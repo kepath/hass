@@ -1,0 +1,98 @@
+blueprint:
+  name: deCONZ - Aqara Magic Cube MFKZQ01LM
+  description: Control anything using Aqara Magic Cube
+  domain: automation
+  input:
+    remote:
+      name: Remote
+      description: Magic Cube to use
+      selector:
+        device:
+          integration: deconz
+          manufacturer: LUMI
+    slide:
+      name: Slide the cube
+      description: Action to run on slide movement
+      default: []
+      selector:
+        action: {}
+    double_tap:
+      name: Double tap the cube
+      description: Action to run on a double tap
+      default: []
+      selector:
+        action: {}
+    flip_180:
+      name: Flip the cube 180 degrees
+      description: Action to run on a 180 flip
+      default: []
+      selector:
+        action: {}
+    flip_90:
+      name: Flip the cube 90 degrees
+      description: Action to run on a 90 flip
+      default: []
+      selector:
+        action: {}
+    shake:
+      name: Shake the cube
+      description: Action to run when the cube is shaked
+      default: []
+      selector:
+        action: {}
+    drop:
+      name: Drop the cube
+      description: Action to run when the cube is dropped
+      default: []
+      selector:
+        action: {}
+    rotate_cw:
+      name: Rotate cube clockwise
+      description: Action to run when the cube is rotated clockwise
+      default: []
+      selector:
+        action: {}
+    rotate_ccw:
+      name: Rotate cube counter clockwise
+      description: Action to run when the cube is rotated counter clockwise
+      default: []
+      selector:
+        action: {}
+  source_url: https://community.home-assistant.io/t/deconz-xiaomi-aqara-mfkzq01lm-cube-controller/255988/7
+mode: restart
+max_exceeded: silent
+trigger:
+- platform: event
+  event_type: deconz_event
+  event_data:
+    device_id: !input 'remote'
+action:
+- variables:
+    event: '{{ trigger.event.data.event }}'
+- choose:
+  - conditions:
+    - '{{ event in [1000, 2000, 3000, 4000, 5000, 6000] }}'
+    sequence: !input 'slide'
+  - conditions:
+    - '{{ event in [1001, 2002, 3003, 4004, 5005, 6006] }}'
+    sequence: !input 'double_tap'
+  - conditions:
+    - '{{ event in [1006, 2005, 3004, 4003, 5002, 6001] }}'
+    sequence: !input 'flip_180'
+  - conditions:
+    - '{{ event in [1002, 1003, 1004, 1005, 2001, 2003, 2004, 2006, 3001, 3002, 3005,
+      3006, 4001, 4002, 4005, 4006, 5001, 5003, 5004, 5006, 6002, 6003, 6004, 6005]
+      }}'
+    sequence: !input 'flip_90'
+  - conditions:
+    - '{{ event == 7007 }}'
+    sequence: !input 'shake'
+  - conditions:
+    - '{{ event == 7008 }}'
+    sequence: !input 'drop'
+  - conditions:
+    - '{{ event | int > 0 }}'
+    sequence: !input 'rotate_cw'
+  - conditions:
+    - '{{ event | int < 0 }}'
+    sequence: !input 'rotate_ccw'

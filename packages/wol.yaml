@@ -1,0 +1,345 @@
+script:
+  arcade_win10_wake:
+    alias: "Arcade Machine - Wake"
+    sequence:
+      - service: wake_on_lan.send_magic_packet
+        data:
+          mac: "40:8D:5C:73:E1:B6"
+          host: 192.168.1.23
+
+  arcade_win10_shutdown:
+    alias: "Arcade Machine - Shutdown"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/shutdown"
+          payload: ""
+
+  arcade_win10_suspend:
+    alias: "Arcade Machine - Suspend"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/suspend"
+          payload: ""
+
+  arcade_win10_hibernate:
+    alias: "Arcade Machine - Hibernate"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/hibernate"
+          payload: ""
+
+  arcade_win10_reboot:
+    alias: "Arcade Machine - Reboot"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/reboot"
+          payload: ""
+
+  arcade_win10_lock:
+    alias: "Arcade Machine - Lock"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/lock"
+          payload: ""
+
+  arcade_win10_logoff:
+    alias: "Arcade Machine - Logoff"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/logoff"
+          payload: ""
+
+  arcade_win10_vol_mute:
+    alias: "Arcade Machine - Toggle Mute"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/volume/mute"
+          payload: ""
+
+  arcade_win10_vol_max:
+    alias: "Arcade Machine - Vol Max"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/volume/set"
+          payload: "100"
+
+  arcade_win10_displays_on:
+    alias: "Arcade Machine - Displays ON"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/displays/on"
+          payload: ""
+
+  arcade_win10_displays_off:
+    alias: "Arcade Machine - Displays OFF"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/displays/off"
+          payload: ""
+
+  arcade_win10_refresh:
+    alias: "Arcade Machine - Refresh"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/refresh"
+          payload: ""
+
+  arcade_win10_notify:
+    alias: "Arcade Machine - Notify"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/arcade-win10/commands/notify"
+          payload: '{ "title": "My Notification Title", "message": "This is an example of notification using IOT Link", "launchParams": "toast://open/https://iotlink.gitlab.io" }'
+
+
+
+  danwin10_wake:
+    alias: "Dans Tower PC - Wake"
+    sequence:
+      - service: wake_on_lan.send_magic_packet
+        data:
+          mac: "FC:AA:14:88:62:97"
+          host: 192.168.1.115
+
+  danwin10_shutdown:
+    alias: "Dans Tower PC - Shutdown"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/shutdown"
+          payload: ""
+
+  danwin10_suspend:
+    alias: "Dans Tower PC - Suspend"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/suspend"
+          payload: ""
+
+  danwin10_hibernate:
+    alias: "Dans Tower PC - Hibernate"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/hibernate"
+          payload: ""
+
+  danwin10_reboot:
+    alias: "Dans Tower PC - Reboot"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/reboot"
+          payload: ""
+
+  danwin10_lock:
+    alias: "Dans Tower PC - Lock"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/lock"
+          payload: ""
+
+  danwin10_logoff:
+    alias: "Dans Tower PC - Logoff"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/logoff"
+          payload: ""
+
+  danwin10_vol_mute:
+    alias: "Dans Tower PC - Toggle Mute"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/volume/mute"
+          payload: ""
+
+  danwin10_vol_max:
+    alias: "Dans Tower PC - Vol Max"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/volume/set"
+          payload: "100"
+
+  danwin10_displays_on:
+    alias: "Dans Tower PC - Displays ON"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/displays/on"
+          payload: ""
+
+  danwin10_displays_off:
+    alias: "Dans Tower PC - Displays OFF"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/displays/off"
+          payload: ""
+
+  danwin10_refresh:
+    alias: "Dans Tower PC - Refresh"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/refresh"
+          payload: ""
+
+  danwin10_notify:
+    alias: "Dans Tower PC - Notify"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/danwin10/commands/notify"
+          payload: '{ "title": "My Notification Title", "message": "This is an example of notification using IOT Link", "launchParams": "toast://open/https://iotlink.gitlab.io" }'
+
+
+
+  dang5gaminglapt_wake:
+    alias: "Dans G5 Gaming Laptop - Wake"
+    sequence:
+      - service: wake_on_lan.send_magic_packet
+        data:
+          mac: "18:1D:EA:B3:1F:5F"
+          host: 192.168.1.128
+
+  dang5gaminglapt_shutdown:
+    alias: "Dans G5 Gaming Laptop - Shutdown"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/shutdown"
+          payload: ""
+
+  dang5gaminglapt_suspend:
+    alias: "Dans G5 Gaming Laptop - Suspend"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/suspend"
+          payload: ""
+
+  dang5gaminglapt_hibernate:
+    alias: "Dans G5 Gaming Laptop - Hibernate"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/hibernate"
+          payload: ""
+
+  dang5gaminglapt_reboot:
+    alias: "Dans G5 Gaming Laptop - Reboot"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/reboot"
+          payload: ""
+
+  dang5gaminglapt_lock:
+    alias: "Dans G5 Gaming Laptop - Lock"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/lock"
+          payload: ""
+
+  dang5gaminglapt_logoff:
+    alias: "Dans G5 Gaming Laptop - Logoff"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/logoff"
+          payload: ""
+
+  dang5gaminglapt_vol_mute:
+    alias: "Dans G5 Gaming Laptop - Toggle Mute"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/volume/mute"
+          payload: ""
+
+  dang5gaminglapt_vol_max:
+    alias: "Dans G5 Gaming Laptop - Vol Max"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/volume/set"
+          payload: "100"
+
+  dang5gaminglapt_displays_on:
+    alias: "Dans G5 Gaming Laptop - Displays ON"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/displays/on"
+          payload: ""
+
+  dang5gaminglapt_displays_off:
+    alias: "Dans G5 Gaming Laptop - Displays OFF"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/displays/off"
+          payload: ""
+
+  dang5gaminglapt_refresh:
+    alias: "Dans G5 Gaming Laptop - Refresh"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/refresh"
+          payload: ""
+
+  dang5gaminglapt_notify:
+    alias: "Dans G5 Gaming Laptop - Notify"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: "iotlink/workgroup/dang5gaminglapt/commands/notify"
+          payload: '{ "title": "My Notification Title", "message": "This is an example of notification using IOT Link", "launchParams": "toast://open/https://iotlink.gitlab.io" }'
+
+  test_message:
+    alias: Door is still open
+    sequence:
+      - service: tts.cloud_say
+        data:
+          entity_id: media_player.bed_e_echo_plus
+          message: the door has been open for 10 minutes
+          options:
+            gender: female
+          language: en-US
+
+          #media_player.lounge_echo_dot
+switch:
+  - platform: wake_on_lan
+    mac: C8:2A:14:4D:6F:30
+    name: iMac Wake-on-LAN
+    host: 192.168.1.117
+    #unit_of_measurement: 'on/off'
+  - platform: wake_on_lan
+    mac: 24:4B:03:A8:B9:B9
+    name: Samsung TV Lounge Wake-on-LAN
+    host: 192.168.1.78
+    #unit_of_measurement: 'on/off'
+  - platform: wake_on_lan
+    mac: 50:85:69:67:D3:02
+    name: Samsung TV Bed A Wake-on-LAN
+    host: 192.168.1.77
+    #unit_of_measurement: 'on/off'

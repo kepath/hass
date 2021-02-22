@@ -1,0 +1,74 @@
+binary_sensor:
+  #Asus connections
+  - platform: template
+    sensors:
+      #unit_of_measurement: 'up/down'
+      devicetracker_gateway_g5_gaming_laptop_wifi:
+        device_class: connectivity
+        friendly_name: "VPN Connected to Dans Laptop Wifi"
+        unique_id: devicetracker_gateway_g5_gaming_laptop_wifi
+        value_template: "{{ is_state('device_tracker.dang5gaminglaptop', 'home') }}"
+        icon_template: mdi:laptop-windows
+  - platform: template
+    sensors:
+      #unit_of_measurement: 'up/down'
+      devicetracker_gateway_kev_macbook_2018:
+        device_class: connectivity
+        friendly_name: "VPN Connected to Kevs Macbook Wifi"
+        unique_id: devicetracker_gateway_kev_macbook_2018
+        value_template: "{{ is_state('device_tracker.38_f9_d3_24_59_6c', 'home') }}"
+        icon_template: mdi:laptop-mac
+  - platform: template
+    sensors:
+      #unit_of_measurement: 'up/down'
+      devicetracker_gateway_solar_battery:
+        device_class: connectivity
+        friendly_name: "Solar Battery Connected"
+        unique_id: devicetracker_gateway_solar_battery
+        value_template: "{{ is_state('device_tracker.dru10002268', 'home') }}"
+        icon_template: mdi:solar-power
+
+  - platform: template
+    sensors:
+      #unit_of_measurement: 'up/down'
+      devicetracker_gateway_vpn_router:
+        device_class: connectivity
+        friendly_name: "Gateway connected to VPN"
+        unique_id: devicetracker_gateway_vpn_router
+        value_template: "{{ is_state('device_tracker.vpn', 'home') }}"
+        icon_template: mdi:security
+
+
+  #phones
+  - platform: template
+    sensors:
+      devicetracker_gateway_kev_iphone_home:
+        device_class: presence
+        friendly_name: "Kev iPhone WiFi"
+        unique_id: devicetracker_gateway_kev_iphone_home
+        value_template: "{{ is_state('device_tracker.iphone_2', 'home') }}"
+        icon_template: mdi:alpha-k-box
+  - platform: template
+    sensors:
+      devicetracker_gateway_dan_iphone_home:
+        device_class: presence
+        friendly_name: "Dans iPhone WiFi"
+        unique_id: devicetracker_gateway_dan_iphone_home
+        value_template: "{{ is_state('device_tracker.6c_72_e7_de_5a_85', 'home') or is_state('device_tracker.daniels_iphone', 'home') }}"
+        icon_template: mdi:alpha-d-box
+  - platform: template
+    sensors:
+      devicetracker_gateway_julia_iphone_home:
+        device_class: presence
+        friendly_name: "Julia iPhone WiFi"
+        unique_id: devicetracker_gateway_julia_iphone_home
+        value_template: "{{ is_state('device_tracker.julias_iphone_6', 'home') or is_state('device_tracker.julias_iphone_6_2', 'home') }}"
+        icon_template: mdi:alpha-j-box
+  - platform: template
+    sensors:
+      devicetracker_gateway_emily_iphone_home:
+        device_class: presence
+        friendly_name: "Emily iPhone WiFi"
+        unique_id: devicetracker_gateway_emily_iphone_home
+        value_template: "{{ is_state('device_tracker.26_00_dd_10_bc_a2', 'home') or is_state('device_tracker.40_9c_28_76_db_42', 'home')  or is_state('device_tracker.emilysiphone6s_3', 'home')}}"
+        icon_template: mdi:alpha-e-box

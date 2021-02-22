@@ -1,0 +1,270 @@
+# Text to speech
+#tts:
+#  - platform: google_translate
+
+#device_tracker:
+#  - platform: bluetooth_le_tracker
+#  - platform: bluetooth_tracker
+
+#apple_tv:
+#  - host: !secret apple_tv_ip
+#    login_id: !secret apple_tv_login_id
+#    name: Apple TV 4k
+
+#auto_backup:
+#  auto_purge: true
+#  backup_path: /srv/backups/supervisor
+
+#sabnzbd:
+#  host: !secret vpn_ip
+#  api_key: !secret sabnzbd_api_key
+#  sensors:
+#    - current_status
+#    - speed
+#    - queue_size
+#    - queue_count
+#    - day_size
+#    - month_size
+
+#panel_iframe:
+#  tautulli:
+#    title: Tautulli
+#    icon: mdi:filmstrip
+#    url: !secret addon_tautulli_url
+
+#panel_iframe:
+#  tasmoadmin:
+#    title: TasmoAdmin
+#    icon: mdi:lightbulb-on
+#    url: http://192.168.1.20:9541
+
+#panel_custom:
+#  - name: hassio-main
+#    sidebar_title: Tautulli
+#    sidebar_icon: mdi:filmstrip
+#    js_url: /api/hassio/app/entrypoint.js
+#    url_path: tautulli
+#    embed_iframe: true
+#    require_admin: true
+#    config:
+#      ingress: a0d7b954_tautulli
+
+#local_ip:
+
+#media_player:
+#  - platform: samsungtv_custom
+#    name: samsung tv ctl lounge #UE48HU7500T
+#    host: !secret samsung_tv_lounge_ip
+#    port: 8080
+#    mac: 24:4b:03:a8:b9:b9
+#    timeout: 30
+    #sourcelist: '{"PlayStation": "KEY_HDMI1", "RaspberryPi": "KEY_HDMI2", "Chromecast": "KEY_HDMI3"}'
+#    protocol: ws
+    #token: d396c8033689999088b250d9fe579297
+    #id: 07bfa481-0082-1000-b3aa-244b03a8b9b9
+#  - platform: samsungtv_custom
+#    name: samsung tv ctl bed a #UE32F4500
+#    host: 192.168.1.77
+#    port: 8001
+#    mac: 50:85:69:67:D3:02
+#    sourcelist: '{"PlayStation": "KEY_HDMI1", "RaspberryPi": "KEY_HDMI2", "Chromecast": "KEY_HDMI3"}'
+#    #applist: "YouTube, Plex, Prime Video, Netflix, Spotify"
+#    protocol: ctl
+
+
+#samsungtv_smart:
+#  - host: 192.168.1.78
+#    name: Samsung TV Lounge
+
+# Resolve IP address of home-assistant.io via Google DNS
+#  - platform: dnsip
+#    hostname: nabu.casa
+#    name: hass
+#    resolver: 8.8.8.8
+#  - platform: glances
+#    name: ScanPC
+#  - platform: glances
+#    name: DownloadPC
+#    host: 192.168.1.2
+#- platform: geo_rss_events
+#  name: Copernicus EMS
+#  url: https://emergency.copernicus.eu/mapping/activations-rapid/feed
+#  radius: 30
+
+  #  - platform: steam_online
+  #    api_key: !secret steam_api_key
+  #    accounts: 
+  #      - !secret steam_client_id
+
+    #- platform: sonarr
+  #  host: 192.168.1.2
+  #  api_key: !secret sonarr_api_key
+  #  monitored_conditions:
+  #    - upcoming
+  #      - wanted
+  #      - series
+  #    - queue
+  #  days: 7
+
+  #- platform: radarr
+  #  host: 192.168.1.2
+  #  api_key: !secret radarr_api_key
+  #  monitored_conditions:
+  #    - upcoming
+  #    - status
+  #      - movies
+  #  days: 7
+
+
+#get
+#- platform: statistics
+#  name: 'VPN Load 1 Stats'
+#  entity_id: sensor.vpn_load_1
+#  sampling_size: 300 #10 minutes
+#  #unit_of_measurement: 'calc'
+#- platform: statistics
+#  name: 'VPN Load 5 Stats'
+#  entity_id: sensor.vpn_load_5
+#  sampling_size: 300 #10 minutes
+#  #unit_of_measurement: 'calc'
+#- platform: statistics
+#  name: 'VPN Load 15 Stats'
+#  entity_id: sensor.vpn_load_15
+#  sampling_size: 300 #10 minutes 
+#  #unit_of_measurement: 'calc'
+
+
+#  - platform: template
+#    sensors:
+#      #unit_of_measurement: 'up/down'
+#      dans_tower_connected_to_gateway:
+#        device_class: connectivity
+#        friendly_name: "Dans Tower PC On"
+#        value_template: "{{ is_state('device_tracker.danwin10', 'home') }}"
+#        icon_template: mdi:desktop-tower
+  # - platform: template
+  #   sensors:
+  #     #unit_of_measurement: 'up/down'
+  #     samsung_tv_lounge_connected_to_gateway:
+  #       device_class: connectivity
+  #       friendly_name: "Samsung UE48HU7500T TV On"
+  #       value_template: "{{ is_state('device_tracker.24_4b_03_a8_b9_b9', 'home') }}"
+  #       icon_template: mdi:television-play
+  # - platform: template
+  #   sensors:
+  #     #unit_of_measurement: 'up/down'
+  #     samsung_tv_bed_a_connected_to_gateway:
+  #       device_class: connectivity
+  #       friendly_name: "Samsung UE32F4500 TV On"
+  #       value_template: "{{ is_state('device_tracker.50_85_69_67_d3_02', 'home') }}"
+  #       icon_template: mdi:television
+  #- platform: template
+  #  sensors:
+  #    #unit_of_measurement: 'up/down'
+  #    bigpc_connected_to_gateway:
+  #      device_class: connectivity
+  #      friendly_name: "Big PC On"
+  #      value_template: "{{ is_state('device_tracker.win10_bigpc', 'home') }}"
+  #      icon_template: mdi:sunglasses
+  #- platform: template
+  #  sensors:
+  #    #unit_of_measurement: 'up/down'
+  #    arcade_machine_connected_to_gateway:
+  #      device_class: connectivity
+  #      friendly_name: "Arcade PC On"
+  #      value_template: "{{ is_state('device_tracker.arcade_win10', 'home') }}"
+  #      icon_template: mdi:gamepad-square
+  # - platform: template
+  #   sensors:
+  #     #unit_of_measurement: 'up/down'
+  #     samsung_tv_bed_e_connected_to_gateway:
+  #       device_class: connectivity
+  #       friendly_name: "Samsung TV Bed E On"
+  #       value_template: "{{ is_state('device_tracker.24_4b_03_1a_2c_6f', 'home') }}"
+  #       icon_template: mdi:television-classic
+  #- platform: template
+  #  sensors:
+  #    #unit_of_measurement: 'up/down'
+  #    diskstation_connected_to_gateway:
+  #      device_class: connectivity
+  #      friendly_name: "Diskstation connected to Gateway"
+  #      value_template: "{{ is_state('device_tracker.diskstation', 'home') }}"
+  #      icon_template: mdi:server-network
+        
+  # - platform: template
+  #   sensors:
+  #     gateway_connected_to_vpn:
+  #       device_class: connectivity
+  #       friendly_name: "Gateway connected to VPN"
+  #       value_template: "{{ is_state('device_tracker.04_d4_c4_cf_ca_10', 'home') }}"
+  #       icon_template: >-
+  #         {% if is_state('device_tracker.04_d4_c4_cf_ca_10', 'home') %}
+  #           mdi:access-point-network
+  #         {% else %}
+  #           mdi:access-point-network-off
+  #         {% endif %}
+  # - platform: template
+  #   sensors:
+  #     diskstation_connected_to_vpn:
+  #       device_class: connectivity
+  #       friendly_name: "Diskstation connected to VPN"
+  #       value_template: "{{ is_state('device_tracker.diskstation_2', 'home') }}"
+  #       icon_template: >-
+  #         {% if is_state('device_tracker.diskstation_2', 'home') %}
+  #           mdi:server-network
+  #         {% else %}
+  #           mdi:server-network-off
+  #         {% endif %}
+
+  #person.emily_thorn:
+#  entity_picture: /local/images/emily_thumb2.jpg
+#person.julia_thorn:
+#  entity_picture: /local/images/julia_thumb.jpg
+#person.daniel:
+#  entity_picture: /local/images/dan_thumb.jpg
+#person.kevin_thorn:
+#  entity_picture: /local/images/kevin_thumb.jpg
+
+#title: Spinae
+
+#resources:
+#  - url: /community_plugin/custom-header/custom-header.js
+#    type: module
+
+#custom_header:
+#  background: 'rgba(155, 155, 155, 0.25)'
+#  compact_mode: true
+#  button_text:
+#    options: '{{ hours24 }}:{{ minutesLZ }}'
+
+#background: var(--background-image)
+#views:
+#  - id: 0
+#    icon: mdi:castle
+#    name: Home
+
+#asuswrt:
+#  host: !secret gateway_ip
+#  username: !secret asus_gateway_user
+#  password: !secret asus_gateway_password
+#  interface: ppp0
+#  sensors:
+#    - devices
+#    - upload
+#    - download
+#    - upload_speed
+#    - download_speed
+
+#local tuya
+#[
+#  {
+#    name: 'Siren Sensor-UK',
+#    id: 'bf0bd2eb3cd28d130aqu01',
+#    key: '4361bd7a984b65cc'
+#  },
+#  {
+#    name: 'Camera indoor',
+#    id: 'bf719cb239863c8a27ldou',
+#    key: '914abf8bb22c006b'
+#  }
+#]

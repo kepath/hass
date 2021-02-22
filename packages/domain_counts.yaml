@@ -1,0 +1,198 @@
+#====================================
+#=== Home Assistant Component counts
+#====================================
+sensor:
+- platform: template
+  sensors:
+
+  #----- Count Automations   value_template: "{{ is_state('value' , 0) / 100}}"
+    count_automations:
+      #entity_id: sensor.date
+      friendly_name: Automation No.
+      unit_of_measurement: 'Count'
+      unique_id: automation_domain_count
+      value_template: >
+        {%- set domains = ['automation'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Count Scripts
+    count_scripts:
+      #entity_id: sensor.date
+      friendly_name: Scripts No.
+      unit_of_measurement: 'Count'
+      unique_id: script_domain_count
+      value_template: >
+        {%- set domains = ['script'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Count Device Trackers
+    count_device_trackers:
+      #entity_id: sensor.date
+      friendly_name: Device Tracker No.
+      unit_of_measurement: 'Count'
+      unique_id: device_tracker_domain_count
+      value_template: >
+        {%- set domains = ['device_tracker'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}        
+
+  #----- Count Binary Sensors
+    count_binary_sensors:
+      #entity_id: sensor.date
+      friendly_name: Binary Sensors No.
+      unit_of_measurement: 'Count'
+      unique_id: binary_sensor_domain_count
+      value_template: >
+        {%- set domains = ['binary_sensor'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Count Sensors
+    count_sensors:
+      #entity_id: sensor.date
+      friendly_name: Sensors No.
+      unit_of_measurement: 'Count'
+      unique_id: sensor_domain_count
+      value_template: >
+        {%- set domains = ['sensor'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Count Switches
+    count_switches:
+      #entity_id: sensor.date
+      friendly_name: Switches No.
+      unit_of_measurement: 'Count'
+      unique_id: switch_domain_count
+      value_template: >
+        {%- set domains = ['switch'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Count Zones
+    count_zones:
+      #entity_id: sensor.date
+      friendly_name: Zones No.
+      unit_of_measurement: 'Count'
+      unique_id: zone_domain_count
+      value_template: >
+        {%- set domains = ['zone'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Input Booleans
+    count_input_booleans:
+      #entity_id: sensor.date
+      friendly_name: Input Booleans No.
+      unit_of_measurement: 'Count'
+      unique_id: input_boolean_domain_count
+      value_template: >
+        {%- set domains = ['input_boolean'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Input Numbers
+    count_input_numbers:
+      #entity_id: sensor.date
+      friendly_name: Input Numbers No.
+      unit_of_measurement: 'Count'
+      unique_id: input_number_domain_count
+      value_template: >
+        {%- set domains = ['input_number'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Input Texts
+    count_input_texts:
+      #entity_id: sensor.date
+      friendly_name: Input Texts No.
+      unit_of_measurement: 'Count'
+      unique_id: input_text_domain_count
+      value_template: >
+        {%- set domains = ['input_text'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Input Selects
+    count_input_selects:
+      #entity_id: sensor.date
+      friendly_name: Input Select No.
+      unit_of_measurement: 'Count'
+      unique_id: input_select_domain_count
+      value_template: >
+        {%- set domains = ['input_select'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+
+  #----- Input Date Times
+    count_input_datetimes:
+      #entity_id: sensor.date
+      friendly_name: Input DateTime No.
+      unit_of_measurement: 'Count'
+      unique_id: input_datetime_domain_count
+      value_template: >
+        {%- set domains = ['input_datetime'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}

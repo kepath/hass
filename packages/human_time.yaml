@@ -1,0 +1,165 @@
+sensor:
+#  - platform: snmp
+#    name: 'NetGear Switch Uptime Timeticks'
+#    host: 192.168.1.5
+#    baseoid: 1.3.6.1.2.1.1.3.0
+#    community: 'public'
+#    version: '2c'
+#    scan_interval: 60
+#  - platform: template
+#    sensors:
+#      netgear_switch_system_uptime_human:
+#        friendly_name: NetGear Switch Uptime Human
+#        unique_id: netgear_switch_uptime_human
+#        icon_template: mdi:sort-clock-descending
+#        value_template: >-
+#          {% if states('sensor.netgear_switch_uptime_timeticks') == 'unknown' or 
+#          states('sensor.netgear_switch_uptime_timeticks') == 'unavailable' %}
+#            {{"power off"}}
+#          {% else %}
+#            {% set up_milliseconds = states('sensor.netgear_switch_uptime_timeticks') | int  %}
+#            {{ relative_time( now() - timedelta( seconds = up_milliseconds / 100 )) }}
+#          {% endif %}
+
+  - platform: snmp
+    name: 'VPN Router Uptime Timeticks'
+    host: 192.168.1.2
+    baseoid: 1.3.6.1.2.1.1.3.0
+    community: 'public'
+    version: '2c'
+    scan_interval: 60
+  - platform: template
+    sensors:
+      vpn_router_system_uptime_human:
+        friendly_name: VPN Router Uptime Human
+        unique_id: vpn_router_uptime_human
+        icon_template: mdi:sort-clock-descending
+        value_template: >-
+          {% if states('sensor.vpn_router_uptime_timeticks') == 'unknown' or 
+          states('sensor.vpn_router_uptime_timeticks') == 'unavailable' %}
+            {{"power off"}}
+          {% else %}
+            {% set up_milliseconds = states('sensor.vpn_router_uptime_timeticks') | int  %}
+            {{ relative_time( now() - timedelta( seconds = up_milliseconds / 100 )) }}
+          {% endif %}
+
+  - platform: snmp
+    name: 'Download PC Uptime Timeticks'
+    host: 192.168.1.2
+    baseoid: 1.3.6.1.2.1.1.3.0
+    community: 'public'
+    version: '2c'
+    scan_interval: 60
+    port: 8161
+  - platform: template
+    sensors:
+      download_pc_system_uptime_human:
+        friendly_name: Download PC Uptime Human
+        unique_id: download_pc_uptime_human
+        icon_template: mdi:sort-clock-descending
+        value_template: >-
+          {% if states('sensor.download_pc_uptime_timeticks') == 'unknown' or 
+          states('sensor.download_pc_uptime_timeticks') == 'unavailable' %}
+            {{"power off"}}
+          {% else %}
+            {% set up_milliseconds = states('sensor.download_pc_uptime_timeticks') | int  %}
+            {{ relative_time( now() - timedelta( seconds = up_milliseconds / 100 )) }}
+          {% endif %}
+
+  - platform: snmp
+    name: 'Synology NAS Uptime Timeticks'
+    host: 192.168.1.15
+    baseoid: 1.3.6.1.2.1.1.3.0
+    community: 'public'
+    version: '2c'
+    scan_interval: 60
+  - platform: template
+    sensors:
+      synology_nas_system_uptime_human:
+        friendly_name: Synology NAS Uptime Human
+        unique_id: synology_nas_uptime_human
+        icon_template: mdi:sort-clock-descending
+        value_template: >-
+          {% if states('sensor.synology_nas_uptime_timeticks') == 'unknown' or 
+          states('sensor.synology_nas_uptime_timeticks') == 'unavailable' %}
+            {{"power off"}}
+          {% else %}
+            {% set up_milliseconds = states('sensor.synology_nas_uptime_timeticks') | int  %}
+            {{ relative_time( now() - timedelta( seconds = up_milliseconds / 100 )) }}
+          {% endif %}
+
+  - platform: snmp
+    name: 'Printer Uptime Timeticks'
+    host: 192.168.1.11
+    baseoid: 1.3.6.1.2.1.1.3.0
+    community: 'public'
+    version: '2c'
+    scan_interval: 60
+  - platform: template
+    sensors:
+      printer_system_uptime_human:
+        friendly_name: Printer Uptime Human
+        unique_id: printer_uptime_human
+        icon_template: mdi:sort-clock-descending
+        value_template: >-
+          {% if states('sensor.printer_uptime_timeticks') == 'unknown' or 
+          states('sensor.printer_uptime_timeticks') == 'unavailable' %}
+            {{"power off"}}
+          {% else %}
+            {% set up_milliseconds = states('sensor.printer_uptime_timeticks') | int  %}
+            {{ relative_time( now() - timedelta( seconds = up_milliseconds / 100 )) }}
+          {% endif %}
+
+  - platform: template
+    sensors:
+      dang5gaminglapt_system_uptime_human:
+        friendly_name: Dan G5 Gaming Laptop System Uptime Human
+        unique_id: dan_g5_gaming_laptop_uptime_human
+        icon_template: mdi:sort-clock-descending
+        value_template: >-
+          {% if states('sensor.dang5gaminglapt_system_uptime') == 'unknown' or 
+          states('sensor.dang5gaminglapt_system_uptime') == 'unavailable' %}
+            {{"power off"}}
+          {% else %}
+            {% set dateString = states('sensor.dang5gaminglapt_system_uptime') %}
+            {% set up_days = dateString[:2] %}
+            {% set up_hours = dateString[3:5] %}
+            {% set up_minutes = dateString[6:8] %}
+              {{ relative_time( now() - timedelta( days = up_days | int, hours = up_hours | int, minutes = up_minutes | int)) }}
+          {% endif %}
+
+  - platform: template
+    sensors:
+      danwin10_system_uptime_human:
+        friendly_name: Dan Tower PC System Uptime Human
+        unique_id: dan_tower_pc_uptime_human
+        icon_template: mdi:sort-clock-descending
+        value_template: >-
+          {% if states('sensor.danwin10_system_uptime') == 'unknown' or 
+          states('sensor.danwin10_system_uptime') == 'unavailable' %}
+            {{"power off"}}
+          {% else %}
+            {% set dateString = states('sensor.danwin10_system_uptime') %}
+            {% set up_days = dateString[:2] %}
+            {% set up_hours = dateString[3:5] %}
+            {% set up_minutes = dateString[6:8] %}
+              {{ relative_time( now() - timedelta( days = up_days | int, hours = up_hours | int, minutes = up_minutes | int)) }}
+          {% endif %}
+
+  - platform: template
+    sensors:
+      arcade_win10_system_uptime_human:
+        friendly_name: Arcade PC System Uptime Human
+        unique_id: arcade_machine_uptime_human
+        icon_template: mdi:sort-clock-descending
+        value_template: >-
+          {% if states('sensor.arcade_win10_system_uptime') == 'unknown' or 
+          states('sensor.arcade_win10_system_uptime') == 'unavailable' %}
+            {{"power off"}}
+          {% else %}
+            {% set dateString = states('sensor.arcade_win10_system_uptime') %}
+            {% set up_days = dateString[:2] %}
+            {% set up_hours = dateString[3:5] %}
+            {% set up_minutes = dateString[6:8] %}
+              {{ relative_time( now() - timedelta( days = up_days | int, hours = up_hours | int, minutes = up_minutes | int)) }}
+          {% endif %}
