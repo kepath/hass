@@ -1,0 +1,185 @@
+default_config:
+
+discovery:
+api:
+stream:
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+recorder:
+  db_url: !secret mysql_db_url
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+homeassistant:
+  customize: !include customize.yaml
+  packages: !include_dir_named packages
+#  auth_providers:
+#    - type: trusted_networks
+#      trusted_networks:
+#        - 192.168.1.0/24
+#        - 127.0.0.1
+
+http:
+  ip_ban_enabled: true
+  login_attempts_threshold: 20
+
+logger:
+  default: info
+#  logs:
+#    homeassistant.components.mqtt: debug
+
+influxdb:
+  username: !secret influx_db_user
+  password: !secret influx_db_pass
+
+history:
+  exclude:
+    domains:
+      - device_tracker
+    entity_globs:
+      - sensor.*_calc
+      - sensor.*_timeticks
+      - sensor.*_uptime
+
+homekit:
+  filter:
+    include_domains:
+    - climate
+    include_entity_globs:
+    - switch.adguard*
+    - switch.wol*
+    - sensor.adguard*
+    - sensor.diskstation_volume*
+    - sensor.diskstation_drive_*_status
+    - binary_sensor.*iphone
+    - binary_sensor.iphone*
+    - binary_sensor.diskstation*
+    - binary_sensor.door*
+    - binary_sensor.vibration*
+    - binary_sensor.motion*
+    include_entities:
+    - binary_sensor.remote_ui
+    - binary_sensor.dru10002268
+    - device_tracker.26_00_dd_10_bc_a2
+    - device_tracker.40_9c_28_76_db_42
+    - device_tracker.6c_72_e7_de_5a_85
+
+nest:
+  client_id: !secret google_oauth_client_id
+  client_secret: !secret google_oauth_client_secret
+  project_id: !secret nest_project_id
+  subscriber_id: !secret nest_subscription_id
+
+speedtestdotnet:
+wake_on_lan:
+
+device_tracker:
+  - platform: luci
+    host: !secret vpn_ip
+    username: !secret luci_user
+    password: !secret luci_pass
+  - platform: bluetooth_tracker    
+
+spotify:
+  client_id: !secret spotify_client_id
+  client_secret: !secret spotify_client_secret
+
+spotcast: #default is home account
+  sp_dc: !secret spotcast_homeaccount_sp_dc
+  sp_key: !secret spotcast_homeaccount_sp_key
+  accounts:
+    kevin:
+      sp_dc: !secret spotcast_kevin_sp_dc
+      sp_key: !secret spotcast_kevin_sp_key
+#    emily:
+#      sp_dc: !secret spotcast_emily_sp_dc
+#      sp_key: !secret spotcast_emily_sp_key
+
+#feedreader:
+#  urls:
+#    - https://alerts.home-assistant.io/feed.xml
+#  scan_interval:
+#    minutes: 30
+#  max_entries: 5
+
+glances:
+    name: DownloadPC
+    host: !secret vpn_ip
+
+media_player:
+  - platform: androidtv
+    name: NVIDIA Shield Lounge ADB
+    host: 192.168.1.64
+    adb_server_ip: 192.168.1.20
+    adb_server_port: 5037
+  - platform: androidtv
+    name: NVidia Shield Bed E ADB
+    host: 192.168.1.65
+    adb_server_ip: 192.168.1.20
+    adb_server_port: 5037
+    apps:
+      #com.plexapp.mediaserver.smb: "Plex"
+      com.netflix.ninja: "Netflix"
+      com.disney.disneyplus: "Disney+"
+      com.plexapp.android: "Plex"
+      com.nvidia.bbciplayer: "iPlayer"
+      com.pluralsight: "Pluralsight"
+      com.google.android.youtube.tv: "YouTube"
+      com.amazon.amazonvideo.livingroom: "Amazon Prime"
+      com.spotify.tv.android: "Spotify"
+      air.ITVMobilePlayer: "ITV Hub"
+      com.channel5.my5: "My 5"
+    #exclude_unnamed_apps: true
+  - platform: androidtv
+    name: Amazon Firestick Kitchen ADB
+    host: 192.168.1.73
+    adb_server_ip: 192.168.1.20
+    adb_server_port: 5037
+  - platform: androidtv
+    name: Amazon Fire TV ADB
+    host: 192.168.1.74
+    adb_server_ip: 192.168.1.20
+    adb_server_port: 5037
+
+  - platform: yamaha
+    name: RX-V777 Reciever Yamaha Integration
+    #entity_id: yamaha_rx_v777_yamaha_network_integration
+    host: 192.168.1.105
+    zone_ignore:
+      - zone_2
+    zone_names:
+      Main_Zone: "Bed C"
+    source_ignore:
+      - AUDIO1
+      - AUDIO2
+      - AV2
+      - AV3
+      - AV4
+      - AV5
+      - AV6
+      - Napster
+      - PHONO
+      - SERVER
+      - TUNER
+      - USB
+      - V-AUX
+      - iPod (USB)
+    source_names:
+      AV1: "Nintendo Wii"
+      HDMI1: "Humax YouView"
+      HDMI2: "Apple TV 4k"
+      HDMI3: "Xbox One"
+      HDMI4: "PlayStation 3"
+      HDMI5: "Arcade Machine"
+
+binary_sensor:
+  - platform: tod
+    name: Night Time
+    after: sunset
+    before: sunrise
+    #unit_of_measurement: 'boolean'

@@ -1,0 +1,66 @@
+- id: '1587503984484'
+  alias: tautulli_webhook
+  description: ''
+  trigger:
+  - platform: webhook
+    webhook_id: call_tautulli_webhook
+  condition: []
+  action:
+  - data_template:
+      message: '{{ trigger.json.text }}'
+    service: persistent_notification.create
+- id: '1594322479253'
+  alias: Perform Full Backup
+  description: ''
+  trigger:
+  - at: 02:30:00
+    platform: time
+  condition: []
+  action:
+  - data_template:
+      backup_path: /share/srv
+      keep_days: 28
+      name: 'WeeklyBackup: {{ now().strftime(''%A, %B %-d, %Y'') }}'
+    service: auto_backup.snapshot_full
+- id: '1594523612794'
+  alias: alert when glances disk space goes below 2 percent
+  description: ''
+  trigger:
+  - below: 2
+    entity_id: sensor.glances_used_percent
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      message: Disk space on DPC very low
+    service: notify.mobile_app_kevins_iphone_8
+- id: '1609788406791'
+  alias: When Yamaha Reciever is Off, Turn on the Fridge
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.yamaha_reciever_state
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 879c2bb1df8b9f0a05d9d59bab1e401b
+    entity_id: switch.on_off_plug_in_unit_3
+    domain: switch
+  mode: single
+- id: '1609788662612'
+  alias: When Yamaha Receiver is On, Turn off the Fridge
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.yamaha_reciever_state
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 879c2bb1df8b9f0a05d9d59bab1e401b
+    entity_id: switch.on_off_plug_in_unit_3
+    domain: switch
+  mode: single
