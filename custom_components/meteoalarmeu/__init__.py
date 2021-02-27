@@ -3,9 +3,17 @@ import asyncio
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from meteoalarm_rssapi import MeteoAlarm
 
-from .const import DOMAIN
+from .client import Client
+from .const import (
+    CONF_AWARENESS_TYPES,
+    CONF_COUNTRY,
+    CONF_LANGUAGE,
+    CONF_REGION,
+    DOMAIN,
+)
+
+__version__ = "2021.5.0"
 
 PLATFORMS = ["binary_sensor"]
 
@@ -18,8 +26,11 @@ async def async_setup(hass: HomeAssistant, config: dict):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up meteoalarmeu from a config entry."""
-    hass.data[DOMAIN][entry.entry_id] = MeteoAlarm(
-        entry.data["country"], entry.data["region"]
+    hass.data[DOMAIN][entry.entry_id] = Client(
+        entry.data[CONF_COUNTRY],
+        entry.data[CONF_REGION],
+        entry.data[CONF_LANGUAGE],
+        entry.data[CONF_AWARENESS_TYPES],
     )
 
     for component in PLATFORMS:
@@ -37,7 +48,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
             *[
                 hass.config_entries.async_forward_entry_unload(entry, component)
                 for component in PLATFORMS
-            ]
+            ],
         )
     )
     if unload_ok:
