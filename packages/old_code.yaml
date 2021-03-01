@@ -268,3 +268,34 @@
 #    key: '914abf8bb22c006b'
 #  }
 #]
+
+#decluttering_templates:
+#  my_first_template:     # This is the name of a template
+#    default:
+#      - icon: fire
+#    card:
+#      type: custom:button-card
+#      name: '[[name]]'
+#      icon: 'mdi:[[icon]]'
+
+#sensor:
+#  - type: custom:decluttering-card
+#    template: button_text
+#    variables:
+#      - name: TIVO
+#      - border: rgba(255, 125, 125,1) # pink(ish) color top nav buttons
+#      - background_active: gray
+#  - platform: template
+#    sensors:
+#      vpn_router_system_uptime_human:
+#        friendly_name: VPN Router Uptime Human
+#        unique_id: vpn_router_uptime_human
+#        icon_template: mdi:sort-clock-descending
+#        value_template: >-
+#          {% if states('sensor.vpn_router_uptime_timeticks') == 'unknown' or 
+#          states('sensor.vpn_router_uptime_timeticks') == 'unavailable' %}
+#            {{"power off"}}
+#          {% else %}
+#            {% set up_milliseconds = states('sensor.vpn_router_uptime_timeticks') | int  %}
+#            {{ relative_time( now() - timedelta( seconds = up_milliseconds / 100 )) }}
+#          {% endif %}
