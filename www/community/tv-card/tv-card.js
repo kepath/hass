@@ -57,7 +57,7 @@ class TVCardServices extends LitElement {
 
           </div>
           ${
-            this._config.power
+            this._config.tv && this._config.power
               ? html`
                   <div class="row">
                     <ha-icon-button
@@ -66,12 +66,27 @@ class TVCardServices extends LitElement {
                       icon="mdi:power"
                       title="Power"
                     ></ha-icon-button>
+                  </div>
+                `
+              : ""
+          }
+
+          ${
+            this._config.tv && !(this._config.power) && (this._config.power_on || this._config.power_off)
+              ? html`
+                  <div class="row">
+                    <ha-icon-button
+                      .action="${"power_on"}"
+                      @click="${this.handleActionClick}"
+                      icon="mdi:power-on"
+                      title="Power on"
+                    ></ha-icon-button>
                     ${emptyButton}
                     <ha-icon-button
-                      .action="${"power"}"
+                      .action="${"power_off"}"
                       @click="${this.handleActionClick}"
-                      icon="mdi:power"
-                      title="Power"
+                      icon="mdi:power-off"
+                      title="Power off"
                     ></ha-icon-button>
                   </div>
                 `
@@ -237,10 +252,10 @@ class TVCardServices extends LitElement {
           }
 
           ${
-            this._config.tv ||
+            this._config.tv && (
             this._config.volume_up ||
             this._config.volume_down ||
-            this._config.volume_mute
+            this._config.volume_mute )
               ? html`
                   <div class="row">
                     <ha-icon-button
@@ -261,6 +276,47 @@ class TVCardServices extends LitElement {
                       icon="mdi:volume-plus"
                       title="Volume Up"
                     ></ha-icon-button>
+                  </div>
+                `
+              : ""
+          }
+
+          ${
+            this._config.netflix ||
+            this._config.prime_video ||
+            this._config.youtube
+              ? html`
+                  <div class="row">
+                    ${this._config.netflix ?
+                      html`
+                        <ha-icon-button
+                          .action="${"netflix"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:netflix"
+                          title="Netflix"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
+                    ${this._config.prime_video ?
+                      html`
+                        <ha-icon-button
+                          .action="${"prime_video"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:amazon"
+                          title="Prime Video"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
+                    ${this._config.youtube ?
+                      html`
+                        <ha-icon-button
+                          .action="${"youtube"}"
+                          @click="${this.handleActionClick}"
+                          icon="mdi:youtube"
+                          title="Youtube"
+                        ></ha-icon-button>
+                      `
+                    : emptyButton}
                   </div>
                 `
               : ""
@@ -316,6 +372,8 @@ class TVCardServices extends LitElement {
   handleActionClick(e) {
     const custom_services = [
       "power",
+      "power_on",
+      "power_off",
       "volume_up",
       "volume_down",
       "volume_mute",
@@ -332,7 +390,10 @@ class TVCardServices extends LitElement {
       "down",
       "reverse",
       "play",
-      "forward"
+      "forward",
+      "netflix",
+      "prime_video",
+      "youtube"
     ];
 
     if (
