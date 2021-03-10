@@ -571,3 +571,54 @@ sensor:
             {% set up_seconds = as_timestamp(states('sensor.unifi_yamaha_rx_v777_receiver_uptime')) | int  %}
             {{ relative_time( now() - timedelta( seconds = up_seconds )) }}
           {% endif %}
+  - platform: template
+    sensors:
+      devicetracker_app_kevin_iphone_lastupdated:
+        friendly_name: "Kevin iPhone App Last Updated"
+        unique_id: devicetracker_app_kevin_iphone_lastupdated
+        value_template: >- 
+          {{ relative_time( now() - states.device_tracker.kevin_iphone_ha_app.last_changed ) }}
+        icon_template: mdi:alpha-k-box
+
+
+binary_sensor:
+  - platform: template
+    sensors:
+      unifi_apple_iphone_11_kev_home:
+        device_class: connectivity
+        friendly_name: "iPhone 11 Kev (Unifi) is Home"
+        unique_id: unifi_apple_iphone_11_kev_home
+        value_template: >-
+          {{ not is_state('sensor.unifi_apple_iphone_11_kev_uptime', 'unknown') or 
+          not is_state('sensor.unifi_apple_iphone_11_kev_uptime', 'unavailable') }}
+        icon_template: mdi:laptop-windows
+  - platform: template
+    sensors:
+      unifi_apple_iphone_xs_emily_home:
+        device_class: connectivity
+        friendly_name: "iPhone XS Emily (Unifi) is Home"
+        unique_id: unifi_apple_iphone_xs_emily_home
+        value_template: >-
+          {{ not is_state('sensor.unifi_apple_iphone_xs_emily_uptime', 'unknown') or 
+          not is_state('sensor.unifi_apple_iphone_xs_emily_uptime', 'unavailable') }}
+        icon_template: mdi:laptop-windows
+  - platform: template
+    sensors:
+      unifi_apple_iphone_6s_dan_home:
+        device_class: connectivity
+        friendly_name: "iPhone 6S Dan (Unifi) is Home"
+        unique_id: unifi_apple_iphone_6s_dan_home
+        value_template: >-
+          {{ not is_state('sensor.unifi_apple_iphone_6s_dan_uptime', 'unknown') or 
+          not is_state('sensor.unifi_apple_iphone_6s_dan_uptime', 'unavailable') }}
+        icon_template: mdi:laptop-windows
+  - platform: template
+    sensors:
+      unifi_apple_iphone_8_julia_home:
+        device_class: connectivity
+        friendly_name: "iPhone 8 Julia (Unifi) is Home"
+        unique_id: unifi_apple_iphone_8_julia_home
+        value_template: >-
+          {{ not is_state('sensor.unifi_apple_iphone_8_julia_uptime', 'unknown') or 
+          not is_state('sensor.unifi_apple_iphone_8_julia_uptime', 'unavailable') }}
+        icon_template: mdi:laptop-windows
