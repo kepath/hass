@@ -64,3 +64,20 @@
     entity_id: switch.on_off_plug_in_unit_3
     domain: switch
   mode: single
+- id: '1616842943101'
+  alias: Turn on Garage Light when the Garage Door is opened
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 71ee91608c77bd7b20116fd047e4db03
+    entity_id: binary_sensor.door_sensor_garage
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 7e32daef050424d3f7b1738e7398c2fa
+    entity_id: light.garage_light
+    domain: light
+    brightness_pct: 100
+  mode: single

@@ -21,7 +21,7 @@ homeassistant:
 #  auth_providers:
 #    - type: trusted_networks
 #      trusted_networks:
-#        - 192.168.1.0/24
+#        - 192.168.1.0/20
 #        - 127.0.0.1
 
 http:
@@ -80,7 +80,7 @@ wake_on_lan:
 
 device_tracker:
   - platform: luci
-    host: !secret vpn_ip
+    host: !secret vpn_rj45_ip
     username: !secret luci_user
     password: !secret luci_pass
   - platform: bluetooth_tracker
@@ -121,13 +121,13 @@ glances:
 media_player:
   - platform: androidtv
     name: NVIDIA Shield Lounge ADB
-    host: 192.168.1.64
-    adb_server_ip: 192.168.1.20
+    host: !secret nvidia_shield_lounge_rj45_ip
+    adb_server_ip: !secret ha_rj45_ip
     adb_server_port: 5037
   - platform: androidtv
     name: NVidia Shield Bed E ADB
-    host: 192.168.1.65
-    adb_server_ip: 192.168.1.20
+    host: !secret nvidia_shield_bede_rj45_ip
+    adb_server_ip: !secret ha_rj45_ip
     adb_server_port: 5037
     apps:
       #com.plexapp.mediaserver.smb: "Plex"
@@ -144,19 +144,19 @@ media_player:
     #exclude_unnamed_apps: true
   - platform: androidtv
     name: Amazon Firestick Bed A ADB
-    host: 192.168.1.73
-    adb_server_ip: 192.168.1.20
+    host: !secret amazon_fire_stick_beda_wifi_ip
+    adb_server_ip: !secret ha_rj45_ip
     adb_server_port: 5037
   - platform: androidtv
     name: Amazon Fire TV Kitchen ADB
-    host: 192.168.1.74
-    adb_server_ip: 192.168.1.20
+    host: !secret amazon_fire_tv_kitchen_rj45_ip
+    adb_server_ip: !secret ha_rj45_ip
     adb_server_port: 5037
 
   - platform: yamaha
     name: RX-V777 Reciever Yamaha Integration
     #entity_id: yamaha_rx_v777_yamaha_network_integration
-    host: 192.168.1.105
+    host: !secret yamaha_rx_v777_rj45_ip
     zone_ignore:
       - zone_2
     zone_names:

@@ -4,8 +4,8 @@ script:
     sequence:
       - service: wake_on_lan.send_magic_packet
         data:
-          mac: "40:8D:5C:73:E1:B6"
-          host: 192.168.1.23
+          mac: !secret arcade_machine_rj45_mac
+          host: !secret arcade_machine_rj45_ip
 
   arcade_win10_shutdown:
     alias: "Arcade Machine - Shutdown"
@@ -110,8 +110,8 @@ script:
     sequence:
       - service: wake_on_lan.send_magic_packet
         data:
-          mac: "FC:AA:14:88:62:97"
-          host: 192.168.1.115
+          mac: !secret dans_tower_pc_rj45_mac
+          host: !secret dans_tower_pc_rj45_ip
 
   danwin10_shutdown:
     alias: "Dans Tower PC - Shutdown"
@@ -216,8 +216,8 @@ script:
     sequence:
       - service: wake_on_lan.send_magic_packet
         data:
-          mac: "18:1D:EA:B3:1F:5F"
-          host: 192.168.1.128
+          mac: !secret dans_dell_g5_laptop_wifi_mac
+          host:  !secret dans_dell_g5_laptop_wifi_ip
 
   dang5gaminglapt_shutdown:
     alias: "Dans G5 Gaming Laptop - Shutdown"
@@ -331,15 +331,15 @@ switch:
   - platform: wake_on_lan
     mac: C8:2A:14:4D:6F:30
     name: iMac Wake-on-LAN
-    host: 192.168.1.117
+    host: !secret apple_imac_study_rj45_ip
     #unit_of_measurement: 'on/off'
   - platform: wake_on_lan
     mac: 24:4B:03:A8:B9:B9
     name: Samsung TV Lounge Wake-on-LAN
-    host: 192.168.1.78
+    host: !secret samsung_tv_lounge_rj45_ip
     #unit_of_measurement: 'on/off'
   - platform: wake_on_lan
     mac: 50:85:69:67:D3:02
     name: Samsung TV Bed A Wake-on-LAN
-    host: 192.168.1.77
+    host: !secret samsung_tv_beda_rj45_ip
     #unit_of_measurement: 'on/off'

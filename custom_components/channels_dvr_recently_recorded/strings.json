@@ -1,0 +1,33 @@
+{
+  "title": "Channels DVR Recordings",
+  "config": {
+    "flow_title": "Channels DVR {host}",
+    "step": {
+      "user": {
+        "data": {
+          "host": "[%key:common::config_flow::data::host%]",
+          "port": "[%key:common::config_flow::data::port%]",
+          "name": "[%key:common::config_flow::data::name%]",
+          "max": "[%key:common::config_flow::data::max%]",
+          "dl_images": "[%key:common::config_flow::data::dl_images%]",
+          "img_dir": "[%key:common::config_flow::data::img_cache%]"
+        }
+      },
+      "confirm": {
+        "data": {
+          "name": "[%key:common::config_flow::data::name%]",
+          "max": "[%key:common::config_flow::data::max%]",
+          "dl_images": "[%key:common::config_flow::data::dl_images%]",
+          "img_dir": "[%key:common::config_flow::data::img_cache%]"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
+    },
+    "abort": {
+      "single_instance_allowed": "[%key:common::config_flow::abort::single_instance_allowed%]"
+    }
+  }
+}
