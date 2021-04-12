@@ -81,3 +81,36 @@
     domain: light
     brightness_pct: 100
   mode: single
+- id: '1617175491057'
+  alias: Turn off garage light 10 mins after garage door shut
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 71ee91608c77bd7b20116fd047e4db03
+    entity_id: binary_sensor.door_sensor_garage
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 7e32daef050424d3f7b1738e7398c2fa
+    entity_id: light.garage_light
+    domain: light
+  mode: single
+- id: '1618218635277'
+  alias: Doorbell - Notify Alexa and or Google and send camera snapshot to app
+  description: ''
+  use_blueprint:
+    path: seamus65/doorbell-notify-alexa-and-or-google-and-send-camera-snapshot-to-app.yaml
+    input:
+      notification_message: There is Somebody at the Door!
+      doorbell: binary_sensor.doorbell_uvc_g4_doorbell
+      echo_device: media_player.everywhere
+      camera: camera.uvc_g4_doorbell
+      notify_device: 7efaa4e5200ba2b72ab1fa14f7be8a66
+      is_ios: true

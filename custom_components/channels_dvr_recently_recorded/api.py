@@ -35,59 +35,10 @@ class ChannelsDVR:
         """Return the version number of the server software."""
         return self._version
 
-    async def init_data(self):
-        """Get the version number of the server"""
-        status_uri = f"http://{self.host}:{self.port}{STATUS_ENDPOINT}"
+    async def request_data(self, uri):
+        """Request data from an endpoint."""
         try:
-            resp = await self.request(status_uri)
-            json_string = resp.decode("utf-8")
-            status = json.loads(json_string)
-        except OSError:
-            msg = "Host %s is not available" % self.host
-            _LOGGER.warning(msg)
-            raise ConnectionFail(msg)
-
-        self._version = {VERSION: status[VERSION]}
-
-    async def get_files(self):
-        """Get the list of files from the server."""
-        files_uri = f"http://{self.host}:{self.port}{FILES_ENDPOINT}"
-        _LOGGER.debug(f"Updating")
-
-        """Retrieve recorded show info and server version"""
-        try:
-            resp = await self.request(files_uri)
-            json_string = resp.decode("utf-8")
-            files = json.loads(json_string)
-            if not files:
-                msg = "%s cannot be reached" % self.host
-                _LOGGER.warning(msg)
-                raise ConnectionFail(msg)
-
-        except OSError:
-            msg = "%s cannot be reached" % self.host
-            _LOGGER.warning(msg)
-            raise ConnectionFail(msg)
-
-        except JSONDecodeError:
-            msg = "Couldn't decode data returned from %s" % self.host
-            _LOGGER.warning(msg)
-            raise ConnectionFail(msg)
-
-        return files
-
-    async def get_poster(self, image_uri):
-        """Get the poster for a show from the server."""
-        return await self.request(image_uri)
-
-    async def get_auth(self):
-        """Make sure we can reach the server and get the unique ID (verification)"""
-        try:
-            auth_uri = f"http://{self.host}:{self.port}{AUTH_ENDPOINT}"
-
-            resp = await self.request(auth_uri)
-            json_string = resp.decode("utf-8")
-            auth = json.loads(json_string)
+            resp = await self.request(uri)
         except (OSError, AttributeError):
             msg = "Host %s is not available" % self.host
             _LOGGER.error(msg)
@@ -98,7 +49,41 @@ class ChannelsDVR:
             _LOGGER.exception(msg)
             raise ConnectionFail(msg)
 
-        return auth
+        if resp is not None:
+            json_string = resp.decode("utf-8")
+            data = json.loads(json_string)
+            if not data:
+                msg = "Response cannot be decoded"
+                _LOGGER.warning(msg)
+                raise ConnectionFail(msg)
+        else:
+            msg = "%s cannot be reached" % self.host
+            _LOGGER.warning(msg)
+            raise ConnectionFail(msg)
+
+        return data
+
+    async def init_data(self):
+        """Get the version number of the server"""
+        status_uri = f"http://{self.host}:{self.port}{STATUS_ENDPOINT}"
+        status = await self.request_data(status_uri)
+
+        self._version = {VERSION: status[VERSION]}
+
+    async def get_files(self):
+        """Get the list of files from the server."""
+        files_uri = f"http://{self.host}:{self.port}{FILES_ENDPOINT}"
+        _LOGGER.debug(f"Updating")
+        return await self.request_data(files_uri)
+
+    async def get_poster(self, image_uri):
+        """Get the poster for a show from the server."""
+        return await self.request(image_uri)
+
+    async def get_auth(self):
+        """Make sure we can reach the server and get the unique ID (verification)"""
+        auth_uri = f"http://{self.host}:{self.port}{AUTH_ENDPOINT}"
+        return await self.request_data(auth_uri)
 
 
 class ConnectionFail(Exception):
