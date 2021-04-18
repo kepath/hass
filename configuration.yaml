@@ -31,6 +31,9 @@ http:
 logger:
   default: info
 #  logs:
+#    homeassistant.components.camera: debug
+#    homeassistant.components.media_player: debug
+#    homeassistant.components.stream: debug
 #    homeassistant.components.mqtt: debug
 #    aiounifi: debug
 #    homeassistant.components.unifi: debug
@@ -62,18 +65,18 @@ homekit:
     - sensor.adguard*
     - sensor.diskstation_volume*
     - sensor.diskstation_drive_*_status
-    - binary_sensor.*iphone
-    - binary_sensor.iphone*
+#    - binary_sensor.*iphone
+#    - binary_sensor.iphone*
     - binary_sensor.diskstation*
     - binary_sensor.door*
     - binary_sensor.vibration*
     - binary_sensor.motion*
     include_entities:
     - binary_sensor.remote_ui
-    - binary_sensor.dru10002268
-    - device_tracker.26_00_dd_10_bc_a2
-    - device_tracker.40_9c_28_76_db_42
-    - device_tracker.6c_72_e7_de_5a_85
+#    - binary_sensor.dru10002268
+#    - device_tracker.26_00_dd_10_bc_a2
+#    - device_tracker.40_9c_28_76_db_42
+#    - device_tracker.6c_72_e7_de_5a_85
 
 nest:
   client_id: !secret google_oauth_client_id
@@ -194,7 +197,7 @@ media_player:
 
 binary_sensor:
   - platform: tod
-    name: Night Time
+    name: nighttime
     after: sunset
     before: sunrise
     #unit_of_measurement: 'boolean'
@@ -207,3 +210,14 @@ octopusagile:
   startdate: "2020-05-08"
 sensor:
 - platform: "octopusagile"
+
+lovelace:
+  mode: storage
+  # Add yaml dashboards
+  dashboards:
+    network-information:
+      mode: yaml
+      title: Network Information
+      icon: mdi:lan
+      show_in_sidebar: true
+      filename: lovelace/network/network_information.yaml

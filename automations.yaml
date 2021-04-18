@@ -102,7 +102,7 @@
     entity_id: light.garage_light
     domain: light
   mode: single
-- id: '1618218635277'
+- id: '1618338665195'
   alias: Doorbell - Notify Alexa and or Google and send camera snapshot to app
   description: ''
   use_blueprint:
@@ -110,7 +110,12 @@
     input:
       notification_message: There is Somebody at the Door!
       doorbell: binary_sensor.doorbell_uvc_g4_doorbell
-      echo_device: media_player.everywhere
       camera: camera.uvc_g4_doorbell
       notify_device: 7efaa4e5200ba2b72ab1fa14f7be8a66
-      is_ios: true
+      delay: 2
+      notification_title: There is Somebody at the Door!
+      message: There is Somebody at the Door
+      echo_device: media_player.amazon_echo_dot_bed_c_alexa_integration, media_player.amazon_echo_dot_lounge_alexa_integration,
+        media_player.amazon_echo_kitchen_alexa_integration, media_player.amazon_echo_spot_bed_a_alexa_integration,
+        media_player.amazon_fire_tv_kitchen_alexa_integration, media_player.kevin_s_echo_show,
+        media_player.kevin_s_firetvstick

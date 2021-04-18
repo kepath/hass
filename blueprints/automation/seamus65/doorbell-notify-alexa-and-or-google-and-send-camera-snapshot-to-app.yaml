@@ -18,14 +18,6 @@ blueprint:
         entity:
           domain: media_player
       default: ''
-    google_device:
-      name: Google
-      description: The Google device to make the announcement on. Make a comma seperated
-        list to announce on multiple devices.
-      selector:
-        entity:
-          domain: media_player
-      default: ''
     message:
       name: Message (Optional)
       description: 'Default: "There is Somebody at the Door!"'
@@ -47,8 +39,8 @@ blueprint:
       name: Is it an iOS device?
       description: Toggle if your selected device runs iOS, default is Android
       selector:
-        boolean: {}
-      default: false
+        boolean:
+      default: true
     notification_title:
       name: Notification title (Optional)
       description: 'Default: "There is Somebody at the Door!"'
@@ -94,11 +86,6 @@ action:
     message: !input 'message'
     data:
       type: tts
-- service: tts.google_translate_say
-  data:
-    entity_id:
-    - !input 'google_device'
-    message: !input 'message'
 - delay: '{{ delay }}'
 - service: camera.snapshot
   entity_id: !input 'camera'
