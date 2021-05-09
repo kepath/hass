@@ -26,7 +26,11 @@ class ChannelsDVR:
             try:
                 with async_timeout.timeout(8):
                     async with session.get(uri) as response:
-                        return await response.content.read()
+                        return (
+                            await response.content.read()
+                            if response.status == 200
+                            else None
+                        )
             except:
                 return None
 

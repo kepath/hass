@@ -27,6 +27,10 @@ homeassistant:
 http:
   ip_ban_enabled: true
   login_attempts_threshold: 20
+#  use_x_forwarded_for: true
+#  trusted_proxies:
+#  - 127.0.0.1
+
 
 logger:
   default: info
@@ -204,9 +208,9 @@ binary_sensor:
 
 octopusagile:
   region_code: "E"
-  mpan: 1460000856420
-  serial: 17P0704368
-  auth: sk_live_yr4mH3kPyAUfG2Qx252Pk0jK
+  mpan: !secret octopusagile_mpan
+  serial: !secret octopusagile_serial
+  auth: !secret octopusagile_auth
   startdate: "2020-05-08"
 sensor:
 - platform: "octopusagile"

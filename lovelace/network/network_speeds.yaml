@@ -1,368 +1,490 @@
----
 ###################################################################################################
 ##  Lovelace View - netword speed monitoring
 
 ###################################################################################################
-title: Network Speeds
-icon: mdi:remote
-cards:
-#  - type: custom:masonry-layout
-#    layout: vertical
-#    min_columns: 1
-#    max_columns: 1
-#    max_width: 99%
-#    cards:
-
-###################################################################################################
-## Navigation Buttons (Shown on top of all remotes)
-###################################################################################################
-#      - type: horizontal-stack
-#        cards:
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_echo_dot_bed_c_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_echo_dot_bed_c_unifi_rx_derivative
-              - unifi_entity_icon: mdi:speaker
-              - unifi_entity_name: "AMAZON ECHO DOT: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_echo_dot_lounge_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_echo_dot_lounge_unifi_rx_derivative
-              - unifi_entity_icon: mdi:speaker
-              - unifi_entity_name: "AMAZON ECHO DOT: Lounge"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_echo_kitchen_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_echo_kitchen_unifi_rx_derivative
-              - unifi_entity_icon: mdi:speaker
-              - unifi_entity_name: "AMAZON ECHO: Kitchen"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_echo_plus_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_echo_plus_unifi_rx_derivative
-              - unifi_entity_icon: mdi:speaker
-              - unifi_entity_name: "AMAZON ECHO PLUS: Bed B"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_echo_show_8_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_echo_show_8_unifi_rx_derivative
-              - unifi_entity_icon: mdi:play-network
-              - unifi_entity_name: "AMAZON ECHO SHOW: Bed E"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_echo_spot_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_echo_spot_unifi_rx_derivative
-              - unifi_entity_icon: mdi:timeline-clock
-              - unifi_entity_name: "AMAZON ECHO SPOT: Bed A"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_fire_stick_4k_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_fire_stick_4k_unifi_rx_derivative
-              - unifi_entity_icon: mdi:play-network
-              - unifi_entity_name: "AMAZON FIRE STICK: Bed A"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_fire_tv_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_fire_tv_unifi_tx_derivative
-              - unifi_entity_icon: mdi:play-network
-              - unifi_entity_name: "AMAZON FIRE TV: Kitchen"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.apple_imac_2011_unifi_tx_derivative
-              - rx_sensor: sensor.apple_imac_2011_unifi_tx_derivative
-              - unifi_entity_icon: mdi:desktop-mac
-              - unifi_entity_name: "APPLE iMAC 2011: Study"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.apple_iphone_11_kev_unifi_tx_derivative
-              - rx_sensor: sensor.apple_iphone_11_kev_unifi_rx_derivative
-              - unifi_entity_icon: mdi:cellphone-iphone
-              - unifi_entity_name: "APPLE iPHONE 11: Mobile"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.apple_iphone_6s_dan_unifi_tx_derivative
-              - rx_sensor: sensor.apple_iphone_6s_dan_unifi_rx_derivative
-              - unifi_entity_icon: mdi:cellphone-iphone
-              - unifi_entity_name: "APPLE iPHONE 6S: Mobile"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.apple_iphone_8_ju_unifi_tx_derivative
-              - rx_sensor: sensor.apple_iphone_8_ju_unifi_rx_derivative
-              - unifi_entity_icon: mdi:cellphone-iphone
-              - unifi_entity_name: "APPLE iPHONE 8: Mobile"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.apple_iphone_xs_emily_unifi_tx_derivative
-              - rx_sensor: sensor.apple_iphone_xs_emily_unifi_rx_derivative
-              - unifi_entity_icon: mdi:cellphone-iphone
-              - unifi_entity_name: "APPLE iPHONE XS: Mobile"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.apple_macbook_pro_2018_kev_unifi_tx_derivative
-              - rx_sensor: sensor.apple_macbook_pro_2018_kev_unifi_rx_derivative
-              - unifi_entity_icon: mdi:laptop-mac
-              - unifi_entity_name: "APPLE MACBOOK PRO 2018: Bed E"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.apple_tv_4k_unifi_tx_derivative
-              - rx_sensor: sensor.apple_tv_4k_unifi_rx_derivative
-              - unifi_entity_icon: mdi:play-network
-              - unifi_entity_name: "APPLE TV 4k: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.arcade_machine_unifi_tx_derivative
-              - rx_sensor: sensor.arcade_machine_unifi_rx_derivative
-              - unifi_entity_icon: mdi:gamepad-variant
-              - unifi_entity_name: "ARCADE MACHINE: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.brother_mfc_j870dw_printer_unifi_tx_derivative
-              - rx_sensor: sensor.brother_mfc_j870dw_printer_unifi_rx_derivative
-              - unifi_entity_icon: mdi:printer
-              - unifi_entity_name: "BROTHER PRINTER: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.calex_ip_camera_unifi_tx_derivative
-              - rx_sensor: sensor.calex_ip_camera_unifi_rx_derivative
-              - unifi_entity_icon: mdi:camera
-              - unifi_entity_name: "CALEX CAMERA: Bed E"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.calex_smart_siren_unifi_tx_derivative
-              - rx_sensor: sensor.calex_smart_siren_unifi_rx_derivative
-              - unifi_entity_icon: mdi:speaker
-              - unifi_entity_name: "CALEX SMART SIREN: Top Hallway"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.dell_g5_gaming_laptop_dan_unifi_tx_derivative
-              - rx_sensor: sensor.dell_g5_gaming_laptop_dan_unifi_rx_derivative
-              - unifi_entity_icon: mdi:alarm-bell
-              - unifi_entity_name: "DELL G5 LAPTOP: Bed D"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.google_nest_thermostat_bottom_hallway_unifi_tx_derivative
-              - rx_sensor: sensor.google_nest_thermostat_bottom_hallway_unifi_rx_derivative
-              - unifi_entity_icon: mdi:thermostat
-              - unifi_entity_name: "NEST THERMOSTAT: Bottom Hallway"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.google_nest_thermostat_middle_hallway_unifi_tx_derivative
-              - rx_sensor: sensor.google_nest_thermostat_middle_hallway_unifi_rx_derivative
-              - unifi_entity_icon: mdi:thermostat
-              - unifi_entity_name: "NEST THERMOSTAT: Middle Hallway"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.home_assistant_unifi_tx_derivative
-              - rx_sensor: sensor.home_assistant_unifi_rx_derivative
-              - unifi_entity_icon: mdi:home-assistant
-              - unifi_entity_name: "HOME ASSISTANT: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.humax_dtr_t2000_stb_unifi_tx_derivative
-              - rx_sensor: sensor.humax_dtr_t2000_stb_unifi_rx_derivative
-              - unifi_entity_icon: mdi:set-top-box
-              - unifi_entity_name: "HUMAX STB: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.logitech_harmony_hub_unifi_tx_derivative
-              - rx_sensor: sensor.logitech_harmony_hub_unifi_rx_derivative
-              - unifi_entity_icon: mdi:remote
-              - unifi_entity_name: "HARMONY HUB: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.microsoft_xbox_one_unifi_tx_derivative
-              - rx_sensor: sensor.microsoft_xbox_one_unifi_rx_derivative
-              - unifi_entity_icon: mdi:microsoft-xbox
-              - unifi_entity_name: "XBOX ONE: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.nvidia_shield_bed_e_unifi_tx_derivative
-              - rx_sensor: sensor.nvidia_shield_bed_e_unifi_rx_derivative
-              - unifi_entity_icon: mdi:google-play
-              - unifi_entity_name: "NVIDIA SHIELD: Bed E"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.nvidia_shield_lounge_unifi_tx_derivative
-              - rx_sensor: sensor.nvidia_shield_lounge_unifi_rx_derivative
-              - unifi_entity_icon: mdi:google-play
-              - unifi_entity_name: "NVIDIA SHIELD: Lounge"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.samsung_ue32f4500_tv_unifi_tx_derivative
-              - rx_sensor: sensor.samsung_ue32f4500_tv_unifi_rx_derivative
-              - unifi_entity_icon: mdi:television
-              - unifi_entity_name: "SAMSUNG TV: Bed A"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.samsung_ue48hu7500t_tv_unifi_tx_derivative
-              - rx_sensor: sensor.samsung_ue48hu7500t_tv_unifi_rx_derivative
-              - unifi_entity_icon: mdi:television
-              - unifi_entity_name: "SAMSUNG TV: Lounge"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.solar_battery_1_unifi_tx_derivative
-              - rx_sensor: sensor.solar_battery_1_unifi_rx_derivative
-              - unifi_entity_icon: mdi:solar-power
-              - unifi_entity_name: "SOLAR BATTERY: Garage"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.solar_battery_2_unifi_tx_derivative
-              - rx_sensor: sensor.solar_battery_2_unifi_rx_derivative
-              - unifi_entity_icon: mdi:solar-power
-              - unifi_entity_name: "SOLAR BATTERY: Garage"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.sony_bravia_kdl_32ex403_tv_unifi_tx_derivative
-              - rx_sensor: sensor.sony_bravia_kdl_32ex403_tv_unifi_rx_derivative
-              - unifi_entity_icon: mdi:television
-              - unifi_entity_name: "SONY BRAVIA TV: Bed E"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.synology_diskstation_ds412_unifi_tx_derivative
-              - rx_sensor: sensor.synology_diskstation_ds412_unifi_rx_derivative
-              - unifi_entity_icon: mdi:nas
-              - unifi_entity_name: "SYNOLOGY NAS: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.unifi_g4_doorbell_unifi_tx_derivative
-              - rx_sensor: sensor.unifi_g4_doorbell_unifi_rx_derivative
-              - unifi_entity_icon: mdi:doorbell-video
-              - unifi_entity_name: "G4 DOORBELL: BottomHallway"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.vpn_router_unifi_tx_derivative
-              - rx_sensor: sensor.vpn_router_unifi_rx_derivative
-              - unifi_entity_icon: mdi:security-network
-              - unifi_entity_name: "VPN: Bed B"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.work_laptop_kev_unifi_tx_derivative
-              - rx_sensor: sensor.work_laptop_kev_unifi_rx_derivative
-              - unifi_entity_icon: mdi:laptop-windows
-              - unifi_entity_name: "WORK LAPTOP: Bed E"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.amazon_kindle_voyage_kev_unifi_tx_derivative
-              - rx_sensor: sensor.amazon_kindle_voyage_kev_unifi_rx_derivative
-              - unifi_entity_icon: mdi:book-open-variant
-              - unifi_entity_name: "AMAZON KINDLE VOYAGE: Mobile"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.sony_playstation_3_unifi_tx_derivative
-              - rx_sensor: sensor.sony_playstation_3_unifi_rx_derivative
-              - unifi_entity_icon: mdi:sony-playstation
-              - unifi_entity_name: "PLAYSTATION 3: Bed C"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.bloxham_school_laptop_emily_unifi_tx_derivative
-              - rx_sensor: sensor.bloxham_school_laptop_emily_unifi_rx_derivative
-              - unifi_entity_icon: mdi:laptop-windows
-              - unifi_entity_name: "SCHOOL LAPTOP: Bed B"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.caldigit_macbook_dock_unifi_tx_derivative
-              - rx_sensor: sensor.caldigit_macbook_dock_unifi_rx_derivative
-              - unifi_entity_icon: mdi:connection
-              - unifi_entity_name: "CALDIGIT MACBOOK DOCK: Bed E"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.big_pc_unifi_tx_derivative
-              - rx_sensor: sensor.big_pc_unifi_rx_derivative
-              - unifi_entity_icon: mdi:virtual-reality
-              - unifi_entity_name: "BIG PC: Bed E"
-          - type: custom:decluttering-card
-            template: mbps_template
-            variables:
-              - tx_sensor: sensor.yamaha_rx_v777_receiver_unifi_tx_derivative
-              - rx_sensor: sensor.yamaha_rx_v777_receiver_unifi_rx_derivative
-              - unifi_entity_icon: mdi:audio-video
-              - unifi_entity_name: "YAMAHA RECIEVER: Bed C"
-          - type: entities
-            entities:
-            - entity: device_tracker.amazon_echo_dot_bed_c_unifi
-            - entity: device_tracker.amazon_echo_dot_lounge_unifi
-            - entity: device_tracker.amazon_echo_kitchen_unifi
-            - entity: device_tracker.amazon_echo_plus_unifi
-            - entity: device_tracker.amazon_echo_show_8_unifi
-            - entity: device_tracker.amazon_echo_spot_unifi
-            - entity: device_tracker.amazon_fire_stick_4k_unifi
-            - entity: device_tracker.amazon_fire_tv_unifi
-            - entity: device_tracker.amazon_kindle_voyage_kev_unifi
-            - entity: device_tracker.apple_imac_2011_unifi
-            - entity: device_tracker.apple_iphone_11_kev_unifi
-            - entity: device_tracker.apple_iphone_6s_dan_unifi
-            - entity: device_tracker.apple_iphone_8_ju_unifi
-            - entity: device_tracker.apple_iphone_xs_emily_unifi
-            - entity: device_tracker.apple_macbook_pro_2018_kev_unifi
-            - entity: device_tracker.apple_tv_4k_unifi
-            - entity: device_tracker.arcade_machine_unifi
-            - entity: device_tracker.big_pc_unifi
-            - entity: device_tracker.bloxham_school_laptop_emily_unifi
-            - entity: device_tracker.brother_mfc_j870dw_printer_unifi
-            - entity: device_tracker.caldigit_macbook_dock_unifi
-            - entity: device_tracker.calex_ip_camera_unifi
-            - entity: device_tracker.calex_smart_siren_unifi
-            - entity: device_tracker.dell_g5_gaming_laptop_dan_unifi
-            - entity: device_tracker.google_nest_thermostat_bottom_hallway_unifi
-            - entity: device_tracker.google_nest_thermostat_middle_hallway_unifi
-            - entity: device_tracker.home_assistant_unifi
-            - entity: device_tracker.humax_dtr_t2000_stb_unifi
-            - entity: device_tracker.logitech_harmony_hub_unifi
-            - entity: device_tracker.microsoft_xbox_one_unifi
-            - entity: device_tracker.nvidia_shield_bed_e_unifi
-            - entity: device_tracker.nvidia_shield_lounge_unifi
-            - entity: device_tracker.samsung_ue32f4500_tv_unifi
-            - entity: device_tracker.samsung_ue48hu7500t_tv_unifi
-            - entity: device_tracker.solar_battery_1_unifi
-            - entity: device_tracker.solar_battery_2_unifi
-            - entity: device_tracker.sony_bravia_kdl_32ex403_tv_unifi
-            - entity: device_tracker.sony_playstation_3_unifi
-            - entity: device_tracker.synology_diskstation_ds412_unifi
-            - entity: device_tracker.u6_lr
-            - entity: device_tracker.udmpro
-            - entity: device_tracker.unifi_g4_doorbell_unifi
-            - entity: device_tracker.vpn_router_unifi
-            - entity: device_tracker.work_laptop_kev_unifi
-            - entity: device_tracker.yamaha_rx_v777_receiver_unifi
+# views:
+  title: Network Speeds
+  icon: mdi:remote
+  badges:
+  - type: entity-filter
+    # title: Turned Off/Not Connected
+    entities:
+    - sensor.amazon_echo_dot_bed_c_unifi_tx_statistics
+    - sensor.amazon_echo_dot_lounge_unifi_tx_statistics
+    - sensor.amazon_echo_kitchen_unifi_tx_statistics
+    - sensor.amazon_echo_plus_unifi_tx_statistics
+    - sensor.amazon_echo_show_8_unifi_tx_statistics
+    - sensor.amazon_echo_spot_unifi_tx_statistics
+    - sensor.amazon_fire_stick_4k_unifi_tx_statistics
+    - sensor.amazon_fire_tv_unifi_tx_statistics
+    - sensor.apple_imac_2011_unifi_tx_statistics
+    - sensor.apple_tv_4k_unifi_tx_statistics
+    - sensor.arcade_machine_unifi_tx_statistics
+    - sensor.big_pc_unifi_tx_statistics
+    - sensor.brother_mfc_j870dw_printer_unifi_tx_statistics
+    - sensor.caldigit_macbook_dock_unifi_tx_statistics
+    - sensor.calex_ip_camera_unifi_tx_statistics
+    - sensor.calex_smart_siren_unifi_tx_statistics
+    - sensor.google_nest_thermostat_bottom_hallway_unifi_tx_statistics
+    - sensor.google_nest_thermostat_middle_hallway_unifi_tx_statistics
+    - sensor.home_assistant_unifi_tx_statistics
+    - sensor.humax_dtr_t2000_stb_unifi_tx_statistics
+    - sensor.logitech_harmony_hub_unifi_tx_statistics
+    - sensor.microsoft_xbox_one_unifi_tx_statistics
+    - sensor.nvidia_shield_bed_e_unifi_tx_statistics
+    - sensor.nvidia_shield_lounge_unifi_tx_statistics
+    - sensor.samsung_ue32f4500_tv_unifi_tx_statistics
+    - sensor.samsung_ue48hu7500t_tv_unifi_tx_statistics
+    - sensor.solar_battery_1_unifi_tx_statistics
+    - sensor.solar_battery_2_unifi_tx_statistics
+    - sensor.sony_bravia_kdl_32ex403_tv_unifi_tx_statistics
+    - sensor.sony_playstation_3_unifi_tx_statistics
+    - sensor.synology_diskstation_ds412_unifi_tx_statistics
+    - sensor.unifi_g4_doorbell_unifi_tx_statistics
+    - sensor.vpn_router_unifi_tx_statistics
+    - sensor.yamaha_rx_v777_receiver_unifi_tx_statistics
+    state_filter:
+      - operator: "=="
+        value: 0
+        attribute: count
+  - type: entity-filter
+    # title: Turned Off/Not Connected
+    entities:
+    - sensor.amazon_kindle_voyage_kev_unifi_tx_statistics
+    - sensor.apple_iphone_11_kev_unifi_tx_statistics
+    - sensor.apple_iphone_6s_dan_unifi_tx_statistics
+    - sensor.apple_iphone_8_ju_unifi_tx_statistics
+    - sensor.apple_iphone_xs_emily_unifi_tx_statistics
+    - sensor.apple_macbook_pro_2018_kev_unifi_tx_statistics
+    - sensor.bloxham_school_laptop_emily_unifi_tx_statistics
+    - sensor.dell_g5_gaming_laptop_dan_unifi_tx_statistics
+    - sensor.work_laptop_kev_unifi_tx_statistics
+    state_filter:
+      - operator: "=="
+        value: 0
+        attribute: count
+  # card:
+  entities:
+  - type: section
+    name: Wired
+    cards:
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.arcade_machine_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.arcade_machine_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.arcade_machine_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.arcade_machine_unifi_rx_derivative
+        - unifi_entity_icon: mdi:gamepad-variant
+        - unifi_entity_name: "ARCADE MACHINE: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.yamaha_rx_v777_receiver_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.yamaha_rx_v777_receiver_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.yamaha_rx_v777_receiver_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.yamaha_rx_v777_receiver_unifi_rx_derivative
+        - unifi_entity_icon: mdi:audio-video
+        - unifi_entity_name: "YAMAHA RECIEVER: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_fire_tv_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_fire_tv_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_fire_tv_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_fire_tv_unifi_rx_derivative
+        - unifi_entity_icon: mdi:play-network
+        - unifi_entity_name: "AMAZON FIRE TV: Kitchen"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.apple_imac_2011_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.apple_imac_2011_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.apple_imac_2011_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.apple_imac_2011_unifi_rx_derivative
+        - unifi_entity_icon: mdi:desktop-mac
+        - unifi_entity_name: "APPLE iMAC 2011: Study"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.caldigit_macbook_dock_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.caldigit_macbook_dock_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.caldigit_macbook_dock_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.caldigit_macbook_dock_unifi_rx_derivative
+        - unifi_entity_icon: mdi:connection
+        - unifi_entity_name: "CALDIGIT MACBOOK DOCK: Bed E"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.big_pc_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.big_pc_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.big_pc_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.big_pc_unifi_rx_derivative
+        - unifi_entity_icon: mdi:virtual-reality
+        - unifi_entity_name: "BIG PC: Bed E"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.sony_playstation_3_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.sony_playstation_3_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.sony_playstation_3_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.sony_playstation_3_unifi_rx_derivative
+        - unifi_entity_icon: mdi:sony-playstation
+        - unifi_entity_name: "PLAYSTATION 3: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.vpn_router_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.vpn_router_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.vpn_router_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.vpn_router_unifi_rx_derivative
+        - unifi_entity_icon: mdi:security-network
+        - unifi_entity_name: "VPN: Bed B"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.microsoft_xbox_one_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.microsoft_xbox_one_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.microsoft_xbox_one_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.microsoft_xbox_one_unifi_rx_derivative
+        - unifi_entity_icon: mdi:microsoft-xbox
+        - unifi_entity_name: "XBOX ONE: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.nvidia_shield_bed_e_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.nvidia_shield_bed_e_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.nvidia_shield_bed_e_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.nvidia_shield_bed_e_unifi_rx_derivative
+        - unifi_entity_icon: mdi:google-play
+        - unifi_entity_name: "NVIDIA SHIELD: Bed E"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.nvidia_shield_lounge_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.nvidia_shield_lounge_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.nvidia_shield_lounge_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.nvidia_shield_lounge_unifi_rx_derivative
+        - unifi_entity_icon: mdi:google-play
+        - unifi_entity_name: "NVIDIA SHIELD: Lounge"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.samsung_ue32f4500_tv_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.samsung_ue32f4500_tv_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.samsung_ue32f4500_tv_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.samsung_ue32f4500_tv_unifi_rx_derivative
+        - unifi_entity_icon: mdi:television
+        - unifi_entity_name: "SAMSUNG TV: Bed A"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.samsung_ue48hu7500t_tv_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.samsung_ue48hu7500t_tv_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.samsung_ue48hu7500t_tv_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.samsung_ue48hu7500t_tv_unifi_rx_derivative
+        - unifi_entity_icon: mdi:television
+        - unifi_entity_name: "SAMSUNG TV: Lounge"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.solar_battery_1_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.solar_battery_1_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.solar_battery_1_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.solar_battery_1_unifi_rx_derivative
+        - unifi_entity_icon: mdi:solar-power
+        - unifi_entity_name: "SOLAR BATTERY: Garage"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.solar_battery_2_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.solar_battery_2_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.solar_battery_2_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.solar_battery_2_unifi_rx_derivative
+        - unifi_entity_icon: mdi:solar-power
+        - unifi_entity_name: "SOLAR BATTERY: Garage"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.sony_bravia_kdl_32ex403_tv_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.sony_bravia_kdl_32ex403_tv_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.sony_bravia_kdl_32ex403_tv_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.sony_bravia_kdl_32ex403_tv_unifi_rx_derivative
+        - unifi_entity_icon: mdi:television
+        - unifi_entity_name: "SONY BRAVIA TV: Bed E"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.synology_diskstation_ds412_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.synology_diskstation_ds412_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.synology_diskstation_ds412_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.synology_diskstation_ds412_unifi_rx_derivative
+        - unifi_entity_icon: mdi:nas
+        - unifi_entity_name: "SYNOLOGY NAS: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.home_assistant_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.home_assistant_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.home_assistant_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.home_assistant_unifi_rx_derivative
+        - unifi_entity_icon: mdi:home-assistant
+        - unifi_entity_name: "HOME ASSISTANT: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.humax_dtr_t2000_stb_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.humax_dtr_t2000_stb_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.humax_dtr_t2000_stb_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.humax_dtr_t2000_stb_unifi_rx_derivative
+        - unifi_entity_icon: mdi:set-top-box
+        - unifi_entity_name: "HUMAX STB: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.apple_tv_4k_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.apple_tv_4k_unifi_rx_statistics
+        - rx_sensor_derivative: sensor.apple_tv_4k_unifi_rx_derivative
+        - rx_sensor_derivative: sensor.apple_tv_4k_unifi_rx_derivative
+        - unifi_entity_icon: mdi:play-network
+        - unifi_entity_name: "APPLE TV 4k: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.brother_mfc_j870dw_printer_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.brother_mfc_j870dw_printer_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.brother_mfc_j870dw_printer_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.brother_mfc_j870dw_printer_unifi_rx_derivative
+        - unifi_entity_icon: mdi:printer
+        - unifi_entity_name: "BROTHER PRINTER: Bed C"
+  - type: section
+    name: Wi-Fi
+    cards:
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_echo_dot_bed_c_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_echo_dot_bed_c_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_echo_dot_bed_c_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_echo_dot_bed_c_unifi_rx_derivative
+        - unifi_entity_icon: mdi:speaker
+        - unifi_entity_name: "AMAZON ECHO DOT: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_echo_dot_lounge_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_echo_dot_lounge_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_echo_dot_lounge_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_echo_dot_lounge_unifi_rx_derivative
+        - unifi_entity_icon: mdi:speaker
+        - unifi_entity_name: "AMAZON ECHO DOT: Lounge"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_echo_kitchen_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_echo_kitchen_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_echo_kitchen_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_echo_kitchen_unifi_rx_derivative
+        - unifi_entity_icon: mdi:speaker
+        - unifi_entity_name: "AMAZON ECHO: Kitchen"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_echo_plus_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_echo_plus_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_echo_plus_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_echo_plus_unifi_rx_derivative
+        - unifi_entity_icon: mdi:speaker
+        - unifi_entity_name: "AMAZON ECHO PLUS: Bed B"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_echo_show_8_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_echo_show_8_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_echo_show_8_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_echo_show_8_unifi_rx_derivative
+        - unifi_entity_icon: mdi:play-network
+        - unifi_entity_name: "AMAZON ECHO SHOW: Bed E"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_echo_spot_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_echo_spot_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_echo_spot_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_echo_spot_unifi_rx_derivative
+        - unifi_entity_icon: mdi:timeline-clock
+        - unifi_entity_name: "AMAZON ECHO SPOT: Bed A"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_fire_stick_4k_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_fire_stick_4k_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_fire_stick_4k_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_fire_stick_4k_unifi_rx_derivative
+        - unifi_entity_icon: mdi:play-network
+        - unifi_entity_name: "AMAZON FIRE STICK: Bed A"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.calex_ip_camera_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.calex_ip_camera_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.calex_ip_camera_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.calex_ip_camera_unifi_rx_derivative
+        - unifi_entity_icon: mdi:camera
+        - unifi_entity_name: "CALEX CAMERA: Bed E"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.calex_smart_siren_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.calex_smart_siren_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.calex_smart_siren_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.calex_smart_siren_unifi_rx_derivative
+        - unifi_entity_icon: mdi:alarm-bell
+        - unifi_entity_name: "CALEX SMART SIREN: Top Hallway"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.google_nest_thermostat_bottom_hallway_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.google_nest_thermostat_bottom_hallway_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.google_nest_thermostat_bottom_hallway_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.google_nest_thermostat_bottom_hallway_unifi_rx_derivative
+        - unifi_entity_icon: mdi:thermostat
+        - unifi_entity_name: "NEST THERMOSTAT: Bottom Hallway"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.google_nest_thermostat_middle_hallway_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.google_nest_thermostat_middle_hallway_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.google_nest_thermostat_middle_hallway_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.google_nest_thermostat_middle_hallway_unifi_rx_derivative
+        - unifi_entity_icon: mdi:thermostat
+        - unifi_entity_name: "NEST THERMOSTAT: Middle Hallway"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.logitech_harmony_hub_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.logitech_harmony_hub_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.logitech_harmony_hub_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.logitech_harmony_hub_unifi_rx_derivative
+        - unifi_entity_icon: mdi:remote
+        - unifi_entity_name: "HARMONY HUB: Bed C"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.unifi_g4_doorbell_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.unifi_g4_doorbell_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.unifi_g4_doorbell_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.unifi_g4_doorbell_unifi_rx_derivative
+        - unifi_entity_icon: mdi:doorbell-video
+        - unifi_entity_name: "G4 DOORBELL: BottomHallway"
+  - type: section
+    name: Mobile
+    cards:
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.apple_iphone_11_kev_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.apple_iphone_11_kev_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.apple_iphone_11_kev_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.apple_iphone_11_kev_unifi_rx_derivative
+        - unifi_entity_icon: mdi:cellphone-iphone
+        - unifi_entity_name: "APPLE iPHONE 11: Kev"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.apple_iphone_6s_dan_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.apple_iphone_6s_dan_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.apple_iphone_6s_dan_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.apple_iphone_6s_dan_unifi_rx_derivative
+        - unifi_entity_icon: mdi:cellphone-iphone
+        - unifi_entity_name: "APPLE iPHONE 6S: Dan"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.apple_iphone_8_ju_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.apple_iphone_8_ju_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.apple_iphone_8_ju_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.apple_iphone_8_ju_unifi_rx_derivative
+        - unifi_entity_icon: mdi:cellphone-iphone
+        - unifi_entity_name: "APPLE iPHONE 8: Ju"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.apple_iphone_xs_emily_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.apple_iphone_xs_emily_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.apple_iphone_xs_emily_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.apple_iphone_xs_emily_unifi_rx_derivative
+        - unifi_entity_icon: mdi:cellphone-iphone
+        - unifi_entity_name: "APPLE iPHONE XS: Emily"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.apple_macbook_pro_2018_kev_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.apple_macbook_pro_2018_kev_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.apple_macbook_pro_2018_kev_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.apple_macbook_pro_2018_kev_unifi_rx_derivative
+        - unifi_entity_icon: mdi:laptop-mac
+        - unifi_entity_name: "APPLE MACBOOK PRO 2018: Bed E"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.work_laptop_kev_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.work_laptop_kev_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.work_laptop_kev_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.work_laptop_kev_unifi_rx_derivative
+        - unifi_entity_icon: mdi:laptop-windows
+        - unifi_entity_name: "WORK LAPTOP: Bed E"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.amazon_kindle_voyage_kev_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.amazon_kindle_voyage_kev_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.amazon_kindle_voyage_kev_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.amazon_kindle_voyage_kev_unifi_rx_derivative
+        - unifi_entity_icon: mdi:book-open-variant
+        - unifi_entity_name: "AMAZON KINDLE VOYAGE: Mobile"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.bloxham_school_laptop_emily_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.bloxham_school_laptop_emily_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.bloxham_school_laptop_emily_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.bloxham_school_laptop_emily_unifi_rx_derivative
+        - unifi_entity_icon: mdi:laptop-windows
+        - unifi_entity_name: "SCHOOL LAPTOP: Bed B"
+    - type: custom:decluttering-card
+      template: mbps_graph
+      variables:
+        - tx_sensor_statistics: sensor.dell_g5_gaming_laptop_dan_unifi_tx_statistics
+        - rx_sensor_statistics: sensor.dell_g5_gaming_laptop_dan_unifi_rx_statistics
+        - tx_sensor_derivative: sensor.dell_g5_gaming_laptop_dan_unifi_tx_derivative
+        - rx_sensor_derivative: sensor.dell_g5_gaming_laptop_dan_unifi_rx_derivative
+        - unifi_entity_icon: mdi:laptop-windows
+        - unifi_entity_name: "DELL G5 LAPTOP: Bed D"
+  - type: section
+    name: ZigBee
+    cards:
+    - type: custom:zigbee2mqtt-networkmap
+      entity: sensor.zigbee2mqtt_networkmap
+      # the following are optional:
+      mqtt_base_topic: zigbee2mqtt # if you change base_topic of Zigbee2mqtt, change it accordingly
+      force: 1000 # decrease it to get smaller map if you have many devices
+      node_size: 16
+      font_size: 12
+      link_width: 2
+      height: 400 # height of the card
+      # use this css config or use whatever css tech to change look and feel,
+      # the same variable can also be used in Home Assistant themes, see https://www.home-assistant.io/components/frontend/#defining-themes
+      css: |
+        :host {
+          --zigbee2mqtt-networkmap-node-color: rgba(18, 120, 98, .7);
+          --zigbee2mqtt-networkmap-node-fill-color: #dcfaf3;
+          --zigbee2mqtt-networkmap-node-pinned-color: rgba(190, 56, 93, .6);
+          --zigbee2mqtt-networkmap-link-color: rgba(18, 120, 98, .5);
+          --zigbee2mqtt-networkmap-hover-color: #be385d;
+          --zigbee2mqtt-networkmap-link-selected-color: rgba(202, 164, 85, .6);
+          --zigbee2mqtt-networkmap-label-color: #127862;
+          --zigbee2mqtt-networkmap-arrow-color: rgba(18, 120, 98, 0.7);
+          --zigbee2mqtt-networkmap-node-coordinator-color: rgba(224, 78, 93, .7);
+          --zigbee2mqtt-networkmap-node-router-color: rgba(0, 165, 255, .7);
+        }

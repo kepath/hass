@@ -1,9 +1,11 @@
 decluttering_templates:
 ##################################################################################
-# mbps_template
+# mbps_graph
 ##################################################################################
-  mbps_template:
+  mbps_graph:
     default:
+    - statistic_attribute_measured: max_value
+    - statistic_attribute_value: 0.05
     - rx_color: '#005ce6'
     - tx_threshold_value_1: 1
     - tx_threshold_color_1: '#2eb82e'
@@ -13,50 +15,75 @@ decluttering_templates:
     - tx_threshold_color_3: '#e68a00'
     - tx_threshold_value_4: 10
     - tx_threshold_color_4: '#e63900'
+    
     card:
-      type: 'custom:mini-graph-card'
-      animate: true
+      type: custom:state-switch
+      entity: template
+      template: >-
+        {% if state_attr('[[tx_sensor_statistics]]', '[[statistic_attribute_measured]]') | float > [[statistic_attribute_value]] or state_attr('[[rx_sensor_statistics]]', '[[statistic_attribute_measured]]') | float > [[statistic_attribute_value]] %} 
+          busy 
+        {% endif %}
+      states:
+        busy:
+          type: 'custom:mini-graph-card'
+          animate: true
+          entities:
+            - entity: '[[tx_sensor_derivative]]'
+              name: Download Speed
+              show_state: true
+              state_adaptive_color: true
+            - entity: '[[rx_sensor_derivative]]'
+              name: Upload Speed
+              show_state: true
+              color: '[[rx_color]]'
+            - entity: binary_sensor.nighttime
+              color: gray
+              y_axis: secondary
+              aggregate_func: min
+              show_state: false
+              show_line: true
+              show_points: false
+              show_legend: false
+          font_size: 75
+          font_size_header: 12
+          hours_to_show: 1
+          points_per_hour: 60
+          lower_bound: 0
+          aggregate_func: max
+          line_width: 3
+          icon: '[[unifi_entity_icon]]'
+          name: '[[unifi_entity_name]]'
+          group: true
+          update_interval: 10
+          show:
+            extrema: true
+            labels: false
+            labels_secondary: false
+          color_thresholds:
+            - value: '[[tx_threshold_value_1]]'
+              color: '[[tx_threshold_color_1]]'
+            - value: '[[tx_threshold_value_2]]'
+              color: '[[tx_threshold_color_2]]'
+            - value: '[[tx_threshold_value_3]]'
+              color: '[[tx_threshold_color_3]]'
+            - value: '[[tx_threshold_value_4]]'
+              color: '[[tx_threshold_color_4]]'
+
+
+  mbps_badges:
+    default:
+    - statistic_attribute_measured: count
+    - statistic_attribute_value: 0
+    card:
+      type: entity-filter
       entities:
-        - entity: '[[tx_sensor]]'
-          name: Download Speed
-          show_state: true
-          state_adaptive_color: true
-        - entity: '[[rx_sensor]]'
-          name: Upload Speed
-          show_state: true
-          color: '[[rx_color]]'
-        - entity: binary_sensor.nighttime
-          color: gray
-          y_axis: secondary
-          aggregate_func: min
-          show_state: false
-          show_line: true
-          show_points: false
-          show_legend: false
-      font_size: 75
-      font_size_header: 12
-      hours_to_show: 1
-      points_per_hour: 60
-      lower_bound: 0
-      aggregate_func: max
-      line_width: 3
-      icon: '[[unifi_entity_icon]]'
-      name: '[[unifi_entity_name]]'
-      group: true
-      update_interval: 10
-      show:
-        extrema: true
-        labels: false
-        labels_secondary: false
-      color_thresholds:
-        - value: '[[tx_threshold_value_1]]'
-          color: '[[tx_threshold_color_1]]'
-        - value: '[[tx_threshold_value_2]]'
-          color: '[[tx_threshold_color_2]]'
-        - value: '[[tx_threshold_value_3]]'
-          color: '[[tx_threshold_color_3]]'
-        - value: '[[tx_threshold_value_4]]'
-          color: '[[tx_threshold_color_4]]'
+      - entity: '[[tx_sensor_statistics]]'
+        name: '[[unifi_entity_name]]'
+        icon: '[[unifi_entity_icon]]'
+        state_filter:
+          - operator: "=="
+            value: '[[statistic_attribute_value]]'
+            attribute: '[[statistic_attribute_measured]]'
 
 
 

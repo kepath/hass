@@ -1,6 +1,6 @@
 ((LitElement) => {
 
-console.info('NUMBERBOX_CARD 2.4');
+console.info('NUMBERBOX_CARD 2.7');
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 class NumberBox extends LitElement {
@@ -77,11 +77,16 @@ setNumb(c){
 	let v=this.pending; const a=this.stateObj.attributes;
 	const step=Number(a.step);
 	if( v===false ){ v=Number(this.stateObj.state); v=isNaN(v)?a.min:v;}
-	const adval=c?(v + step):(v - step);
+	let adval=c?(v + step):(v - step);
+	adval=Math.round(adval*1000)/1000
 	if( adval <=  Number(a.max) && adval >= Number(a.min)){
-		this.pending=(adval);
-		clearTimeout(this.bounce);
-		this.bounce = setTimeout(this.publishNum, this.config.delay, this);
+		if(this.config.delay){
+			this.pending=(adval);
+			clearTimeout(this.bounce);
+			this.bounce = setTimeout(this.publishNum, this.config.delay, this);
+		}else{
+			this._hass.callService(this.stateObj.entity_id.split('.')[0], "set_value", { entity_id: this.stateObj.entity_id, value: adval });
+		}
 	}
 }
 
@@ -99,18 +104,18 @@ niceNum(){
 	fix = v.toFixed(fix);
 	const u=this.config.unit;
 	if( u=="time" ){
-		return html`${this.zeroFill(Math.floor(fix/3600), 2)}:${this.zeroFill(Math.floor(fix/60), 2)}:${this.zeroFill(fix%60, 2)}`
+		return html`${
+			Math.floor(fix/3600).toString().padStart(2,'0')
+			}:${
+			(Math.floor(fix/60)-Math.floor(fix/3600)*60).toString().padStart(2,'0')
+			}:${
+			(fix%60).toString().padStart(2,'0')
+			}`
 	}
 	return u===false ? fix: html`${fix}<span class="cur-unit" >${u}</span>`;
 }
 
-zeroFill(number, width){
-	width -= number.toString().length;
-	if ( width > 0 ){
-		return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( '0' ) + number;
-	}
-	return number + "";
-}
+
 
 moreInfo(type, options = {}) {
 	const e = new Event(type, {
