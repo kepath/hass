@@ -108,10 +108,10 @@ sensor:
     json_attributes_topic: zigbee2mqtt/bridge/networkmap/raw
 
   - platform: sql
-    db_url: !secret mysql_db_url
+    db_url: !secret hass_addon_mariadb_url
     queries:
     - name: HASS DB size
-      query: !secret mysql_db_url_size_query
+      query: !secret hass_addon_mariadb_size_query
       column: 'value'
       unit_of_measurement: MB
 
