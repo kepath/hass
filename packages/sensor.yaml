@@ -107,6 +107,21 @@ sensor:
     # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
     json_attributes_topic: zigbee2mqtt/bridge/networkmap/raw
 
+  - platform: mqtt
+    name: "Shelly Bed C Light MQTT"
+    state_topic: "shellies/shelly1l-F4CFA2E399DF/relay/0"
+    command_topic: "shellies/shelly1l-F4CFA2E399DF/relay/0/command"
+    payload_on: "on"
+    payload_off: "off"
+    retain: true
+  - platform: mqtt
+    name: "Shelly Bottom Hallway Light MQTT"
+    state_topic: "shellies/shelly1l-E09806AA14C7/relay/0"
+    command_topic: "shellies/shelly1l-E09806AA14C7/relay/0/command"
+    payload_on: "on"
+    payload_off: "off"
+    retain: true
+
   - platform: sql
     db_url: !secret hass_addon_mariadb_url
     queries:
