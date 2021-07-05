@@ -3,6 +3,7 @@ default_config:
 discovery:
 api:
 stream:
+python_script:
 
 frontend:
   themes: !include_dir_merge_named themes
@@ -33,16 +34,18 @@ http:
 
 
 logger:
-  default: info
-#  logs:
+  default: warning
+  logs:
 #    homeassistant.components.camera: debug
 #    homeassistant.components.media_player: debug
 #    homeassistant.components.stream: debug
-#    homeassistant.components.mqtt: debug
+    homeassistant.components.mqtt: debug
 #    aiounifi: debug
 #    homeassistant.components.unifi: debug
 #    homeassistant.components.device_tracker.unifi: debug
 #    homeassistant.components.switch.unifi: debug
+    homeassistant.components.python_script: debug
+    homeassistant.components.automation: info
 
 influxdb:
   username: !secret influx_db_user
