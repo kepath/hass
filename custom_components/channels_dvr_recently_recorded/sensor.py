@@ -123,7 +123,7 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
         self._state = "Online"
 
         """Only look for recorded programs"""
-        recordings = [x for x in files if x["JobID"] != "" and x["Deleted"] == False]
+        recordings = [x for x in files if x.get("JobID", "") != "" and x.get("Deleted", False) == False]
         recordings.sort(
             reverse=True, key=lambda x: parse(x["Airing"]["Raw"]["startTime"])
         )
