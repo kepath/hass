@@ -18675,12 +18675,7 @@ class Plex {
         this.requestTimeout = 10000;
         this.sections = [];
         this.init = async () => {
-            await this.getClients();
-            /*
-            setInterval(() => {
-                this.getClients();
-            }, 30000);
-            */
+            await Promise.all([this.getSections(), this.getClients(), this.getServerID()]);
         };
         this.getClients = async () => {
             const url = this.authorizeURL(`${this.getBasicURL()}/clients`);
@@ -18718,15 +18713,51 @@ class Plex {
             }
             return this.sections;
         };
+        this.getSectionData = async (sectionID) => {
+            return this.exportSectionsData([await this.getSectionDataWithoutProcessing(sectionID)]);
+        };
+        this.getSectionDataWithoutProcessing = async (sectionID) => {
+            const bulkItems = 50;
+            let url = this.authorizeURL(`${this.getBasicURL()}/library/sections/${sectionID}/all`);
+            url += `&sort=${this.sort}`;
+            let result = {};
+            try {
+                result = await axios.get(url, {
+                    timeout: this.requestTimeout
+                });
+            }
+            catch (err) {
+                // probably hitting limit of items to return, we need to request in parts
+                if (lodash.includes(err.message, 'Request failed with status code 500')) {
+                    url += `&X-Plex-Container-Start=0&X-Plex-Container-Size=${bulkItems}`;
+                    result = await axios.get(url, {
+                        timeout: this.requestTimeout
+                    });
+                    const { totalSize } = result.data.MediaContainer;
+                    let startOfItems = bulkItems;
+                    const sectionsRequests = [];
+                    while (startOfItems < totalSize) {
+                        sectionsRequests.push(axios.get(this.authorizeURL(`${this.getBasicURL()}/library/sections/${sectionID}/all?sort=${this.sort}&X-Plex-Container-Start=${startOfItems}&X-Plex-Container-Size=${bulkItems}`), {
+                            timeout: this.requestTimeout
+                        }));
+                        startOfItems += bulkItems;
+                    }
+                    const allResults = await Promise.all(sectionsRequests);
+                    lodash.forEach(allResults, multiResult => {
+                        result.data.MediaContainer.Metadata = lodash.concat(result.data.MediaContainer.Metadata, multiResult.data.MediaContainer.Metadata);
+                    });
+                }
+                else {
+                    throw err;
+                }
+            }
+            return result;
+        };
         this.getSectionsData = async () => {
             const sections = await this.getSections();
             const sectionsRequests = [];
             lodash.forEach(sections, section => {
-                let url = this.authorizeURL(`${this.getBasicURL()}/library/sections/${section.key}/all`);
-                url += `&sort=${this.sort}`;
-                sectionsRequests.push(axios.get(url, {
-                    timeout: this.requestTimeout
-                }));
+                sectionsRequests.push(this.getSectionDataWithoutProcessing(section.key));
             });
             return this.exportSectionsData(await Promise.all(sectionsRequests));
         };
@@ -20782,7 +20813,7 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             }
             window.addEventListener('scroll', () => {
                 // todo: improve performance by calculating this when needed only
-                if (this.detailsShown && this.activeMovieElem && !isVideoFullScreen(this)) {
+                if (this.detailsShown && this.activeMovieElem && !isVideoFullScreen(this) && this.isVisible) {
                     const seasonContainers = this.getElementsByClassName('seasonContainer');
                     const episodeContainers = this.getElementsByClassName('episodeContainer');
                     const seasonElems = this.getElementsByClassName('seasonElem');
@@ -20822,22 +20853,24 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                 this.renderNewElementsIfNeeded();
             });
             window.addEventListener('resize', () => {
-                if (!this.detailsShown) {
-                    const videoPlayer = this.getElementsByClassName('videoPlayer')[0];
-                    let isFullScreen = false;
-                    if (videoPlayer.children.length > 0) {
-                        isFullScreen = isVideoFullScreen(this);
-                    }
-                    if (this.card && this.movieElems.length > 0 && !isFullScreen) {
-                        if (this.previousPageWidth !== this.card.offsetWidth) {
-                            this.previousPageWidth = this.card.offsetWidth;
-                            this.renderPage();
-                            const contentbg = this.getElementsByClassName('contentbg');
-                            this.contentBGHeight = getHeight(contentbg[0]);
+                if (this.isVisible) {
+                    if (!this.detailsShown) {
+                        const videoPlayer = this.getElementsByClassName('videoPlayer')[0];
+                        let isFullScreen = false;
+                        if (videoPlayer.children.length > 0) {
+                            isFullScreen = isVideoFullScreen(this);
+                        }
+                        if (this.card && this.movieElems.length > 0 && !isFullScreen) {
+                            if (this.previousPageWidth !== this.card.offsetWidth) {
+                                this.previousPageWidth = this.card.offsetWidth;
+                                this.renderPage();
+                                const contentbg = this.getElementsByClassName('contentbg');
+                                this.contentBGHeight = getHeight(contentbg[0]);
+                            }
                         }
                     }
+                    this.renderNewElementsIfNeeded();
                 }
-                this.renderNewElementsIfNeeded();
             });
             if (this.card) {
                 this.previousPageWidth = this.card.offsetWidth;
@@ -20919,73 +20952,114 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                         await this.playController.init();
                     }
                     await this.plex.init();
-                    try {
-                        const onDeck = await this.plex.getOnDeck();
-                        this.data.Deck = onDeck.Metadata;
-                    }
-                    catch (err) {
-                        if (lodash.includes(err.message, 'Request failed with status code 404')) {
-                            console.warn(getOldPlexServerErrorMessage('Deck'));
-                        }
-                        else {
-                            throw err;
-                        }
-                    }
-                    try {
-                        const continueWatching = await this.plex.getContinueWatching();
-                        this.data['Continue Watching'] = continueWatching.Metadata;
-                    }
-                    catch (err) {
-                        if (lodash.includes(err.message, 'Request failed with status code 404')) {
-                            console.warn(getOldPlexServerErrorMessage('Continue Watching'));
-                        }
-                        else {
-                            throw err;
-                        }
-                    }
-                    try {
-                        const watchNext = await this.plex.getWatchNext();
-                        this.data['Watch Next'] = watchNext.Metadata;
-                    }
-                    catch (err) {
-                        if (lodash.includes(err.message, 'Request failed with status code 404')) {
-                            console.warn(getOldPlexServerErrorMessage('Watch Next'));
-                        }
-                        else {
-                            throw err;
-                        }
-                    }
-                    try {
-                        const recentlyAdded = await this.plex.getRecentyAdded();
-                        this.data['Recently Added'] = recentlyAdded.Metadata;
-                    }
-                    catch (err) {
-                        if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                    const plexAllSections = await this.plex.getSections();
+                    const getOnDeck = async () => {
+                        if (this.plex) {
                             try {
-                                console.warn('PlexMeetsHomeAssistant: Using old endpoint for recently added tv shows. Consider updating your Plex server.');
-                                const recentlyAdded = await this.plex.getRecentyAdded(true);
-                                this.data['Recently Added'] = recentlyAdded.Metadata;
-                                // eslint-disable-next-line no-shadow
+                                const onDeck = await this.plex.getOnDeck();
+                                this.data.Deck = onDeck.Metadata;
                             }
                             catch (err) {
                                 if (lodash.includes(err.message, 'Request failed with status code 404')) {
-                                    console.warn(getOldPlexServerErrorMessage('Recently Added'));
+                                    console.warn(getOldPlexServerErrorMessage('Deck'));
                                 }
                                 else {
                                     throw err;
                                 }
                             }
                         }
-                        else {
-                            throw err;
+                    };
+                    const getContinueWatching = async () => {
+                        if (this.plex) {
+                            try {
+                                const continueWatching = await this.plex.getContinueWatching();
+                                this.data['Continue Watching'] = continueWatching.Metadata;
+                            }
+                            catch (err) {
+                                if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                    console.warn(getOldPlexServerErrorMessage('Continue Watching'));
+                                }
+                                else {
+                                    throw err;
+                                }
+                            }
                         }
-                    }
-                    const [serverID, plexSections] = await Promise.all([this.plex.getServerID(), this.plex.getSectionsData()]);
-                    // eslint-disable-next-line @typescript-eslint/camelcase
-                    this.data.serverID = serverID;
-                    lodash.forEach(plexSections, section => {
-                        this.data[section.title1] = section.Metadata;
+                    };
+                    const getWatchNext = async () => {
+                        if (this.plex) {
+                            try {
+                                const watchNext = await this.plex.getWatchNext();
+                                this.data['Watch Next'] = watchNext.Metadata;
+                            }
+                            catch (err) {
+                                if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                    console.warn(getOldPlexServerErrorMessage('Watch Next'));
+                                }
+                                else {
+                                    throw err;
+                                }
+                            }
+                        }
+                    };
+                    const getRecentyAdded = async () => {
+                        if (this.plex) {
+                            try {
+                                const recentlyAdded = await this.plex.getRecentyAdded();
+                                this.data['Recently Added'] = recentlyAdded.Metadata;
+                            }
+                            catch (err) {
+                                if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                    try {
+                                        console.warn('PlexMeetsHomeAssistant: Using old endpoint for recently added tv shows. Consider updating your Plex server.');
+                                        const recentlyAdded = await this.plex.getRecentyAdded(true);
+                                        this.data['Recently Added'] = recentlyAdded.Metadata;
+                                        // eslint-disable-next-line no-shadow
+                                    }
+                                    catch (err) {
+                                        if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                            console.warn(getOldPlexServerErrorMessage('Recently Added'));
+                                        }
+                                        else {
+                                            throw err;
+                                        }
+                                    }
+                                }
+                                else {
+                                    throw err;
+                                }
+                            }
+                        }
+                    };
+                    let sectionKey = 0;
+                    lodash.forEach(plexAllSections, (section) => {
+                        if (lodash.isEqual(section.title, this.config.libraryName)) {
+                            sectionKey = section.key;
+                            return false;
+                        }
+                        return true;
                     });
+                    const loadDataRequests = [];
+                    if (sectionKey) {
+                        loadDataRequests.push(this.plex.getSectionData(sectionKey));
+                    }
+                    if (lodash.isEqual(this.config.libraryName, 'Deck')) {
+                        loadDataRequests.push(getOnDeck());
+                    }
+                    else if (lodash.isEqual(this.config.libraryName, 'Continue Watching')) {
+                        loadDataRequests.push(getContinueWatching());
+                    }
+                    else if (lodash.isEqual(this.config.libraryName, 'Watch Next')) {
+                        loadDataRequests.push(getWatchNext());
+                    }
+                    else if (lodash.isEqual(this.config.libraryName, 'Recently Added')) {
+                        loadDataRequests.push(getRecentyAdded());
+                    }
+                    const [plexSections] = await Promise.all(loadDataRequests);
+                    if (plexSections && sectionKey) {
+                        lodash.forEach(plexSections, section => {
+                            this.data[section.title1] = section.Metadata;
+                        });
+                    }
                     if (this.data[this.config.libraryName] === undefined) {
                         this.error = `Library name ${this.config.libraryName} does not exist.`;
                     }
@@ -21014,10 +21088,12 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             this.searchInputElem.value = this.searchValue;
             this.searchInputElem.placeholder = `Search ${this.config.libraryName}...`;
             this.searchInputElem.addEventListener('keyup', () => {
-                this.searchValue = this.searchInputElem.value;
-                this.renderPage();
-                this.focus();
-                this.renderNewElementsIfNeeded();
+                if (!lodash.isEqual(this.searchInputElem.value, this.searchValue)) {
+                    this.searchValue = this.searchInputElem.value;
+                    this.renderPage();
+                    this.focus();
+                    this.renderNewElementsIfNeeded();
+                }
             });
             searchContainer.appendChild(this.searchInputElem);
             return searchContainer;
@@ -21108,7 +21184,7 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                 }
             }
             this.renderedItems = 0;
-            this.columnsCount = 0;
+            // this.columnsCount = 0;
             const spinner = document.createElement('div');
             spinner.style.display = 'flex';
             spinner.style.alignItems = 'center';
