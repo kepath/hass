@@ -17196,17 +17196,18 @@ var lodash = createCommonjsModule(function (module, exports) {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CSS_STYLE = {
-    width: 138,
-    height: 203,
+    ratio: 1.471,
+    minimumWidth: 138,
     expandedWidth: 220,
     expandedHeight: 324,
-    episodeWidth: 300,
-    episodeHeight: 169
+    episodeRatio: 0.563,
+    minimumEpisodeWidth: 300
 };
 const supported = {
     kodi: ['movie', 'episode'],
-    androidtv: ['movie', 'show', 'season', 'episode'],
-    plexPlayer: ['movie', 'show', 'season', 'episode']
+    androidtv: ['movie', 'show', 'season', 'episode', 'clip'],
+    plexPlayer: ['movie', 'show', 'season', 'episode', 'clip'],
+    cast: ['movie', 'episode']
 };
 
 var bind = function bind(fn, thisArg) {
@@ -18668,20 +18669,16 @@ var axios = axios_1;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 class Plex {
-    constructor(ip, port = 32400, token, protocol = 'http') {
+    constructor(ip, port = false, token, protocol = 'http', sort = 'titleSort:asc') {
         this.serverInfo = {};
         this.clients = [];
-        this.requestTimeout = 5000;
+        this.requestTimeout = 10000;
+        this.sections = [];
         this.init = async () => {
-            await this.getClients();
-            /*
-            setInterval(() => {
-                this.getClients();
-            }, 30000);
-            */
+            await Promise.all([this.getSections(), this.getClients(), this.getServerID()]);
         };
         this.getClients = async () => {
-            const url = `${this.protocol}://${this.ip}:${this.port}/clients?X-Plex-Token=${this.token}`;
+            const url = this.authorizeURL(`${this.getBasicURL()}/clients`);
             try {
                 const result = await axios.get(url, {
                     timeout: this.requestTimeout
@@ -18700,30 +18697,150 @@ class Plex {
             return this.serverInfo.machineIdentifier;
         };
         this.getServerInfo = async () => {
-            const url = `${this.protocol}://${this.ip}:${this.port}/?X-Plex-Token=${this.token}`;
+            const url = this.authorizeURL(`${this.getBasicURL()}/`);
             this.serverInfo = (await axios.get(url, {
                 timeout: this.requestTimeout
             })).data.MediaContainer;
             return this.serverInfo;
         };
         this.getSections = async () => {
-            const url = `${this.protocol}://${this.ip}:${this.port}/library/sections?X-Plex-Token=${this.token}`;
-            return (await axios.get(url, {
-                timeout: this.requestTimeout
-            })).data.MediaContainer.Directory;
+            if (lodash.isEmpty(this.sections)) {
+                const url = this.authorizeURL(`${this.getBasicURL()}/library/sections`);
+                const sectionsData = await axios.get(url, {
+                    timeout: this.requestTimeout
+                });
+                this.sections = sectionsData.data.MediaContainer.Directory;
+            }
+            return this.sections;
+        };
+        this.getSectionData = async (sectionID) => {
+            return this.exportSectionsData([await this.getSectionDataWithoutProcessing(sectionID)]);
+        };
+        this.getSectionDataWithoutProcessing = async (sectionID) => {
+            const bulkItems = 50;
+            let url = this.authorizeURL(`${this.getBasicURL()}/library/sections/${sectionID}/all`);
+            url += `&sort=${this.sort}`;
+            let result = {};
+            try {
+                result = await axios.get(url, {
+                    timeout: this.requestTimeout
+                });
+            }
+            catch (err) {
+                // probably hitting limit of items to return, we need to request in parts
+                if (lodash.includes(err.message, 'Request failed with status code 500')) {
+                    url += `&X-Plex-Container-Start=0&X-Plex-Container-Size=${bulkItems}`;
+                    result = await axios.get(url, {
+                        timeout: this.requestTimeout
+                    });
+                    const { totalSize } = result.data.MediaContainer;
+                    let startOfItems = bulkItems;
+                    const sectionsRequests = [];
+                    while (startOfItems < totalSize) {
+                        sectionsRequests.push(axios.get(this.authorizeURL(`${this.getBasicURL()}/library/sections/${sectionID}/all?sort=${this.sort}&X-Plex-Container-Start=${startOfItems}&X-Plex-Container-Size=${bulkItems}`), {
+                            timeout: this.requestTimeout
+                        }));
+                        startOfItems += bulkItems;
+                    }
+                    const allResults = await Promise.all(sectionsRequests);
+                    lodash.forEach(allResults, multiResult => {
+                        result.data.MediaContainer.Metadata = lodash.concat(result.data.MediaContainer.Metadata, multiResult.data.MediaContainer.Metadata);
+                    });
+                }
+                else {
+                    throw err;
+                }
+            }
+            return result;
         };
         this.getSectionsData = async () => {
             const sections = await this.getSections();
             const sectionsRequests = [];
             lodash.forEach(sections, section => {
-                sectionsRequests.push(axios.get(`${this.protocol}://${this.ip}:${this.port}/library/sections/${section.key}/all?X-Plex-Token=${this.token}`, {
-                    timeout: this.requestTimeout
-                }));
+                sectionsRequests.push(this.getSectionDataWithoutProcessing(section.key));
             });
             return this.exportSectionsData(await Promise.all(sectionsRequests));
         };
+        this.getRecentyAdded = async (useHub = false) => {
+            if (useHub) {
+                const hubs = await this.getHubs();
+                let recentlyAddedData = {};
+                // eslint-disable-next-line consistent-return
+                lodash.forEach(hubs.Hub, hub => {
+                    if (lodash.isEqual(hub.key, '/hubs/home/recentlyAdded?type=2')) {
+                        recentlyAddedData = hub;
+                        return false;
+                    }
+                });
+                return recentlyAddedData;
+            }
+            const url = this.authorizeURL(`${this.getBasicURL()}/hubs/home/recentlyAdded?type=2&X-Plex-Container-Start=0&X-Plex-Container-Size=50`);
+            return (await axios.get(url, {
+                timeout: this.requestTimeout
+            })).data.MediaContainer;
+        };
+        this.getHubs = async () => {
+            const url = this.authorizeURL(`${this.getBasicURL()}/hubs?includeEmpty=1&count=50&includeFeaturedTags=1&includeTypeFirst=1&includeStations=1&includeExternalMetadata=1&excludePlaylists=1`);
+            return (await axios.get(url, {
+                timeout: this.requestTimeout
+            })).data.MediaContainer;
+        };
+        this.getWatchNext = async () => {
+            const sections = await this.getSections();
+            let sectionsString = '';
+            lodash.forEach(sections, section => {
+                sectionsString += `${section.key},`;
+            });
+            sectionsString = sectionsString.slice(0, -1);
+            const url = this.authorizeURL(`${this.getBasicURL()}/hubs/continueWatching/items?contentDirectoryID=${sectionsString}`);
+            return (await axios.get(url, {
+                timeout: this.requestTimeout
+            })).data.MediaContainer;
+        };
+        this.getContinueWatching = async () => {
+            const hubs = await this.getHubs();
+            let continueWatchingData = {};
+            // eslint-disable-next-line consistent-return
+            lodash.forEach(hubs.Hub, hub => {
+                if (lodash.isEqual(hub.key, '/hubs/home/continueWatching')) {
+                    continueWatchingData = hub;
+                    return false;
+                }
+            });
+            return continueWatchingData;
+        };
+        this.getOnDeck = async () => {
+            const hubs = await this.getHubs();
+            let onDeckData = {};
+            // eslint-disable-next-line consistent-return
+            lodash.forEach(hubs.Hub, hub => {
+                if (lodash.isEqual(hub.key, '/hubs/home/onDeck')) {
+                    onDeckData = hub;
+                    return false;
+                }
+            });
+            return onDeckData;
+        };
+        this.getBasicURL = () => {
+            return `${this.protocol}://${this.ip}${this.port === false ? '' : `:${this.port}`}`;
+        };
+        this.authorizeURL = (url) => {
+            if (!lodash.includes(url, 'X-Plex-Token')) {
+                if (lodash.includes(url, '?')) {
+                    return `${url}&X-Plex-Token=${this.token}`;
+                }
+                return `${url}?X-Plex-Token=${this.token}`;
+            }
+            return url;
+        };
+        this.getDetails = async (id) => {
+            const url = this.authorizeURL(`${this.getBasicURL()}/library/metadata/${id}?includeConcerts=1&includeExtras=1&includeOnDeck=1&includePopularLeaves=1&includePreferences=1&includeReviews=1&includeChapters=1&includeStations=1&includeExternalMedia=1&asyncAugmentMetadata=1&asyncCheckFiles=1&asyncRefreshAnalysis=1&asyncRefreshLocalMediaAgent=1`);
+            return (await axios.get(url, {
+                timeout: this.requestTimeout
+            })).data.MediaContainer.Metadata[0];
+        };
         this.getLibraryData = async (id) => {
-            const url = `${this.protocol}://${this.ip}:${this.port}/library/metadata/${id}/children?X-Plex-Token=${this.token}`;
+            const url = this.authorizeURL(`${this.getBasicURL()}/library/metadata/${id}/children`);
             return (await axios.get(url, {
                 timeout: this.requestTimeout
             })).data.MediaContainer.Metadata;
@@ -18739,12 +18856,15 @@ class Plex {
         this.port = port;
         this.token = token;
         this.protocol = protocol;
+        this.sort = sort;
     }
 }
 
 class PlayController {
-    constructor(hass, plex, entity) {
+    constructor(hass, plex, entity, runBefore, runAfter) {
         this.plexPlayerEntity = '';
+        this.runBefore = false;
+        this.runAfter = false;
         this.supported = supported;
         this.getState = async (entityID) => {
             return this.hass.callApi('GET', `states/${entityID}`);
@@ -18772,6 +18892,8 @@ class PlayController {
                 }
             });
             if (lodash.isEmpty(foundResult)) {
+                // eslint-disable-next-line no-alert
+                alert(`Title ${search} not found in Kodi.`);
                 throw Error(`Title ${search} not found in Kodi.`);
             }
             return foundResult;
@@ -18802,28 +18924,70 @@ class PlayController {
             return foundResult;
         };
         this.play = async (data, instantPlay = false) => {
-            const playService = this.getPlayService(data);
-            switch (playService) {
+            if (lodash.isArray(this.runBefore)) {
+                await this.hass.callService(this.runBefore[0], this.runBefore[1], {});
+            }
+            const entity = this.getPlayService(data);
+            switch (entity.key) {
                 case 'kodi':
-                    await this.playViaKodi(data, data.type);
+                    await this.playViaKodi(entity.value, data, data.type);
                     break;
                 case 'androidtv':
-                    await this.playViaAndroidTV(data.key.split('/')[3], instantPlay);
+                    await this.playViaAndroidTV(entity.value, data.key.split('/')[3], instantPlay);
                     break;
                 case 'plexPlayer':
-                    await this.playViaPlexPlayer(data.key.split('/')[3]);
+                    await this.playViaPlexPlayer(entity.value, data.key.split('/')[3]);
+                    break;
+                case 'cast':
+                    if (this.hass.services.plex) {
+                        try {
+                            switch (data.type) {
+                                case 'movie':
+                                    await this.playViaCastPlex(entity.value, 'movie', `plex://${JSON.stringify({
+                                        // eslint-disable-next-line @typescript-eslint/camelcase
+                                        library_name: data.librarySectionTitle,
+                                        title: data.title
+                                    })}`);
+                                    break;
+                                case 'episode':
+                                    await this.playViaCastPlex(entity.value, 'EPISODE', `plex://${JSON.stringify({
+                                        // eslint-disable-next-line @typescript-eslint/camelcase
+                                        library_name: data.librarySectionTitle,
+                                        // eslint-disable-next-line @typescript-eslint/camelcase
+                                        show_name: data.grandparentTitle,
+                                        // eslint-disable-next-line @typescript-eslint/camelcase
+                                        season_number: data.parentIndex,
+                                        // eslint-disable-next-line @typescript-eslint/camelcase
+                                        episode_number: data.index
+                                    })}`);
+                                    break;
+                                default:
+                                    this.playViaCast(entity.value, data.Media[0].Part[0].key);
+                            }
+                        }
+                        catch (err) {
+                            console.log(err);
+                            this.playViaCast(entity.value, data.Media[0].Part[0].key);
+                        }
+                    }
+                    else {
+                        this.playViaCast(entity.value, data.Media[0].Part[0].key);
+                    }
                     break;
                 default:
                     throw Error(`No service available to play ${data.title}!`);
             }
+            if (lodash.isArray(this.runAfter)) {
+                await this.hass.callService(this.runAfter[0], this.runAfter[1], {});
+            }
         };
-        this.plexPlayerCreateQueue = async (movieID) => {
-            const url = `${this.plex.protocol}://${this.plex.ip}:${this.plex.port}/playQueues?type=video&shuffle=0&repeat=0&continuous=1&own=1&uri=server://${await this.plex.getServerID()}/com.plexapp.plugins.library/library/metadata/${movieID}`;
+        this.plexPlayerCreateQueue = async (movieID, plex) => {
+            const url = `${plex.getBasicURL()}/playQueues?type=video&shuffle=0&repeat=0&continuous=1&own=1&uri=server://${await plex.getServerID()}/com.plexapp.plugins.library/library/metadata/${movieID}`;
             const plexResponse = await axios({
                 method: 'post',
                 url,
                 headers: {
-                    'X-Plex-Token': this.plex.token,
+                    'X-Plex-Token': plex.token,
                     'X-Plex-Client-Identifier': 'PlexMeetsHomeAssistant'
                 }
             });
@@ -18835,13 +18999,30 @@ class PlayController {
                 playQueueSelectedMetadataItemID: plexResponse.data.MediaContainer.playQueueSelectedMetadataItemID
             };
         };
-        this.playViaPlexPlayer = async (movieID) => {
-            const machineID = !lodash.isEmpty(this.plexPlayerEntity) ? this.plexPlayerEntity : this.entity.plexPlayer;
-            const { playQueueID, playQueueSelectedMetadataItemID } = await this.plexPlayerCreateQueue(movieID);
-            const url = `${this.plex.protocol}://${this.plex.ip}:${this.plex.port}/player/playback/playMedia?address=${this.plex.ip}&commandID=1&containerKey=/playQueues/${playQueueID}?window=100%26own=1&key=/library/metadata/${playQueueSelectedMetadataItemID}&machineIdentifier=${await this.plex.getServerID()}&offset=0&port=${this.plex.port}&token=${this.plex.token}&type=video&protocol=${this.plex.protocol}`;
+        this.playViaPlexPlayer = async (entity, movieID) => {
+            const machineID = this.getPlexPlayerMachineIdentifier(entity);
+            let { plex } = this;
+            if (lodash.isObject(entity) && !lodash.isNil(entity.plex)) {
+                plex = entity.plex;
+            }
+            const { playQueueID, playQueueSelectedMetadataItemID } = await this.plexPlayerCreateQueue(movieID, this.plex);
+            let url = plex.getBasicURL();
+            url += `/player/playback/playMedia`;
+            url += `?type=video`;
+            url += `&commandID=1`;
+            url += `&providerIdentifier=com.plexapp.plugins.library`;
+            url += `&containerKey=/playQueues/${playQueueID}`;
+            url += `&key=/library/metadata/${playQueueSelectedMetadataItemID}`;
+            url += `&offset=0`;
+            url += `&machineIdentifier=${await this.plex.getServerID()}`;
+            url += `&protocol=${this.plex.protocol}`;
+            url += `&address=${this.plex.ip}`;
+            url += `&port=${this.plex.port}`;
+            url += `&token=${this.plex.token}`;
+            url = plex.authorizeURL(url);
             try {
                 const plexResponse = await axios({
-                    method: 'post',
+                    method: 'get',
                     url,
                     headers: {
                         'X-Plex-Target-Client-Identifier': machineID,
@@ -18856,6 +19037,19 @@ class PlayController {
                 }
             }
             catch (err) {
+                try {
+                    await this.hass.callService('rest_command', 'pmha_playmedia', {
+                        // eslint-disable-next-line @typescript-eslint/camelcase
+                        url,
+                        // eslint-disable-next-line @typescript-eslint/camelcase
+                        target_client_identifier: machineID,
+                        // eslint-disable-next-line @typescript-eslint/camelcase
+                        client_identifier: 'PlexMeetsHomeAssistant'
+                    });
+                }
+                catch (homeAssistantErr) {
+                    // pass
+                }
                 if (lodash.includes(err.message, '404')) {
                     throw Error('Defined plexPlayer is currently not available for playback.');
                 }
@@ -18864,12 +19058,12 @@ class PlayController {
                 }
             }
         };
-        this.playViaKodi = async (data, type) => {
+        this.playViaKodi = async (entityName, data, type) => {
             if (type === 'movie') {
                 const kodiData = await this.getKodiSearch(data.title);
                 await this.hass.callService('kodi', 'call_method', {
                     // eslint-disable-next-line @typescript-eslint/camelcase
-                    entity_id: this.entity.kodi,
+                    entity_id: entityName,
                     method: 'Player.Open',
                     item: {
                         movieid: kodiData.movieid
@@ -18891,7 +19085,7 @@ class PlayController {
                 }
                 await this.hass.callService('kodi', 'call_method', {
                     // eslint-disable-next-line @typescript-eslint/camelcase
-                    entity_id: this.entity.kodi,
+                    entity_id: entityName,
                     method: 'Player.Open',
                     item: {
                         episodeid: foundEpisode.episodeid
@@ -18902,7 +19096,27 @@ class PlayController {
                 throw Error(`Plex type ${type} is not supported in Kodi.`);
             }
         };
-        this.playViaAndroidTV = async (mediaID, instantPlay = false) => {
+        this.playViaCast = (entityName, mediaLink) => {
+            this.hass.callService('media_player', 'play_media', {
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                entity_id: entityName,
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                media_content_type: 'video',
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                media_content_id: this.plex.authorizeURL(`${this.plex.getBasicURL()}${mediaLink}`)
+            });
+        };
+        this.playViaCastPlex = (entityName, contentType, mediaLink) => {
+            return this.hass.callService('media_player', 'play_media', {
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                entity_id: entityName,
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                media_content_type: contentType,
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                media_content_id: mediaLink
+            });
+        };
+        this.playViaAndroidTV = async (entityName, mediaID, instantPlay = false) => {
             const serverID = await this.plex.getServerID();
             let command = `am start`;
             if (instantPlay) {
@@ -18911,77 +19125,156 @@ class PlayController {
             command += ` -a android.intent.action.VIEW 'plex://server://${serverID}/com.plexapp.plugins.library/library/metadata/${mediaID}'`;
             this.hass.callService('androidtv', 'adb_command', {
                 // eslint-disable-next-line @typescript-eslint/camelcase
-                entity_id: this.entity.androidtv,
+                entity_id: entityName,
                 command: 'HOME'
             });
             this.hass.callService('androidtv', 'adb_command', {
                 // eslint-disable-next-line @typescript-eslint/camelcase
-                entity_id: this.entity.androidtv,
+                entity_id: entityName,
                 command
             });
         };
         this.getPlayService = (data) => {
-            let service = '';
+            let service = {};
             lodash.forEach(this.entity, (value, key) => {
-                if (lodash.includes(this.supported[key], data.type)) {
-                    if ((key === 'kodi' && this.isKodiSupported()) ||
-                        (key === 'androidtv' && this.isAndroidTVSupported()) ||
-                        (key === 'plexPlayer' && this.isPlexPlayerSupported())) {
-                        service = key;
-                        return false;
+                if (lodash.isEmpty(service)) {
+                    const entityVal = value;
+                    if (lodash.isArray(entityVal)) {
+                        lodash.forEach(entityVal, entity => {
+                            if (lodash.includes(this.supported[key], data.type)) {
+                                if ((key === 'kodi' && this.isKodiSupported(entity)) ||
+                                    (key === 'androidtv' && this.isAndroidTVSupported(entity)) ||
+                                    (key === 'plexPlayer' && this.isPlexPlayerSupported(entity)) ||
+                                    (key === 'cast' && this.isCastSupported(entity))) {
+                                    service = { key, value: entity };
+                                    return false;
+                                }
+                            }
+                        });
+                    }
+                    else if (lodash.includes(this.supported[key], data.type)) {
+                        if ((key === 'kodi' && this.isKodiSupported(entityVal)) ||
+                            (key === 'androidtv' && this.isAndroidTVSupported(entityVal)) ||
+                            (key === 'plexPlayer' && this.isPlexPlayerSupported(entityVal)) ||
+                            (key === 'cast' && this.isCastSupported(entityVal))) {
+                            service = { key, value: entityVal };
+                            return false;
+                        }
                     }
                 }
             });
             return service;
         };
-        this.isPlexPlayerSupported = () => {
-            let found = false;
-            lodash.forEach(this.plex.clients, plexClient => {
-                if (lodash.isEqual(plexClient.machineIdentifier, this.entity.plexPlayer)) {
-                    found = true;
+        this.init = async () => {
+            if (!lodash.isNil(this.entity.plexPlayer)) {
+                if (lodash.isArray(this.entity.plexPlayer)) {
+                    for (let i = 0; i < this.entity.plexPlayer.length; i += 1) {
+                        if (lodash.isObjectLike(this.entity.plexPlayer[i]) && !lodash.isNil(this.entity.plexPlayer[i].server)) {
+                            let port = false;
+                            if (!lodash.isNil(this.entity.plexPlayer[i].server.port)) {
+                                port = this.entity.plexPlayer[i].server.port;
+                            }
+                            let protocol = 'http';
+                            if (!lodash.isNil(this.entity.plexPlayer[i].server.protocol)) {
+                                protocol = this.entity.plexPlayer[i].server.protocol;
+                            }
+                            // eslint-disable-next-line no-param-reassign
+                            this.entity.plexPlayer[i].plex = new Plex(this.entity.plexPlayer[i].server.ip, port, this.entity.plexPlayer[i].server.token, protocol);
+                            // eslint-disable-next-line no-await-in-loop
+                            await this.entity.plexPlayer[i].plex.getClients();
+                        }
+                    }
+                }
+                else if (!lodash.isNil(this.entity.plexPlayer.server) &&
+                    !lodash.isNil(this.entity.plexPlayer.server.ip) &&
+                    !lodash.isNil(this.entity.plexPlayer.server.token)) {
+                    let port = false;
+                    if (!lodash.isNil(this.entity.plexPlayer.server.port)) {
+                        port = this.entity.plexPlayer.server.port;
+                    }
+                    let protocol = 'http';
+                    if (!lodash.isNil(this.entity.plexPlayer.server.protocol)) {
+                        protocol = this.entity.plexPlayer.server.protocol;
+                    }
+                    // eslint-disable-next-line no-param-reassign
+                    this.entity.plexPlayer.plex = new Plex(this.entity.plexPlayer.server.ip, port, this.entity.plexPlayer.server.token, protocol);
+                    // eslint-disable-next-line no-await-in-loop
+                    await this.entity.plexPlayer.plex.getClients();
+                }
+            }
+        };
+        this.getPlexPlayerMachineIdentifier = (entity) => {
+            let machineIdentifier = '';
+            let { plex } = this;
+            let entityName = '';
+            if (lodash.isString(entity)) {
+                entityName = entity;
+            }
+            else if (lodash.isObjectLike(entity) && !lodash.isNil(entity.identifier)) {
+                entityName = entity.identifier;
+                if (!lodash.isNil(entity.plex) && entity.plex) {
+                    plex = entity.plex;
+                }
+            }
+            lodash.forEach(plex.clients, plexClient => {
+                if (lodash.isEqual(plexClient.machineIdentifier, entityName) ||
+                    lodash.isEqual(plexClient.product, entityName) ||
+                    lodash.isEqual(plexClient.name, entityName) ||
+                    lodash.isEqual(plexClient.host, entityName) ||
+                    lodash.isEqual(plexClient.address, entityName)) {
+                    machineIdentifier = plexClient.machineIdentifier;
                     return false;
                 }
             });
-            // Try to look into any other fields to identify machine ID
-            if (!found) {
-                lodash.forEach(this.plex.clients, plexClient => {
-                    if (lodash.isEqual(plexClient.product, this.entity.plexPlayer) ||
-                        lodash.isEqual(plexClient.name, this.entity.plexPlayer) ||
-                        lodash.isEqual(plexClient.host, this.entity.plexPlayer) ||
-                        lodash.isEqual(plexClient.address, this.entity.plexPlayer)) {
-                        this.plexPlayerEntity = plexClient.machineIdentifier;
-                        found = true;
-                        return false;
-                    }
-                });
-            }
-            return found;
+            return machineIdentifier;
         };
         this.isPlaySupported = (data) => {
             return !lodash.isEmpty(this.getPlayService(data));
         };
-        this.isKodiSupported = () => {
-            if (this.entity.kodi) {
-                return (this.hass.states[this.entity.kodi] &&
-                    this.hass.states['sensor.kodi_media_sensor_search'] &&
-                    this.hass.states['sensor.kodi_media_sensor_search'].state !== 'unavailable' &&
-                    this.hass.states[this.entity.kodi].state !== 'off' &&
-                    this.hass.states[this.entity.kodi].state !== 'unavailable');
+        this.isPlexPlayerSupported = (entity) => {
+            let found = false;
+            if (this.getPlexPlayerMachineIdentifier(entity)) {
+                found = true;
+            }
+            return found || !lodash.isEqual(this.runBefore, false);
+        };
+        this.isKodiSupported = (entityName) => {
+            if (entityName) {
+                const hasKodiMediaSearchInstalled = this.hass.states['sensor.kodi_media_sensor_search'] &&
+                    this.hass.states['sensor.kodi_media_sensor_search'].state !== 'unavailable';
+                return ((this.hass.states[entityName] &&
+                    this.hass.states[entityName].state !== 'off' &&
+                    this.hass.states[entityName].state !== 'unavailable' &&
+                    hasKodiMediaSearchInstalled) ||
+                    (!lodash.isEqual(this.runBefore, false) && hasKodiMediaSearchInstalled));
             }
             return false;
         };
-        this.isAndroidTVSupported = () => {
-            return (this.hass.states[this.entity.androidtv] &&
-                this.hass.states[this.entity.androidtv].attributes &&
-                this.hass.states[this.entity.androidtv].attributes.adb_response !== undefined);
+        this.isCastSupported = (entityName) => {
+            return ((this.hass.states[entityName] &&
+                !lodash.isNil(this.hass.states[entityName].attributes) &&
+                this.hass.states[entityName].state !== 'unavailable') ||
+                !lodash.isEqual(this.runBefore, false));
+        };
+        this.isAndroidTVSupported = (entityName) => {
+            return ((this.hass.states[entityName] &&
+                !lodash.isEqual(this.hass.states[entityName].state, 'off') &&
+                this.hass.states[entityName].attributes &&
+                this.hass.states[entityName].attributes.adb_response !== undefined) ||
+                !lodash.isEqual(this.runBefore, false));
         };
         this.hass = hass;
         this.plex = plex;
         this.entity = entity;
+        if (!lodash.isEmpty(runBefore) && this.hass.states[runBefore]) {
+            this.runBefore = runBefore.split('.');
+        }
+        if (!lodash.isEmpty(runAfter) && this.hass.states[runAfter]) {
+            this.runAfter = runAfter.split('.');
+        }
     }
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const escapeHtml = (unsafe) => {
     if (unsafe) {
@@ -18994,6 +19287,13 @@ const escapeHtml = (unsafe) => {
             .replace(/'/g, '&#039;');
     }
     return '';
+};
+const fetchEntityRegistry = (conn) => conn.sendMessagePromise({
+    type: 'config/entity_registry/list'
+});
+const getHeight = (el) => {
+    const height = Math.max(el.scrollHeight, el.offsetHeight, el.clientHeight, el.scrollHeight, el.offsetHeight);
+    return height;
 };
 const getOffset = (el) => {
     let x = 0;
@@ -19012,6 +19312,735 @@ const getOffset = (el) => {
     }
     return { top: y, left: x };
 };
+const getDetailsBottom = (seasonContainers, episodeContainers, activeElem) => {
+    const lastSeasonContainer = seasonContainers[seasonContainers.length - 1];
+    const lastEpisodeContainer = episodeContainers[episodeContainers.length - 1];
+    let detailBottom = false;
+    if (seasonContainers.length > 0 && parseInt(activeElem.style.top, 10) > 0) {
+        detailBottom = getHeight(lastSeasonContainer) + parseInt(getOffset(lastSeasonContainer).top, 10) + 10;
+    }
+    else if (episodeContainers.length > 0) {
+        detailBottom = getHeight(lastEpisodeContainer) + parseInt(getOffset(lastEpisodeContainer).top, 10) + 10;
+    }
+    return detailBottom;
+};
+const hasEpisodes = (media) => {
+    let result = false;
+    // eslint-disable-next-line consistent-return
+    lodash.forEach(media, data => {
+        if (lodash.isEqual(data.type, 'episode')) {
+            result = true;
+            return false;
+        }
+    });
+    return result;
+};
+const isVideoFullScreen = (_this) => {
+    const videoPlayer = _this.getElementsByClassName('videoPlayer')[0];
+    const video = videoPlayer.children[0];
+    if (!video)
+        return false;
+    const body = document.getElementsByTagName('body')[0];
+    return ((video.offsetWidth === body.offsetWidth && video.offsetHeight === body.offsetHeight) ||
+        (_this.videoElem && _this.videoElem.classList.contains('simulatedFullScreen')));
+};
+const getOldPlexServerErrorMessage = (libraryName) => {
+    return `PlexMeetsHomeAssistant: 404 Error requesting library feed for ${libraryName}. Plex API might have changed or using outdated server. Library ${libraryName} will not work.`;
+};
+const findTrailerURL = (movieData) => {
+    let foundURL = '';
+    if (movieData.Extras && movieData.Extras.Metadata && movieData.Extras.Metadata.length > 0) {
+        // eslint-disable-next-line consistent-return
+        lodash.forEach(movieData.Extras.Metadata, extra => {
+            if (extra.subtype === 'trailer') {
+                foundURL = extra.Media[0].Part[0].key;
+                return false;
+            }
+        });
+    }
+    return foundURL;
+};
+const clickHandler = (elem, clickFunction, holdFunction) => {
+    let longpress = false;
+    let presstimer = null;
+    const cancel = (e) => {
+        e.stopPropagation();
+        if (presstimer !== null) {
+            clearTimeout(presstimer);
+            presstimer = null;
+        }
+    };
+    const click = (e) => {
+        e.stopPropagation();
+        if (presstimer !== null) {
+            clearTimeout(presstimer);
+            presstimer = null;
+        }
+        if (longpress) {
+            return false;
+        }
+        clickFunction(e);
+        return true;
+    };
+    const start = (e) => {
+        e.stopPropagation();
+        if (e.type === 'click' && e.button !== 0) {
+            return;
+        }
+        longpress = false;
+        presstimer = setTimeout(() => {
+            holdFunction(e);
+            longpress = true;
+        }, 1000);
+    };
+    elem.addEventListener('mousedown', start);
+    elem.addEventListener('touchstart', start);
+    elem.addEventListener('click', click);
+    elem.addEventListener('mouseout', cancel);
+    elem.addEventListener('touchend', cancel);
+    elem.addEventListener('touchleave', cancel);
+    elem.addEventListener('touchcancel', cancel);
+};
+const createEpisodesView = (playController, plex, data) => {
+    const episodeContainer = document.createElement('div');
+    episodeContainer.className = 'episodeContainer';
+    episodeContainer.style.width = `${CSS_STYLE.episodeWidth}px`;
+    const episodeThumbURL = plex.authorizeURL(`${plex.getBasicURL()}/photo/:/transcode?width=${CSS_STYLE.episodeWidth}&height=${CSS_STYLE.episodeHeight}&minSize=1&upscale=1&url=${data.thumb}`);
+    const episodeElem = document.createElement('div');
+    episodeElem.className = 'episodeElem';
+    episodeElem.style.width = `${CSS_STYLE.episodeWidth}px`;
+    episodeElem.style.height = `${CSS_STYLE.episodeHeight}px`;
+    episodeElem.style.backgroundImage = `url('${episodeThumbURL}')`;
+    episodeElem.dataset.clicked = 'false';
+    if (typeof data.lastViewedAt === 'undefined') {
+        const toViewElem = document.createElement('div');
+        toViewElem.className = 'toViewEpisode';
+        episodeElem.appendChild(toViewElem);
+    }
+    if (playController.isPlaySupported(data)) {
+        const episodeInteractiveArea = document.createElement('div');
+        episodeInteractiveArea.className = 'interactiveArea';
+        const episodePlayButton = document.createElement('button');
+        episodePlayButton.name = 'playButton';
+        episodePlayButton.addEventListener('click', episodeEvent => {
+            episodeEvent.stopPropagation();
+            playController.play(data, true);
+        });
+        episodeInteractiveArea.append(episodePlayButton);
+        episodeElem.append(episodeInteractiveArea);
+    }
+    episodeContainer.append(episodeElem);
+    const episodeTitleElem = document.createElement('div');
+    episodeTitleElem.className = 'episodeTitleElem';
+    episodeTitleElem.innerHTML = escapeHtml(data.title);
+    episodeContainer.append(episodeTitleElem);
+    const episodeNumber = document.createElement('div');
+    episodeNumber.className = 'episodeNumber';
+    if (data.type === 'episode') {
+        episodeNumber.innerHTML = escapeHtml(`Episode ${escapeHtml(data.index)}`);
+    }
+    else if (data.type === 'clip') {
+        let text = '';
+        switch (data.subtype) {
+            case 'behindTheScenes':
+                text = 'Behind the Scenes';
+                break;
+            case 'trailer':
+                text = 'Trailer';
+                break;
+            case 'scene':
+                text = 'Scene';
+                break;
+            case 'sceneOrSample':
+                text = 'Scene';
+                break;
+            default:
+                text = data.subtype;
+                break;
+        }
+        episodeNumber.innerHTML = escapeHtml(text);
+    }
+    episodeContainer.append(episodeNumber);
+    episodeContainer.addEventListener('click', episodeEvent => {
+        episodeEvent.stopPropagation();
+    });
+    return episodeContainer;
+};
+const isScrolledIntoView = (elem) => {
+    const rect = elem.getBoundingClientRect();
+    const elemTop = rect.top;
+    const elemBottom = rect.bottom;
+    // Only completely visible elements return true:
+    const isVisible = elemTop >= 0 && elemBottom <= window.innerHeight;
+    // Partially visible elements return true:
+    // isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+    return isVisible;
+};
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+class PlexMeetsHomeAssistantEditor extends HTMLElement {
+    constructor() {
+        super(...arguments);
+        this.plexPort = false;
+        this.plexProtocol = 'http';
+        this.config = {};
+        this.ip = document.createElement('paper-input');
+        this.token = document.createElement('paper-input');
+        this.port = document.createElement('paper-input');
+        this.maxCount = document.createElement('paper-input');
+        this.libraryName = document.createElement('paper-dropdown-menu');
+        this.protocol = document.createElement('paper-dropdown-menu');
+        this.tabs = document.createElement('paper-tabs');
+        this.sort = document.createElement('paper-dropdown-menu');
+        this.sortOrder = document.createElement('paper-dropdown-menu');
+        this.playTrailer = document.createElement('paper-dropdown-menu');
+        this.showExtras = document.createElement('paper-dropdown-menu');
+        this.showSearch = document.createElement('paper-dropdown-menu');
+        this.runBefore = document.createElement('paper-dropdown-menu');
+        this.runAfter = document.createElement('paper-dropdown-menu');
+        this.entitiesSection = document.createElement('div');
+        this.devicesTabs = 0;
+        this.entities = [];
+        this.scriptEntities = [];
+        this.sections = [];
+        this.clients = {};
+        this.entitiesRegistry = false;
+        this.plexValidSection = document.createElement('div');
+        this.loaded = false;
+        this.fireEvent = (node, type, detail, options = {}) => {
+            // eslint-disable-next-line no-param-reassign
+            detail = detail === null || detail === undefined ? {} : detail;
+            const event = new Event(type, {
+                bubbles: options.bubbles === undefined ? true : options.bubbles,
+                cancelable: Boolean(options.cancelable),
+                composed: options.composed === undefined ? true : options.composed
+            });
+            event.detail = detail;
+            node.dispatchEvent(event);
+            return event;
+        };
+        this.valueUpdated = () => {
+            const originalConfig = lodash.clone(this.config);
+            this.config.protocol = this.protocol.value;
+            this.config.ip = this.ip.value;
+            this.config.token = this.token.value;
+            this.config.port = this.port.value;
+            if (this.loaded) {
+                if (!this.config.entity) {
+                    this.config.entity = [];
+                }
+                if (!lodash.isEmpty(this.libraryName.value)) {
+                    this.config.libraryName = this.libraryName.value;
+                    let sortOrderValue = '';
+                    if (lodash.isEqual(this.sortOrder.value, 'Ascending')) {
+                        sortOrderValue = 'asc';
+                    }
+                    else if (lodash.isEqual(this.sortOrder.value, 'Descending')) {
+                        sortOrderValue = 'desc';
+                    }
+                    if (!lodash.isEmpty(sortOrderValue) && !lodash.isEmpty(this.sort.value)) {
+                        this.config.sort = `${this.sort.value}:${sortOrderValue}`;
+                    }
+                    else {
+                        this.config.sort = ``;
+                    }
+                    if (lodash.isEmpty(this.maxCount.value)) {
+                        this.config.maxCount = '';
+                    }
+                    else {
+                        this.config.maxCount = this.maxCount.value;
+                    }
+                    if (!lodash.isEmpty(this.entities)) {
+                        this.config.entity = [];
+                        lodash.forEach(this.entities, entity => {
+                            if (!lodash.isEmpty(entity.value) && !lodash.includes(this.config.entity, entity.value)) {
+                                this.config.entity.push(entity.value);
+                            }
+                        });
+                    }
+                    if (lodash.isEqual(this.playTrailer.value, 'Yes')) {
+                        this.config.playTrailer = true;
+                    }
+                    else if (lodash.isEqual(this.playTrailer.value, 'No')) {
+                        this.config.playTrailer = false;
+                    }
+                    else if (lodash.isEqual(this.playTrailer.value, 'Muted')) {
+                        this.config.playTrailer = 'muted';
+                    }
+                    if (lodash.isEqual(this.showExtras.value, 'Yes')) {
+                        this.config.showExtras = true;
+                    }
+                    else if (lodash.isEqual(this.showExtras.value, 'No')) {
+                        this.config.showExtras = false;
+                    }
+                    if (lodash.isEqual(this.showSearch.value, 'Yes')) {
+                        this.config.showSearch = true;
+                    }
+                    else if (lodash.isEqual(this.showSearch.value, 'No')) {
+                        this.config.showSearch = false;
+                    }
+                    this.config.runBefore = this.runBefore.value;
+                    this.config.runAfter = this.runAfter.value;
+                }
+            }
+            if (!lodash.isEqual(this.config, originalConfig)) {
+                this.fireEvent(this, 'config-changed', { config: this.config });
+            }
+        };
+        this.render = async () => {
+            const addDropdownItem = (text) => {
+                const libraryItem = document.createElement('paper-item');
+                libraryItem.innerHTML = text;
+                return libraryItem;
+            };
+            const createEntitiesDropdown = (selected, changeHandler) => {
+                if (this.entitiesRegistry) {
+                    const entitiesDropDown = document.createElement('paper-dropdown-menu');
+                    const entities = document.createElement('paper-listbox');
+                    entities.appendChild(addDropdownItem(''));
+                    const addedEntityStrings = [];
+                    lodash.forEach(this.entitiesRegistry, entityRegistry => {
+                        if (lodash.isEqual(entityRegistry.platform, 'cast') ||
+                            lodash.isEqual(entityRegistry.platform, 'kodi') ||
+                            lodash.isEqual(entityRegistry.platform, 'androidtv')) {
+                            const entityName = `${entityRegistry.platform} | ${entityRegistry.entity_id}`;
+                            entities.appendChild(addDropdownItem(entityName));
+                            addedEntityStrings.push(entityName);
+                        }
+                    });
+                    lodash.forEach(this.clients, value => {
+                        const entityName = `plexPlayer | ${value.name} | ${value.address} | ${value.machineIdentifier}`;
+                        entities.appendChild(addDropdownItem(entityName));
+                        addedEntityStrings.push(entityName);
+                    });
+                    if (lodash.isArray(this.config.entity)) {
+                        lodash.forEach(this.config.entity, value => {
+                            if (!lodash.includes(addedEntityStrings, value)) {
+                                entities.appendChild(addDropdownItem(value));
+                                addedEntityStrings.push(value);
+                            }
+                        });
+                    }
+                    entities.slot = 'dropdown-content';
+                    entitiesDropDown.label = 'Entity';
+                    entitiesDropDown.value = selected;
+                    entitiesDropDown.appendChild(entities);
+                    entitiesDropDown.style.width = '100%';
+                    entitiesDropDown.className = 'entitiesDropDown';
+                    entitiesDropDown.addEventListener('value-changed', changeHandler);
+                    this.entities.push(entitiesDropDown);
+                    return entitiesDropDown;
+                }
+                return false;
+            };
+            if (this.content)
+                this.content.remove();
+            if (this.hassObj && !this.entitiesRegistry) {
+                lodash.forOwn(this.hassObj.states, (value, key) => {
+                    if (lodash.startsWith(key, 'script.')) {
+                        this.scriptEntities.push(key);
+                    }
+                });
+                this.entitiesRegistry = await fetchEntityRegistry(this.hassObj.connection);
+            }
+            this.entities = [];
+            this.content = document.createElement('div');
+            const plexTitle = document.createElement('h2');
+            plexTitle.innerHTML = 'Plex Configuration';
+            plexTitle.style.margin = '0px';
+            plexTitle.style.padding = '0px';
+            this.content.appendChild(plexTitle);
+            this.protocol.innerHTML = '';
+            const protocolItems = document.createElement('paper-listbox');
+            // eslint-disable-next-line no-restricted-globals
+            const pageProtocol = location.protocol;
+            if (lodash.isEqual(pageProtocol, 'http:')) {
+                protocolItems.appendChild(addDropdownItem('http'));
+            }
+            protocolItems.appendChild(addDropdownItem('https'));
+            protocolItems.slot = 'dropdown-content';
+            this.protocol.label = 'Plex Protocol';
+            this.protocol.appendChild(protocolItems);
+            this.protocol.style.width = '100%';
+            this.protocol.addEventListener('value-changed', this.valueUpdated);
+            if (lodash.isEmpty(this.config.protocol)) {
+                if (lodash.isEqual(pageProtocol, 'http:')) {
+                    this.protocol.value = 'http';
+                }
+                else {
+                    this.protocol.value = 'https';
+                }
+            }
+            else {
+                this.protocol.value = this.config.protocol;
+            }
+            this.content.appendChild(this.protocol);
+            this.ip.label = 'Plex IP Address';
+            this.ip.value = this.config.ip;
+            this.ip.addEventListener('change', this.valueUpdated);
+            this.content.appendChild(this.ip);
+            this.port.label = 'Plex Port';
+            this.port.value = this.config.port;
+            this.port.type = 'number';
+            this.port.addEventListener('change', this.valueUpdated);
+            this.content.appendChild(this.port);
+            this.token.label = 'Plex Token';
+            this.token.value = this.config.token;
+            this.token.addEventListener('change', this.valueUpdated);
+            this.content.appendChild(this.token);
+            this.libraryName.innerHTML = '';
+            const libraryItems = document.createElement('paper-listbox');
+            libraryItems.appendChild(addDropdownItem('Continue Watching'));
+            libraryItems.appendChild(addDropdownItem('Deck'));
+            libraryItems.appendChild(addDropdownItem('Recently Added'));
+            libraryItems.appendChild(addDropdownItem('Watch Next'));
+            libraryItems.slot = 'dropdown-content';
+            this.libraryName.label = 'Plex Library';
+            this.libraryName.disabled = true;
+            this.libraryName.appendChild(libraryItems);
+            this.libraryName.style.width = '100%';
+            this.libraryName.addEventListener('value-changed', this.valueUpdated);
+            this.content.appendChild(this.libraryName);
+            this.appendChild(this.content);
+            this.plex = new Plex(this.config.ip, this.plexPort, this.config.token, this.plexProtocol, this.config.sort);
+            this.sections = await this.plex.getSections();
+            this.clients = await this.plex.getClients();
+            this.plexValidSection.style.display = 'none';
+            this.plexValidSection.innerHTML = '';
+            let hasUIConfig = true;
+            let canConvert = true;
+            if (lodash.isArray(this.config.entity)) {
+                // eslint-disable-next-line consistent-return
+                lodash.forEach(this.config.entity, entity => {
+                    if (lodash.isObjectLike(entity)) {
+                        canConvert = !lodash.includes(lodash.keys(this.config.entity), 'plexPlayer');
+                        hasUIConfig = false;
+                        return false;
+                    }
+                });
+            }
+            else if (lodash.isObjectLike(this.config.entity)) {
+                canConvert = !lodash.includes(lodash.keys(this.config.entity), 'plexPlayer');
+                hasUIConfig = false;
+                if (canConvert) {
+                    const convertedEntities = [];
+                    hasUIConfig = true;
+                    if (lodash.isObjectLike(this.config.entity)) {
+                        lodash.forOwn(this.config.entity, value => {
+                            if (lodash.isString(value)) {
+                                convertedEntities.push(value);
+                            }
+                            else if (lodash.isArray(value)) {
+                                lodash.forEach(value, valueStr => {
+                                    convertedEntities.push(valueStr);
+                                });
+                            }
+                        });
+                    }
+                    this.config.entity = convertedEntities;
+                }
+            }
+            const devicesTitle = document.createElement('h2');
+            devicesTitle.innerHTML = `Devices Configuration`;
+            devicesTitle.style.lineHeight = '29px';
+            devicesTitle.style.marginBottom = '0px';
+            devicesTitle.style.marginTop = '20px';
+            if (hasUIConfig) {
+                const addDeviceButton = document.createElement('button');
+                addDeviceButton.style.float = 'right';
+                addDeviceButton.style.fontSize = '20px';
+                addDeviceButton.style.cursor = 'pointer';
+                addDeviceButton.innerHTML = '+';
+                addDeviceButton.addEventListener('click', () => {
+                    const entitiesDropdown = createEntitiesDropdown('', this.valueUpdated);
+                    if (entitiesDropdown) {
+                        this.entitiesSection.appendChild(entitiesDropdown);
+                    }
+                });
+                devicesTitle.appendChild(addDeviceButton);
+            }
+            this.plexValidSection.appendChild(devicesTitle);
+            this.entitiesSection.innerHTML = '';
+            this.plexValidSection.appendChild(this.entitiesSection);
+            if (hasUIConfig) {
+                if (lodash.isString(this.config.entity)) {
+                    this.config.entity = [this.config.entity];
+                }
+                if (lodash.isArray(this.config.entity)) {
+                    lodash.forEach(this.config.entity, entity => {
+                        if (lodash.isString(entity)) {
+                            const entitiesDropdown = createEntitiesDropdown(entity, this.valueUpdated);
+                            if (entitiesDropdown) {
+                                this.entitiesSection.appendChild(entitiesDropdown);
+                            }
+                        }
+                    });
+                }
+            }
+            else {
+                const entitiesUINotAvailable = document.createElement('div');
+                entitiesUINotAvailable.innerHTML =
+                    'Devices configuration is not available when using plexPlayer client device.<br/>You can edit any other settings through UI and use <b>Show code editor</b> to edit entities.<br/><br/>If you are not using server settings for plexPlayer with <b>identifier</b> and <b>server</b> key, you can migrate your settings to UI by removing plexPlayer section and readd through UI.';
+                this.plexValidSection.appendChild(entitiesUINotAvailable);
+            }
+            const viewTitle = document.createElement('h2');
+            viewTitle.innerHTML = `View Configuration`;
+            viewTitle.style.lineHeight = '29px';
+            viewTitle.style.marginBottom = '0px';
+            viewTitle.style.marginTop = '20px';
+            this.plexValidSection.appendChild(viewTitle);
+            this.maxCount.label = 'Maximum number of items to display';
+            this.maxCount.value = this.config.maxCount;
+            this.maxCount.type = 'number';
+            this.maxCount.addEventListener('change', this.valueUpdated);
+            this.plexValidSection.appendChild(this.maxCount);
+            this.sort.innerHTML = '';
+            const sortItems = document.createElement('paper-listbox');
+            sortItems.slot = 'dropdown-content';
+            this.sort.label = 'Sort';
+            this.sort.appendChild(sortItems);
+            this.sort.style.width = '100%';
+            this.sort.addEventListener('value-changed', this.valueUpdated);
+            this.plexValidSection.appendChild(this.sort);
+            this.sortOrder.innerHTML = '';
+            const sortOrderItems = document.createElement('paper-listbox');
+            sortOrderItems.appendChild(addDropdownItem('Ascending'));
+            sortOrderItems.appendChild(addDropdownItem('Descending'));
+            sortOrderItems.slot = 'dropdown-content';
+            this.sortOrder.label = 'Sort Order';
+            this.sortOrder.appendChild(sortOrderItems);
+            this.sortOrder.style.width = '100%';
+            this.sortOrder.addEventListener('value-changed', this.valueUpdated);
+            if (lodash.isEmpty(this.config.sort)) {
+                this.sortOrder.value = 'Ascending';
+            }
+            else {
+                const sortOrder = this.config.sort.split(':')[1];
+                if (lodash.isEmpty(sortOrder)) {
+                    this.sortOrder.value = 'Ascending';
+                }
+                else if (lodash.isEqual(sortOrder, 'asc')) {
+                    this.sortOrder.value = 'Ascending';
+                }
+                else if (lodash.isEqual(sortOrder, 'desc')) {
+                    this.sortOrder.value = 'Descending';
+                }
+            }
+            this.plexValidSection.appendChild(this.sortOrder);
+            this.playTrailer.innerHTML = '';
+            const playTrailerItems = document.createElement('paper-listbox');
+            playTrailerItems.appendChild(addDropdownItem('Yes'));
+            playTrailerItems.appendChild(addDropdownItem('Muted'));
+            playTrailerItems.appendChild(addDropdownItem('No'));
+            playTrailerItems.slot = 'dropdown-content';
+            this.playTrailer.label = 'Play Trailer';
+            this.playTrailer.appendChild(playTrailerItems);
+            this.playTrailer.style.width = '100%';
+            this.playTrailer.addEventListener('value-changed', this.valueUpdated);
+            let playTrailerValue = 'Yes';
+            if (lodash.isEqual(this.config.playTrailer, 'muted')) {
+                playTrailerValue = 'Muted';
+            }
+            else if (!this.config.playTrailer) {
+                playTrailerValue = 'No';
+            }
+            this.playTrailer.value = playTrailerValue;
+            this.plexValidSection.appendChild(this.playTrailer);
+            this.showExtras.innerHTML = '';
+            const showExtrasItems = document.createElement('paper-listbox');
+            showExtrasItems.appendChild(addDropdownItem('Yes'));
+            showExtrasItems.appendChild(addDropdownItem('No'));
+            showExtrasItems.slot = 'dropdown-content';
+            this.showExtras.label = 'Show Extras';
+            this.showExtras.appendChild(showExtrasItems);
+            this.showExtras.style.width = '100%';
+            this.showExtras.addEventListener('value-changed', this.valueUpdated);
+            let showExtrasValue = 'Yes';
+            if (!this.config.showExtras) {
+                showExtrasValue = 'No';
+            }
+            this.showExtras.value = showExtrasValue;
+            this.plexValidSection.appendChild(this.showExtras);
+            this.showSearch.innerHTML = '';
+            const showSearchItems = document.createElement('paper-listbox');
+            showSearchItems.appendChild(addDropdownItem('Yes'));
+            showSearchItems.appendChild(addDropdownItem('No'));
+            showSearchItems.slot = 'dropdown-content';
+            this.showSearch.label = 'Show Search';
+            this.showSearch.appendChild(showSearchItems);
+            this.showSearch.style.width = '100%';
+            this.showSearch.addEventListener('value-changed', this.valueUpdated);
+            let showSearchValue = 'Yes';
+            if (!this.config.showSearch) {
+                showSearchValue = 'No';
+            }
+            this.showSearch.value = showSearchValue;
+            this.plexValidSection.appendChild(this.showSearch);
+            this.runBefore.innerHTML = '';
+            const runBeforeItems = document.createElement('paper-listbox');
+            runBeforeItems.appendChild(addDropdownItem(''));
+            lodash.forEach(this.scriptEntities, entity => {
+                runBeforeItems.appendChild(addDropdownItem(entity));
+            });
+            runBeforeItems.slot = 'dropdown-content';
+            this.runBefore.label = 'Script to execute before starting the media';
+            this.runBefore.appendChild(runBeforeItems);
+            this.runBefore.style.width = '100%';
+            this.runBefore.addEventListener('value-changed', this.valueUpdated);
+            this.runBefore.value = this.config.runBefore;
+            this.plexValidSection.appendChild(this.runBefore);
+            this.runAfter.innerHTML = '';
+            const runAfterItems = document.createElement('paper-listbox');
+            runAfterItems.appendChild(addDropdownItem(''));
+            lodash.forEach(this.scriptEntities, entity => {
+                runAfterItems.appendChild(addDropdownItem(entity));
+            });
+            runAfterItems.slot = 'dropdown-content';
+            this.runAfter.label = 'Script to execute after starting the media';
+            this.runAfter.appendChild(runAfterItems);
+            this.runAfter.style.width = '100%';
+            this.runAfter.addEventListener('value-changed', this.valueUpdated);
+            this.runAfter.value = this.config.runAfter;
+            this.plexValidSection.appendChild(this.runAfter);
+            if (!lodash.isEmpty(this.sections)) {
+                lodash.forEach(this.sections, (section) => {
+                    libraryItems.appendChild(addDropdownItem(section.title));
+                });
+                this.libraryName.disabled = false;
+                this.libraryName.value = this.config.libraryName;
+                let libraryType = '';
+                // eslint-disable-next-line consistent-return
+                lodash.forEach(this.sections, section => {
+                    if (lodash.isEqual(section.title, this.libraryName.value)) {
+                        libraryType = section.type;
+                        return false;
+                    }
+                });
+                if (lodash.isEqual(libraryType, 'show')) {
+                    sortItems.appendChild(addDropdownItem('titleSort'));
+                    sortItems.appendChild(addDropdownItem('title'));
+                    sortItems.appendChild(addDropdownItem('year'));
+                    sortItems.appendChild(addDropdownItem('originallyAvailableAt'));
+                    sortItems.appendChild(addDropdownItem('rating'));
+                    sortItems.appendChild(addDropdownItem('audienceRating'));
+                    sortItems.appendChild(addDropdownItem('userRating'));
+                    sortItems.appendChild(addDropdownItem('contentRating'));
+                    sortItems.appendChild(addDropdownItem('unviewedLeafCount'));
+                    sortItems.appendChild(addDropdownItem('episode.addedAt'));
+                    sortItems.appendChild(addDropdownItem('addedAt'));
+                    sortItems.appendChild(addDropdownItem('lastViewedAt'));
+                    this.sort.style.display = 'block';
+                    this.sortOrder.style.display = 'block';
+                }
+                else if (lodash.isEqual(libraryType, 'movie')) {
+                    sortItems.appendChild(addDropdownItem('titleSort'));
+                    sortItems.appendChild(addDropdownItem('title'));
+                    sortItems.appendChild(addDropdownItem('originallyAvailableAt'));
+                    sortItems.appendChild(addDropdownItem('rating'));
+                    sortItems.appendChild(addDropdownItem('audienceRating'));
+                    sortItems.appendChild(addDropdownItem('userRating'));
+                    sortItems.appendChild(addDropdownItem('duration'));
+                    sortItems.appendChild(addDropdownItem('viewOffset'));
+                    sortItems.appendChild(addDropdownItem('viewCount'));
+                    sortItems.appendChild(addDropdownItem('addedAt'));
+                    sortItems.appendChild(addDropdownItem('lastViewedAt'));
+                    sortItems.appendChild(addDropdownItem('mediaHeight'));
+                    sortItems.appendChild(addDropdownItem('mediaBitrate'));
+                    this.sort.style.display = 'block';
+                    this.sortOrder.style.display = 'block';
+                }
+                else {
+                    this.sort.style.display = 'none';
+                    this.sortOrder.style.display = 'none';
+                    this.config.sort = '';
+                }
+                if (lodash.isEmpty(this.config.sort)) {
+                    this.sort.value = '';
+                    this.sortOrder.value = '';
+                }
+                else {
+                    // eslint-disable-next-line prefer-destructuring
+                    this.sort.value = this.config.sort.split(':')[0];
+                    const sortOrder = this.config.sort.split(':')[1];
+                    if (lodash.isEmpty(sortOrder)) {
+                        this.sortOrder.value = 'Ascending';
+                    }
+                    else if (lodash.isEqual(sortOrder, 'asc')) {
+                        this.sortOrder.value = 'Ascending';
+                    }
+                    else if (lodash.isEqual(sortOrder, 'desc')) {
+                        this.sortOrder.value = 'Descending';
+                    }
+                }
+                this.plexValidSection.style.display = 'block';
+            }
+            this.loaded = true;
+            this.content.appendChild(this.plexValidSection);
+        };
+        this.setConfig = (config) => {
+            this.config = JSON.parse(JSON.stringify(config));
+            if (config.port && !lodash.isEqual(config.port, '')) {
+                this.plexPort = config.port;
+            }
+            else {
+                this.plexPort = false;
+            }
+            // eslint-disable-next-line no-restricted-globals
+            const pageProtocol = location.protocol;
+            if (config.protocol) {
+                this.plexProtocol = config.protocol;
+            }
+            else if (lodash.isEqual(pageProtocol, 'http:')) {
+                this.config.protocol = 'http';
+            }
+            else {
+                this.config.protocol = 'https';
+            }
+            if (!config.sort) {
+                this.config.sort = 'titleSort:asc';
+            }
+            if (!lodash.isNil(config.playTrailer)) {
+                this.config.playTrailer = config.playTrailer;
+            }
+            else {
+                this.config.playTrailer = true;
+            }
+            if (!lodash.isNil(config.showExtras)) {
+                this.config.showExtras = config.showExtras;
+            }
+            else {
+                this.config.showExtras = true;
+            }
+            if (!lodash.isNil(config.showSearch)) {
+                this.config.showSearch = config.showSearch;
+            }
+            else {
+                this.config.showSearch = true;
+            }
+            if (!lodash.isNil(config.runBefore)) {
+                this.config.runBefore = config.runBefore;
+            }
+            if (!lodash.isNil(config.runAfter)) {
+                this.config.runAfter = config.runAfter;
+            }
+            if (lodash.isNumber(this.config.maxCount)) {
+                this.config.maxCount = `${this.config.maxCount}`;
+            }
+            this.render();
+        };
+        this.configChanged = (newConfig) => {
+            const event = new Event('config-changed', {
+                bubbles: true,
+                composed: true
+            });
+            event.detail = { config: newConfig };
+            this.dispatchEvent(event);
+        };
+    }
+    set hass(hass) {
+        this.hassObj = hass;
+    }
+}
 
 /**
  * @license
@@ -19251,33 +20280,48 @@ const css = (strings, ...values) => {
 /* eslint-env browser */
 const style = document.createElement('style');
 style.textContent = css `
+	.maxZIndex {
+		z-index: 6 !important;
+	}
+	.transparent {
+		visibility: hidden !important;
+	}
 	.detailPlayAction {
-		top: 10px;
 		color: rgb(15 17 19);
 		font-weight: bold;
-		padding: 5px 10px;
+		float: left;
+		padding: 7px 10px;
 		border-radius: 5px;
 		cursor: pointer;
 		position: relative;
 		background: orange;
+		border: none;
+		visibility: hidden;
 	}
 	.seasons {
 		z-index: 5;
 		position: absolute;
 		top: ${CSS_STYLE.expandedHeight + 16}px;
-		width: calc(100% - 32px);
+		width: calc(100% - 22px);
 		left: 0;
 		padding: 16px;
 		display: none;
 	}
 	.episodes {
-		z-index: 4;
+		z-index: 5;
 		position: absolute;
 		top: ${CSS_STYLE.expandedHeight + 16}px;
-		width: calc(100% - 32px);
+		width: calc(100% - 22px);
 		left: 0;
 		padding: 16px;
 		display: none;
+	}
+	.additionalElem {
+		color: hsla(0, 0%, 100%, 0.45);
+		position: relative;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
 	}
 	.ratingDetail {
 		background: #ffffff24;
@@ -19286,6 +20330,7 @@ style.textContent = css `
 		white-space: nowrap;
 		margin-bottom: 10px;
 		float: left;
+		margin-right: 10px;
 	}
 	.contentRatingDetail {
 		background: #ffffff24;
@@ -19310,6 +20355,7 @@ style.textContent = css `
 	}
 	.detail .metaInfo {
 		display: block;
+		float: left;
 	}
 	.detail h2 {
 		text-overflow: ellipsis;
@@ -19340,6 +20386,7 @@ style.textContent = css `
 	.searchContainer {
 		position: relative;
 		z-index: 2;
+		padding-right: 8px;
 	}
 
 	.searchContainer input {
@@ -19397,7 +20444,7 @@ style.textContent = css `
 		position: absolute;
 		left: 247px;
 		width: calc(100% - 267px);
-		z-index: 4;
+		z-index: 5;
 		transition: 0.5s;
 		color: rgba(255, 255, 255, 0);
 	}
@@ -19410,10 +20457,113 @@ style.textContent = css `
 		transition: 0.5s;
 		left: 0;
 		top: 0;
+		background-size: cover;
+	}
+	.stop-scrolling {
+		height: 100%;
+		overflow: hidden;
+	}
+	.contentArt {
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0);
+		z-index: 2;
+		left: 0;
+		top: 0;
+		background-size: cover;
+		display: none;
+		-webkit-animation: fadein 0.5s; /* Safari, Chrome and Opera > 12.1 */
+		-moz-animation: fadein 0.5s; /* Firefox < 16 */
+		-ms-animation: fadein 0.5s; /* Internet Explorer */
+		-o-animation: fadein 0.5s; /* Opera < 12.1 */
+		animation: fadein 0.5s;
 	}
 	.yearElem {
 		color: hsla(0, 0%, 100%, 0.45);
 		position: relative;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+	.viewProgress {
+		background: #e5a00d;
+		height: 3px;
+		bottom: 0;
+		position: absolute;
+	}
+	.toViewEpisode {
+		position: relative;
+		height: 28px;
+		width: 28px;
+		float: right;
+		display: block;
+		background: #e5a00d;
+		font-weight: bold;
+		color: black;
+		transition: 0.5s;
+		right: -14px;
+		top: -14px;
+		transform: rotate(45deg);
+	}
+	@keyframes fadein {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	/* Firefox < 16 */
+	@-moz-keyframes fadein {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	/* Safari, Chrome and Opera > 12.1 */
+	@-webkit-keyframes fadein {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	/* Internet Explorer */
+	@-ms-keyframes fadein {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	/* Opera < 12.1 */
+	@-o-keyframes fadein {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+	.toViewSeason {
+		position: relative;
+		top: 5px;
+		right: 5px;
+		float: right;
+		display: block;
+		border-radius: 5px;
+		background: #e5a00d;
+		font-weight: bold;
+		color: black;
+		padding: 1px 6px;
+		transition: 0.5s;
 	}
 	.seasonTitleElem {
 		text-overflow: ellipsis;
@@ -19451,22 +20601,33 @@ style.textContent = css `
 	.seasonContainer {
 		position: relative;
 		float: left;
-		margin-right: 16px;
+		margin-right: 10px;
 		margin-bottom: 15px;
 		transition: 0.5s;
 	}
 	.episodeContainer {
 		position: relative;
 		float: left;
-		margin-right: 16px;
+		margin-right: 10px;
 		margin-bottom: 15px;
 		transition: 0.5s;
+	}
+	.metaInfoDetails {
+		color: hsla(0, 0%, 98%, 0.45);
+		text-transform: uppercase;
+		margin-top: 10px;
+	}
+	.simulatedFullScreen {
+		background: black;
+		height: 100%;
 	}
 	.episodeElem {
 		background-repeat: no-repeat;
 		background-size: contain;
 		border-radius: 5px;
 		transition: 0.5s;
+		background: black;
+		overflow: hidden;
 	}
 	.seasonElem {
 		background-repeat: no-repeat;
@@ -19477,7 +20638,8 @@ style.textContent = css `
 	.movieElem {
 		margin-bottom: 5px;
 		background-repeat: no-repeat;
-		background-size: contain;
+		background-size: cover;
+		overflow: hidden;
 		border-radius: 5px;
 		transition: 0.5s;
 		position: absolute;
@@ -19490,14 +20652,41 @@ style.textContent = css `
 		margin-right: 10px;
 		transition: 0.5s;
 	}
+	.no-transparency {
+		background-color: rgba(0, 0, 0, 1) !important;
+	}
+	.videobg1 {
+		position: absolute;
+		background-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
+		height: 50%;
+		top: 0;
+		width: 100%;
+	}
+	.videobg2 {
+		position: absolute;
+		background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 1));
+		height: 50%;
+		top: 50%;
+		width: 100%;
+	}
+	.video {
+		position: absolute;
+		z-index: 3;
+		visibility: hidden;
+	}
+	.movieExtras {
+		z-index: 5;
+		position: absolute;
+		top: 340px;
+		width: calc(100% - 32px);
+		left: 0;
+		padding: 16px;
+	}
 	.interactiveArea {
 		position: relative;
 		width: 100%;
 		height: 100%;
 		transition: 0.5s;
-		display: flex;
-		align-items: center;
-		justify-content: center;
 	}
 	.interactiveArea:hover {
 		background: rgba(0, 0, 0, 0.3);
@@ -19507,9 +20696,13 @@ style.textContent = css `
 		height: 40px;
 		border: 2px solid white;
 		border-radius: 100%;
-		margin: auto;
 		cursor: pointer;
 		transition: 0.2s;
+		margin: 0 auto;
+		left: calc(50% - 20px);
+		display: block;
+		top: calc(50% - 20px);
+		position: absolute;
 	}
 	button[name='playButton']:hover {
 		background: orange !important;
@@ -19564,7 +20757,21 @@ style.textContent = css `
 class PlexMeetsHomeAssistant extends HTMLElement {
     constructor() {
         super(...arguments);
+        this.searchInputElem = document.createElement('input');
         this.plexProtocol = 'http';
+        this.plexPort = false;
+        this.detailsShown = false;
+        this.entityRegistry = [];
+        this.runBefore = '';
+        this.playTrailer = true;
+        this.showExtras = true;
+        this.isVisible = true;
+        this.showSearch = true;
+        this.previousPageWidth = 0;
+        this.runAfter = '';
+        this.columnsCount = 0;
+        this.renderedItems = 0;
+        this.maxRenderCount = false;
         this.seasonContainerClickEnabled = true;
         this.looseSearch = false;
         this.movieElems = [];
@@ -19579,20 +20786,280 @@ class PlexMeetsHomeAssistant extends HTMLElement {
         this.loading = false;
         this.maxCount = false;
         this.error = '';
-        this.previousPositions = [];
         this.contentBGHeight = 0;
+        this.initialDataLoaded = false;
+        this.renderNewElementsIfNeeded = () => {
+            const loadAdditionalRowsCount = 2; // todo: make this configurable
+            const height = getHeight(this.content);
+            if (!this.detailsShown &&
+                window.innerHeight + window.scrollY > height + getOffset(this.content).top - 300 &&
+                this.renderedItems > 0) {
+                this.maxRenderCount = this.renderedItems + this.columnsCount * (loadAdditionalRowsCount * 2);
+                this.renderMovieElems();
+                this.calculatePositions();
+            }
+        };
         this.loadInitialData = async () => {
+            this.initialDataLoaded = true;
+            setInterval(() => {
+                const isVisibleNow = !lodash.isNull(this.offsetParent);
+                if (isVisibleNow && !this.isVisible) {
+                    this.renderPage();
+                }
+                this.isVisible = isVisibleNow;
+            }, 100);
+            if (this.hassObj) {
+                this.entityRegistry = await fetchEntityRegistry(this.hassObj.connection);
+            }
+            window.addEventListener('scroll', () => {
+                // todo: improve performance by calculating this when needed only
+                if (this.detailsShown && this.activeMovieElem && !isVideoFullScreen(this) && this.isVisible) {
+                    const seasonContainers = this.getElementsByClassName('seasonContainer');
+                    const episodeContainers = this.getElementsByClassName('episodeContainer');
+                    const seasonElems = this.getElementsByClassName('seasonElem');
+                    let activeElem = this.activeMovieElem;
+                    // eslint-disable-next-line consistent-return
+                    lodash.forEach(seasonElems, seasonElem => {
+                        if (lodash.isEqual(seasonElem.dataset.clicked, 'true')) {
+                            activeElem = seasonElem;
+                            return false;
+                        }
+                    });
+                    const detailTop = parseInt(getOffset(activeElem).top, 10) - 70;
+                    const detailBottom = getDetailsBottom(seasonContainers, episodeContainers, activeElem);
+                    if (this.getTop() < detailTop) {
+                        window.scroll({
+                            top: detailTop
+                        });
+                        this.children[0].classList.add('stop-scrolling');
+                    }
+                    else if (detailBottom) {
+                        if (window.innerHeight < detailBottom - detailTop) {
+                            if (detailBottom && this.getTop() + window.innerHeight > detailBottom) {
+                                window.scroll({
+                                    top: detailBottom - window.innerHeight
+                                });
+                                this.children[0].classList.add('stop-scrolling');
+                            }
+                        }
+                        else if (detailTop !== -70 && detailBottom !== -10) {
+                            window.scroll({
+                                top: detailTop
+                            });
+                            this.children[0].classList.add('stop-scrolling');
+                        }
+                    }
+                }
+                this.renderNewElementsIfNeeded();
+            });
+            window.addEventListener('resize', () => {
+                if (this.isVisible) {
+                    if (!this.detailsShown) {
+                        const videoPlayer = this.getElementsByClassName('videoPlayer')[0];
+                        let isFullScreen = false;
+                        if (videoPlayer.children.length > 0) {
+                            isFullScreen = isVideoFullScreen(this);
+                        }
+                        if (this.card && this.movieElems.length > 0 && !isFullScreen) {
+                            if (this.previousPageWidth !== this.card.offsetWidth) {
+                                this.previousPageWidth = this.card.offsetWidth;
+                                this.renderPage();
+                                const contentbg = this.getElementsByClassName('contentbg');
+                                this.contentBGHeight = getHeight(contentbg[0]);
+                            }
+                        }
+                    }
+                    this.renderNewElementsIfNeeded();
+                }
+            });
+            if (this.card) {
+                this.previousPageWidth = this.card.offsetWidth;
+            }
+            this.resizeBackground();
+        };
+        this.renderInitialData = async () => {
+            let { entity } = JSON.parse(JSON.stringify(this.config));
+            const processEntity = (entityObj, entityString) => {
+                let realEntityString = entityString;
+                let isPlexPlayer = false;
+                if (lodash.startsWith(entityString, 'plexPlayer | ')) {
+                    // eslint-disable-next-line prefer-destructuring
+                    realEntityString = entityString.split(' | ')[3];
+                    isPlexPlayer = true;
+                }
+                else if (lodash.startsWith(entityString, 'androidtv | ') ||
+                    lodash.startsWith(entityString, 'kodi | ') ||
+                    lodash.startsWith(entityString, 'cast | ')) {
+                    // eslint-disable-next-line prefer-destructuring
+                    realEntityString = entityString.split(' | ')[1];
+                    isPlexPlayer = false;
+                }
+                if (isPlexPlayer) {
+                    if (lodash.isNil(entityObj.plexPlayer)) {
+                        // eslint-disable-next-line no-param-reassign
+                        entityObj.plexPlayer = [];
+                    }
+                    entityObj.plexPlayer.push(realEntityString);
+                }
+                else {
+                    lodash.forEach(this.entityRegistry, entityInRegister => {
+                        if (lodash.isEqual(entityInRegister.entity_id, realEntityString)) {
+                            switch (entityInRegister.platform) {
+                                case 'cast':
+                                    if (lodash.isNil(entityObj.cast)) {
+                                        // eslint-disable-next-line no-param-reassign
+                                        entityObj.cast = [];
+                                    }
+                                    entityObj.cast.push(entityInRegister.entity_id);
+                                    break;
+                                case 'androidtv':
+                                    if (lodash.isNil(entityObj.androidtv)) {
+                                        // eslint-disable-next-line no-param-reassign
+                                        entityObj.androidtv = [];
+                                    }
+                                    entityObj.androidtv.push(entityInRegister.entity_id);
+                                    break;
+                                case 'kodi':
+                                    if (lodash.isNil(entityObj.kodi)) {
+                                        // eslint-disable-next-line no-param-reassign
+                                        entityObj.kodi = [];
+                                    }
+                                    entityObj.kodi.push(entityInRegister.entity_id);
+                                    break;
+                                // pass
+                            }
+                        }
+                    });
+                }
+            };
+            const entityOrig = entity;
+            if (lodash.isString(entityOrig)) {
+                entity = {};
+                processEntity(entity, entityOrig);
+            }
+            else if (lodash.isArray(entityOrig)) {
+                entity = {};
+                lodash.forEach(entityOrig, entityStr => {
+                    processEntity(entity, entityStr);
+                });
+            }
             this.loading = true;
             this.renderPage();
             try {
-                if (this.plex) {
+                if (this.plex && this.hassObj) {
+                    this.playController = new PlayController(this.hassObj, this.plex, entity, this.runBefore, this.runAfter);
+                    if (this.playController) {
+                        await this.playController.init();
+                    }
                     await this.plex.init();
-                    const [serverID, plexSections] = await Promise.all([this.plex.getServerID(), this.plex.getSectionsData()]);
-                    // eslint-disable-next-line @typescript-eslint/camelcase
-                    this.data.serverID = serverID;
-                    lodash.forEach(plexSections, section => {
-                        this.data[section.title1] = section.Metadata;
+                    const plexAllSections = await this.plex.getSections();
+                    const getOnDeck = async () => {
+                        if (this.plex) {
+                            try {
+                                const onDeck = await this.plex.getOnDeck();
+                                this.data.Deck = onDeck.Metadata;
+                            }
+                            catch (err) {
+                                if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                    console.warn(getOldPlexServerErrorMessage('Deck'));
+                                }
+                                else {
+                                    throw err;
+                                }
+                            }
+                        }
+                    };
+                    const getContinueWatching = async () => {
+                        if (this.plex) {
+                            try {
+                                const continueWatching = await this.plex.getContinueWatching();
+                                this.data['Continue Watching'] = continueWatching.Metadata;
+                            }
+                            catch (err) {
+                                if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                    console.warn(getOldPlexServerErrorMessage('Continue Watching'));
+                                }
+                                else {
+                                    throw err;
+                                }
+                            }
+                        }
+                    };
+                    const getWatchNext = async () => {
+                        if (this.plex) {
+                            try {
+                                const watchNext = await this.plex.getWatchNext();
+                                this.data['Watch Next'] = watchNext.Metadata;
+                            }
+                            catch (err) {
+                                if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                    console.warn(getOldPlexServerErrorMessage('Watch Next'));
+                                }
+                                else {
+                                    throw err;
+                                }
+                            }
+                        }
+                    };
+                    const getRecentyAdded = async () => {
+                        if (this.plex) {
+                            try {
+                                const recentlyAdded = await this.plex.getRecentyAdded();
+                                this.data['Recently Added'] = recentlyAdded.Metadata;
+                            }
+                            catch (err) {
+                                if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                    try {
+                                        console.warn('PlexMeetsHomeAssistant: Using old endpoint for recently added tv shows. Consider updating your Plex server.');
+                                        const recentlyAdded = await this.plex.getRecentyAdded(true);
+                                        this.data['Recently Added'] = recentlyAdded.Metadata;
+                                        // eslint-disable-next-line no-shadow
+                                    }
+                                    catch (err) {
+                                        if (lodash.includes(err.message, 'Request failed with status code 404')) {
+                                            console.warn(getOldPlexServerErrorMessage('Recently Added'));
+                                        }
+                                        else {
+                                            throw err;
+                                        }
+                                    }
+                                }
+                                else {
+                                    throw err;
+                                }
+                            }
+                        }
+                    };
+                    let sectionKey = 0;
+                    lodash.forEach(plexAllSections, (section) => {
+                        if (lodash.isEqual(section.title, this.config.libraryName)) {
+                            sectionKey = section.key;
+                            return false;
+                        }
+                        return true;
                     });
+                    const loadDataRequests = [];
+                    if (sectionKey) {
+                        loadDataRequests.push(this.plex.getSectionData(sectionKey));
+                    }
+                    if (lodash.isEqual(this.config.libraryName, 'Deck')) {
+                        loadDataRequests.push(getOnDeck());
+                    }
+                    else if (lodash.isEqual(this.config.libraryName, 'Continue Watching')) {
+                        loadDataRequests.push(getContinueWatching());
+                    }
+                    else if (lodash.isEqual(this.config.libraryName, 'Watch Next')) {
+                        loadDataRequests.push(getWatchNext());
+                    }
+                    else if (lodash.isEqual(this.config.libraryName, 'Recently Added')) {
+                        loadDataRequests.push(getRecentyAdded());
+                    }
+                    const [plexSections] = await Promise.all(loadDataRequests);
+                    if (plexSections && sectionKey) {
+                        lodash.forEach(plexSections, section => {
+                            this.data[section.title1] = section.Metadata;
+                        });
+                    }
                     if (this.data[this.config.libraryName] === undefined) {
                         this.error = `Library name ${this.config.libraryName} does not exist.`;
                     }
@@ -19600,7 +21067,9 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                     this.render();
                 }
                 else {
-                    throw Error('Plex not initialized.');
+                    setTimeout(() => {
+                        this.renderInitialData();
+                    }, 250);
                 }
             }
             catch (err) {
@@ -19609,52 +21078,118 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             }
         };
         this.render = () => {
-            this.previousPositions = [];
-            // todo: find a better way to detect resize...
-            setInterval(() => {
-                if (this.movieElems.length > 0) {
-                    let renderNeeded = false;
-                    if (this.previousPositions.length === 0) {
-                        for (let i = 0; i < this.movieElems.length; i += 1) {
-                            this.previousPositions[i] = {};
-                            this.previousPositions[i].top = this.movieElems[i].parentElement.offsetTop;
-                            this.previousPositions[i].left = this.movieElems[i].parentElement.offsetLeft;
-                        }
-                    }
-                    for (let i = 0; i < this.movieElems.length; i += 1) {
-                        if (this.previousPositions[i] &&
-                            this.movieElems[i].dataset.clicked !== 'true' &&
-                            (this.previousPositions[i].top !== this.movieElems[i].parentElement.offsetTop ||
-                                this.previousPositions[i].left !== this.movieElems[i].parentElement.offsetLeft)) {
-                            renderNeeded = true;
-                            this.previousPositions = [];
-                        }
-                    }
-                    if (renderNeeded) {
-                        this.renderPage();
-                        const contentbg = this.getElementsByClassName('contentbg');
-                        this.contentBGHeight = contentbg[0].scrollHeight;
-                    }
-                }
-            }, 100);
             this.renderPage();
         };
         this.searchInput = () => {
             const searchContainer = document.createElement('div');
             searchContainer.className = 'searchContainer';
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.value = this.searchValue;
-            searchInput.placeholder = `Search ${this.config.libraryName}...`;
-            searchInput.addEventListener('keyup', () => {
-                this.searchValue = searchInput.value;
-                this.renderPage();
-                this.focus();
+            this.searchInputElem = document.createElement('input');
+            this.searchInputElem.type = 'text';
+            this.searchInputElem.value = this.searchValue;
+            this.searchInputElem.placeholder = `Search ${this.config.libraryName}...`;
+            this.searchInputElem.addEventListener('keyup', () => {
+                if (!lodash.isEqual(this.searchInputElem.value, this.searchValue)) {
+                    this.searchValue = this.searchInputElem.value;
+                    this.renderPage();
+                    this.focus();
+                    this.renderNewElementsIfNeeded();
+                }
             });
-            searchContainer.appendChild(searchInput);
+            searchContainer.appendChild(this.searchInputElem);
             return searchContainer;
         };
+        this.renderMovieElems = () => {
+            if (this.data[this.config.libraryName] && this.renderedItems < this.data[this.config.libraryName].length) {
+                let count = 0;
+                // eslint-disable-next-line consistent-return
+                const searchValues = lodash.split(this.searchValue, ' ');
+                // eslint-disable-next-line consistent-return
+                let lastRowTop = 0;
+                const loadAdditionalRowsCount = 2; // todo: make this configurable
+                const hasEpisodesResult = hasEpisodes(this.data[this.config.libraryName]);
+                // eslint-disable-next-line consistent-return
+                lodash.forEach(this.data[this.config.libraryName], (movieData) => {
+                    if ((!this.maxCount || this.renderedItems < this.maxCount) &&
+                        (!this.maxRenderCount || this.renderedItems < this.maxRenderCount)) {
+                        const movieElem = this.getMovieElement(movieData, hasEpisodesResult);
+                        let shouldRender = false;
+                        if (this.looseSearch) {
+                            let found = false;
+                            // eslint-disable-next-line consistent-return
+                            lodash.forEach(searchValues, value => {
+                                if ((!lodash.isEmpty(value) && lodash.includes(lodash.toUpper(movieData.title), lodash.toUpper(value))) ||
+                                    lodash.includes(lodash.toUpper(movieData.parentTitle), lodash.toUpper(value)) ||
+                                    lodash.includes(lodash.toUpper(movieData.grandparentTitle), lodash.toUpper(value))) {
+                                    found = true;
+                                    return false;
+                                }
+                            });
+                            if (found || lodash.isEmpty(searchValues[0])) {
+                                shouldRender = true;
+                            }
+                        }
+                        else if (lodash.includes(lodash.toUpper(movieData.title), lodash.toUpper(this.searchValue)) ||
+                            lodash.includes(lodash.toUpper(movieData.parentTitle), lodash.toUpper(this.searchValue)) ||
+                            lodash.includes(lodash.toUpper(movieData.grandparentTitle), lodash.toUpper(this.searchValue))) {
+                            shouldRender = true;
+                        }
+                        if (shouldRender) {
+                            count += 1;
+                            if (count > this.renderedItems) {
+                                this.content.appendChild(movieElem);
+                                this.renderedItems += 1;
+                            }
+                        }
+                        if (lastRowTop !== movieElem.getBoundingClientRect().top) {
+                            if (lastRowTop !== 0 && this.columnsCount === 0) {
+                                this.columnsCount = this.renderedItems - 1;
+                            }
+                            lastRowTop = movieElem.getBoundingClientRect().top;
+                            if (!isScrolledIntoView(movieElem) && !this.maxRenderCount && this.renderedItems > 0) {
+                                this.maxRenderCount = this.renderedItems - 1 + this.columnsCount * loadAdditionalRowsCount;
+                            }
+                        }
+                    }
+                    else {
+                        return true;
+                    }
+                });
+            }
+            const contentbg = this.getElementsByClassName('contentbg')[0];
+            this.contentBGHeight = getHeight(contentbg);
+        };
         this.renderPage = () => {
+            this.searchInputElem.placeholder = `Search ${this.config.libraryName}...`;
+            if (this.showSearch) {
+                this.searchInputElem.style.display = 'block';
+            }
+            else {
+                this.searchInputElem.style.display = 'none';
+            }
+            if (this.card) {
+                const marginRight = 10; // needs to be equal to .container margin right
+                const areaSize = this.card.offsetWidth - parseInt(this.card.style.paddingRight, 10) - parseInt(this.card.style.paddingLeft, 10);
+                const postersInRow = Math.floor(areaSize / CSS_STYLE.minimumWidth);
+                if (areaSize > 0) {
+                    CSS_STYLE.width = areaSize / postersInRow - marginRight;
+                    CSS_STYLE.height = CSS_STYLE.width * CSS_STYLE.ratio;
+                    const episodesInRow = Math.floor(areaSize / CSS_STYLE.minimumEpisodeWidth);
+                    CSS_STYLE.episodeWidth = Math.floor(areaSize / episodesInRow - marginRight);
+                    CSS_STYLE.episodeHeight = Math.round(CSS_STYLE.episodeWidth * CSS_STYLE.episodeRatio);
+                }
+                else {
+                    setTimeout(() => {
+                        this.renderPage();
+                    }, 250);
+                }
+            }
+            this.renderedItems = 0;
+            // this.columnsCount = 0;
+            const spinner = document.createElement('div');
+            spinner.style.display = 'flex';
+            spinner.style.alignItems = 'center';
+            spinner.style.justifyContent = 'center';
+            spinner.innerHTML = '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
             if (this.content) {
                 this.content.remove();
             }
@@ -19663,7 +21198,14 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                 this.card.style.transition = '0.5s';
                 this.card.style.overflow = 'hidden';
                 this.card.style.padding = '16px';
+                this.card.style.paddingRight = '6px';
                 this.card.appendChild(this.searchInput());
+                if (this.showSearch) {
+                    this.searchInputElem.style.display = 'block';
+                }
+                else {
+                    this.searchInputElem.style.display = 'none';
+                }
                 this.appendChild(this.card);
             }
             this.content = document.createElement('div');
@@ -19676,19 +21218,101 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             }
             else if (this.loading) {
                 this.content.style.padding = '16px 16px 16px';
-                this.content.innerHTML +=
-                    '<div style="display: flex; align-items: center; justify-content: center;"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>';
+                this.content.appendChild(spinner);
             }
             this.card.appendChild(this.content);
-            let count = 0;
             const contentbg = document.createElement('div');
             contentbg.className = 'contentbg';
             this.content.appendChild(contentbg);
+            const contentArt = document.createElement('div');
+            contentArt.className = 'contentArt';
+            const contentArtBG1 = document.createElement('div');
+            contentArtBG1.className = 'videobg1';
+            contentArt.appendChild(contentArtBG1);
+            const contentArtBG2 = document.createElement('div');
+            contentArtBG2.className = 'videobg2';
+            contentArt.appendChild(contentArtBG2);
+            this.content.appendChild(contentArt);
             this.detailElem = document.createElement('div');
             this.detailElem.className = 'detail';
-            this.detailElem.innerHTML =
-                "<h1></h1><h2></h2><span class='metaInfo'></span><span class='detailDesc'></span><div class='clear'></div>";
+            this.detailElem.innerHTML = `<h1 class='detailsTitle'></h1>
+			<h2 class='detailsYear'></h2>
+			<span class='metaInfo'></span>
+			<button class='detailPlayAction'>Fullscreen Trailer</button>
+			<div class='clear'></div>
+			<span class='detailDesc'></span>
+			<div class='clear'></div>
+			<table>
+				<tr>
+					<td class='metaInfoDetails'>
+						Directed by
+					</td>
+					<td class='metaInfoDetailsData'>
+						...
+					</td>
+				</tr>
+				<tr>
+					<td class='metaInfoDetails'>
+						Written by
+					</td>
+					<td class='metaInfoDetailsData'>
+						...
+					</td>
+				</tr>
+				<tr>
+					<td class='metaInfoDetails'>
+						Studio
+					</td>
+					<td class='metaInfoDetailsData'>
+						...
+					</td>
+				</tr>
+				<tr>
+					<td class='metaInfoDetails'>
+						Genre
+					</td>
+					<td class='metaInfoDetailsData'>
+						...
+					</td>
+				</tr>
+			</table>`;
+            this.detailElem.addEventListener('click', () => {
+                this.hideBackground();
+                this.minimizeAll();
+            });
             this.content.appendChild(this.detailElem);
+            const fullscreenTrailer = this.getElementsByClassName('detailPlayAction')[0];
+            fullscreenTrailer.addEventListener('click', event => {
+                event.stopPropagation();
+                if (this.videoElem) {
+                    const videoPlayer = this.getElementsByClassName('videoPlayer')[0];
+                    const video = videoPlayer.children[0];
+                    if (video.requestFullscreen) {
+                        video.requestFullscreen();
+                    }
+                    else if (video.webkitRequestFullscreen) {
+                        video.webkitRequestFullscreen();
+                    }
+                    else if (video.msRequestFullscreen) {
+                        video.msRequestFullscreen();
+                    }
+                    else {
+                        const videobgs1 = this.getElementsByClassName('videobg1');
+                        const videobgs2 = this.getElementsByClassName('videobg2');
+                        // eslint-disable-next-line no-restricted-syntax
+                        for (const videobg1 of videobgs1) {
+                            videobg1.classList.add('transparent');
+                        }
+                        // eslint-disable-next-line no-restricted-syntax
+                        for (const videobg2 of videobgs2) {
+                            videobg2.classList.add('transparent');
+                        }
+                        this.videoElem.classList.add('maxZIndex');
+                        this.videoElem.classList.add('simulatedFullScreen');
+                        video.controls = true;
+                    }
+                }
+            });
             this.seasonsElem = document.createElement('div');
             this.seasonsElem.className = 'seasons';
             this.seasonsElem.addEventListener('click', () => {
@@ -19703,45 +21327,59 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                 this.minimizeAll();
             });
             this.content.appendChild(this.episodesElem);
+            this.videoElem = document.createElement('div');
+            this.videoElem.className = 'video';
+            this.videoElem.addEventListener('click', event => {
+                const videoPlayer = this.getElementsByClassName('videoPlayer')[0];
+                const video = videoPlayer.children[0];
+                if (isVideoFullScreen(this)) {
+                    event.stopPropagation();
+                    if (this.videoElem) {
+                        this.videoElem.classList.remove('maxZIndex');
+                        this.videoElem.classList.remove('simulatedFullScreen');
+                    }
+                    const videobgs1 = this.getElementsByClassName('videobg1');
+                    const videobgs2 = this.getElementsByClassName('videobg2');
+                    // eslint-disable-next-line no-restricted-syntax
+                    for (const videobg1 of videobgs1) {
+                        videobg1.classList.remove('transparent');
+                    }
+                    // eslint-disable-next-line no-restricted-syntax
+                    for (const videobg2 of videobgs2) {
+                        videobg2.classList.remove('transparent');
+                    }
+                    video.controls = false;
+                }
+                else {
+                    this.hideBackground();
+                    this.minimizeAll();
+                }
+            });
+            const videoBG1 = document.createElement('div');
+            videoBG1.className = 'videobg1';
+            this.videoElem.appendChild(videoBG1);
+            const videoBG2 = document.createElement('div');
+            videoBG2.className = 'videobg2';
+            this.videoElem.appendChild(videoBG2);
+            const videoPlayer = document.createElement('div');
+            videoPlayer.className = 'videoPlayer';
+            this.videoElem.appendChild(videoPlayer);
+            this.content.appendChild(this.videoElem);
             // todo: figure out why timeout is needed here and do it properly
             setTimeout(() => {
                 contentbg.addEventListener('click', () => {
                     this.hideBackground();
                     this.minimizeAll();
                 });
-            }, 1);
-            if (this.data[this.config.libraryName]) {
-                // eslint-disable-next-line consistent-return
-                const searchValues = lodash.split(this.searchValue, ' ');
-                // eslint-disable-next-line consistent-return
-                lodash.forEach(this.data[this.config.libraryName], (movieData) => {
-                    if (!this.maxCount || count < this.maxCount) {
-                        count += 1;
-                        if (this.looseSearch) {
-                            let found = false;
-                            // eslint-disable-next-line consistent-return
-                            lodash.forEach(searchValues, value => {
-                                if (!lodash.isEmpty(value) && lodash.includes(lodash.toUpper(movieData.title), lodash.toUpper(value))) {
-                                    found = true;
-                                    return false;
-                                }
-                            });
-                            if (found || lodash.isEmpty(searchValues[0])) {
-                                this.content.appendChild(this.getMovieElement(movieData));
-                            }
-                        }
-                        else if (lodash.includes(lodash.toUpper(movieData.title), lodash.toUpper(this.searchValue))) {
-                            this.content.appendChild(this.getMovieElement(movieData));
-                        }
-                    }
-                    else {
-                        return true;
-                    }
+                contentArt.addEventListener('click', () => {
+                    this.hideBackground();
+                    this.minimizeAll();
                 });
-            }
+            }, 1);
             const endElem = document.createElement('div');
             endElem.className = 'clear';
             this.content.appendChild(endElem);
+            this.renderMovieElems();
             this.calculatePositions();
             this.loadCustomStyles();
         };
@@ -19771,6 +21409,9 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                     const seasonTitleElem = child.children[1];
                     const seasonEpisodesCount = child.children[2];
                     seasonElem.style.display = 'block';
+                    if (typeof seasonElem.children[0].children[0] !== 'undefined') {
+                        seasonElem.children[0].children[0].style.display = 'block';
+                    }
                     const moveElem = (elem) => {
                         const seasonElemLocal = elem;
                         seasonElemLocal.style.marginTop = '0';
@@ -19799,7 +21440,29 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                 });
             }
         };
+        this.hideVideo = () => {
+            if (this.videoElem) {
+                const videoPlayer = this.getElementsByClassName('videoPlayer')[0];
+                videoPlayer.innerHTML = '';
+                this.videoElem.classList.remove('maxZIndex');
+                this.videoElem.classList.remove('simulatedFullScreen');
+                const videobgs1 = this.getElementsByClassName('videobg1');
+                const videobgs2 = this.getElementsByClassName('videobg2');
+                // eslint-disable-next-line no-restricted-syntax
+                for (const videobg1 of videobgs1) {
+                    videobg1.classList.remove('transparent');
+                }
+                // eslint-disable-next-line no-restricted-syntax
+                for (const videobg2 of videobgs2) {
+                    videobg2.classList.remove('transparent');
+                }
+            }
+        };
         this.minimizeAll = () => {
+            this.detailsShown = false;
+            if (this.activeMovieElem) {
+                this.activeMovieElem.style.display = `block`;
+            }
             this.activeMovieElem = undefined;
             for (let i = 0; i < this.movieElems.length; i += 1) {
                 if (parseInt(this.movieElems[i].style.width, 10) > CSS_STYLE.width) {
@@ -19815,12 +21478,11 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             this.hideSeasons();
             this.hideEpisodes();
             this.hideDetails();
+            this.hideVideo();
             clearInterval(this.showDetailsTimeout);
             clearInterval(this.showSeasonElemTimeout);
             clearInterval(this.seasonTitleColorTimeout);
             clearInterval(this.moveElemTimeout);
-            clearInterval(this.hideSeasonsTimeout);
-            clearInterval(this.hideEpisodesTimeout);
             clearInterval(this.scrollDownInactiveSeasonsTimeout);
             clearInterval(this.episodesLoadTimeout);
             clearInterval(this.episodesElemFreshlyLoadedTimeout);
@@ -19883,31 +21545,87 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                 this.detailElem.style.zIndex = '0';
                 this.detailElem.style.visibility = 'hidden';
             }
+            clearTimeout(this.renderNewElementsIfNeededTimeout);
+            this.renderNewElementsIfNeededTimeout = setTimeout(() => {
+                this.renderNewElementsIfNeeded();
+            }, 1000);
+            const fullscreenTrailer = this.getElementsByClassName('detailPlayAction')[0];
+            fullscreenTrailer.style.visibility = 'hidden';
         };
         this.showDetails = async (data) => {
+            this.detailsShown = true;
             const top = this.getTop();
             if (this.detailElem) {
                 this.detailElem.style.transition = '0s';
                 this.detailElem.style.top = `${top - 1000}px`;
                 clearInterval(this.showDetailsTimeout);
-                this.showDetailsTimeout = setTimeout(() => {
-                    if (this.detailElem) {
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                this.showDetailsTimeout = setTimeout(async () => {
+                    if (this.detailElem && this.plex) {
                         this.detailElem.style.visibility = 'visible';
                         this.detailElem.style.transition = '0.7s';
                         this.detailElem.style.top = `${top}px`;
-                        this.detailElem.children[0].innerHTML = escapeHtml(data.title);
-                        this.detailElem.children[1].innerHTML = escapeHtml(data.year);
-                        this.detailElem.children[1].dataset.year = escapeHtml(data.year);
-                        this.detailElem.children[2].innerHTML = `${(data.duration !== undefined
-                            ? `<span class='minutesDetail'>${Math.round(parseInt(escapeHtml(data.duration), 10) / 60 / 1000)} min</span>`
+                        let mainData = data;
+                        if (lodash.isEqual(data.type, 'season')) {
+                            mainData = await this.plex.getDetails(data.parentKey.split('/')[3]);
+                            mainData.title = `${mainData.title} - ${data.title}`;
+                        }
+                        const directorElem = this.getElementsByClassName('metaInfoDetailsData')[0];
+                        if (directorElem.parentElement) {
+                            if (mainData.Director && mainData.Director.length > 0) {
+                                directorElem.innerHTML = escapeHtml(mainData.Director[0].tag);
+                                directorElem.parentElement.style.display = 'table-row';
+                            }
+                            else {
+                                directorElem.parentElement.style.display = 'none';
+                            }
+                        }
+                        const writerElem = this.getElementsByClassName('metaInfoDetailsData')[1];
+                        if (writerElem.parentElement) {
+                            if (mainData.Writer && mainData.Writer.length > 0) {
+                                writerElem.innerHTML = escapeHtml(mainData.Writer[0].tag);
+                                writerElem.parentElement.style.display = 'table-row';
+                            }
+                            else {
+                                writerElem.parentElement.style.display = 'none';
+                            }
+                        }
+                        const studioElem = this.getElementsByClassName('metaInfoDetailsData')[2];
+                        if (studioElem.parentElement) {
+                            if (mainData.studio) {
+                                studioElem.innerHTML = escapeHtml(mainData.studio);
+                                studioElem.parentElement.style.display = 'table-row';
+                            }
+                            else {
+                                studioElem.parentElement.style.display = 'none';
+                            }
+                        }
+                        const genreElem = this.getElementsByClassName('metaInfoDetailsData')[3];
+                        if (genreElem.parentElement) {
+                            if (mainData.Genre && mainData.Genre.length > 0) {
+                                let genre = '';
+                                lodash.forEach(mainData.Genre, tag => {
+                                    genre += `${tag.tag}, `;
+                                });
+                                genreElem.innerHTML = escapeHtml(genre.slice(0, -2));
+                                genreElem.parentElement.style.display = 'table-row';
+                            }
+                            else {
+                                genreElem.parentElement.style.display = 'none';
+                            }
+                        }
+                        this.getElementsByClassName('detailsTitle')[0].innerHTML = escapeHtml(mainData.title);
+                        this.getElementsByClassName('detailsYear')[0].innerHTML = escapeHtml(mainData.year);
+                        this.getElementsByClassName('metaInfo')[0].innerHTML = `${(mainData.duration !== undefined
+                            ? `<span class='minutesDetail'>${Math.round(parseInt(escapeHtml(mainData.duration), 10) / 60 / 1000)} min</span>`
                             : '') +
-                            (data.contentRating !== undefined
-                                ? `<span class='contentRatingDetail'>${escapeHtml(data.contentRating)}</span>`
+                            (mainData.contentRating !== undefined
+                                ? `<span class='contentRatingDetail'>${escapeHtml(mainData.contentRating)}</span>`
                                 : '') +
-                            (data.rating !== undefined
-                                ? `<span class='ratingDetail'>${data.rating < 5 ? '&#128465;' : '&#11088;'}&nbsp;${escapeHtml(data.rating)}</span>`
+                            (mainData.rating !== undefined
+                                ? `<span class='ratingDetail'>${mainData.rating < 5 ? '&#128465;' : '&#11088;'}&nbsp;${Math.round(parseFloat(escapeHtml(mainData.rating)) * 10) / 10}</span>`
                                 : '')}<div class='clear'></div>`;
-                        this.detailElem.children[3].innerHTML = escapeHtml(data.summary);
+                        this.getElementsByClassName('detailDesc')[0].innerHTML = escapeHtml(mainData.summary);
                         /* todo temp disabled
                         if (data.type === 'movie') {
                             (this.detailElem.children[5] as HTMLElement).style.visibility = 'visible';
@@ -19921,194 +21639,314 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                     }
                 }, 200);
             }
-            if (this.plex && data.childCount > 0) {
-                this.seasonElemFreshlyLoaded = true;
-                const seasonsData = await this.plex.getLibraryData(data.key.split('/')[3]);
-                if (this.seasonsElem) {
-                    this.seasonsElem.style.display = 'block';
-                    this.seasonsElem.innerHTML = '';
-                    this.seasonsElem.style.transition = `0s`;
-                    this.seasonsElem.style.top = `${top + 2000}px`;
+            if (this.plex) {
+                let seasonsData = {};
+                if (lodash.isEqual(data.type, 'episode')) {
+                    seasonsData = await this.plex.getLibraryData(data.grandparentKey.split('/')[3]);
                 }
-                lodash.forEach(seasonsData, seasonData => {
-                    if (this.seasonsElem) {
-                        this.seasonsElemHidden = false;
-                        const seasonContainer = document.createElement('div');
-                        seasonContainer.className = 'seasonContainer';
-                        seasonContainer.style.width = `${CSS_STYLE.width}px`;
-                        const thumbURL = `${this.plexProtocol}://${this.config.ip}:${this.config.port}/photo/:/transcode?width=${CSS_STYLE.expandedWidth}&height=${CSS_STYLE.expandedHeight}&minSize=1&upscale=1&url=${seasonData.thumb}&X-Plex-Token=${this.config.token}`;
-                        const seasonElem = document.createElement('div');
-                        seasonElem.className = 'seasonElem';
-                        seasonElem.style.width = `${CSS_STYLE.width}px`;
-                        seasonElem.style.height = `${CSS_STYLE.height - 3}px`;
-                        seasonElem.style.backgroundImage = `url('${thumbURL}')`;
-                        seasonElem.dataset.clicked = 'false';
-                        if (this.playController && !this.playController.isPlaySupported(seasonData)) {
-                            seasonElem.style.cursor = 'pointer';
+                else if (data.childCount > 0) {
+                    seasonsData = await this.plex.getLibraryData(data.key.split('/')[3]);
+                }
+                const dataDetails = await this.plex.getDetails(data.key.split('/')[3]);
+                if (this.videoElem) {
+                    const art = this.plex.authorizeURL(this.plex.getBasicURL() + data.art);
+                    const trailerURL = findTrailerURL(dataDetails);
+                    if (trailerURL !== '' && !lodash.isEqual(this.playTrailer, false)) {
+                        const videoPlayer = this.getElementsByClassName('videoPlayer')[0];
+                        const video = document.createElement('video');
+                        video.style.height = '100%';
+                        video.style.width = '100%';
+                        video.controls = false;
+                        if (lodash.isEqual(this.playTrailer, 'muted')) {
+                            video.muted = true;
                         }
-                        const interactiveArea = document.createElement('div');
-                        interactiveArea.className = 'interactiveArea';
-                        if (this.playController && this.playController.isPlaySupported(seasonData)) {
-                            const playButton = this.getPlayButton();
-                            playButton.addEventListener('click', event => {
+                        const source = document.createElement('source');
+                        source.type = 'video/mp4';
+                        source.src = this.plex.authorizeURL(`${this.plex.getBasicURL()}${dataDetails.Extras.Metadata[0].Media[0].Part[0].key}`);
+                        video.appendChild(source);
+                        videoPlayer.appendChild(video);
+                        video.load();
+                        video.play();
+                        let playingFired = false;
+                        const videobgs1 = this.getElementsByClassName('videobg1');
+                        const videobgs2 = this.getElementsByClassName('videobg2');
+                        video.addEventListener('click', event => {
+                            if (isVideoFullScreen(this)) {
                                 event.stopPropagation();
-                                if (this.plex && this.playController) {
-                                    this.playController.play(seasonData, true);
-                                }
-                            });
-                            interactiveArea.append(playButton);
-                        }
-                        seasonElem.append(interactiveArea);
-                        seasonContainer.append(seasonElem);
-                        const seasonTitleElem = document.createElement('div');
-                        seasonTitleElem.className = 'seasonTitleElem';
-                        seasonTitleElem.innerHTML = escapeHtml(seasonData.title);
-                        seasonContainer.append(seasonTitleElem);
-                        const seasonEpisodesCount = document.createElement('div');
-                        seasonEpisodesCount.className = 'seasonEpisodesCount';
-                        seasonEpisodesCount.innerHTML = `${escapeHtml(seasonData.leafCount)} episodes`;
-                        seasonContainer.append(seasonEpisodesCount);
-                        seasonContainer.addEventListener('click', event => {
-                            event.stopPropagation();
-                            if (this.seasonContainerClickEnabled) {
-                                this.seasonContainerClickEnabled = false;
-                                setTimeout(() => {
-                                    this.seasonContainerClickEnabled = true;
-                                }, 500);
-                                if (this.activeMovieElem) {
-                                    if (seasonElem.dataset.clicked === 'false') {
-                                        seasonElem.dataset.clicked = 'true';
-                                        this.activeMovieElem.style.top = `${top - 1000}px`;
-                                        this.scrollDownInactiveSeasons();
-                                        seasonContainer.style.top = `${-CSS_STYLE.expandedHeight}px`;
-                                        seasonElem.style.width = `${CSS_STYLE.expandedWidth}px`;
-                                        seasonElem.style.height = `${CSS_STYLE.expandedHeight - 6}px`;
-                                        seasonElem.style.zIndex = '3';
-                                        seasonElem.style.marginLeft = `-${getOffset(seasonElem).left -
-                                            getOffset(this.activeMovieElem).left}px`;
-                                        seasonTitleElem.style.color = 'rgba(255,255,255,0)';
-                                        seasonEpisodesCount.style.color = 'rgba(255,255,255,0)';
-                                        if (this.detailElem) {
-                                            this.detailElem.children[1].innerHTML = seasonData.title;
-                                        }
-                                        (async () => {
-                                            if (seasonData.leafCount > 0 && this.plex) {
-                                                this.episodesElemFreshlyLoaded = true;
-                                                const episodesData = await this.plex.getLibraryData(seasonData.key.split('/')[3]);
-                                                if (this.episodesElem) {
-                                                    this.episodesElemHidden = false;
-                                                    this.episodesElem.style.display = 'block';
-                                                    this.episodesElem.innerHTML = '';
-                                                    this.episodesElem.style.transition = `0s`;
-                                                    this.episodesElem.style.top = `${top + 2000}px`;
-                                                    lodash.forEach(episodesData, episodeData => {
-                                                        if (this.episodesElem) {
-                                                            const episodeContainer = document.createElement('div');
-                                                            episodeContainer.className = 'episodeContainer';
-                                                            episodeContainer.style.width = `${CSS_STYLE.episodeWidth}px`;
-                                                            const episodeThumbURL = `${this.plexProtocol}://${this.config.ip}:${this.config.port}/photo/:/transcode?width=${CSS_STYLE.episodeWidth}&height=${CSS_STYLE.episodeHeight}&minSize=1&upscale=1&url=${episodeData.thumb}&X-Plex-Token=${this.config.token}`;
-                                                            const episodeElem = document.createElement('div');
-                                                            episodeElem.className = 'episodeElem';
-                                                            episodeElem.style.width = `${CSS_STYLE.episodeWidth}px`;
-                                                            episodeElem.style.height = `${CSS_STYLE.episodeHeight}px`;
-                                                            episodeElem.style.backgroundImage = `url('${episodeThumbURL}')`;
-                                                            episodeElem.dataset.clicked = 'false';
-                                                            if (this.playController && this.playController.isPlaySupported(episodeData)) {
-                                                                const episodeInteractiveArea = document.createElement('div');
-                                                                episodeInteractiveArea.className = 'interactiveArea';
-                                                                const episodePlayButton = document.createElement('button');
-                                                                episodePlayButton.name = 'playButton';
-                                                                episodePlayButton.addEventListener('click', episodeEvent => {
-                                                                    episodeEvent.stopPropagation();
-                                                                    if (this.plex && this.playController) {
-                                                                        this.playController.play(episodeData, true);
-                                                                    }
-                                                                });
-                                                                episodeInteractiveArea.append(episodePlayButton);
-                                                                episodeElem.append(episodeInteractiveArea);
-                                                            }
-                                                            episodeContainer.append(episodeElem);
-                                                            const episodeTitleElem = document.createElement('div');
-                                                            episodeTitleElem.className = 'episodeTitleElem';
-                                                            episodeTitleElem.innerHTML = escapeHtml(episodeData.title);
-                                                            episodeContainer.append(episodeTitleElem);
-                                                            const episodeNumber = document.createElement('div');
-                                                            episodeNumber.className = 'episodeNumber';
-                                                            episodeNumber.innerHTML = escapeHtml(`Episode ${escapeHtml(episodeData.index)}`);
-                                                            episodeContainer.append(episodeNumber);
-                                                            episodeContainer.addEventListener('click', episodeEvent => {
-                                                                episodeEvent.stopPropagation();
-                                                            });
-                                                            this.episodesElem.append(episodeContainer);
-                                                        }
-                                                    });
-                                                    clearInterval(this.episodesLoadTimeout);
-                                                    this.episodesLoadTimeout = setTimeout(() => {
-                                                        if (this.episodesElem) {
-                                                            this.episodesElem.style.transition = `0.7s`;
-                                                            this.episodesElem.style.top = `${top + CSS_STYLE.expandedHeight + 16}px`;
-                                                            this.resizeBackground();
-                                                        }
-                                                    }, 200);
-                                                    clearInterval(this.episodesElemFreshlyLoadedTimeout);
-                                                    this.episodesElemFreshlyLoadedTimeout = setTimeout(() => {
-                                                        this.episodesElemFreshlyLoaded = false;
-                                                    }, 700);
-                                                }
-                                            }
-                                        })();
+                            }
+                        });
+                        const fullScreenChangeAction = () => {
+                            if (this.videoElem) {
+                                if (isVideoFullScreen(this)) {
+                                    // eslint-disable-next-line no-restricted-syntax
+                                    for (const videobg1 of videobgs1) {
+                                        videobg1.classList.add('transparent');
                                     }
-                                    else {
-                                        seasonContainer.style.top = `${seasonContainer.dataset.top}px`;
-                                        this.minimizeSeasons();
-                                        this.hideEpisodes();
-                                        this.activeMovieElem.style.top = `${top + 16}px`;
-                                        if (this.detailElem && this.detailElem.children[1]) {
-                                            const { year } = this.detailElem.children[1].dataset;
-                                            if (year) {
-                                                this.detailElem.children[1].innerHTML = year;
-                                            }
-                                        }
+                                    // eslint-disable-next-line no-restricted-syntax
+                                    for (const videobg2 of videobgs2) {
+                                        videobg2.classList.add('transparent');
+                                    }
+                                    this.videoElem.classList.add('maxZIndex');
+                                    video.controls = true;
+                                    video.muted = false;
+                                }
+                                else {
+                                    // eslint-disable-next-line no-restricted-syntax
+                                    for (const videobg1 of videobgs1) {
+                                        videobg1.classList.remove('transparent');
+                                    }
+                                    // eslint-disable-next-line no-restricted-syntax
+                                    for (const videobg2 of videobgs2) {
+                                        videobg2.classList.remove('transparent');
+                                    }
+                                    this.videoElem.classList.remove('maxZIndex');
+                                    video.controls = false;
+                                    window.scroll({
+                                        top: getOffset(this.activeMovieElem).top - 70,
+                                        behavior: 'smooth'
+                                    });
+                                    if (lodash.isEqual(this.playTrailer, 'muted')) {
+                                        video.muted = true;
                                     }
                                 }
                             }
+                        };
+                        video.addEventListener('fullscreenchange', fullScreenChangeAction);
+                        video.addEventListener('mozfullscreenchange', fullScreenChangeAction);
+                        video.addEventListener('webkitfullscreenchange', fullScreenChangeAction);
+                        video.addEventListener('msfullscreenchange', fullScreenChangeAction);
+                        video.addEventListener('playing', () => {
+                            if (this.videoElem && !playingFired) {
+                                const contentbg = this.getElementsByClassName('contentbg')[0];
+                                const fullscreenTrailer = this.getElementsByClassName('detailPlayAction')[0];
+                                fullscreenTrailer.style.visibility = 'visible';
+                                contentbg.classList.add('no-transparency');
+                                playingFired = true;
+                                this.videoElem.style.width = `${this.getElementsByClassName('searchContainer')[0].offsetWidth}px`;
+                                this.videoElem.style.visibility = 'visible';
+                                this.videoElem.style.top = `${top}px`;
+                            }
                         });
-                        this.seasonsElem.append(seasonContainer);
                     }
-                });
-                lodash.forEach(this.seasonsElem.children, elem => {
-                    const seasonElem = elem;
-                    const left = seasonElem.offsetLeft;
-                    const topElem = seasonElem.offsetTop;
-                    seasonElem.style.left = `${left}px`;
-                    seasonElem.dataset.left = `${left}`;
-                    seasonElem.style.top = `${topElem}px`;
-                    seasonElem.dataset.top = `${topElem}`;
-                });
-                lodash.forEach(this.seasonsElem.children, elem => {
-                    const seasonElem = elem;
-                    seasonElem.style.position = 'absolute';
-                });
-                clearInterval(this.seasonElemFreshlyLoadedTimeout);
-                this.seasonElemFreshlyLoadedTimeout = setTimeout(() => {
-                    this.seasonElemFreshlyLoaded = false;
-                }, 700);
-                clearInterval(this.showSeasonElemTimeout);
-                this.showSeasonElemTimeout = setTimeout(() => {
+                    else if (!lodash.isEmpty(art)) {
+                        const contentArt = this.getElementsByClassName('contentArt')[0];
+                        const contentbg = this.getElementsByClassName('contentbg')[0];
+                        contentArt.style.width = `${window.innerWidth}px`;
+                        contentArt.style.height = `${window.innerHeight}px`;
+                        contentArt.style.backgroundImage = `url('${art}')`;
+                        contentArt.style.top = `${top - 8}px`;
+                        contentArt.style.transition = '0.5s';
+                        contentArt.style.display = 'block';
+                        contentbg.classList.add('no-transparency');
+                    }
+                }
+                if (!lodash.isEmpty(seasonsData)) {
+                    this.seasonElemFreshlyLoaded = true;
                     if (this.seasonsElem) {
-                        this.seasonsElem.style.transition = `0.7s`;
-                        this.seasonsElem.style.top = `${top + CSS_STYLE.expandedHeight + 16}px`;
-                        this.resizeBackground();
+                        this.seasonsElem.style.display = 'block';
+                        this.seasonsElem.innerHTML = '';
+                        this.seasonsElem.style.transition = `0s`;
+                        this.seasonsElem.style.top = `${top + 2000}px`;
                     }
-                }, 200);
+                    lodash.forEach(seasonsData, seasonData => {
+                        if (this.seasonsElem && this.plex) {
+                            this.seasonsElemHidden = false;
+                            const seasonContainer = document.createElement('div');
+                            seasonContainer.className = 'seasonContainer';
+                            seasonContainer.style.width = `${CSS_STYLE.width}px`;
+                            const thumbURL = `${this.plex.getBasicURL()}/photo/:/transcode?width=${CSS_STYLE.expandedWidth}&height=${CSS_STYLE.expandedHeight}&minSize=1&upscale=1&url=${seasonData.thumb}&X-Plex-Token=${this.config.token}`;
+                            const seasonElem = document.createElement('div');
+                            seasonElem.className = 'seasonElem';
+                            seasonElem.style.width = `${CSS_STYLE.width}px`;
+                            seasonElem.style.height = `${CSS_STYLE.height - 3}px`;
+                            seasonElem.style.backgroundImage = `url('${thumbURL}')`;
+                            seasonElem.dataset.clicked = 'false';
+                            if (this.playController && !this.playController.isPlaySupported(seasonData)) {
+                                seasonElem.style.cursor = 'pointer';
+                            }
+                            const interactiveArea = document.createElement('div');
+                            interactiveArea.className = 'interactiveArea';
+                            if (seasonData.leafCount - seasonData.viewedLeafCount > 0) {
+                                const toViewElem = document.createElement('div');
+                                toViewElem.className = 'toViewSeason';
+                                toViewElem.innerHTML = (seasonData.leafCount - seasonData.viewedLeafCount).toString();
+                                interactiveArea.appendChild(toViewElem);
+                            }
+                            if (this.playController && this.playController.isPlaySupported(seasonData)) {
+                                const playButton = this.getPlayButton();
+                                playButton.addEventListener('click', event => {
+                                    event.stopPropagation();
+                                    if (this.plex && this.playController) {
+                                        this.playController.play(seasonData, true);
+                                    }
+                                });
+                                interactiveArea.append(playButton);
+                            }
+                            seasonElem.append(interactiveArea);
+                            seasonContainer.append(seasonElem);
+                            const seasonTitleElem = document.createElement('div');
+                            seasonTitleElem.className = 'seasonTitleElem';
+                            seasonTitleElem.innerHTML = escapeHtml(seasonData.title);
+                            seasonContainer.append(seasonTitleElem);
+                            const seasonEpisodesCount = document.createElement('div');
+                            seasonEpisodesCount.className = 'seasonEpisodesCount';
+                            seasonEpisodesCount.innerHTML = `${escapeHtml(seasonData.leafCount)} episodes`;
+                            seasonContainer.append(seasonEpisodesCount);
+                            seasonContainer.addEventListener('click', event => {
+                                event.stopPropagation();
+                                if (this.seasonContainerClickEnabled) {
+                                    this.seasonContainerClickEnabled = false;
+                                    setTimeout(() => {
+                                        this.seasonContainerClickEnabled = true;
+                                    }, 500);
+                                    if (this.activeMovieElem) {
+                                        if (seasonElem.dataset.clicked === 'false') {
+                                            if (typeof seasonElem.children[0].children[0] !== 'undefined') {
+                                                seasonElem.children[0].children[0].style.display = 'none';
+                                            }
+                                            seasonElem.dataset.clicked = 'true';
+                                            this.activeMovieElem.style.top = `${top - 1000}px`;
+                                            setTimeout(() => {
+                                                if (this.activeMovieElem) {
+                                                    this.activeMovieElem.style.display = 'none';
+                                                }
+                                            }, 500);
+                                            this.scrollDownInactiveSeasons();
+                                            seasonContainer.style.top = `${-CSS_STYLE.expandedHeight}px`;
+                                            seasonElem.style.width = `${CSS_STYLE.expandedWidth}px`;
+                                            seasonElem.style.height = `${CSS_STYLE.expandedHeight - 6}px`;
+                                            seasonElem.style.zIndex = '3';
+                                            seasonElem.style.marginLeft = `-${getOffset(seasonElem).left -
+                                                getOffset(this.activeMovieElem).left}px`;
+                                            seasonTitleElem.style.color = 'rgba(255,255,255,0)';
+                                            seasonEpisodesCount.style.color = 'rgba(255,255,255,0)';
+                                            if (this.detailElem) {
+                                                this.detailElem.children[1].innerHTML = seasonData.title;
+                                            }
+                                            (async () => {
+                                                if (seasonData.leafCount > 0 && this.plex) {
+                                                    this.episodesElemFreshlyLoaded = true;
+                                                    const episodesData = await this.plex.getLibraryData(seasonData.key.split('/')[3]);
+                                                    if (this.episodesElem) {
+                                                        this.episodesElemHidden = false;
+                                                        this.episodesElem.style.display = 'block';
+                                                        this.episodesElem.innerHTML = '';
+                                                        this.episodesElem.style.transition = `0s`;
+                                                        this.episodesElem.style.top = `${top + 2000}px`;
+                                                        lodash.forEach(episodesData, episodeData => {
+                                                            if (this.episodesElem && this.playController && this.plex) {
+                                                                this.episodesElem.append(createEpisodesView(this.playController, this.plex, episodeData));
+                                                            }
+                                                        });
+                                                        clearInterval(this.episodesLoadTimeout);
+                                                        this.episodesLoadTimeout = setTimeout(() => {
+                                                            if (this.episodesElem) {
+                                                                this.episodesElem.style.transition = `0.7s`;
+                                                                this.episodesElem.style.top = `${top + CSS_STYLE.expandedHeight + 16}px`;
+                                                                this.resizeBackground();
+                                                            }
+                                                        }, 200);
+                                                        clearInterval(this.episodesElemFreshlyLoadedTimeout);
+                                                        this.episodesElemFreshlyLoadedTimeout = setTimeout(() => {
+                                                            this.episodesElemFreshlyLoaded = false;
+                                                        }, 700);
+                                                    }
+                                                }
+                                            })();
+                                        }
+                                        else {
+                                            seasonContainer.style.top = `${seasonContainer.dataset.top}px`;
+                                            this.minimizeSeasons();
+                                            this.hideEpisodes();
+                                            this.activeMovieElem.style.display = `block`;
+                                            setTimeout(() => {
+                                                if (this.activeMovieElem) {
+                                                    this.activeMovieElem.style.top = `${top + 16}px`;
+                                                }
+                                            }, 10);
+                                            if (this.detailElem && this.detailElem.children[1]) {
+                                                const { year } = this.detailElem.children[1].dataset;
+                                                if (year) {
+                                                    this.detailElem.children[1].innerHTML = year;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            this.seasonsElem.append(seasonContainer);
+                        }
+                    });
+                    lodash.forEach(this.seasonsElem.children, elem => {
+                        const seasonElem = elem;
+                        const left = seasonElem.offsetLeft;
+                        const topElem = seasonElem.offsetTop;
+                        seasonElem.style.left = `${left}px`;
+                        seasonElem.dataset.left = `${left}`;
+                        seasonElem.style.top = `${topElem}px`;
+                        seasonElem.dataset.top = `${topElem}`;
+                    });
+                    lodash.forEach(this.seasonsElem.children, elem => {
+                        const seasonElem = elem;
+                        seasonElem.style.position = 'absolute';
+                    });
+                    clearInterval(this.seasonElemFreshlyLoadedTimeout);
+                    this.seasonElemFreshlyLoadedTimeout = setTimeout(() => {
+                        this.seasonElemFreshlyLoaded = false;
+                    }, 700);
+                    clearInterval(this.showSeasonElemTimeout);
+                    this.showSeasonElemTimeout = setTimeout(() => {
+                        if (this.seasonsElem) {
+                            this.seasonsElem.style.transition = `0.7s`;
+                            this.seasonsElem.style.top = `${top + CSS_STYLE.expandedHeight + 16}px`;
+                            this.resizeBackground();
+                        }
+                    }, 200);
+                }
+                else {
+                    this.episodesElemFreshlyLoaded = true;
+                    if (this.episodesElem) {
+                        this.episodesElemHidden = false;
+                        this.episodesElem.style.display = 'block';
+                        this.episodesElem.innerHTML = '';
+                        this.episodesElem.style.transition = `0s`;
+                        this.episodesElem.style.top = `${top + 2000}px`;
+                        if (lodash.isEqual(data.type, 'season')) {
+                            const episodesData = await this.plex.getLibraryData(data.key.split('/')[3]);
+                            lodash.forEach(episodesData, episodeData => {
+                                if (this.episodesElem && this.playController && this.plex) {
+                                    this.episodesElem.append(createEpisodesView(this.playController, this.plex, episodeData));
+                                }
+                            });
+                        }
+                        else if (this.showExtras) {
+                            const extras = dataDetails.Extras.Metadata;
+                            lodash.forEach(extras, extrasData => {
+                                if (this.episodesElem && this.playController && this.plex) {
+                                    this.episodesElem.append(createEpisodesView(this.playController, this.plex, extrasData));
+                                }
+                            });
+                        }
+                        clearInterval(this.episodesLoadTimeout);
+                        this.episodesLoadTimeout = setTimeout(() => {
+                            if (this.episodesElem) {
+                                this.episodesElem.style.transition = `0.7s`;
+                                this.episodesElem.style.top = `${top + CSS_STYLE.expandedHeight + 16}px`;
+                                this.resizeBackground();
+                            }
+                        }, 200);
+                        clearInterval(this.episodesElemFreshlyLoadedTimeout);
+                        this.episodesElemFreshlyLoadedTimeout = setTimeout(() => {
+                            this.episodesElemFreshlyLoaded = false;
+                        }, 700);
+                    }
+                }
             }
         };
         this.resizeBackground = () => {
             if (this.seasonsElem && this.episodesElem && this.card) {
                 const contentbg = this.getElementsByClassName('contentbg')[0];
-                if (this.contentBGHeight === 0) {
-                    this.contentBGHeight = contentbg.scrollHeight;
-                }
+                this.contentBGHeight = getHeight(contentbg);
                 const requiredSeasonBodyHeight = parseInt(this.seasonsElem.style.top.replace('px', ''), 10) + this.seasonsElem.scrollHeight;
                 const requiredEpisodeBodyHeight = parseInt(this.episodesElem.style.top.replace('px', ''), 10) + this.episodesElem.scrollHeight;
                 if (requiredSeasonBodyHeight > this.contentBGHeight && !this.seasonsElemHidden) {
@@ -20128,9 +21966,12 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             contentbg[0].style.backgroundColor = 'rgba(0,0,0,0.9)';
         };
         this.hideBackground = () => {
-            const contentbg = this.getElementsByClassName('contentbg');
-            contentbg[0].style.zIndex = '1';
-            contentbg[0].style.backgroundColor = 'rgba(0,0,0,0)';
+            const contentbg = this.getElementsByClassName('contentbg')[0];
+            contentbg.classList.remove('no-transparency');
+            contentbg.style.zIndex = '1';
+            contentbg.style.backgroundColor = 'rgba(0,0,0,0)';
+            const contentArt = this.getElementsByClassName('contentArt')[0];
+            contentArt.style.display = 'none';
         };
         this.activateMovieElem = (movieElem) => {
             const movieElemLocal = movieElem;
@@ -20150,7 +21991,6 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             }
             else {
                 const top = this.getTop();
-                this.minimizeAll();
                 this.showDetails(this.activeMovieElemData);
                 this.showBackground();
                 movieElemLocal.style.width = `${CSS_STYLE.expandedWidth}px`;
@@ -20174,12 +22014,25 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             }
             return 0;
         };
-        this.getMovieElement = (data) => {
-            const thumbURL = `${this.plexProtocol}://${this.config.ip}:${this.config.port}/photo/:/transcode?width=${CSS_STYLE.expandedWidth}&height=${CSS_STYLE.expandedHeight}&minSize=1&upscale=1&url=${data.thumb}&X-Plex-Token=${this.config.token}`;
+        this.getMovieElement = (data, hasAdditionalData = false) => {
+            let thumbURL = '';
+            if (this.plex) {
+                if (lodash.isEqual(data.type, 'episode')) {
+                    thumbURL = `${this.plex.getBasicURL()}/photo/:/transcode?width=${CSS_STYLE.expandedWidth}&height=${CSS_STYLE.expandedHeight}&minSize=1&upscale=1&url=${data.grandparentThumb}&X-Plex-Token=${this.config.token}`;
+                }
+                else {
+                    thumbURL = `${this.plex.getBasicURL()}/photo/:/transcode?width=${CSS_STYLE.expandedWidth}&height=${CSS_STYLE.expandedHeight}&minSize=1&upscale=1&url=${data.thumb}&X-Plex-Token=${this.config.token}`;
+                }
+            }
             const container = document.createElement('div');
             container.className = 'container';
             container.style.width = `${CSS_STYLE.width}px`;
-            container.style.height = `${CSS_STYLE.height + 30}px`;
+            if (hasAdditionalData) {
+                container.style.height = `${CSS_STYLE.height + 50}px`;
+            }
+            else {
+                container.style.height = `${CSS_STYLE.height + 30}px`;
+            }
             const movieElem = document.createElement('div');
             movieElem.className = 'movieElem';
             movieElem.style.width = `${CSS_STYLE.width}px`;
@@ -20194,27 +22047,63 @@ class PlexMeetsHomeAssistant extends HTMLElement {
             });
             const playButton = this.getPlayButton();
             const interactiveArea = document.createElement('div');
+            if (!(data.viewCount && data.viewCount > 0) && data.type === 'movie') {
+                const toViewElem = document.createElement('div');
+                toViewElem.className = 'toViewEpisode';
+                interactiveArea.appendChild(toViewElem);
+            }
+            if (data.leafCount - data.viewedLeafCount > 0 && data.type === 'show') {
+                const toViewElem = document.createElement('div');
+                toViewElem.className = 'toViewSeason';
+                toViewElem.innerHTML = (data.leafCount - data.viewedLeafCount).toString();
+                interactiveArea.appendChild(toViewElem);
+            }
+            if (data.viewOffset > 0 && data.duration > 0) {
+                const toViewElem = document.createElement('div');
+                toViewElem.className = 'viewProgress';
+                toViewElem.style.width = `${(data.viewOffset / data.duration) * 100}%`;
+                interactiveArea.appendChild(toViewElem);
+            }
             interactiveArea.className = 'interactiveArea';
             if (this.playController && this.playController.isPlaySupported(data)) {
                 interactiveArea.append(playButton);
             }
             movieElem.append(interactiveArea);
-            playButton.addEventListener('click', event => {
+            clickHandler(playButton, (event) => {
                 event.stopPropagation();
                 if (this.hassObj && this.playController) {
                     this.playController.play(data, true);
                 }
+            }, (event) => {
+                console.log('Play version... will be here!');
+                event.stopPropagation();
             });
             const titleElem = document.createElement('div');
-            titleElem.innerHTML = escapeHtml(data.title);
+            if (lodash.isEqual(data.type, 'episode')) {
+                titleElem.innerHTML = escapeHtml(data.grandparentTitle);
+            }
+            else {
+                titleElem.innerHTML = escapeHtml(data.title);
+            }
             titleElem.className = 'titleElem';
             titleElem.style.marginTop = `${CSS_STYLE.height}px`;
             const yearElem = document.createElement('div');
-            yearElem.innerHTML = escapeHtml(data.year);
+            if (lodash.isEqual(data.type, 'episode')) {
+                yearElem.innerHTML = escapeHtml(data.title);
+            }
+            else {
+                yearElem.innerHTML = escapeHtml(data.year);
+            }
             yearElem.className = 'yearElem';
+            const additionalElem = document.createElement('div');
+            if (lodash.isEqual(data.type, 'episode')) {
+                additionalElem.innerHTML = escapeHtml(`S${data.parentIndex} E${data.index}`);
+                additionalElem.className = 'additionalElem';
+            }
             container.appendChild(movieElem);
             container.appendChild(titleElem);
             container.appendChild(yearElem);
+            container.appendChild(additionalElem);
             return container;
         };
         this.loadCustomStyles = () => {
@@ -20228,10 +22117,19 @@ class PlexMeetsHomeAssistant extends HTMLElement {
         };
         this.setConfig = (config) => {
             this.plexProtocol = 'http';
-            if (!config.entity || config.entity.length === 0 || !lodash.isObject(config.entity)) {
+            if (!config.ip) {
+                throw new Error('You need to define a Plex IP Address');
+            }
+            if (!config.token) {
+                throw new Error('You need to define a Plex Token');
+            }
+            if (!config.libraryName) {
+                throw new Error('You need to define a libraryName');
+            }
+            if (!config.entity || config.entity.length === 0) {
                 throw new Error('You need to define at least one entity');
             }
-            if (lodash.isObject(config.entity)) {
+            if (lodash.isPlainObject(config.entity)) {
                 let entityDefined = false;
                 // eslint-disable-next-line consistent-return
                 lodash.forEach(config.entity, (value, key) => {
@@ -20244,26 +22142,41 @@ class PlexMeetsHomeAssistant extends HTMLElement {
                     throw new Error('You need to define at least one supported entity');
                 }
             }
-            if (!config.token) {
-                throw new Error('You need to define a token');
-            }
-            if (!config.ip) {
-                throw new Error('You need to define a ip');
-            }
-            if (!config.port) {
-                throw new Error('You need to define a port');
-            }
-            if (!config.libraryName) {
-                throw new Error('You need to define a libraryName');
+            else if (!lodash.isString(config.entity) && !lodash.isArray(config.entity)) {
+                throw new Error('You need to define at least one supported entity');
             }
             this.config = config;
             if (config.protocol) {
                 this.plexProtocol = config.protocol;
             }
-            if (config.maxCount) {
+            if (config.port && !lodash.isEqual(config.port, '')) {
+                this.plexPort = config.port;
+            }
+            else {
+                this.plexPort = false;
+            }
+            if (config.maxCount && config.maxCount !== '') {
                 this.maxCount = config.maxCount;
             }
-            this.plex = new Plex(this.config.ip, this.config.port, this.config.token, this.plexProtocol);
+            if (config.runBefore && !lodash.isEqual(config.runBefore, '')) {
+                this.runBefore = config.runBefore;
+            }
+            if (config.runAfter && !lodash.isEqual(config.runAfter, '')) {
+                this.runAfter = config.runAfter;
+            }
+            if (!lodash.isNil(config.playTrailer)) {
+                this.playTrailer = config.playTrailer;
+            }
+            if (!lodash.isNil(config.showExtras)) {
+                this.showExtras = config.showExtras;
+            }
+            if (!lodash.isNil(config.showSearch)) {
+                this.showSearch = config.showSearch;
+            }
+            this.plex = new Plex(this.config.ip, this.plexPort, this.config.token, this.plexProtocol, this.config.sort);
+            this.data = {};
+            this.error = '';
+            this.renderInitialData();
         };
         this.getCardSize = () => {
             return 3;
@@ -20271,15 +22184,20 @@ class PlexMeetsHomeAssistant extends HTMLElement {
     }
     set hass(hass) {
         this.hassObj = hass;
-        if (this.plex) {
-            this.playController = new PlayController(this.hassObj, this.plex, this.config.entity);
-        }
-        if (!this.content) {
-            this.error = '';
-            if (!this.loading) {
-                this.loadInitialData();
-            }
+        if (!this.initialDataLoaded) {
+            this.loadInitialData();
         }
     }
+    static getConfigElement() {
+        return document.createElement('plex-meets-homeassistant-editor');
+    }
 }
+customElements.define('plex-meets-homeassistant-editor', PlexMeetsHomeAssistantEditor);
 customElements.define('plex-meets-homeassistant', PlexMeetsHomeAssistant);
+window.customCards = window.customCards || [];
+window.customCards.push({
+    type: 'plex-meets-homeassistant',
+    name: 'Plex meets Home Assistant',
+    preview: false,
+    description: 'Integrates Plex into Home Assistant. Browse and launch media with a simple click.' // Optional
+});

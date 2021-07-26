@@ -1,5 +1,6 @@
 """Support for Ubiquiti's Unifi Protect NVR."""
 import logging
+import os
 
 from homeassistant.components.camera import SUPPORT_STREAM, Camera
 from homeassistant.config_entries import ConfigEntry
@@ -63,6 +64,8 @@ async def async_setup_entry(
     protect_data = entry_data["protect_data"]
     server_info = entry_data["server_info"]
     snapshot_direct = entry_data["snapshot_direct"]
+    disable_stream = entry_data["disable_stream"]
+
     if not protect_data.data:
         return
 
@@ -71,7 +74,12 @@ async def async_setup_entry(
         if protect_data.data[camera_id].get("type") in DEVICES_WITH_CAMERA:
             cameras.append(
                 UnifiProtectCamera(
-                    upv_object, protect_data, server_info, camera_id, snapshot_direct
+                    upv_object,
+                    protect_data,
+                    server_info,
+                    camera_id,
+                    snapshot_direct,
+                    disable_stream,
                 )
             )
     async_add_entities(cameras)
@@ -141,13 +149,19 @@ class UnifiProtectCamera(UnifiProtectEntity, Camera):
     """A Ubiquiti Unifi Protect Camera."""
 
     def __init__(
-        self, upv_object, protect_data, server_info, camera_id, snapshot_direct
+        self,
+        upv_object,
+        protect_data,
+        server_info,
+        camera_id,
+        snapshot_direct,
+        disable_stream,
     ):
         """Initialize an Unifi camera."""
         super().__init__(upv_object, protect_data, server_info, camera_id, None)
         self._snapshot_direct = snapshot_direct
         self._name = self._device_data["name"]
-        self._stream_source = self._device_data["rtsp"]
+        self._stream_source = None if disable_stream else self._device_data["rtsp"]
         self._last_image = None
         self._supported_features = SUPPORT_STREAM if self._stream_source else 0
 
@@ -223,10 +237,13 @@ class UnifiProtectCamera(UnifiProtectEntity, Camera):
 
         image = await self.upv_object.get_thumbnail(self._device_id, image_width)
         if image is None:
-            _LOGGER.error("Last recording not found for Camera %s", self.name)
+            _LOGGER.error("Last thumbnail not found for Camera %s", self.name)
             return
 
         try:
+            if not os.path.exists(os.path.dirname(filename)):
+                os.makedirs(os.path.dirname(filename), exist_ok=True)
+
             await self.hass.async_add_executor_job(_write_image, filename, image)
         except OSError as err:
             _LOGGER.error("Can't write image to file: %s", err)
