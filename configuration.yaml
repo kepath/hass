@@ -3,6 +3,7 @@ default_config:
 discovery:
 api:
 stream:
+python_script:
 
 frontend:
   themes: !include_dir_merge_named themes
@@ -25,24 +26,26 @@ homeassistant:
 #        - 127.0.0.1
 
 http:
-  ip_ban_enabled: true
-  login_attempts_threshold: 20
+  # ip_ban_enabled: true
+  # login_attempts_threshold: 20
 #  use_x_forwarded_for: true
 #  trusted_proxies:
 #  - 127.0.0.1
 
 
 logger:
-  default: info
-#  logs:
+  default: warning
+  logs:
 #    homeassistant.components.camera: debug
 #    homeassistant.components.media_player: debug
 #    homeassistant.components.stream: debug
-#    homeassistant.components.mqtt: debug
+    homeassistant.components.mqtt: debug
 #    aiounifi: debug
 #    homeassistant.components.unifi: debug
 #    homeassistant.components.device_tracker.unifi: debug
 #    homeassistant.components.switch.unifi: debug
+    homeassistant.components.python_script: debug
+    homeassistant.components.automation: info
 
 influxdb:
   username: !secret influx_db_user
@@ -63,18 +66,23 @@ homekit:
   filter:
     include_domains:
     - climate
+    - camera
+    - switch
+    - media_player
     include_entity_globs:
-    - switch.adguard*
-    - switch.wol*
-    - sensor.adguard*
+#    - switch.adguard*
+#    - switch.wol*
+#    - sensor.adguard*
     - sensor.diskstation_volume*
     - sensor.diskstation_drive_*_status
+    - sensor.zigbee*
+    - binary_sensor.zigbee*
 #    - binary_sensor.*iphone
 #    - binary_sensor.iphone*
-    - binary_sensor.diskstation*
-    - binary_sensor.door*
-    - binary_sensor.vibration*
-    - binary_sensor.motion*
+#    - binary_sensor.diskstation*
+#    - binary_sensor.door*
+#    - binary_sensor.vibration*
+#    - binary_sensor.motion*
     include_entities:
     - binary_sensor.remote_ui
 #    - binary_sensor.dru10002268
@@ -88,7 +96,7 @@ nest:
   project_id: !secret nest_project_id
   subscriber_id: !secret nest_subscription_id
 
-speedtestdotnet:
+#speedtestdotnet:
 wake_on_lan:
 
 device_tracker:
@@ -129,9 +137,9 @@ spotcast: #default is home account
 #    minutes: 30
 #  max_entries: 5
 
-glances:
-    name: DownloadPC
-    host: !secret vpn_router_rj45_ip
+#glances:
+#    name: DownloadPC
+#    host: !secret vpn_router_rj45_ip
 
 media_player:
   - platform: androidtv
@@ -159,12 +167,12 @@ media_player:
     #exclude_unnamed_apps: true
   - platform: androidtv
     name: Amazon Firestick Bed A ADB
-    host: !secret amazon_fire_stick_beda_wifi_ip
+    host: !secret amazon_fire_stick_beda_rj45_ip
     adb_server_ip: !secret ha_rj45_ip
     adb_server_port: 5037
   - platform: androidtv
     name: Amazon Fire TV Kitchen ADB
-    host: !secret amazon_fire_tv_kitchen_rj45_ip
+    host: !secret amazon_fire_stick_kitchen_rj45_ip
     adb_server_ip: !secret ha_rj45_ip
     adb_server_port: 5037
 

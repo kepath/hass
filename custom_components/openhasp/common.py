@@ -1,38 +1,47 @@
 """HASP-LVGL Commonalities."""
+import logging
+
 from homeassistant.core import callback
-from homeassistant.helpers.entity import ToggleEntity
+from homeassistant.helpers.entity import ToggleEntity, Entity
 import voluptuous as vol
 
 from .const import (
     CONF_PLATE,
+    DOMAIN,
     EVENT_HASP_PLATE_OFFLINE,
     EVENT_HASP_PLATE_ONLINE,
     HASP_IDLE_STATES,
 )
 
+_LOGGER = logging.getLogger(__name__)
+
+
 HASP_IDLE_SCHEMA = vol.Schema(vol.Any(*HASP_IDLE_STATES))
 
 
-class HASPToggleEntity(ToggleEntity):
-    """Representation of HASP ToggleEntity."""
+class HASPEntity(Entity):
+    """Generic HASP entity (base class)."""
 
-    def __init__(self, plate, topic):
-        """Initialize the light."""
+    def __init__(self, name, hwid: str, topic: str, gpio=None) -> None:
+        """Initialize the HASP entity."""
         super().__init__()
+        self._name = name
+        self._hwid = hwid
         self._topic = topic
+        self._gpio = gpio
         self._state = None
-        self._plate = plate
         self._available = False
+        self._subscriptions = []
+
+    @property
+    def unique_id(self):
+        """Return the identifier of the toggle."""
+        return f"{self._hwid}.{self._gpio}"
 
     @property
     def available(self):
         """Return if entity is available."""
         return self._available
-
-    @property
-    def is_on(self):
-        """Return true if device is on."""
-        return self._state
 
     async def refresh(self):
         """Sync local state back to plate."""
@@ -44,16 +53,58 @@ class HASPToggleEntity(ToggleEntity):
 
         @callback
         async def online(event):
-            if event.data[CONF_PLATE] == self._plate:
+            if event.data[CONF_PLATE] == self._hwid:
                 self._available = True
-                await self.refresh()
+                if self._state:
+                    await self.refresh()
 
-        self.hass.bus.async_listen(EVENT_HASP_PLATE_ONLINE, online)
+        self._subscriptions.append(
+            self.hass.bus.async_listen(EVENT_HASP_PLATE_ONLINE, online)
+        )
 
         @callback
         async def offline(event):
-            if event.data[CONF_PLATE] == self._plate:
+            if event.data[CONF_PLATE] == self._hwid:
                 self._available = False
                 self.async_write_ha_state()
 
-        self.hass.bus.async_listen(EVENT_HASP_PLATE_OFFLINE, offline)
+        self._subscriptions.append(
+            self.hass.bus.async_listen(EVENT_HASP_PLATE_OFFLINE, offline)
+        )
+
+    async def async_will_remove_from_hass(self):
+        """Run when entity about to be removed."""
+        await super().async_will_remove_from_hass()
+
+        for subscription in self._subscriptions:
+            subscription()
+
+    @property
+    def device_info(self):
+        """Return device information."""
+        return {
+            "identifiers": {(DOMAIN, self._hwid)},
+        }
+
+
+class HASPToggleEntity(HASPEntity, ToggleEntity):
+    """Representation of HASP ToggleEntity."""
+
+    @property
+    def is_on(self):
+        """Return true if device is on."""
+        return self._state
+
+    async def async_turn_on(self, **kwargs):
+        """Turn on."""
+        self._state = True
+        await self.refresh()
+
+    async def async_turn_off(self, **kwargs):
+        """Turn off."""
+        self._state = False
+        await self.refresh()
+
+    async def refresh(self):
+        """Sync local state back to plate."""
+        raise NotImplementedError()
