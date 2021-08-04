@@ -1,15 +1,14 @@
-"""Support for Multiscrape sensors."""
+"""Support for multiscrape binary sensors."""
 import logging
 
-from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.const import CONF_DEVICE_CLASS
 from homeassistant.const import CONF_FORCE_UPDATE
 from homeassistant.const import CONF_ICON
 from homeassistant.const import CONF_NAME
 from homeassistant.const import CONF_RESOURCE_TEMPLATE
 from homeassistant.const import CONF_UNIQUE_ID
-from homeassistant.const import CONF_UNIT_OF_MEASUREMENT
 from homeassistant.const import CONF_VALUE_TEMPLATE
 from homeassistant.exceptions import PlatformNotReady
 from homeassistant.helpers.entity import async_generate_entity_id
@@ -23,17 +22,17 @@ from .const import CONF_SELECT_LIST
 from .const import CONF_SENSOR_ATTRS
 from .entity import MultiscrapeEntity
 
+ENTITY_ID_FORMAT = BINARY_SENSOR_DOMAIN + ".{}"
 _LOGGER = logging.getLogger(__name__)
-ENTITY_ID_FORMAT = SENSOR_DOMAIN + ".{}"
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the multiscrape sensor."""
+    """Set up the multiscrape binary sensor."""
     # Must update the sensor now (including fetching the rest resource) to
     # ensure it's updating its state.
     if discovery_info is not None:
         conf, coordinator, rest = await async_get_config_and_coordinator(
-            hass, SENSOR_DOMAIN, discovery_info
+            hass, BINARY_SENSOR_DOMAIN, discovery_info
         )
     else:
         _LOGGER.error("Could not find sensor configuration")
@@ -45,10 +44,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     name = conf.get(CONF_NAME)
     unique_id = conf.get(CONF_UNIQUE_ID)
-    unit = conf.get(CONF_UNIT_OF_MEASUREMENT)
     device_class = conf.get(CONF_DEVICE_CLASS)
-    select_template = conf.get(CONF_SELECT)
-    select_list_template = conf.get(CONF_SELECT_LIST)
+    select = conf.get(CONF_SELECT)
     attribute = conf.get(CONF_ATTR)
     index = conf.get(CONF_INDEX)
     value_template = conf.get(CONF_VALUE_TEMPLATE)
@@ -62,19 +59,17 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     async_add_entities(
         [
-            MultiscrapeSensor(
+            MultiscrapeBinarySensor(
                 hass,
                 coordinator,
                 rest,
                 unique_id,
                 name,
-                unit,
                 device_class,
                 value_template,
                 force_update,
                 resource_template,
-                select_template,
-                select_list_template,
+                select,
                 attribute,
                 index,
                 sensor_attributes,
@@ -84,8 +79,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     )
 
 
-class MultiscrapeSensor(MultiscrapeEntity, SensorEntity):
-    """Implementation of a multiscrape sensor."""
+class MultiscrapeBinarySensor(MultiscrapeEntity, BinarySensorEntity):
+    """Representation of a multiscrape binary sensor."""
 
     def __init__(
         self,
@@ -94,19 +89,18 @@ class MultiscrapeSensor(MultiscrapeEntity, SensorEntity):
         rest,
         unique_id,
         name,
-        unit_of_measurement,
         device_class,
         value_template,
         force_update,
         resource_template,
         select_template,
-        select_list_template,
         attribute,
         index,
         sensor_attributes,
         icon_template,
     ):
-        """Initialize the multiscrape sensor."""
+
+        """Initialize a multiscrape binary sensor."""
         super().__init__(
             hass,
             coordinator,
@@ -117,18 +111,16 @@ class MultiscrapeSensor(MultiscrapeEntity, SensorEntity):
             force_update,
             icon_template,
         )
-        self._state = None
-        self._unique_id = unique_id
-        self._unit_of_measurement = unit_of_measurement
+        self._state = False
+        self._previous_data = None
         self._value_template = value_template
-        self._attributes = None
+        self._is_on = None
+        self._unique_id = unique_id
         self._select_template = select_template
-        self._select_list_template = select_list_template
         self._attribute = attribute
         self._index = index
+        self._attributes = None
         self._sensor_attributes = sensor_attributes
-        self._select = None
-        self._select_list = None
 
         self.entity_id = async_generate_entity_id(
             ENTITY_ID_FORMAT, unique_id or name, hass=hass
@@ -136,52 +128,44 @@ class MultiscrapeSensor(MultiscrapeEntity, SensorEntity):
 
         if self._select_template is not None:
             self._select_template.hass = self._hass
-        if self._select_list_template is not None:
-            self._select_list_template.hass = self._hass
-
-    @property
-    def unit_of_measurement(self):
-        """Return the unit the value is expressed in."""
-        return self._unit_of_measurement
-
-    @property
-    def state(self):
-        """Return the state of the device."""
-        return self._state
 
     @property
     def extra_state_attributes(self):
         """Return the state attributes."""
         return self._attributes
 
-    def _update_from_rest_data(self):
-        """Update state from the rest data."""
+    @property
+    def is_on(self):
+        """Return true if the binary sensor is on."""
+        return self._is_on
 
-        if self._select_template:
-            self._select = self._select_template.async_render(parse_result=True)
-            _LOGGER.debug("Rendered select template: %s", self._select)
-        elif self._select_list_template:
-            self._select_list = self._select_list_template.async_render(
-                parse_result=True
-            )
-            _LOGGER.debug("Rendered select template: %s", self._select_list)
-        else:
-            raise ValueError(
-                "State selector error: either select or select_list should contain a selector."
-            )
+    def _update_from_rest_data(self):
+        """Update state from the scraped data."""
+
+        self._select = self._select_template.async_render(parse_result=False)
+        _LOGGER.debug("Parsed select template: %s", self._select)
+
+        if self.rest.soup is None:
+            self._is_on = False
 
         value = self._scrape(
             self.rest.soup,
             self._select,
-            self._select_list,
+            None,
             self._attribute,
             self._index,
             self._value_template,
         )
-        self._state = value
+
+        try:
+            self._is_on = bool(int(value))
+        except ValueError:
+            self._is_on = {"true": True, "on": True, "open": True, "yes": True}.get(
+                value.lower(), False
+            )
 
         if self._icon_template:
-            self._set_icon(value)
+            self._set_icon(self._is_on)
 
         if self._sensor_attributes:
             self._attributes = {}
