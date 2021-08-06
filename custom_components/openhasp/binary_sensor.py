@@ -4,7 +4,6 @@ import logging
 from typing import Callable
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
-
 # pylint: disable=R0801
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME
@@ -96,8 +95,10 @@ class HASPBinarySensor(HASPEntity, BinarySensorEntity):
             except vol.error.Invalid as err:
                 _LOGGER.error(err)
 
-        await self.hass.components.mqtt.async_subscribe(
-            f"{self._topic}/state/input{self._gpio}", state_message_received
+        self._subscriptions.append(
+            await self.hass.components.mqtt.async_subscribe(
+                f"{self._topic}/state/input{self._gpio}", state_message_received
+            )
         )
 
         self.hass.components.mqtt.async_publish(

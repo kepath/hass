@@ -1,12 +1,13 @@
 """Config flow to configure OpenHASP component."""
 import json
-import os
 import logging
+import os
 
-from homeassistant import config_entries, exceptions, data_entry_flow
+from homeassistant import config_entries, data_entry_flow, exceptions
 from homeassistant.components.mqtt import valid_subscribe_topic
 from homeassistant.const import CONF_NAME
 from homeassistant.core import callback
+import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 
 from .const import (
@@ -80,8 +81,9 @@ class OpenHASPFlowHandler(config_entries.ConfigFlow):
 
     async def async_step_mqtt(self, discovery_info=None):
         """Handle a flow initialized by MQTT discovery."""
+        print(type(discovery_info))
 
-        _discovered = json.loads(discovery_info.payload)
+        _discovered = json.loads(discovery_info["payload"])
         _LOGGER.debug("Discovered: %s", _discovered)
 
         hwid = _discovered[DISCOVERED_HWID]
@@ -105,7 +107,7 @@ class OpenHASPFlowHandler(config_entries.ConfigFlow):
         ]
         self.config_data[
             CONF_TOPIC
-        ] = f"{discovery_info.topic.split('/')[0]}/{self.config_data[CONF_NODE]}"
+        ] = f"{discovery_info['topic'].split('/')[0]}/{self.config_data[CONF_NODE]}"
 
         self.config_data[DISCOVERED_MANUFACTURER] = _discovered.get(
             DISCOVERED_MANUFACTURER
@@ -192,9 +194,10 @@ class OpenHASPOptionsFlowHandler(config_entries.OptionsFlow):
             # Actually check path is a file
 
             try:
-                user_input[CONF_PAGES_PATH] = validate_jsonl(
-                    user_input[CONF_PAGES_PATH]
-                )
+                if len(user_input[CONF_PAGES_PATH]):
+                    user_input[CONF_PAGES_PATH] = validate_jsonl(
+                        user_input[CONF_PAGES_PATH]
+                    )
             except InvalidJSONL:
                 return self.async_abort(reason="invalid_jsonl_path")
 
@@ -215,9 +218,9 @@ class OpenHASPOptionsFlowHandler(config_entries.OptionsFlow):
                         CONF_PAGES_PATH,
                         default=self.config_entry.options.get(
                             CONF_PAGES_PATH,
-                            self.config_entry.data.get(CONF_PAGES_PATH),
+                            self.config_entry.data.get(CONF_PAGES_PATH, ""),
                         ),
-                    ): str,
+                    ): cv.string,
                 }
             ),
         )
