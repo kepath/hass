@@ -1,6 +1,7 @@
 """The Hue Power constants."""
 
 DOMAIN = "powercalc"
+DOMAIN_CONFIG = "config"
 
 DATA_CALCULATOR_FACTORY = "calculator_factory"
 
@@ -12,6 +13,7 @@ CONF_MANUFACTURER = "manufacturer"
 CONF_MODE = "mode"
 CONF_MIN_WATT = "min_watt"
 CONF_MAX_WATT = "max_watt"
+CONF_ENTITY_NAME_PATTERN = "entity_name_pattern"
 CONF_POWER = "power"
 CONF_MIN_POWER = "min_power"
 CONF_MAX_POWER = "max_power"
@@ -41,5 +43,6 @@ MODEL_DIRECTORY_MAPPING = {
         "TRADFRI bulb E14 W op/ch 400lm": "LED1649C5",
         "TRADFRI bulb GU10 W 400lm": "LED1650R5",
         "TRADFRI bulb E27 WS opal 1000lm": "LED1732G11",
+        "TRADFRI bulb E27 WS opal 980lm": "LED1545G12",
     }
 }

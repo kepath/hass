@@ -16,13 +16,16 @@ from homeassistant.components import (
     light,
     media_player,
     remote,
+    sensor,
     switch,
 )
 from homeassistant.components.hue.const import DOMAIN as HUE_DOMAIN
 from homeassistant.components.light import PLATFORM_SCHEMA, Light
+from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
 from homeassistant.const import (
     CONF_ENTITY_ID,
     CONF_NAME,
+    CONF_SCAN_INTERVAL,
     DEVICE_CLASS_POWER,
     EVENT_HOMEASSISTANT_START,
     POWER_WATT,
@@ -31,14 +34,18 @@ from homeassistant.const import (
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
 )
-from homeassistant.core import split_entity_id
+from homeassistant.core import callback, split_entity_id
 from homeassistant.helpers.entity import Entity
-from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.helpers.event import (
+    async_track_state_change_event,
+    async_track_time_interval,
+)
 from homeassistant.helpers.typing import HomeAssistantType
 
 from .const import (
     CONF_CUSTOM_MODEL_DIRECTORY,
     CONF_DISABLE_STANDBY_USAGE,
+    CONF_ENTITY_NAME_PATTERN,
     CONF_FIXED,
     CONF_LINEAR,
     CONF_MANUFACTURER,
@@ -50,6 +57,7 @@ from .const import (
     CONF_WATT,
     DATA_CALCULATOR_FACTORY,
     DOMAIN,
+    DOMAIN_CONFIG,
     MODE_FIXED,
     MODE_LINEAR,
     MODE_LUT,
@@ -78,6 +86,7 @@ PLATFORM_SCHEMA = vol.All(
                     remote.DOMAIN,
                     media_player.DOMAIN,
                     input_boolean.DOMAIN,
+                    sensor.DOMAIN,
                 )
             ),
             vol.Optional(CONF_MODEL): cv.string,
@@ -104,6 +113,7 @@ async def async_setup_platform(
     """Set up the sensor platform."""
 
     calculation_strategy_factory = hass.data[DOMAIN][DATA_CALCULATOR_FACTORY]
+    component_config = hass.data[DOMAIN][DOMAIN_CONFIG]
 
     entity_id = config[CONF_ENTITY_ID]
 
@@ -124,7 +134,8 @@ async def async_setup_platform(
         entity_name = split_entity_id(entity_id)[1].replace("_", " ")
         entity_domain = split_entity_id(entity_id)[0]
 
-    name = config.get(CONF_NAME) or NAME_FORMAT.format(entity_name)
+    name_pattern = component_config.get(CONF_ENTITY_NAME_PATTERN)
+    name = config.get(CONF_NAME) or name_pattern.format(entity_name)
 
     light_model = None
     try:
@@ -163,12 +174,13 @@ async def async_setup_platform(
 
     async_add_entities(
         [
-            GenericPowerSensor(
+            VirtualPowerSensor(
                 power_calculator=calculation_strategy,
                 name=name,
                 entity_id=entity_id,
                 unique_id=unique_id,
                 standby_usage=standby_usage,
+                scan_interval=component_config.get(CONF_SCAN_INTERVAL),
             )
         ]
     )
@@ -261,8 +273,12 @@ async def find_hue_light(
     return None
 
 
-class GenericPowerSensor(Entity):
+class VirtualPowerSensor(Entity):
     """Representation of a Sensor."""
+
+    _attr_device_class = DEVICE_CLASS_POWER
+    _attr_state_class = STATE_CLASS_MEASUREMENT
+    _attr_unit_of_measurement = POWER_WATT
 
     def __init__(
         self,
@@ -271,6 +287,7 @@ class GenericPowerSensor(Entity):
         entity_id: str,
         unique_id: str,
         standby_usage: float | None,
+        scan_interval,
     ):
         """Initialize the sensor."""
         self._power_calculator = power_calculator
@@ -279,6 +296,8 @@ class GenericPowerSensor(Entity):
         self._power = None
         self._unique_id = unique_id
         self._standby_usage = standby_usage
+        self._attr_force_update = True
+        self._scan_interval = scan_interval
 
     async def async_added_to_hass(self):
         """Register callbacks."""
@@ -299,6 +318,13 @@ class GenericPowerSensor(Entity):
             new_state = self.hass.states.get(self._entity_id)
 
             await self._update_power_sensor(new_state)
+
+        @callback
+        def async_update(event_time=None):
+            """Update the entity."""
+            self.async_schedule_update_ha_state(True)
+
+        async_track_time_interval(self.hass, async_update, self._scan_interval)
 
         self.hass.bus.async_listen_once(
             EVENT_HOMEASSISTANT_START, home_assistant_startup
@@ -346,13 +372,3 @@ class GenericPowerSensor(Entity):
     def available(self):
         """Return True if entity is available."""
         return self._power is not None
-
-    @property
-    def unit_of_measurement(self):
-        """Return the unit of measurement."""
-        return POWER_WATT
-
-    @property
-    def device_class(self) -> str:
-        """Device class of the sensor."""
-        return DEVICE_CLASS_POWER

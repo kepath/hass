@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 import logging
+from datetime import timedelta
 from typing import Optional
 
+import homeassistant.helpers.config_validation as cv
+import voluptuous as vol
+from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.helpers.typing import HomeAssistantType
 
 from .const import (
+    CONF_ENTITY_NAME_PATTERN,
     CONF_FIXED,
     CONF_LINEAR,
     CONF_MAX_POWER,
@@ -19,6 +24,7 @@ from .const import (
     CONF_WATT,
     DATA_CALCULATOR_FACTORY,
     DOMAIN,
+    DOMAIN_CONFIG,
     MODE_FIXED,
     MODE_LINEAR,
     MODE_LUT,
@@ -32,10 +38,36 @@ from .strategy_lut import LutRegistry, LutStrategy
 
 _LOGGER = logging.getLogger(__name__)
 
+DEFAULT_SCAN_INTERVAL = timedelta(minutes=10)
+DEFAULT_NAME_PATTERN = "{} power"
+
+CONFIG_SCHEMA = vol.Schema(
+    {
+        DOMAIN: vol.Schema(
+            {
+                vol.Optional(
+                    CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL
+                ): cv.time_period,
+                vol.Optional(
+                    CONF_ENTITY_NAME_PATTERN, default=DEFAULT_NAME_PATTERN
+                ): vol.Match(r"\{\}"),
+            }
+        )
+    },
+    extra=vol.ALLOW_EXTRA,
+)
+
 
 async def async_setup(hass: HomeAssistantType, config: dict) -> bool:
-    hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][DATA_CALCULATOR_FACTORY] = PowerCalculatorStrategyFactory(hass)
+    conf = config.get(DOMAIN) or {
+        CONF_ENTITY_NAME_PATTERN: DEFAULT_NAME_PATTERN,
+        CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL,
+    }
+
+    hass.data[DOMAIN] = {
+        DATA_CALCULATOR_FACTORY: PowerCalculatorStrategyFactory(hass),
+        DOMAIN_CONFIG: conf,
+    }
 
     return True
 
