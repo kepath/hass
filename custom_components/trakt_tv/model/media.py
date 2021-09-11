@@ -4,7 +4,7 @@ from asyncio import gather
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 import aiohttp
 
@@ -48,10 +48,32 @@ class Media(ABC):
         """
 
     @abstractmethod
-    def to_upcoming(self):
+    def to_upcoming(self) -> Dict[str, Any]:
         """
         Convert the Media to upcoming data.
+
+        :return: The dictionary containing all necessary information for upcoming media
+                 card
         """
+
+    def common_upcoming_information(self) -> Dict[str, Any]:
+        """
+        Common upcoming information.
+
+        :return: The dictionary containing all common information for all kind of medias
+        """
+        default = {
+            "title": self.name,
+            "release": "$day, $date $time",
+            "airdate": self.released.isoformat() + "Z",
+            "poster": self.poster,
+            "fanart": self.fanart,
+            "genres": self.genres,
+            "rating": self.rating,
+            "studio": self.studio,
+        }
+
+        return {k: v for k, v in default.items() if v is not None}
 
     async def get_more_information(self, language):
         """
@@ -72,6 +94,7 @@ class Movie(Media):
     genres: List[str] = field(default_factory=list)
     rating: Optional[int] = None
     runtime: Optional[int] = None
+    studio: Optional[str] = None
 
     @staticmethod
     def from_trakt(data) -> "Movie":
@@ -109,23 +132,22 @@ class Movie(Media):
                     self.rating = vote_average
             if runtime := json.get("runtime"):
                 self.runtime = runtime
+            if production_companies := json.get("production_companies"):
+                self.studio = production_companies[0].get("name")
 
-    def to_upcoming(self):
+    def to_upcoming(self) -> Dict[str, Any]:
         """
         Convert the Movie to upcoming data.
+
+        :return: The dictionary containing all necessary information for upcoming media
+                 card
         """
         default = {
-            "title": self.name,
-            "release": "$day, $date $time",
-            "airdate": self.released.isoformat() + "Z",
-            "poster": self.poster,
-            "fanart": self.fanart,
-            "genres": self.genres,
-            "rating": self.rating,
+            **self.common_upcoming_information(),
             "runtime": self.runtime,
         }
 
-        return {k: v for k, v in default.items() if v is not None}
+        return default
 
 
 @dataclass
@@ -154,6 +176,10 @@ class Episode:
 class Show(Media):
     episode: Episode
     poster: Optional[str] = None
+    fanart: Optional[str] = None
+    genres: List[str] = field(default_factory=list)
+    rating: Optional[int] = None
+    studio: Optional[str] = None
 
     @staticmethod
     def from_trakt(data) -> "Show":
@@ -196,22 +222,29 @@ class Show(Media):
             if vote_average := json.get("vote_average"):
                 if vote_average != 0:
                     self.rating = vote_average
+            if networks := json.get("networks"):
+                self.studio = networks[0].get("name")
 
-    def to_upcoming(self):
+    def to_upcoming(self) -> Dict[str, Any]:
         """
-        Convert the Show to upcoming data
+        Convert the Show to upcoming data.
+
+        :return: The dictionary containing all necessary information for upcoming media
+                 card
         """
+        season = self.episode.season
+        season = season if season >= 10 else f"0{season}"
+
+        episode = self.episode.number
+        episode = episode if episode >= 10 else f"0{episode}"
+
         default = {
-            "title": self.name,
-            "release": "$day, $date $time",
-            "airdate": self.released.isoformat() + "Z",
-            "poster": self.poster,
-            "fanart": self.fanart,
-            "genres": self.genres,
-            "rating": self.rating,
+            **self.common_upcoming_information(),
+            "episode": self.episode.title,
+            "number": f"S{season}E{episode}",
         }
 
-        return {k: v for k, v in default.items() if v is not None}
+        return default
 
 
 @dataclass
@@ -229,9 +262,12 @@ class Medias:
             "icon": "mdi:arrow-down-bold",
         }
 
-    def to_upcoming(self):
+    def to_upcoming(self) -> Dict[str, Any]:
         """
-        Convert the List of Media to upcoming data
+        Convert the List of medias to upcoming data.
+
+        :return: The dictionary containing all necessary information for upcoming media
+                 card
         """
         medias = sorted(self.items, key=lambda media: media.released)
         medias = [media.to_upcoming() for media in medias]

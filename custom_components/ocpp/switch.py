@@ -4,13 +4,13 @@ from typing import Any
 from homeassistant.components.switch import SwitchEntity
 
 from .api import CentralSystem
-from .const import CONF_CPID, DOMAIN, ICON, SWITCHES
+from .const import CONF_CPID, DEFAULT_CPID, DOMAIN, ICON, SWITCHES
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
     """Configure the sensor platform."""
     central_system = hass.data[DOMAIN][entry.entry_id]
-    cp_id = entry.data[CONF_CPID]
+    cp_id = entry.data.get(CONF_CPID, DEFAULT_CPID)
 
     entities = []
 
@@ -45,7 +45,7 @@ class ChargePointSwitch(SwitchEntity):
     @property
     def available(self) -> bool:
         """Return if switch is available."""
-        return True  # type: ignore [no-any-return]
+        return self.central_system.get_available(self.cp_id)  # type: ignore [no-any-return]
 
     @property
     def is_on(self) -> bool:

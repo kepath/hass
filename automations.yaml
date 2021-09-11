@@ -35,7 +35,7 @@
       message: Disk space on DPC very low
     service: notify.mobile_app_kevins_iphone_8
 - id: '1609788406791'
-  alias: When Yamaha Reciever is Off, Turn on the Fridge
+  alias: When Reciever is Off, Turn on the Fridge
   description: ''
   trigger:
   - platform: state
@@ -50,7 +50,7 @@
     domain: switch
   mode: single
 - id: '1609788662612'
-  alias: When Yamaha Receiver is On, turn Off the Fridge and Light
+  alias: When Receiver is On, turn Off the Fridge and Light
   description: ''
   trigger:
   - platform: state
@@ -69,7 +69,7 @@
     domain: switch
   mode: single
 - id: '1616842943101'
-  alias: Turn on Garage Light when the Garage Door is opened
+  alias: Garage light on when the Garage Door is opened
   description: ''
   trigger:
   - type: opened
@@ -86,7 +86,7 @@
     brightness_pct: 100
   mode: single
 - id: '1617175491057'
-  alias: Turn off garage light 10 mins after garage door shut
+  alias: Garage light off 10 mins after garage door shut
   description: ''
   trigger:
   - type: not_opened
@@ -121,7 +121,7 @@
       message: There is Somebody at the Door
       echo_device: media_player.everywhere_2
 - id: '1624743776933'
-  alias: Turn on Bottom Hallway Light When the Front Door is opened
+  alias: Bottom Hallway light on When the Front Door is opened
   description: ''
   trigger:
   - type: opened
@@ -129,39 +129,24 @@
     device_id: bfb5f733e3cc226de9ff83eaf5571ab9
     entity_id: binary_sensor.zigbee_door_sensor_front_contact
     domain: binary_sensor
+    id: '26381'
   condition:
   - condition: sun
     after: sunset
     before: sunrise
   action:
-  - type: turn_off
+  - type: toggle
     device_id: 707639a037c05f21cb7ba1e119538bf0
     entity_id: light.shelly1l_hallway_bottom_light
     domain: light
   mode: single
-- id: '1628095122464'
-  alias: Turn on the backdoor light when the sun sets
+- id: '1630481089896'
+  alias: backdoor light on when motion detected
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-  condition: []
-  action:
-  - type: turn_on
-    device_id: baaf4aaa5cf581b079c86f344c22832b
-    entity_id: light.bf82abce93da177c79kymc
-    domain: light
-  mode: single
-- id: '1628095252621'
-  alias: Turn off backdoor light at 10 pm
-  description: ''
-  trigger:
-  - platform: time
-    at: '22:00'
-  condition: []
-  action:
-  - type: turn_off
-    device_id: baaf4aaa5cf581b079c86f344c22832b
-    entity_id: light.bf82abce93da177c79kymc
-    domain: light
-  mode: single
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      motion_entity: binary_sensor.motion_uvc_g3_flex_back
+      light_target:
+        entity_id: light.bf82abce93da177c79kymc
+      no_motion_wait: 306

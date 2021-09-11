@@ -1,11 +1,11 @@
 """Additional enumerated values to use in home assistant."""
-from enum import Enum
+from enum import Enum, IntFlag, auto
 
 
 class HAChargerServices(str, Enum):
     """Charger status conditions to report in home assistant."""
 
-    """For HA service reference use .name for function to call use .value"""
+    """For HA service reference and for function to call use .value"""
 
     service_charge_start = "start_transaction"
     service_charge_stop = "stop_transaction"
@@ -16,7 +16,9 @@ class HAChargerServices(str, Enum):
     service_update_firmware = "update_firmware"
     service_configure = "configure"
     service_get_configuration = "get_configuration"
+    service_get_diagnostics = "get_diagnostics"
     service_clear_profile = "clear_profile"
+    service_data_transfer = "data_transfer"
 
 
 class HAChargerStatuses(str, Enum):
@@ -27,6 +29,7 @@ class HAChargerStatuses(str, Enum):
     error_code = "Error.Code"
     stop_reason = "Stop.Reason"
     firmware_status = "FW.Status"
+    reconnects = "Reconnects"
 
 
 class HAChargerDetails(str, Enum):
@@ -48,6 +51,17 @@ class HAChargerSession(str, Enum):
     session_time = "Session.Time"  # in min
     session_energy = "Session.Energy"  # in kWh
     meter_start = "Meter.Start"  # in kWh
+
+
+class Profiles(IntFlag):
+    """Flags to indicate supported feature profiles."""
+
+    CORE = auto()  # Core
+    FW = auto()  # FirmwareManagement
+    SMART = auto()  # SmartCharging
+    RES = auto()  # Reservation
+    REM = auto()  # RemoteTrigger
+    AUTH = auto()  # LocalAuthListManagement
 
 
 class OcppMisc(str, Enum):
