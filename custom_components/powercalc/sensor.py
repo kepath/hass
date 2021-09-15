@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 import homeassistant.helpers.config_validation as cv
 import homeassistant.helpers.entity_registry as er
@@ -21,7 +21,7 @@ from homeassistant.components import (
     sensor,
     switch,
     vacuum,
-    water_heater
+    water_heater,
 )
 from homeassistant.components.integration.sensor import (
     TRAPEZOIDAL_METHOD,
@@ -30,6 +30,7 @@ from homeassistant.components.integration.sensor import (
 from homeassistant.components.light import PLATFORM_SCHEMA
 from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
 from homeassistant.components.utility_meter import DEFAULT_OFFSET
+from homeassistant.components.utility_meter.const import METER_TYPES
 from homeassistant.components.utility_meter.sensor import UtilityMeterSensor
 from homeassistant.const import (
     CONF_ENTITY_ID,
@@ -58,7 +59,7 @@ from homeassistant.helpers.typing import (
     HomeAssistantType,
 )
 
-from .common import SourceEntity
+from .common import SourceEntity, validate_name_pattern
 from .const import (
     CALCULATION_MODES,
     CONF_CREATE_ENERGY_SENSOR,
@@ -89,7 +90,6 @@ from .errors import (
     StrategyConfigurationError,
     UnsupportedMode,
 )
-from .light_model import LightModel
 from .model_discovery import get_light_model
 from .strategy_fixed import CONFIG_SCHEMA as FIXED_SCHEMA
 from .strategy_interface import PowerCalculationStrategyInterface
@@ -115,7 +115,7 @@ PLATFORM_SCHEMA = vol.All(
                     input_select.DOMAIN,
                     sensor.DOMAIN,
                     vacuum.DOMAIN,
-                    water_heater.DOMAIN
+                    water_heater.DOMAIN,
                 )
             ),
             vol.Optional(CONF_MODEL): cv.string,
@@ -127,8 +127,14 @@ PLATFORM_SCHEMA = vol.All(
             vol.Optional(CONF_FIXED): FIXED_SCHEMA,
             vol.Optional(CONF_LINEAR): LINEAR_SCHEMA,
             vol.Optional(CONF_CREATE_ENERGY_SENSOR): cv.boolean,
+            vol.Optional(CONF_CREATE_UTILITY_METERS): cv.boolean,
+            vol.Optional(CONF_UTILITY_METER_TYPES): vol.All(
+                cv.ensure_list, [vol.In(METER_TYPES)]
+            ),
             vol.Optional(CONF_MULTIPLY_FACTOR): vol.Coerce(float),
             vol.Optional(CONF_MULTIPLY_FACTOR_STANDBY, default=False): cv.boolean,
+            vol.Optional(CONF_POWER_SENSOR_NAMING): validate_name_pattern,
+            vol.Optional(CONF_ENERGY_SENSOR_NAMING): validate_name_pattern,
         }
     ),
 )
@@ -150,6 +156,7 @@ async def async_setup_platform(
     """Set up the sensor platform."""
 
     component_config = hass.data[DOMAIN][DOMAIN_CONFIG]
+    sensor_config = get_sensor_configuration(config, component_config)
 
     source_entity = config[CONF_ENTITY_ID]
     source_entity_domain, source_object_id = split_entity_id(source_entity)
@@ -181,31 +188,50 @@ async def async_setup_platform(
 
     try:
         power_sensor = await create_power_sensor(
-            hass, entity_entry, config, component_config, source_entity
+            hass, entity_entry, sensor_config, component_config, source_entity
         )
     except PowercalcSetupError as err:
         return
 
     entities_to_add = [power_sensor]
 
-    should_create_energy_sensor = component_config.get(CONF_CREATE_ENERGY_SENSORS)
-    if CONF_CREATE_ENERGY_SENSOR in config:
-        should_create_energy_sensor = config.get(CONF_CREATE_ENERGY_SENSOR)
-
-    if should_create_energy_sensor:
+    if sensor_config.get(CONF_CREATE_ENERGY_SENSOR):
         energy_sensor = await create_energy_sensor(
-            hass, component_config, config, power_sensor, source_entity
+            hass, sensor_config, power_sensor, source_entity
         )
         entities_to_add.append(energy_sensor)
 
-        if component_config.get(CONF_CREATE_UTILITY_METERS):
-            meter_types = component_config.get(CONF_UTILITY_METER_TYPES)
+        if sensor_config.get(CONF_CREATE_UTILITY_METERS):
+            meter_types = sensor_config.get(CONF_UTILITY_METER_TYPES)
             for meter_type in meter_types:
                 entities_to_add.append(
                     create_utility_meter_sensor(energy_sensor, meter_type)
                 )
 
     async_add_entities(entities_to_add)
+
+
+def get_sensor_configuration(config: dict, component_config: dict) -> dict:
+    """Build the configuration dictionary for the sensors."""
+
+    fallbackAttributes = (
+        CONF_CREATE_UTILITY_METERS,
+        CONF_ENERGY_SENSOR_NAMING,
+        CONF_POWER_SENSOR_NAMING,
+        CONF_UTILITY_METER_TYPES,
+    )
+
+    # When not set on sensor level will fallback to global level configuration
+    for attribute in fallbackAttributes:
+        if not attribute in config:
+            config[attribute] = component_config.get(attribute)
+
+    if not CONF_CREATE_ENERGY_SENSOR in config:
+        config[CONF_CREATE_ENERGY_SENSOR] = component_config.get(
+            CONF_CREATE_ENERGY_SENSORS
+        )
+
+    return config
 
 
 async def create_power_sensor(
@@ -219,7 +245,7 @@ async def create_power_sensor(
 
     calculation_strategy_factory = hass.data[DOMAIN][DATA_CALCULATOR_FACTORY]
 
-    name_pattern = component_config.get(CONF_POWER_SENSOR_NAMING)
+    name_pattern = sensor_config.get(CONF_POWER_SENSOR_NAMING)
     name = sensor_config.get(CONF_NAME) or source_entity.name
     name = name_pattern.format(name)
     object_id = sensor_config.get(CONF_NAME) or source_entity.object_id
@@ -229,9 +255,20 @@ async def create_power_sensor(
 
     light_model = None
     try:
-        light_model = await get_light_model(hass, entity_entry, sensor_config)
+        mode = select_calculation_mode(sensor_config)
+        if (
+            sensor_config.get(CONF_LINEAR) is None
+            and sensor_config.get(CONF_FIXED) is None
+        ):
+            light_model = await get_light_model(hass, entity_entry, sensor_config)
+            if mode is None and light_model:
+                mode = light_model.supported_modes[0]
 
-        mode = select_calculation_mode(sensor_config, light_model)
+        if mode is None:
+            raise UnsupportedMode(
+                "Cannot select a mode (LINEAR, FIXED or LUT), supply it in the config"
+            )
+
         calculation_strategy = calculation_strategy_factory.create(
             sensor_config, mode, light_model, source_entity.domain
         )
@@ -254,7 +291,7 @@ async def create_power_sensor(
             standby_usage = light_model.standby_usage
 
     _LOGGER.debug(
-        "Setting up power sensor (entity_id:%s sensor_name:%s strategy=%s manufacturer=%s model=%s standby_usage=%s unique_id=%s)",
+        "Creating power sensor (entity_id=%s sensor_name=%s strategy=%s manufacturer=%s model=%s standby_usage=%s unique_id=%s)",
         source_entity.entity_id,
         name,
         calculation_strategy.__class__.__name__,
@@ -281,12 +318,13 @@ async def create_power_sensor(
 
 async def create_energy_sensor(
     hass: HomeAssistantType,
-    component_config: dict,
     sensor_config: dict,
     power_sensor: VirtualPowerSensor,
     source_entity: SourceEntity,
 ) -> VirtualEnergySensor:
-    name_pattern = component_config.get(CONF_ENERGY_SENSOR_NAMING)
+    """Create the energy sensor entity"""
+
+    name_pattern = sensor_config.get(CONF_ENERGY_SENSOR_NAMING)
     name = sensor_config.get(CONF_NAME) or source_entity.name
     name = name_pattern.format(name)
     object_id = sensor_config.get(CONF_NAME) or source_entity.object_id
@@ -313,6 +351,8 @@ async def create_energy_sensor(
 def create_utility_meter_sensor(
     energy_sensor: VirtualEnergySensor, meter_type: str
 ) -> VirtualUtilityMeterSensor:
+    """Create the utility meter sensor entity"""
+
     name = f"{energy_sensor.name} {meter_type}"
     entity_id = f"{energy_sensor.entity_id}_{meter_type}"
     _LOGGER.debug("Creating utility_meter sensor: %s", name)
@@ -321,7 +361,7 @@ def create_utility_meter_sensor(
     )
 
 
-def select_calculation_mode(config: dict, light_model: LightModel) -> str:
+def select_calculation_mode(config: dict) -> Optional[str]:
     """Select the calculation mode"""
     config_mode = config.get(CONF_MODE)
     if config_mode:
@@ -333,12 +373,7 @@ def select_calculation_mode(config: dict, light_model: LightModel) -> str:
     if config.get(CONF_FIXED):
         return MODE_FIXED
 
-    if light_model:
-        return light_model.supported_modes[0]
-
-    raise UnsupportedMode(
-        "Cannot select a mode (LINEAR, FIXED or LUT), supply it in the config"
-    )
+    return None
 
 
 class VirtualPowerSensor(Entity):
