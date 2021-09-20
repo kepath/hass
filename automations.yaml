@@ -1,38 +1,3 @@
-- id: shellies_announce
-  alias: Shellies Announce
-  trigger:
-  - platform: homeassistant
-    event: start
-  - platform: time_pattern
-    hours: /1
-  action:
-    service: mqtt.publish
-    data:
-      topic: shellies/command
-      payload: announce
-- id: shellies_discovery
-  alias: Shellies Discovery
-  mode: queued
-  max: 999
-  trigger:
-    platform: mqtt
-    topic: shellies/announce
-  action:
-    service: python_script.shellies_discovery
-    data:
-      id: '{{ trigger.payload_json.id }}'
-      mac: '{{ trigger.payload_json.mac }}'
-      fw_ver: '{{ trigger.payload_json.fw_ver }}'
-      model: '{{ trigger.payload_json.model }}'
-      mode: '{{ trigger.payload_json.mode | default }}'
-      discovery_prefix: homeassistant
-      qos: 2
-      shelly1l-F4CFA2E399DF:
-        relay-0-name: Bed C Light
-        force_update_sensors: true
-      shelly1l-E09806AA14C7:
-        relay-0-name: Bottom Hall Light
-        force_update_sensors: true
 - id: '1587503984484'
   alias: tautulli_webhook
   description: ''
@@ -70,7 +35,7 @@
       message: Disk space on DPC very low
     service: notify.mobile_app_kevins_iphone_8
 - id: '1609788406791'
-  alias: When Yamaha Reciever is Off, Turn on the Fridge
+  alias: When Reciever is Off, Turn on the Fridge
   description: ''
   trigger:
   - platform: state
@@ -85,7 +50,7 @@
     domain: switch
   mode: single
 - id: '1609788662612'
-  alias: When Yamaha Receiver is On, turn Off the Fridge and Light
+  alias: When Receiver is On, turn Off the Fridge and Light
   description: ''
   trigger:
   - platform: state
@@ -104,7 +69,7 @@
     domain: switch
   mode: single
 - id: '1616842943101'
-  alias: Turn on Garage Light when the Garage Door is opened
+  alias: Garage light on when the Garage Door is opened
   description: ''
   trigger:
   - type: opened
@@ -121,7 +86,7 @@
     brightness_pct: 100
   mode: single
 - id: '1617175491057'
-  alias: Turn off garage light 10 mins after garage door shut
+  alias: Garage light off 10 mins after garage door shut
   description: ''
   trigger:
   - type: not_opened
@@ -150,30 +115,74 @@
       notification_message: There is Somebody at the Door!
       doorbell: binary_sensor.doorbell_uvc_g4_doorbell
       camera: camera.uvc_g4_doorbell
-      notify_device: 7efaa4e5200ba2b72ab1fa14f7be8a66
       delay: 2
       notification_title: There is Somebody at the Door!
       message: There is Somebody at the Door
-      echo_device: media_player.amazon_echo_dot_bed_c_alexa_integration, media_player.amazon_echo_dot_lounge_alexa_integration,
-        media_player.amazon_echo_kitchen_alexa_integration, media_player.amazon_echo_spot_bed_a_alexa_integration,
-        media_player.amazon_fire_tv_kitchen_alexa_integration, media_player.kevin_s_echo_show,
-        media_player.kevin_s_firetvstick
+      echo_device: media_player.amazon_echo_dot_bed_c_alexa_integration, media_player.amazon_echo_spot_bed_a_alexa_integration,
+        media_player.bed_b_echo_plus, media_player.kevin_s_echo_dot, media_player.kevin_s_echo_show
+      is_ios: false
+      notify_device: f07826679ff92d5162eecd1ecf393e72
 - id: '1624743776933'
-  alias: Turn on Bottom Hallway Light When the Front Door is opened
+  alias: Bottom Hallway light on When the Front Door is opened
   description: ''
   trigger:
   - type: opened
     platform: device
     device_id: bfb5f733e3cc226de9ff83eaf5571ab9
-    entity_id: binary_sensor.zigbee_door_sensor_front_door_contact
+    entity_id: binary_sensor.zigbee_door_sensor_front_contact
     domain: binary_sensor
+    id: '263813'
   condition:
   - condition: sun
     after: sunset
     before: sunrise
   action:
   - type: turn_on
-    device_id: ee8b8309176e9e06f44b48762de253b5
-    entity_id: switch.bottom_hall_light
-    domain: switch
+    device_id: 707639a037c05f21cb7ba1e119538bf0
+    entity_id: light.shelly1l_hallway_bottom_light
+    domain: light
   mode: single
+- id: '1631736153340'
+  alias: Back Lights on when Motion Detected
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: a41beba7d038fb84cb5f9b81cfe4d189
+    entity_id: binary_sensor.motion_uvc_g3_flex_back
+    domain: binary_sensor
+    id: '351179'
+  condition:
+  - condition: sun
+    before: sunrise
+    after: sunset
+  - condition: device
+    type: is_off
+    device_id: d4aabe0c259eb8f64a5080976888b8a4
+    entity_id: light.tybf82abce93da177c79kymc
+    domain: light
+  action:
+  - type: turn_on
+    device_id: d4aabe0c259eb8f64a5080976888b8a4
+    entity_id: light.tybf82abce93da177c79kymc
+    domain: light
+    brightness_pct: 100
+  - type: turn_on
+    device_id: 376a2d183b5132bd8417b81b10aa763f
+    entity_id: light.zigbee_bulb_garage
+    domain: light
+    brightness_pct: 100
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: d4aabe0c259eb8f64a5080976888b8a4
+    entity_id: light.tybf82abce93da177c79kymc
+    domain: light
+  - type: turn_off
+    device_id: 376a2d183b5132bd8417b81b10aa763f
+    entity_id: light.zigbee_bulb_garage
+    domain: light
+  mode: restart

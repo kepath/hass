@@ -2,7 +2,7 @@
 import logging
 
 from homeassistant.core import callback
-from homeassistant.helpers.entity import ToggleEntity, Entity
+from homeassistant.helpers.entity import Entity, ToggleEntity
 import voluptuous as vol
 
 from .const import (
@@ -104,7 +104,3 @@ class HASPToggleEntity(HASPEntity, ToggleEntity):
         """Turn off."""
         self._state = False
         await self.refresh()
-
-    async def refresh(self):
-        """Sync local state back to plate."""
-        raise NotImplementedError()

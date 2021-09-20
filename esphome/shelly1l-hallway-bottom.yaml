@@ -9,7 +9,11 @@ esphome:
   name: ${device_name}
   platform: ESP8266
   board: esp01_1m
-
+  on_boot:
+    - priority: -100
+      then:
+        - light.turn_off: lightid
+        - logger.log: 'startup - light should be off'
 wifi:
   ssid: ${ssid}
   password: !secret not_wifi_password
@@ -76,37 +80,19 @@ binary_sensor:
   - platform: gpio
     pin:
       number: GPIO4
-    name: ${device_name}-switch-1
-    
-    
-    # config for multi click actions
-    # on_multi_click:
-    #   # double click
-    #   - timing:
-    #       - ON for at most 1s
-    #       - OFF for at most 1s
-    #       - ON for at most 1s
-    #       - OFF for at least 0.2s
-    #     then:
-    #       - if:
-    #           condition:
-    #             and:
-    #               - wifi.connected:
-    #               - api.connected:
-    #           # send double click event in case wifi and api are conncected
-    #           then:
-    #             - homeassistant.event:
-    #                 event: esphome.button_pressed
-    #                 data:
-    #                   title: ${device_name}-double-click
-    #           # toggle relay in case either wifi or api are not connected
-    #           else:
-    #             - light.toggle: lightid    
-    
-    
+    name: ${device_name}-switch-1 
     on_state:
       then:
         - light.toggle: lightid
+    on_double_click:
+      min_length: 50ms
+      max_length: 350ms
+      then:
+        - homeassistant.service:
+            service: light.turn_off
+            data:
+              entity_id: light.all_lights_everywhere
+
     id: switchid1
     filters:
       - delayed_on_off: 50ms
