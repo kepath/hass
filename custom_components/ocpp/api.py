@@ -347,6 +347,7 @@ class ChargePoint(cp):
 
         try:
             self.status = STATE_OK
+            await asyncio.sleep(2)
             await self.get_supported_features()
             if prof.REM in self._attr_supported_features:
                 await self.trigger_status_notification()
@@ -632,6 +633,10 @@ class ChargePoint(cp):
                 data,
                 resp.data,
             )
+            self._metrics[cdet.data_response.value].value = datetime.now(
+                tz=timezone.utc
+            ).isoformat()
+            self._metrics[cdet.data_response.value].extra_attr = {message_id: resp.data}
             return True
         else:
             _LOGGER.warning("Failed with response: %s", resp.status)
@@ -647,6 +652,10 @@ class ChargePoint(cp):
         if resp.configuration_key is not None:
             value = resp.configuration_key[0][om.value.value]
             _LOGGER.debug("Get Configuration for %s: %s", key, value)
+            self._metrics[cdet.config_response.value].value = datetime.now(
+                tz=timezone.utc
+            ).isoformat()
+            self._metrics[cdet.config_response.value].extra_attr = {key: value}
             return value
         if resp.unknown_key is not None:
             _LOGGER.warning("Get Configuration returned unknown key for: %s", key)
@@ -714,6 +723,8 @@ class ChargePoint(cp):
         except websockets.exceptions.WebSocketException as e:
             _LOGGER.debug("Websockets exception: %s", e)
         finally:
+            await self._connection.close()
+            self._connection = None
             self.status = STATE_UNAVAILABLE
 
     async def reconnect(self, connection):
@@ -726,6 +737,8 @@ class ChargePoint(cp):
         except websockets.exceptions.WebSocketException as e:
             _LOGGER.debug("Websockets exception: %s", e)
         finally:
+            await self._connection.close()
+            self._connection = None
             self.status = STATE_UNAVAILABLE
 
     async def async_update_device_info(self, boot_info: dict):
@@ -759,6 +772,7 @@ class ChargePoint(cp):
             phase = sv.get(om.phase.value, None)
             value = sv.get(om.value.value, None)
             unit = sv.get(om.unit.value, None)
+            context = sv.get(om.context.value, None)
             if measurand is not None and phase is not None:
                 if measurand not in measurand_data:
                     measurand_data[measurand] = {}
@@ -767,18 +781,21 @@ class ChargePoint(cp):
                 self._metrics[measurand].unit = unit
                 self._metrics[measurand].extra_attr[om.unit.value] = unit
                 self._metrics[measurand].extra_attr[phase] = float(value)
+                self._metrics[measurand].extra_attr[om.context.value] = context
 
         for metric, phase_info in measurand_data.items():
             # _LOGGER.debug("Metric: %s, extra attributes: %s", metric, phase_info)
             metric_value = None
             if metric in [Measurand.voltage.value]:
-                if Phase.l1_n.value in phase_info:
+                if Phase.l2_n.value in phase_info:
                     """Line-neutral voltages are averaged."""
                     metric_value = (
                         phase_info.get(Phase.l1_n.value, 0)
                         + phase_info.get(Phase.l2_n.value, 0)
                         + phase_info.get(Phase.l3_n.value, 0)
                     ) / 3
+                elif Phase.l1_n.value in phase_info:
+                    metric_value = phase_info.get(Phase.l1_n.value, 0)
                 elif Phase.l1_l2.value in phase_info:
                     """Line-line voltages are converted to line-neutral and averaged."""
                     metric_value = (
@@ -805,6 +822,9 @@ class ChargePoint(cp):
     @on(Action.MeterValues)
     def on_meter_values(self, connector_id: int, meter_value: Dict, **kwargs):
         """Request handler for MeterValues Calls."""
+        self._metrics[csess.transaction_id.value].value = kwargs.get(
+            om.transaction_id.name, 0
+        )
         for bucket in meter_value:
             unprocessed = bucket[om.sampled_value.name]
             processed_keys = []
@@ -814,6 +834,7 @@ class ChargePoint(cp):
                 unit = sv.get(om.unit.value, None)
                 phase = sv.get(om.phase.value, None)
                 location = sv.get(om.location.value, None)
+                context = sv.get(om.context.value, None)
 
                 if len(sv.keys()) == 1:  # Backwars compatibility
                     measurand = DEFAULT_MEASURAND
@@ -833,6 +854,8 @@ class ChargePoint(cp):
                         self._metrics[measurand].extra_attr[
                             om.location.value
                         ] = location
+                    if context is not None:
+                        self._metrics[measurand].extra_attr[om.context.value] = context
                     processed_keys.append(idx)
             for idx in sorted(processed_keys, reverse=True):
                 unprocessed.pop(idx)
@@ -848,7 +871,10 @@ class ChargePoint(cp):
                 om.transaction_id.name
             )
             self._transactionId = kwargs.get(om.transaction_id.name)
-        if self._metrics[csess.transaction_id.value].value is not None:
+        if self._metrics[csess.transaction_id.value].value == 0:
+            self._metrics[csess.session_time.value].value = 0
+            self._metrics[csess.session_energy.value].value = 0
+        else:
             self._metrics[csess.session_time.value].value = round(
                 (
                     int(time.time())
@@ -862,15 +888,20 @@ class ChargePoint(cp):
                 - float(self._metrics[csess.meter_start.value].value),
                 1,
             )
+        else:
+            self._metrics[csess.session_energy.value].value = 0
         self.hass.async_create_task(self.central.update(self.central.cpid))
         return call_result.MeterValuesPayload()
 
     @on(Action.BootNotification)
     def on_boot_notification(self, **kwargs):
         """Handle a boot notification."""
-
+        resp = call_result.BootNotificationPayload(
+            current_time=datetime.now(tz=timezone.utc).isoformat(),
+            interval=3600,
+            status=RegistrationStatus.accepted.value,
+        )
         _LOGGER.debug("Received boot notification for %s: %s", self.id, kwargs)
-
         # update metrics
         self._metrics[cdet.model.value].value = kwargs.get(
             om.charge_point_model.name, None
@@ -888,11 +919,7 @@ class ChargePoint(cp):
         self.hass.async_create_task(self.async_update_device_info(kwargs))
         self.hass.async_create_task(self.central.update(self.central.cpid))
         self.hass.async_create_task(self.post_connect())
-        return call_result.BootNotificationPayload(
-            current_time=datetime.now(tz=timezone.utc).isoformat(),
-            interval=30,
-            status=RegistrationStatus.accepted.value,
-        )
+        return resp
 
     @on(Action.StatusNotification)
     def on_status_notification(self, connector_id, error_code, status, **kwargs):
