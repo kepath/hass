@@ -64,8 +64,8 @@
     entity_id: switch.0x00124b00226aa136
     domain: switch
   - type: turn_off
-    device_id: 94895a7be392ab4224e422d8f6393cc5
-    entity_id: switch.bed_c_light
+    device_id: ecdc93708d2afbf8f645e3eb84d0e39c
+    entity_id: switch.unifi_poe_f4_cf_a2_e3_99_df
     domain: switch
   mode: single
 - id: '1616842943101'
@@ -138,9 +138,9 @@
       seconds: 1
       milliseconds: 0
   condition:
-  - condition: sun
-    after: sunset
-    before: sunrise
+  - condition: state
+    entity_id: binary_sensor.nighttime
+    state: 'on'
   action:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
@@ -160,39 +160,48 @@
     for:
       hours: 0
       minutes: 0
-      seconds: 2
+      seconds: 1
       milliseconds: 0
   condition:
-  - condition: sun
-    before: sunrise
-    after: sunset
-  - condition: device
-    type: is_off
-    device_id: d4aabe0c259eb8f64a5080976888b8a4
-    entity_id: light.tybf82abce93da177c79kymc
-    domain: light
+  - condition: state
+    entity_id: binary_sensor.nighttime
+    state: 'on'
   action:
   - type: turn_on
     device_id: d4aabe0c259eb8f64a5080976888b8a4
     entity_id: light.tybf82abce93da177c79kymc
     domain: light
     brightness_pct: 100
-  - type: turn_on
-    device_id: 376a2d183b5132bd8417b81b10aa763f
-    entity_id: light.zigbee_bulb_garage
-    domain: light
-    brightness_pct: 100
+  - service: automation.trigger
+    target:
+      entity_id: automation.turn_on_garage_light_when_the_garage_door_is_opened
   - delay:
-      hours: 0
-      minutes: 5
-      seconds: 0
-      milliseconds: 0
+      minutes: 12
+  - service: automation.trigger
+    target:
+      entity_id: automation.turn_back_light_off_if_not_activated_by_script
+  - service: automation.trigger
+    target:
+      entity_id:
+      - automation.turn_off_garage_light_10_mins_after_garage_door_shut
+  mode: restart
+- id: '1634659565583'
+  alias: Back Light mark on
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+    id: '592258'
+  condition:
+  - condition: device
+    type: is_on
+    device_id: d4aabe0c259eb8f64a5080976888b8a4
+    entity_id: light.tybf82abce93da177c79kymc
+    domain: light
+  action:
   - type: turn_off
     device_id: d4aabe0c259eb8f64a5080976888b8a4
     entity_id: light.tybf82abce93da177c79kymc
     domain: light
-  - type: turn_off
-    device_id: 376a2d183b5132bd8417b81b10aa763f
-    entity_id: light.zigbee_bulb_garage
-    domain: light
-  mode: restart
+  mode: queued
+  max: 10
