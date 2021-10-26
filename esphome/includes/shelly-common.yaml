@@ -1,0 +1,147 @@
+esphome:
+  name: ${device_name}
+  comment: ${friendly_name}
+  platform: ESP8266
+  board: esp01_1m
+  on_boot:
+    - priority: -100
+      then:
+        - if:
+            condition:
+              binary_sensor.is_on: isnight
+            then:
+              - light.turn_on: lightid1
+              - logger.log: 'startup - light should be on'
+            else:
+              - light.turn_off: lightid1
+              - logger.log: 'startup - light should be off'
+
+wifi:
+  networks:
+  - ssid: ${ssid_primary}
+    password: !secret not_wifi_password
+  - ssid: ${ssid_secondary}
+    password: !secret not_wifi_password
+  domain: .localdomain
+  # use_address: 192.168.30.15
+  manual_ip:
+    static_ip: ${device_ip}
+    gateway: 192.168.30.1
+    subnet: 255.255.255.0
+    dns1: 192.168.30.1
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${device_name}
+    manual_ip:
+      static_ip: 192.168.100.2
+      gateway: 192.168.100.1
+      subnet: 255.255.255.0
+      dns1: 8.8.8.8
+      dns2: 8.8.4.4
+      
+captive_portal:
+
+logger:
+  level: ${log_level}
+api:
+ota:
+web_server:
+  port: 80
+prometheus:
+  
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+  # - platform: sntp
+  #   id: sntp_time
+  #   servers: !secret ha_rj45_ip
+
+#==============================================================
+    
+# Text sensors with general information.
+text_sensor:
+  # Expose ESPHome version as sensor.
+  - platform: version
+    name: ${device_name} ESPHome Version
+  - platform: template
+    name: ${device_name}-uptime
+    id: uptime_human
+    icon: mdi:clock-start
+  # - platform: template
+  #   name: ${device_name}-isnight
+  #   id: isnight_text
+  #   icon: mdi:weather-night
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${device_name}-IP
+    ssid:
+      name: ${device_name}-SSID
+    bssid:
+      name: ${device_name}-BSSID
+    mac_address:
+      name: ${device_name}-MAC
+    # scan_results:
+    #   name: ${device_name}-wifi-scan
+
+sensor:
+  - platform: ntc
+    sensor: temp_resistance_reading
+    name: ${device_name}-temperature
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    icon: "mdi:thermometer"
+    calibration:
+      b_constant: 3350
+      reference_resistance: 10kOhm
+      reference_temperature: 298.15K
+    on_value_range:
+      - above: ${max_temp}
+        then:
+          - light.turn_off: lightid1
+          - homeassistant.service:
+              service: persistent_notification.create
+              data:
+                title: Message from ${device_name}
+              data_template:
+                message: Switch turned off because temperature exceeded ${max_temp}C
+  - platform: resistance
+    id: temp_resistance_reading
+    sensor: temp_analog_reading
+    configuration: DOWNSTREAM
+    resistor: 32kOhm
+  - platform: adc
+    id: temp_analog_reading
+    pin: A0
+  - platform: wifi_signal
+    name: ${device_name}-RSSI
+    update_interval: 60s
+    icon: "mdi:wifi"
+  - platform: uptime
+    name: Uptime Sensor
+    id: uptime_sensor
+    internal: true
+    update_interval: 60s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "") +
+                (to_string(seconds) + "s")
+              ).c_str();
+
+status_led:
+  pin: GPIO0
+#==============================================================

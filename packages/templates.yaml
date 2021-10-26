@@ -1,0 +1,22 @@
+ binary_sensor:
+  - platform: template
+    sensors:
+      yamaha_reciever_state:
+        friendly_name: "Yamaha Reciever State"
+        unique_id: devicetracker_yamaha_reciever_state
+        value_template: "{{ is_state('media_player.rx_v777_reciever_yamaha_integration_bed_c', 'on') }}"
+        icon_template: mdi:audio-video
+
+  - platform: template
+    sensors:
+      back_door_light_on_by_switch:
+        friendly_name: "Back door light turned on with switch"
+        unique_id: devicetracker_back_door_light_on_by_switch
+        icon_template: mdi:light-switch
+        value_template: >-
+          {% if states('sensor.vpn_tun0_out_octets_mbps_stats_calc') == 'unknown' or 
+          states('sensor.vpn_tun0_out_octets_mbps_stats_calc') == 'unavailable' %}
+            {{ 0 }}
+          {% else %}
+            {{ state_attr('sensor.vpn_tun0_out_octets_mbps_stats_calc', 'max_value') }}
+          {% endif %}
