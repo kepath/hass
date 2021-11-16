@@ -8,14 +8,14 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.const import (
     CONF_MONITORED_VARIABLES,
+    DEVICE_CLASS_BATTERY,
     DEVICE_CLASS_CURRENT,
     DEVICE_CLASS_ENERGY,
     DEVICE_CLASS_POWER,
     DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_TIMESTAMP,
     DEVICE_CLASS_VOLTAGE,
 )
-
-from ocpp.v16.enums import UnitOfMeasure
 
 from .api import CentralSystem
 from .const import CONF_CPID, DEFAULT_CPID, DOMAIN, ICON
@@ -26,10 +26,15 @@ async def async_setup_entry(hass, entry, async_add_devices):
     """Configure the sensor platform."""
     central_system = hass.data[DOMAIN][entry.entry_id]
     cp_id = entry.data.get(CONF_CPID, DEFAULT_CPID)
-
     entities = []
-
-    for measurand in entry.data[CONF_MONITORED_VARIABLES].split(","):
+    for measurand in list(
+        set(
+            entry.data[CONF_MONITORED_VARIABLES].split(",")
+            + list(HAChargerDetails)
+            + list(HAChargerSession)
+            + list(HAChargerStatuses)
+        )
+    ):
         entities.append(
             ChargePointMetric(
                 central_system,
@@ -37,15 +42,6 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 measurand,
             )
         )
-    for list in [HAChargerDetails, HAChargerSession, HAChargerStatuses]:
-        for sensor in list:
-            entities.append(
-                ChargePointMetric(
-                    central_system,
-                    cp_id,
-                    sensor.value,
-                )
-            )
 
     async_add_devices(entities, False)
 
@@ -91,7 +87,7 @@ class ChargePointMetric(SensorEntity):
     @property
     def unit_of_measurement(self):
         """Return the unit the value is expressed in."""
-        return self.central_system.get_unit(self.cp_id, self.metric)
+        return self.central_system.get_ha_unit(self.cp_id, self.metric)
 
     @property
     def should_poll(self):
@@ -122,36 +118,51 @@ class ChargePointMetric(SensorEntity):
     @property
     def state_class(self):
         """Return the state class of the sensor."""
+        state_class = None
         if self.device_class is DEVICE_CLASS_ENERGY:
             state_class = STATE_CLASS_TOTAL_INCREASING
-        else:
+        elif self.device_class in [
+            DEVICE_CLASS_CURRENT,
+            DEVICE_CLASS_POWER,
+            DEVICE_CLASS_TEMPERATURE,
+            DEVICE_CLASS_BATTERY,
+        ]:
             state_class = STATE_CLASS_MEASUREMENT
         return state_class
 
     @property
     def device_class(self):
         """Return the device class of the sensor."""
-        if self.unit_of_measurement in [
-            UnitOfMeasure.wh.value,
-            UnitOfMeasure.kwh.value,
+        device_class = None
+        if self.metric.lower().startswith("current"):
+            device_class = DEVICE_CLASS_CURRENT
+        elif self.metric.lower().startswith("voltage"):
+            device_class = DEVICE_CLASS_VOLTAGE
+        elif self.metric.lower().startswith("energy"):
+            device_class = DEVICE_CLASS_ENERGY
+        elif self.metric.lower().startswith("power"):
+            device_class = DEVICE_CLASS_POWER
+        elif self.metric.lower().startswith("temperature"):
+            device_class = DEVICE_CLASS_TEMPERATURE
+        elif self.metric.lower().startswith("soc"):
+            device_class = DEVICE_CLASS_BATTERY
+        elif self.metric in [
+            HAChargerDetails.config_response.value,
+            HAChargerDetails.data_response.value,
+            HAChargerStatuses.heartbeat.value,
         ]:
-            return DEVICE_CLASS_ENERGY
-        elif self.unit_of_measurement in [
-            UnitOfMeasure.w.value,
-            UnitOfMeasure.kw.value,
-        ]:
-            return DEVICE_CLASS_POWER
-        elif self.unit_of_measurement in [
-            UnitOfMeasure.celsius.value,
-            UnitOfMeasure.fahrenheit.value,
-        ]:
-            return DEVICE_CLASS_TEMPERATURE
-        elif self.unit_of_measurement in [UnitOfMeasure.a.value]:
-            return DEVICE_CLASS_CURRENT
-        elif self.unit_of_measurement in [UnitOfMeasure.v.value]:
-            return DEVICE_CLASS_VOLTAGE
-        else:
-            return None
+            device_class = DEVICE_CLASS_TIMESTAMP
+        return device_class
+
+    @property
+    def native_value(self):
+        """Return the state of the sensor."""
+        return self.central_system.get_metric(self.cp_id, self.metric)
+
+    @property
+    def native_unit_of_measurement(self):
+        """Return the native unit of measurement."""
+        return self.central_system.get_ha_unit(self.cp_id, self.metric)
 
     async def async_update(self):
         """Get the latest data and update the states."""

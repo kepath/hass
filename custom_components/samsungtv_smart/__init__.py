@@ -1,8 +1,8 @@
 """The samsungtv_smart integration."""
 
 from aiohttp import ClientConnectionError, ClientSession, ClientResponseError
-from async_timeout import timeout
 import asyncio
+import async_timeout
 import logging
 import os
 from shutil import copyfile
@@ -43,6 +43,8 @@ from .const import (
     CONF_LOAD_ALL_APPS,
     CONF_SOURCE_LIST,
     CONF_SHOW_CHANNEL_NR,
+    CONF_SYNC_TURN_OFF,
+    CONF_SYNC_TURN_ON,
     CONF_WS_NAME,
     CONF_UPDATE_METHOD,
     CONF_UPDATE_CUSTOM_PING_URL,
@@ -193,10 +195,27 @@ def _migrate_token_file(hass: HomeAssistant, hostname: str):
     return
 
 
+def _migrate_options_format(hass: HomeAssistant, entry: ConfigEntry):
+    """Migrate options to new format."""
+    opt_migrated = False
+    new_options = {}
+
+    for key, option in entry.options.items():
+        if key in [CONF_SYNC_TURN_OFF, CONF_SYNC_TURN_ON]:
+            if isinstance(option, str):
+                new_options[key] = option.split(",")
+                opt_migrated = True
+                continue
+        new_options[key] = option
+
+    if opt_migrated:
+        hass.config_entries.async_update_entry(entry, options=new_options)
+
+
 async def get_device_info(hostname: str, session: ClientSession) -> dict:
     """Try retrieve device information"""
     try:
-        with timeout(2):
+        async with async_timeout.timeout(2):
             async with session.get(
                     tv_url(host=hostname),
                     raise_for_status=True
@@ -270,7 +289,7 @@ class SamsungTVInfo:
         """Try to connect to ST device"""
 
         try:
-            with timeout(10):
+            async with async_timeout.timeout(10):
                 _LOGGER.info(
                     "Try connection to SmartThings TV with id [%s]", device_id
                 )
@@ -298,7 +317,7 @@ class SamsungTVInfo:
         """Get list of available ST devices"""
 
         try:
-            with timeout(4):
+            async with async_timeout.timeout(4):
                 devices = await SmartThingsTV.get_devices_list(
                     api_key, session, st_device_label
                 )
@@ -356,6 +375,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     # migrate old token file if required
     _migrate_token_file(hass, entry.unique_id)
+
+    # migrate options to new format if required
+    _migrate_options_format(hass, entry)
 
     # setup entry
     hass.data.setdefault(DOMAIN, {})
