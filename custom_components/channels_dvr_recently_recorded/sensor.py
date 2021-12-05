@@ -11,6 +11,7 @@ import logging
 from homeassistant.core import callback
 from homeassistant.const import CONF_NAME
 from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.device_registry import DeviceEntryType
 from dateutil.parser import parse
 from urllib.parse import urlparse
 from datetime import timedelta
@@ -100,7 +101,7 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
             "manufacturer": "Channels",
             "model": "DVR Server",
             "default_name": "Channels DVR Recordings",
-            "entry_type": "service",
+            "entry_type": DeviceEntryType.SERVICE,
             "sw_version": self.version,
         }
 

@@ -1,11 +1,11 @@
 """Common classes and functions for Zoom."""
 from datetime import timedelta
+from http import HTTPStatus
 from logging import getLogger
 from typing import Any, Dict, List
 
 from aiohttp.web import Request, Response
 from homeassistant.components.http.view import HomeAssistantView
-from homeassistant.const import HTTP_OK
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_entry_oauth2_flow
 from homeassistant.helpers.network import NoURLAvailableError, get_url
@@ -13,7 +13,6 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .api import ZoomAPI
 from .const import (
-    DEFAULT_NAME,
     DOMAIN,
     HA_URL,
     HA_ZOOM_EVENT,
@@ -98,7 +97,7 @@ class ZoomWebhookRequestView(HomeAssistantView):
     """Provide a page for the device to call."""
 
     requires_auth = False
-    core_allowed = True
+    cors_allowed = True
     url = HA_URL
     name = HA_URL[1:].replace("/", ":")
 
@@ -115,23 +114,21 @@ class ZoomWebhookRequestView(HomeAssistantView):
                     data = await request.json()
                     status = WEBHOOK_RESPONSE_SCHEMA(data)
                     _LOGGER.debug("Received event: %s", status)
-                    hass.bus.async_fire(
-                        f"{HA_ZOOM_EVENT}", {"status": status, "token": token}
-                    )
+                    hass.bus.async_fire(f"{HA_ZOOM_EVENT}", {**status, "token": token})
                 except Exception as err:
                     _LOGGER.warning(
                         "Received authorized event but unable to parse: %s (%s)",
                         await request.text(),
                         err,
                     )
-                return Response(status=HTTP_OK)
+                return Response(status=HTTPStatus.OK)
 
         _LOGGER.warning(
             "Received unauthorized request: %s (Headers: %s)",
             await request.text(),
             request.headers,
         )
-        return Response(status=HTTP_OK)
+        return Response(status=HTTPStatus.OK)
 
 
 class ZoomUserProfileDataUpdateCoordinator(DataUpdateCoordinator):
