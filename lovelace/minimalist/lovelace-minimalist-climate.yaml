@@ -1,0 +1,256 @@
+button_card_templates: !include_dir_merge_named minimalist-templates/
+views:
+  - title: Climate
+    icon: mdi:weather-partly-cloudy
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+      - type: 'custom:button-card'
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /lovelace-minimalist
+
+      - type: vertical-stack
+        cards:
+          - type: custom:weather-card
+            entity: weather.home
+            name: Home
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-blue)"
+            ulm_card_graph_name: Garage
+            ulm_card_graph_entity: sensor.zigbee_door_sensor_garage_temperature
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-red)"
+            ulm_card_graph_name: Front
+            ulm_card_graph_entity: sensor.zigbee_door_sensor_front_temperature
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-red)"
+            ulm_card_graph_name: Back
+            ulm_card_graph_entity: sensor.zigbee_door_sensor_back_temperature
+        - type: custom:button-card
+          template: edge
+
+  - title: House
+    icon: mdi:thermometer
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+      - type: 'custom:button-card'
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /lovelace-minimalist
+      - type: vertical-stack
+        cards:
+          - type: custom:mini-climate
+            entity: climate.nest_bottom_floor
+            icon: mdi:home-floor-g
+            toggle:
+              hide: true
+            temperature:
+              unit: '°C'
+              round: 1
+              # use an external temperature sensor
+              source:
+                entity: sensor.nest_bottom_floor_temperature
+            secondary_info:
+              icon: mdi:tune-vertical
+
+            indicators:
+              humidity:
+                icon: mdi:water-percent
+                unit: '%'
+                round: 1
+                source:
+                  entity: sensor.nest_bottom_floor_humidity
+
+          - type: custom:mini-climate
+            entity: climate.nest_middle_floor
+            icon: mdi:home-floor-1
+            temperature:
+              unit: '°C'
+              round: 1
+              # use an external temperature sensor
+              source:
+                entity: sensor.nest_middle_floor_temperature
+            secondary_info:
+              icon: mdi:tune-vertical
+            indicators:
+              humidity:
+                icon: mdi:water-percent
+                unit: '%'
+                round: 1
+                source:
+                  entity: sensor.nest_middle_floor_humidity
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-red)"
+            ulm_card_graph_name: Bottom
+            ulm_card_graph_entity: sensor.nest_bottom_floor_temperature
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-red)"
+            ulm_card_graph_name: Middle
+            ulm_card_graph_entity: sensor.nest_middle_floor_temperature
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-blue)"
+            ulm_card_graph_name: Bottom
+            ulm_card_graph_entity: sensor.nest_bottom_floor_humidity
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-blue)"
+            ulm_card_graph_name: Middle
+            ulm_card_graph_entity: sensor.nest_middle_floor_humidity
+        - type: custom:button-card
+          template: edge
+
+
+
+  - title: Thermostat
+    icon: mdi:thermometer-high
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-yellow)"
+            ulm_card_graph_name: Patio 1
+            ulm_card_graph_entity: sensor.zigbee_door_sensor_patio_1_temperature
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-yellow)"
+            ulm_card_graph_name: Patio 2
+            ulm_card_graph_entity: sensor.zigbee_door_sensor_patio_2_temperature
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-yellow)"
+            ulm_card_graph_name: Bed C
+            ulm_card_graph_entity: sensor.zigbee_door_sensor_bed_c_temperature
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-yellow)"
+            ulm_card_graph_name: Loft
+            ulm_card_graph_entity: sensor.zigbee_door_sensor_bed_b_temperature            
+        - type: custom:button-card
+          template: edge
+
+
+
+  - title: Weather Maps
+    icon: mdi:weather-windy
+    theme: minimalist-mobile
+    panel: true
+    cards:
+      - type: iframe
+        url: >-
+          https://embed.windy.com/embed2.html?lat=51.914&lon=-1.351&detailLat=51.914&detailLon=-1.351&zoom=7&level=surface&overlay=wind&product=ecmwf&message=true&marker=true&calendar=now&type=map&location=coordinates&metricWind=mph&metricTemp=%C2%B0C&radarRange=-1
+
+      # - type: horizontal-stack
+      #   cards:
+      #   - type: custom:button-card
+      #     template: edge
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_back_battery
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_bed_b_battery
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_bed_c_battery
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_front_battery
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_garage_battery
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_patio_1_battery
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_patio_2_battery
+      #   - type: custom:button-card
+      #     template: edge
+
+      # - type: horizontal-stack
+      #   cards:
+      #   - type: custom:button-card
+      #     template: edge
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_back_linkquality
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_bed_b_linkquality
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_bed_c_linkquality
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_front_linkquality
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_garage_linkquality
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_patio_1_linkquality
+      #   - type: 'custom:button-card'
+      #     template: card_generic
+      #     entity: sensor.zigbee_door_sensor_patio_2_linkquality
+      #   - type: custom:button-card
+      #     template: edge

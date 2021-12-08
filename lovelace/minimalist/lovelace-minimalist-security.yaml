@@ -1,0 +1,274 @@
+button_card_templates: !include_dir_merge_named minimalist-templates/
+views:
+  - title: Camera's
+    icon: mdi:cctv
+    theme: minimalist-mobile
+    # panel: true
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:surveillance-card
+          thumb_interval: 10
+          update_interval: 1
+          recording_duration: 10
+          show_capture_buttons: false
+          cameras:
+            - entity: camera.doorbell_g4
+              motion_entity: binary_sensor.motion_uvc_g4_doorbell
+            - entity: camera.front_g3_flex
+            - entity: camera.back_g3_flex
+              motion_entity: binary_sensor.motion_uvc_g3_flex_back
+            - entity: camera.lounge_g3_instant
+              motion_entity: binary_sensor.motion_uvc_g3_instant
+            - entity: camera.uvc_g3_flex_middle_hallway
+              motion_entity: binary_sensor.motion_uvc_g3_flex_middle_hallway
+  - title: Security
+    icon: mdi:lock
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_binary_sensor_alert
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.zigbee_door_sensor_front_contact
+          show_last_changed: true
+          name: Front
+        - type: 'custom:button-card'
+          template: card_binary_sensor_alert
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.zigbee_door_sensor_back_contact
+          show_last_changed: true
+          name: Back
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_binary_sensor_alert
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.zigbee_door_sensor_patio_1_contact
+          show_last_changed: true
+          name: Patio
+        - type: 'custom:button-card'
+          template: card_binary_sensor_alert
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.zigbee_door_sensor_patio_2_contact
+          show_last_changed: true
+          name: Patio
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy
+          show_last_changed: true
+          name: Stairs Motion
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.motion_uvc_g3_flex_middle_hallway
+          show_last_changed: true
+          name: G3 Middle
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.zigbee_door_sensor_garage_contact
+          show_last_changed: true
+          name: Garage
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: false
+          entity: binary_sensor.zigbee_door_sensor_bed_b_contact
+          show_last_changed: true
+          name: Loft
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: false
+          entity: binary_sensor.zigbee_door_sensor_bed_c_contact
+          show_last_changed: true
+          name: Bed C
+        - type: custom:button-card
+          template: edge
+
+  - title: Climate
+    icon: mdi:weather-partly-cloudy
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+
+        - type: 'custom:button-card'
+          template: card_power_outlet
+          entity: switch.zigbee_plug_arcade_machine_bed_c
+          name: Arcade Machine
+
+        - type: 'custom:button-card'
+          template: card_power_outlet
+          entity: switch.zigbee_plug_g4_doorbell_bottom_hallway
+          name: Doorbell
+
+        - type: 'custom:button-card'
+          template: card_power_outlet
+          entity: switch.zigbee_plug_garage
+          name: Garage
+
+        - type: 'custom:button-card'
+          template: card_power_outlet
+          entity: switch.0x00124b00226a8812
+          name: Harmony Hub
+
+        - type: 'custom:button-card'
+          template: card_power_outlet
+          entity: switch.0x00124b00226aa136
+          name: Fridge
+
+        - type: custom:button-card
+          template: edge
+
+  - title: Media
+    icon: mdi:remote-tv
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_generic
+          entity: sensor.ups_status
+        - type: custom:button-card
+          template: edge
+
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_binary_sensor_alert
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.diskstation_security_status
+          show_last_changed: true
+          name: NAS Status
+        - type: 'custom:button-card'
+          template: card_graph
+          variables:
+            ulm_card_graph_color: "var(--google-blue)"
+            ulm_card_graph_name: UPS Load
+            ulm_card_graph_entity: sensor.ups_load
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_battery
+          entity: sensor.zigbee_door_sensor_back_battery
+        - type: 'custom:button-card'
+          template: card_battery
+          entity: sensor.zigbee_door_sensor_bed_b_battery
+        - type: 'custom:button-card'
+          template: card_battery
+          entity: sensor.zigbee_door_sensor_bed_c_battery
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_battery
+          entity: sensor.zigbee_door_sensor_front_battery
+        - type: 'custom:button-card'
+          template: card_battery
+          entity: sensor.zigbee_door_sensor_garage_battery
+        - type: 'custom:button-card'
+          template: card_battery
+          entity: sensor.zigbee_door_sensor_patio_1_battery
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_battery
+          entity: sensor.zigbee_door_sensor_patio_2_battery
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_zigbee_lqi
+          entity: sensor.zigbee_door_sensor_back_linkquality
+        - type: 'custom:button-card'
+          template: card_zigbee_lqi
+          entity: sensor.zigbee_door_sensor_bed_b_linkquality
+        - type: 'custom:button-card'
+          template: card_zigbee_lqi
+          entity: sensor.zigbee_door_sensor_bed_c_linkquality
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_zigbee_lqi
+          entity: sensor.zigbee_door_sensor_front_linkquality
+        - type: 'custom:button-card'
+          template: card_zigbee_lqi
+          entity: sensor.zigbee_door_sensor_garage_linkquality
+        - type: 'custom:button-card'
+          template: card_zigbee_lqi
+          entity: sensor.zigbee_door_sensor_patio_1_linkquality
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_zigbee_lqi
+          entity: sensor.zigbee_door_sensor_patio_2_linkquality
+        - type: custom:button-card
+          template: edge

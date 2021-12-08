@@ -1,162 +1,226 @@
 button_card_templates: !include_dir_merge_named minimalist-templates/
 views:
-  - title: Minimalist
+
+  - title: Main
+    icon: mdi:cellphone-text
+    theme: minimalist-mobile
     cards:
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: custom:button-card
-            template: title
-            name: Welcome to UI-Lovelace-Minimalist
-          - type: custom:button-card
-            template: edge
-  - title: Lights
-    icon: mdi:lightbulb
-    cards:
+      # - type: horizontal-stack
+      #   cards:
+      #   - type: 'custom:button-card'
+      #     template: chip_icon_state
+      #     variables:
+      #       ulm_chip_icon_state_icon: '🧩'
+      #       ulm_chip_icon_state_entity: sensor.hacs
+      #     tap_action:
+      #       action: navigate  
+      #       navigation_path: /hacs
+      #   - type: custom:button-card
+      #     template: edge
+      #   tap_action:
+      #     action: more-info
+      #     entity: weather.met_office_banbury
+      # - type: 'custom:button-card'
+      #   template: chip_icon_state
+      #   variables:
+      #     ulm_chip_icon_state_icon: '🖨️'
+      #     ulm_chip_icon_state_entity: sensor.mfc_j870dw_status
+      # - type: 'custom:button-card'
+      #   template: chip_icon_state
+      #   variables:
+      #     ulm_chip_icon_state_icon: '🪟'
+      #     ulm_chip_icon_state_entity: sensor.zigbee_vibration_sensor_patio_action
+      # - type: 'custom:button-card'
+      #   template: chip_icon_state
+      #   variables:
+      #     ulm_chip_icon_state_icon: '🔋'
+      #     ulm_chip_icon_state_entity: sensor.ups_status
+      # - type: custom:button-card
+      #   template: edge
 
       - type: horizontal-stack
         cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_title
-            label: Bottom       
-          - type: custom:button-card
-            template: edge    
-      - type: vertical-stack
-        cards:
-        - type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_hallway_bottom_light_1
-              name: Hallway
-            - type: custom:button-card
-              template: edge          
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_study_light_1
-              name: Study
-            - type: custom:button-card
-              template: edge
-        - type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_lounge_light_1
-              name: Lounge          
-            - type: custom:button-card
-              template: edge
-      - type: vertical-stack
-        cards:
-        - type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_kitchen_main_light_1
-              name: Kitchen Main
-            - type: custom:button-card
-              template: edge
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_kitchen_utility_light_1
-              name: Kitchen Utility
-            - type: custom:button-card
-              template: edge
-        - type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light_slider_collapse
-              variables:
-                ulm_card_light_slider_collapse_name: Backdoor
-              entity: light.tybf82abce93da177c79kymc
-            - type: custom:button-card
-              template: edge
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light_slider_collapse
-              variables:
-                ulm_card_light_slider_collapse_name: Garage
-              entity: light.zigbee_bulb_garage
-            - type: custom:button-card
-              template: edge
+        - type: custom:button-card
+          template: edge
+        - type: custom:button-card
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist-automation
+            ulm_card_navigate_title: Automation
+            ulm_card_navigate_icon: mdi:refresh-auto
+        - type: custom:button-card
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist-security
+            ulm_card_navigate_title: Security
+            ulm_card_navigate_icon: mdi:lock
+        - type: custom:button-card
+          template: edge
 
       - type: horizontal-stack
         cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_title
-            label: Middle       
-          - type: custom:button-card
-            template: edge
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_bed_a_light_1
-            name: Bed A          
-          - type: custom:button-card
-            template: edge
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_ensuite_light_1
-            name: Ensuite
-          - type: custom:button-card
-            template: edge
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_bathroom_light_1
-            name: Bathroom
-          - type: custom:button-card
-            template: edge
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_bed_c_light_1
-            name: Bed C
-          - type: custom:button-card
-            template: edge
+        - type: custom:button-card
+          template: edge
+        - type: custom:button-card
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist-network
+            ulm_card_navigate_title: Network
+            ulm_card_navigate_icon: mdi:lan
+        - type: custom:button-card
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist-media
+            ulm_card_navigate_title: Media
+            ulm_card_navigate_icon: mdi:remote-tv
+        - type: custom:button-card
+          template: edge
 
       - type: horizontal-stack
         cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_title
-            label: Top       
-          - type: custom:button-card
-            template: edge
+        - type: custom:button-card
+          template: edge
+        - type: custom:button-card
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist-climate
+            ulm_card_navigate_title: Climate
+            ulm_card_navigate_icon: mdi:weather-partly-cloudy
+        - type: custom:button-card
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist
+            ulm_card_navigate_title: "?"
+            ulm_card_navigate_icon: mdi:help-box
+        - type: custom:button-card
+          template: edge
+
       - type: horizontal-stack
         cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_bed_e_light_1
-            name: Bed E          
-          - type: custom:button-card
-            template: edge
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_binary_sensor_alert
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.doorbell_uvc_g4_doorbell
+          show_last_changed: true
+          name: Doorbell
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.updater
+          show_last_changed: true
+          name: HA Update
+          tap_action:
+            action: navigate  
+            navigation_path: /hassio
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: chip_temperature
+          variables:
+            ulm_chip_temperature_inside: sensor.nest_middle_floor_temperature
+            ulm_chip_temperature_outside: sensor.banbury_temperature
+            ulm_chip_temperature_weather: weather.met_office_banbury
+          tap_action:
+            action: more-info
+            entity: weather.met_office_banbury
+        - type: 'custom:button-card'
+          template: chip_icon_state
+          variables:
+            ulm_chip_icon_state_icon: '🧩'
+            ulm_chip_icon_state_entity: sensor.hacs
+          tap_action:
+            action: navigate  
+            navigation_path: /hacs
+        - type: 'custom:button-card'
+          template: chip_icon_state
+          variables:
+            ulm_chip_icon_state_icon: '🖨️'
+            ulm_chip_icon_state_entity: sensor.mfc_j870dw_status
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_person
+          variables:
+            ulm_card_person_entity: person.kevin_thorn
+            ulm_card_person_use_entity_picture: true
+            ulm_card_person_zone1: repl group
+            ulm_card_person_zone2: bloxham school
+          tap_action:
+            action: more-info
+            entity: person.kevin_thorn
+        - type: 'custom:button-card'
+          template: card_person
+          variables:
+            ulm_card_person_entity: person.julia_thorn
+            ulm_card_person_use_entity_picture: true
+            ulm_card_person_zone1: tudor hall school
+            ulm_card_person_zone2: gym
+          tap_action:
+            action: more-info
+            entity: person.julia_thorn
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_person
+          variables:
+            ulm_card_person_entity: person.daniel_thorn
+            ulm_card_person_use_entity_picture: true
+            ulm_card_person_zone1: currys
+            ulm_card_person_zone2: jus parents
+          tap_action:
+            action: more-info
+            entity: person.daniel_thorn
+        - type: 'custom:button-card'
+          template: card_person
+          variables:
+            ulm_card_person_entity: person.emily_thorn
+            ulm_card_person_use_entity_picture: true
+            ulm_card_person_zone1: bloxham_school
+            ulm_card_person_zone2: kks house
+          tap_action:
+            action: more-info
+            entity: person.emily_thorn
+        - type: custom:button-card
+          template: edge
+
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_power_outlet
+          entity: switch.emily_s_iphone_xs_family_unifi
+          name: Emily iPhone Access
+        - type: 'custom:button-card'
+          template: card_power_outlet
+          entity: switch.emily_s_school_laptop_family_unifi
+          name: Emily Laptop Access
+        - type: custom:button-card
+          template: edge
+
+      # - type: horizontal-stack
+      #   cards:
+      #   - type: custom:button-card
+      #     template: edge
+      #   - type: custom:button-card
+      #     template: custom_card_tpx01_aircondition_with_buttons
+      #     variables:
+      #       entity: climate.nest_bottom_floor
+      #       name: Nest:Bottom Floor
