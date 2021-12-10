@@ -1,27 +1,6 @@
 button_card_templates: !include_dir_merge_named minimalist-templates/
 views:
-  - title: Camera's
-    icon: mdi:cctv
-    theme: minimalist-mobile
-    # panel: true
-    cards:
-      - type: horizontal-stack
-        cards:
-        - type: custom:surveillance-card
-          thumb_interval: 10
-          update_interval: 1
-          recording_duration: 10
-          show_capture_buttons: false
-          cameras:
-            - entity: camera.doorbell_g4
-              motion_entity: binary_sensor.motion_uvc_g4_doorbell
-            - entity: camera.front_g3_flex
-            - entity: camera.back_g3_flex
-              motion_entity: binary_sensor.motion_uvc_g3_flex_back
-            - entity: camera.lounge_g3_instant
-              motion_entity: binary_sensor.motion_uvc_g3_instant
-            - entity: camera.uvc_g3_flex_middle_hallway
-              motion_entity: binary_sensor.motion_uvc_g3_flex_middle_hallway
+
   - title: Security
     icon: mdi:lock
     theme: minimalist-mobile
@@ -34,14 +13,14 @@ views:
           template: card_binary_sensor_alert
           variables:
             - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.zigbee_door_sensor_front_contact
+          entity: binary_sensor.binary_open_alert_front_door_five_mins
           show_last_changed: true
           name: Front
         - type: 'custom:button-card'
           template: card_binary_sensor_alert
           variables:
             - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.zigbee_door_sensor_back_contact
+          entity: binary_sensor.binary_open_alert_back_door_five_mins
           show_last_changed: true
           name: Back
         - type: custom:button-card
@@ -117,78 +96,34 @@ views:
         - type: custom:button-card
           template: edge
 
-  - title: Climate
-    icon: mdi:weather-partly-cloudy
+  - title: Camera's
+    icon: mdi:cctv
     theme: minimalist-mobile
+    # panel: true
     cards:
       - type: horizontal-stack
         cards:
-        - type: custom:button-card
-          template: edge
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.zigbee_plug_arcade_machine_bed_c
-          name: Arcade Machine
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.zigbee_plug_g4_doorbell_bottom_hallway
-          name: Doorbell
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.zigbee_plug_garage
-          name: Garage
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.0x00124b00226a8812
-          name: Harmony Hub
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.0x00124b00226aa136
-          name: Fridge
-
-        - type: custom:button-card
-          template: edge
+        - type: custom:surveillance-card
+          thumb_interval: 10
+          update_interval: 1
+          recording_duration: 10
+          show_capture_buttons: false
+          cameras:
+            - entity: camera.doorbell_g4
+              motion_entity: binary_sensor.motion_uvc_g4_doorbell
+            - entity: camera.front_g3_flex
+              motion_entity: binary_sensor.motion_front_g3_flex
+            - entity: camera.back_g3_flex
+              motion_entity: binary_sensor.motion_uvc_g3_flex_back
+            - entity: camera.lounge_g3_instant
+              motion_entity: binary_sensor.motion_uvc_g3_instant
+            - entity: camera.uvc_g3_flex_middle_hallway
+              motion_entity: binary_sensor.motion_uvc_g3_flex_middle_hallway
 
   - title: Media
-    icon: mdi:remote-tv
+    icon: mdi:signal
     theme: minimalist-mobile
     cards:
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.ups_status
-        - type: custom:button-card
-          template: edge
-
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: card_binary_sensor_alert
-          variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.diskstation_security_status
-          show_last_changed: true
-          name: NAS Status
-        - type: 'custom:button-card'
-          template: card_graph
-          variables:
-            ulm_card_graph_color: "var(--google-blue)"
-            ulm_card_graph_name: UPS Load
-            ulm_card_graph_entity: sensor.ups_load
-        - type: custom:button-card
-          template: edge
-
       - type: horizontal-stack
         cards:
         - type: custom:button-card

@@ -5,7 +5,7 @@ script:
       - service: wake_on_lan.send_magic_packet
         data:
           mac: !secret arcade_machine_rj45_mac
-          host: !secret arcade_machine_rj45_ip
+          broadcast_address: !secret arcade_machine_rj45_ip
 
   arcade_win10_shutdown:
     alias: "Arcade Machine - Shutdown"
@@ -111,7 +111,7 @@ script:
       - service: wake_on_lan.send_magic_packet
         data:
           mac: !secret dans_tower_pc_rj45_mac
-          host: !secret dans_tower_pc_rj45_ip
+          broadcast_address: !secret dans_tower_pc_rj45_ip
 
   danwin10_shutdown:
     alias: "Dans Tower PC - Shutdown"
@@ -217,7 +217,7 @@ script:
       - service: wake_on_lan.send_magic_packet
         data:
           mac: !secret dans_dell_g5_laptop_wifi_mac
-          host:  !secret dans_dell_g5_laptop_wifi_ip
+          broadcast_address:  !secret dans_dell_g5_laptop_wifi_ip
 
   dang5gaminglapt_shutdown:
     alias: "Dans G5 Gaming Laptop - Shutdown"
@@ -315,16 +315,16 @@ script:
           topic: "iotlink/workgroup/dang5gaminglapt/commands/notify"
           payload: '{ "title": "My Notification Title", "message": "This is an example of notification using IOT Link", "launchParams": "toast://open/https://iotlink.gitlab.io" }'
 
-  test_message:
-    alias: Door is still open
-    sequence:
-      - service: tts.cloud_say
-        data:
-          entity_id: media_player.bed_e_echo_plus
-          message: the door has been open for 10 minutes
-          options:
-            gender: female
-          language: en-US
+  # test_message:
+  #   alias: Door is still open
+  #   sequence:
+  #     - service: tts.cloud_say
+  #       data:
+  #         entity_id: media_player.bed_e_echo_plus
+  #         message: the door has been open for 10 minutes
+  #         options:
+  #           gender: female
+  #         language: en-US
 
           #media_player.lounge_echo_dot
 #switch:

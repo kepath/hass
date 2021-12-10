@@ -19,15 +19,15 @@
 
 script:
   big_pc_wake:
-    alias: "Big PC - Wake"
+    alias: "Big PC:Wake"
     sequence:
       - service: wake_on_lan.send_magic_packet
         data:
           mac: !secret big_pc_rj45_mac
-          host: !secret big_pc_rj45_ip
+          broadcast_address: !secret big_pc_rj45_ip
 
   big_pc_shutdown:
-    alias: "Big PC - Shutdown"
+    alias: "Big PC:Shutdown"
     sequence:
       - service: mqtt.publish
         data:
@@ -35,7 +35,7 @@ script:
           payload: ""
 
   big_pc_suspend:
-    alias: "Big PC - Suspend"
+    alias: "Big PC:Suspend"
     sequence:
       - service: mqtt.publish
         data:
@@ -43,7 +43,7 @@ script:
           payload: ""
 
   big_pc_hibernate:
-    alias: "Big PC - Hibernate"
+    alias: "Big PC:Hibernate"
     sequence:
       - service: mqtt.publish
         data:
@@ -51,7 +51,7 @@ script:
           payload: ""
 
   big_pc_reboot:
-    alias: "Big PC - Reboot"
+    alias: "Big PC:Reboot"
     sequence:
       - service: mqtt.publish
         data:
@@ -59,7 +59,7 @@ script:
           payload: ""
 
   big_pc_lock:
-    alias: "Big PC - Lock"
+    alias: "Big PC:Lock"
     sequence:
       - service: mqtt.publish
         data:
@@ -67,7 +67,7 @@ script:
           payload: ""
 
   big_pc_logoff:
-    alias: "Big PC - Logoff"
+    alias: "Big PC:Logoff"
     sequence:
       - service: mqtt.publish
         data:
@@ -75,7 +75,7 @@ script:
           payload: ""
 
   big_pc_vol_mute:
-    alias: "Big PC - Toggle Mute"
+    alias: "Big PC:Toggle Mute"
     sequence:
       - service: mqtt.publish
         data:
@@ -83,7 +83,7 @@ script:
           payload: ""
 
   big_pc_vol_max:
-    alias: "Big PC - Vol Max"
+    alias: "Big PC:Vol Max"
     sequence:
       - service: mqtt.publish
         data:
@@ -91,7 +91,7 @@ script:
           payload: "100"
 
   big_pc_displays_on:
-    alias: "Big PC - Displays ON"
+    alias: "Big PC:Displays ON"
     sequence:
       - service: mqtt.publish
         data:
@@ -99,7 +99,7 @@ script:
           payload: ""
 
   big_pc_displays_off:
-    alias: "Big PC - Displays OFF"
+    alias: "Big PC:Displays OFF"
     sequence:
       - service: mqtt.publish
         data:
@@ -107,7 +107,7 @@ script:
           payload: ""
 
   big_pc_refresh:
-    alias: "Big PC - Refresh"
+    alias: "Big PC:Refresh"
     sequence:
       - service: mqtt.publish
         data:
@@ -115,7 +115,7 @@ script:
           payload: ""
 
   big_pc_notify:
-    alias: "Big PC - Notify"
+    alias: "Big PC:Notify"
     sequence:
       - service: mqtt.publish
         data:

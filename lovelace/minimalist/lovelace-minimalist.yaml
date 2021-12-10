@@ -64,9 +64,9 @@ views:
         - type: custom:button-card
           template: card_navigate
           variables:
-            ulm_card_navigate_path: /lovelace-minimalist-network
-            ulm_card_navigate_title: Network
-            ulm_card_navigate_icon: mdi:lan
+            ulm_card_navigate_path: /lovelace-minimalist-climate
+            ulm_card_navigate_title: Climate
+            ulm_card_navigate_icon: mdi:weather-partly-cloudy
         - type: custom:button-card
           template: card_navigate
           variables:
@@ -83,15 +83,15 @@ views:
         - type: custom:button-card
           template: card_navigate
           variables:
-            ulm_card_navigate_path: /lovelace-minimalist-climate
-            ulm_card_navigate_title: Climate
-            ulm_card_navigate_icon: mdi:weather-partly-cloudy
+            ulm_card_navigate_path: /lovelace-minimalist-network
+            ulm_card_navigate_title: Network
+            ulm_card_navigate_icon: mdi:lan
         - type: custom:button-card
           template: card_navigate
           variables:
             ulm_card_navigate_path: /lovelace-minimalist
-            ulm_card_navigate_title: "?"
-            ulm_card_navigate_icon: mdi:help-box
+            ulm_card_navigate_title: Devices
+            ulm_card_navigate_icon: mdi:devices
         - type: custom:button-card
           template: edge
 
@@ -103,17 +103,28 @@ views:
           template: card_binary_sensor_alert
           variables:
             - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.doorbell_uvc_g4_doorbell
+          entity: binary_sensor.binary_ring_alert_doorbell_five_mins
           show_last_changed: true
           name: Doorbell
+          tap_action:
+            action: more-info
+            entity: binary_sensor.doorbell_uvc_g4_doorbell
+
+          double_tap_action:
+            action: navigate  
+            navigation_path: /lovelace-minimalist-security/1
         - type: 'custom:button-card'
           template: card_binary_sensor
           variables:
             - ulm_card_binary_sensor_alert: true
           entity: binary_sensor.updater
           show_last_changed: true
-          name: HA Update
+          name: HA Update          
           tap_action:
+            action: more-info
+            entity: binary_sensor.updater
+
+          double_tap_action:
             action: navigate  
             navigation_path: /hassio
         - type: custom:button-card
