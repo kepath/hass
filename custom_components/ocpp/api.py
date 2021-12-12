@@ -818,15 +818,35 @@ class ChargePoint(cp):
                 Measurand.power_active_import.value,
                 Measurand.power_active_export.value,
             ]:
-                """Line currents and powers are summed."""
+                # Currents and powers are always summed.
                 if Phase.l1.value in phase_info:
                     metric_value = (
                         phase_info.get(Phase.l1.value, 0)
                         + phase_info.get(Phase.l2.value, 0)
                         + phase_info.get(Phase.l3.value, 0)
                     )
+                elif Phase.l1_n.value in phase_info:
+                    metric_value = (
+                        phase_info.get(Phase.l1_n.value, 0)
+                        + phase_info.get(Phase.l2_n.value, 0)
+                        + phase_info.get(Phase.l3_n.value, 0)
+                    )
+                elif Phase.l1_l2.value in phase_info:
+                    metric_value = (
+                        phase_info.get(Phase.l1_l2.value, 0)
+                        + phase_info.get(Phase.l2_l3.value, 0)
+                        + phase_info.get(Phase.l3_l1.value, 0)
+                    )
             if metric_value is not None:
-                self._metrics[metric].value = round(metric_value, 1)
+                if unit == DEFAULT_POWER_UNIT:
+                    self._metrics[measurand].value = float(metric_value) / 1000
+                    self._metrics[measurand].unit = HA_POWER_UNIT
+                elif unit == DEFAULT_ENERGY_UNIT:
+                    self._metrics[measurand].value = float(metric_value) / 1000
+                    self._metrics[measurand].unit = HA_ENERGY_UNIT
+                else:
+                    self._metrics[measurand].value = round(float(metric_value), 1)
+                    self._metrics[measurand].unit = unit
 
     @on(Action.MeterValues)
     def on_meter_values(self, connector_id: int, meter_value: Dict, **kwargs):
