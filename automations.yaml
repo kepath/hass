@@ -205,3 +205,78 @@
     domain: light
   mode: queued
   max: 10
+- id: '1639344975319'
+  alias: Front Door Open
+  description: Raise an alert for 5 minutes when the front door is opened
+  trigger:
+  - type: opened
+    platform: device
+    device_id: bfb5f733e3cc226de9ff83eaf5571ab9
+    entity_id: binary_sensor.zigbee_door_sensor_front_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: 3434xcgcg657456f5d90
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.doorbell_rung
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.front_door_open
+  mode: restart
+- id: '1639347854414'
+  alias: Back Door Open
+  description: Raise an alert for 5 minutes when the back door is opened
+  trigger:
+  - type: opened
+    platform: device
+    device_id: a2469c4f16cd3a40ffb763fb0f349799
+    entity_id: binary_sensor.zigbee_door_sensor_back_contact
+    domain: binary_sensor
+    id: 3434xcgcg657456ff56
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.back_door_open
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.back_door_open
+  mode: restart
+- id: '1639348115728'
+  alias: Doorbell Rung
+  description: Raise an alert for 5 minutes when the doorbell is rung
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.doorbell_uvc_g4_doorbell
+    id: 3434xcgcg657456ff76
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.doorbell_rung
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.doorbell_rung
+  mode: restart

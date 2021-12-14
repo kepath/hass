@@ -21,16 +21,34 @@ views:
           template: card_binary_sensor_alert
           variables:
             - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.binary_open_alert_front_door_five_mins
+          entity: input_boolean.front_door_open
           show_last_changed: true
           name: Front
+          tap_action:
+            action: more-info
+            entity: binary_sensor.zigbee_door_sensor_front_contact
+          double_tap_action:
+            action: navigate  
+            navigation_path: /45df7312_zigbee2mqtt_edge
+          hold_action:
+            action: more-info
+            entity: camera.lounge_g3_instant
         - type: 'custom:button-card'
           template: card_binary_sensor_alert
           variables:
             - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.binary_open_alert_back_door_five_mins
+          entity: input_boolean.back_door_open
           show_last_changed: true
           name: Back
+          tap_action:
+            action: more-info
+            entity: binary_sensor.zigbee_door_sensor_back_contact
+          double_tap_action:
+            action: navigate  
+            navigation_path: /45df7312_zigbee2mqtt_edge
+          hold_action:
+            action: more-info
+            entity: camera.back_g3_flex
         - type: custom:button-card
           template: edge
 

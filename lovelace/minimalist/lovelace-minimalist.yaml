@@ -89,7 +89,7 @@ views:
         - type: custom:button-card
           template: card_navigate
           variables:
-            ulm_card_navigate_path: /lovelace-minimalist
+            ulm_card_navigate_path: /lovelace-minimalist-devices
             ulm_card_navigate_title: Devices
             ulm_card_navigate_icon: mdi:devices
         - type: custom:button-card
@@ -103,16 +103,18 @@ views:
           template: card_binary_sensor_alert
           variables:
             - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.binary_ring_alert_doorbell_five_mins
+          entity: input_boolean.doorbell_rung
           show_last_changed: true
           name: Doorbell
           tap_action:
             action: more-info
             entity: binary_sensor.doorbell_uvc_g4_doorbell
-
           double_tap_action:
             action: navigate  
             navigation_path: /lovelace-minimalist-security/1
+          hold_action:
+            action: more-info
+            entity: camera.doorbell_g4
         - type: 'custom:button-card'
           template: card_binary_sensor
           variables:

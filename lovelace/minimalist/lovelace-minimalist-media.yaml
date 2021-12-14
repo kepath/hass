@@ -1,29 +1,8 @@
 button_card_templates: !include_dir_merge_named minimalist-templates/
 views:
-  - title: Camera's
-    icon: mdi:cctv
-    theme: minimalist-mobile
-    # panel: true
-    cards:
-      - type: horizontal-stack
-        cards:
-        - type: custom:surveillance-card
-          thumb_interval: 10
-          update_interval: 1
-          recording_duration: 10
-          show_capture_buttons: false
-          cameras:
-            - entity: camera.doorbell_g4
-              motion_entity: binary_sensor.motion_uvc_g4_doorbell
-            - entity: camera.front_g3_flex
-            - entity: camera.back_g3_flex
-              motion_entity: binary_sensor.motion_uvc_g3_flex_back
-            - entity: camera.lounge_g3_instant
-              motion_entity: binary_sensor.motion_uvc_g3_instant
-            - entity: camera.uvc_g3_flex_middle_hallway
-              motion_entity: binary_sensor.motion_uvc_g3_flex_middle_hallway
-  - title: Security
-    icon: mdi:lock
+
+  - title: Overview
+    icon: mdi:devices
     theme: minimalist-mobile
     cards:
       - type: horizontal-stack
@@ -31,333 +10,29 @@ views:
         - type: custom:button-card
           template: edge
         - type: 'custom:button-card'
-          template: card_binary_sensor_alert
+          template: chip_back
           variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.zigbee_door_sensor_front_contact
-          show_last_changed: true
-          name: Front
-        - type: 'custom:button-card'
-          template: card_binary_sensor_alert
-          variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.zigbee_door_sensor_back_contact
-          show_last_changed: true
-          name: Back
-        - type: custom:button-card
-          template: edge
-
+            ulm_chip_back_path: /lovelace-minimalist
       - type: horizontal-stack
         cards:
         - type: custom:button-card
           template: edge
-        - type: 'custom:button-card'
-          template: card_binary_sensor_alert
-          variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.zigbee_door_sensor_patio_1_contact
-          show_last_changed: true
-          name: Patio
-        - type: 'custom:button-card'
-          template: card_binary_sensor_alert
-          variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.zigbee_door_sensor_patio_2_contact
-          show_last_changed: true
-          name: Patio
-        - type: custom:button-card
-          template: edge
-
       - type: horizontal-stack
         cards:
         - type: custom:button-card
           template: edge
-        - type: 'custom:button-card'
-          template: card_binary_sensor
-          variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy
-          show_last_changed: true
-          name: Stairs Motion
-        - type: 'custom:button-card'
-          template: card_binary_sensor
-          variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.motion_uvc_g3_flex_middle_hallway
-          show_last_changed: true
-          name: G3 Middle
         - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist-media/1
+            ulm_card_navigate_title: Lounge
+            ulm_card_navigate_icon: mdi:television
         - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: card_binary_sensor
+          template: card_navigate
           variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.zigbee_door_sensor_garage_contact
-          show_last_changed: true
-          name: Garage
-        - type: 'custom:button-card'
-          template: card_binary_sensor
-          variables:
-            - ulm_card_binary_sensor_alert: false
-          entity: binary_sensor.zigbee_door_sensor_bed_b_contact
-          show_last_changed: true
-          name: Loft
-        - type: 'custom:button-card'
-          template: card_binary_sensor
-          variables:
-            - ulm_card_binary_sensor_alert: false
-          entity: binary_sensor.zigbee_door_sensor_bed_c_contact
-          show_last_changed: true
-          name: Bed C
-        - type: custom:button-card
-          template: edge
-  - title: Lights
-    icon: mdi:lightbulb
-    theme: minimalist-mobile
-    cards:
-
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_title
-            label: Bottom       
-          - type: custom:button-card
-            template: edge    
-      - type: vertical-stack
-        cards:
-        - type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_hallway_bottom_light_1
-              name: Hallway
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_study_light_1
-              name: Study
-            - type: custom:button-card
-              template: edge
-        - type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_lounge_light_1
-              name: Lounge          
-            - type: custom:button-card
-              template: edge
-      - type: vertical-stack
-        cards:
-        - type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_kitchen_main_light_1
-              name: Kitchen Main
-            - type: 'custom:button-card'
-              template: card_light
-              entity: light.shelly1l_kitchen_utility_light_1
-              name: Kitchen Utility
-            - type: custom:button-card
-              template: edge
-        - type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: edge
-            - type: 'custom:button-card'
-              template: card_light_slider_collapse
-              variables:
-                ulm_card_light_slider_collapse_name: Backdoor
-              entity: light.tybf82abce93da177c79kymc
-            - type: 'custom:button-card'
-              template: card_light_slider_collapse
-              variables:
-                ulm_card_light_slider_collapse_name: Garage
-              entity: light.zigbee_bulb_garage
-            - type: custom:button-card
-              template: edge
-
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_title
-            label: Middle       
-          - type: custom:button-card
-            template: edge
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_bed_a_light_1
-            name: Bed A          
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_ensuite_light_1
-            name: Ensuite
-          - type: custom:button-card
-            template: edge
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_bathroom_light_1
-            name: Bathroom
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_bed_c_light_1
-            name: Bed C
-          - type: custom:button-card
-            template: edge
-
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_title
-            label: Top       
-          - type: custom:button-card
-            template: edge
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_light
-            entity: light.shelly1l_bed_e_light_1
-            name: Bed E          
-          - type: custom:button-card
-            template: edge
-
-  - title: Climate
-    icon: mdi:weather-partly-cloudy
-    theme: minimalist-mobile
-    cards:
-      - type: vertical-stack
-        cards:
-          - type: custom:weather-card
-            entity: weather.home
-            name: Home
-      - type: vertical-stack
-        cards:
-          - type: custom:mini-climate
-            entity: climate.nest_bottom_floor
-            icon: mdi:home-floor-g
-            toggle:
-              hide: true
-            temperature:
-              unit: '°C'
-              round: 1
-              # use an external temperature sensor
-              source:
-                entity: sensor.nest_bottom_floor_temperature
-            secondary_info:
-              icon: mdi:tune-vertical
-
-            indicators:
-              humidity:
-                icon: mdi:water-percent
-                unit: '%'
-                round: 1
-                source:
-                  entity: sensor.nest_bottom_floor_humidity
-
-          - type: custom:mini-climate
-            entity: climate.nest_middle_floor
-            icon: mdi:home-floor-1
-            temperature:
-              unit: '°C'
-              round: 1
-              # use an external temperature sensor
-              source:
-                entity: sensor.nest_middle_floor_temperature
-            secondary_info:
-              icon: mdi:tune-vertical
-            indicators:
-              humidity:
-                icon: mdi:water-percent
-                unit: '%'
-                round: 1
-                source:
-                  entity: sensor.nest_middle_floor_humidity
-
-      - type: horizontal-stack
-        cards:
-        - type: 'custom:button-card'
-          template: chip_icon_state
-          variables:
-            ulm_chip_icon_state_icon: '🚗🚪'
-            ulm_chip_icon_state_entity: binary_sensor.zigbee_door_sensor_front_contact
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-
-        - type: 'custom:button-card'
-          template: card_graph
-          variables:
-            ulm_card_graph_color: "var(--google-blue)"
-            ulm_card_graph_name: DNS queries
-            ulm_card_graph_entity: sensor.adguard_dns_queries
-
-        - type: 'custom:button-card'
-          template: card_graph
-          variables:
-            ulm_card_graph_color: "var(--google-blue)"
-            ulm_card_graph_name: DNS queries
-            ulm_card_graph_entity: sensor.speedtest_download
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.zigbee_plug_arcade_machine_bed_c
-          name: Arcade Machine
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.zigbee_plug_g4_doorbell_bottom_hallway
-          name: Doorbell
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.zigbee_plug_garage
-          name: Garage
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.0x00124b00226a8812
-          name: Harmony Hub
-
-        - type: 'custom:button-card'
-          template: card_power_outlet
-          entity: switch.0x00124b00226aa136
-          name: Fridge
-
+            ulm_card_navigate_path: /lovelace-minimalist-media/2
+            ulm_card_navigate_title: Bed A
+            ulm_card_navigate_icon: mdi:bed-king
         - type: custom:button-card
           template: edge
 
@@ -368,9 +43,15 @@ views:
         - type: custom:button-card
           template: card_navigate
           variables:
-            ulm_card_navigate_path: /ui-lovelace-minimalist/media
-            ulm_card_navigate_title: Media
-            ulm_card_navigate_icon: mdi:television
+            ulm_card_navigate_path: /lovelace-minimalist-media/3
+            ulm_card_navigate_title: Bed C
+            ulm_card_navigate_icon: mdi:remote-tv
+        - type: custom:button-card
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist-media/4
+            ulm_card_navigate_title: Bed E
+            ulm_card_navigate_icon: mdi:television-classic
         - type: custom:button-card
           template: edge
 
@@ -378,17 +59,329 @@ views:
         cards:
         - type: custom:button-card
           template: edge
-        - type: 'custom:button-card'
-          template: card_person
+        - type: custom:button-card
+          template: card_navigate
           variables:
-            ulm_card_person_entity: person.kevin_thorn
-            ulm_card_person_use_entity_picture: true
-            ulm_card_person_zone1: work
-            ulm_card_person_zone2: school
+            ulm_card_navigate_path: /lovelace-minimalist-media/5
+            ulm_card_navigate_title: Kitchen
+            ulm_card_navigate_icon: mdi:fridge-outline
+        - type: custom:button-card
+          template: card_navigate
+          variables:
+            ulm_card_navigate_path: /lovelace-minimalist-media/6
+            ulm_card_navigate_title: Apple TV
+            ulm_card_navigate_icon: mdi:cast-variant
         - type: custom:button-card
           template: edge
 
-  - title: Media
+  - title: Lounge
+    icon: mdi:television
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: chip_back
+          variables:
+            ulm_chip_back_path: /lovelace-minimalist-media/0
+
+
+
+
+        - type: vertical-stack
+          cards:
+            - type: button
+              tap_action:
+                action: navigate
+                navigation_path: overview
+              entity: null
+              show_icon: false
+              name: Back to Home
+            - type: horizontal-stack
+              cards:
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: green
+                    entity: switch.big_pc_unifi
+                  icon: 'mdi:import'
+                  show_name: false
+                  tap_action:
+                    action: toggle
+                - type: button
+                  tap_action:
+                    action: none
+                  show_icon: true
+                  show_name: false
+                  icon: 'mdi:shield'
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: orange
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:power'
+                  show_name: false
+                  icon_height: 50px
+            - type: horizontal-stack
+              cards:
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.sony_tv
+                  icon: 'mdi:television'
+                  show_name: false
+                  icon_height: 50px
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: white
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:arrow-up'
+                  icon_height: 50px
+                  show_name: false
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  show_name: false
+                  icon: 'mdi:home'
+                  icon_height: 50px
+            - type: horizontal-stack
+              cards:
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: white
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:arrow-left'
+                  icon_height: 50px
+                  show_name: false
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: white
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:arrow-all'
+                  icon_height: 50px
+                  show_name: false
+                  hold_action:
+                    action: toggle
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: white
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:arrow-right'
+                  icon_height: 50px
+                  show_name: false
+            - type: horizontal-stack
+              cards:
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:undo-variant'
+                  icon_height: 50px
+                  show_name: false
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: white
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  show_name: false
+                  icon: 'mdi:arrow-down'
+                  icon_height: 50px
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: red
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:netflix'
+                  show_name: false
+                  icon_height: 50px
+            - type: horizontal-stack
+              cards:
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  show_name: false
+                  icon: 'mdi:volume-plus'
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  show_name: false
+                  icon: 'mdi:plus'
+            - type: horizontal-stack
+              cards:
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:volume-minus'
+                  show_name: false
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:minus'
+                  show_name: false
+            - type: horizontal-stack
+              cards:
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  show_icon: false
+                  name: '1'
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  show_icon: false
+                  name: '2'
+                  show_name: true
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  show_name: true
+                  show_icon: false
+                  name: '3'
+                  show_state: false
+            - type: horizontal-stack
+              cards:
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: '4'
+                  show_icon: false
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: '5'
+                  show_icon: false
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: '6'
+                  show_icon: false
+            - type: horizontal-stack
+              cards:
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: '7'
+                  show_icon: false
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: '8'
+                  show_icon: false
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: '9'
+                  show_icon: false
+            - type: horizontal-stack
+              cards:
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: exit
+                  show_icon: false
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: '0'
+                  show_icon: false
+                - type: button
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  name: teletext
+                  show_icon: false
+            - type: horizontal-stack
+              cards:
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: red
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:card'
+                  show_name: false
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: green
+                  tap_action:
+                    action: toggle
+                  show_name: false
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:card'
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: yellow
+                  tap_action:
+                    action: toggle
+                  entity: switch.big_pc_unifi
+                  icon: 'mdi:card'
+                  show_name: false
+                - type: 'custom:button-card'
+                  styles:
+                    icon:
+                      - color: blue
+                  tap_action:
+                    action: toggle
+                  entity: script.big_pc_unifi
+                  icon: 'mdi:card'
+                  show_name: false
+
+  - title: Bed A
+    icon: mdi:bed-king
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: chip_back
+          variables:
+            ulm_chip_back_path: /lovelace-minimalist-media/0
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+  - title: Bed C
     icon: mdi:remote-tv
     theme: minimalist-mobile
     cards:
@@ -397,154 +390,72 @@ views:
         - type: custom:button-card
           template: edge
         - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.plex_state_mqtt
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.plex_state_tautulli
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.ups_status
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_back_temperature
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_bed_b_temperature
-        - type: 'custom:button-card'
-          template: card_graph
+          template: chip_back
           variables:
-            ulm_card_graph_color: "var(--google-blue)"
-            ulm_card_graph_name: Bed C
-            ulm_card_graph_entity: sensor.zigbee_door_sensor_bed_c_temperature
+            ulm_chip_back_path: /lovelace-minimalist-media/0
+      - type: horizontal-stack
+        cards:
         - type: custom:button-card
           template: edge
-
+  - title: Bed E
+    icon: mdi:television-classic
+    theme: minimalist-mobile
+    cards:
       - type: horizontal-stack
         cards:
         - type: custom:button-card
           template: edge
         - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_front_temperature
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_patio_1_temperature
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_patio_2_temperature
-        - type: 'custom:button-card'
-          template: card_graph
+          template: chip_back
           variables:
-            ulm_card_graph_color: "var(--google-blue)"
-            ulm_card_graph_name: Garage
-            ulm_card_graph_entity: sensor.zigbee_door_sensor_garage_temperature
+            ulm_chip_back_path: /lovelace-minimalist-media/0
+      - type: horizontal-stack
+        cards:
+        - type: 'custom:button-card'
+          template: card_media_player_with_control
+          entity: media_player.nvidia_shield_adb_bed_e
+          name: Bed E Nvidia Shield
+        - type: custom:button-card
+          template: edge
+      - type: horizontal-stack
+        cards:
+        - type: 'custom:button-card'
+          template: card_media_player_with_control
+          entity: media_player.shield_delta
+          name: Bed E Nvidia Shield
         - type: custom:button-card
           template: edge
 
+
+  - title: Kitchen
+    icon: mdi:fridge-outline
+    theme: minimalist-mobile
+    cards:
       - type: horizontal-stack
         cards:
         - type: custom:button-card
           template: edge
         - type: 'custom:button-card'
-          template: card_binary_sensor_alert
+          template: chip_back
           variables:
-            - ulm_card_binary_sensor_alert: true
-          entity: binary_sensor.diskstation_security_status
-          show_last_changed: true
-          name: NAS Status
+            ulm_chip_back_path: /lovelace-minimalist-media/0
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+  - title: Apple TV
+    icon: mdi:cast-variant
+    theme: minimalist-mobile
+    cards:
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
         - type: 'custom:button-card'
-          template: card_graph
+          template: chip_back
           variables:
-            ulm_card_graph_color: "var(--google-blue)"
-            ulm_card_graph_name: Garage
-            ulm_card_graph_entity: sensor.ups_load
-        - type: custom:button-card
-          template: edge
-
+            ulm_chip_back_path: /lovelace-minimalist-media/0
       - type: horizontal-stack
         cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_back_battery
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_bed_b_battery
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_bed_c_battery
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_front_battery
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_garage_battery
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_patio_1_battery
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_patio_2_battery
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_back_linkquality
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_bed_b_linkquality
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_bed_c_linkquality
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_front_linkquality
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_garage_linkquality
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_patio_1_linkquality
-        - type: 'custom:button-card'
-          template: card_generic
-          entity: sensor.zigbee_door_sensor_patio_2_linkquality
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-
         - type: custom:button-card
           template: edge

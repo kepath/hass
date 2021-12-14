@@ -1,0 +1,54 @@
+substitutions:
+  device_name: shelly1l-bed-b
+  friendly_name: Shelly Light Switch Bed B
+  light1_icon: "mdi:ceiling-light"  
+  device_ip: 192.168.30.24
+  ssid: !secret not_wifi_ssid
+  log_level: DEBUG  
+  max_temp: "80.0" #Centigrade
+
+# Common Include
+<<: !include includes/shelly-common.yaml
+
+# Extended Config
+light:
+  - platform: binary
+    name: ${device_name}-light-1
+    output: shelly_1l_relay
+    id: lightid1
+    icon: ${light1_icon}
+
+output:
+  - platform: gpio
+    pin: GPIO5
+    id: shelly_1l_relay
+
+binary_sensor:
+# =====================common binary_sensor
+  - platform: homeassistant
+    name: ${device_name}-isnight
+    entity_id: binary_sensor.nighttime
+    id: isnight
+    internal: true
+
+  - platform: status
+    name: ${device_name}-status
+    device_class: connectivity
+# =====================common binary_sensor
+
+  - platform: gpio
+    pin:
+      number: GPIO4
+    name: ${device_name}-switch-1
+    id: switchid1
+    on_state:
+      then:
+        - light.toggle: lightid1
+    filters:
+      - delayed_on_off: 50ms
+    
+  - platform: gpio
+    pin:
+      number: GPIO14
+    name: ${device_name}-switch-2
+    id: switchid2
