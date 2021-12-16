@@ -393,10 +393,31 @@ views:
           template: chip_back
           variables:
             ulm_chip_back_path: /lovelace-minimalist-media/0
-      - type: horizontal-stack
+      - type: vertical-stack
         cards:
-        - type: custom:button-card
-          template: edge
+        - type: horizontal-stack
+          cards:
+          - type: 'custom:button-card'
+            template: chip_remote_power
+            entity: sun.sun
+        - type: horizontal-stack
+          cards:
+          - type: 'custom:button-card'
+            template: chip_remote_back
+            entity: sun.sun
+          - type: 'custom:button-card'
+            template: chip_remote_home
+            entity: sun.sun
+          - type: 'custom:button-card'
+            template: chip_remote_select
+            entity: sun.sun
+        - type: horizontal-stack
+          cards:
+          - type: 'custom:button-card'
+            template: card_remote_home_group
+
+
+
   - title: Bed E
     icon: mdi:television-classic
     theme: minimalist-mobile
@@ -431,18 +452,90 @@ views:
     icon: mdi:fridge-outline
     theme: minimalist-mobile
     cards:
-      - type: horizontal-stack
+      - type: vertical-stack
         cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: chip_back
-          variables:
-            ulm_chip_back_path: /lovelace-minimalist-media/0
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
+          - type: horizontal-stack
+            cards:
+            - type: custom:button-card
+              template: edge
+            - type: 'custom:button-card'
+              template: chip_back
+              variables:
+                ulm_chip_back_path: /lovelace-minimalist-media/0
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_remote_group_home
+              variables:
+                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+                ulm_card_remote_group_home_color_back: "var(--google-yellow)"
+                ulm_card_remote_group_home_color_home: "var(--google-green)"
+                ulm_card_remote_group_home_color_menu: "var(--google-yellow)"
+            - type: custom:button-card
+              template: edge
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: list_item1_item1_item2
+              custom_fields:
+                item1:
+
+                  card:
+                    type: 'custom:button-card'
+                    template: card_remote_group_arrow_select
+                    variables:
+                      ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+                      ulm_card_remote_group_home_color_up: "var(--google-blue)"
+                      ulm_card_remote_group_home_color_down: "var(--google-blue)"
+                      ulm_card_remote_group_home_color_left: "var(--google-blue)"
+                      ulm_card_remote_group_home_color_right: "var(--google-blue)"
+                      ulm_card_remote_group_home_color_select: "var(--google-blue)"
+                item2:
+                
+                  card:
+                    type: 'custom:button-card'
+                    template: card_remote_group_volume
+                    variables:
+                      ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+                      ulm_card_remote_group_home_color_volumeup: "var(--google-green)"
+                      ulm_card_remote_group_home_color_volumedown: "var(--google-green)"
+                      ulm_card_remote_group_home_color_volumemute: "var(--google-green)"
+            - type: custom:button-card
+              template: edge
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_remote_group_play
+              variables:
+                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+            - type: custom:button-card
+              template: edge
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_remote_group_numbers
+              variables:
+                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+            - type: custom:button-card
+              template: edge
+          # - type: horizontal-stack
+          #   cards:
+          #   - type: 'custom:button-card'
+          #     template: 
+          #       - card_remote_group_colors
+          #     variables:
+          #       ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+          #   - type: custom:button-card
+          #     template: edge
+
+
+
+
+
+
   - title: Apple TV
     icon: mdi:cast-variant
     theme: minimalist-mobile
