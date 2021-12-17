@@ -433,17 +433,21 @@ views:
       - type: horizontal-stack
         cards:
         - type: 'custom:button-card'
-          template: card_media_player_with_control
-          entity: media_player.nvidia_shield_adb_bed_e
-          name: Bed E Nvidia Shield
+          template: 
+          - card_media_player_with_controls
+          variables:
+            ulm_card_media_player_with_controls_name: "Bed E Nvidia Shield"
+            ulm_card_media_player_with_controls_entity: media_player.nvidia_shield_adb_bed_e
         - type: custom:button-card
           template: edge
       - type: horizontal-stack
         cards:
         - type: 'custom:button-card'
-          template: card_media_player_with_control
-          entity: media_player.shield_delta
-          name: Bed E Nvidia Shield
+          template: 
+          - card_media_player_with_controls
+          variables:
+            ulm_card_media_player_with_controls_name: "Lounge Nvidia Shield"
+            ulm_card_media_player_with_controls_entity: media_player.nvidia_shield_adb_lounge
         - type: custom:button-card
           template: edge
 
@@ -465,42 +469,58 @@ views:
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
+              template: card_media_player
+              entity: media_player.nvidia_shield_adb_lounge
+              name: Nvidia Shield Bed E
+              # aspect-ratio: 1/1
+            - type: custom:button-card
+              template: edge                
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_remote_group_power
+              variables:
+                ulm_card_remote_group_power_entity: media_player.nvidia_shield_adb_lounge
+            - type: custom:button-card
+              template: edge
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
               template: 
                 - card_remote_group_home
               variables:
-                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
-                ulm_card_remote_group_home_color_back: "var(--google-yellow)"
-                ulm_card_remote_group_home_color_home: "var(--google-green)"
-                ulm_card_remote_group_home_color_menu: "var(--google-yellow)"
+                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_lounge"
             - type: custom:button-card
               template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: list_item1_item1_item2
+              styles:
+                card:
+                - background-color: var(--primary-background-color)
               custom_fields:
                 item1:
-
                   card:
                     type: 'custom:button-card'
                     template: card_remote_group_arrow_select
+                    styles:
+                      card:
+                      - border-radius: var(--border-radius)
+                      - box-shadow: var(--box-shadow)
                     variables:
-                      ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
-                      ulm_card_remote_group_home_color_up: "var(--google-blue)"
-                      ulm_card_remote_group_home_color_down: "var(--google-blue)"
-                      ulm_card_remote_group_home_color_left: "var(--google-blue)"
-                      ulm_card_remote_group_home_color_right: "var(--google-blue)"
-                      ulm_card_remote_group_home_color_select: "var(--google-blue)"
+                      ulm_card_remote_group_arrow_select_entity: "media_player.nvidia_shield_adb_lounge"
                 item2:
-                
                   card:
                     type: 'custom:button-card'
                     template: card_remote_group_volume
+                    styles:
+                      card:
+                      - border-radius: var(--border-radius)
+                      - box-shadow: var(--box-shadow)
                     variables:
-                      ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
-                      ulm_card_remote_group_home_color_volumeup: "var(--google-green)"
-                      ulm_card_remote_group_home_color_volumedown: "var(--google-green)"
-                      ulm_card_remote_group_home_color_volumemute: "var(--google-green)"
+                      ulm_card_remote_group_volume_entity: "media_player.nvidia_shield_adb_lounge"
             - type: custom:button-card
               template: edge
           - type: horizontal-stack
@@ -509,25 +529,25 @@ views:
               template: 
                 - card_remote_group_play
               variables:
-                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
-          - type: horizontal-stack
-            cards:
-            - type: 'custom:button-card'
-              template: 
-                - card_remote_group_numbers
-              variables:
-                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+                ulm_card_remote_group_play_entity: "media_player.nvidia_shield_adb_lounge"
             - type: custom:button-card
               template: edge
           # - type: horizontal-stack
           #   cards:
           #   - type: 'custom:button-card'
           #     template: 
+          #       - card_remote_group_numbers
+          #     variables:
+          #       ulm_card_remote_group_numbers_entity: "media_player.nvidia_shield_adb_bed_e"
+          #   - type: custom:button-card
+          #     template: edge
+          # - type: horizontal-stack
+          #   cards:
+          #   - type: 'custom:button-card'
+          #     template: 
           #       - card_remote_group_colors
           #     variables:
-          #       ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+          #       ulm_card_remote_group_colors_entity: "media_player.nvidia_shield_adb_bed_e"
           #   - type: custom:button-card
           #     template: edge
 
