@@ -155,283 +155,32 @@ views:
                 ulm_card_remote_group_play_entity: "media_player.nvidia_shield_adb_lounge"
             - type: custom:button-card
               template: edge
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_remote_group_apps
+              variables:
+                ulm_card_remote_group_apps_entity: "media_player.nvidia_shield_adb_lounge"
+                ulm_card_remote_group_apps_icon_01: 'phu:netflix'
+                ulm_card_remote_group_apps_icon_02: 'phu:disney-plus'
+                ulm_card_remote_group_apps_icon_03: 'phu:prime-video'
+                ulm_card_remote_group_apps_icon_04: 'phu:apple-tv'
+                ulm_card_remote_group_apps_icon_05: 'mdi:plex'
+                ulm_card_remote_group_apps_icon_06: 'mdi:spotify'
+                ulm_card_remote_group_apps_icon_07: 'mdi:youtube'
+
+                ulm_card_remote_group_apps_color_01: "var(--google-red)"
+                ulm_card_remote_group_apps_color_02: "var(--google-blue)"
+                ulm_card_remote_group_apps_color_03: "var(--google-blue)"
+                ulm_card_remote_group_apps_color_04: "var(--google-grey)"
+                ulm_card_remote_group_apps_color_05: "var(--google-yellow)"
+                ulm_card_remote_group_apps_color_06: "var(--google-green)"
+                ulm_card_remote_group_apps_color_07: "var(--google-red)"
+            - type: custom:button-card
+              template: edge
 
 
-
-        # - type: vertical-stack
-        #   cards:
-        #     - type: button
-        #       tap_action:
-        #         action: navigate
-        #         navigation_path: overview
-        #       entity: null
-        #       show_icon: false
-        #       name: Back to Home
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: green
-        #             entity: switch.big_pc_unifi
-        #           icon: 'mdi:import'
-        #           show_name: false
-        #           tap_action:
-        #             action: toggle
-        #         - type: button
-        #           tap_action:
-        #             action: none
-        #           show_icon: true
-        #           show_name: false
-        #           icon: 'mdi:shield'
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: orange
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:power'
-        #           show_name: false
-        #           icon_height: 50px
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.sony_tv
-        #           icon: 'mdi:television'
-        #           show_name: false
-        #           icon_height: 50px
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: white
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:arrow-up'
-        #           icon_height: 50px
-        #           show_name: false
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           show_name: false
-        #           icon: 'mdi:home'
-        #           icon_height: 50px
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: white
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:arrow-left'
-        #           icon_height: 50px
-        #           show_name: false
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: white
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:arrow-all'
-        #           icon_height: 50px
-        #           show_name: false
-        #           hold_action:
-        #             action: toggle
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: white
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:arrow-right'
-        #           icon_height: 50px
-        #           show_name: false
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:undo-variant'
-        #           icon_height: 50px
-        #           show_name: false
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: white
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           show_name: false
-        #           icon: 'mdi:arrow-down'
-        #           icon_height: 50px
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: red
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:netflix'
-        #           show_name: false
-        #           icon_height: 50px
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           show_name: false
-        #           icon: 'mdi:volume-plus'
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           show_name: false
-        #           icon: 'mdi:plus'
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:volume-minus'
-        #           show_name: false
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:minus'
-        #           show_name: false
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           show_icon: false
-        #           name: '1'
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           show_icon: false
-        #           name: '2'
-        #           show_name: true
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           show_name: true
-        #           show_icon: false
-        #           name: '3'
-        #           show_state: false
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: '4'
-        #           show_icon: false
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: '5'
-        #           show_icon: false
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: '6'
-        #           show_icon: false
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: '7'
-        #           show_icon: false
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: '8'
-        #           show_icon: false
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: '9'
-        #           show_icon: false
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: exit
-        #           show_icon: false
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: '0'
-        #           show_icon: false
-        #         - type: button
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           name: teletext
-        #           show_icon: false
-        #     - type: horizontal-stack
-        #       cards:
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: red
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:card'
-        #           show_name: false
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: green
-        #           tap_action:
-        #             action: toggle
-        #           show_name: false
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:card'
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: yellow
-        #           tap_action:
-        #             action: toggle
-        #           entity: switch.big_pc_unifi
-        #           icon: 'mdi:card'
-        #           show_name: false
-        #         - type: 'custom:button-card'
-        #           styles:
-        #             icon:
-        #               - color: blue
-        #           tap_action:
-        #             action: toggle
-        #           entity: script.big_pc_unifi
-        #           icon: 'mdi:card'
-        #           show_name: false
 
   - title: Bed A
     icon: mdi:bed-king
@@ -463,6 +212,8 @@ views:
                 - card_remote_group_power
               variables:
                 ulm_card_remote_group_power_entity: media_player.amazon_firestick_bed_a_adb
+                ulm_card_remote_group_power_command_power: "input keyevent 26"
+                ulm_card_remote_group_power_command_input: ""
             - type: custom:button-card
               template: edge
           - type: horizontal-stack
@@ -472,6 +223,9 @@ views:
                 - card_remote_group_home
               variables:
                 ulm_card_remote_group_home_entity: "media_player.amazon_firestick_bed_a_adb"
+                ulm_card_remote_group_home_command_back: "BACK"
+                ulm_card_remote_group_home_command_home: "HOME"
+                ulm_card_remote_group_home_command_menu: "MENU"
             - type: custom:button-card
               template: edge
           - type: horizontal-stack
@@ -492,6 +246,11 @@ views:
                       - box-shadow: var(--box-shadow)
                     variables:
                       ulm_card_remote_group_arrow_select_entity: "media_player.amazon_firestick_bed_a_adb"
+                      ulm_card_remote_group_arrow_select_command_up: "UP"
+                      ulm_card_remote_group_arrow_select_command_down: "DOWN"
+                      ulm_card_remote_group_arrow_select_command_left: "LEFT"
+                      ulm_card_remote_group_arrow_select_command_right: "RIGHT"
+                      ulm_card_remote_group_arrow_select_command_select: "input keyevent 23"
                 item2:
                   card:
                     type: 'custom:button-card'
@@ -502,6 +261,9 @@ views:
                       - box-shadow: var(--box-shadow)
                     variables:
                       ulm_card_remote_group_volume_entity: "media_player.amazon_firestick_bed_a_adb"
+                      ulm_card_remote_group_volume_command_volumeup: ""
+                      ulm_card_remote_group_volume_command_volumedown: ""
+                      ulm_card_remote_group_volume_command_volumemute: ""
             - type: custom:button-card
               template: edge
           - type: horizontal-stack
@@ -511,6 +273,9 @@ views:
                 - card_remote_group_play
               variables:
                 ulm_card_remote_group_play_entity: "media_player.amazon_firestick_bed_a_adb"
+                ulm_card_remote_group_play_command_rewind: "input keyevent 89"
+                ulm_card_remote_group_play_command_play: "input keyevent 85"
+                ulm_card_remote_group_play_command_fastforward: "input keyevent 90"
             - type: custom:button-card
               template: edge
 
@@ -537,7 +302,14 @@ views:
               name: Harmony
               # aspect-ratio: 1/1
             - type: custom:button-card
-              template: edge                
+              template: edge
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_remote_group_harmony_actions
+              variables:
+                ulm_card_remote_group_harmony_actions_entity: remote.harmony_hub
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'

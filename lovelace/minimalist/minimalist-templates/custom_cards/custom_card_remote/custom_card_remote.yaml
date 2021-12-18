@@ -680,6 +680,546 @@ card_remote_group_numbers:
                 icon:
                 - color: ulm_card_remote_group_numbers_color_dots
 
+card_remote_group_apps:
+  variables:
+    ulm_card_remote_group_apps_entity:
+
+    ulm_card_remote_group_apps_command_01: ""
+    ulm_card_remote_group_apps_command_02: ""
+    ulm_card_remote_group_apps_command_03: ""
+    ulm_card_remote_group_apps_command_04: ""
+    ulm_card_remote_group_apps_command_05: ""
+    ulm_card_remote_group_apps_command_06: ""
+    ulm_card_remote_group_apps_command_07: ""
+    ulm_card_remote_group_apps_command_08: ""
+    ulm_card_remote_group_apps_command_09: ""
+    ulm_card_remote_group_apps_command_10: ""
+    ulm_card_remote_group_apps_command_11: ""
+    ulm_card_remote_group_apps_command_12: ""
+    ulm_card_remote_group_apps_command_13: ""
+    ulm_card_remote_group_apps_command_14: ""
+    ulm_card_remote_group_apps_command_15: ""
+    ulm_card_remote_group_apps_command_16: ""
+
+    ulm_card_remote_group_apps_icon_01: 'mdi:alpha-a-box'
+    ulm_card_remote_group_apps_icon_02: 'mdi:alpha-b-box'
+    ulm_card_remote_group_apps_icon_03: 'mdi:alpha-c-box'
+    ulm_card_remote_group_apps_icon_04: 'mdi:alpha-d-box'
+    ulm_card_remote_group_apps_icon_05: 'mdi:alpha-e-box'
+    ulm_card_remote_group_apps_icon_06: 'mdi:alpha-f-box'
+    ulm_card_remote_group_apps_icon_07: 'mdi:alpha-g-box'
+    ulm_card_remote_group_apps_icon_08: 'mdi:alpha-h-box'
+    ulm_card_remote_group_apps_icon_09: 'mdi:alpha-i-box'
+    ulm_card_remote_group_apps_icon_10: 'mdi:alpha-j-box'
+    ulm_card_remote_group_apps_icon_11: 'mdi:alpha-k-box'
+    ulm_card_remote_group_apps_icon_12: 'mdi:alpha-l-box'
+    ulm_card_remote_group_apps_icon_13: 'mdi:alpha-m-box'
+    ulm_card_remote_group_apps_icon_14: 'mdi:alpha-n-box'
+    ulm_card_remote_group_apps_icon_15: 'mdi:alpha-o-box'
+    ulm_card_remote_group_apps_icon_16: 'mdi:alpha-p-box'
+
+    ulm_card_remote_group_apps_color_01: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_02: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_03: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_04: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_05: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_06: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_07: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_08: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_09: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_10: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_11: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_12: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_13: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_14: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_15: "var(--google-grey)"
+    ulm_card_remote_group_apps_color_16: "var(--google-grey)"
+
+  styles:
+    grid:
+      - grid-template-areas: '"item1" "item2" "item3" "item4"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_to_item4
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_01 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_01 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_01 ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_02 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_02 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_02 ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_03 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_03 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_03 ]]]'
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_04 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_04 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_04 ]]]'
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_to_item4
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_05 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_05 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_05 ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_06 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_06 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_06 ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_07 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_07 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_07 ]]]'
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_08 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_08 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_08 ]]]'
+    item3:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_to_item4
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_09 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_09 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_09 ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_10 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_10 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_10 ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_11 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_11 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_11 ]]]'
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_12 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_12 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_12 ]]]'
+    item4:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_to_item4
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_13 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_13 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_13 ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_14 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_14 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_14 ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_15 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_15 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_15 ]]]'
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_apps_command_16 ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_apps_entity ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_apps_icon_16 ]]]'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_apps_color_16 ]]]'
+
+
+card_remote_group_harmony_actions:
+  variables:
+    ulm_card_remote_group_harmony_actions_entity:
+    ulm_card_remote_group_harmony_actions_activity_01: "Xbox Series X"
+    ulm_card_remote_group_harmony_actions_activity_02: "Watch Apple TV"
+    ulm_card_remote_group_harmony_actions_activity_03: "Watch Humax TV"
+    ulm_card_remote_group_harmony_actions_activity_04: "Play Wii"
+    ulm_card_remote_group_harmony_actions_activity_05: "Play PS3"
+    ulm_card_remote_group_harmony_actions_activity_06: "Spotify Direct"
+    ulm_card_remote_group_harmony_actions_icon_01: 'mdi:microsoft-xbox'
+    ulm_card_remote_group_harmony_actions_icon_02: 'phu:apple-tv-box'
+    ulm_card_remote_group_harmony_actions_icon_03: 'mdi:set-top-box'
+    ulm_card_remote_group_harmony_actions_icon_04: 'mdi:nintendo-wii'
+    ulm_card_remote_group_harmony_actions_icon_05: 'mdi:sony-playstation'
+    ulm_card_remote_group_harmony_actions_icon_06: 'mdi:spotify'
+
+  styles:
+    grid:
+      - grid-template-areas: '"item1" "item2"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_to_item4
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+
+                action: call-service
+                service: remote.turn_on
+                target:
+                  entity_id: '[[[ return variables.ulm_card_remote_group_harmony_actions_entity ]]]'
+                service_data:
+                  activity: '[[[ return variables.ulm_card_remote_group_harmony_actions_activity_01 ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_harmony_actions_icon_01 ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+
+                action: call-service
+                service: remote.turn_on
+                target:
+                  entity_id: '[[[ return variables.ulm_card_remote_group_harmony_actions_entity ]]]'
+                service_data:
+                  activity: '[[[ return variables.ulm_card_remote_group_harmony_actions_activity_02 ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_harmony_actions_icon_02 ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+
+                action: call-service
+                service: remote.turn_on
+                target:
+                  entity_id: '[[[ return variables.ulm_card_remote_group_harmony_actions_entity ]]]'
+                service_data:
+                  activity: '[[[ return variables.ulm_card_remote_group_harmony_actions_activity_03 ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_harmony_actions_icon_03 ]]]'
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+
+                action: call-service
+                service: remote.turn_on
+                target:
+                  entity_id: '[[[ return variables.ulm_card_remote_group_harmony_actions_entity ]]]'
+                service_data:
+                  activity: '[[[ return variables.ulm_card_remote_group_harmony_actions_activity_04 ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_harmony_actions_icon_04 ]]]'
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_to_item4
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+
+                action: call-service
+                service: remote.turn_on
+                target:
+                  entity_id: '[[[ return variables.ulm_card_remote_group_harmony_actions_entity ]]]'
+                service_data:
+                  activity: '[[[ return variables.ulm_card_remote_group_harmony_actions_activity_05 ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_harmony_actions_icon_05 ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+
+                action: call-service
+                service: remote.turn_on
+                target:
+                  entity_id: '[[[ return variables.ulm_card_remote_group_harmony_actions_entity ]]]'
+                service_data:
+                  activity: '[[[ return variables.ulm_card_remote_group_harmony_actions_activity_06 ]]]'
+              icon: '[[[ return variables.ulm_card_remote_group_harmony_actions_icon_06 ]]]'
+
+
+card_remote_group_harmony_arrow_select:
+  variables:
+    ulm_card_remote_group_arrow_select_entity:
+    ulm_card_remote_group_arrow_select_command_up:
+    ulm_card_remote_group_arrow_select_command_down:
+    ulm_card_remote_group_arrow_select_command_left:
+    ulm_card_remote_group_arrow_select_command_right:
+    ulm_card_remote_group_arrow_select_command_select:
+    ulm_card_remote_group_arrow_select_color_up: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_down: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_left: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_right: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_select: "var(--google-blue)"
+  styles:
+    grid:
+      - grid-template-areas: '"item1"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_items_arrow_select
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+
+                service: remote.send_command
+                target:
+                  entity_id: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+                service_data:
+                  command:
+                    - '[[[ return variables.ulm_card_remote_group_arrow_select_command_up ]]]'
+                  device: '[[[ return variables.ulm_card_remote_group_arrow_select_device_up ]]]'
+                  delay_secs: 0.6
+
+                # service: androidtv.adb_command
+                # service_data:
+                #   command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_up ]]]'
+                #   entity_id: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+              icon: 'mdi:arrow-up'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_up ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_left ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+              icon: 'mdi:arrow-left'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_left ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_select ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+              icon: 'mdi:checkbox-blank-circle-outline'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_select ]]]'
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_right ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+              icon: 'mdi:arrow-right'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_right ]]]'
+          item5:
+            card:
+              type: 'custom:button-card'
+              template: widget_icon
+              tap_action:
+                action: call-service
+                service: androidtv.adb_command
+                service_data:
+                  command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_down ]]]'
+                  entity_id: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+              icon: 'mdi:arrow-down'
+              styles:
+                icon:
+                - color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_down ]]]'
+
+
 list_item1_to_item4:
   styles:
     grid:
