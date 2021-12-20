@@ -83,8 +83,6 @@ views:
         cards:
           - type: horizontal-stack
             cards:
-            - type: custom:button-card
-              template: edge
             - type: 'custom:button-card'
               template: chip_back
               variables:
@@ -94,92 +92,42 @@ views:
             - type: 'custom:button-card'
               template: card_media_player
               entity: media_player.nvidia_shield_adb_lounge
-              name: Nvidia Shield Lounge
-              # aspect-ratio: 1/1
-            - type: custom:button-card
-              template: edge                
+              name: Nvidia Shield Lounge      
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_power
+                - card_shield_remote_group_power
               variables:
                 ulm_card_remote_group_power_entity: media_player.nvidia_shield_adb_lounge
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_home
+                - card_shield_remote_group_home
               variables:
                 ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_lounge"
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: list_item1_item1_item2
-              styles:
-                card:
-                - background-color: var(--primary-background-color)
-              custom_fields:
-                item1:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_arrow_select
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_arrow_select_entity: "media_player.nvidia_shield_adb_lounge"
-                item2:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_volume
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_volume_entity: "media_player.nvidia_shield_adb_lounge"
-            - type: custom:button-card
-              template: edge
+              template: card_shield_remote_group_arrows_and_volume
+              variables:
+                ulm_card_remote_group_volume_entity: "media_player.nvidia_shield_adb_bed_e"
+                ulm_card_remote_group_arrow_select_entity: "media_player.nvidia_shield_adb_bed_e"
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_play
+                - card_shield_remote_group_play
               variables:
                 ulm_card_remote_group_play_entity: "media_player.nvidia_shield_adb_lounge"
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_apps
+                - card_shield_remote_group_apps
               variables:
-                ulm_card_remote_group_apps_entity: "media_player.nvidia_shield_adb_lounge"
-                ulm_card_remote_group_apps_icon_01: 'phu:netflix'
-                ulm_card_remote_group_apps_icon_02: 'phu:disney-plus'
-                ulm_card_remote_group_apps_icon_03: 'phu:prime-video'
-                ulm_card_remote_group_apps_icon_04: 'phu:apple-tv'
-                ulm_card_remote_group_apps_icon_05: 'mdi:plex'
-                ulm_card_remote_group_apps_icon_06: 'mdi:spotify'
-                ulm_card_remote_group_apps_icon_07: 'mdi:youtube'
-
-                ulm_card_remote_group_apps_color_01: "var(--google-red)"
-                ulm_card_remote_group_apps_color_02: "var(--google-blue)"
-                ulm_card_remote_group_apps_color_03: "var(--google-blue)"
-                ulm_card_remote_group_apps_color_04: "var(--google-grey)"
-                ulm_card_remote_group_apps_color_05: "var(--google-yellow)"
-                ulm_card_remote_group_apps_color_06: "var(--google-green)"
-                ulm_card_remote_group_apps_color_07: "var(--google-red)"
-            - type: custom:button-card
-              template: edge
-
+                ulm_remote_grid_four_by_four_entity: "media_player.nvidia_shield_adb_lounge"
 
 
   - title: Bed A
@@ -190,8 +138,6 @@ views:
         cards:
           - type: horizontal-stack
             cards:
-            - type: custom:button-card
-              template: edge
             - type: 'custom:button-card'
               template: chip_back
               variables:
@@ -202,82 +148,41 @@ views:
               template: card_media_player
               entity: media_player.amazon_firestick_bed_a_adb
               name: Firestick Bed A
-              # aspect-ratio: 1/1
-            - type: custom:button-card
-              template: edge                
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_power
+                - card_firestick_remote_group_power
               variables:
                 ulm_card_remote_group_power_entity: media_player.amazon_firestick_bed_a_adb
-                ulm_card_remote_group_power_command_power: "input keyevent 26"
-                ulm_card_remote_group_power_command_input: ""
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_home
+                - card_firestick_remote_group_home
               variables:
                 ulm_card_remote_group_home_entity: "media_player.amazon_firestick_bed_a_adb"
-                ulm_card_remote_group_home_command_back: "BACK"
-                ulm_card_remote_group_home_command_home: "HOME"
-                ulm_card_remote_group_home_command_menu: "MENU"
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: list_item1_item1_item2
-              styles:
-                card:
-                - background-color: var(--primary-background-color)
-              custom_fields:
-                item1:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_arrow_select
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_arrow_select_entity: "media_player.amazon_firestick_bed_a_adb"
-                      ulm_card_remote_group_arrow_select_command_up: "UP"
-                      ulm_card_remote_group_arrow_select_command_down: "DOWN"
-                      ulm_card_remote_group_arrow_select_command_left: "LEFT"
-                      ulm_card_remote_group_arrow_select_command_right: "RIGHT"
-                      ulm_card_remote_group_arrow_select_command_select: "input keyevent 23"
-                item2:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_volume
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_volume_entity: "media_player.amazon_firestick_bed_a_adb"
-                      ulm_card_remote_group_volume_command_volumeup: ""
-                      ulm_card_remote_group_volume_command_volumedown: ""
-                      ulm_card_remote_group_volume_command_volumemute: ""
-            - type: custom:button-card
-              template: edge
+              template: card_firestick_remote_group_arrows_and_volume
+              variables:
+                ulm_card_remote_group_volume_entity: "media_player.amazon_firestick_bed_a_adb"
+                ulm_card_remote_group_arrow_select_entity: "media_player.amazon_firestick_bed_a_adb"
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_play
+                - card_firestick_remote_group_play
               variables:
                 ulm_card_remote_group_play_entity: "media_player.amazon_firestick_bed_a_adb"
-                ulm_card_remote_group_play_command_rewind: "input keyevent 89"
-                ulm_card_remote_group_play_command_play: "input keyevent 85"
-                ulm_card_remote_group_play_command_fastforward: "input keyevent 90"
-            - type: custom:button-card
-              template: edge
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_firestick_remote_group_apps
+              variables:
+                ulm_remote_grid_four_by_four_entity: "media_player.amazon_firestick_bed_a_adb"
 
 
   - title: Bed C
@@ -288,8 +193,6 @@ views:
         cards:
           - type: horizontal-stack
             cards:
-            - type: custom:button-card
-              template: edge
             - type: 'custom:button-card'
               template: chip_back
               variables:
@@ -298,95 +201,58 @@ views:
             cards:
             - type: 'custom:button-card'
               template: card_media_player
-              entity: media_player.nvidia_shield_adb_bed_e
+              entity: remote.harmony_hub
               name: Harmony
-              # aspect-ratio: 1/1
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_harmony_actions
+                - card_harmony_remote_group_power
               variables:
-                ulm_card_remote_group_harmony_actions_entity: remote.harmony_hub
+                ulm_card_remote_group_power_entity: remote.harmony_hub
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_power
+                - card_harmony_remote_group_actions
               variables:
-                ulm_card_remote_group_power_entity: media_player.nvidia_shield_adb_bed_e
-            - type: custom:button-card
-              template: edge
+                ulm_card_harmony_remote_group_actions_entity: remote.harmony_hub
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_home
+                - card_harmony_remote_group_home
               variables:
-                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
+                ulm_card_remote_group_home_entity: "remote.harmony_hub"
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: list_item1_item1_item2
-              styles:
-                card:
-                - background-color: var(--primary-background-color)
-              custom_fields:
-                item1:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_arrow_select
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_arrow_select_entity: "media_player.nvidia_shield_adb_bed_e"
-                item2:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_volume
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_volume_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
-          - type: horizontal-stack
-            cards:
-            - type: 'custom:button-card'
-              template: 
-                - card_remote_group_play
+              template: card_harmony_remote_group_arrows_and_volume
               variables:
-                ulm_card_remote_group_play_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
-          - type: horizontal-stack
-            cards:
-            - type: 'custom:button-card'
-              template: 
-                - card_remote_group_numbers
-              variables:
-                ulm_card_remote_group_numbers_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
-          - type: horizontal-stack
-            cards:
-            - type: 'custom:button-card'
-              template: 
-                - card_remote_group_colors
-              variables:
-                ulm_card_remote_group_colors_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
+                ulm_card_remote_group_volume_entity: "media_player.rx_v777_reciever_yamaha_integration_bed_c"
+                ulm_card_remote_group_arrow_select_entity: "remote.harmony_hub"
 
-
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_harmony_remote_group_play
+              variables:
+                ulm_card_remote_group_play_entity: "remote.harmony_hub"
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_harmony_remote_group_numbers
+              variables:
+                ulm_card_remote_group_numbers_entity: "remote.harmony_hub"
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_harmony_remote_group_colors
+              variables:
+                ulm_card_remote_group_colors_entity: "remote.harmony_hub"
 
 
   - title: Bed E
@@ -397,8 +263,6 @@ views:
         cards:
           - type: horizontal-stack
             cards:
-            - type: custom:button-card
-              template: edge
             - type: 'custom:button-card'
               template: chip_back
               variables:
@@ -409,67 +273,95 @@ views:
               template: card_media_player
               entity: media_player.nvidia_shield_adb_bed_e
               name: Nvidia Shield Bed E
-              # aspect-ratio: 1/1
-            - type: custom:button-card
-              template: edge                
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_power
+                - card_shield_remote_group_power
               variables:
                 ulm_card_remote_group_power_entity: media_player.nvidia_shield_adb_bed_e
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_home
+                - card_shield_remote_group_home
               variables:
                 ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: list_item1_item1_item2
-              styles:
-                card:
-                - background-color: var(--primary-background-color)
-              custom_fields:
-                item1:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_arrow_select
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_arrow_select_entity: "media_player.nvidia_shield_adb_bed_e"
-                item2:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_volume
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_volume_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
+              template: card_shield_remote_group_arrows_and_volume
+              variables:
+                ulm_card_remote_group_volume_entity: "media_player.nvidia_shield_adb_bed_e"
+                ulm_card_remote_group_arrow_select_entity: "media_player.nvidia_shield_adb_bed_e"
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_play
+                - card_shield_remote_group_play
               variables:
                 ulm_card_remote_group_play_entity: "media_player.nvidia_shield_adb_bed_e"
-            - type: custom:button-card
-              template: edge
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_shield_remote_group_apps
+              variables:
+                ulm_remote_grid_four_by_four_entity: "media_player.nvidia_shield_adb_bed_e"
 
+  - title: Kitchen
+    icon: mdi:fridge-outline
+    theme: minimalist-mobile
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: chip_back
+              variables:
+                ulm_chip_back_path: /lovelace-minimalist-media/0
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: card_media_player
+              entity: media_player.amazon_fire_tv_kitchen_adb
+              name: Firestick Kitchen
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_firestick_remote_group_power
+              variables:
+                ulm_card_remote_group_power_entity: media_player.amazon_fire_tv_kitchen_adb
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_firestick_remote_group_home
+              variables:
+                ulm_card_remote_group_home_entity: "media_player.amazon_fire_tv_kitchen_adb"
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: card_firestick_remote_group_arrows_and_volume
+              variables:
+                ulm_card_remote_group_volume_entity: "media_player.amazon_fire_tv_kitchen_adb"
+                ulm_card_remote_group_arrow_select_entity: "media_player.amazon_fire_tv_kitchen_adb"
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_firestick_remote_group_play
+              variables:
+                ulm_card_remote_group_play_entity: "media_player.amazon_fire_tv_kitchen_adb"
+          - type: horizontal-stack
+            cards:
+            - type: 'custom:button-card'
+              template: 
+                - card_firestick_remote_group_apps
+              variables:
+                ulm_remote_grid_four_by_four_entity: "media_player.amazon_fire_tv_kitchen_adb"
 
   - title: Apple TV
     icon: mdi:cast-variant
@@ -479,8 +371,6 @@ views:
         cards:
           - type: horizontal-stack
             cards:
-            - type: custom:button-card
-              template: edge
             - type: 'custom:button-card'
               template: chip_back
               variables:
@@ -489,83 +379,33 @@ views:
             cards:
             - type: 'custom:button-card'
               template: card_media_player
-              entity: media_player.
+              entity: media_player.apple_tv_4k_bed_c
               name: Apple TV
-              # aspect-ratio: 1/1
-            - type: custom:button-card
-              template: edge                
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_power
+                - card_apple_tv_remote_group_power
               variables:
                 ulm_card_remote_group_power_entity: media_player.apple_tv_4k_bed_c
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_home
+                - card_apple_tv_remote_group_home
               variables:
                 ulm_card_remote_group_home_entity: "media_player.apple_tv_4k_bed_c"
-            - type: custom:button-card
-              template: edge
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: list_item1_item1_item2
-              styles:
-                card:
-                - background-color: var(--primary-background-color)
-              custom_fields:
-                item1:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_arrow_select
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_arrow_select_entity: "media_player.apple_tv_4k_bed_c"
-                item2:
-                  card:
-                    type: 'custom:button-card'
-                    template: card_remote_group_volume
-                    styles:
-                      card:
-                      - border-radius: var(--border-radius)
-                      - box-shadow: var(--box-shadow)
-                    variables:
-                      ulm_card_remote_group_volume_entity: "media_player.apple_tv_4k_bed_c"
-            - type: custom:button-card
-              template: edge
+              template: card_apple_tv_remote_group_arrows_and_volume
+              variables:
+                ulm_card_remote_group_volume_entity: "media_player.apple_tv_4k_bed_c"
+                ulm_card_remote_group_arrow_select_entity: "media_player.apple_tv_4k_bed_c"
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
-                - card_remote_group_play
+                - card_apple_tv_remote_group_play
               variables:
                 ulm_card_remote_group_play_entity: "media_player.apple_tv_4k_bed_c"
-            - type: custom:button-card
-              template: edge
-          # - type: horizontal-stack
-          #   cards:
-          #   - type: 'custom:button-card'
-          #     template: 
-          #       - card_remote_group_numbers
-          #     variables:
-          #       ulm_card_remote_group_numbers_entity: "media_player.nvidia_shield_adb_bed_e"
-          #   - type: custom:button-card
-          #     template: edge
-          # - type: horizontal-stack
-          #   cards:
-          #   - type: 'custom:button-card'
-          #     template: 
-          #       - card_remote_group_colors
-          #     variables:
-          #       ulm_card_remote_group_colors_entity: "media_player.nvidia_shield_adb_bed_e"
-          #   - type: custom:button-card
-          #     template: edge
