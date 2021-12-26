@@ -143,42 +143,50 @@ spotcast: #default is home account
 
 media_player:
   - platform: androidtv
-    name: NVIDIA Shield Lounge ADB
+    name: "NVIDIA Shield Lounge ADB"
     host: !secret nvidia_shield_lounge_rj45_ip
-    adb_server_ip: !secret ha_rj45_ip
-    adb_server_port: 5037
+    adbkey: "/config/.storage/androidtv_adbkey"
+    device_class: androidtv
+    # adb_server_ip: !secret ha_rj45_ip
+    # adb_server_port: 5037
   - platform: androidtv
-    name: NVidia Shield Bed E ADB
+    name: "NVidia Shield Bed E ADB"
     host: !secret nvidia_shield_bede_rj45_ip
-    adb_server_ip: !secret ha_rj45_ip
-    adb_server_port: 5037
+    adbkey: "/config/.storage/androidtv_adbkey"
+    device_class: androidtv
+    # adb_server_ip: !secret ha_rj45_ip
+    # adb_server_port: 5037
     apps:
       #com.plexapp.mediaserver.smb: "Plex"
-      com.netflix.ninja: "Netflix"
       com.disney.disneyplus: "Disney+"
-      com.plexapp.android: "Plex"
+      # com.plexapp.android: "Plex"
       com.nvidia.bbciplayer: "iPlayer"
       com.pluralsight: "Pluralsight"
-      com.google.android.youtube.tv: "YouTube"
-      com.amazon.amazonvideo.livingroom: "Amazon Prime"
-      com.spotify.tv.android: "Spotify"
+      # com.google.android.youtube.tv: "YouTube"
+      # com.amazon.amazonvideo.livingroom: "Amazon Prime"
+      # com.spotify.tv.android: "Spotify"
       air.ITVMobilePlayer: "ITV Hub"
       com.channel5.my5: "My 5"
+      com.apple.atve.androidtv.appletv: "Apple TV"
     #exclude_unnamed_apps: true
   - platform: androidtv
-    name: Amazon Firestick Bed A ADB
+    name: "Amazon Firestick Bed A ADB"
     host: !secret amazon_fire_stick_beda_rj45_ip
-    adb_server_ip: !secret ha_rj45_ip
-    adb_server_port: 5037
+    adbkey: "/config/.storage/androidtv_adbkey"
+    device_class: firetv
+    # adb_server_ip: !secret ha_rj45_ip
+    # adb_server_port: 5037
   - platform: androidtv
-    name: Amazon Fire Stick Kitchen ADB
+    name: "Amazon Fire Stick Kitchen ADB"
     host: !secret amazon_fire_stick_kitchen_rj45_ip
-    adb_server_ip: !secret ha_rj45_ip
-    adb_server_port: 5037
+    adbkey: "/config/.storage/androidtv_adbkey"
+    device_class: firetv
+    # adb_server_ip: !secret ha_rj45_ip
+    # adb_server_port: 5037
 
   - platform: yamaha
-    name: RX-V777 Reciever Yamaha Integration
-    #entity_id: yamaha_rx_v777_yamaha_network_integration
+    name: "Yamaha RX-V777 Reciever Integration"
+    #entity: "yamaha_rx_v777_yamaha_network_integration"
     host: !secret yamaha_rx_v777_rj45_ip
     zone_ignore:
       - zone_2
@@ -197,7 +205,6 @@ media_player:
       - SERVER
       - TUNER
       - USB
-      - V-AUX
       - iPod (USB)
     source_names:
       AV1: "Nintendo Wii"
@@ -206,6 +213,27 @@ media_player:
       HDMI3: "Xbox One"
       HDMI4: "PlayStation 3"
       HDMI5: "Arcade Machine"
+      V-AUX: "Nintendo Switch"
+
+  # - platform: samsungtv_custom
+  #   name: samsung tv ctl lounge #UE48HU7500T
+  #   host: !secret samsung_tv_lounge_rj45_ip
+  #   port: 8001 #8080
+  #   mac: !secret samsung_tv_lounge_rj45_mac
+  #   timeout: 30
+  #   #sourcelist: '{"PlayStation": "KEY_HDMI1", "RaspberryPi": "KEY_HDMI2", "Chromecast": "KEY_HDMI3"}'
+  #   protocol: ws
+  #   token: d396c8033689999088b250d9fe579297
+  #   id: 07bfa481-0082-1000-b3aa-244b03a8b9b9
+
+  # - platform: samsungtv_custom
+  #   name: samsung tv ctl bed a #UE32F4500
+  #   host: !secret samsung_tv_beda_rj45_ip
+  #   port: 8001
+  #   mac: !secret samsung_tv_beda_rj45_mac
+  #   #sourcelist: '{"PlayStation": "KEY_HDMI1", "RaspberryPi": "KEY_HDMI2", "Chromecast": "KEY_HDMI3"}'
+  #   # applist: "YouTube, Plex, Prime Video, Netflix, Spotify"
+  #   protocol: ctl
 
 binary_sensor:
   - platform: tod
