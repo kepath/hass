@@ -9,9 +9,10 @@ from homeassistant.const import (
     CONF_ID,
     CONF_STATE,
     CONF_TYPE,
+    EVENT_HOMEASSISTANT_START,
     EVENT_STATE_CHANGED,
 )
-from homeassistant.core import callback
+from homeassistant.core import CoreState, callback
 from homeassistant.helpers import entity_platform, trigger
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
@@ -20,6 +21,7 @@ import voluptuous as vol
 
 from . import NodeRedEntity
 from .const import (
+    CONF_CONFIG,
     CONF_DATA,
     CONF_DEVICE_TRIGGER,
     CONF_OUTPUT_PATH,
@@ -94,17 +96,14 @@ class NodeRedSwitch(NodeRedEntity, ToggleEntity):
         super().__init__(hass, config)
         self._message_id = config[CONF_ID]
         self._connection = connection
-        self._state = config.get(CONF_STATE, True)
+
+        self._attr_state = config.get(CONF_STATE, True)
+        self._attr_icon = self._config.get(CONF_ICON, SWITCH_ICON)
 
     @property
     def is_on(self) -> bool:
         """Return the state of the switch."""
-        return self._state
-
-    @property
-    def icon(self):
-        """Return the icon of the sensor."""
-        return self._config.get(CONF_ICON, SWITCH_ICON)
+        return self._attr_state
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn off the switch."""
@@ -137,6 +136,20 @@ class NodeRedSwitch(NodeRedEntity, ToggleEntity):
             )
         )
 
+    @callback
+    def handle_entity_update(self, msg):
+        """Update entity state."""
+        self._attr_state = msg.get(CONF_STATE)
+        super().handle_entity_update(msg)
+
+    @callback
+    def handle_discovery_update(self, msg, connection):
+        """Update entity config."""
+        super().handle_discovery_update(msg, connection)
+        if CONF_REMOVE not in msg:
+            self._attr_icon = msg[CONF_CONFIG].get(CONF_ICON, SWITCH_ICON)
+            self.async_write_ha_state()
+
 
 class NodeRedDeviceTrigger(NodeRedSwitch):
     """Node-RED Device Trigger class."""
@@ -154,19 +167,16 @@ class NodeRedDeviceTrigger(NodeRedSwitch):
         self.remove_device_trigger()
 
     async def add_device_trigger(self):
-        """Validate device trigger."""
+        """Add device trigger."""
 
-        @callback
-        def forward_trigger(event, context=None):
-            """Forward events to websocket."""
-            message = event_message(
-                self._message_id,
-                {"type": EVENT_DEVICE_TRIGGER, "data": event["trigger"]},
-            )
-            self._connection.send_message(
-                json.dumps(message, cls=NodeRedJSONEncoder, allow_nan=False)
+        if self.hass.state == CoreState.running:
+            await self._attach_triggers()
+        else:
+            self._unsub_start = self.hass.bus.async_listen_once(
+                EVENT_HOMEASSISTANT_START, self._attach_triggers
             )
 
+    async def _attach_triggers(self, start_event=None) -> None:
         try:
             trigger_config = await trigger.async_validate_trigger_config(
                 self.hass, [self._trigger_config]
@@ -174,7 +184,7 @@ class NodeRedDeviceTrigger(NodeRedSwitch):
             self._unsubscribe_device_trigger = await trigger.async_initialize_triggers(
                 self.hass,
                 trigger_config,
-                forward_trigger,
+                self.forward_trigger,
                 DOMAIN,
                 DOMAIN,
                 _LOGGER.log,
@@ -183,6 +193,17 @@ class NodeRedDeviceTrigger(NodeRedSwitch):
             _LOGGER.error(
                 f"Error initializing device trigger '{self._node_id}': {str(ex)}",
             )
+
+    @callback
+    def forward_trigger(self, event, context=None):
+        """Forward events to websocket."""
+        message = event_message(
+            self._message_id,
+            {"type": EVENT_DEVICE_TRIGGER, "data": event["trigger"]},
+        )
+        self._connection.send_message(
+            json.dumps(message, cls=NodeRedJSONEncoder, allow_nan=False)
+        )
 
     def remove_device_trigger(self):
         """Remove device trigger."""

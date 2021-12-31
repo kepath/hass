@@ -5,6 +5,7 @@ from homeassistant.components.binary_sensor import (
     DEVICE_CLASSES_SCHEMA as BINARY_SENSOR_DEVICE_CLASSES_SCHEMA,
 )
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
+from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.sensor import (
     DEVICE_CLASSES_SCHEMA as SENSOR_DEVICE_CLASSES_SCHEMA,
 )
@@ -50,11 +51,13 @@ from .const import CONF_ON_ERROR_VALUE_DEFAULT
 from .const import CONF_ON_ERROR_VALUE_LAST
 from .const import CONF_ON_ERROR_VALUE_NONE
 from .const import CONF_PARSER
+from .const import CONF_PICTURE
 from .const import CONF_SELECT
 from .const import CONF_SELECT_LIST
 from .const import CONF_SENSOR_ATTRS
 from .const import CONF_STATE_CLASS
 from .const import DEFAULT_BINARY_SENSOR_NAME
+from .const import DEFAULT_BUTTON_NAME
 from .const import DEFAULT_FORCE_UPDATE
 from .const import DEFAULT_METHOD
 from .const import DEFAULT_PARSER
@@ -126,6 +129,7 @@ SENSOR_SCHEMA = {
     vol.Optional(CONF_STATE_CLASS): SENSOR_STATE_CLASSES_SCHEMA,
     vol.Optional(CONF_ICON): cv.template,
     vol.Optional(CONF_FORCE_UPDATE, default=DEFAULT_FORCE_UPDATE): cv.boolean,
+    vol.Optional(CONF_PICTURE): cv.string,
     **SELECTOR_SCHEMA,
     vol.Optional(CONF_SENSOR_ATTRS): vol.All(
         cv.ensure_list, [vol.Schema(SENSOR_ATTRIBUTE_SCHEMA)]
@@ -138,10 +142,16 @@ BINARY_SENSOR_SCHEMA = {
     vol.Optional(CONF_DEVICE_CLASS): BINARY_SENSOR_DEVICE_CLASSES_SCHEMA,
     vol.Optional(CONF_ICON): cv.template,
     vol.Optional(CONF_FORCE_UPDATE, default=DEFAULT_FORCE_UPDATE): cv.boolean,
+    vol.Optional(CONF_PICTURE): cv.string,
     **SELECTOR_SCHEMA,
     vol.Optional(CONF_SENSOR_ATTRS): vol.All(
         cv.ensure_list, [vol.Schema(SENSOR_ATTRIBUTE_SCHEMA)]
     ),
+}
+
+BUTTON_SCHEMA = {
+    vol.Optional(CONF_NAME, default=DEFAULT_BUTTON_NAME): cv.string,
+    vol.Optional(CONF_UNIQUE_ID): cv.string,
 }
 
 COMBINED_SCHEMA = vol.Schema(
@@ -153,6 +163,9 @@ COMBINED_SCHEMA = vol.Schema(
         ),
         vol.Optional(BINARY_SENSOR_DOMAIN): vol.All(
             cv.ensure_list, [vol.Schema(BINARY_SENSOR_SCHEMA)]
+        ),
+        vol.Optional(BUTTON_DOMAIN): vol.All(
+            cv.ensure_list, [vol.Schema(BUTTON_SCHEMA)]
         ),
     }
 )
