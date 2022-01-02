@@ -26,6 +26,15 @@
 card_harmony_remote_group_actions:
   variables:
     ulm_card_harmony_remote_group_actions_entity:
+    ulm_card_harmony_remote_current_activity: >
+      "[[[
+        var currentActivity = "PowerOff";
+        if (typeof states[variables.ulm_card_harmony_remote_group_actions_entity].attributes.current_activity !== 'undefined'){
+          currentActivity = states[variables.ulm_card_harmony_remote_group_actions_entity].attributes.current_activity;
+        }
+        return currentActivity;
+      ]]]"
+
     ulm_card_harmony_remote_group_actions_activity_01: "Xbox Series X"
     ulm_card_harmony_remote_group_actions_activity_02: "Watch Apple TV"
     ulm_card_harmony_remote_group_actions_activity_03: "Watch Humax TV"
@@ -33,12 +42,12 @@ card_harmony_remote_group_actions:
     ulm_card_harmony_remote_group_actions_activity_05: "Play PS3"
     ulm_card_harmony_remote_group_actions_activity_06: "Spotify Direct"
 
-    ulm_card_harmony_remote_group_actions_haptic_01: "Xbox Series X"
-    ulm_card_harmony_remote_group_actions_haptic_02: "Watch Apple TV"
-    ulm_card_harmony_remote_group_actions_haptic_03: "Watch Humax TV"
-    ulm_card_harmony_remote_group_actions_haptic_04: "Play Wii"
-    ulm_card_harmony_remote_group_actions_haptic_05: "Play PS3"
-    ulm_card_harmony_remote_group_actions_haptic_06: "Spotify Direct"
+    ulm_card_harmony_remote_group_actions_haptic_01: "success"
+    ulm_card_harmony_remote_group_actions_haptic_02: "success"
+    ulm_card_harmony_remote_group_actions_haptic_03: "success"
+    ulm_card_harmony_remote_group_actions_haptic_04: "success"
+    ulm_card_harmony_remote_group_actions_haptic_05: "success"
+    ulm_card_harmony_remote_group_actions_haptic_06: "success"
 
     ulm_card_harmony_remote_group_actions_icon_01: 'mdi:microsoft-xbox'
     ulm_card_harmony_remote_group_actions_icon_02: 'phu:apple-tv-box'
@@ -142,39 +151,44 @@ card_harmony_remote_group_power:
 #   variables:
 #     harmony_activity_0: '[[[ return states('remote.harmony_hub').attributes.devices_list[0] ]]]'
 
-card_harmony_remote_group_home:
+card_harmony_remote_group_home_layout_chooser:
   variables:
     ulm_card_remote_group_home_entity:
-  template: '[[[ return "card_harmony_remote_group_home_poweroff" ]]]'
+    # ulm_card_harmony_remote_layout: >
+    #   "[[[ 
+    #     var currentActivity = 'poweroff';
+    #     if (typeof states[variables.ulm_card_remote_group_home_entity].attributes.current_activity !== 'undefined'){
+    #       switch (states[variables.ulm_card_remote_group_home_entity].attributes.current_activity) {
+    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[0]:
+    #           currentActivity = "0";
+    #           break;
+    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[1]:
+    #           currentActivity = "1";
+    #           break;
+    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[2]:
+    #           currentActivity = "2";
+      #         break;
+      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[3]:
+      #         currentActivity = "3";
+      #         break;
+      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[4]:
+      #         currentActivity = "4";
+      #         break;
+      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[5]:
+      #         currentActivity = "5";
+      #         break;
+      #       default:
+      #         break;
+      #     }
+      #   }
+      #   return 'card_harmony_remote_group_home_layout_' + currentActivity;
+      # ]]]"
   
   
 # card_harmony_remote_group_home_poweroff
-    
+        # return 'card_harmony_remote_group_home_poweroff' 
 
-# var currentActivity = "poweroff";
 
-# if (typeof states[variables.ulm_card_remote_group_home_entity].attributes.current_activity !== 'undefined'){
-#   switch (states[variables.ulm_card_remote_group_home_entity].attributes.current_activity) {
-#     case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[0]:
-#       currentActivity = "0";
-#       break;
-#     case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[1]:
-#       currentActivity = "1";
-#       break;
-#     case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[2]:
-#       currentActivity = "2";
-#       break;
-#     case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[3]:
-#       currentActivity = "3";
-#       break;
-#     case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[4]:
-#       currentActivity = "4";
-#       break;
-#     case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[5]:
-#       currentActivity = "5";
-#       break;
-#   }
-# }
 
 # if (states[variables.ulm_card_remote_group_home_entity].attributes.current_activity == states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[0] ){
 #   var currentActivity =  "0";
@@ -210,7 +224,7 @@ card_harmony_remote_group_home_poweroff:
   #   ulm_card_remote_group_home_color_back: "var(--google-grey)"
   #   ulm_card_remote_group_home_color_home: "var(--google-grey)"
   #   ulm_card_remote_group_home_color_menu: "var(--google-grey)"
-card_harmony_remote_group_home_activity_01:
+card_harmony_remote_group_home:
   template: card_remote_group_home_three_button
   variables:
     ulm_card_remote_group_home_entity:
@@ -2104,27 +2118,27 @@ remote_harmony_activity_button:
   icon: '[[[ return variables.ulm_card_remote_harmony_activity_button_icon ]]]'
   styles:
     icon:
-    - color: >
-        [[[
-            var color = "var(--google-grey)";
-            if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== 'undefined'){
-              if (states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity == variables.ulm_card_remote_harmony_activity_button_activity){
-                var color =  "var(--google-green)";
+      - color: >
+          [[[
+              var color = "var(--google-grey)";
+              if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== 'undefined'){
+                if (states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity == variables.ulm_card_remote_harmony_activity_button_activity){
+                  var color =  "var(--google-green)";
+                }
               }
-            }
-            return color;
-        ]]]
+              return color;
+          ]]]
     img_cell:
-    - background-color: >
-        [[[
-            var color = "rgba(var(--color-grey), 0.2)";
-            if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== 'undefined'){
-              if (states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity == variables.ulm_card_remote_harmony_activity_button_activity){
-                var color =  "rgba(var(--color-green), 0.2)";
+      - background-color: >
+          [[[
+              var color = "rgba(var(--color-grey), 0.2)";
+              if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== 'undefined'){
+                if (states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity == variables.ulm_card_remote_harmony_activity_button_activity){
+                  var color =  "rgba(var(--color-green), 0.2)";
+                }
               }
-            }
-            return color;
-        ]]]
+              return color;
+          ]]]
 
 remote_harmony_standard_button:
   type: 'custom:button-card'
@@ -2254,28 +2268,28 @@ remote_harmony_standard_button:
     ]]]
   styles:
     icon:
-    - color: '[[[ return variables.ulm_card_remote_standard_button_icon_color ]]]'
+      - color: '[[[ return variables.ulm_card_remote_standard_button_icon_color ]]]'
     img_cell:
-    - background-color: >
-        [[[
-            var color = variables.ulm_card_remote_standard_button_background_color;
-            if (variables.ulm_card_remote_standard_button_type == 'mute') {
-              if (typeof states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted !== 'undefined') {
-                if (states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted){
-                  var color = "rgba(var(--color-green), 0.2)";
+      - background-color: >
+          [[[
+              var color = variables.ulm_card_remote_standard_button_background_color;
+              if (variables.ulm_card_remote_standard_button_type == 'mute') {
+                if (typeof states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted !== 'undefined') {
+                  if (states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted){
+                    var color = "rgba(var(--color-green), 0.2)";
+                  }
                 }
               }
-            }
-            if (variables.ulm_card_remote_standard_button_type == 'power') {
-              if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
-                  || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff') {
-                var color = variables.ulm_card_remote_standard_button_background_color;
-              } else {
-                var color = "rgba(var(--color-red), 0.2)";
+              if (variables.ulm_card_remote_standard_button_type == 'power') {
+                if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
+                    || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff') {
+                  var color = variables.ulm_card_remote_standard_button_background_color;
+                } else {
+                  var color = "rgba(var(--color-red), 0.2)";
+                }
               }
-            }
-            return color;
-        ]]]
+              return color;
+          ]]]
 
 remote_standard_button:
   type: 'custom:button-card'
@@ -2348,139 +2362,153 @@ remote_standard_button:
     ]]]
   styles:
     icon:
-    - color: '[[[ return variables.ulm_card_remote_standard_button_icon_color ]]]'
+      - color: '[[[ return variables.ulm_card_remote_standard_button_icon_color ]]]'
     img_cell:
-    - background-color: >
-        [[[
-            var color = variables.ulm_card_remote_standard_button_background_color;
-            if (variables.ulm_card_remote_standard_button_type == 'mute') {
-              if (typeof states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted !== 'undefined') {
-                if (states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted){
-                  var color = "rgba(var(--color-green), 0.2)";
+      - background-color: >
+          [[[
+              var color = variables.ulm_card_remote_standard_button_background_color;
+              if (variables.ulm_card_remote_standard_button_type == 'mute') {
+                if (typeof states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted !== 'undefined') {
+                  if (states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted){
+                    var color = "rgba(var(--color-green), 0.2)";
+                  }
                 }
               }
-            }
-            if (variables.ulm_card_remote_standard_button_type == 'power') {
-              if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
-                  || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff') {
-                var color = variables.ulm_card_remote_standard_button_background_color;
-              } else {
-                var color = "rgba(var(--color-red), 0.2)";
+              if (variables.ulm_card_remote_standard_button_type == 'power') {
+                if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
+                    || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff') {
+                  var color = variables.ulm_card_remote_standard_button_background_color;
+                } else {
+                  var color = "rgba(var(--color-red), 0.2)";
+                }
               }
-            }
-            return color;
-        ]]]
+              return color;
+          ]]]
 
 remote_button_presses:
   type: 'custom:button-card'
   template: widget_icon
   variables:
-    ulm_card_harmony_remote_entity:
-    ulm_card_remote_tap_action: "call-service"
-    ulm_card_remote_tap_action_service:
-    ulm_card_remote_tap_action_command:
-    ulm_card_remote_tap_action_haptic: "none"
-    ulm_card_remote_tap_harmony_device:
-    ulm_card_remote_tap_harmony_delay:
-    ulm_card_remote_double_tap_action: "none"
-    ulm_card_remote_double_tap_action_service:
-    ulm_card_remote_double_tap_action_command:
-    ulm_card_remote_double_tap_action_haptic: "none"
-    ulm_card_remote_double_tap_harmony_device:
-    ulm_card_remote_double_tap_harmony_delay:
-    ulm_card_remote_hold_action: "more-info"
-    ulm_card_remote_hold_action_service:
-    ulm_card_remote_hold_action_command:
-    ulm_card_remote_hold_action_haptic: "none"
-    ulm_card_remote_hold_harmony_device:
-    ulm_card_remote_hold_harmony_delay:
+    var_remote_button_presses:
+      entity:
+      tap_action:
+        entity: '[[[ return var_remote_button_presses.entity ]]]'
+        action: "call-service"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
+      double_tap_action:
+        entity: '[[[ return var_remote_button_presses.entity ]]]'
+        action: "none"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
+      hold_action: 
+        entity: '[[[ return var_remote_button_presses.entity ]]]'
+        action: "more-info"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
   tap_action:
     remote_button_actions:
       type: 'custom:button-card'
       template: widget_icon
       variables:
-        ulm_card_remote_entity:
-        ulm_card_remote_action: '[[[ return variables.ulm_card_remote_tap_action ]]]'
-        ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_tap_action_service ]]]'
-        ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_tap_action_command ]]]'
-        ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_tap_action_haptic ]]]'
-        ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_tap_harmony_device ]]]'
-        ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_tap_harmony_delay ]]]'
+        var_remote_button_actions: '[[[ return var_remote_button_presses.tap_action ]]]'
+        # ulm_card_remote_entity:
+        # ulm_card_remote_action: '[[[ return variables.ulm_card_remote_tap_action ]]]'
+        # ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_tap_action_service ]]]'
+        # ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_tap_action_command ]]]'
+        # ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_tap_action_haptic ]]]'
+        # ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_tap_harmony_device ]]]'
+        # ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_tap_harmony_delay ]]]'
   double_tap_action:
     remote_button_actions:
       type: 'custom:button-card'
       template: widget_icon
       variables:
-        ulm_card_remote_entity:
-        ulm_card_remote_action: '[[[ return variables.ulm_card_remote_double_tap_action ]]]'
-        ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_double_tap_action_service ]]]'
-        ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_double_tap_action_command ]]]'
-        ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_double_tap_action_haptic ]]]'
-        ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_double_tap_harmony_device ]]]'
-        ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_double_tap_harmony_delay ]]]'
+        var_remote_button_actions: '[[[ return var_remote_button_presses.double_tap_action ]]]'
+        # ulm_card_remote_entity:
+        # ulm_card_remote_action: '[[[ return variables.ulm_card_remote_double_tap_action ]]]'
+        # ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_double_tap_action_service ]]]'
+        # ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_double_tap_action_command ]]]'
+        # ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_double_tap_action_haptic ]]]'
+        # ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_double_tap_harmony_device ]]]'
+        # ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_double_tap_harmony_delay ]]]'
   hold_action:
     remote_button_actions:
       type: 'custom:button-card'
       template: widget_icon
       variables:
-        ulm_card_remote_entity:
-        ulm_card_remote_action: '[[[ return variables.ulm_card_remote_hold_action ]]]'
-        ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_hold_action_service ]]]'
-        ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_hold_action_command ]]]'
-        ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_hold_action_haptic ]]]'
-        ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_hold_harmony_device ]]]'
-        ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_hold_harmony_delay ]]]'
+        var_remote_button_actions: '[[[ return var_remote_button_presses.hold_action ]]]'
+        # ulm_card_remote_entity:
+        # ulm_card_remote_action: '[[[ return variables.ulm_card_remote_hold_action ]]]'
+        # ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_hold_action_service ]]]'
+        # ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_hold_action_command ]]]'
+        # ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_hold_action_haptic ]]]'
+        # ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_hold_harmony_device ]]]'
+        # ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_hold_harmony_delay ]]]'
 
 remote_button_actions:
   type: 'custom:button-card'
   template: widget_icon
-  variables:
-    ulm_card_remote_entity:
-    ulm_card_remote_action: 
-    ulm_card_remote_action_service:
-    ulm_card_remote_action_command:
-    ulm_card_remote_action_haptic: "success"
-    ulm_card_remote_harmony_device:
-    ulm_card_remote_harmony_delay: 0.6
+  variables: 
+    var_remote_button_actions:
+    # ulm_card_remote_entity:
+    # ulm_card_remote_action: 
+    # ulm_card_remote_action_service:
+    # ulm_card_remote_action_command:
+    # ulm_card_remote_action_haptic: "success"
+    # ulm_card_remote_harmony_device:
+    # ulm_card_remote_harmony_delay: 0.6
   action: >
-    {% if variables.ulm_card_remote_action == "call-service" %}
-      {% if variables.ulm_card_remote_action_service.startswith("androidtv") %}
+    {% if variables.var_remote_button_actions.action == "call-service" %}
+      {% if variables.var_remote_button_actions.service.startswith("androidtv") %}
         action: call-service
         service: androidtv.adb_command
         service_data:
-          command: '[[[ return variables.ulm_card_remote_action_command ]]]'
-          entity_id: '[[[ return variables.ulm_card_remote_entity ]]]'
-      {% elif variables.ulm_card_remote_action_service.startswith("media") %}
+          command: '[[[ return variables.var_remote_button_actions.command ]]]'
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+      {% elif variables.var_remote_button_actions.service.startswith("media") %}
         service: media_player.play_media
         data:
-          entity_id: '[[[ return variables.ulm_card_remote_entity ]]]'
-          media_content_id: '[[[ return variables.ulm_card_remote_action_command ]]]'
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+          media_content_id: '[[[ return variables.var_remote_button_actions.command ]]]'
           media_content_type: "send_key"
-      {% elif variables.ulm_card_remote_action_service.startswith("remote") %}
+      {% elif variables.var_remote_button_actions.service.startswith("remote") %}
         service: remote.send_command
         target:
-          entity_id: '[[[ return variables.ulm_card_remote_entity ]]]'
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
         data:
           command:
-            - '[[[ return variables.ulm_card_remote_action_command ]]]'
-          device: '[[[ return variables.ulm_card_remote_harmony_device ]]]'
-          delay_secs: '[[[ return variables.ulm_card_remote_harmony_delay ]]]'
+            - '[[[ return variables.var_remote_button_actions.command ]]]'
+          device: '[[[ return variables.var_remote_button_actions.harmony.device ]]]'
+          delay_secs: '[[[ return variables.var_remote_button_actions.harmony.delay ]]]'
       {% else %}
         "none"
       {% endif%}
-    {% elif variables.ulm_card_remote_action == "more-info" %}
+    {% elif variables.var_remote_button_actions.action == "more-info" %}
       action: more-info
-      entity_id: '[[[ return variables.ulm_card_remote_entity ]]]'
-    {% elif variables.ulm_card_remote_action == "toggle" %}
+      entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+    {% elif variables.var_remote_button_actions.action == "toggle" %}
       action: toggle
-    {% elif variables.ulm_card_remote_action == "navigate" %}
+    {% elif variables.var_remote_button_actions.action == "navigate" %}
       action: navigate  
-      navigation_path: '[[[ return variables.ulm_card_remote_action_command ]]]'
-    {% elif variables.ulm_card_remote_action == "url" %}
+      navigation_path: '[[[ return variables.var_remote_button_actions.command ]]]'
+    {% elif variables.var_remote_button_actions.action == "url" %}
     {% else %}
       "none"
     {% endif %}
-    haptic: '[[[ return variables.ulm_card_remote_action_haptic ]]]'
+    haptic: '[[[ return variables.var_remote_button_actions.haptic ]]]'
 
 ########################################################
 #####  LAYOUTS                                      ####
