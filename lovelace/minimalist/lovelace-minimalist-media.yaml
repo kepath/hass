@@ -215,16 +215,10 @@ views:
             - type: 'custom:button-card'
               template: 
                 - card_harmony_remote_group_actions
+                - variable_definitions_harmony_remote_group_actions
               variables:
-                ulm_card_harmony_remote_group_actions_entity: remote.harmony_hub
-                ulm_card_harmony_remote_group_current_activity: >
-                  "[[[
-                    var currentActivity = 'PowerOff';
-                    if (typeof states[variables.ulm_card_harmony_remote_group_actions_entity].attributes.current_activity !== 'undefined'){
-                      currentActivity = states[variables.ulm_card_harmony_remote_group_actions_entity].attributes.current_activity
-                    }
-                    return currentActivity;
-                  ]]]"
+                var_harmony_remote_group_actions:
+                  entity: 'remote.harmony_hub'
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'

@@ -29,13 +29,7 @@ from homeassistant.helpers.entity import Entity
 from pyunifiprotect.data import NVR, Camera, Event, Light, Sensor
 from pyunifiprotect.utils import utc_now
 
-from .const import (
-    ATTR_EVENT_OBJECT,
-    ATTR_EVENT_SCORE,
-    ATTR_EVENT_THUMB,
-    DOMAIN,
-    RING_INTERVAL,
-)
+from .const import ATTR_EVENT_SCORE, ATTR_EVENT_THUMB, DOMAIN
 from .data import ProtectData
 from .entity import (
     AccessTokenMixin,
@@ -78,7 +72,7 @@ CAMERA_SENSORS: tuple[ProtectBinaryEntityDescription, ...] = (
         device_class=DEVICE_CLASS_OCCUPANCY,
         icon="mdi:doorbell-video",
         ufp_required_field="feature_flags.has_chime",
-        ufp_value="last_ring",
+        ufp_value="is_ringing",
     ),
     ProtectBinaryEntityDescription(
         key=_KEY_DARK,
@@ -250,24 +244,9 @@ class ProtectDeviceBinarySensor(ProtectDeviceEntity, BinarySensorEntity):
         if self.entity_description.ufp_value is None:
             return
 
-        if self.entity_description.key == _KEY_DOORBELL:
-            last_ring = get_nested_attr(self.device, self.entity_description.ufp_value)
-            now = utc_now()
-
-            is_ringing = (
-                False if last_ring is None else (now - last_ring) < RING_INTERVAL
-            )
-            if is_ringing:
-                if self._doorbell_callback is not None:
-                    self._doorbell_callback.cancel()
-                self._doorbell_callback = asyncio.ensure_future(
-                    self._async_wait_for_doorbell(last_ring + RING_INTERVAL)
-                )
-            self._attr_is_on = is_ringing
-        else:
-            self._attr_is_on = get_nested_attr(
-                self.device, self.entity_description.ufp_value
-            )
+        self._attr_is_on = get_nested_attr(
+            self.device, self.entity_description.ufp_value
+        )
 
     @callback
     async def _async_wait_for_doorbell(self, end_time: datetime) -> None:
@@ -276,74 +255,6 @@ class ProtectDeviceBinarySensor(ProtectDeviceEntity, BinarySensorEntity):
             await asyncio.sleep(1)
         _LOGGER.debug("Doorbell callback ended")
         self._async_updated_event()
-
-    @callback
-    def _async_updated_event(self) -> None:
-        self._async_fire_events()
-        super()._async_updated_event()
-
-    @callback
-    def _async_fire_events(self) -> None:
-        """Fire events on ring or motion.
-
-        CORE: Remove this before merging to core.
-        """
-
-        key = self.entity_description.key
-        if key == _KEY_DOORBELL:
-            self._async_fire_doorbell_event()
-        if key == _KEY_MOTION:
-            self._async_fire_motion_event()
-
-    @callback
-    def _async_fire_doorbell_event(self) -> None:
-        """Fire events on ring.
-
-        CORE: Remove this before merging to core.
-        """
-
-        assert isinstance(self.device, Camera)
-        if self._attr_is_on:
-            self.hass.bus.async_fire(
-                f"{DOMAIN}_doorbell",
-                {
-                    "ring": self._attr_is_on,
-                    "entity_id": self.entity_id,
-                },
-            )
-
-    @callback
-    def _async_fire_motion_event(self) -> None:
-        """Fire events on motion.
-
-        CORE: Remove this before merging to core.
-        """
-
-        if isinstance(self.device, Sensor):
-            return
-
-        obj: list[str] | None = None
-        if isinstance(self.device, Camera):
-            is_on = self.device.is_motion_detected
-            if (
-                self.device.is_smart_detected
-                and self.device.last_smart_detect_event is not None
-            ):
-                obj = [
-                    t.value
-                    for t in self.device.last_smart_detect_event.smart_detect_types
-                ]
-        else:
-            is_on = self.device.is_pir_motion_detected
-
-        self.hass.bus.async_fire(
-            f"{DOMAIN}_motion",
-            {
-                "entity_id": self.entity_id,
-                "smart_detect": obj,
-                "motion_on": is_on,
-            },
-        )
 
 
 class ProtectDiskBinarySensor(ProtectNVREntity, BinarySensorEntity):
@@ -414,17 +325,12 @@ class ProtectAccessTokenBinarySensor(ProtectDeviceBinarySensor, AccessTokenMixin
         # Camera motion sensors with object detection
         attrs: dict[str, Any] = {
             **super()._async_update_extra_attrs_from_protect(),
-            ATTR_LAST_TRIP_TIME: self.device.last_motion,
             ATTR_EVENT_SCORE: 0,
-            ATTR_EVENT_OBJECT: None,
             ATTR_EVENT_THUMB: None,
         }
 
         if self._event is None:
             return attrs
-
-        if len(self._event.smart_detect_types) > 0:
-            attrs[ATTR_EVENT_OBJECT] = self._event.smart_detect_types[0].value
 
         if len(self.access_tokens) > 0:
             params = urlencode(

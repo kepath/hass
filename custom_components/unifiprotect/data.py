@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 import collections
+from collections.abc import Generator, Iterable
 from datetime import timedelta
 import logging
-from typing import Any, Generator, Iterable
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
@@ -15,9 +16,10 @@ from pyunifiprotect.data import (
     Event,
     Liveview,
     ModelType,
+    ProtectAdoptableDeviceModel,
     WSSubscriptionMessage,
 )
-from pyunifiprotect.data.base import ProtectAdoptableDeviceModel, ProtectDeviceModel
+from pyunifiprotect.data.base import ProtectDeviceModel
 
 from .const import CONF_DISABLE_RTSP, DEVICES_THAT_ADOPT, DEVICES_WITH_ENTITIES
 
@@ -33,7 +35,7 @@ class ProtectData:
         protect: ProtectApiClient,
         update_interval: timedelta,
         entry: ConfigEntry,
-    ):
+    ) -> None:
         """Initialize an subscriber."""
         super().__init__()
 
@@ -85,18 +87,27 @@ class ProtectData:
 
     async def async_refresh(self, *_: Any, force: bool = False) -> None:
         """Update the data."""
+
+        # if last update was failure, force until success
+        if not self.last_update_success:
+            force = True
+
         try:
-            self._async_process_updates(await self.api.update(force=force))
-            self.last_update_success = True
+            updates = await self.api.update(force=force)
         except NvrError:
             if self.last_update_success:
                 _LOGGER.exception("Error while updating")
             self.last_update_success = False
+            # manually trigger update to mark entities unavailable
+            self._async_process_updates(self.api.bootstrap)
         except NotAuthorized:
             await self.async_stop()
             _LOGGER.exception("Reauthentication required")
             self._entry.async_start_reauth(self._hass)
             self.last_update_success = False
+        else:
+            self.last_update_success = True
+            self._async_process_updates(updates)
 
     @callback
     def _async_process_ws_message(self, message: WSSubscriptionMessage) -> None:
@@ -104,9 +115,13 @@ class ProtectData:
             self.async_signal_device_id_update(message.new_obj.id)
             # trigger update for all Cameras with LCD screens when NVR Doorbell settings updates
             if "doorbell_settings" in message.changed_data:
-                _LOGGER.error(
-                    "Doorbell settings updated. Restart Home Assistant to update Viewport select options"
+                _LOGGER.debug(
+                    "Doorbell messages updated. Updating devices with LCD screens"
                 )
+                self.api.bootstrap.nvr.update_all_messages()
+                for camera in self.api.bootstrap.cameras.values():
+                    if camera.feature_flags.has_lcd_screen:
+                        self.async_signal_device_id_update(camera.id)
         # trigger updates for camera that the event references
         elif isinstance(message.new_obj, Event):
             if message.new_obj.camera is not None:
@@ -115,11 +130,11 @@ class ProtectData:
                 self.async_signal_device_id_update(message.new_obj.light.id)
             elif message.new_obj.sensor is not None:
                 self.async_signal_device_id_update(message.new_obj.sensor.id)
-        # trigger update for all viewports when a liveview updates
+        # alert user viewport needs restart so voice clients can get new options
         elif len(self.api.bootstrap.viewers) > 0 and isinstance(
             message.new_obj, Liveview
         ):
-            _LOGGER.error(
+            _LOGGER.warning(
                 "Liveviews updated. Restart Home Assistant to update Viewport select options"
             )
 
@@ -172,6 +187,7 @@ class ProtectData:
         if not self._subscriptions.get(device_id):
             return
 
+        _LOGGER.debug("Updating device: %s", device_id)
         for update_callback in self._subscriptions[device_id]:
             update_callback()
 

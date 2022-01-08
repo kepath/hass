@@ -67,8 +67,9 @@ homekit:
     include_domains:
     - climate
     - camera
-    - switch
+    # - switch
     - media_player
+    - person
     include_entity_globs:
 #    - switch.adguard*
 #    - switch.wol*
@@ -77,6 +78,10 @@ homekit:
     - sensor.diskstation_drive_*_status
     - sensor.zigbee*
     - binary_sensor.zigbee*
+    - switch.doorbell*
+    - switch.harmony*
+    - switch.smart_surge*
+    - switch.zigbee*
 #    - binary_sensor.*iphone
 #    - binary_sensor.iphone*
 #    - binary_sensor.diskstation*
@@ -130,6 +135,11 @@ spotcast: #default is home account
 #      sp_dc: !secret spotcast_emily_sp_dc
 #      sp_key: !secret spotcast_emily_sp_key
 
+emulated_roku:
+  servers:
+    - name: Home Assistant
+      listen_port: 8060
+      upnp_bind_multicast: false
 #feedreader:
 #  urls:
 #    - https://alerts.home-assistant.io/feed.xml
@@ -252,6 +262,7 @@ octopusagile:
 sensor:
   - platform: "octopusagile"
 
+lovelace_gen:
 lovelace:
   mode: storage
   # Add yaml dashboards

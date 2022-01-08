@@ -19,15 +19,9 @@ from homeassistant.helpers.entity import DeviceInfo, Entity, EntityDescription
 from pyunifiprotect.data.base import ProtectAdoptableDeviceModel
 from pyunifiprotect.data.devices import Camera, Light, Sensor, Viewer
 from pyunifiprotect.data.nvr import NVR
-from pyunifiprotect.data.types import ModelType
+from pyunifiprotect.data.types import ModelType, StateType
 
-from .const import (
-    ATTR_DEVICE_MODEL,
-    DEFAULT_ATTRIBUTION,
-    DEFAULT_BRAND,
-    DOMAIN,
-    EVENT_UPDATE_TOKENS,
-)
+from .const import DEFAULT_ATTRIBUTION, DEFAULT_BRAND, DOMAIN, EVENT_UPDATE_TOKENS
 from .data import ProtectData
 from .models import ProtectRequiredKeysMixin
 from .utils import get_nested_attr
@@ -81,7 +75,7 @@ def async_all_device_entities(
     camera_descs: Sequence[ProtectRequiredKeysMixin] | None = None,
     light_descs: Sequence[ProtectRequiredKeysMixin] | None = None,
     sense_descs: Sequence[ProtectRequiredKeysMixin] | None = None,
-    viewport_descs: Sequence[ProtectRequiredKeysMixin] | None = None,
+    viewer_descs: Sequence[ProtectRequiredKeysMixin] | None = None,
     all_descs: Sequence[ProtectRequiredKeysMixin] | None = None,
 ) -> list[ProtectDeviceEntity]:
     """Generate a list of all the device entities."""
@@ -89,18 +83,18 @@ def async_all_device_entities(
     camera_descs = list(camera_descs or []) + all_descs
     light_descs = list(light_descs or []) + all_descs
     sense_descs = list(sense_descs or []) + all_descs
-    viewport_descs = list(viewport_descs or []) + all_descs
+    viewer_descs = list(viewer_descs or []) + all_descs
 
     return (
         _async_device_entities(data, klass, ModelType.CAMERA, camera_descs)
         + _async_device_entities(data, klass, ModelType.LIGHT, light_descs)
         + _async_device_entities(data, klass, ModelType.SENSOR, sense_descs)
-        + _async_device_entities(data, klass, ModelType.VIEWPORT, viewport_descs)
+        + _async_device_entities(data, klass, ModelType.VIEWPORT, viewer_descs)
     )
 
 
 class ProtectDeviceEntity(Entity):
-    """Base class for unifi protect entities."""
+    """Base class for UniFi protect entities."""
 
     def __init__(
         self,
@@ -147,7 +141,6 @@ class ProtectDeviceEntity(Entity):
         return {
             **attrs,
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
-            ATTR_DEVICE_MODEL: self.device.type,
             **self._extra_state_attributes,
         }
 
@@ -164,8 +157,10 @@ class ProtectDeviceEntity(Entity):
         )
 
     @callback
-    def _async_update_extra_attrs_from_protect(self) -> dict[str, Any]:
-        """Calculate extra state attributes."""
+    def _async_update_extra_attrs_from_protect(  # pylint: disable=no-self-use
+        self,
+    ) -> dict[str, Any]:
+        """Calculate extra state attributes. Primarily for subclass to override."""
         return {}
 
     @callback
@@ -177,7 +172,7 @@ class ProtectDeviceEntity(Entity):
             self.device = devices[self.device.id]
 
         self._attr_available = (
-            self.data.last_update_success and self.device.is_connected
+            self.data.last_update_success and self.device.state == StateType.CONNECTED
         )
         self._extra_state_attributes = self._async_update_extra_attrs_from_protect()
 
@@ -242,7 +237,7 @@ class AccessTokenMixin(Entity):
         return self.data.async_get_or_create_access_tokens(self.entity_id)
 
     @callback
-    def _async_update_and_write_token(self):
+    def _async_update_and_write_token(self) -> None:
         _LOGGER.debug("Updating access tokens for %s", self.entity_id)
         self.async_update_token()
         self.async_write_ha_state()
@@ -255,7 +250,7 @@ class AccessTokenMixin(Entity):
         )
 
     @callback
-    def _trigger_update_tokens(self, *args, **kwargs):
+    def _trigger_update_tokens(self, *args: Any, **kwargs: Any) -> None:
         assert isinstance(self, ProtectDeviceEntity)
         async_dispatcher_send(
             self.hass,
