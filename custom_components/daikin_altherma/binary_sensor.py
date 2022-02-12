@@ -1,5 +1,4 @@
 import logging
-
 from homeassistant.components.binary_sensor import BinarySensorEntity, DEVICE_CLASS_PROBLEM
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
@@ -14,18 +13,20 @@ async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Daikin climate based on config_entry."""
     api = hass.data[DOMAIN].get(entry.entry_id)
     coordinator = hass.data[DOMAIN]['coordinator']
-    async_add_entities([
-        AlthermaUnitProblemSensor(
+    entities = []
+    if api.space_heating_device_info is not None:
+        entities.append(AlthermaUnitProblemSensor(
             coordinator, api, 'Space Heating Unit State',
             api.space_heating_device_info,
-            'SpaceHeating'
-        ),
-        AlthermaUnitProblemSensor(
+            'SpaceHeating'))
+
+    if api.HWT_device_info is not None:
+        entities.append(AlthermaUnitProblemSensor(
             coordinator, api, 'Hot Water Tank State',
             api.HWT_device_info,
             'DomesticHotWaterTank'
-        )
-    ], update_before_add=False)
+        ))
+    async_add_entities(entities, update_before_add=False)
 
 
 class AlthermaUnitProblemSensor(BinarySensorEntity, CoordinatorEntity):
@@ -57,10 +58,7 @@ class AlthermaUnitProblemSensor(BinarySensorEntity, CoordinatorEntity):
     def _is_problem_state(self):
         unit_status = self._api.status[f'function/{self._unit_ref}']
         states = unit_status['states'].copy()
-        #max_sum_value = 0
         # Not a problem if we are in weather dependent state
-        #if 'WeatherDependentState' in states and states['WeatherDependentState'] is True:
-        #    max_sum_value = 1
         if 'WeatherDependentState' in states:
             del states['WeatherDependentState']
         values = list(states.values())

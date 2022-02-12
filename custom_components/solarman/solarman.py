@@ -1,6 +1,7 @@
 import socket
+import yaml
 from homeassistant.util import Throttle
-
+from datetime import datetime
 from .parser import ParameterParser
 from .const import *
 
@@ -17,6 +18,10 @@ class Inverter:
         self._host = host
         self._port = port
         self._current_val = None
+        self.status_connection = "Disconnected"
+        self.status_lastUpdate = "N/A"
+        with open(self.path +'parameters.yaml') as f:
+            self.parameter_definition = yaml.full_load(f) 
 
     def modbus(self, data):
         POLY = 0xA001
@@ -77,10 +82,13 @@ class Inverter:
             sock.connect((self._host, self._port))
             sock.sendall(request) # Request param 0x3B up to 0x71
             raw_msg = sock.recv(1024)
+            self.status_lastUpdate = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+            self.status_connection = "Connected"
             params.parse(raw_msg, start, length) 
             del raw_msg
         except:
             print ('Could not connect to the inverter on %s:%s', self._host, self._port)
+            self.status_connection = "Disconnected"
         finally:
             sock.close()
             
@@ -94,19 +102,17 @@ class Inverter:
 
 
     def get_statistics(self):
-        params = ParameterParser(self.path)
-        self.send_request (params, 0x0003, 0x000E)
-        # Gap from 0x00F to 0x003A
-        self.send_request (params, 0x003B, 0x0070)
-        # There is a gap from 0x0070 to 0x0096
-        self.send_request (params, 0x0096, 0x00C3)
+        params = ParameterParser(self.parameter_definition)
+        for request in self.parameter_definition['requests']:
+            start = request['start']
+            end= request['end']
+            self.send_request(params, start, end)
         
-        self.send_request (params, 0x00f4, 0x00f8)        
         self._current_val = params.get_result()
 
     def get_current_val(self):
         return self._current_val
 
     def get_sensors(self):
-        params = ParameterParser(self.path)
+        params = ParameterParser(self.parameter_definition)
         return params.get_sensors ()
