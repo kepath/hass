@@ -112,7 +112,7 @@ sensor:
       friendly_name: "VPN eth0 Out Speed"
       unique_id: vpn_eth0_out_mbps
     vpn_eth1_in_octets_snmp_mbps:
-      icon_template: mdi:access-point-network
+      icon_template: mdi:access-point-network to
       value_template:  "{{ [((states('sensor.vpn_eth1_in_octets_per_second_snmp_calc')|float*8)/1000000)|round(2),0]|max }}"
       unit_of_measurement: 'Mbps'
       friendly_name: "VPN eth1 In Speed"
@@ -140,36 +140,42 @@ sensor:
 - platform: statistics
   entity_id: sensor.vpn_eth0_in_octets_snmp_mbps
   name: VPN eth0 In Octets Mbps Stats Calc
+  state_characteristic: mean
   sampling_size: 300 #minimum 10 minutes
   max_age: 
     hours: 24
 - platform: statistics
   entity_id: sensor.vpn_eth0_out_octets_snmp_mbps
   name: VPN eth0 Out Octets Mbps Stats Calc
+  state_characteristic: mean
   sampling_size: 300 #minimum 10 minutes
   max_age: 
     hours: 24
 - platform: statistics
   entity_id: sensor.vpn_eth1_in_octets_snmp_mbps
   name: VPN eth1 In Octets Mbps Stats Calc
+  state_characteristic: mean
   sampling_size: 300 #minimum 10 minutes
   max_age: 
     hours: 24
 - platform: statistics
   entity_id: sensor.vpn_eth1_out_octets_snmp_mbps
   name: VPN eth1 Out Octets Mbps Stats Calc
+  state_characteristic: mean
   sampling_size: 300 #minimum 10 minutes
   max_age: 
     hours: 24
 - platform: statistics
   entity_id: sensor.vpn_tun0_in_octets_snmp_mbps
   name: VPN tun0 In Octets Mbps Stats Calc
+  state_characteristic: mean
   sampling_size: 300 #minimum 10 minutes
   max_age: 
     hours: 24
 - platform: statistics
   entity_id: sensor.vpn_tun0_out_octets_snmp_mbps
   name: VPN tun0 Out Octets Mbps Stats Calc
+  state_characteristic: mean
   sampling_size: 300 #minimum 10 minutes
   max_age: 
     hours: 24
