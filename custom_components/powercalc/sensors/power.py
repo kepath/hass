@@ -4,6 +4,7 @@ import logging
 from decimal import Decimal
 from typing import Optional
 
+import homeassistant.helpers.entity_registry as er
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, SensorEntity
 from homeassistant.const import (
@@ -41,6 +42,7 @@ from custom_components.powercalc.const import (
     CONF_MODEL,
     CONF_MULTIPLY_FACTOR,
     CONF_MULTIPLY_FACTOR_STANDBY,
+    CONF_POWER_SENSOR_ID,
     CONF_POWER_SENSOR_NAMING,
     CONF_POWER_SENSOR_PRECISION,
     CONF_STANDBY_POWER,
@@ -70,6 +72,23 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def create_power_sensor(
+    hass: HomeAssistantType,
+    sensor_config: dict,
+    source_entity: SourceEntity,
+    discovery_info: DiscoveryInfoType | None = None,
+) -> PowerSensor:
+    """Create the power sensor based on powercalc sensor configuration"""
+
+    if CONF_POWER_SENSOR_ID in sensor_config:
+        # Use an existing power sensor, only create energy sensors / utility meters
+        return await create_real_power_sensor(hass, sensor_config)
+
+    return await create_virtual_power_sensor(
+        hass, sensor_config, source_entity, discovery_info
+    )
+
+
+async def create_virtual_power_sensor(
     hass: HomeAssistantType,
     sensor_config: dict,
     source_entity: SourceEntity,
@@ -167,6 +186,26 @@ async def create_power_sensor(
     )
 
 
+async def create_real_power_sensor(
+    hass: HomeAssistantType, sensor_config: dict
+) -> RealPowerSensor:
+    """Create reference to an existing power sensor"""
+
+    power_sensor_id = sensor_config.get(CONF_POWER_SENSOR_ID)
+    unique_id = sensor_config.get(CONF_UNIQUE_ID)
+    device_id = None
+    ent_reg = er.async_get(hass)
+    entity_entry = ent_reg.async_get(power_sensor_id)
+    if entity_entry:
+        if not unique_id:
+            unique_id = entity_entry.unique_id
+        device_id = entity_entry.device_id
+
+    return RealPowerSensor(
+        entity_id=power_sensor_id, device_id=device_id, unique_id=unique_id
+    )
+
+
 def select_calculation_mode(config: dict) -> Optional[str]:
     """Select the calculation mode"""
     config_mode = config.get(CONF_MODE)
@@ -238,7 +277,7 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
             """Handle for state changes for dependent sensors."""
             new_state = event.data.get("new_state")
 
-            await self._update_power_sensor(new_state)
+            await self._update_power_sensor(self._source_entity, new_state)
 
         async def home_assistant_startup(event):
             """Add listeners and get initial state."""
@@ -253,7 +292,7 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
             for entity_id in tracked_entities:
                 new_state = self.hass.states.get(entity_id)
 
-                await self._update_power_sensor(new_state)
+                await self._update_power_sensor(entity_id, new_state)
 
         @callback
         def async_update(event_time=None):
@@ -266,22 +305,19 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
             EVENT_HOMEASSISTANT_START, home_assistant_startup
         )
 
-    async def _update_power_sensor(self, state) -> bool:
+    async def _update_power_sensor(self, trigger_entity_id: str, state) -> bool:
         """Update power sensor based on new dependant entity state."""
         if (
             state is None
             or state.state == STATE_UNKNOWN
             or (not self._ignore_unavailable_state and state.state == STATE_UNAVAILABLE)
         ):
+            _LOGGER.debug("%s: Source entity has an invalid state, setting power sensor to unavailable", trigger_entity_id)
             self._power = None
-        else:
-            self._power = await self.calculate_power(state)
-
-        if self._power is None:
             self.async_write_ha_state()
             return False
-
-        self._power = round(self._power, self._rounding_digits)
+        
+        self._power = await self.calculate_power(state)
 
         _LOGGER.debug(
             '%s: State changed to "%s". Power:%s',
@@ -289,6 +325,12 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
             state.state,
             self._power,
         )
+
+        if self._power is None:
+            self.async_write_ha_state()
+            return False
+
+        self._power = round(self._power, self._rounding_digits)
 
         self.async_write_ha_state()
         return True
@@ -308,7 +350,7 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
             return Decimal(standby_power)
 
         power = await self._power_calculator.calculate(state)
-        if not power:
+        if power is None:
             return None
 
         if self._multiply_factor:
@@ -350,10 +392,22 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
 class RealPowerSensor(PowerSensor):
     """Contains a reference to a existing real power sensor entity"""
 
-    def __init__(self, entity_id: str):
+    def __init__(self, entity_id: str, device_id: str = None, unique_id: str = None):
         self._entity_id = entity_id
+        self._device_id = device_id
+        self._unique_id = unique_id
 
     @property
-    def entity_id(self):
+    def entity_id(self) -> str:
         """Return the name of the sensor."""
         return self._entity_id
+
+    @property
+    def device_id(self) -> str:
+        """Return the device_id of the sensor."""
+        return self._device_id
+
+    @property
+    def unique_id(self) -> str:
+        """Return the unique_id of the sensor."""
+        return self._unique_id
