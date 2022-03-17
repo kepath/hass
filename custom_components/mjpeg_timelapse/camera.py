@@ -22,7 +22,11 @@ from homeassistant.components.camera import (
 )
 from homeassistant.components.camera.const import DOMAIN as CAMERA_DOMAIN
 
-from homeassistant.const import CONF_NAME
+from homeassistant.const import (
+    CONF_NAME,
+    CONF_USERNAME,
+    CONF_PASSWORD,
+)
 
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import TemplateError
@@ -41,7 +45,10 @@ from .const import (
     CONF_QUALITY,
     CONF_LOOP,
     CONF_HEADERS,
+    CONF_PAUSED,
     SERVICE_CLEAR_IMAGES,
+    SERVICE_PAUSE_RECORDING,
+    SERVICE_RESUME_RECORDING,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -61,6 +68,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_QUALITY, default=75): vol.All(vol.Coerce(int), vol.Range(min=1, max=100)),
         vol.Optional(CONF_LOOP, default=True): cv.boolean,
         vol.Optional(CONF_HEADERS, default={}): dict,
+        vol.Optional(CONF_USERNAME): str,
+        vol.Optional(CONF_PASSWORD): str,
     }
 )
 
@@ -76,6 +85,16 @@ async def async_setup_entry(hass, entry, async_add_entities):
         {},
         "clear_images",
     )
+    platform.async_register_entity_service(
+        SERVICE_PAUSE_RECORDING,
+        {},
+        "pause_recording",
+    )
+    platform.async_register_entity_service(
+        SERVICE_RESUME_RECORDING,
+        {},
+        "resume_recording",
+    )
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
@@ -87,6 +106,16 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         SERVICE_CLEAR_IMAGES,
         {},
         "clear_images",
+    )
+    platform.async_register_entity_service(
+        SERVICE_PAUSE_RECORDING,
+        {},
+        "pause_recording",
+    )
+    platform.async_register_entity_service(
+        SERVICE_RESUME_RECORDING,
+        {},
+        "resume_recording",
     )
 
 
@@ -110,9 +139,17 @@ class MjpegTimelapseCamera(Camera):
         self._attr_supported_features = SUPPORT_ON_OFF
         self._attr_loop = device_info.get(CONF_LOOP, False)
         self._attr_headers = device_info.get(CONF_HEADERS, {})
+        self._attr_username = device_info.get(CONF_USERNAME, {})
+        self._attr_password = device_info.get(CONF_PASSWORD, {})
+        self._attr_is_paused = device_info.get(CONF_PAUSED, False)
 
         if self._attr_is_on == True:
             self.start_fetching()
+
+    @property
+    def should_poll(self):
+        """Return false for should poll."""
+        return False
 
     @property
     def icon(self):
@@ -160,13 +197,29 @@ class MjpegTimelapseCamera(Camera):
         return self._attr_headers
 
     @property
+    def username(self):
+        """Return the basic auth username."""
+        return self._attr_username
+
+    @property
+    def password(self):
+        """Return the basic auth password."""
+        return self._attr_password
+
+    @property
+    def is_paused(self):
+        """Returns whether recording is paused."""
+        return self._attr_is_paused
+
+    @property
     def is_recording(self):
         """Indicate whether recording or not."""
         return self._fetching_listener is not None
 
     def turn_on(self):
         """Turn on the camera."""
-        self.start_fetching()
+        if not self.is_paused:
+            self.start_fetching()
         self._attr_is_on = True
 
     def turn_off(self):
@@ -198,15 +251,31 @@ class MjpegTimelapseCamera(Camera):
             self._fetching_listener()
             self._fetching_listener = None
 
+    def pause_recording(self):
+        """Pause recording images."""
+        self.stop_fetching()
+        self._attr_is_paused = True
+        self.schedule_update_ha_state()
+
+    def resume_recording(self):
+        """Pause recording images."""
+        self.start_fetching()
+        self._attr_is_paused = False
+        self.schedule_update_ha_state()
+
     async def fetch_image(self, _time):
         headers = {**self.headers}
         session = async_get_clientsession(self.hass)
+        auth = None
 
         if self.last_modified:
             headers["If-Modified-Since"] = self.last_modified
 
+        if self.username is not None:
+            auth = aiohttp.BasicAuth(self.username, self.password, 'utf-8')
+
         try:
-            async with session.get(self.image_url, timeout=5, headers=headers) as res:
+            async with session.get(self.image_url, timeout=5, headers=headers, auth=auth) as res:
                 res.raise_for_status()
                 self._attr_available = True
 
@@ -226,9 +295,9 @@ class MjpegTimelapseCamera(Camera):
                 await self.hass.async_add_executor_job(self.save_image, str(int(self.last_updated)), data)
 
         except OSError as err:
-            _LOGGER.error("Can't write image to file: %s", err)
+            _LOGGER.error("Can't write image for '%s' to file: %s", self.name, err)
         except (asyncio.TimeoutError, aiohttp.ClientError) as err:
-            _LOGGER.error("Failed to fetch image, %s", type(err))
+            _LOGGER.error("Failed to fetch image for '%s': %s", self.name, err)
             self._attr_available = False
 
         self.async_write_ha_state()

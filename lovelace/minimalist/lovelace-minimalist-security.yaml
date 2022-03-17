@@ -122,6 +122,34 @@ views:
         - type: custom:button-card
           template: edge
 
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: edge
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.nest_protect_bottom_floor_occupancy
+          show_last_changed: true
+          name: Nest Bottom
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.nest_protect_middle_floor_occupancy
+          show_last_changed: true
+          name: Nest Middle
+        - type: 'custom:button-card'
+          template: card_binary_sensor
+          variables:
+            - ulm_card_binary_sensor_alert: true
+          entity: binary_sensor.nest_protect_top_floor_occupancy
+          show_last_changed: true
+          name: Nest Top
+        - type: custom:button-card
+          template: edge
+
   - title: Camera's
     icon: mdi:cctv
     theme: minimalist-mobile
