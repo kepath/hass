@@ -1,6 +1,8 @@
+from asyncio.log import logger
+from calendar import c
 import datetime
 from dataclasses import dataclass
-from typing import Dict, List, Tuple
+from typing import Dict
 
 import appdaemon.plugins.hass.hassapi as hass
 
@@ -28,7 +30,6 @@ class Climate(hass.Hass):
         except KeyError:
             self.log("missing required argument: thermostat")
             raise
-        self.mode_switching_enabled = self.args.get("mode_switching_enabled", False)
 
         try:
             self.prefs = Preferences.from_args(self.args["preferences"])
@@ -46,6 +47,11 @@ class Climate(hass.Hass):
             raise
 
         self.run_minutely(self.temperature_check, datetime.time(0, 0, 0))
+        self.open_close_sensors = self.args.get("open_close_sensors", {})
+        self.log(f"open_close_sensors: {self.open_close_sensors}")
+        for sensor in self.open_close_sensors:
+            self.listen_state(callback=self.open_close_callback, entity_id=sensor)
+        self.climate_off_timeout = self.parse_time(self.args.get("climate_off_timeout", "00:30:00"))
 
     @property
     def outside_temperature(self) -> float:
@@ -53,17 +59,54 @@ class Climate(hass.Hass):
 
     @property
     def max_temperature(self) -> int:
-        return int(self.args.get("max_temperature", 80))
+        try:
+            return int(float(self.get_state(self.args.get("max_temperature"))))
+        except Exception as e:
+            self.log("Error getting max temp, using default of 80", e)
+            return 80
 
     @property
     def min_temperature(self) -> int:
-        return int(self.args.get("min_temperature", 60))
+        try:
+            return int(float(self.get_state(self.args.get("min_temperature"))))
+        except Exception:
+            self.log("Error getting min temp. Using default of 55")
+            return 55
 
     @property
     def thermostat_temperature(self) -> int:
         return int(self.get_state(
-                self.thermostat, attribute="current_temperature"
+            self.thermostat, attribute="current_temperature"
         ))
+
+    @property
+    def mode_switching_enabled(self) -> bool:
+        try:
+            return bool(self.get_state(self.args.get("mode_switching_enabled")))
+        except Exception as e:
+            self.log("Error getting mode switching option, defaulting to false.", e)
+            return False
+
+    def open_close_callback(self, entity, attribute, old, new, kwargs):
+        self.log(f"Running open_close_callback, new: {new}, old: {old}, entity: {entity}")
+        if old == new:
+            return
+
+        if new == "open":
+            self.turn_off_climate()
+        elif new == "closed":
+            self.turn_on_climate()
+        else:
+            self.log(f"Unknown state: {new}")
+
+    def turn_off_climate(self, kwargs=None):
+        self.log("Turning climate off")
+        self.call_service("climate/turn_off")
+        self.run_in(self.turn_on_climate, self.open_close_callback)
+
+    def turn_on_climate(self, kwargs=None):
+        self.log("Turning climate on")
+        self.call_service("climate/turn_on")
 
     def temperature_check(self, kwargs):
         self.log("Checking temperature")
@@ -113,7 +156,7 @@ class Climate(hass.Hass):
             f"adj_temp: {temp_to_set}, thermostat_temp: {thermostat_temp}, current_outside_temp: {current_outside_temp}"
         )
 
-        if target_area_temp > current_outside_temp:
+        if target_area_temp > current_outside_temp and target_area_temp < temp_to_set:
             mode = "heat"
         else:
             mode = "cool"
@@ -145,9 +188,13 @@ class Climate(hass.Hass):
             temps = []
             for x in v["sensors"]:
                 inside_temp = self.get_state(x)
+                if not inside_temp:
+                    logger.warn(f"{inside_temp} was {inside_temp} which cannot be parsed.")
+                    continue
+
                 try:
                     temps.append(float(inside_temp))
-                except ValueError:
+                except (ValueError, TypeError):
                     self.log(f"could not parse {inside_temp}")
 
             if temps:
