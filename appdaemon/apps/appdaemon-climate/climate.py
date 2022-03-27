@@ -1,5 +1,4 @@
 from asyncio.log import logger
-from calendar import c
 import datetime
 from dataclasses import dataclass
 from typing import Dict
@@ -92,9 +91,9 @@ class Climate(hass.Hass):
         if old == new:
             return
 
-        if new == "open":
+        if new == "open" or new == "on":
             self.turn_off_climate()
-        elif new == "closed":
+        elif new == "closed" or new == "off":
             self.turn_on_climate()
         else:
             self.log(f"Unknown state: {new}")
@@ -156,7 +155,7 @@ class Climate(hass.Hass):
             f"adj_temp: {temp_to_set}, thermostat_temp: {thermostat_temp}, current_outside_temp: {current_outside_temp}"
         )
 
-        if target_area_temp > current_outside_temp and target_area_temp < temp_to_set:
+        if target_area_temp > current_outside_temp and target_area_temp > temp_to_set:
             mode = "heat"
         else:
             mode = "cool"
