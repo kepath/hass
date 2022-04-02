@@ -5,34 +5,117 @@ views:
     icon: mdi:devices
     theme: minimalist-mobile
     cards:
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: chip_back
-          variables:
-            ulm_chip_back_path: /lovelace-minimalist
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
+      - type: custom:button-card
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /lovelace-minimalist
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/1
+          ulm_card_navigate_title: Printer
+          ulm_card_navigate_icon: mdi:printer
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/2
+          ulm_card_navigate_title: NAS (UPS)
+          ulm_card_navigate_icon: mdi:nas
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/3
+          ulm_card_navigate_title: Arcade Machine
+          ulm_card_navigate_icon: mdi:controller-classic
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/4
+          ulm_card_navigate_title: Big PC
+          ulm_card_navigate_icon: mdi:safety-goggles
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/5
+          ulm_card_navigate_title: Ju
+          ulm_card_navigate_icon: mdi:alpha-j-box-outline
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/6
+          ulm_card_navigate_title: Dan
+          ulm_card_navigate_icon: mdi:alpha-d-box
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/7
+          ulm_card_navigate_title: Emily
+          ulm_card_navigate_icon: mdi:alpha-e-box-outline
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/8
+          ulm_card_navigate_title: Kev
+          ulm_card_navigate_icon: mdi:alpha-k-box
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/9
+          ulm_card_navigate_title: VPN
+          ulm_card_navigate_icon: mdi:security-network
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/10
+          ulm_card_navigate_title: Apple TV
+          ulm_card_navigate_icon: mdi:cast-variant
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/11
+          ulm_card_navigate_title: XBox
+          ulm_card_navigate_icon: mdi:microsoft-xbox
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace-minimalist-devices/12
+          ulm_card_navigate_title: PlayStation 3
+          ulm_card_navigate_icon: mdi:sony-playstation
+      - type: custom:button-card
+        template: edge
   - title: Printer
     icon: mdi:printer
     theme: minimalist-mobile
     cards:
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: chip_back
-          variables:
-            ulm_chip_back_path: /lovelace-minimalist
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
+      - type: custom:button-card
+        template: edge
+      - type: 'custom:button-card'
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /lovelace-minimalist-devices
+      - type: custom:button-card
+        template: custom_card_mpse_printer
+        entity: sensor.mfc_j870dw_status
+        variables:
+          ulm_card_printer_name: 'Brother MFC-J870DW'
+          ulm_card_printer_black_name: sensor.mfc_j870dw_black_ink_remaining
+          ulm_card_printer_yellow_name: sensor.mfc_j870dw_yellow_ink_remaining
+          ulm_card_printer_cyan_name: sensor.mfc_j870dw_cyan_ink_remaining
+          ulm_card_printer_magenta_name: sensor.mfc_j870dw_magenta_ink_remaining
+      - type: 'custom:button-card'
+        template: card_generic_swap
+        entity: sensor.mfc_j870dw_page_counter
+      - type: 'custom:button-card'
+        template: card_generic_swap
+        entity: sensor.mfc_j870dw_b_w_counter
+      - type: 'custom:button-card'
+        template: card_generic_swap
+        entity: sensor.mfc_j870dw_color_counter
+      - type: 'custom:button-card'
+        template: card_generic_swap
+        entity: sensor.mfc_j870dw_uptime
+      - type: custom:button-card
+        template: edge
   - title: NAS (UPS)
     icon: mdi:nas
     theme: minimalist-mobile
@@ -44,7 +127,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -60,7 +143,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -76,7 +159,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -92,7 +175,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -108,7 +191,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -124,7 +207,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -140,7 +223,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -156,7 +239,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -172,7 +255,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -188,7 +271,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card
@@ -204,7 +287,7 @@ views:
         - type: 'custom:button-card'
           template: chip_back
           variables:
-            ulm_chip_back_path: /lovelace-minimalist
+            ulm_chip_back_path: /lovelace-minimalist-devices
       - type: horizontal-stack
         cards:
         - type: custom:button-card

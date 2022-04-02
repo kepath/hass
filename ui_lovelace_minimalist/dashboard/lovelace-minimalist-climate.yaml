@@ -63,86 +63,140 @@ views:
           template: chip_back
           variables:
             ulm_chip_back_path: /lovelace-minimalist
+            
       - type: vertical-stack
         cards:
-          - type: custom:mini-climate
+        - type: custom:button-card
+          template: edge
+        - type: custom:button-card
+          template: custom_card_httpedo13_thermostat_with_buttons
+          variables:
             entity: climate.nest_bottom_floor
-            icon: mdi:home-floor-g
-            toggle:
-              hide: true
-            temperature:
-              unit: '°C'
+            name: Nest Ground Floor
+
+
+        - type: custom:mini-climate
+          entity: climate.nest_bottom_floor
+          icon: mdi:home-floor-g
+          toggle:
+            hide: true
+          temperature:
+            unit: '°C'
+            round: 1
+            # use an external temperature sensor
+            source:
+              entity: sensor.nest_bottom_floor_temperature
+          secondary_info:
+            icon: mdi:tune-vertical
+
+          indicators:
+            humidity:
+              icon: mdi:water-percent
+              unit: '%'
               round: 1
-              # use an external temperature sensor
               source:
-                entity: sensor.nest_bottom_floor_temperature
-            secondary_info:
-              icon: mdi:tune-vertical
+                entity: sensor.nest_bottom_floor_humidity
 
-            indicators:
-              humidity:
-                icon: mdi:water-percent
-                unit: '%'
-                round: 1
-                source:
-                  entity: sensor.nest_bottom_floor_humidity
+        - type: custom:mini-climate
+          entity: climate.nest_middle_floor
+          icon: mdi:home-floor-1
+          temperature:
+            unit: '°C'
+            round: 1
+            # use an external temperature sensor
+            source:
+              entity: sensor.nest_middle_floor_temperature
+          secondary_info:
+            icon: mdi:tune-vertical
+          indicators:
+            humidity:
+              icon: mdi:water-percent
+              unit: '%'
+              round: 1
+              source:
+                entity: sensor.nest_middle_floor_humidity
 
-          - type: custom:mini-climate
+        - type: "custom:button-card"
+          template: "custom_card_apexcharts"
+          variables:
+            chart_type: "line"
+            graph_span: "24h"
+            entity_1:
+              entity_id: "sensor.nest_bottom_floor_temperature"
+              icon: mdi:home-thermometer
+              name: "Nest Bottom Temperature"
+              color: "red"
+              max_value: 40
+            entity_2:
+              entity_id: "sensor.nest_bottom_floor_humidity"
+              icon: 'mdi:water-percent'
+              name: "Nest Bottom Humidity"
+              color: "blue"
+              max_value: 100
+
+        - type: custom:button-card
+          template: custom_card_httpedo13_thermostat_with_buttons
+          variables:
             entity: climate.nest_middle_floor
-            icon: mdi:home-floor-1
-            temperature:
-              unit: '°C'
-              round: 1
-              # use an external temperature sensor
-              source:
-                entity: sensor.nest_middle_floor_temperature
-            secondary_info:
-              icon: mdi:tune-vertical
-            indicators:
-              humidity:
-                icon: mdi:water-percent
-                unit: '%'
-                round: 1
-                source:
-                  entity: sensor.nest_middle_floor_humidity
+            name: Nest Middle Floor
 
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: card_graph
+        - type: "custom:button-card"
+          template: "custom_card_apexcharts"
           variables:
-            ulm_card_graph_color: "var(--google-red)"
-            ulm_card_graph_name: Bottom
-            ulm_card_graph_entity: sensor.nest_bottom_floor_temperature
-        - type: 'custom:button-card'
-          template: card_graph
-          variables:
-            ulm_card_graph_color: "var(--google-red)"
-            ulm_card_graph_name: Middle
-            ulm_card_graph_entity: sensor.nest_middle_floor_temperature
-        - type: custom:button-card
-          template: edge
+            chart_type: "line"
+            graph_span: "24h"
+            entity_1:
+              entity_id: "sensor.nest_middle_floor_temperature"
+              icon: mdi:home-thermometer
+              name: "Nest Middle Temperature"
+              color: "red"
+              max_value: 40
+            entity_2:
+              entity_id: "sensor.nest_middle_floor_humidity"
+              icon: 'mdi:water-percent'
+              name: "Nest Middle Humidity"
+              color: "blue"
+              max_value: 100
 
-      - type: horizontal-stack
-        cards:
         - type: custom:button-card
           template: edge
-        - type: 'custom:button-card'
-          template: card_graph
-          variables:
-            ulm_card_graph_color: "var(--google-blue)"
-            ulm_card_graph_name: Bottom
-            ulm_card_graph_entity: sensor.nest_bottom_floor_humidity
-        - type: 'custom:button-card'
-          template: card_graph
-          variables:
-            ulm_card_graph_color: "var(--google-blue)"
-            ulm_card_graph_name: Middle
-            ulm_card_graph_entity: sensor.nest_middle_floor_humidity
-        - type: custom:button-card
-          template: edge
+      # - type: horizontal-stack
+      #   cards:
+      #   - type: custom:button-card
+      #     template: edge
+      #   - type: 'custom:button-card'
+      #     template: card_graph
+      #     variables:
+      #       ulm_card_graph_color: "var(--google-red)"
+      #       ulm_card_graph_name: Bottom
+      #       ulm_card_graph_entity: sensor.nest_bottom_floor_temperature
+      #   - type: 'custom:button-card'
+      #     template: card_graph
+      #     variables:
+      #       ulm_card_graph_color: "var(--google-red)"
+      #       ulm_card_graph_name: Middle
+      #       ulm_card_graph_entity: sensor.nest_middle_floor_temperature
+      #   - type: custom:button-card
+      #     template: edge
+
+      # - type: horizontal-stack
+      #   cards:
+      #   - type: custom:button-card
+      #     template: edge
+      #   - type: 'custom:button-card'
+      #     template: card_graph
+      #     variables:
+      #       ulm_card_graph_color: "var(--google-blue)"
+      #       ulm_card_graph_name: Bottom
+      #       ulm_card_graph_entity: sensor.nest_bottom_floor_humidity
+      #   - type: 'custom:button-card'
+      #     template: card_graph
+      #     variables:
+      #       ulm_card_graph_color: "var(--google-blue)"
+      #       ulm_card_graph_name: Middle
+      #       ulm_card_graph_entity: sensor.nest_middle_floor_humidity
+      #   - type: custom:button-card
+      #     template: edge
 
   # - title: Thermostat
   #   icon: mdi:thermometer-high
