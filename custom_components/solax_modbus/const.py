@@ -30,6 +30,7 @@ DOMAIN = "solax_modbus"
 DEFAULT_NAME = "SolaX"
 DEFAULT_SCAN_INTERVAL = 15
 DEFAULT_PORT = 502
+DEFAULT_MODBUS_ADDR = 1
 CONF_READ_GEN2X1 = "read_gen2_x1"
 CONF_READ_GEN3X1 = "read_gen3_x1"
 CONF_READ_GEN3X3 = "read_gen3_x3"
@@ -37,6 +38,7 @@ CONF_READ_GEN4X1 = "read_gen4_x1"
 CONF_READ_GEN4X3 = "read_gen4_x3"
 CONF_READ_X1_EPS = "read_x1_eps"
 CONF_READ_X3_EPS = "read_x3_eps"
+CONF_MODBUS_ADDR = "read_modbus_addr"
 CONF_SERIAL      = "read_serial"
 CONF_SERIAL_PORT = "read_serial_port"
 CONF_SolaX_HUB   = "solax_hub"
@@ -648,12 +650,23 @@ SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {
     	native_unit_of_measurement=PERCENTAGE,
     	entity_registry_enabled_default=False,
     ),
+    "battery_package_number": SolaXModbusSensorEntityDescription(
+    	name="Battery Package Number",
+    	key="battery_package_number",
+    	entity_registry_enabled_default=False,
+    ),
     "battery_power_charge": SolaXModbusSensorEntityDescription(
     	name="Battery Power Charge",
     	key="battery_power_charge",
     	native_unit_of_measurement=POWER_WATT,
     	device_class=DEVICE_CLASS_POWER,
     	state_class=STATE_CLASS_MEASUREMENT,
+    ),
+    "battery_soh": SolaXModbusSensorEntityDescription(
+    	name="Battery State of Health",
+    	key="battery_soh",
+    	native_unit_of_measurement=PERCENTAGE,
+    	entity_registry_enabled_default=False,
     ),
     "battery_type": SolaXModbusSensorEntityDescription(
     	name="Battery Type",
@@ -663,6 +676,24 @@ SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {
     "battery_charge_float_voltage": SolaXModbusSensorEntityDescription(
         name="Battery Charge Float Voltage",
         key="battery_charge_float_voltage",
+        entity_registry_enabled_default=False,
+    ),
+    "battery_input_energy_charge": SolaXModbusSensorEntityDescription(
+        name="Battery Input Energy",
+        key="input_energy_charge",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+        icon="mdi:solar-power",
+        device_class=DEVICE_CLASS_ENERGY,
+        state_class=STATE_CLASS_TOTAL_INCREASING,
+        entity_registry_enabled_default=False,
+    ),
+    "battery_output_energy_charge": SolaXModbusSensorEntityDescription(
+        name="Battery Output Energy",
+        key="output_energy_charge",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+        icon="mdi:solar-power",
+        device_class=DEVICE_CLASS_ENERGY,
+        state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
     ),
     "battery_temperature": SolaXModbusSensorEntityDescription(
@@ -1119,24 +1150,6 @@ GEN3_X1_SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {
 		key="backup_gridcharge",
 		entity_registry_enabled_default=False,
 	),
-    "battery_input_energy_charge": SolaXModbusSensorEntityDescription(
-        name="Battery Input Energy",
-        key="input_energy_charge",
-        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        icon="mdi:solar-power",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-        entity_registry_enabled_default=False,
-    ),
-    "battery_output_energy_charge": SolaXModbusSensorEntityDescription(
-        name="Battery Output Energy",
-        key="output_energy_charge",
-        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        icon="mdi:solar-power",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-        entity_registry_enabled_default=False,
-    ),
 	"battery_input_energy_today": SolaXModbusSensorEntityDescription(
 		name="Battery Input Energy Today",
 		key="input_energy_charge_today",
@@ -1414,24 +1427,6 @@ GEN3_X3_SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {
     "ct_meter_setting": SolaXModbusSensorEntityDescription(
         name="CT Meter Setting",
         key="ct_meter_setting",
-        entity_registry_enabled_default=False,
-    ),
-    "battery_input_energy_charge": SolaXModbusSensorEntityDescription(
-        name="Battery Input Energy",
-        key="input_energy_charge",
-        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        icon="mdi:solar-power",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-        entity_registry_enabled_default=False,
-    ),
-    "battery_output_energy_charge": SolaXModbusSensorEntityDescription(
-        name="Battery Output Energy",
-        key="output_energy_charge",
-        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        icon="mdi:solar-power",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
     ),
     "battery_input_energy_today": SolaXModbusSensorEntityDescription(

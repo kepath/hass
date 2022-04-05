@@ -5,23 +5,28 @@ views:
     icon: mdi:floor-plan
     theme: minimalist-mobile
     cards:
+    - type: horizontal-stack
+      style:
+        card:
+        - width: "100%"    
+      cards:
+      - type: custom:button-card
+        template: edge
+      - type: 'custom:button-card'
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /lovelace-minimalist
 
     - type: vertical-stack
       cards:
-
+      - type: custom:button-card
+        template: edge      
+      - type: 'custom:button-card'
+        template: card_title
+        label: Exterior      
       - type: horizontal-stack
         cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template: chip_back
-          variables:
-            ulm_chip_back_path: /lovelace-minimalist
 
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
         - type: 'custom:button-card'
           template:
             - card_room
@@ -38,32 +43,36 @@ views:
             label_use_temperature: true
             label_use_brightness: false
             entity_1:
-              entity_id: light.lounge_light_light_1
+              entity_id: group.light
               templates:
                 - yellow_on
               tap_action:
                 action: toggle
             entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
+              entity_id: binary_sensor.motion_front_g3_flex
               templates:
                 - green_off
                 - red_on
               tap_action:
-                action: none
+                action: more-info
+              # hold_action:
+              #   action: call-service
+              #   service: camera.play_stream
+              #   service_data:
+              #     entity_id: camera.back_g3_flex
             entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+              entity_id: camera.front_g3_flex
+              show_live_stream: true
               templates:
-                - green_off
-                - red_on
+                - blue_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
         - type: 'custom:button-card'
           template:
             - card_room
@@ -73,9 +82,93 @@ views:
           entity: binary_sensor.zigbee_door_sensor_back_contact
           icon: mdi:shovel
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info
+          variables:
+            label_use_temperature: true
+            label_use_brightness: false
+            entity_1:
+              entity_id: light.tybf82abce93da177c79kymc
+              templates:
+                - yellow_on
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info
+            entity_2:
+              entity_id: binary_sensor.motion_uvc_g3_flex_back
+              templates:
+                - green_off
+                - red_on
+              tap_action:
+                action: more-info  
+            entity_3:
+              entity_id: camera.back_g3_flex
+              show_live_stream: true
+              templates:
+                - blue_no_state
+              tap_action:
+                action: more-info  
+            entity_4:
+              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+      - type: horizontal-stack
+        cards:
+        - type: 'custom:button-card'
+          template:
+            - card_room
+            - green_off
+            - red_on
+          name: Garage
+          entity: binary_sensor.zigbee_door_sensor_garage_contact
+          icon: mdi:garage
+          tap_action:
+            action: more-info  
+          hold_action:
+            action: more-info            
+          variables:
+            label_use_temperature: true
+            label_use_brightness: false
+            entity_1:
+              entity_id: light.zigbee_bulb_garage
+              templates:
+                - yellow_on
+              tap_action:
+                action: toggle
+            entity_2:
+              entity_id: switch.zigbee_plug_garage
+              icon: mdi:power-plug
+              templates:
+                - plug_on
+              tap_action:
+                action: toggle  
+            entity_3:
+              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+            entity_4:
+              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+        - type: 'custom:button-card'
+          template:
+            - card_room
+            - blue_no_state
+          name: Outside
+          entity: weather.met_office_banbury
+          icon: mdi:home-map-marker
+          tap_action:
+            action: more-info  
+          hold_action:
+            action: more-info            
           variables:
             label_use_temperature: true
             label_use_brightness: false
@@ -86,33 +179,34 @@ views:
               tap_action:
                 action: toggle
             entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
-              templates:
+              entity_id: input_boolean.doorbell_rung
+              templates:               
                 - green_off
                 - red_on
               tap_action:
-                action: none
+                action: more-info  
             entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+              entity_id: camera.uvc_g4_doorbell
+              show_live_stream: true
               templates:
-                - green_off
-                - red_on
+                - blue_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
-        - type: custom:button-card
-          template: edge
-
+                action: more-info  
+    - type: vertical-stack
+      cards:
+      - type: custom:button-card
+        template: edge      
+      - type: 'custom:button-card'
+        template: card_title
+        label: Rooms
       - type: horizontal-stack
         cards:
-        - type: custom:button-card
-          template: edge
         - type: 'custom:button-card'
           template:
             - card_room
@@ -122,7 +216,7 @@ views:
           entity: binary_sensor.zigbee_door_sensor_patio_2_contact
           icon: mdi:sofa
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info
           variables:
@@ -140,127 +234,78 @@ views:
                 - green_off
                 - red_on
               tap_action:
-                action: none
+                action: more-info  
             entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+              entity_id: camera.lounge_g3_instant_high
+              show_live_stream: true
               templates:
-                - green_off
-                - red_on
+                - blue_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - purple_on
               tap_action:
-                action: none
+                action: more-info  
                 
         - type: 'custom:button-card'
           template:
             - card_room
-            - green_no_state
+            - blue_no_state
           name: Kitchen
-          entity: sensor.banbury_feels_like_temperature
+          entity: binary_sensor.zigbee_door_sensor_patio_2_contact
           icon: mdi:countertop-outline
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info            
           variables:
             label_use_temperature: true
             label_use_brightness: false
             entity_1:
-              entity_id: light.lounge_light_light_1
+              entity_id: light.kitchen_main_light_light_1
               templates:
                 - yellow_on
               tap_action:
                 action: toggle
             entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
+              entity_id: light.kitchen_utility_light_light_1
               templates:
-                - green_off
-                - red_on
+                - yellow_on
               tap_action:
-                action: none
+                action: toggle
             entity_3:
               entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
-        - type: custom:button-card
-          template: edge
+                action: more-info  
 
       - type: horizontal-stack
         cards:
-        - type: custom:button-card
-          template: edge
         - type: 'custom:button-card'
           template:
             - card_room
-            - green_no_state
-          name: Bottom Hallway
-          entity: sensor.nest_bottom_floor_temperature
-          icon: mdi:home-floor-g
-          tap_action:
-            action: none
-          hold_action:
-            action: more-info            
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: light.lounge_light_light_1
-              templates:
-                - yellow_on
-              tap_action:
-                action: toggle
-            entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_4:
-              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-        - type: 'custom:button-card'
-          template:
-            - card_room
-            - green_no_state
+            - blue_no_state
           name: Study
           entity: binary_sensor.zigbee_door_sensor_patio_2_contact
           icon: mdi:bookshelf
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info            
           variables:
             label_use_temperature: false
             label_use_brightness: false
             entity_1:
-              entity_id: light.lounge_light_light_1
+              entity_id: light.study_light_light_1
               templates:
                 - yellow_on
               tap_action:
@@ -268,177 +313,85 @@ views:
             entity_2:
               entity_id: binary_sensor.motion_uvc_g3_instant
               templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_4:
-              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template:
-            - card_room
-            - yellow_no_state
-          name: Bed A
-          entity: binary_sensor.zigbee_door_sensor_patio_2_contact
-          icon: mdi:alpha-a-circle
-          tap_action:
-            action: none
-          hold_action:
-            action: more-info            
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: light.lounge_light_light_1
-              templates:
                 - yellow_on
               tap_action:
-                action: toggle
-            entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
+                action: more-info  
             entity_3:
               entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
         - type: 'custom:button-card'
           template:
             - card_room
-            - yellow_no_state
-          name: En-suite
-          entity: binary_sensor.zigbee_door_sensor_patio_2_contact
-          icon: mdi:shower-head
-          tap_action:
-            action: none
-          hold_action:
-            action: more-info            
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: light.lounge_light_light_1
-              templates:
-                - yellow_on
-              tap_action:
-                action: toggle
-            entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_4:
-              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template:
-            - card_room
-            - yellow_no_state
-          name: Middle Hallway
-          entity: sensor.nest_middle_floor_temperature
-          icon: mdi:home-floor-1
-          tap_action:
-            action: none
-          hold_action:
-            action: more-info            
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: light.lounge_light_light_1
-              templates:
-                - yellow_on
-              tap_action:
-                action: toggle
-            entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_4:
-              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-        - type: 'custom:button-card'
-          template:
-            - card_room
-            - yellow_no_state
+            - blue_no_state
           name: Bathroom
           entity: binary_sensor.zigbee_door_sensor_patio_2_contact
           icon: mdi:bathtub-outline
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info            
           variables:
             label_use_temperature: false
             label_use_brightness: false
             entity_1:
-              entity_id: light.lounge_light_light_1
+              entity_id: light.bathroom_light_light_1
+              templates:
+                - yellow_on
+              tap_action:
+                action: toggle
+            entity_2:
+              entity_id: binary_sensor.motion_uvc_g3_flex_middle_hallway
+              templates:
+                - green_off
+                - red_on
+              tap_action:
+                action: more-info  
+            entity_3:
+              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+            entity_4:
+              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+    - type: vertical-stack
+      cards:
+      - type: custom:button-card
+        template: edge      
+      - type: 'custom:button-card'
+        template: card_title
+        label: Bedrooms
+      - type: horizontal-stack
+        cards:
+        - type: 'custom:button-card'
+          template:
+            - card_room
+            - blue_no_state
+          name: Bed A
+          entity: binary_sensor.zigbee_door_sensor_patio_2_contact
+          icon: mdi:alpha-a-circle
+          tap_action:
+            action: more-info  
+          hold_action:
+            action: more-info            
+          variables:
+            label_use_temperature: false
+            label_use_brightness: false
+            entity_1:
+              entity_id: light.bed_a_light_light_1
               templates:
                 - yellow_on
               tap_action:
@@ -446,47 +399,78 @@ views:
             entity_2:
               entity_id: binary_sensor.motion_uvc_g3_instant
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_3:
               entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
-        - type: custom:button-card
-          template: edge
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
+                action: more-info  
         - type: 'custom:button-card'
           template:
             - card_room
-            - yellow_no_state
+            - blue_no_state
+          name: En-suite
+          entity: binary_sensor.zigbee_door_sensor_patio_2_contact
+          icon: mdi:shower-head
+          tap_action:
+            action: more-info  
+          hold_action:
+            action: more-info            
+          variables:
+            label_use_temperature: false
+            label_use_brightness: false
+            entity_1:
+              entity_id: light.ensuite_light_light_1
+              templates:
+                - yellow_on
+              tap_action:
+                action: toggle
+            entity_2:
+              entity_id: binary_sensor.motion_uvc_g3_instant
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+            entity_3:
+              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+            entity_4:
+              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+
+      - type: horizontal-stack
+        cards:
+        - type: 'custom:button-card'
+          template:
+            - card_room
+            - blue_no_state
           name: Bed B
           entity: binary_sensor.zigbee_door_sensor_patio_2_contact
           icon: mdi:alpha-b-circle
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info            
           variables:
             label_use_temperature: false
             label_use_brightness: false
             entity_1:
-              entity_id: light.lounge_light_light_1
+              entity_id: light.bed_b_light_light_1
               templates:
                 - yellow_on
               tap_action:
@@ -494,72 +478,62 @@ views:
             entity_2:
               entity_id: binary_sensor.motion_uvc_g3_instant
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_3:
               entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
         - type: 'custom:button-card'
           template:
             - card_room
-            - yellow_no_state
+            - green_off
+            - red_on
           name: Bed C
-          entity: sensor.zigbee_door_sensor_bed_c_temperature
+          entity: binary_sensor.zigbee_door_sensor_bed_c_contact
           icon: mdi:alpha-c-circle
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info            
           variables:
             label_use_temperature: true
             label_use_brightness: false
             entity_1:
-              entity_id: light.lounge_light_light_1
+              entity_id: light.bed_c_light_1
               templates:
                 - yellow_on
               tap_action:
                 action: toggle
             entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
+              entity_id: switch.zigbee_plug_arcade_pc_bed_c
               templates:
-                - green_off
-                - red_on
+                - plug_on
               tap_action:
-                action: none
+                action: more-info  
             entity_3:
               entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
-        - type: custom:button-card
-          template: edge
-
+                action: more-info
       - type: horizontal-stack
         cards:
-        - type: custom:button-card
-          template: edge
         - type: 'custom:button-card'
           template:
             - card_room
@@ -568,14 +542,14 @@ views:
           entity: binary_sensor.zigbee_door_sensor_patio_2_contact
           icon: mdi:alpha-e-circle
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info            
           variables:
             label_use_temperature: false
             label_use_brightness: false
             entity_1:
-              entity_id: light.lounge_light_light_1
+              entity_id: light.bed_e_light_light_1
               templates:
                 - yellow_on
               tap_action:
@@ -583,35 +557,168 @@ views:
             entity_2:
               entity_id: binary_sensor.motion_uvc_g3_instant
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_3:
               entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+        - type: "custom:button-card"
+          color_type: blank-card
+    - type: vertical-stack
+      cards:
+      - type: custom:button-card
+        template: edge      
+      - type: 'custom:button-card'
+        template: card_title
+        label: Hallways
+      - type: horizontal-stack
+        cards:
+        - type: 'custom:button-card'
+          template:
+            - card_room
+            - green_off
+            - red_on
+          name: Bottom Hallway
+          entity: climate.nest_bottom_floor
+          icon: mdi:home-floor-g
+          tap_action:
+            action: more-info  
+          hold_action:
+            action: more-info            
+          variables:
+            label_use_temperature: true
+            label_use_brightness: false
+            entity_1:
+              entity_id: light.shelly1l_hallway_bottom_light_1
+              templates:
+                - yellow_on
+              tap_action:
+                action: toggle
+            entity_2:
+              entity_id: binary_sensor.nest_protect_bottom_floor_occupancy
               templates:
                 - green_off
                 - red_on
               tap_action:
-                action: none
+                action: more-info  
+            entity_3:
+              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+            entity_4:
+              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+        - type: 'custom:button-card'
+          template:
+            - card_room
+            - green_off
+            - red_on
+          name: Middle Hallway
+          entity: climate.nest_middle_floor
+          icon: mdi:home-floor-1
+          tap_action:
+            action: more-info  
+          hold_action:
+            action: more-info            
+          variables:
+            label_use_temperature: true
+            label_use_brightness: false
+            entity_1:
+              entity_id: light.middle_hallway_light_light_1
+              templates:
+                - yellow_on
+              tap_action:
+                action: toggle
+            entity_2:
+              entity_id: binary_sensor.nest_protect_middle_floor_occupancy
+              templates:
+                - green_off
+                - red_on
+              tap_action:
+                action: more-info  
+            entity_3:
+              entity_id: camera.uvc_g3_flex_middle_hallway
+              show_live_stream: true
+              templates:
+                - blue_no_state
+              tap_action:
+                action: more-info  
+            entity_4:
+              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+
+      - type: horizontal-stack
+        cards:
         - type: 'custom:button-card'
           template:
             - card_room
             - blue_no_state
           name: Top Hallway
-          entity: binary_sensor.zigbee_door_sensor_patio_2_contact
+          entity: binary_sensor.zigbee_door_sensor_bed_b_contact
           icon: mdi:home-floor-2
           tap_action:
-            action: none
+            action: more-info  
           hold_action:
             action: more-info            
+          variables:
+            label_use_temperature: true
+            label_use_brightness: false
+            entity_1:
+              entity_id: light.lounge_light_light_1
+              templates:
+                - yellow_on
+              tap_action:
+                action: toggle
+            entity_2:
+              entity_id: binary_sensor.nest_protect_top_floor_occupancy
+              templates:
+                - green_off
+                - red_on
+              tap_action:
+                action: more-info  
+            entity_3:
+              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+            entity_4:
+              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - grey_no_state
+              tap_action:
+                action: more-info  
+
+        - type: 'custom:button-card'
+          template:
+            - card_room
+            - green_off
+            - red_on
+          name: Loft
+          entity: binary_sensor.zigbee_door_sensor_bed_b_contact
+          icon: mdi:home-floor-l
+          tap_action:
+            action: more-info  
+          hold_action:
+            action: more-info 
           variables:
             label_use_temperature: false
             label_use_brightness: false
@@ -624,113 +731,18 @@ views:
             entity_2:
               entity_id: binary_sensor.motion_uvc_g3_instant
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_3:
               entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
+                action: more-info  
             entity_4:
               entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: none
-        - type: custom:button-card
-          template: edge
-
-
-      - type: horizontal-stack
-        cards:
-        - type: custom:button-card
-          template: edge
-        - type: 'custom:button-card'
-          template:
-            - card_room
-            - red_no_state
-          name: Garage
-          entity: sensor.zigbee_door_sensor_garage_temperature
-          icon: mdi:garage
-          tap_action:
-            action: none
-          hold_action:
-            action: more-info            
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: light.lounge_light_light_1
-              templates:
-                - yellow_on
-              tap_action:
-                action: toggle
-            entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_4:
-              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-        - type: 'custom:button-card'
-          template:
-            - card_room
-            - red_no_state
-          name: Loft
-          entity: sensor.zigbee_door_sensor_bed_b_temperature
-          icon: mdi:home-floor-l
-          tap_action:
-            action: none
-          hold_action:
-            action: more-info 
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: light.lounge_light_light_1
-              templates:
-                - yellow_on
-              tap_action:
-                action: toggle
-            entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_instant
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_3:
-              entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-            entity_4:
-              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
-              templates:
-                - green_off
-                - red_on
-              tap_action:
-                action: none
-        - type: custom:button-card
-          template: edge
+                action: more-info  
