@@ -1,0 +1,81 @@
+binary_sensor:
+  - platform: template
+    sensors:
+      fire_stick_tv_kitchen_state:
+        friendly_name: "Fire TV Kitchen State"
+        unique_id: binary_state_fire_tv_kitchen
+        icon_template: mdi:television-play
+        value_template: >-
+          {% if states('media_player.amazon_fire_tv_kitchen_adb') == 'unknown' or 
+            states('media_player.amazon_fire_tv_kitchen_adb') == 'unavailable' or
+            states('media_player.amazon_fire_tv_kitchen_adb') == 'off' %}
+              {{ "off" }}
+          {% else %}
+              {{ "on" }}
+          {% endif %}
+
+  - platform: template
+    sensors:
+      fire_stick_tv_bed_a_state:
+        friendly_name: "Fire TV Bed A State"
+        unique_id: binary_state_fire_tv_bed_a
+        icon_template: mdi:television-play
+        value_template: >-
+          {% if states('media_player.amazon_firestick_bed_a_adb') == 'unknown' or 
+            states('media_player.amazon_firestick_bed_a_adb') == 'unavailable' or
+            states('media_player.amazon_firestick_bed_a_adb') == 'off' or 
+            states('media_player.samsung_ue32f4500_tv') == 'unknown' or 
+            states('media_player.samsung_ue32f4500_tv') == 'unavailable' or
+            states('media_player.samsung_ue32f4500_tv') == 'off' %}
+              {{ "off" }}
+          {% else %}
+              {{ "on" }}
+          {% endif %}
+
+  - platform: template
+    sensors:
+      nvidia_shield_lounge_state:
+        friendly_name: "NVidia Shield Lounge State"
+        unique_id: binary_state_shield_lounge
+        icon_template: mdi:television-play
+        value_template: >-
+          {% if states('media_player.nvidia_shield_adb_lounge') == 'unknown' or 
+            states('media_player.nvidia_shield_adb_lounge') == 'unavailable' or
+            states('media_player.nvidia_shield_adb_lounge') == 'off' or 
+            states('media_player.tv_samsung_lounge') == 'unknown' or 
+            states('media_player.tv_samsung_lounge') == 'unavailable' or
+            states('media_player.tv_samsung_lounge') == 'off' %}
+              {{ "off" }}
+          {% else %}
+              {{ "on" }}
+          {% endif %}
+
+  - platform: template
+    sensors:
+      nvidia_shield_bed_e_state:
+        friendly_name: "NVidia Shield Bed E State"
+        unique_id: binary_state_shield_bed_e
+        icon_template: mdi:television-play
+        value_template: >-
+          {% if states('media_player.nvidia_shield_adb_bed_e') == 'unknown' or 
+            states('media_player.nvidia_shield_adb_bed_e') == 'unavailable' or
+            states('media_player.nvidia_shield_adb_bed_e') == 'off' %}
+              {{ "off" }}
+          {% else %}
+              {{ "on" }}
+          {% endif %}
+
+  - platform: template
+    sensors:
+      harmony_hub_bed_c_state:
+        friendly_name: "Harmony Hub Bed C State"
+        unique_id: binary_state_harmony_hub_bed_c
+        icon_template: mdi:television-play
+        value_template: >-
+          {% if states('remote.harmony_hub') == 'unknown' or 
+            states('remote.harmony_hub') == 'unavailable' or
+            states('remote.harmony_hub') == 'off' %}
+              {{ "off" }}
+          {% else %}
+              {{ "on" }}
+          {% endif %}
