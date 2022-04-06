@@ -48,6 +48,8 @@ views:
                 - red_on
               tap_action:
                 action: more-info
+                entity: camera.uvc_g4_doorbell
+                show_live_stream: true
               hold_action:
                 action: more-info
             entity_2:
@@ -57,19 +59,18 @@ views:
                 - red_on
               tap_action:
                 action: more-info
-              # hold_action:
-              #   action: call-service
-              #   service: camera.play_stream
-              #   service_data:
-              #     entity_id: camera.back_g3_flex
-            entity_3:
-              entity_id: camera.front_g3_flex
-              show_live_stream: true
-              templates:
-                - blue_no_state
-                - icon_cctv
-              tap_action:
+                entity: camera.front_g3_flex
+                show_live_stream: true
+              hold_action:
                 action: more-info  
+            entity_3:
+              entity_id: input_boolean.placeholder
+              templates:
+                - grey_no_state
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info
             entity_4:
               entity_id: input_boolean.placeholder
               templates:
@@ -77,7 +78,7 @@ views:
               tap_action:
                 action: toggle
               hold_action:
-                action: more-info 
+                action: more-info
         - type: 'custom:button-card'
           template:
             - card_room
@@ -107,21 +108,25 @@ views:
                 - green_off
                 - red_on
               tap_action:
-                action: more-info  
+                action: more-info
+                entity: camera.back_g3_flex
+                show_live_stream: true
+              hold_action:
+                action: more-info
             entity_3:
-              entity_id: camera.back_g3_flex
-              show_live_stream: true
-              templates:
-                - blue_no_state
-                - icon_cctv
-              tap_action:
-                action: more-info  
-            entity_4:
               entity_id: input_boolean.placeholder
+              templates:
+                - grey_no_state
               tap_action:
                 action: toggle
               hold_action:
-                action: more-info 
+                action: more-info
+            entity_4:
+              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              templates:
+                - purple_on
+              tap_action:
+                action: more-info
       - type: horizontal-stack
         cards:
         - type: 'custom:button-card'
@@ -178,7 +183,7 @@ views:
             - blue_no_state
           name: Outside
           entity: weather.met_office_banbury
-          icon: mdi:home-map-marker
+          #icon: mdi:home-map-marker
           tap_action:
             action: more-info  
           hold_action:
@@ -187,15 +192,16 @@ views:
             label_use_temperature: true
             label_use_brightness: false
             entity_1:
-              entity_id: input_boolean.placeholder
+              entity_id: person.kevin_thorn
               templates:
-                - grey_no_state
+                - green_off
+                - red_on
               tap_action:
                 action: toggle
               hold_action:
                 action: more-info
             entity_2:
-              entity_id: input_boolean.placeholder
+              entity_id: person.julia_thorn
               templates:
                 - grey_no_state
               tap_action:
@@ -203,18 +209,20 @@ views:
               hold_action:
                 action: more-info
             entity_3:
-              entity_id: camera.uvc_g4_doorbell
-              show_live_stream: true
+              entity_id: person.daniel_thorn
               templates:
-                - blue_no_state
-                - icon_cctv
+                - grey_no_state
               tap_action:
-                action: more-info  
+                action: toggle
+              hold_action:
+                action: more-info
             entity_4:
-              entity_id: binary_sensor.zigbee_vibration_sensor_patio_vibration
+              entity_id: person.emily_thorn
               templates:
-                - purple_on
+                - grey_no_state
               tap_action:
+                action: toggle
+              hold_action:
                 action: more-info
 
     - type: vertical-stack
@@ -229,8 +237,7 @@ views:
         - type: 'custom:button-card'
           template:
             - card_room
-            - green_off
-            - red_on
+            - yellow_heating
           name: Bottom Hallway
           entity: climate.nest_bottom_floor
           icon: mdi:home-floor-g
@@ -275,8 +282,7 @@ views:
         - type: 'custom:button-card'
           template:
             - card_room
-            - green_off
-            - red_on
+            - yellow_heating
           name: Middle Hallway
           entity: climate.nest_middle_floor
           icon: mdi:home-floor-1
@@ -304,13 +310,14 @@ views:
               tap_action:
                 action: more-info  
             entity_3:
-              entity_id: camera.uvc_g3_flex_middle_hallway
-              show_live_stream: true
+              entity_id: binary_sensor.motion_uvc_g3_flex_middle_hallway
               templates:
-                - blue_no_state
-                - icon_cctv
+                - green_off
+                - red_on
               tap_action:
                 action: more-info
+                entity: camera.uvc_g3_flex_middle_hallway
+                show_live_stream: true
               hold_action:
                 action: more-info
             entity_4:
@@ -453,20 +460,24 @@ views:
                 - green_off
                 - red_on
               tap_action:
+                action: more-info
+                entity: camera.lounge_g3_instant_high
+                show_live_stream: true
+              hold_action:
                 action: more-info  
             entity_3:
-              entity_id: camera.lounge_g3_instant_high
-              show_live_stream: true
-              templates:
-                - blue_no_state
-                - icon_cctv
-              tap_action:
-                action: more-info  
-            entity_4:
               entity_id: binary_sensor.nvidia_shield_lounge_state
               templates:
                 - green_on
               tap_action:
+                action: more-info 
+            entity_4:
+              entity_id: input_boolean.placeholder
+              templates:
+                - grey_no_state
+              tap_action:
+                action: toggle
+              hold_action:
                 action: more-info  
                 
         - type: 'custom:button-card'
@@ -481,7 +492,7 @@ views:
           hold_action:
             action: more-info            
           variables:
-            label_use_temperature: true
+            label_use_temperature: false
             label_use_brightness: false
             entity_1:
               entity_id: light.kitchen_main_light_light_1
@@ -543,6 +554,7 @@ views:
               entity_id: input_boolean.placeholder
               templates:
                 - grey_no_state
+                - icon_desktop_classic
               tap_action:
                 action: toggle
               hold_action:
@@ -586,12 +598,13 @@ views:
               hold_action:
                 action: more-info
             entity_2:
-              entity_id: binary_sensor.motion_uvc_g3_flex_middle_hallway
+              entity_id: input_boolean.placeholder
               templates:
-                - green_off
-                - red_on
+                - grey_no_state
               tap_action:
-                action: more-info  
+                action: toggle
+              hold_action:
+                action: more-info
             entity_3:
               entity_id: input_boolean.placeholder
               templates:
@@ -831,6 +844,7 @@ views:
               entity_id: input_boolean.placeholder
               templates:
                 - grey_no_state
+                - icon_desktop_classic
               tap_action:
                 action: toggle
               hold_action:
@@ -875,6 +889,7 @@ views:
               entity_id: input_boolean.placeholder
               templates:
                 - grey_no_state
+                - icon_desktop_classic
               tap_action:
                 action: toggle
               hold_action:
