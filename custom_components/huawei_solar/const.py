@@ -4,24 +4,27 @@ from datetime import timedelta
 DOMAIN = "huawei_solar"
 DEFAULT_PORT = 502
 DEFAULT_SLAVE_ID = 0
-
-DATA_MODBUS_CLIENT = "client"
-DATA_SLAVE_IDS = "slave_ids"
-DATA_DEVICE_INFOS = "device_infos"
-DATA_UPDATE_COORDINATORS = "update_coordinators"
+DEFAULT_USERNAME = "installer"
+DEFAULT_PASSWORD = "00000a"
 
 CONF_SLAVE_IDS = "slave_ids"
-LEGACY_CONF_SLAVE = "slave"
-
-IDENTIFIER_SLAVE_ID = "slave_id"
-IDENTIFIER_DEVICE_TYPE = "device_type"
-
-DEVICE_TYPE_INVERTER = "inverter"
-DEVICE_TYPE_ENERGY_STORAGE = "energy_storage"
-DEVICE_TYPE_SINGLE_PHASE_POWER_METER = "single_phase_power_meter"
-DEVICE_TYPE_THREE_PHASE_POWER_METER = "three_phase_power_meter"
+CONF_ENABLE_PARAMETER_CONFIGURATION = "enable_parameter_configuration"
 
 
-BATTERY_UPDATE_INTERVAL = timedelta(seconds=30)
-INVERTER_UPDATE_INTERVAL = timedelta(seconds=30)
-METER_UPDATE_INTERVAL = timedelta(seconds=15)
+DATA_UPDATE_COORDINATORS = "update_coordinators"
+
+UPDATE_INTERVAL = timedelta(seconds=30)
+
+SERVICE_FORCIBLE_CHARGE = "forcible_charge"
+SERVICE_FORCIBLE_DISCHARGE = "forcible_discharge"
+SERVICE_FORCIBLE_CHARGE_SOC = "forcible_charge_soc"
+SERVICE_FORCIBLE_DISCHARGE_SOC = "forcible_discharge_soc"
+SERVICE_STOP_FORCIBLE_CHARGE = "stop_forcible_charge"
+
+SERVICES = (
+    SERVICE_FORCIBLE_CHARGE,
+    SERVICE_FORCIBLE_DISCHARGE,
+    SERVICE_FORCIBLE_CHARGE_SOC,
+    SERVICE_FORCIBLE_DISCHARGE_SOC,
+    SERVICE_STOP_FORCIBLE_CHARGE,
+)
