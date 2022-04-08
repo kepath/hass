@@ -21,9 +21,12 @@ binary_sensor:
         unique_id: binary_state_fire_tv_bed_a
         icon_template: mdi:television-play
         value_template: >-
-          {% if states('device_tracker.samsung_ue32f4500_tv_unifi') == 'unknown' or 
+          {% if (states('device_tracker.samsung_ue32f4500_tv_unifi') == 'unknown' or 
             states('device_tracker.samsung_ue32f4500_tv_unifi') == 'unavailable' or
-            states('device_tracker.samsung_ue32f4500_tv_unifi') == 'away' %}
+            states('device_tracker.samsung_ue32f4500_tv_unifi') == 'away') and
+            (states('media_player.amazon_firestick_bed_a_adb') == 'unknown' or 
+            states('media_player.amazon_firestick_bed_a_adb') == 'unavailable' or
+            states('media_player.amazon_firestick_bed_a_adb') == 'off') %}
               {{ "off" }}
           {% else %}
               {{ "on" }}
@@ -36,9 +39,12 @@ binary_sensor:
         unique_id: binary_state_shield_lounge
         icon_template: mdi:television-play
         value_template: >-
-          {% if states('device_tracker.samsung_ue48hu7500t_tv_unifi') == 'unknown' or 
+          {% if (states('device_tracker.samsung_ue48hu7500t_tv_unifi') == 'unknown' or 
             states('device_tracker.samsung_ue48hu7500t_tv_unifi') == 'unavailable' or
-            states('device_tracker.samsung_ue48hu7500t_tv_unifi') == 'away' %}
+            states('device_tracker.samsung_ue48hu7500t_tv_unifi') == 'away') and
+            (states('media_player.nvidia_shield_adb_lounge') == 'unknown' or 
+            states('media_player.nvidia_shield_adb_lounge') == 'unavailable' or
+            states('media_player.nvidia_shield_adb_lounge') == 'off') %}
               {{ "off" }}
           {% else %}
               {{ "on" }}
