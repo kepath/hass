@@ -79,3 +79,28 @@ binary_sensor:
           {% else %}
               {{ "on" }}
           {% endif %}
+
+  - platform: tod
+    name: nighttime
+    after: "sunset"
+    before: "sunrise"
+  - platform: tod
+    name: quiettime
+    after: "23:00"
+    before: "07:00"
+  - platform: tod
+    name: cheap heating time
+    after: "00:00"
+    before: "07:00"
+  - platform: tod
+    name: morning heating time
+    after: "06:00"
+    before: "09:00"
+  - platform: tod
+    name: afternoon heating time
+    after: "14:00"
+    before: "17:00"
+  - platform: tod
+    name: evening heating time
+    after: "19:00"
+    before: "21:00"  

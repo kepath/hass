@@ -21,33 +21,11 @@ scene: !include scenes.yaml
 homeassistant:
   customize: !include customize.yaml
   packages: !include_dir_named packages
-#  auth_providers:
-#    - type: trusted_networks
-#      trusted_networks:
-#        - 192.168.1.0/20
-#        - 127.0.0.1
 
 http:
-  # ip_ban_enabled: true
-  # login_attempts_threshold: 20
-#  use_x_forwarded_for: true
-#  trusted_proxies:
-#  - 127.0.0.1
-
 
 logger:
   default: warning
-  logs:
-#    homeassistant.components.camera: debug
-#    homeassistant.components.media_player: debug
-#    homeassistant.components.stream: debug
-    homeassistant.components.mqtt: debug
-#    aiounifi: debug
-#    homeassistant.components.unifi: debug
-#    homeassistant.components.device_tracker.unifi: debug
-#    homeassistant.components.switch.unifi: debug
-    homeassistant.components.python_script: debug
-    homeassistant.components.automation: info
 
 influxdb:
   username: !secret influx_db_user
@@ -69,13 +47,9 @@ homekit:
     include_domains:
     - climate
     - camera
-    # - switch
     - media_player
     - person
     include_entity_globs:
-#    - switch.adguard*
-#    - switch.wol*
-#    - sensor.adguard*
     - sensor.diskstation_volume*
     - sensor.diskstation_drive_*_status
     - sensor.zigbee*
@@ -84,18 +58,8 @@ homekit:
     - switch.harmony*
     - switch.smart_surge*
     - switch.zigbee*
-#    - binary_sensor.*iphone
-#    - binary_sensor.iphone*
-#    - binary_sensor.diskstation*
-#    - binary_sensor.door*
-#    - binary_sensor.vibration*
-#    - binary_sensor.motion*
     include_entities:
     - binary_sensor.remote_ui
-#    - binary_sensor.dru10002268
-#    - device_tracker.26_00_dd_10_bc_a2
-#    - device_tracker.40_9c_28_76_db_42
-#    - device_tracker.6c_72_e7_de_5a_85
 
 nest:
   client_id: !secret google_oauth_client_id
@@ -103,7 +67,6 @@ nest:
   project_id: !secret nest_project_id
   subscriber_id: !secret nest_subscription_id
 
-#speedtestdotnet:
 wake_on_lan:
 
 device_tracker:
@@ -126,174 +89,86 @@ spotify:
   client_id: !secret spotify_client_id
   client_secret: !secret spotify_client_secret
 
-# spotcast: #default is home account
-#   sp_dc: !secret spotcast_homeaccount_sp_dc
-#   sp_key: !secret spotcast_homeaccount_sp_key
-#   accounts:
-#     kevin:
-#       sp_dc: !secret spotcast_kevin_sp_dc
-#       sp_key: !secret spotcast_kevin_sp_key
-#    emily:
-#      sp_dc: !secret spotcast_emily_sp_dc
-#      sp_key: !secret spotcast_emily_sp_key
+# media_player:
+#   - platform: androidtv
+#     name: "NVIDIA Shield Lounge ADB"
+#     host: !secret nvidia_shield_lounge_rj45_ip
+#     adbkey: "/config/.storage/androidtv_adbkey"
+#     device_class: androidtv
+#     # adb_server_ip: !secret ha_rj45_ip
+#     # adb_server_port: 5037
+#   - platform: androidtv
+#     name: "NVidia Shield Bed E ADB"
+#     host: !secret nvidia_shield_bede_rj45_ip
+#     adbkey: "/config/.storage/androidtv_adbkey"
+#     device_class: androidtv
+#     # adb_server_ip: !secret ha_rj45_ip
+#     # adb_server_port: 5037
+#     apps:
+#       #com.plexapp.mediaserver.smb: "Plex"
+#       com.disney.disneyplus: "Disney+"
+#       # com.plexapp.android: "Plex"
+#       com.nvidia.bbciplayer: "iPlayer"
+#       com.pluralsight: "Pluralsight"
+#       # com.google.android.youtube.tv: "YouTube"
+#       # com.amazon.amazonvideo.livingroom: "Amazon Prime"
+#       # com.spotify.tv.android: "Spotify"
+#       air.ITVMobilePlayer: "ITV Hub"
+#       com.channel5.my5: "My 5"
+#       com.apple.atve.androidtv.appletv: "Apple TV"
+#     #exclude_unnamed_apps: true
+#   - platform: androidtv
+#     name: "Amazon Firestick Bed A ADB"
+#     host: !secret amazon_fire_stick_beda_rj45_ip
+#     adbkey: "/config/.storage/androidtv_adbkey"
+#     device_class: firetv
+#     # adb_server_ip: !secret ha_rj45_ip
+#     # adb_server_port: 5037
+#   - platform: androidtv
+#     name: "Amazon Fire Stick Kitchen ADB"
+#     host: !secret amazon_fire_stick_kitchen_rj45_ip
+#     adbkey: "/config/.storage/androidtv_adbkey"
+#     device_class: firetv
+#     # adb_server_ip: !secret ha_rj45_ip
+#     # adb_server_port: 5037
 
-emulated_roku:
-  servers:
-    - name: Home Assistant
-      listen_port: 8060
-      upnp_bind_multicast: false
-#feedreader:
-#  urls:
-#    - https://alerts.home-assistant.io/feed.xml
-#  scan_interval:
-#    minutes: 30
-#  max_entries: 5
-
-#glances:
-#    name: DownloadPC
-#    host: !secret vpn_router_rj45_ip
-
-media_player:
-  - platform: androidtv
-    name: "NVIDIA Shield Lounge ADB"
-    host: !secret nvidia_shield_lounge_rj45_ip
-    adbkey: "/config/.storage/androidtv_adbkey"
-    device_class: androidtv
-    # adb_server_ip: !secret ha_rj45_ip
-    # adb_server_port: 5037
-  - platform: androidtv
-    name: "NVidia Shield Bed E ADB"
-    host: !secret nvidia_shield_bede_rj45_ip
-    adbkey: "/config/.storage/androidtv_adbkey"
-    device_class: androidtv
-    # adb_server_ip: !secret ha_rj45_ip
-    # adb_server_port: 5037
-    apps:
-      #com.plexapp.mediaserver.smb: "Plex"
-      com.disney.disneyplus: "Disney+"
-      # com.plexapp.android: "Plex"
-      com.nvidia.bbciplayer: "iPlayer"
-      com.pluralsight: "Pluralsight"
-      # com.google.android.youtube.tv: "YouTube"
-      # com.amazon.amazonvideo.livingroom: "Amazon Prime"
-      # com.spotify.tv.android: "Spotify"
-      air.ITVMobilePlayer: "ITV Hub"
-      com.channel5.my5: "My 5"
-      com.apple.atve.androidtv.appletv: "Apple TV"
-    #exclude_unnamed_apps: true
-  - platform: androidtv
-    name: "Amazon Firestick Bed A ADB"
-    host: !secret amazon_fire_stick_beda_rj45_ip
-    adbkey: "/config/.storage/androidtv_adbkey"
-    device_class: firetv
-    # adb_server_ip: !secret ha_rj45_ip
-    # adb_server_port: 5037
-  - platform: androidtv
-    name: "Amazon Fire Stick Kitchen ADB"
-    host: !secret amazon_fire_stick_kitchen_rj45_ip
-    adbkey: "/config/.storage/androidtv_adbkey"
-    device_class: firetv
-    # adb_server_ip: !secret ha_rj45_ip
-    # adb_server_port: 5037
-
-  - platform: yamaha
-    name: "Yamaha RX-V777 Reciever Integration"
-    #unique_id: yamaha_reciever_yamaha_platform_integration
-    #entity: "yamaha_rx_v777_yamaha_network_integration"
-    host: !secret yamaha_rx_v777_rj45_ip
-    zone_ignore:
-      - zone_2
-    zone_names:
-      Main_Zone: "Bed C"
-    source_ignore:
-      - AUDIO1
-      - AUDIO2
-      - AV2
-      - AV3
-      - AV4
-      - AV5
-      - AV6
-      - Napster
-      - PHONO
-      - SERVER
-      - TUNER
-      - USB
-      - iPod (USB)
-    source_names:
-      AV1: "Nintendo Wii"
-      HDMI1: "Humax YouView"
-      HDMI2: "Apple TV 4k"
-      HDMI3: "Xbox One"
-      HDMI4: "PlayStation 3"
-      HDMI5: "Arcade Machine"
-      V-AUX: "Nintendo Switch"
-
-  # - platform: samsungtv_custom
-  #   name: samsung tv ctl lounge #UE48HU7500T
-  #   host: !secret samsung_tv_lounge_rj45_ip
-  #   port: 7676 #8080
-  #   mac: !secret samsung_tv_lounge_rj45_mac
-  #   timeout: 30
-  #   # sourcelist: '{"PlayStation": "KEY_HDMI1", "RaspberryPi": "KEY_HDMI2", "Chromecast": "KEY_HDMI3"}'
-  #   protocol: ws
-  #   # token: d396c8033689999088b250d9fe579297
-  #   # id: 07bfa481-0082-1000-b3aa-244b03a8b9b9
-
-  # - platform: samsungtv_custom
-  #   name: samsung tv ctl bed a #UE32F4500
-  #   host: !secret samsung_tv_beda_rj45_ip
-  #   port: 8001
-  #   mac: !secret samsung_tv_beda_rj45_mac
-  #   # sourcelist: '{"PlayStation": "KEY_HDMI1", "RaspberryPi": "KEY_HDMI2", "Chromecast": "KEY_HDMI3"}'
-  #   # applist: "YouTube, Plex, Prime Video, Netflix, Spotify"
-  #   protocol: ctl
-
-binary_sensor:
-  - platform: tod
-    name: nighttime
-    after: "sunset"
-    before: "sunrise"
-  - platform: tod
-    name: quiettime
-    after: "23:00"
-    before: "07:00"
-  - platform: tod
-    name: cheap heating time
-    after: "00:00"
-    before: "07:00"
-  - platform: tod
-    name: morning heating time
-    after: "06:00"
-    before: "09:00"
-  - platform: tod
-    name: afternoon heating time
-    after: "14:00"
-    before: "17:00"
-  - platform: tod
-    name: evening heating time
-    after: "19:00"
-    before: "21:00"
-
-#octopusagile:
-#  region_code: "E"
-#  mpan: !secret octopusagile_mpan
-#  serial: !secret octopusagile_serial
-#  auth: !secret octopusagile_auth
-#  startdate: "2020-05-08"
-#sensor:
-#  - platform: "octopusagile"
+#   - platform: yamaha
+#     name: "Yamaha RX-V777 Reciever Integration"
+#     #unique_id: yamaha_reciever_yamaha_platform_integration
+#     #entity: "yamaha_rx_v777_yamaha_network_integration"
+#     host: !secret yamaha_rx_v777_rj45_ip
+#     zone_ignore:
+#       - zone_2
+#     zone_names:
+#       Main_Zone: "Bed C"
+#     source_ignore:
+#       - AUDIO1
+#       - AUDIO2
+#       - AV2
+#       - AV3
+#       - AV4
+#       - AV5
+#       - AV6
+#       - Napster
+#       - PHONO
+#       - SERVER
+#       - TUNER
+#       - USB
+#       - iPod (USB)
+#     source_names:
+#       AV1: "Nintendo Wii"
+#       HDMI1: "Humax YouView"
+#       HDMI2: "Apple TV 4k"
+#       HDMI3: "Xbox One"
+#       HDMI4: "PlayStation 3"
+#       HDMI5: "Arcade Machine"
+#       V-AUX: "Nintendo Switch"
 
 lovelace_gen:
 lovelace:
   mode: storage
   # Add yaml dashboards
   dashboards:
-    # network-information:
-    #   mode: yaml
-    #   title: Network Information
-    #   icon: mdi:lan
-    #   show_in_sidebar: true
-    #   filename: lovelace/network/network_information.yaml
     lovelace-minimalist:
       mode: yaml
       title: Minimalist
