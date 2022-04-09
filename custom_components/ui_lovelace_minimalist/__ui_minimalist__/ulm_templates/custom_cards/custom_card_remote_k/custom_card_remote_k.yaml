@@ -1,0 +1,2570 @@
+variable_definitions_harmony_remote_group_actions:
+  variables:
+    var_harmony_remote_group_actions:
+      entity:
+      activity0:
+        entity: 
+        name: 
+        icon: 
+        haptic: 
+      activity1:
+        entity: 
+        name: 
+        icon: 
+        haptic: 
+      activity2:
+        entity: 
+        name: 
+        icon: 
+        haptic: 
+      activity3:
+        entity: 
+        name: 
+        icon: 
+        haptic: 
+      activity4:
+        entity: 
+        name: 
+        icon: 
+        haptic: 
+      activity5:
+        entity: 
+        name: 
+        icon: 
+        haptic: 
+# Array:
+#     name : Array Test
+#     options:
+#       - Option A
+#       - Option B
+#       - Option C
+#       - Option D
+
+# {% set arraytest = state_attr("input_select.array","options") %}
+
+# input_text: >-
+#         [[[
+#             var color = "var(--google-grey)";
+#             if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== 'undefined'){
+#               if (states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity == variables.ulm_card_remote_harmony_activity_button_activity){
+#                 var color =  "var(--google-green)";
+#               }
+#             }
+#             return color;
+#         ]]]
+
+########################################################
+#####  LOGITECH HARMONY CARDS                       ####
+########################################################
+
+card_harmony_remote_group_actions:
+  # template: 
+  #   - variable_definitions_harmony_remote_group_actions
+  variables:
+    var_harmony_remote_group_actions:
+      entity: '{{ variables.var_harmony_remote_group_actions.entity }}'
+      # current_activity: >
+      #   "[[[
+      #     var currentActivity = "PowerOff";
+      #     if (typeof states[variables.var_harmony_remote_group_actions.entity].attributes.current_activity !== 'undefined'){
+      #       currentActivity = states[variables.var_harmony_remote_group_actions.entity].attributes.current_activity;
+      #     }
+      #     return currentActivity;
+      #   ]]]"
+      activity0:
+        entity: '[[[ return variables.var_harmony_remote_group_actions.entity ]]]'
+        name: "Xbox Series X"
+        icon: 'mdi:microsoft-xbox'
+        haptic: "success"
+      activity1:
+        entity: '[[[ return variables.var_harmony_remote_group_actions.entity ]]]'
+        name: "Watch Apple TV"
+        icon: 'phu:apple-tv-box'
+        haptic: "success"
+      activity2:
+        entity: '[[[ return variables.var_harmony_remote_group_actions.entity ]]]'
+        name: "Watch Humax TV"
+        icon: 'mdi:set-top-box'
+        haptic: "success"
+      activity3:
+        entity: '[[[ return variables.var_harmony_remote_group_actions.entity ]]]'
+        name: "Play Wii"
+        icon: 'mdi:nintendo-wii'
+        haptic: "success"
+      activity4:
+        entity: '[[[ return variables.var_harmony_remote_group_actions.entity ]]]'
+        name: "Play PS3"
+        icon: 'mdi:sony-playstation'
+        haptic: "success"
+      activity5:
+        entity: '[[[ return variables.var_harmony_remote_group_actions.entity ]]]'
+        name: "Spotify Direct"
+        icon: 'mdi:spotify'
+        haptic: "success"
+
+  triggers_update: all
+  styles:
+    grid:
+      - grid-template-areas: '"item1" "item2"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+
+  # name: '{{ variables.var_harmony_remote_group_actions.activity0 }}'
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_to_item4
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remote_harmony_activity_button
+              variables:
+                var_remote_harmony_activity_button: '[[[ return variables.var_harmony_remote_group_actions.activity0 ]]]'
+                # ulm_card_remote_harmony_activity_button_entity: '[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]'
+                # ulm_card_remote_harmony_activity_button_activity: '[[[ return variables.ulm_card_harmony_remote_group_actions_activity_01 ]]]'
+                # ulm_card_remote_harmony_activity_button_icon: '[[[ return variables.ulm_card_harmony_remote_group_actions_icon_01 ]]]'
+                # ulm_card_remote_harmony_activity_button_haptic: '[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_01 ]]]'
+
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remote_harmony_activity_button
+              variables:
+                var_remote_harmony_activity_button: '[[[ return variables.var_harmony_remote_group_actions.activity1 ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: remote_harmony_activity_button
+              variables:
+                var_remote_harmony_activity_button: '[[[ return variables.var_harmony_remote_group_actions.activity2 ]]]'
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: remote_harmony_activity_button
+              variables:
+                var_remote_harmony_activity_button: '[[[ return variables.var_harmony_remote_group_actions.activity3 ]]]'
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_to_item4
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remote_harmony_activity_button
+              variables:
+                var_remote_harmony_activity_button: '[[[ return variables.var_harmony_remote_group_actions.activity4 ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remote_harmony_activity_button
+              variables:
+                var_remote_harmony_activity_button: '[[[ return variables.var_harmony_remote_group_actions.activity5 ]]]'
+
+card_harmony_remote_group_power:
+  template: card_remote_group_power
+  variables:
+    ulm_card_remote_group_power_entity:
+    ulm_card_remote_group_power_command_power: "input keyevent 26"
+    ulm_card_remote_group_power_command_input: ""
+
+    ulm_card_remote_group_power_haptic_power: "input keyevent 26"
+    ulm_card_remote_group_power_haptic_input: ""
+
+    ulm_card_remote_group_power_color_input: "var(--google-grey)"
+
+# card_harmony_remote_current_activity:
+#   variables:
+#     harmony_activity_0: '[[[ return states('remote.harmony_hub').attributes.devices_list[0] ]]]'
+
+card_harmony_remote_group_home_layout_chooser:
+  variables:
+    ulm_card_remote_group_home_entity:
+    # ulm_card_harmony_remote_layout: >
+    #   "[[[ 
+    #     var currentActivity = 'poweroff';
+    #     if (typeof states[variables.ulm_card_remote_group_home_entity].attributes.current_activity !== 'undefined'){
+    #       switch (states[variables.ulm_card_remote_group_home_entity].attributes.current_activity) {
+    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[0]:
+    #           currentActivity = "0";
+    #           break;
+    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[1]:
+    #           currentActivity = "1";
+    #           break;
+    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[2]:
+    #           currentActivity = "2";
+      #         break;
+      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[3]:
+      #         currentActivity = "3";
+      #         break;
+      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[4]:
+      #         currentActivity = "4";
+      #         break;
+      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[5]:
+      #         currentActivity = "5";
+      #         break;
+      #       default:
+      #         break;
+      #     }
+      #   }
+      #   return 'card_harmony_remote_group_home_layout_' + currentActivity;
+      # ]]]"
+  
+  
+# card_harmony_remote_group_home_poweroff
+        # return 'card_harmony_remote_group_home_poweroff' 
+
+
+
+# if (states[variables.ulm_card_remote_group_home_entity].attributes.current_activity == states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[0] ){
+#   var currentActivity =  "0";
+# }
+
+card_harmony_remote_group_home_poweroff:
+  type: 'custom:button-card'
+  tap_action:
+    action: none
+  # ulm_card_harmony_remote_group_current_activity: >
+  #   [[[
+  #     var currentActivity = "PowerOff";
+  #     if (typeof states[variables.ulm_card_remote_group_arrow_select_entity].attributes.current_activity !== 'undefined'){
+  #       currentActivity = states[variables.ulm_card_remote_group_arrow_select_entity].attributes.current_activity
+  #     }
+  #     return currentActivity;
+  #   ]]]
+
+  # {{ states[ulm_card_harmony_remote_group_actions_entity].attributes.devices_list[0] }}
+  
+  # card_remote_group_home_three_button
+  # variables:
+  #   ulm_card_remote_group_home_entity:
+
+  #   ulm_card_remote_group_home_command_back: "BACK"
+  #   ulm_card_remote_group_home_command_home: "HOME"
+  #   ulm_card_remote_group_home_command_menu: "MENU"
+
+  #   ulm_card_remote_group_home_haptic_back: "BACK"
+  #   ulm_card_remote_group_home_haptic_home: "HOME"
+  #   ulm_card_remote_group_home_haptic_menu: "MENU"
+
+  #   ulm_card_remote_group_home_color_back: "var(--google-grey)"
+  #   ulm_card_remote_group_home_color_home: "var(--google-grey)"
+  #   ulm_card_remote_group_home_color_menu: "var(--google-grey)"
+card_harmony_remote_group_home:
+  template: card_remote_group_home_three_button
+  variables:
+    ulm_card_remote_group_home_entity:
+
+    ulm_card_remote_group_home_command_back: "BACK"
+    ulm_card_remote_group_home_command_home: "HOME"
+    ulm_card_remote_group_home_command_menu: "MENU"
+
+    ulm_card_remote_group_home_haptic_back: "BACK"
+    ulm_card_remote_group_home_haptic_home: "HOME"
+    ulm_card_remote_group_home_haptic_menu: "MENU"
+
+    ulm_card_remote_group_home_color_back: "var(--google-grey)"
+    ulm_card_remote_group_home_color_home: "var(--google-grey)"
+    ulm_card_remote_group_home_color_menu: "var(--google-grey)"
+
+card_harmony_remote_group_play:
+  template: card_remote_group_play
+  variables:
+
+
+    ulm_card_harmony_remote_activity_current:
+    ulm_card_harmony_remote_entity:
+    ulm_card_harmony_remote_group_current_activity:
+
+    ulm_card_harmony_remote_button_icon:
+    ulm_card_harmony_remote_button_icon_color:
+    ulm_card_harmony_remote_button_background_color:
+    ulm_card_harmony_remote_button_type: "normal"
+
+    ulm_card_harmony_remote_activity_01:
+    ulm_card_harmony_remote_device_01:
+    ulm_card_harmony_remote_delay_01:
+    ulm_card_harmony_remote_tap_action_01: "none"
+    ulm_card_harmony_remote_tap_action_service_01:
+    ulm_card_harmony_remote_tap_action_command_01:
+    ulm_card_harmony_remote_tap_action_haptic_01: "none"
+    ulm_card_harmony_remote_double_tap_action_01: "none"
+    ulm_card_harmony_remote_double_tap_action_service_01:
+    ulm_card_harmony_remote_double_tap_action_command_01:
+    ulm_card_harmony_remote_double_tap_action_haptic_01: "none"
+    ulm_card_harmony_remote_hold_action_01: "none"
+    ulm_card_harmony_remote_hold_action_service_01:
+    ulm_card_harmony_remote_hold_action_command_01:
+    ulm_card_harmony_remote_hold_action_haptic_01: "none"
+
+    ulm_card_harmony_remote_activity_02:
+    ulm_card_harmony_remote_device_02:
+    ulm_card_harmony_remote_delay_02:
+    ulm_card_harmony_remote_tap_action_02: "none"
+    ulm_card_harmony_remote_tap_action_service_02:
+    ulm_card_harmony_remote_tap_action_command_02:
+    ulm_card_harmony_remote_tap_action_haptic_02: "none"
+    ulm_card_harmony_remote_double_tap_action_02: "none"
+    ulm_card_harmony_remote_double_tap_action_service_02:
+    ulm_card_harmony_remote_double_tap_action_command_02:
+    ulm_card_harmony_remote_double_tap_action_haptic_02: "none"
+    ulm_card_harmony_remote_hold_action_02: "none"
+    ulm_card_harmony_remote_hold_action_service_02:
+    ulm_card_harmony_remote_hold_action_command_02:
+    ulm_card_harmony_remote_hold_action_haptic_02: "none"
+    
+    ulm_card_harmony_remote_activity_03:
+    ulm_card_harmony_remote_device_03:
+    ulm_card_harmony_remote_delay_03:
+    ulm_card_harmony_remote_tap_action_03: "none"
+    ulm_card_harmony_remote_tap_action_service_03:
+    ulm_card_harmony_remote_tap_action_command_03:
+    ulm_card_harmony_remote_tap_action_haptic_03: "none"
+    ulm_card_harmony_remote_double_tap_action_03: "none"
+    ulm_card_harmony_remote_double_tap_action_service_03:
+    ulm_card_harmony_remote_double_tap_action_command_03:
+    ulm_card_harmony_remote_double_tap_action_haptic_03: "none"
+    ulm_card_harmony_remote_hold_action_03: "none"
+    ulm_card_harmony_remote_hold_action_service_03:
+    ulm_card_harmony_remote_hold_action_command_03:
+    ulm_card_harmony_remote_hold_action_haptic_03: "none"
+
+    ulm_card_harmony_remote_activity_04:
+    ulm_card_harmony_remote_device_04:
+    ulm_card_harmony_remote_delay_04:
+    ulm_card_harmony_remote_tap_action_04: "none"
+    ulm_card_harmony_remote_tap_action_service_04:
+    ulm_card_harmony_remote_tap_action_command_04:
+    ulm_card_harmony_remote_tap_action_haptic_04: "none"
+    ulm_card_harmony_remote_double_tap_action_04: "none"
+    ulm_card_harmony_remote_double_tap_action_service_04:
+    ulm_card_harmony_remote_double_tap_action_command_04:
+    ulm_card_harmony_remote_double_tap_action_haptic_04: "none"
+    ulm_card_harmony_remote_hold_action_04: "none"
+    ulm_card_harmony_remote_hold_action_service_04:
+    ulm_card_harmony_remote_hold_action_command_04:
+    ulm_card_harmony_remote_hold_action_haptic_04: "none"
+
+    ulm_card_harmony_remote_activity_05:
+    ulm_card_harmony_remote_device_05:
+    ulm_card_harmony_remote_delay_05:
+    ulm_card_harmony_remote_tap_action_05: "none"
+    ulm_card_harmony_remote_tap_action_service_05:
+    ulm_card_harmony_remote_tap_action_command_05:
+    ulm_card_harmony_remote_tap_action_haptic_05: "none"
+    ulm_card_harmony_remote_double_tap_action_05: "none"
+    ulm_card_harmony_remote_double_tap_action_service_05:
+    ulm_card_harmony_remote_double_tap_action_command_05:
+    ulm_card_harmony_remote_double_tap_action_haptic_05: "none"
+    ulm_card_harmony_remote_hold_action_05: "none"
+    ulm_card_harmony_remote_hold_action_service_05:
+    ulm_card_harmony_remote_hold_action_command_05:
+    ulm_card_harmony_remote_hold_action_haptic_05: "none"
+
+    ulm_card_harmony_remote_activity_06:
+    ulm_card_harmony_remote_device_06:
+    ulm_card_harmony_remote_delay_06:
+    ulm_card_harmony_remote_tap_action_06: "none"
+    ulm_card_harmony_remote_tap_action_service_06:
+    ulm_card_harmony_remote_tap_action_command_06:
+    ulm_card_harmony_remote_tap_action_haptic_06: "none"
+    ulm_card_harmony_remote_double_tap_action_06: "none"
+    ulm_card_harmony_remote_double_tap_action_service_06:
+    ulm_card_harmony_remote_double_tap_action_command_06:
+    ulm_card_harmony_remote_double_tap_action_haptic_06: "none"
+    ulm_card_harmony_remote_hold_action_06: "none"
+    ulm_card_harmony_remote_hold_action_service_06:
+    ulm_card_harmony_remote_hold_action_command_06:
+    ulm_card_harmony_remote_hold_action_haptic_06: "none"
+
+
+    ulm_card_remote_group_play_entity:
+    ulm_card_remote_standard_button_background_color: "rgba(var(--color-grey), 0.2)"
+    ulm_card_remote_group_play_command_rewind: "input keyevent 89"
+    ulm_card_remote_group_play_command_play: "input keyevent 85"
+    ulm_card_remote_group_play_command_fastforward: "input keyevent 90"
+
+    ulm_card_remote_group_play_haptic_rewind: "input keyevent 89"
+    ulm_card_remote_group_play_haptic_play: "input keyevent 85"
+    ulm_card_remote_group_play_haptic_fastforward: "input keyevent 90"
+
+    ulm_card_remote_group_play_color_rewind: 
+    ulm_card_remote_group_play_color_play: 
+    ulm_card_remote_group_play_color_fastforward: 
+
+card_harmony_remote_group_arrows_and_volume:
+  template: card_remote_group_arrows_and_volume
+  variables:
+    ulm_card_remote_group_volume_entity:
+    ulm_card_harmony_remote_group_current_activity:
+    
+    ulm_card_remote_group_volume_command_volumeup: "input keyevent 89"
+    ulm_card_remote_group_volume_command_volumedown: "input keyevent 85"
+    ulm_card_remote_group_volume_command_volumemute: "input keyevent 90"
+
+    ulm_card_remote_group_volume_haptic_volumeup: "input keyevent 89"
+    ulm_card_remote_group_volume_haptic_volumedown: "input keyevent 85"
+    ulm_card_remote_group_volume_haptic_volumemute: "input keyevent 90"
+
+    ulm_card_remote_group_volume_color_volumeup: "var(--google-green)"
+    ulm_card_remote_group_volume_color_volumedown: "var(--google-green)"
+    ulm_card_remote_group_volume_color_volumemute: "var(--google-green)"
+
+    ulm_card_remote_group_arrow_select_entity:
+    ulm_card_remote_group_arrow_select_command_up: "UP"
+    ulm_card_remote_group_arrow_select_command_down: "DOWN"
+    ulm_card_remote_group_arrow_select_command_left: "LEFT"
+    ulm_card_remote_group_arrow_select_command_right: "RIGHT"
+    ulm_card_remote_group_arrow_select_command_select: "input keyevent 23"
+
+    ulm_card_remote_group_arrow_select_haptic_up: 
+    ulm_card_remote_group_arrow_select_haptic_down: 
+    ulm_card_remote_group_arrow_select_haptic_left: 
+    ulm_card_remote_group_arrow_select_haptic_right: 
+    ulm_card_remote_group_arrow_select_haptic_select: 
+
+    ulm_card_remote_group_arrow_select_color_up: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_down: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_left: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_right: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_select: "var(--google-blue)"
+
+card_harmony_remote_group_numbers:
+  template: card_remote_group_numbers
+  variables:
+    ulm_remote_grid_three_by_four_command_01: 
+    ulm_remote_grid_three_by_four_command_02: 
+    ulm_remote_grid_three_by_four_command_03: 
+    ulm_remote_grid_three_by_four_command_04: 
+    ulm_remote_grid_three_by_four_command_05: 
+    ulm_remote_grid_three_by_four_command_06:
+    ulm_remote_grid_three_by_four_command_07: 
+    ulm_remote_grid_three_by_four_command_08: 
+    ulm_remote_grid_three_by_four_command_09: 
+    ulm_remote_grid_three_by_four_command_10: 
+    ulm_remote_grid_three_by_four_command_11: 
+    ulm_remote_grid_three_by_four_command_12: 
+
+    ulm_remote_grid_three_by_four_haptic_01: 
+    ulm_remote_grid_three_by_four_haptic_02: 
+    ulm_remote_grid_three_by_four_haptic_03: 
+    ulm_remote_grid_three_by_four_haptic_04: 
+    ulm_remote_grid_three_by_four_haptic_05: 
+    ulm_remote_grid_three_by_four_haptic_06:
+    ulm_remote_grid_three_by_four_haptic_07: 
+    ulm_remote_grid_three_by_four_haptic_08: 
+    ulm_remote_grid_three_by_four_haptic_09: 
+    ulm_remote_grid_three_by_four_haptic_10: 
+    ulm_remote_grid_three_by_four_haptic_11: 
+    ulm_remote_grid_three_by_four_haptic_12: 
+
+    ulm_remote_grid_three_by_four_icon_01: 'mdi:numeric-1-circle'
+    ulm_remote_grid_three_by_four_icon_02: 'mdi:numeric-2-circle'
+    ulm_remote_grid_three_by_four_icon_03: 'mdi:numeric-3-circle'
+    ulm_remote_grid_three_by_four_icon_04: 'mdi:numeric-4-circle'
+    ulm_remote_grid_three_by_four_icon_05: 'mdi:numeric-5-circle'
+    ulm_remote_grid_three_by_four_icon_06: 'mdi:numeric-6-circle'
+    ulm_remote_grid_three_by_four_icon_07: 'mdi:numeric-7-circle'
+    ulm_remote_grid_three_by_four_icon_08: 'mdi:numeric-8-circle'
+    ulm_remote_grid_three_by_four_icon_09: 'mdi:numeric-9-circle'
+    ulm_remote_grid_three_by_four_icon_10: 'mdi:plus-circle'
+    ulm_remote_grid_three_by_four_icon_11: 'mdi:numeric-0-circle'
+    ulm_remote_grid_three_by_four_icon_12: 'mdi:dots-horizontal-circle'
+
+    ulm_remote_grid_three_by_four_color_01: 
+    ulm_remote_grid_three_by_four_color_02: 
+    ulm_remote_grid_three_by_four_color_03: 
+    ulm_remote_grid_three_by_four_color_04: 
+    ulm_remote_grid_three_by_four_color_05: 
+    ulm_remote_grid_three_by_four_color_06: 
+    ulm_remote_grid_three_by_four_color_07: 
+    ulm_remote_grid_three_by_four_color_08: 
+    ulm_remote_grid_three_by_four_color_09: 
+    ulm_remote_grid_three_by_four_color_10: 
+    ulm_remote_grid_three_by_four_color_11: 
+    ulm_remote_grid_three_by_four_color_12: 
+
+card_harmony_remote_group_colors:
+  template: card_remote_group_colors
+  variables:
+    ulm_card_remote_group_colors_entity:
+    ulm_card_harmony_remote_group_current_activity:
+
+    ulm_card_remote_standard_button_background_color: "rgba(var(--color-grey), 0.2)"
+    ulm_card_remote_group_colors_command_red:
+    ulm_card_remote_group_colors_command_green:
+    ulm_card_remote_group_colors_command_yellow:
+    ulm_card_remote_group_colors_command_blue:
+
+    ulm_card_remote_group_colors_haptic_red:
+    ulm_card_remote_group_colors_haptic_green:
+    ulm_card_remote_group_colors_haptic_yellow:
+    ulm_card_remote_group_colors_haptic_blue:
+
+########################################################
+#####  NVIDIA SHIELD CARDS                          ####
+########################################################
+
+card_shield_remote_group_power:
+  template: card_remote_group_power
+  variables:
+    ulm_card_remote_group_power_entity:
+    ulm_card_remote_group_power_command_power: "input keyevent 26"
+    ulm_card_remote_group_power_command_input: ""
+
+    ulm_card_remote_group_power_haptic_power: "light"
+    ulm_card_remote_group_power_haptic_input: "light"
+
+    ulm_card_remote_group_power_color_input: "var(--google-grey)"
+
+card_shield_remote_group_home:
+  template: card_remote_group_home_two_button
+  variables:
+    ulm_card_remote_group_home_entity:
+    ulm_card_remote_group_home_command_back: "BACK"
+    ulm_card_remote_group_home_command_home: "HOME"
+
+    ulm_card_remote_group_home_haptic_back: "success"
+    ulm_card_remote_group_home_haptic_home: "success"
+
+    ulm_card_remote_group_home_color_back: "var(--google-grey)"
+    ulm_card_remote_group_home_color_home: "var(--google-grey)"
+
+card_shield_remote_group_play:
+  template: card_remote_group_play
+  variables:
+    ulm_card_remote_group_play_entity:
+    ulm_card_remote_standard_button_background_color: "rgba(var(--color-grey), 0.2)"
+    ulm_card_remote_group_play_command_rewind: "input keyevent 89"
+    ulm_card_remote_group_play_command_play: "input keyevent 85"
+    ulm_card_remote_group_play_command_fastforward: "input keyevent 90"
+
+    ulm_card_remote_group_play_haptic_rewind: "medium"
+    ulm_card_remote_group_play_haptic_play: "medium"
+    ulm_card_remote_group_play_haptic_fastforward: "medium"
+
+    ulm_card_remote_group_play_color_rewind: 
+    ulm_card_remote_group_play_color_play: 
+    ulm_card_remote_group_play_color_fastforward: 
+
+card_shield_remote_group_arrows_and_volume:
+  template: card_remote_group_arrows_and_volume
+  variables:
+    ulm_card_remote_group_volume_entity:
+    ulm_card_remote_group_volume_command_volumeup: "input keyevent 89"
+    ulm_card_remote_group_volume_command_volumedown: "input keyevent 85"
+    ulm_card_remote_group_volume_command_volumemute: "input keyevent 90"
+
+    ulm_card_remote_group_volume_haptic_volumeup: "heavy"
+    ulm_card_remote_group_volume_haptic_volumedown: "heavy"
+    ulm_card_remote_group_volume_haptic_volumemute: "heavy"
+
+    ulm_card_remote_group_volume_color_volumeup: "var(--google-green)"
+    ulm_card_remote_group_volume_color_volumedown: "var(--google-green)"
+    ulm_card_remote_group_volume_color_volumemute: "var(--google-green)"
+
+    ulm_card_remote_group_arrow_select_entity:
+    ulm_card_remote_group_arrow_select_command_up: "UP"
+    ulm_card_remote_group_arrow_select_command_down: "DOWN"
+    ulm_card_remote_group_arrow_select_command_left: "LEFT"
+    ulm_card_remote_group_arrow_select_command_right: "RIGHT"
+    ulm_card_remote_group_arrow_select_command_select: "input keyevent 23"
+
+    ulm_card_remote_group_arrow_select_haptic_up: 
+    ulm_card_remote_group_arrow_select_haptic_down: 
+    ulm_card_remote_group_arrow_select_haptic_left: 
+    ulm_card_remote_group_arrow_select_haptic_right: 
+    ulm_card_remote_group_arrow_select_haptic_select: 
+
+    ulm_card_remote_group_arrow_select_color_up: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_down: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_left: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_right: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_select: "var(--google-blue)"
+
+card_shield_remote_group_apps:
+  template: card_remote_group_apps
+  variables:
+    ulm_remote_grid_four_by_four_entity: 
+    ulm_card_remote_standard_button_background_color:
+
+    ulm_remote_grid_four_by_four_command_01: ""
+    ulm_remote_grid_four_by_four_command_02: ""
+    ulm_remote_grid_four_by_four_command_03: ""
+    ulm_remote_grid_four_by_four_command_04: ""
+    ulm_remote_grid_four_by_four_command_05: ""
+    ulm_remote_grid_four_by_four_command_06: ""
+    ulm_remote_grid_four_by_four_command_07: ""
+    ulm_remote_grid_four_by_four_command_08: ""
+    ulm_remote_grid_four_by_four_command_09: ""
+    ulm_remote_grid_four_by_four_command_10: ""
+    ulm_remote_grid_four_by_four_command_11: ""
+    ulm_remote_grid_four_by_four_command_12: ""
+    ulm_remote_grid_four_by_four_command_13: ""
+    ulm_remote_grid_four_by_four_command_14: ""
+    ulm_remote_grid_four_by_four_command_15: ""
+    ulm_remote_grid_four_by_four_command_16: ""
+
+    ulm_remote_grid_four_by_four_haptic_01: ""
+    ulm_remote_grid_four_by_four_haptic_02: ""
+    ulm_remote_grid_four_by_four_haptic_03: ""
+    ulm_remote_grid_four_by_four_haptic_04: ""
+    ulm_remote_grid_four_by_four_haptic_05: ""
+    ulm_remote_grid_four_by_four_haptic_06: ""
+    ulm_remote_grid_four_by_four_haptic_07: ""
+    ulm_remote_grid_four_by_four_haptic_08: ""
+    ulm_remote_grid_four_by_four_haptic_09: ""
+    ulm_remote_grid_four_by_four_haptic_10: ""
+    ulm_remote_grid_four_by_four_haptic_11: ""
+    ulm_remote_grid_four_by_four_haptic_12: ""
+    ulm_remote_grid_four_by_four_haptic_13: ""
+    ulm_remote_grid_four_by_four_haptic_14: ""
+    ulm_remote_grid_four_by_four_haptic_15: ""
+    ulm_remote_grid_four_by_four_haptic_16: ""
+
+    ulm_remote_grid_four_by_four_icon_01: 'phu:netflix'
+    ulm_remote_grid_four_by_four_icon_02: 'mdi:plex' 
+    ulm_remote_grid_four_by_four_icon_03: 'mdi:spotify' 
+    ulm_remote_grid_four_by_four_icon_04: 'mdi:youtube' 
+    ulm_remote_grid_four_by_four_icon_05: 'mdi:fast-forward-outline' 
+    ulm_remote_grid_four_by_four_icon_06:  
+    ulm_remote_grid_four_by_four_icon_07:  
+    ulm_remote_grid_four_by_four_icon_08: 
+    ulm_remote_grid_four_by_four_icon_09: 
+    ulm_remote_grid_four_by_four_icon_10: 
+    ulm_remote_grid_four_by_four_icon_11: 
+    ulm_remote_grid_four_by_four_icon_12: 
+    ulm_remote_grid_four_by_four_icon_13: 
+    ulm_remote_grid_four_by_four_icon_14: 
+    ulm_remote_grid_four_by_four_icon_15: 
+    ulm_remote_grid_four_by_four_icon_16: 
+
+
+    ulm_remote_grid_four_by_four_color_01: "var(--google-red)"
+    ulm_remote_grid_four_by_four_color_02: "var(--google-yellow)"
+    ulm_remote_grid_four_by_four_color_03: "var(--google-green)"
+    ulm_remote_grid_four_by_four_color_04: "var(--google-red)"
+    ulm_remote_grid_four_by_four_color_05: "var(--google-red)"
+    ulm_remote_grid_four_by_four_color_06: 
+    ulm_remote_grid_four_by_four_color_07: 
+    ulm_remote_grid_four_by_four_color_08: 
+    ulm_remote_grid_four_by_four_color_09: 
+    ulm_remote_grid_four_by_four_color_10: 
+    ulm_remote_grid_four_by_four_color_11: 
+    ulm_remote_grid_four_by_four_color_12: 
+    ulm_remote_grid_four_by_four_color_13: 
+    ulm_remote_grid_four_by_four_color_14: 
+    ulm_remote_grid_four_by_four_color_15: 
+    ulm_remote_grid_four_by_four_color_16: 
+
+
+########################################################
+#####  APPLE TV CARDS                               ####
+########################################################
+
+card_apple_tv_remote_group_power:
+  template: card_remote_group_power
+  variables:
+    ulm_card_remote_group_power_entity:
+    ulm_card_remote_group_power_command_power: "input keyevent 26"
+    ulm_card_remote_group_power_command_input: ""
+
+    ulm_card_remote_group_power_haptic_power: "input keyevent 26"
+    ulm_card_remote_group_power_haptic_input: ""
+
+    ulm_card_remote_group_power_color_input: "var(--google-grey)"
+
+card_apple_tv_remote_group_home:
+  template: card_remote_group_home_two_button
+  variables:
+    ulm_card_remote_group_home_entity:
+    ulm_card_remote_group_home_command_back: "BACK"
+    ulm_card_remote_group_home_command_home: "HOME"
+
+    ulm_card_remote_group_home_haptic_back: "BACK"
+    ulm_card_remote_group_home_haptic_home: "HOME"
+
+    ulm_card_remote_group_home_color_back: "var(--google-grey)"
+    ulm_card_remote_group_home_color_home: "var(--google-grey)"
+
+card_apple_tv_remote_group_play:
+  template: card_remote_group_play
+  variables:
+    ulm_card_remote_group_play_entity:
+    ulm_card_remote_standard_button_background_color: "rgba(var(--color-grey), 0.2)"
+    ulm_card_remote_group_play_command_rewind: "input keyevent 89"
+    ulm_card_remote_group_play_command_play: "input keyevent 85"
+    ulm_card_remote_group_play_command_fastforward: "input keyevent 90"
+
+    ulm_card_remote_group_play_haptic_rewind: "input keyevent 89"
+    ulm_card_remote_group_play_haptic_play: "input keyevent 85"
+    ulm_card_remote_group_play_haptic_fastforward: "input keyevent 90"
+
+    ulm_card_remote_group_play_color_rewind: 
+    ulm_card_remote_group_play_color_play: 
+    ulm_card_remote_group_play_color_fastforward: 
+
+card_apple_tv_remote_group_arrows_and_volume:
+  template: card_remote_group_arrows_and_volume
+  variables:
+    ulm_card_remote_group_volume_entity:
+    ulm_card_remote_group_volume_command_volumeup: "input keyevent 89"
+    ulm_card_remote_group_volume_command_volumedown: "input keyevent 85"
+    ulm_card_remote_group_volume_command_volumemute: "input keyevent 90"
+
+    ulm_card_remote_group_volume_haptic_volumeup: ""
+    ulm_card_remote_group_volume_haptic_volumedown: ""
+    ulm_card_remote_group_volume_haptic_volumemute: ""
+
+    ulm_card_remote_group_volume_color_volumeup: "var(--google-green)"
+    ulm_card_remote_group_volume_color_volumedown: "var(--google-green)"
+    ulm_card_remote_group_volume_color_volumemute: "var(--google-green)"
+
+    ulm_card_remote_group_arrow_select_entity:
+    ulm_card_remote_group_arrow_select_command_up: "UP"
+    ulm_card_remote_group_arrow_select_command_down: "DOWN"
+    ulm_card_remote_group_arrow_select_command_left: "LEFT"
+    ulm_card_remote_group_arrow_select_command_right: "RIGHT"
+    ulm_card_remote_group_arrow_select_command_select: "input keyevent 23"
+
+    ulm_card_remote_group_arrow_select_haptic_up: 
+    ulm_card_remote_group_arrow_select_haptic_down: 
+    ulm_card_remote_group_arrow_select_haptic_left: 
+    ulm_card_remote_group_arrow_select_haptic_right: 
+    ulm_card_remote_group_arrow_select_haptic_select: 
+
+    ulm_card_remote_group_arrow_select_color_up: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_down: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_left: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_right: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_select: "var(--google-blue)"
+
+card_apple_tv_remote_group_apps:
+  template: card_remote_group_apps
+  variables:
+    ulm_remote_grid_four_by_four_entity: 
+    ulm_card_remote_standard_button_background_color:
+
+    ulm_remote_grid_four_by_four_command_01: ""
+    ulm_remote_grid_four_by_four_command_02: ""
+    ulm_remote_grid_four_by_four_command_03: ""
+    ulm_remote_grid_four_by_four_command_04: ""
+    ulm_remote_grid_four_by_four_command_05: ""
+    ulm_remote_grid_four_by_four_command_06: ""
+    ulm_remote_grid_four_by_four_command_07: ""
+    ulm_remote_grid_four_by_four_command_08: ""
+    ulm_remote_grid_four_by_four_command_09: ""
+    ulm_remote_grid_four_by_four_command_10: ""
+    ulm_remote_grid_four_by_four_command_11: ""
+    ulm_remote_grid_four_by_four_command_12: ""
+    ulm_remote_grid_four_by_four_command_13: ""
+    ulm_remote_grid_four_by_four_command_14: ""
+    ulm_remote_grid_four_by_four_command_15: ""
+    ulm_remote_grid_four_by_four_command_16: ""
+
+    ulm_remote_grid_four_by_four_haptic_01: ""
+    ulm_remote_grid_four_by_four_haptic_02: ""
+    ulm_remote_grid_four_by_four_haptic_03: ""
+    ulm_remote_grid_four_by_four_haptic_04: ""
+    ulm_remote_grid_four_by_four_haptic_05: ""
+    ulm_remote_grid_four_by_four_haptic_06: ""
+    ulm_remote_grid_four_by_four_haptic_07: ""
+    ulm_remote_grid_four_by_four_haptic_08: ""
+    ulm_remote_grid_four_by_four_haptic_09: ""
+    ulm_remote_grid_four_by_four_haptic_10: ""
+    ulm_remote_grid_four_by_four_haptic_11: ""
+    ulm_remote_grid_four_by_four_haptic_12: ""
+    ulm_remote_grid_four_by_four_haptic_13: ""
+    ulm_remote_grid_four_by_four_haptic_14: ""
+    ulm_remote_grid_four_by_four_haptic_15: ""
+    ulm_remote_grid_four_by_four_haptic_16: ""
+
+    ulm_remote_grid_four_by_four_icon_01: 'phu:netflix'
+    ulm_remote_grid_four_by_four_icon_02: 'mdi:plex' 
+    ulm_remote_grid_four_by_four_icon_03: 'mdi:spotify' 
+    ulm_remote_grid_four_by_four_icon_04: 'mdi:youtube' 
+    ulm_remote_grid_four_by_four_icon_05: 'mdi:fast-forward-outline' 
+    ulm_remote_grid_four_by_four_icon_06:  
+    ulm_remote_grid_four_by_four_icon_07:  
+    ulm_remote_grid_four_by_four_icon_08: 
+    ulm_remote_grid_four_by_four_icon_09: 
+    ulm_remote_grid_four_by_four_icon_10: 
+    ulm_remote_grid_four_by_four_icon_11: 
+    ulm_remote_grid_four_by_four_icon_12: 
+    ulm_remote_grid_four_by_four_icon_13: 
+    ulm_remote_grid_four_by_four_icon_14: 
+    ulm_remote_grid_four_by_four_icon_15: 
+    ulm_remote_grid_four_by_four_icon_16: 
+
+    ulm_remote_grid_four_by_four_color_01: "var(--google-red)"
+    ulm_remote_grid_four_by_four_color_02: "var(--google-yellow)"
+    ulm_remote_grid_four_by_four_color_03: "var(--google-green)"
+    ulm_remote_grid_four_by_four_color_04: "var(--google-red)"
+    ulm_remote_grid_four_by_four_color_05: "var(--google-red)"
+    ulm_remote_grid_four_by_four_color_06: 
+    ulm_remote_grid_four_by_four_color_07: 
+    ulm_remote_grid_four_by_four_color_08: 
+    ulm_remote_grid_four_by_four_color_09: 
+    ulm_remote_grid_four_by_four_color_10: 
+    ulm_remote_grid_four_by_four_color_11: 
+    ulm_remote_grid_four_by_four_color_12: 
+    ulm_remote_grid_four_by_four_color_13: 
+    ulm_remote_grid_four_by_four_color_14: 
+    ulm_remote_grid_four_by_four_color_15: 
+    ulm_remote_grid_four_by_four_color_16: 
+
+
+########################################################
+#####  AMAZON FIRESTICK CARDS                       ####
+########################################################
+
+card_firestick_remote_group_power:
+  template: card_remote_group_power
+  variables:
+    ulm_card_remote_group_power_entity:
+    ulm_card_remote_group_power_command_power: "input keyevent 26"
+    ulm_card_remote_group_power_command_input: ""
+    ulm_card_remote_group_power_haptic_power: ""
+    ulm_card_remote_group_power_haptic_input: ""
+    ulm_card_remote_group_power_color_input: "var(--google-grey)"
+
+card_firestick_remote_group_home:
+  template: card_remote_group_home_three_button
+  variables:
+    ulm_card_remote_group_home_entity:
+    ulm_card_remote_group_home_command_back: "BACK"
+    ulm_card_remote_group_home_command_home: "HOME"
+    ulm_card_remote_group_home_command_menu: "MENU"
+    ulm_card_remote_group_home_haptic_back: ""
+    ulm_card_remote_group_home_haptic_home: ""
+    ulm_card_remote_group_home_haptic_menu: ""
+    ulm_card_remote_group_home_color_back: "var(--google-grey)"
+    ulm_card_remote_group_home_color_home: "var(--google-grey)"
+    ulm_card_remote_group_home_color_menu: "var(--google-grey)"
+
+card_firestick_remote_group_play:
+  template: card_remote_group_play
+  variables:
+    ulm_card_remote_group_play_entity:
+    ulm_card_remote_standard_button_background_color: "rgba(var(--color-grey), 0.2)"
+    ulm_card_remote_group_play_command_rewind: "input keyevent 89"
+    ulm_card_remote_group_play_command_play: "input keyevent 85"
+    ulm_card_remote_group_play_command_fastforward: "input keyevent 90"
+    ulm_card_remote_group_play_haptic_rewind: ""
+    ulm_card_remote_group_play_haptic_play: ""
+    ulm_card_remote_group_play_haptic_fastforward: ""
+    ulm_card_remote_group_play_color_rewind: 
+    ulm_card_remote_group_play_color_play: 
+    ulm_card_remote_group_play_color_fastforward: 
+
+card_firestick_remote_group_arrows_and_volume:
+  template: card_remote_group_arrows_and_volume
+  variables:
+
+    ulm_card_remote_group_volume_entity:
+    ulm_card_remote_group_volume_command_volumeup: "input keyevent 89"
+    ulm_card_remote_group_volume_command_volumedown: "input keyevent 85"
+    ulm_card_remote_group_volume_command_volumemute: "input keyevent 90"
+
+    ulm_card_remote_group_volume_haptic_volumeup: ""
+    ulm_card_remote_group_volume_haptic_volumedown: ""
+    ulm_card_remote_group_volume_haptic_volumemute: ""
+
+    ulm_card_remote_group_volume_color_volumeup: "var(--google-green)"
+    ulm_card_remote_group_volume_color_volumedown: "var(--google-green)"
+    ulm_card_remote_group_volume_color_volumemute: "var(--google-green)"
+
+    ulm_card_remote_group_arrow_select_entity:
+    ulm_card_remote_group_arrow_select_command_up: "UP"
+    ulm_card_remote_group_arrow_select_command_down: "DOWN"
+    ulm_card_remote_group_arrow_select_command_left: "LEFT"
+    ulm_card_remote_group_arrow_select_command_right: "RIGHT"
+    ulm_card_remote_group_arrow_select_command_select: "input keyevent 23"
+
+    ulm_card_remote_group_arrow_select_haptic_up: ""
+    ulm_card_remote_group_arrow_select_haptic_down: ""
+    ulm_card_remote_group_arrow_select_haptic_left: ""
+    ulm_card_remote_group_arrow_select_haptic_right: ""
+    ulm_card_remote_group_arrow_select_haptic_select: ""
+
+    ulm_card_remote_group_arrow_select_color_up: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_down: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_left: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_right: "var(--google-blue)"
+    ulm_card_remote_group_arrow_select_color_select: "var(--google-blue)"
+
+card_firestick_remote_group_apps:
+  template: card_remote_group_apps
+  variables:
+    ulm_remote_grid_four_by_four_entity: 
+    ulm_card_remote_standard_button_background_color:
+
+    ulm_remote_grid_four_by_four_command_01: ""
+    ulm_remote_grid_four_by_four_command_02: ""
+    ulm_remote_grid_four_by_four_command_03: ""
+    ulm_remote_grid_four_by_four_command_04: ""
+    ulm_remote_grid_four_by_four_command_05: ""
+    ulm_remote_grid_four_by_four_command_06: ""
+    ulm_remote_grid_four_by_four_command_07: ""
+    ulm_remote_grid_four_by_four_command_08: ""
+    ulm_remote_grid_four_by_four_command_09: ""
+    ulm_remote_grid_four_by_four_command_10: ""
+    ulm_remote_grid_four_by_four_command_11: ""
+    ulm_remote_grid_four_by_four_command_12: ""
+    ulm_remote_grid_four_by_four_command_13: ""
+    ulm_remote_grid_four_by_four_command_14: ""
+    ulm_remote_grid_four_by_four_command_15: ""
+    ulm_remote_grid_four_by_four_command_16: ""
+
+    ulm_remote_grid_four_by_four_haptic_01: ""
+    ulm_remote_grid_four_by_four_haptic_02: ""
+    ulm_remote_grid_four_by_four_haptic_03: ""
+    ulm_remote_grid_four_by_four_haptic_04: ""
+    ulm_remote_grid_four_by_four_haptic_05: ""
+    ulm_remote_grid_four_by_four_haptic_06: ""
+    ulm_remote_grid_four_by_four_haptic_07: ""
+    ulm_remote_grid_four_by_four_haptic_08: ""
+    ulm_remote_grid_four_by_four_haptic_09: ""
+    ulm_remote_grid_four_by_four_haptic_10: ""
+    ulm_remote_grid_four_by_four_haptic_11: ""
+    ulm_remote_grid_four_by_four_haptic_12: ""
+    ulm_remote_grid_four_by_four_haptic_13: ""
+    ulm_remote_grid_four_by_four_haptic_14: ""
+    ulm_remote_grid_four_by_four_haptic_15: ""
+    ulm_remote_grid_four_by_four_haptic_16: ""
+
+    ulm_remote_grid_four_by_four_icon_01: 'phu:netflix'
+    ulm_remote_grid_four_by_four_icon_02: 'phu:disney-plus'
+    ulm_remote_grid_four_by_four_icon_03: 'phu:prime-video'
+    ulm_remote_grid_four_by_four_icon_04: 'phu:apple-tv'
+    ulm_remote_grid_four_by_four_icon_05: 'mdi:plex'
+    ulm_remote_grid_four_by_four_icon_06: 'mdi:spotify'
+    ulm_remote_grid_four_by_four_icon_07: 'mdi:youtube'
+    ulm_remote_grid_four_by_four_icon_08: 
+    ulm_remote_grid_four_by_four_icon_09: 
+    ulm_remote_grid_four_by_four_icon_10: 
+    ulm_remote_grid_four_by_four_icon_11: 
+    ulm_remote_grid_four_by_four_icon_12: 
+    ulm_remote_grid_four_by_four_icon_13: 
+    ulm_remote_grid_four_by_four_icon_14: 
+    ulm_remote_grid_four_by_four_icon_15: 
+    ulm_remote_grid_four_by_four_icon_16: 
+
+
+    ulm_remote_grid_four_by_four_color_01: "var(--google-red)"
+    ulm_remote_grid_four_by_four_color_02: "var(--google-blue)"
+    ulm_remote_grid_four_by_four_color_03: "var(--google-blue)"
+    ulm_remote_grid_four_by_four_color_04: 
+    ulm_remote_grid_four_by_four_color_05: "var(--google-yellow)"
+    ulm_remote_grid_four_by_four_color_06: "var(--google-green)"
+    ulm_remote_grid_four_by_four_color_07: "var(--google-red)"
+    ulm_remote_grid_four_by_four_color_08: 
+    ulm_remote_grid_four_by_four_color_09: 
+    ulm_remote_grid_four_by_four_color_10: 
+    ulm_remote_grid_four_by_four_color_11: 
+    ulm_remote_grid_four_by_four_color_12: 
+    ulm_remote_grid_four_by_four_color_13: 
+    ulm_remote_grid_four_by_four_color_14: 
+    ulm_remote_grid_four_by_four_color_15: 
+    ulm_remote_grid_four_by_four_color_16: "var(--google-red)"
+
+########################################################
+#####  REMOTE TEMPLATES                             ####
+########################################################
+
+card_remote_group_power:
+  variables:
+    ulm_card_remote_group_power_entity:
+    ulm_card_remote_group_power_command_power: 
+    ulm_card_remote_group_power_command_input: 
+
+    ulm_card_remote_group_power_haptic_power: 
+    ulm_card_remote_group_power_haptic_input: 
+
+    ulm_card_remote_group_power_color_input: 
+    
+  triggers_update: all
+  styles:
+    grid:
+      - grid-template-areas: '"item1"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_gap_item2 
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_power_entity ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_power_command_power ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_power_haptic_power ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:power'
+                ulm_card_remote_standard_button_icon_color: "var(--google-red)"
+                ulm_card_remote_standard_button_type: 'power'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_power_entity ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_power_command_input ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_power_haptic_input ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:import'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_power_color_input ]]]'
+
+card_remote_group_home_three_button:
+  variables:
+    ulm_card_remote_group_home_three_button_entity:
+    ulm_card_remote_group_home_three_button_command_back: 
+    ulm_card_remote_group_home_three_button_command_home: 
+    ulm_card_remote_group_home_three_button_command_menu: 
+
+    ulm_card_remote_group_home_three_button_haptic_back: 
+    ulm_card_remote_group_home_three_button_haptic_home: 
+    ulm_card_remote_group_home_three_button_haptic_menu: 
+
+    ulm_card_remote_group_home_three_button_color_back: 
+    ulm_card_remote_group_home_three_button_color_home: 
+    ulm_card_remote_group_home_three_button_color_menu: 
+  styles:
+    grid:
+      - grid-template-areas: '"item1"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_items
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_home_three_button_entity ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_home_three_button_command_back ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_home_three_button_haptic_back ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:arrow-u-left-top-bold'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_home_three_button_color_back ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_home_three_button_entity ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_home_three_button_command_home ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_home_three_button_haptic_home ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:home'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_home_three_button_color_home ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_home_three_button_entity ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_home_three_button_command_menu ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_home_three_button_haptic_menu ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:menu'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_home_three_button_color_menu ]]]'
+
+card_remote_group_home_two_button:
+  variables:
+    ulm_card_remote_group_home_two_button_entity:
+    ulm_card_remote_group_home_two_button_command_back: 
+    ulm_card_remote_group_home_two_button_command_home: 
+
+    ulm_card_remote_group_home_two_button_haptic_back: 
+    ulm_card_remote_group_home_two_button_haptic_home: 
+
+    ulm_card_remote_group_home_two_button_color_back: 
+    ulm_card_remote_group_home_two_button_color_home: 
+  styles:
+    grid:
+      - grid-template-areas: '"item1"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_item1_gap_item2
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_home_two_button_entity ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_home_two_button_command_back ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_home_two_button_haptic_back ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:menu-left-outline'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_home_two_button_color_back ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_home_two_button_entity ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_home_two_button_command_home ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_home_two_button_haptic_home ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:circle-outline'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_home_two_button_color_home ]]]'
+
+card_remote_group_play:
+  variables:
+    ulm_card_remote_group_play_entity:
+    ulm_card_remote_standard_button_background_color: 
+
+    ulm_card_remote_group_play_command_rewind: 
+    ulm_card_remote_group_play_command_play: 
+    ulm_card_remote_group_play_command_fastforward: 
+
+    ulm_card_remote_group_play_haptic_rewind: 
+    ulm_card_remote_group_play_haptic_play: 
+    ulm_card_remote_group_play_haptic_fastforward: 
+
+    ulm_card_remote_group_play_color_rewind: 
+    ulm_card_remote_group_play_color_play: 
+    ulm_card_remote_group_play_color_fastforward: 
+  styles:
+    grid:
+      - grid-template-areas: '"item1"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_items
+        custom_fields:
+          item1:
+
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_play_entity ]]]'
+                ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_play_command_rewind ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_play_haptic_rewind ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:rewind'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_play_color_rewind ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_play_entity ]]]'
+                ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_play_command_play ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_play_haptic_play ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:pause'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_play_color_play ]]]'
+                ulm_card_remote_standard_button_type: 'play'
+          item3:
+            
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_play_entity ]]]'
+                ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_play_command_fastforward ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_play_haptic_fastforward ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:fast-forward'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_play_color_fastforward ]]]'
+
+card_remote_group_arrow_select:
+  variables:
+    ulm_card_remote_group_arrow_select_entity:
+    ulm_card_remote_group_arrow_select_command_up:
+    ulm_card_remote_group_arrow_select_command_down:
+    ulm_card_remote_group_arrow_select_command_left:
+    ulm_card_remote_group_arrow_select_command_right:
+    ulm_card_remote_group_arrow_select_command_select:
+
+    ulm_card_remote_group_arrow_select_haptic_up:
+    ulm_card_remote_group_arrow_select_haptic_down:
+    ulm_card_remote_group_arrow_select_haptic_left:
+    ulm_card_remote_group_arrow_select_haptic_right:
+    ulm_card_remote_group_arrow_select_haptic_select:
+
+    ulm_card_remote_group_arrow_select_color_up: 
+    ulm_card_remote_group_arrow_select_color_down: 
+    ulm_card_remote_group_arrow_select_color_left: 
+    ulm_card_remote_group_arrow_select_color_right: 
+    ulm_card_remote_group_arrow_select_color_select: 
+  styles:
+    grid:
+      - grid-template-areas: '"item1"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: list_items_arrow_select
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+                ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_up ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_up ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:arrow-up'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_up ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+                ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_left ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_left ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:arrow-left'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_left ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+                ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_select ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_select ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:checkbox-blank-circle-outline'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_select ]]]'
+
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+                ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_right ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_right ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:arrow-right'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_right ]]]'
+
+          item5:
+            card:
+              type: 'custom:button-card'
+              template: remote_standard_button
+              variables:
+                ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+                ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+                ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_arrow_select_command_down ]]]'
+                ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_down ]]]'
+                ulm_card_remote_standard_button_icon: 'mdi:arrow-down'
+                ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_arrow_select_color_down ]]]'
+
+card_remote_group_volume:
+  variables:
+    ulm_card_remote_group_volume_entity:
+    ulm_card_remote_group_volume_command_volumeup: 
+    ulm_card_remote_group_volume_command_volumedown: 
+    ulm_card_remote_group_volume_command_volumemute: 
+
+    ulm_card_remote_group_volume_haptic_volumeup: 
+    ulm_card_remote_group_volume_haptic_volumedown: 
+    ulm_card_remote_group_volume_haptic_volumemute: 
+
+    ulm_card_remote_group_volume_color_volumeup: 
+    ulm_card_remote_group_volume_color_volumedown: 
+    ulm_card_remote_group_volume_color_volumemute: 
+  styles:
+    grid:
+      - grid-template-areas: '"item1" "item2" "item3"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_volume_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_volume_command_volumeup ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_volume_haptic_volumeup ]]]'
+          ulm_card_remote_standard_button_icon: 'mdi:volume-plus'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_volume_color_volumeup ]]]'
+
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_volume_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_volume_command_volumedown ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_volume_haptic_volumedown ]]]'
+          ulm_card_remote_standard_button_icon: 'mdi:volume-minus'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_volume_color_volumedown ]]]'
+
+    item3:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_volume_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_group_volume_command_volumemute ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_group_volume_haptic_volumemute ]]]'
+          ulm_card_remote_standard_button_icon: 'mdi:volume-off'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_group_volume_color_volumemute ]]]'
+          ulm_card_remote_standard_button_type: "mute"
+
+card_remote_group_colors:
+
+  variables:
+    ulm_card_remote_group_colors_entity:
+    ulm_card_remote_standard_button_background_color: 
+
+    ulm_card_remote_group_colors_command_red:
+    ulm_card_remote_group_colors_command_green:
+    ulm_card_remote_group_colors_command_yellow:
+    ulm_card_remote_group_colors_command_blue:
+
+    ulm_card_remote_group_colors_haptic_red:
+    ulm_card_remote_group_colors_haptic_green:
+    ulm_card_remote_group_colors_haptic_yellow:
+    ulm_card_remote_group_colors_haptic_blue:
+  styles:
+    grid:
+      - grid-template-areas: '"item1"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_four_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_group_colors_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_card_remote_group_colors_command_red ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_card_remote_group_colors_haptic_red ]]]'
+          ulm_card_remote_standard_button_icon_item1: 'mdi:card'
+          ulm_card_remote_standard_button_icon_color_item1: "var(--google-red)"
+
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_card_remote_group_colors_command_green ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_card_remote_group_colors_haptic_green ]]]'
+          ulm_card_remote_standard_button_icon_item2: 'mdi:card'
+          ulm_card_remote_standard_button_icon_color_item2: "var(--google-green)"
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_card_remote_group_colors_command_yellow ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_card_remote_group_colors_haptic_yellow ]]]'
+          ulm_card_remote_standard_button_icon_item3: 'mdi:card'
+          ulm_card_remote_standard_button_icon_color_item3: "var(--google-yellow)"
+
+          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_card_remote_group_colors_command_blue ]]]'
+          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_card_remote_group_colors_haptic_blue ]]]'
+          ulm_card_remote_standard_button_icon_item4: 'mdi:card'
+          ulm_card_remote_standard_button_icon_color_item4: "var(--google-blue)"
+
+card_remote_group_numbers:
+  template: remote_grid_three_by_four
+  variables:
+    ulm_remote_grid_three_by_four_command_01: 
+    ulm_remote_grid_three_by_four_command_02: 
+    ulm_remote_grid_three_by_four_command_03: 
+    ulm_remote_grid_three_by_four_command_04: 
+    ulm_remote_grid_three_by_four_command_05: 
+    ulm_remote_grid_three_by_four_command_06:
+    ulm_remote_grid_three_by_four_command_07: 
+    ulm_remote_grid_three_by_four_command_08: 
+    ulm_remote_grid_three_by_four_command_09: 
+    ulm_remote_grid_three_by_four_command_10: 
+    ulm_remote_grid_three_by_four_command_11: 
+    ulm_remote_grid_three_by_four_command_12: 
+
+    ulm_remote_grid_three_by_four_haptic_01: 
+    ulm_remote_grid_three_by_four_haptic_02: 
+    ulm_remote_grid_three_by_four_haptic_03: 
+    ulm_remote_grid_three_by_four_haptic_04: 
+    ulm_remote_grid_three_by_four_haptic_05: 
+    ulm_remote_grid_three_by_four_haptic_06:
+    ulm_remote_grid_three_by_four_haptic_07: 
+    ulm_remote_grid_three_by_four_haptic_08: 
+    ulm_remote_grid_three_by_four_haptic_09: 
+    ulm_remote_grid_three_by_four_haptic_10: 
+    ulm_remote_grid_three_by_four_haptic_11: 
+    ulm_remote_grid_three_by_four_haptic_12: 
+
+    ulm_remote_grid_three_by_four_icon_01: 'mdi:numeric-1-circle'
+    ulm_remote_grid_three_by_four_icon_02: 'mdi:numeric-2-circle'
+    ulm_remote_grid_three_by_four_icon_03: 'mdi:numeric-3-circle'
+    ulm_remote_grid_three_by_four_icon_04: 'mdi:numeric-4-circle'
+    ulm_remote_grid_three_by_four_icon_05: 'mdi:numeric-5-circle'
+    ulm_remote_grid_three_by_four_icon_06: 'mdi:numeric-6-circle'
+    ulm_remote_grid_three_by_four_icon_07: 'mdi:numeric-7-circle'
+    ulm_remote_grid_three_by_four_icon_08: 'mdi:numeric-8-circle'
+    ulm_remote_grid_three_by_four_icon_09: 'mdi:numeric-9-circle'
+    ulm_remote_grid_three_by_four_icon_10: 
+    ulm_remote_grid_three_by_four_icon_11: 'mdi:numeric-0-circle'
+    ulm_remote_grid_three_by_four_icon_12: 
+
+    ulm_remote_grid_three_by_four_color_01: 
+    ulm_remote_grid_three_by_four_color_02: 
+    ulm_remote_grid_three_by_four_color_03: 
+    ulm_remote_grid_three_by_four_color_04: 
+    ulm_remote_grid_three_by_four_color_05: 
+    ulm_remote_grid_three_by_four_color_06: 
+    ulm_remote_grid_three_by_four_color_07: 
+    ulm_remote_grid_three_by_four_color_08: 
+    ulm_remote_grid_three_by_four_color_09: 
+    ulm_remote_grid_three_by_four_color_10: 
+    ulm_remote_grid_three_by_four_color_11: 
+    ulm_remote_grid_three_by_four_color_12: 
+
+card_remote_group_arrows_and_volume:
+  type: 'custom:button-card'
+  template: list_item1_item1_item2
+  variables:
+
+    ulm_card_remote_group_volume_entity:
+    ulm_card_remote_group_volume_command_volumeup: 
+    ulm_card_remote_group_volume_command_volumedown: 
+    ulm_card_remote_group_volume_command_volumemute: 
+
+    ulm_card_remote_group_volume_haptic_volumeup: 
+    ulm_card_remote_group_volume_haptic_volumedown: 
+    ulm_card_remote_group_volume_haptic_volumemute: 
+
+    ulm_card_remote_group_volume_color_volumeup: 
+    ulm_card_remote_group_volume_color_volumedown: 
+    ulm_card_remote_group_volume_color_volumemute: 
+
+    ulm_card_remote_group_arrow_select_entity:
+    ulm_card_remote_group_arrow_select_command_up: 
+    ulm_card_remote_group_arrow_select_command_down: 
+    ulm_card_remote_group_arrow_select_command_left: 
+    ulm_card_remote_group_arrow_select_command_right: 
+    ulm_card_remote_group_arrow_select_command_select: 
+
+    ulm_card_remote_group_arrow_select_haptic_up: 
+    ulm_card_remote_group_arrow_select_haptic_down: 
+    ulm_card_remote_group_arrow_select_haptic_left: 
+    ulm_card_remote_group_arrow_select_haptic_right: 
+    ulm_card_remote_group_arrow_select_haptic_select: 
+
+    ulm_card_remote_group_arrow_select_color_up: 
+    ulm_card_remote_group_arrow_select_color_down:
+    ulm_card_remote_group_arrow_select_color_left: 
+    ulm_card_remote_group_arrow_select_color_right: 
+    ulm_card_remote_group_arrow_select_color_select: 
+  styles:
+    card:
+    - background-color: var(--primary-background-color)
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: card_remote_group_arrow_select
+        styles:
+          card:
+          - border-radius: var(--border-radius)
+          - box-shadow: var(--box-shadow)
+        variables:
+          ulm_card_remote_group_arrow_select_entity: '[[[ return variables.ulm_card_remote_group_arrow_select_entity ]]]'
+          ulm_card_remote_group_arrow_select_command_up: '[[[ return variables.ulm_card_remote_group_arrow_select_command_up ]]]'
+          ulm_card_remote_group_arrow_select_command_down: '[[[ return variables.ulm_card_remote_group_arrow_select_command_down ]]]'
+          ulm_card_remote_group_arrow_select_command_left: '[[[ return variables.ulm_card_remote_group_arrow_select_command_left ]]]'
+          ulm_card_remote_group_arrow_select_command_right: '[[[ return variables.ulm_card_remote_group_arrow_select_command_right ]]]'
+          ulm_card_remote_group_arrow_select_command_select: '[[[ return variables.ulm_card_remote_group_arrow_select_command_select ]]]'
+          ulm_card_remote_group_arrow_select_haptic_up: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_up ]]]'
+          ulm_card_remote_group_arrow_select_haptic_down: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_down ]]]'
+          ulm_card_remote_group_arrow_select_haptic_left: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_left ]]]'
+          ulm_card_remote_group_arrow_select_haptic_right: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_right ]]]'
+          ulm_card_remote_group_arrow_select_haptic_select: '[[[ return variables.ulm_card_remote_group_arrow_select_haptic_select ]]]'
+          ulm_card_remote_group_arrow_select_color_up: '[[[ return variables.ulm_card_remote_group_arrow_select_color_up ]]]'
+          ulm_card_remote_group_arrow_select_color_down: '[[[ return variables.ulm_card_remote_group_arrow_select_color_down ]]]'
+          ulm_card_remote_group_arrow_select_color_left: '[[[ return variables.ulm_card_remote_group_arrow_select_color_left ]]]'
+          ulm_card_remote_group_arrow_select_color_right: '[[[ return variables.ulm_card_remote_group_arrow_select_color_right ]]]'
+          ulm_card_remote_group_arrow_select_color_select: '[[[ return variables.ulm_card_remote_group_arrow_select_color_select ]]]'
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: card_remote_group_volume
+        styles:
+          card:
+          - border-radius: var(--border-radius)
+          - box-shadow: var(--box-shadow)
+        variables:
+          ulm_card_remote_group_volume_entity: '[[[ return variables.ulm_card_remote_group_volume_entity ]]]'
+          ulm_card_remote_group_volume_command_volumeup: '[[[ return variables.ulm_card_remote_group_volume_command_volumeup ]]]'
+          ulm_card_remote_group_volume_command_volumedown: '[[[ return variables.ulm_card_remote_group_volume_command_volumedown ]]]'
+          ulm_card_remote_group_volume_command_volumemute: '[[[ return variables.ulm_card_remote_group_volume_command_volumemute ]]]'
+          ulm_card_remote_group_volume_haptic_volumeup: '[[[ return variables.ulm_card_remote_group_volume_haptic_volumeup ]]]'
+          ulm_card_remote_group_volume_haptic_volumedown: '[[[ return variables.ulm_card_remote_group_volume_haptic_volumedown ]]]'
+          ulm_card_remote_group_volume_haptic_volumemute: '[[[ return variables.ulm_card_remote_group_volume_haptic_volumemute ]]]'
+          ulm_card_remote_group_volume_color_volumeup: '[[[ return variables.ulm_card_remote_group_volume_color_volumeup ]]]'
+          ulm_card_remote_group_volume_color_volumedown: '[[[ return variables.ulm_card_remote_group_volume_color_volumedown ]]]'
+          ulm_card_remote_group_volume_color_volumemute: '[[[ return variables.ulm_card_remote_group_volume_color_volumemute ]]]'
+ 
+card_remote_group_apps:
+  type: 'custom:button-card'
+  template: 
+    - remote_grid_four_by_four
+  variables:
+    ulm_remote_grid_four_by_four_entity: 
+    ulm_card_remote_standard_button_background_color:
+
+    ulm_remote_grid_four_by_four_command_01: 
+    ulm_remote_grid_four_by_four_command_02: 
+    ulm_remote_grid_four_by_four_command_03: 
+    ulm_remote_grid_four_by_four_command_04: 
+    ulm_remote_grid_four_by_four_command_05: 
+    ulm_remote_grid_four_by_four_command_06: 
+    ulm_remote_grid_four_by_four_command_07: 
+    ulm_remote_grid_four_by_four_command_08: 
+    ulm_remote_grid_four_by_four_command_09: 
+    ulm_remote_grid_four_by_four_command_10: 
+    ulm_remote_grid_four_by_four_command_11: 
+    ulm_remote_grid_four_by_four_command_12: 
+    ulm_remote_grid_four_by_four_command_13: 
+    ulm_remote_grid_four_by_four_command_14: 
+    ulm_remote_grid_four_by_four_command_15: 
+    ulm_remote_grid_four_by_four_command_16: 
+
+    ulm_remote_grid_four_by_four_haptic_01: ""
+    ulm_remote_grid_four_by_four_haptic_02: ""
+    ulm_remote_grid_four_by_four_haptic_03: ""
+    ulm_remote_grid_four_by_four_haptic_04: ""
+    ulm_remote_grid_four_by_four_haptic_05: ""
+    ulm_remote_grid_four_by_four_haptic_06: ""
+    ulm_remote_grid_four_by_four_haptic_07: ""
+    ulm_remote_grid_four_by_four_haptic_08: ""
+    ulm_remote_grid_four_by_four_haptic_09: ""
+    ulm_remote_grid_four_by_four_haptic_10: ""
+    ulm_remote_grid_four_by_four_haptic_11: ""
+    ulm_remote_grid_four_by_four_haptic_12: ""
+    ulm_remote_grid_four_by_four_haptic_13: ""
+    ulm_remote_grid_four_by_four_haptic_14: ""
+    ulm_remote_grid_four_by_four_haptic_15: ""
+    ulm_remote_grid_four_by_four_haptic_16: ""
+
+    ulm_remote_grid_four_by_four_icon_01: 'mdi:alpha-a-box'
+    ulm_remote_grid_four_by_four_icon_02: 'mdi:alpha-b-box'
+    ulm_remote_grid_four_by_four_icon_03: 'mdi:alpha-c-box'
+    ulm_remote_grid_four_by_four_icon_04: 'mdi:alpha-d-box'
+    ulm_remote_grid_four_by_four_icon_05: 'mdi:alpha-e-box'
+    ulm_remote_grid_four_by_four_icon_06: 'mdi:alpha-f-box'
+    ulm_remote_grid_four_by_four_icon_07: 'mdi:alpha-g-box'
+    ulm_remote_grid_four_by_four_icon_08: 'mdi:alpha-h-box'
+    ulm_remote_grid_four_by_four_icon_09: 'mdi:alpha-i-box'
+    ulm_remote_grid_four_by_four_icon_10: 'mdi:alpha-j-box'
+    ulm_remote_grid_four_by_four_icon_11: 'mdi:alpha-k-box'
+    ulm_remote_grid_four_by_four_icon_12: 'mdi:alpha-l-box'
+    ulm_remote_grid_four_by_four_icon_13: 'mdi:alpha-m-box'
+    ulm_remote_grid_four_by_four_icon_14: 'mdi:alpha-n-box'
+    ulm_remote_grid_four_by_four_icon_15: 'mdi:alpha-o-box'
+    ulm_remote_grid_four_by_four_icon_16: 'mdi:alpha-p-box'
+
+    ulm_remote_grid_four_by_four_color_01: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_02: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_03: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_04: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_05: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_06: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_07: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_08: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_09: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_10: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_11: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_12: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_13: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_14: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_15: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_16: "var(--google-grey)"
+
+
+########################################################
+#####  GRID TEMPLATES                               ####
+########################################################
+
+remote_grid_three_by_four:
+  variables:
+    ulm_remote_grid_three_by_four_entity:
+    ulm_card_remote_standard_button_background_color:
+
+    ulm_remote_grid_three_by_four_command_01: 
+    ulm_remote_grid_three_by_four_command_02: 
+    ulm_remote_grid_three_by_four_command_03: 
+    ulm_remote_grid_three_by_four_command_04: 
+    ulm_remote_grid_three_by_four_command_05: 
+    ulm_remote_grid_three_by_four_command_06: 
+    ulm_remote_grid_three_by_four_command_07: 
+    ulm_remote_grid_three_by_four_command_08: 
+    ulm_remote_grid_three_by_four_command_09: 
+    ulm_remote_grid_three_by_four_command_10: 
+    ulm_remote_grid_three_by_four_command_11: 
+    ulm_remote_grid_three_by_four_command_12: 
+
+    ulm_remote_grid_three_by_four_haptic_01: ""
+    ulm_remote_grid_three_by_four_haptic_02: ""
+    ulm_remote_grid_three_by_four_haptic_03: ""
+    ulm_remote_grid_three_by_four_haptic_04: ""
+    ulm_remote_grid_three_by_four_haptic_05: ""
+    ulm_remote_grid_three_by_four_haptic_06: ""
+    ulm_remote_grid_three_by_four_haptic_07: ""
+    ulm_remote_grid_three_by_four_haptic_08: ""
+    ulm_remote_grid_three_by_four_haptic_09: ""
+    ulm_remote_grid_three_by_four_haptic_10: ""
+    ulm_remote_grid_three_by_four_haptic_11: ""
+    ulm_remote_grid_three_by_four_haptic_12: ""
+
+    ulm_remote_grid_three_by_four_icon_01: 'mdi:numeric-1-circle'
+    ulm_remote_grid_three_by_four_icon_02: 'mdi:numeric-2-circle'
+    ulm_remote_grid_three_by_four_icon_03: 'mdi:numeric-3-circle'
+    ulm_remote_grid_three_by_four_icon_04: 'mdi:numeric-4-circle'
+    ulm_remote_grid_three_by_four_icon_05: 'mdi:numeric-5-circle'
+    ulm_remote_grid_three_by_four_icon_06: 'mdi:numeric-6-circle'
+    ulm_remote_grid_three_by_four_icon_07: 'mdi:numeric-7-circle'
+    ulm_remote_grid_three_by_four_icon_08: 'mdi:numeric-8-circle'
+    ulm_remote_grid_three_by_four_icon_09: 'mdi:numeric-9-circle'
+    ulm_remote_grid_three_by_four_icon_10: 
+    ulm_remote_grid_three_by_four_icon_11: 'mdi:numeric-0-circle'
+    ulm_remote_grid_three_by_four_icon_12: 
+
+    ulm_remote_grid_three_by_four_color_01: 
+    ulm_remote_grid_three_by_four_color_02: 
+    ulm_remote_grid_three_by_four_color_03: 
+    ulm_remote_grid_three_by_four_color_04: 
+    ulm_remote_grid_three_by_four_color_05: 
+    ulm_remote_grid_three_by_four_color_06: 
+    ulm_remote_grid_three_by_four_color_07: 
+    ulm_remote_grid_three_by_four_color_08: 
+    ulm_remote_grid_three_by_four_color_09: 
+    ulm_remote_grid_three_by_four_color_10: 
+    ulm_remote_grid_three_by_four_color_11: 
+    ulm_remote_grid_three_by_four_color_12: 
+
+  styles:
+    grid:
+      - grid-template-areas: '"item1" "item2" "item3" "item4"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_three_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_three_by_four_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_three_by_four_command_01 ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_01 ]]]'
+          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_three_by_four_icon_01 ]]]'
+          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_three_by_four_color_01 ]]]'
+          
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_three_by_four_command_02 ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_02 ]]]'
+          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_three_by_four_icon_02 ]]]'
+          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_three_by_four_color_02 ]]]'
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_three_by_four_command_03 ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_03 ]]]'
+          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_three_by_four_icon_03 ]]]'
+          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_three_by_four_color_03 ]]]'
+
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_three_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_three_by_four_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_three_by_four_command_04 ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_04 ]]]'
+          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_three_by_four_icon_04 ]]]'
+          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_three_by_four_color_04 ]]]'
+          
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_three_by_four_command_05 ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_05 ]]]'
+          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_three_by_four_icon_05 ]]]'
+          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_three_by_four_color_05 ]]]'
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_three_by_four_command_06 ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_06 ]]]'
+          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_three_by_four_icon_06 ]]]'
+          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_three_by_four_color_06 ]]]'
+    item3:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_three_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_three_by_four_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_three_by_four_command_07 ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_07 ]]]'
+          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_three_by_four_icon_07 ]]]'
+          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_three_by_four_color_07 ]]]'
+          
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_three_by_four_command_08 ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_08 ]]]'
+          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_three_by_four_icon_08 ]]]'
+          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_three_by_four_color_08 ]]]'
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_three_by_four_command_09 ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_09 ]]]'
+          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_three_by_four_icon_09 ]]]'
+          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_three_by_four_color_09 ]]]'
+    item4:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_three_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_three_by_four_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_three_by_four_command_10 ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_10 ]]]'
+          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_three_by_four_icon_10 ]]]'
+          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_three_by_four_color_10 ]]]'
+          
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_three_by_four_command_11 ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_11 ]]]'
+          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_three_by_four_icon_11 ]]]'
+          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_three_by_four_color_11 ]]]'
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_three_by_four_command_12 ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_12 ]]]'
+          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_three_by_four_icon_12 ]]]'
+          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_three_by_four_color_12 ]]]'
+
+remote_grid_four_by_four:
+  variables:
+    ulm_remote_grid_four_by_four_entity:
+    ulm_card_remote_standard_button_background_color:
+
+    ulm_remote_grid_four_by_four_command_01: ""
+    ulm_remote_grid_four_by_four_command_02: ""
+    ulm_remote_grid_four_by_four_command_03: ""
+    ulm_remote_grid_four_by_four_command_04: ""
+    ulm_remote_grid_four_by_four_command_05: ""
+    ulm_remote_grid_four_by_four_command_06: ""
+    ulm_remote_grid_four_by_four_command_07: ""
+    ulm_remote_grid_four_by_four_command_08: ""
+    ulm_remote_grid_four_by_four_command_09: ""
+    ulm_remote_grid_four_by_four_command_10: ""
+    ulm_remote_grid_four_by_four_command_11: ""
+    ulm_remote_grid_four_by_four_command_12: ""
+    ulm_remote_grid_four_by_four_command_13: ""
+    ulm_remote_grid_four_by_four_command_14: ""
+    ulm_remote_grid_four_by_four_command_15: ""
+    ulm_remote_grid_four_by_four_command_16: ""
+
+    ulm_remote_grid_four_by_four_haptic_01: ""
+    ulm_remote_grid_four_by_four_haptic_02: ""
+    ulm_remote_grid_four_by_four_haptic_03: ""
+    ulm_remote_grid_four_by_four_haptic_04: ""
+    ulm_remote_grid_four_by_four_haptic_05: ""
+    ulm_remote_grid_four_by_four_haptic_06: ""
+    ulm_remote_grid_four_by_four_haptic_07: ""
+    ulm_remote_grid_four_by_four_haptic_08: ""
+    ulm_remote_grid_four_by_four_haptic_09: ""
+    ulm_remote_grid_four_by_four_haptic_10: ""
+    ulm_remote_grid_four_by_four_haptic_11: ""
+    ulm_remote_grid_four_by_four_haptic_12: ""
+    ulm_remote_grid_four_by_four_haptic_13: ""
+    ulm_remote_grid_four_by_four_haptic_14: ""
+    ulm_remote_grid_four_by_four_haptic_15: ""
+    ulm_remote_grid_four_by_four_haptic_16: ""
+
+    ulm_remote_grid_four_by_four_icon_01: 'mdi:alpha-a-box'
+    ulm_remote_grid_four_by_four_icon_02: 'mdi:alpha-b-box'
+    ulm_remote_grid_four_by_four_icon_03: 'mdi:alpha-c-box'
+    ulm_remote_grid_four_by_four_icon_04: 'mdi:alpha-d-box'
+    ulm_remote_grid_four_by_four_icon_05: 'mdi:alpha-e-box'
+    ulm_remote_grid_four_by_four_icon_06: 'mdi:alpha-f-box'
+    ulm_remote_grid_four_by_four_icon_07: 'mdi:alpha-g-box'
+    ulm_remote_grid_four_by_four_icon_08: 'mdi:alpha-h-box'
+    ulm_remote_grid_four_by_four_icon_09: 'mdi:alpha-i-box'
+    ulm_remote_grid_four_by_four_icon_10: 'mdi:alpha-j-box'
+    ulm_remote_grid_four_by_four_icon_11: 'mdi:alpha-k-box'
+    ulm_remote_grid_four_by_four_icon_12: 'mdi:alpha-l-box'
+    ulm_remote_grid_four_by_four_icon_13: 'mdi:alpha-m-box'
+    ulm_remote_grid_four_by_four_icon_14: 'mdi:alpha-n-box'
+    ulm_remote_grid_four_by_four_icon_15: 'mdi:alpha-o-box'
+    ulm_remote_grid_four_by_four_icon_16: 'mdi:alpha-p-box'
+
+    ulm_remote_grid_four_by_four_color_01: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_02: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_03: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_04: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_05: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_06: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_07: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_08: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_09: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_10: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_11: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_12: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_13: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_14: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_15: "var(--google-grey)"
+    ulm_remote_grid_four_by_four_color_16: "var(--google-grey)"
+
+  styles:
+    grid:
+      - grid-template-areas: '"item1" "item2" "item3" "item4"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: min-content
+      - row-gap: 12px
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_four_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_four_by_four_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_four_by_four_command_01 ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_01 ]]]'
+          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_four_by_four_icon_01 ]]]'
+          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_four_by_four_color_01 ]]]'
+          
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_four_by_four_command_02 ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_02 ]]]'
+          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_four_by_four_icon_02 ]]]'
+          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_four_by_four_color_02 ]]]'
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_four_by_four_command_03 ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_03 ]]]'
+          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_four_by_four_icon_03 ]]]'
+          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_four_by_four_color_03 ]]]'
+
+          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_remote_grid_four_by_four_command_04 ]]]'
+          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_04 ]]]'
+          ulm_card_remote_standard_button_icon_item4: '[[[ return variables.ulm_remote_grid_four_by_four_icon_04 ]]]'
+          ulm_card_remote_standard_button_icon_color_item4: '[[[ return variables.ulm_remote_grid_four_by_four_color_04 ]]]'
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_four_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_four_by_four_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_four_by_four_command_05 ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_05 ]]]'
+          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_four_by_four_icon_05 ]]]'
+          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_four_by_four_color_05 ]]]'
+          
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_four_by_four_command_06 ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_06 ]]]'
+          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_four_by_four_icon_06 ]]]'
+          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_four_by_four_color_06 ]]]'
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_four_by_four_command_07 ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_07 ]]]'
+          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_four_by_four_icon_07 ]]]'
+          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_four_by_four_color_07 ]]]'
+
+          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_remote_grid_four_by_four_command_08 ]]]'
+          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_08 ]]]'
+          ulm_card_remote_standard_button_icon_item4: '[[[ return variables.ulm_remote_grid_four_by_four_icon_08 ]]]'
+          ulm_card_remote_standard_button_icon_color_item4: '[[[ return variables.ulm_remote_grid_four_by_four_color_08 ]]]'
+    item3:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_four_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_four_by_four_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_four_by_four_command_09 ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_09 ]]]'
+          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_four_by_four_icon_09 ]]]'
+          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_four_by_four_color_09 ]]]'
+          
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_four_by_four_command_10 ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_10 ]]]'
+          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_four_by_four_icon_10 ]]]'
+          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_four_by_four_color_10 ]]]'
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_four_by_four_command_11 ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_11 ]]]'
+          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_four_by_four_icon_11 ]]]'
+          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_four_by_four_color_11 ]]]'
+
+          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_remote_grid_four_by_four_command_12 ]]]'
+          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_12 ]]]'
+          ulm_card_remote_standard_button_icon_item4: '[[[ return variables.ulm_remote_grid_four_by_four_icon_12 ]]]'
+          ulm_card_remote_standard_button_icon_color_item4: '[[[ return variables.ulm_remote_grid_four_by_four_color_12 ]]]'
+    item4:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_row_four_column
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_four_by_four_entity ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_four_by_four_command_13 ]]]'
+          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_13 ]]]'
+          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_four_by_four_icon_13 ]]]'
+          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_four_by_four_color_13 ]]]'
+          
+          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_four_by_four_command_14 ]]]'
+          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_14 ]]]'
+          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_four_by_four_icon_14 ]]]'
+          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_four_by_four_color_14 ]]]'
+
+          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_four_by_four_command_15 ]]]'
+          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_15 ]]]'
+          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_four_by_four_icon_15 ]]]'
+          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_four_by_four_color_15 ]]]'
+
+          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_remote_grid_four_by_four_command_16 ]]]'
+          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_16 ]]]'
+          ulm_card_remote_standard_button_icon_item4: '[[[ return variables.ulm_remote_grid_four_by_four_icon_16 ]]]'
+          ulm_card_remote_standard_button_icon_color_item4: '[[[ return variables.ulm_remote_grid_four_by_four_color_16 ]]]'
+
+
+########################################################
+#####  ROW TEMPLATES                                ####
+########################################################
+
+remote_standard_row_three_column:
+  type: 'custom:button-card'
+  template: list_items
+  variables:
+    ulm_card_remote_standard_button_entity:
+    ulm_card_remote_standard_button_background_color:
+
+    ulm_card_remote_standard_button_command_item1:
+    ulm_card_remote_standard_button_haptic_item1:
+    ulm_card_remote_standard_button_icon_item1:
+    ulm_card_remote_standard_button_icon_color_item1:
+    
+    ulm_card_remote_standard_button_command_item2:
+    ulm_card_remote_standard_button_haptic_item2:
+    ulm_card_remote_standard_button_icon_item2:
+    ulm_card_remote_standard_button_icon_color_item2:
+
+    ulm_card_remote_standard_button_command_item3:
+    ulm_card_remote_standard_button_haptic_item3:
+    ulm_card_remote_standard_button_icon_item3:
+    ulm_card_remote_standard_button_icon_color_item3:
+
+  custom_fields:
+    item1:            
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item1 ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item1 ]]]'
+          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item1 ]]]'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item1 ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item2 ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item2 ]]]'
+          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item2 ]]]'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item2 ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+    item3:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item3 ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item3 ]]]'
+          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item3 ]]]'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item3 ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+remote_standard_row_four_column:
+  type: 'custom:button-card'
+  template: list_item1_to_item4
+  variables:
+    ulm_card_remote_standard_button_entity:
+    ulm_card_remote_standard_button_background_color: 
+
+    ulm_card_remote_standard_button_command_item1:
+    ulm_card_remote_standard_button_haptic_item1:
+    ulm_card_remote_standard_button_icon_item1:
+    ulm_card_remote_standard_button_icon_color_item1:
+    
+    ulm_card_remote_standard_button_command_item2:
+    ulm_card_remote_standard_button_haptic_item2:
+    ulm_card_remote_standard_button_icon_item2:
+    ulm_card_remote_standard_button_icon_color_item2:
+
+    ulm_card_remote_standard_button_command_item3:
+    ulm_card_remote_standard_button_haptic_item3:
+    ulm_card_remote_standard_button_icon_item3:
+    ulm_card_remote_standard_button_icon_color_item3:
+
+    ulm_card_remote_standard_button_command_item4:
+    ulm_card_remote_standard_button_haptic_item4:
+    ulm_card_remote_standard_button_icon_item4:
+    ulm_card_remote_standard_button_icon_color_item4:
+
+  custom_fields:
+    item1:            
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item1 ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item1 ]]]'
+          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item1 ]]]'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item1 ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item2 ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item2 ]]]'
+          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item2 ]]]'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item2 ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+    item3:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item3 ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item3 ]]]'
+          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item3 ]]]'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item3 ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+    item4:
+      card:
+        type: 'custom:button-card'
+        template: remote_standard_button
+        variables:
+          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item4 ]]]'
+          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item4 ]]]'
+          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item4 ]]]'
+          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item4 ]]]'
+          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+
+
+########################################################
+#####  BUTTON TEMPLATES                             ####
+########################################################
+
+remote_harmony_activity_button:
+  type: 'custom:button-card'
+  template: 
+    - widget_icon
+    # - variable_definitions_harmony_remote_group_actions
+  variables:
+    var_remote_harmony_activity_button:
+    # ulm_card_remote_harmony_activity_button_entity:
+    # ulm_card_remote_harmony_activity_button_activity:
+    # ulm_card_remote_harmony_activity_button_icon:
+  tap_action:
+
+    action: call-service
+    service: remote.turn_on                  
+    service_data:
+      entity_id: '[[[ return variables.var_remote_harmony_activity_button.entity ]]]'
+      activity: '[[[ return variables.var_remote_harmony_activity_button.name ]]]'
+  icon: '[[[ return variables.var_remote_harmony_activity_button.icon ]]]'
+  styles:
+    icon:
+      - color: >
+          [[[
+              var color = "var(--google-grey)";
+              if (typeof states[variables.var_remote_harmony_activity_button.entity].attributes.current_activity !== 'undefined'){
+                if (states[variables.var_remote_harmony_activity_button.entity].attributes.current_activity == variables.var_remote_harmony_activity_button.name){
+                  var color =  "var(--google-green)";
+                }
+              }
+              return color;
+          ]]]
+    img_cell:
+      - background-color: >
+          [[[
+              var color = "rgba(var(--color-grey), 0.2)";
+              if (typeof states[variables.var_remote_harmony_activity_button.entity].attributes.current_activity !== 'undefined'){
+                if (states[variables.var_remote_harmony_activity_button.entity].attributes.current_activity == variables.var_remote_harmony_activity_button.name){
+                  var color =  "rgba(var(--color-green), 0.2)";
+                }
+              }
+              return color;
+          ]]]
+
+# remote_harmony_standard_button:
+#   type: 'custom:button-card'
+#   template: widget_icon
+#   variables:
+
+#     ulm_card_harmony_remote_activity_current:
+#     ulm_card_harmony_remote_entity:
+#     ulm_card_harmony_remote_button_icon:
+#     ulm_card_harmony_remote_button_icon_color:
+#     ulm_card_harmony_remote_button_background_color:
+#     ulm_card_harmony_remote_button_type: "normal"
+#     ulm_card_harmony_remote_activity_01:
+#     ulm_card_harmony_remote_device_01:
+#     ulm_card_harmony_remote_delay_01:
+#     ulm_card_harmony_remote_tap_action_01: "none"
+#     ulm_card_harmony_remote_tap_action_service_01:
+#     ulm_card_harmony_remote_tap_action_command_01:
+#     ulm_card_harmony_remote_tap_action_haptic_01: "none"
+#     ulm_card_harmony_remote_double_tap_action_01: "none"
+#     ulm_card_harmony_remote_double_tap_action_service_01:
+#     ulm_card_harmony_remote_double_tap_action_command_01:
+#     ulm_card_harmony_remote_double_tap_action_haptic_01: "none"
+#     ulm_card_harmony_remote_hold_action_01: "none"
+#     ulm_card_harmony_remote_hold_action_service_01:
+#     ulm_card_harmony_remote_hold_action_command_01:
+#     ulm_card_harmony_remote_hold_action_haptic_01: "none"
+#     ulm_card_harmony_remote_activity_02:
+#     ulm_card_harmony_remote_device_02:
+#     ulm_card_harmony_remote_delay_02:
+#     ulm_card_harmony_remote_tap_action_02: "none"
+#     ulm_card_harmony_remote_tap_action_service_02:
+#     ulm_card_harmony_remote_tap_action_command_02:
+#     ulm_card_harmony_remote_tap_action_haptic_02: "none"
+#     ulm_card_harmony_remote_double_tap_action_02: "none"
+#     ulm_card_harmony_remote_double_tap_action_service_02:
+#     ulm_card_harmony_remote_double_tap_action_command_02:
+#     ulm_card_harmony_remote_double_tap_action_haptic_02: "none"
+#     ulm_card_harmony_remote_hold_action_02: "none"
+#     ulm_card_harmony_remote_hold_action_service_02:
+#     ulm_card_harmony_remote_hold_action_command_02:
+#     ulm_card_harmony_remote_hold_action_haptic_02: "none"
+#     ulm_card_harmony_remote_activity_03:
+#     ulm_card_harmony_remote_device_03:
+#     ulm_card_harmony_remote_delay_03:
+#     ulm_card_harmony_remote_tap_action_03: "none"
+#     ulm_card_harmony_remote_tap_action_service_03:
+#     ulm_card_harmony_remote_tap_action_command_03:
+#     ulm_card_harmony_remote_tap_action_haptic_03: "none"
+#     ulm_card_harmony_remote_double_tap_action_03: "none"
+#     ulm_card_harmony_remote_double_tap_action_service_03:
+#     ulm_card_harmony_remote_double_tap_action_command_03:
+#     ulm_card_harmony_remote_double_tap_action_haptic_03: "none"
+#     ulm_card_harmony_remote_hold_action_03: "none"
+#     ulm_card_harmony_remote_hold_action_service_03:
+#     ulm_card_harmony_remote_hold_action_command_03:
+#     ulm_card_harmony_remote_hold_action_haptic_03: "none"
+#     ulm_card_harmony_remote_activity_04:
+#     ulm_card_harmony_remote_device_04:
+#     ulm_card_harmony_remote_delay_04:
+#     ulm_card_harmony_remote_tap_action_04: "none"
+#     ulm_card_harmony_remote_tap_action_service_04:
+#     ulm_card_harmony_remote_tap_action_command_04:
+#     ulm_card_harmony_remote_tap_action_haptic_04: "none"
+#     ulm_card_harmony_remote_double_tap_action_04: "none"
+#     ulm_card_harmony_remote_double_tap_action_service_04:
+#     ulm_card_harmony_remote_double_tap_action_command_04:
+#     ulm_card_harmony_remote_double_tap_action_haptic_04: "none"
+#     ulm_card_harmony_remote_hold_action_04: "none"
+#     ulm_card_harmony_remote_hold_action_service_04:
+#     ulm_card_harmony_remote_hold_action_command_04:
+#     ulm_card_harmony_remote_hold_action_haptic_04: "none"
+#     ulm_card_harmony_remote_activity_05:
+#     ulm_card_harmony_remote_device_05:
+#     ulm_card_harmony_remote_delay_05:
+#     ulm_card_harmony_remote_tap_action_05: "none"
+#     ulm_card_harmony_remote_tap_action_service_05:
+#     ulm_card_harmony_remote_tap_action_command_05:
+#     ulm_card_harmony_remote_tap_action_haptic_05: "none"
+#     ulm_card_harmony_remote_double_tap_action_05: "none"
+#     ulm_card_harmony_remote_double_tap_action_service_05:
+#     ulm_card_harmony_remote_double_tap_action_command_05:
+#     ulm_card_harmony_remote_double_tap_action_haptic_05: "none"
+#     ulm_card_harmony_remote_hold_action_05: "none"
+#     ulm_card_harmony_remote_hold_action_service_05:
+#     ulm_card_harmony_remote_hold_action_command_05:
+#     ulm_card_harmony_remote_hold_action_haptic_05: "none"
+#     ulm_card_harmony_remote_activity_06:
+#     ulm_card_harmony_remote_device_06:
+#     ulm_card_harmony_remote_delay_06:
+#     ulm_card_harmony_remote_tap_action_06: "none"
+#     ulm_card_harmony_remote_tap_action_service_06:
+#     ulm_card_harmony_remote_tap_action_command_06:
+#     ulm_card_harmony_remote_tap_action_haptic_06: "none"
+#     ulm_card_harmony_remote_double_tap_action_06: "none"
+#     ulm_card_harmony_remote_double_tap_action_service_06:
+#     ulm_card_harmony_remote_double_tap_action_command_06:
+#     ulm_card_harmony_remote_double_tap_action_haptic_06: "none"
+#     ulm_card_harmony_remote_hold_action_06: "none"
+#     ulm_card_harmony_remote_hold_action_service_06:
+#     ulm_card_harmony_remote_hold_action_command_06:
+#     ulm_card_harmony_remote_hold_action_haptic_06: "none"
+
+#   tap_action:
+#     action: call-service
+#     service: androidtv.adb_command
+#     service_data:
+#       command: '[[[ return variables.ulm_card_remote_standard_button_command ]]]'
+#       entity_id: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+#   hold_action:
+#     action: '[[[ return variables.ulm_card_remote_standard_button_hold_action ]]]'
+#     entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+#   double_tap_action:
+#     action: '[[[ return variables.ulm_card_remote_standard_button_double_tap_action ]]]'
+#   icon: >
+#     [[[ 
+#       var icon = variables.ulm_card_remote_standard_button_icon;
+#       if (variables.ulm_card_remote_standard_button_type == 'play') {
+#         if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
+#             || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff' 
+#             || states[variables.ulm_card_remote_standard_button_entity].state == 'idle' 
+#             || states[variables.ulm_card_remote_standard_button_entity].state == 'paused') {
+#           var icon = 'mdi:play';
+#         }  
+#       }
+#       return icon;
+#     ]]]
+#   styles:
+#     icon:
+#       - color: '[[[ return variables.ulm_card_remote_standard_button_icon_color ]]]'
+#     img_cell:
+#       - background-color: >
+#           [[[
+#               var color = variables.ulm_card_remote_standard_button_background_color;
+#               if (variables.ulm_card_remote_standard_button_type == 'mute') {
+#                 if (typeof states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted !== 'undefined') {
+#                   if (states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted){
+#                     var color = "rgba(var(--color-green), 0.2)";
+#                   }
+#                 }
+#               }
+#               if (variables.ulm_card_remote_standard_button_type == 'power') {
+#                 if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
+#                     || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff') {
+#                   var color = variables.ulm_card_remote_standard_button_background_color;
+#                 } else {
+#                   var color = "rgba(var(--color-red), 0.2)";
+#                 }
+#               }
+#               return color;
+#           ]]]
+
+remote_standard_button:
+  type: 'custom:button-card'
+  template: widget_icon
+  variables:
+    var_remote_standard_button:
+      entity:
+      category: "normal"
+      style:
+        icon:
+        icon_color:
+        background_color: "rgba(var(--color-theme),0.05)"
+      tap_action:
+        entity: '[[[ return var_remote_standard_button.entity ]]]'
+        action: "call-service"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
+      double_tap_action:
+        entity: '[[[ return var_remote_standard_button.entity ]]]'
+        action: "none"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
+      hold_action: 
+        entity: '[[[ return var_remote_standard_button.entity ]]]'
+        action: "more-info"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
+  icon: >
+    [[[ 
+      var icon = variables.var_remote_standard_button.style.icon;
+      if (variables.var_remote_standard_button.category == 'play') {
+        if (states[variables.var_remote_standard_button.entity].state == 'off' 
+            || states[variables.var_remote_standard_button.entity].state == 'PowerOff' 
+            || states[variables.var_remote_standard_button.entity].state == 'idle' 
+            || states[variables.var_remote_standard_button.entity].state == 'paused') {
+          var icon = 'mdi:play';
+        }  
+      }
+      return icon;
+    ]]]
+  styles:
+    icon:
+      - color: '[[[ return variables.ulm_card_remote_standard_button_icon_color ]]]'
+    img_cell:
+      - background-color: >
+          [[[
+              var color = variables.var_remote_standard_button.style.background_color;
+              if (variables.var_remote_standard_button.category == 'mute') {
+                if (typeof states[variables.var_remote_standard_button.entity].attributes.is_volume_muted !== 'undefined') {
+                  if (states[variables.var_remote_standard_button.entity].attributes.is_volume_muted){
+                    var color = "rgba(var(--color-green), 0.2)";
+                  }
+                }
+              }
+              if (variables.var_remote_standard_button.category == 'power') {
+                if (states[variables.var_remote_standard_button.entity].state == 'off' 
+                    || states[variables.var_remote_standard_button.entity].state == 'PowerOff') {
+                  var color = variables.var_remote_standard_button.style.background_color;
+                } else {
+                  var color = "rgba(var(--color-red), 0.2)";
+                }
+              }
+              return color;
+          ]]]
+  tap_action:
+    remote_button_actions:
+      type: 'custom:button-card'
+      template: widget_icon
+      variables:
+        var_remote_button_actions: '[[[ return var_remote_standard_button.tap_action ]]]'
+        # ulm_card_remote_entity:
+        # ulm_card_remote_action: '[[[ return variables.ulm_card_remote_tap_action ]]]'
+        # ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_tap_action_service ]]]'
+        # ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_tap_action_command ]]]'
+        # ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_tap_action_haptic ]]]'
+        # ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_tap_harmony_device ]]]'
+        # ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_tap_harmony_delay ]]]'
+  double_tap_action:
+    remote_button_actions:
+      type: 'custom:button-card'
+      template: widget_icon
+      variables:
+        var_remote_button_actions: '[[[ return var_remote_standard_button.double_tap_action ]]]'
+        # ulm_card_remote_entity:
+        # ulm_card_remote_action: '[[[ return variables.ulm_card_remote_double_tap_action ]]]'
+        # ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_double_tap_action_service ]]]'
+        # ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_double_tap_action_command ]]]'
+        # ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_double_tap_action_haptic ]]]'
+        # ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_double_tap_harmony_device ]]]'
+        # ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_double_tap_harmony_delay ]]]'
+  hold_action:
+    remote_button_actions:
+      type: 'custom:button-card'
+      template: widget_icon
+      variables:
+        var_remote_button_actions: '[[[ return var_remote_standard_button.hold_action ]]]'
+        # ulm_card_remote_entity:
+        # ulm_card_remote_action: '[[[ return variables.ulm_card_remote_hold_action ]]]'
+        # ulm_card_remote_action_service: '[[[ return variables.ulm_card_remote_hold_action_service ]]]'
+        # ulm_card_remote_action_command: '[[[ return variables.ulm_card_remote_hold_action_command ]]]'
+        # ulm_card_remote_action_haptic: '[[[ return variables.ulm_card_remote_hold_action_haptic ]]]'
+        # ulm_card_remote_harmony_device: '[[[ return variables.ulm_card_remote_hold_harmony_device ]]]'
+        # ulm_card_remote_harmony_delay: '[[[ return variables.ulm_card_remote_hold_harmony_delay ]]]'
+
+remote_button_actions:
+  type: 'custom:button-card'
+  template: widget_icon
+  variables: 
+    var_remote_button_actions:
+    # ulm_card_remote_entity:
+    # ulm_card_remote_action: 
+    # ulm_card_remote_action_service:
+    # ulm_card_remote_action_command:
+    # ulm_card_remote_action_haptic: "success"
+    # ulm_card_remote_harmony_device:
+    # ulm_card_remote_harmony_delay: 0.6
+  action: >
+    {% if variables.var_remote_button_actions.action == "call-service" %}
+      {% if variables.var_remote_button_actions.service.startswith("androidtv") %}
+        action: call-service
+        service: androidtv.adb_command
+        service_data:
+          command: '[[[ return variables.var_remote_button_actions.command ]]]'
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+      {% elif variables.var_remote_button_actions.service.startswith("media") %}
+        service: media_player.play_media
+        data:
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+          media_content_id: '[[[ return variables.var_remote_button_actions.command ]]]'
+          media_content_type: "send_key"
+      {% elif variables.var_remote_button_actions.service.startswith("remote") %}
+        service: remote.send_command
+        target:
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+        data:
+          command:
+            - '[[[ return variables.var_remote_button_actions.command ]]]'
+          device: '[[[ return variables.var_remote_button_actions.harmony.device ]]]'
+          delay_secs: '[[[ return variables.var_remote_button_actions.harmony.delay ]]]'
+      {% else %}
+        "none"
+      {% endif%}
+    {% elif variables.var_remote_button_actions.action == "more-info" %}
+      action: more-info
+      entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+    {% elif variables.var_remote_button_actions.action == "toggle" %}
+      action: toggle
+    {% elif variables.var_remote_button_actions.action == "navigate" %}
+      action: navigate  
+      navigation_path: '[[[ return variables.var_remote_button_actions.command ]]]'
+    {% elif variables.var_remote_button_actions.action == "url" %}
+    {% else %}
+      "none"
+    {% endif %}
+    haptic: '[[[ return variables.var_remote_button_actions.haptic ]]]'
+
+########################################################
+#####  LAYOUTS                                      ####
+########################################################
+list_item1_to_item4:
+  styles:
+    grid:
+      - grid-template-areas: '"item1 item2 item3 item4"'
+      - grid-template-columns: 1fr 1fr 1fr 1fr
+      - grid-template-rows: min-content
+      - column-gap: 7px
+    card:
+      - box-shadow: none
+      - padding: 0px
+list_item1_item1_item2:
+  styles:
+    grid:
+      - grid-template-areas: '"item1 item1 item2"'
+      - grid-template-columns: 1fr 1fr 1fr
+      - grid-template-rows: min-content
+      - column-gap: 7px
+    card:
+      - box-shadow: none
+      - padding: 0px
+list_item1_gap_item2:
+  styles:
+    grid:
+      - grid-template-areas: '"item1 . item2"'
+      - grid-template-columns: 1fr 1fr 1fr
+      - grid-template-rows: min-content
+      - column-gap: 7px
+    card:
+      - box-shadow: none
+      - padding: 0px
+list_items_arrow_select:
+  styles:
+    grid:
+      - grid-template-areas: '". item1 ." "item2 item3 item4" ". item5 ."'
+      - grid-template-columns: 1fr 1fr 1fr
+      - grid-template-rows: min-content
+      - column-gap: 7px
+      - row-gap: 11px
+    card:
+      - box-shadow: none
+      - padding: 0px
+
+########################################################
+#####  STYLES                                       ####
+########################################################
+
+# icons_green:
+#   styles:
+#     icon:
+#     - color: "var(--google-green)"
+#     img_cell:
+#     - background-color: "rgba(var(--color-green), 0.2)"
+
+# icons_red:
+#   styles:
+#     icon:
+#     - color: "var(--google-red)"
+#     img_cell:
+#     - background-color: "rgba(var(--color-red), 0.2)"
+
+##  success	Indicates that a task or action has completed.
+##  warning	Indicates that a task or action has produced a warning of some kind.
+##  failure	Indicates that a task or action has failed.
+##  light	Provides a physical metaphor that complements the visual experience.
+##  medium	Provides a physical metaphor that complements the visual experience.
+##  heavy	Provides a physical metaphor that complements the visual experience.
+##  selection	Indicates that the selection is actively changing.
+
+## 192.168.20.245
+## 192.168.1.246
+## host 192.168.20.245 port 8080
