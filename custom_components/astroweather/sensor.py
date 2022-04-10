@@ -1,6 +1,6 @@
 """
     Support for the AstroWeather from 7Timer
-    This component will create a few binary sensors.
+    This component will create a few sensors.
 
     For a full description, go here: https://github.com/mawinkler/astroweather
 
@@ -32,6 +32,13 @@ _LOGGER = logging.getLogger(__name__)
 
 # Sensor types are defined like: Name, Unit Type, icon, device class
 SENSOR_TYPES = {
+    "forecast_length": [
+        "Forecast Length",
+        "h",
+        "mdi:map-marker-distance",
+        None,
+        None,
+    ],
     "latitude": [
         "Latitude",
         "°",
@@ -61,7 +68,14 @@ SENSOR_TYPES = {
         None,
     ],
     "cloudcover_percentage": [
-        "Clouds",
+        "Cloud Cover",
+        "%",
+        "mdi:weather-night-partly-cloudy",
+        None,
+        STATE_CLASS_MEASUREMENT,
+    ],
+    "cloudless_percentage": [
+        "Cloudless",
         "%",
         "mdi:weather-night-partly-cloudy",
         None,

@@ -1,4 +1,18 @@
 card_location:
+  state:
+    - styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        label:
+          - color: "rgba(var(--color-green-text),1)"
+        name:
+          - color: "rgba(var(--color-green-text),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
+        card:
+          - background-color: "rgba(var(--color-background-green), var(--opacity-bg))"
+      value: "home"
+      id: "home"
   styles:
     icon:
       - color: "rgba(var(--color-red),1)"
@@ -9,17 +23,35 @@ card_location:
     img_cell:
       - background-color: "rgba(var(--color-red), 0.2)"
 
-  # icon: >
-  #   [[[
-  #     var personplace = entity.state
+  icon: >
+    [[[
+      var personplace = entity.state
 
-  #     if (personplace == "home") {
-
-  #     }
-  #   ]]]
-  #   {%- for item in states.zone -%}
-  #     {% if item.entity_id == "zone." + states('person.daniel_thorn')%}
-  #       {{item.entity_id}}
-  #       {{item.attributes.icon}}
-  #     {% endif %}
-  #   {%- endfor -%}
+      if (personplace == "home") {
+        return entity.attributes.icon;
+      } else if (personplace == "bloxham_school") {
+        return "mdi:school";
+      } else if (personplace == "gym") {
+        return "mdi:run";
+      } else if (personplace == "hollys_house") {
+        return "mdi:human-female-boy";
+      } else if (personplace == "jason_beer") {
+        return "mdi:glass-mug-variant";
+      } else if (personplace == "jus_parents") {
+        return "mdi:human-male-female";
+      } else if (personplace == "kevs_parents") {
+        return "mdi:human-male-female";
+      } else if (personplace == "kks_house") {
+        return "mdi:diamond-stone";
+      } else if (personplace == "louises_house") {
+        return "mdi:human-female-girl";
+      } else if (personplace == "martin_della") {
+        return "mdi:airport";
+      } else if (personplace == "repl_group") {
+        return "mdi:office-building";
+      } else if (personplace == "tudor_hall_school") {
+        return "mdi:human-male-board";
+      } else {
+        return "mdi:account-cancel";
+      }
+    ]]]
