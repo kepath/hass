@@ -876,6 +876,7 @@ views:
           template:
             - card_room
             - blue_no_state
+            - yellow_2_tap_action_entity_on
           name: Bed E
           entity: input_boolean.placeholder
           icon: mdi:alpha-e-circle
@@ -900,10 +901,12 @@ views:
                 - blue_presence_home
                 - icon_desktop_classic
               tap_action:
-                action: more-info
+                action: call-service
+                service: switch.toggle
+                service_data: 
+                  entity_id: switch.big_pc_unifi
               hold_action:
-                action: toggle
-                entity: switch.big_pc_unifi
+                action: more-info
             entity_3:
               entity_id: binary_sensor.nvidia_shield_bed_e_state
               templates:
