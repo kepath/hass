@@ -1,5 +1,4 @@
----
-yellow_heating:
+yellow_2_tap_action_entity_on:
   state:
     - operator: "template"
       value: >
@@ -17,3 +16,11 @@ yellow_heating:
           - background-color: "rgba(var(--color-yellow), 0.2)"
         card:
           - background-color: "rgba(var(--color-background-yellow),var(--opacity-bg))"
+      # value: "home"
+      # id: "home"
+  tooltip: >
+    [[[
+      if (variables?.entity_2?.tap_action?.service_data?.entity_id) {
+        return variables.entity_2.tap_action.service_data.entity_id.attributes.state;
+      }
+    ]]]
