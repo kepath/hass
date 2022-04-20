@@ -5,16 +5,16 @@ esphome:
   board: esp01_1m
   on_boot:
     - priority: -100
-      then:
-        - if:
-            condition:
-              binary_sensor.is_on: isnight
-            then:
-              - light.turn_on: lightid1
-              - logger.log: 'startup - light should be on'
-            else:
-              - light.turn_off: lightid1
-              - logger.log: 'startup - light should be off'
+      # then:
+      #   - if:
+      #       condition:
+      #         binary_sensor.is_on: isnight
+      #       then:
+      #         - light.turn_on: lightid1
+      #         - logger.log: 'startup - light should be on'
+      #       else:
+    - light.turn_off: lightid1
+    - logger.log: 'startup - light should be off'
 
 wifi:
   ssid: ${ssid}
@@ -45,7 +45,7 @@ api:
 ota:
 web_server:
   port: 80
-prometheus:
+# prometheus:
   
 time:
   - platform: homeassistant
