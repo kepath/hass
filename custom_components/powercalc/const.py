@@ -25,6 +25,7 @@ CONF_DAILY_FIXED_ENERGY = "daily_fixed_energy"
 CONF_ENABLE_AUTODISCOVERY = "enable_autodiscovery"
 CONF_ENERGY_INTEGRATION_METHOD = "energy_integration_method"
 CONF_ENERGY_SENSOR_CATEGORY = "energy_sensor_category"
+CONF_ENERGY_SENSOR_ID = "energy_sensor_id"
 CONF_ENERGY_SENSOR_NAMING = "energy_sensor_naming"
 CONF_ENERGY_SENSOR_PRECISION = "energy_sensor_precision"
 CONF_FIXED = "fixed"
@@ -123,6 +124,7 @@ MANUFACTURER_DIRECTORY_MAPPING = {
     "Signify Netherlands B.V.": "signify",
     "Aqara": "aqara",
     "Lexman": "lexman",
+    "Yeelight": "yeelight",
 }
 
 MANUFACTURER_ALIASES = {
@@ -174,6 +176,7 @@ MODEL_DIRECTORY_MAPPING = {
         "440400982841": "LCT024",
         "7602031P7": "LCT026",
         "9290022169": "LTA001",
+        "9290024719": "LTA011",
         "3261030P6": "LTC001",
         "3261031P6": "LTC001",
         "3261048P6": "LTC001",
@@ -188,4 +191,7 @@ MODEL_DIRECTORY_MAPPING = {
         "8718699671211": "LWE002",
         "9290020399": "LWE002",
     },
+    "Yeelight": {
+        "color2": "YLDP06YL",
+    }
 }
