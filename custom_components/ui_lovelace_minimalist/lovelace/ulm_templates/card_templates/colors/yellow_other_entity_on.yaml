@@ -1,12 +1,28 @@
 ---
 yellow_other_entity_on:
+  card:
+    type: 'custom:button-card'
+        # template: card_remote_group_arrow_select
+        # styles:
+        #   card:
+        #   - border-radius: var(--border-radius)
+        #   - box-shadow: var(--box-shadow)
+    variables:
+      trigger_entity: '[[[ return variables.entity_2_trigger_entity ]]]'
+ 
+
+
+
   # type: 'custom:button-card'
   # template:
   #   - "ulm_language_variables"
-  variables:
-     trigger_entity: switch.download_pc_unifi
-  label: '[[[ return variables.trigger_entity ]]]'
-  # tooltip: '[[[ return ${variables.entity_2.tap_action.service_data.entity_id} ]]]'
+  # variables:
+  #   entity_2_trigger_entity:
+    #  entity_2_trigger_entity: switch.arcade_machine_unifi
+    # entity_2_trigger_entity: switch.big_pc_unifi
+    label: '[[[ return variables.entity_2_trigger_entity ]]]'
+  # tooltip: '[[[ return states[variables.entity_2_trigger_entity].state ]]]'
+    tooltip: '[[[ return variables.entity_2_trigger_entity ]]]'
   #   [[[
   #     return variables.trigger_entity;
   #   ]]]
