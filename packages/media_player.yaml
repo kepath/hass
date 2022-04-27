@@ -1,0 +1,73 @@
+media_player:
+#   - platform: androidtv
+#     name: "NVIDIA Shield Lounge ADB"
+#     host: !secret nvidia_shield_lounge_rj45_ip
+#     adbkey: "/config/.storage/androidtv_adbkey"
+#     device_class: androidtv
+#     # adb_server_ip: !secret ha_rj45_ip
+#     # adb_server_port: 5037
+#   - platform: androidtv
+#     name: "NVidia Shield Bed E ADB"
+#     host: !secret nvidia_shield_bede_rj45_ip
+#     adbkey: "/config/.storage/androidtv_adbkey"
+#     device_class: androidtv
+#     # adb_server_ip: !secret ha_rj45_ip
+#     # adb_server_port: 5037
+#     apps:
+#       #com.plexapp.mediaserver.smb: "Plex"
+#       com.disney.disneyplus: "Disney+"
+#       # com.plexapp.android: "Plex"
+#       com.nvidia.bbciplayer: "iPlayer"
+#       com.pluralsight: "Pluralsight"
+#       # com.google.android.youtube.tv: "YouTube"
+#       # com.amazon.amazonvideo.livingroom: "Amazon Prime"
+#       # com.spotify.tv.android: "Spotify"
+#       air.ITVMobilePlayer: "ITV Hub"
+#       com.channel5.my5: "My 5"
+#       com.apple.atve.androidtv.appletv: "Apple TV"
+#     #exclude_unnamed_apps: true
+#   - platform: androidtv
+#     name: "Amazon Firestick Bed A ADB"
+#     host: !secret amazon_fire_stick_beda_rj45_ip
+#     adbkey: "/config/.storage/androidtv_adbkey"
+#     device_class: firetv
+#     # adb_server_ip: !secret ha_rj45_ip
+#     # adb_server_port: 5037
+#   - platform: androidtv
+#     name: "Amazon Fire Stick Kitchen ADB"
+#     host: !secret amazon_fire_stick_kitchen_rj45_ip
+#     adbkey: "/config/.storage/androidtv_adbkey"
+#     device_class: firetv
+#     # adb_server_ip: !secret ha_rj45_ip
+#     # adb_server_port: 5037
+
+  - platform: yamaha
+    name: "Yamaha RX-V777 Reciever Integration"
+    #unique_id: yamaha_reciever_yamaha_platform_integration
+    #entity: "yamaha_rx_v777_yamaha_network_integration"
+    host: !secret yamaha_rx_v777_rj45_ip
+    zone_ignore:
+      - zone_2
+    zone_names:
+      Main_Zone: "Bed C"
+    source_ignore:
+      - AUDIO1
+      - AUDIO2
+      - AV2
+      - AV3
+      - AV4
+      - AV5
+      - AV6
+      - Napster
+      - PHONO
+      - SERVER
+      - TUNER
+      - USB
+      - iPod (USB)
+    source_names:
+      AV1: "Nintendo Wii"
+      HDMI1: "Humax YouView"
+      HDMI2: "Apple TV 4k"
+      HDMI3: "Xbox One"
+      HDMI4: "PlayStation 3"
+      HDMI5: "Nintendo Switch"
