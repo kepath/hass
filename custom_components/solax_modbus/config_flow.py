@@ -15,23 +15,11 @@ from .const import (
     DEFAULT_SERIAL_PORT,
     DEFAULT_MODBUS_ADDR,
 	DOMAIN,
-	CONF_READ_GEN2X1,
-	CONF_READ_GEN3X1,
-	CONF_READ_GEN3X3,
-	CONF_READ_GEN4X1,
-	CONF_READ_GEN4X3,
-	CONF_READ_X1_EPS,
-	CONF_READ_X3_EPS,
+	CONF_READ_EPS,
     CONF_SERIAL,
     CONF_SERIAL_PORT,
     CONF_MODBUS_ADDR,
-	DEFAULT_READ_GEN2X1,
-	DEFAULT_READ_GEN3X1,
-	DEFAULT_READ_GEN3X3,
-	DEFAULT_READ_GEN4X1,
-	DEFAULT_READ_GEN4X3,
-	DEFAULT_READ_X1_EPS,
-	DEFAULT_READ_X3_EPS,
+	DEFAULT_READ_EPS,
 )
 
 DATA_SCHEMA = vol.Schema(
@@ -42,13 +30,7 @@ DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_MODBUS_ADDR, default=DEFAULT_MODBUS_ADDR): int,
         vol.Required(CONF_SERIAL, default=DEFAULT_SERIAL): bool,
         vol.Optional(CONF_SERIAL_PORT, default=DEFAULT_SERIAL_PORT): str,
-        vol.Optional(CONF_READ_GEN2X1, default=DEFAULT_READ_GEN2X1): bool,
-        vol.Optional(CONF_READ_GEN3X1, default=DEFAULT_READ_GEN3X1): bool,
-        vol.Optional(CONF_READ_GEN3X3, default=DEFAULT_READ_GEN3X3): bool,
-        vol.Optional(CONF_READ_GEN4X1, default=DEFAULT_READ_GEN4X1): bool,
-        vol.Optional(CONF_READ_GEN4X3, default=DEFAULT_READ_GEN4X3): bool,
-        vol.Optional(CONF_READ_X1_EPS, default=DEFAULT_READ_X1_EPS): bool,
-        vol.Optional(CONF_READ_X3_EPS, default=DEFAULT_READ_X3_EPS): bool,
+        vol.Optional(CONF_READ_EPS, default=DEFAULT_READ_EPS): bool,
         vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
     }
 )
@@ -91,12 +73,17 @@ class SolaXModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             host = user_input[CONF_HOST]
             serial = user_input[CONF_SERIAL]
-            if self._host_in_configuration_exists(host):
+            modbus_addr = user_input[CONF_MODBUS_ADDR]
+            port = user_input[CONF_PORT]
+            # use an id that is more than the IP address, for compatibilityu reasons, only do this with non-default settings
+            if ( (port != DEFAULT_PORT) or (modbus_addr != DEFAULT_MODBUS_ADDR) ):  hostid = f"{host}_{port}_{modbus_addr}"
+            else: hostid = host
+            if self._host_in_configuration_exists(hostid):
                 errors[CONF_HOST] = "already_configured"
             elif not host_valid(user_input[CONF_HOST]) and not serial:
                 errors[CONF_HOST] = "invalid host IP"
             else:
-                await self.async_set_unique_id(user_input[CONF_HOST])
+                await self.async_set_unique_id(hostid) #user_input[CONF_HOST])
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
                     title=user_input[CONF_NAME], data=user_input

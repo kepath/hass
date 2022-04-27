@@ -5,6 +5,9 @@ from homeassistant.components.sensor import (
     STATE_CLASS_MEASUREMENT,
     STATE_CLASS_TOTAL_INCREASING,
 )
+from homeassistant.components.number import NumberEntityDescription
+from homeassistant.components.select import SelectEntityDescription
+from homeassistant.components.button import ButtonEntityDescription
 
 from homeassistant.const import (
     DEVICE_CLASS_BATTERY,
@@ -26,18 +29,64 @@ from homeassistant.const import (
     TIME_HOURS,
 )
 
+
+""" ============================================================================================
+bitmasks  definitions to characterize inverters, ogranized by group
+these bitmasks are used in entitydeclarations to determine to which inverters the entity applies
+within a group, the bits in an entitydeclaration will be interpreted as OR
+between groups, an AND condition is applied, so all gruoups must match.
+An empty group (group without active flags) evaluates to True.
+example: GEN3 | GEN4 | X1 | X3 | EPS 
+means:  any inverter of tyoe (GEN3 or GEN4) and (X1 or X3) and (EPS)
+
+An entity can be declared multiple times (with different bitmasks) if the parameters are different for each inverter type
+"""
+
+GEN_GROUP_BITS = 0x00FF # inverter generation bits
+GEN2             = 0x0002
+GEN3             = 0x0004
+GEN4             = 0x0008
+#MIC             = 0x0010 Might be needed if it turns out the MIC uses different registers to the GenX
+
+X13_GROUP_BITS = 0x0300 # X1 or X3 model flags
+X1               = 0x0100
+X3               = 0x0200
+
+HYB_GROUP_BITS = 0x1C00 # hybrid or AC or PV flags
+PV               = 0x0400 # Needs further work on PV Only Inverters
+AC               = 0x0800
+HYBRID           = 0x1000
+
+EPS_GROUP_BITS = 0x8000  # EPS flag
+EPS              = 0x8000
+
+
+ALLDEFAULT = 0 # should be equivalent to HYBRID | AC | GEN2 | GEN3 | GEN4 | X1 | X3 
+
+
+def matchInverterWithMask (inverterspec, entitymask, serialnumber = 'not relevant', blacklist = None):
+    # returns true if the entity needs to be created for an inverter
+    genmatch = ((inverterspec & entitymask & GEN_GROUP_BITS) != 0) or (entitymask & GEN_GROUP_BITS == 0)
+    xmatch   = ((inverterspec & entitymask & X13_GROUP_BITS) != 0) or (entitymask & X13_GROUP_BITS == 0)
+    hybmatch = ((inverterspec & entitymask & HYB_GROUP_BITS) != 0) or (entitymask & HYB_GROUP_BITS == 0)
+    epsmatch = ((inverterspec & entitymask & EPS_GROUP_BITS) != 0) or (entitymask & EPS_GROUP_BITS == 0)
+    blacklisted = False
+    if blacklist:
+        for start in blacklist: 
+            if serialnumber.startswith(start) : blacklisted = True
+    return (genmatch and xmatch and hybmatch and epsmatch) and not blacklisted
+
+"""
+end of bitmask handling code
+==============================================================================================="""
+
+
 DOMAIN = "solax_modbus"
 DEFAULT_NAME = "SolaX"
 DEFAULT_SCAN_INTERVAL = 15
 DEFAULT_PORT = 502
 DEFAULT_MODBUS_ADDR = 1
-CONF_READ_GEN2X1 = "read_gen2_x1"
-CONF_READ_GEN3X1 = "read_gen3_x1"
-CONF_READ_GEN3X3 = "read_gen3_x3"
-CONF_READ_GEN4X1 = "read_gen4_x1"
-CONF_READ_GEN4X3 = "read_gen4_x3"
-CONF_READ_X1_EPS = "read_x1_eps"
-CONF_READ_X3_EPS = "read_x3_eps"
+CONF_READ_EPS    = "read_eps"
 CONF_MODBUS_ADDR = "read_modbus_addr"
 CONF_SERIAL      = "read_serial"
 CONF_SERIAL_PORT = "read_serial_port"
@@ -45,224 +94,203 @@ CONF_SolaX_HUB   = "solax_hub"
 ATTR_MANUFACTURER = "SolaX Power"
 DEFAULT_SERIAL      = False
 DEFAULT_SERIAL_PORT = "/dev/ttyUSB0"
-DEFAULT_READ_GEN2X1 = False
-DEFAULT_READ_GEN3X1 = False
-DEFAULT_READ_GEN3X3 = False
-DEFAULT_READ_GEN4X1 = False
-DEFAULT_READ_GEN4X3 = False
-DEFAULT_READ_X1_EPS = False
-DEFAULT_READ_X3_EPS = False
+DEFAULT_READ_EPS = False
+
+
+# ================================= Button Declarations ============================================================
+
+@dataclass
+class SolaxModbusButtonEntityDescription(ButtonEntityDescription):
+    allowedtypes: int = ALLDEFAULT # maybe 0x0000 (nothing) is a better default choice
+    register: int = None
+    command: int = None
+    blacklist: list = None # none or list of serial number prefixees
 
 BUTTON_TYPES = [
-    ["Battery Awaken",
-        "battery_awaken",
-        0x56,
-        1,
-    ],
-    ["Unlock Inverter",
-        "unlock_inverter",
-        0x00,
-        2014,
-    ],
+    SolaxModbusButtonEntityDescription( name = "Battery Awaken",
+        key = "battery_awaken",
+        register = 0x56,
+        command = 1,
+        allowedtypes = ALLDEFAULT,
+    ),
+    SolaxModbusButtonEntityDescription( name = "Unlock Inverter",
+        key = "unlock_inverter",
+        register = 0x00,
+        command = 2014,
+        allowedtypes = ALLDEFAULT,
+    ),
+    SolaxModbusButtonEntityDescription( name = "Unlock Inverter - Advanced",
+        key = "unlock_inverter_advanced",
+        register = 0x00,
+        command = 6868,
+        allowedtypes = ALLDEFAULT,
+    ),
 ]
 
-NUMBER_TYPES = []
+# ================================= Number Declarations ============================================================
 
-NUMBER_TYPES_G2 = [
-        ["Battery Minimum Capacity",
-            "battery_minimum_capacity",
-            0x20,
-            "i",
-            {
-                "min": 0,
-                "max": 99,
-                "step": 1,
-                "unit": PERCENTAGE,
-            },
-            "battery_capacity_charge"
-        ],
-	["Battery Charge Max Current",
-	    "battery_charge_max_current",
-	    0x24,
-	    "f",
-	    {
-               "min": 0,
-               "max": 50,
-               "step": 0.1,
-               "unit": ELECTRIC_CURRENT_AMPERE,
-            }
-	],
-        ["Battery Discharge Max Current",
-            "battery_discharge_max_current",
-            0x25,
-            "f",
-           {
-                "min": 0,
-                "max": 50,
-                "step": 0.1,
-                "unit": ELECTRIC_CURRENT_AMPERE,
-            }
-        ],
+MAX_CURRENTS = [
+    ('L50E',  100 ), # Gen2 X1 SK-TL
+    ('U50',    50 ), # Gen2 X1 SK-SU
+    ('F3E',    25 ), # RetroFit X3
+    ('H3DE',    25 ), # Gen3 X3 might need changing?
+    ('H3PE',    25 ), # Gen3 X3 might need changing?
+    ('H3UE',    25 ), # Gen3 X3
+    ('H450',   30 ), # Gen4 X1
+    ('H460',   25 ), # Gen4 X1 might need changing to 30?
+    ('H475',   25 ), # Gen4 X1 might need changing to 30?
+    ('H34',    25 ), # Gen4 X3
+    ### All known Inverters added
 ]
-NUMBER_TYPES_G3 = [
-        ["Battery Minimum Capacity",
-            "battery_minimum_capacity",
-            0x20,
-            "i",
-            {
-               "min": 0,
-                "max": 99,
-                "step": 1,
-                "unit": PERCENTAGE,
-            },
-            "battery_capacity_charge"
-        ],
-        ["Battery Charge Max Current",
-	        "battery_charge_max_current",
-	        0x24,
-	        "f",
-            {
-                "min": 0,
-                "max": 20,
-                "step": 0.1,
-                "unit": ELECTRIC_CURRENT_AMPERE,
-            }
-        ],
-        ["Battery Discharge Max Current",
-            "battery_discharge_max_current",
-            0x25,
-            "f",
-            {
-                "min": 0,
-                "max": 20,
-                "step": 0.1,
-                "unit": ELECTRIC_CURRENT_AMPERE,
-            }
-        ],
-        ["ForceTime Period 1 Max Capacity",
-            "forcetime_period_1_max_capacity",
-            0xA4,
-            "i",
-            {
-                "min": 5,
-                "max": 100,
-                "step": 1,
-                "unit": PERCENTAGE,
-            }
-         ],
-        ["ForceTime Period 2 Max Capacity",
-            "forcetime_period_2_max_capacity",
-            0xA5,
-            "i",
-            {
-                "min": 5,
-                "max": 100,
-                "step": 1,
-                "unit": PERCENTAGE,
-            }
-        ],
+
+@dataclass
+class SolaxModbusNumberEntityDescription(NumberEntityDescription):
+    allowedtypes: int = ALLDEFAULT # maybe 0x0000 (nothing) is a better default choice
+    register: int = None
+    fmt: str = None
+    state: str = None
+    max_exceptions: list = None  #  None or dict with structue { 'U50EC' : 40 } 
+    blacklist: list = None # None or list of serial number prefixes like 
+
+NUMBER_TYPES = [
+    SolaxModbusNumberEntityDescription( name = "Battery Minimum Capacity",
+        key = "battery_minimum_capacity",
+        register = 0x20,
+        fmt = "i",
+        min_value = 0,
+        max_value = 99,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        state = "battery_capacity_charge",
+        allowedtypes = GEN2 | GEN3,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Battery Minimum Capacity - Grid-tied",
+        key = "battery_minimum_capacity_gridtied",
+        register = 0xa7,
+        fmt = "i",
+        min_value = 28,
+        max_value = 99,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        state = "battery_minimum_capacity_gridtied",
+        allowedtypes = HYBRID | GEN3,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Battery Charge Max Current", # multiple versions depending on GEN
+        key = "battery_charge_max_current",
+        register = 0x24,
+        fmt = "f",
+        min_value = 0,
+        max_value = 20, # default (new default, was 50)
+        step = 0.1,
+        unit_of_measurement = ELECTRIC_CURRENT_AMPERE,
+        allowedtypes = GEN2 | GEN3 | GEN4,
+        max_exceptions = MAX_CURRENTS,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Battery Discharge Max Current", 
+        key = "battery_discharge_max_current",
+        register = 0x25,
+        fmt = "f",
+        min_value = 0,
+        max_value = 20, # universal default
+        step = 0.1,
+        unit_of_measurement = ELECTRIC_CURRENT_AMPERE,
+        allowedtypes = GEN2 | GEN3 | GEN4,
+        max_exceptions = MAX_CURRENTS,
+    ),
+    SolaxModbusNumberEntityDescription( name = "ForceTime Period 1 Max Capacity",
+        key ="forcetime_period_1_max_capacity",
+        register = 0xA4,
+        fmt = "i",
+        min_value = 5,
+        max_value = 100,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        allowedtypes = GEN3,
+    ),
+    SolaxModbusNumberEntityDescription( name = "ForceTime Period 2 Max Capacity",
+        key = "forcetime_period_2_max_capacity",
+        register = 0xA5,
+        fmt = "i",
+        min_value = 5,
+        max_value = 100,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        allowedtypes = GEN3,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Export Control User Limit",
+        key = "export_control_user_limit", 
+        register = 0x42,
+        fmt = "i",
+        min_value = 0,
+        max_value = 60000,
+        step = 500,
+        unit_of_measurement = POWER_WATT,
+        allowedtypes = GEN4,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Selfuse Discharge Min SOC",
+        key ="selfuse_discharge_min_soc",
+        register = 0x61,
+        fmt = "i",
+        min_value = 10,
+        max_value = 100,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        allowedtypes = GEN4,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Selfuse Nightcharge Upper SOC",
+        key = "selfuse_nightcharge_upper_soc", 
+        register = 0x63,
+        fmt = "i",
+        min_value = 10,
+        max_value = 100,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        allowedtypes = GEN4,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Feedin Nightcharge Upper SOC",
+        key = "feedin_nightcharge_upper_soc", 
+        register = 0x64,
+        fmt = "i",
+        min_value = 10,
+        max_value = 100,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        allowedtypes = GEN4,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Feedin Discharge Min SOC",
+        key = "feedin_discharge_min_soc",
+        register = 0x65,
+        fmt = "i",
+        min_value = 10,
+        max_value = 100,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        allowedtypes = GEN4,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Backup Nightcharge Upper SOC",
+        key = "backup_nightcharge_upper_soc", 
+        register = 0x66,
+        fmt = "i",
+        min_value = 10,
+        max_value = 100,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        allowedtypes = GEN4,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Backup Discharge Min SOC",
+        key = "backup_discharge_min_soc",
+        register = 0x67,
+        fmt = "i",
+        min_value = 10,
+        max_value = 100,
+        step = 1,
+        unit_of_measurement = PERCENTAGE,
+        allowedtypes = GEN4,
+    ),
 ]
-NUMBER_TYPES_G4 = [
-        ["Battery Charge Max Currrent",
-            "battery_charge_max_current",
-            0x24,
-            "f",
-            {
-                "min": 0,
-                "max": 25,
-                "step": 0.1,
-                "unit": ELECTRIC_CURRENT_AMPERE,
-            }
-        ],
-        ["Battery Discharge Max Current",
-            "battery_discharge_max_current",
-            0x25,
-            "f",
-            {
-                "min": 0,
-                "max": 25,
-                "step": 0.1,
-                "unit": ELECTRIC_CURRENT_AMPERE,
-            }
-        ],
-        ["Export Control User Limit",
-            "export_control_user_limit", 
-            0x42,
-            "i",
-            {
-                "min": 0,
-                "max": 60000,
-                "step": 500,
-                "unit": POWER_WATT,
-            }
-        ],
-        ["Selfuse Discharge Min SOC",
-            "selfuse_discharge_min_soc",
-            0x61,
-            "i",
-            {
-                "min": 10,
-                "max": 100,
-                "step": 1,
-                "unit": PERCENTAGE,
-            }
-        ],
-        ["Selfuse Nightcharge Upper SOC",
-            "selfuse_nightcharge_upper_soc", 
-            0x63,
-            "i",
-            {
-                "min": 10,
-                "max": 100,
-                "step": 1,
-                "unit": PERCENTAGE,
-            }
-        ],
-        ["Feedin Nightcharge Upper SOC",
-            "feedin_nightcharge_upper_soc", 
-            0x64,
-            "i",
-            {
-                "min": 10,
-                "max": 100,
-                "step": 1,
-                "unit": PERCENTAGE,
-            }
-         ],
-         ["Feedin Discharge Min SOC",
-            "feedin_discharge_min_soc",
-            0x65,
-            "i",
-            {
-                "min": 10,
-                "max": 100,
-                "step": 1,
-                "unit": PERCENTAGE,
-            }
-        ],
-        ["Backup Nightcharge Upper SOC",
-            "backup_nightcharge_upper_soc", 
-            0x66,
-            "i",
-            {
-                "min": 10,
-                "max": 100,
-                "step": 1,
-                "unit": PERCENTAGE,
-            }
-        ],
-        ["Backup Discharge Min SOC",
-            "backup_discharge_min_soc",
-            0x67,
-            "i",
-            {
-                "min": 10,
-                "max": 100,
-                "step": 1,
-                "unit": PERCENTAGE,
-            }
-        ]
-]
+
+# ================================= Select Declarations ============================================================
+
 
 TIME_OPTIONS = {
     0: "00:00",
@@ -464,1116 +492,1241 @@ TIME_OPTIONS_GEN4 = {
     5947: "23:59", # default value for discharger_end_time1
 }
 
-
+@dataclass
+class SolaxModbusSelectEntityDescription(SelectEntityDescription):
+    allowedtypes: int = ALLDEFAULT # maybe 0x0000 (nothing) is a better default choice
+    register: int = None
+    options: dict = None
+    blacklist: list = None # none or list of serial number prefixes
 
 SELECT_TYPES = [
-	["Charger Use Mode",
-	    "charger_use_mode",
-	    0x1F,
-	    {
-	        0: "Self Use Mode",
+    SolaxModbusSelectEntityDescription( name = "Charger Use Mode",
+        key = "charger_use_mode",
+        register = 0x1F,
+        options = {
+            0: "Self Use Mode",
             1: "Force Time Use",
             2: "Back Up Mode",
             3: "Feedin Priority",
-        }
-	],
-        ["Allow Grid Charge",
-            "allow_grid_charge",
-            0x40,
-            {
-                0: "Both Forbidden",
-                1: "Period 1 Allowed",
-                2: "Period 2 Allowed",
-                3: "Both Allowed",
-            }
-        ],
-	["Charger Start Time 1",
-	    "charger_start_time_1",
-	    0x26,
-	    TIME_OPTIONS
-	],
-	["Charger End Time 1",
-	    "charger_end_time_1",
-	    0x27,
-	    TIME_OPTIONS
-	],
-	["Charger Start Time 2",
-	    "charger_start_time_2",
-	    0x2A,
-	    TIME_OPTIONS
-	],
-	["Charger End Time 2",
-	    "charger_end_time_2",
-	    0x2B,
-	    TIME_OPTIONS
-	],
-	["Discharger Start Time 1",
-	    "discharger_start_time_1",
-	    0x28,
-	    TIME_OPTIONS
-	],
-	["Discharger End Time 1",
-	    "discharger_end_time_1",
-	    0x29,
-	    TIME_OPTIONS
-	],
-	["Discharger Start Time 2",
-	    "discharger_start_time_2",
-	    0x2C,
-	    TIME_OPTIONS
-	],
-	["Discharger End Time 2",
-	    "discharger_end_time_2",
-	    0x2D,
-	    TIME_OPTIONS
-	],
-]
-
-SELECT_TYPES_G4 = [
-	["Charger Use Mode",
-	    "charger_use_mode",
-	    0x1F,
-            {
+        },
+        allowedtypes = GEN2 | GEN3,
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charger Use Mode",
+        key = "charger_use_mode",
+        register = 0x1F,
+        options = {
                 0: "Self Use Mode",
                 1: "Feedin Priority",
                 2: "Back Up Mode",
                 3: "Manual Mode",
-            }
-        ],
-        ["Manual Mode Select",
-            "manual_mode",
-            0x20,
-            {   0: "Stop Charge and Discharge",
+            },
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Manual Mode Select",
+        key = "manual_mode",
+        register = 0x20,
+        options = {
+                0: "Stop Charge and Discharge",
                 1: "Force Charge",
                 2: "Force Discharge",
-            }
-        ],
-        ["Selfuse Night Charge Enable",
-            "selfuse_nightcharge_enable",
-            0x62,
-            {   0: "Disabled",
+            },
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Allow Grid Charge",
+        key = "allow_grid_charge",
+        register = 0x40,
+        options =  {
+                0: "Both Forbidden",
+                1: "Period 1 Allowed",
+                2: "Period 2 Allowed",
+                3: "Both Allowed",
+            },
+        allowedtypes = GEN2 | GEN3, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charger Start Time 1",
+        key = "charger_start_time_1",
+        register = 0x26,
+        options = TIME_OPTIONS,
+        allowedtypes = GEN2 | GEN3, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charger End Time 1",
+        key = "charger_end_time_1",
+        register = 0x27,
+        options = TIME_OPTIONS,
+        allowedtypes = GEN2 | GEN3, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charger Start Time 2",
+        key = "charger_start_time_2",
+        register = 0x2A,
+        options = TIME_OPTIONS,
+        allowedtypes = GEN2 | GEN3, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charger End Time 2",
+        key = "charger_end_time_2",
+        register = 0x2B,
+        options = TIME_OPTIONS,
+        allowedtypes = GEN2 | GEN3, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Discharger Start Time 1",
+        key = "discharger_start_time_1",
+        register = 0x28,
+        options = TIME_OPTIONS,
+        allowedtypes = GEN2, # Probably remove Gen3 in future, not in Doc's
+    ),
+    SolaxModbusSelectEntityDescription( name = "Discharger End Time 1",
+        key = "discharger_end_time_1",
+        register = 0x29,
+        options = TIME_OPTIONS,
+        allowedtypes = GEN2, # Probably remove Gen3 in future, not in Doc's
+    ),
+    SolaxModbusSelectEntityDescription( name = "Discharger Start Time 2",
+        key = "discharger_start_time_2",
+        register = 0x2C,
+        options = TIME_OPTIONS,
+        allowedtypes = GEN2, # Probably remove Gen3 in future, not in Doc's
+    ),
+    SolaxModbusSelectEntityDescription( name = "Discharger End Time 2",
+        key = "discharger_end_time_2",
+        register = 0x2D,
+        options = TIME_OPTIONS,
+        allowedtypes = GEN2, # Probably remove Gen3 in future, not in Doc's
+    ),
+    SolaxModbusSelectEntityDescription( name = "Selfuse Night Charge Enable",
+        key = "selfuse_nightcharge_enable",
+        register = 0x62,
+        options =  {
+                0: "Disabled",
                 1: "Enabled",
-            }
-        ],
-        ["Charge and Discharge Period2 Enable",
-            "charge_period2_enable",
-            0x6C,
-            {   0: "Disabled",
+            },
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charge and Discharge Period2 Enable",
+        key = "charge_period2_enable",
+        register = 0x6C,
+        options = {  
+                0: "Disabled",
                 1: "Enabled",
-            }
-        ],
-        [   "Charger Start Time 1",
-            "charger_start_time_1",
-            0x68,
-            TIME_OPTIONS_GEN4
-        ],
-        [   "Charger End Time 1",
-            "charger_end_time_1",
-            0x69,
-            TIME_OPTIONS_GEN4
-        ],
-        [   "Discharger Start Time 1",
-            "discharger_start_time_1",
-            0x6A,
-            TIME_OPTIONS_GEN4
-        ],
-        [   "Discharger End Time 1",
-            "discharger_end_time_1",
-            0x6B,
-            TIME_OPTIONS_GEN4
-        ], 
-        [   "Charger Start Time 2",
-            "charger_start_time_2",
-            0x6D,
-            TIME_OPTIONS_GEN4
-        ],
-        [   "Charger End Time 2",
-            "charger_end_time_2",
-            0x6E,
-            TIME_OPTIONS_GEN4
-        ],
-        [   "Discharger Start Time 2",
-            "discharger_start_time_2",
-            0x6F,
-            TIME_OPTIONS_GEN4
-        ],
-        [   "Discharger End Time 2",
-            "discharger_end_time_2",
-            0x70,
-            TIME_OPTIONS_GEN4
-        ],
+            },
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charger Start Time 1",
+        key = "charger_start_time_1",
+        register = 0x68,
+        options = TIME_OPTIONS_GEN4,
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charger End Time 1",
+        key = "charger_end_time_1",
+        register = 0x69,
+        options = TIME_OPTIONS_GEN4,
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Discharger Start Time 1",
+        key = "discharger_start_time_1",
+        register = 0x6A,
+        options = TIME_OPTIONS_GEN4,
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Discharger End Time 1",
+        key = "discharger_end_time_1",
+        register = 0x6B,
+        options = TIME_OPTIONS_GEN4,
+        allowedtypes = GEN4, 
+    ), 
+    SolaxModbusSelectEntityDescription( name = "Charger Start Time 2",
+        key = "charger_start_time_2",
+        register = 0x6D,
+        options = TIME_OPTIONS_GEN4,
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Charger End Time 2",
+        key = "charger_end_time_2",
+        register = 0x6E,
+        options = TIME_OPTIONS_GEN4,
+        allowedtypes = GEN4, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Discharger Start Time 2",
+        key = "discharger_start_time_2",
+        register = 0x6F,
+        options = TIME_OPTIONS_GEN4,
+        allowedtypes = GEN4,
+    ),
+    SolaxModbusSelectEntityDescription( name = "Discharger End Time 2",
+        key = "discharger_end_time_2",
+        register = 0x70,
+        options = TIME_OPTIONS_GEN4,
+        allowedtypes = GEN4, 
+    ),
 ]
+
+
+# ================================= Sennsor Declarations ============================================================
 
 @dataclass
 class SolaXModbusSensorEntityDescription(SensorEntityDescription):
     """A class that describes SolaX Power Modbus sensor entities."""
+    allowedtypes: int = ALLDEFAULT # maybe 0x0000 (nothing) is a better default choice
+    blacklist: list = None # None or list of serial number prefixes
 
-SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {  
-    "allow_grid_charge": SolaXModbusSensorEntityDescription(
+
+
+SENSOR_TYPES: list[SolaXModbusSensorEntityDescription] = [ 
+    SolaXModbusSensorEntityDescription(
         name="Allow Grid Charge",
         key="allow_grid_charge",
         entity_registry_enabled_default=False,
+        allowedtypes= GEN2 | GEN3 #ALLDEFAULT & ~GEN4,
     ),
-    "battery_capacity_charge": SolaXModbusSensorEntityDescription(
-    	name="Battery Capacity",
-    	key="battery_capacity_charge",
-    	native_unit_of_measurement=PERCENTAGE,
-    	device_class=DEVICE_CLASS_BATTERY,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Capacity",
+        key="battery_capacity_charge",
+        native_unit_of_measurement=PERCENTAGE,
+        device_class=DEVICE_CLASS_BATTERY,
+        allowedtypes=ALLDEFAULT, 
     ),
-    "battery_charge_max_current": SolaXModbusSensorEntityDescription(
-		name="Battery Charge Max Current",
-		key="battery_charge_max_current",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-		entity_registry_enabled_default=False,
-	),
-	"battery_current_charge": SolaXModbusSensorEntityDescription(
-		name="Battery Current Charge",
-		key="battery_current_charge",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Charge Max Current",
+        key="battery_charge_max_current",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Battery Current Charge",
+        key="battery_current_charge",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
         device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes=ALLDEFAULT,
     ),
-    "battery_dicharge_cut_off_voltage": SolaXModbusSensorEntityDescription(
-		name="Battery Discharge Cut Off Voltage",
-		key="battery_discharge_cut_off_voltage",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-		entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Discharge Cut Off Voltage",
+        key="battery_discharge_cut_off_voltage",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-	"battery_discharge_max_current": SolaXModbusSensorEntityDescription(
-		name="Battery Discharge Max Current",
-		key="battery_discharge_max_current",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-		entity_registry_enabled_default=False,
-	),
-    "battery_minimum_capacity": SolaXModbusSensorEntityDescription(
-    	name="Battery Minimum Capacity",
-    	key="battery_minimum_capacity",
-    	native_unit_of_measurement=PERCENTAGE,
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Discharge Max Current",
+        key="battery_discharge_max_current",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "battery_package_number": SolaXModbusSensorEntityDescription(
-    	name="Battery Package Number",
-    	key="battery_package_number",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Install Capacity",
+        key="battery_install_capacity",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN3,
     ),
-    "battery_power_charge": SolaXModbusSensorEntityDescription(
-    	name="Battery Power Charge",
-    	key="battery_power_charge",
-    	native_unit_of_measurement=POWER_WATT,
-    	device_class=DEVICE_CLASS_POWER,
-    	state_class=STATE_CLASS_MEASUREMENT,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Minimum Capacity",
+        key="battery_minimum_capacity",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN2 | GEN3 #ALLDEFAULT & ~GEN4,
     ),
-    "battery_soh": SolaXModbusSensorEntityDescription(
-    	name="Battery State of Health",
-    	key="battery_soh",
-    	native_unit_of_measurement=PERCENTAGE,
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Minimum Capacity - Grid-tied",
+        key="battery_minimum_capacity_gridtied",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_registry_enabled_default=False,
+        allowedtypes= HYBRID | GEN3, 
     ),
-    "battery_type": SolaXModbusSensorEntityDescription(
-    	name="Battery Type",
-    	key="battery_type",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Package Number",
+        key="battery_package_number",
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN2,
     ),
-    "battery_charge_float_voltage": SolaXModbusSensorEntityDescription(
+    SolaXModbusSensorEntityDescription(
+        name="Battery Power Charge",
+        key="battery_power_charge",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Battery State of Health",
+        key="battery_soh",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN2,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Battery Type",
+        key="battery_type",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
         name="Battery Charge Float Voltage",
         key="battery_charge_float_voltage",
         entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "battery_input_energy_charge": SolaXModbusSensorEntityDescription(
-        name="Battery Input Energy",
+    SolaXModbusSensorEntityDescription(
+        name="Battery Input Energy Total",
         key="input_energy_charge",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "battery_output_energy_charge": SolaXModbusSensorEntityDescription(
-        name="Battery Output Energy",
+    SolaXModbusSensorEntityDescription(
+        name="Battery Output Energy Total",
         key="output_energy_charge",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "battery_temperature": SolaXModbusSensorEntityDescription(
-    	name="Battery Temperature",
-    	key="battery_temperature",
-    	native_unit_of_measurement=TEMP_CELSIUS,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Temperature",
+        key="battery_temperature",
+        native_unit_of_measurement=TEMP_CELSIUS,
         device_class=DEVICE_CLASS_TEMPERATURE,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=ALLDEFAULT,
     ),
-	"battery_voltage_charge": SolaXModbusSensorEntityDescription(
-		name="Battery Voltage Charge",
-		key="battery_voltage_charge",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Voltage Charge",
+        key="battery_voltage_charge",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
         device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes=ALLDEFAULT,
     ),
-    "battery_volt_fault_val": SolaXModbusSensorEntityDescription(
-		name="Battery Volt Fault Val",
-		key="battery_volt_fault_val",
-		entity_registry_enabled_default=False,
-	),
-	"bms_charge_max_current": SolaXModbusSensorEntityDescription(
-		name="BMS Charge Max Current",
-		key="bms_charge_max_current",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-		entity_registry_enabled_default=False,
-	),
-    "bms_connect_state": SolaXModbusSensorEntityDescription(
-    	name="BMS Connect State", 
-    	key="bms_connect_state",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Battery Volt Fault Val",
+        key="battery_volt_fault_val",
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN3 | GEN4,
     ),
-    "bms_discharge_max_current": SolaXModbusSensorEntityDescription(
-		name="BMS Discharge Max Current",
-		key="bms_discharge_max_current",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-		entity_registry_enabled_default=False,
-	),
-	"bus_volt": SolaXModbusSensorEntityDescription(
-		name="Bus Volt",
-		key="bus_volt",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+    # Gen 3 & Gen4 only
+    SolaXModbusSensorEntityDescription(
+        name="BMS Charge Max Current",
+        key="bms_charge_max_current",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    # Gen3 & Gen4 only, this is a different sensors on Gen2
+    SolaXModbusSensorEntityDescription(
+        name="BMS Connect State", 
+        key="bms_connect_state",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    # Gen3 & Gen4 only
+    SolaXModbusSensorEntityDescription(
+        name="BMS Discharge Max Current",
+        key="bms_discharge_max_current",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Bus Volt",
+        key="bus_volt",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
         device_class=DEVICE_CLASS_VOLTAGE,
         entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "charger_start_time_1": SolaXModbusSensorEntityDescription(
-    	name="Charger Start Time 1",
-    	key="charger_start_time_1",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Charger Start Time 1",
+        key="charger_start_time_1",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "charger_end_time_1": SolaXModbusSensorEntityDescription(
-    	name="Charger End Time 1",
-    	key="charger_end_time_1",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Charger End Time 1",
+        key="charger_end_time_1",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "charger_start_time_2": SolaXModbusSensorEntityDescription(
-    	name="Charger Start Time 2",
-    	key="charger_start_time_2",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Charger Start Time 2",
+        key="charger_start_time_2",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "charger_end_time_2": SolaXModbusSensorEntityDescription(
-    	name="Charger End Time 2",
-    	key="charger_end_time_2",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Charger End Time 2",
+        key="charger_end_time_2",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "charger_use_mode": SolaXModbusSensorEntityDescription(
-    	name="Charger Use Mode",
-    	key="charger_use_mode",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Charger Use Mode",
+        key="charger_use_mode",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "grid_import_total": SolaXModbusSensorEntityDescription(
-		name="Grid Import Total",
-		key="grid_import_total",
-		native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="Grid Import Total",
+        key="grid_import_total",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "dc_fault_val": SolaXModbusSensorEntityDescription(
-		name="DC Fault Val",
-		key="dc_fault_val",
-		entity_registry_enabled_default=False,
-	),
-	"discharger_start_time_1": SolaXModbusSensorEntityDescription(
-    	name="Discharger Start Time 1",
-    	key="discharger_start_time_1",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="DC Fault Val",
+        key="dc_fault_val",
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN3 | GEN4,
     ),
-    "discharger_end_time_1": SolaXModbusSensorEntityDescription(
-    	name="Discharger End Time 1",
-    	key="discharger_end_time_1",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Discharger Start Time 1",
+        key="discharger_start_time_1",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "discharger_start_time_2": SolaXModbusSensorEntityDescription(
-    	name="Discharger Start Time 2",
-    	key="discharger_start_time_2",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Discharger End Time 1",
+        key="discharger_end_time_1",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "discharger_end_time_2": SolaXModbusSensorEntityDescription(
-    	name="Discharger End Time 2",
-    	key="discharger_end_time_2",
-    	entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Discharger Start Time 2",
+        key="discharger_start_time_2",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "today_yield": SolaXModbusSensorEntityDescription(
-    	name="Today's Yield",
-    	key="today_yield",
-    	native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="Discharger End Time 2",
+        key="discharger_end_time_2",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Today's Yield",
+        key="today_yield",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
+        allowedtypes= GEN3 | GEN4,
     ),
-    "export_control_factory_limit": SolaXModbusSensorEntityDescription(
-		name="Export Control Factory Limit",
-		key="export_control_factory_limit",
-		native_unit_of_measurement=POWER_WATT,
-		entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Export Control Factory Limit",
+        key="export_control_factory_limit",
+        native_unit_of_measurement=POWER_WATT,
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-	"export_control_user_limit": SolaXModbusSensorEntityDescription(
-		name="Export Control User Limit",
-		key="export_control_user_limit",
-		native_unit_of_measurement=POWER_WATT,
-		entity_registry_enabled_default=False,
+    SolaXModbusSensorEntityDescription(
+        name="Export Control User Limit",
+        key="export_control_user_limit",
+        native_unit_of_measurement=POWER_WATT,
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "grid_export_total": SolaXModbusSensorEntityDescription(
-		name="Grid Export Total",
-		key="grid_export_total",
-		native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="Grid Export Total",
+        key="grid_export_total",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "feedin_power": SolaXModbusSensorEntityDescription(
-    	name="Measured Power",
-    	key="feedin_power",
-    	native_unit_of_measurement=POWER_WATT,
+    SolaXModbusSensorEntityDescription(
+        name="Group Read Test",
+        key="group_read_test",
+        icon="mdi:solar-power",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Measured Power",
+        key="feedin_power",
+        native_unit_of_measurement=POWER_WATT,
         device_class=DEVICE_CLASS_POWER,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=ALLDEFAULT,
     ),
-    "firmwareversion_invertermaster": SolaXModbusSensorEntityDescription(
-		name="Firmware Version Inverter Master",
-		key="firmwareversion_invertermaster",
-		entity_registry_enabled_default=False,
-	),
-	"firmwareversion_manager": SolaXModbusSensorEntityDescription(
-		name="Firmware Version Manager",
-		key="firmwareversion_manager",
-		entity_registry_enabled_default=False,
-	),
-	"firmwareversion_modbustcp_major": SolaXModbusSensorEntityDescription(
-		name="Firmware Version Modbus TCP Major",
-		key="firmwareversion_modbustcp_major",
-		entity_registry_enabled_default=False,
-	),
-	"firmwareversion_modbustcp_minor": SolaXModbusSensorEntityDescription(
-		name="Firmware Version Modbus TCP Minor",
-		key="firmwareversion_modbustcp_minor",
-		entity_registry_enabled_default=False,
-	),
-    "grid_frequency": SolaXModbusSensorEntityDescription(
-    	name="Inverter Frequency",
-    	key="grid_frequency",
-    	native_unit_of_measurement=FREQUENCY_HERTZ,
+    SolaXModbusSensorEntityDescription(
+        name="Firmware Version Inverter Master",
+        key="firmwareversion_invertermaster",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-    "grid_import": SolaXModbusSensorEntityDescription(
-    	name="Grid Import",
-    	key="grid_import",
-    	native_unit_of_measurement=POWER_WATT,
+    SolaXModbusSensorEntityDescription(
+        name="Firmware Version Manager",
+        key="firmwareversion_manager",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Firmware Version Modbus TCP Major",
+        key="firmwareversion_modbustcp_major",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Firmware Version Modbus TCP Minor",
+        key="firmwareversion_modbustcp_minor",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Frequency",
+        key="grid_frequency",
+        native_unit_of_measurement=FREQUENCY_HERTZ,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Grid Import",
+        key="grid_import",
+        native_unit_of_measurement=POWER_WATT,
         device_class=DEVICE_CLASS_POWER,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=ALLDEFAULT,
     ),
-    "grid_export": SolaXModbusSensorEntityDescription(
-    	name="Grid Export",
-    	key="grid_export",
-    	native_unit_of_measurement=POWER_WATT,
+    SolaXModbusSensorEntityDescription(
+        name="Grid Export",
+        key="grid_export",
+        native_unit_of_measurement=POWER_WATT,
         device_class=DEVICE_CLASS_POWER,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=ALLDEFAULT,
     ),
-    "house_load": SolaXModbusSensorEntityDescription(
-    	name="House Load",
-    	key="house_load",
-    	native_unit_of_measurement=POWER_WATT,
+    SolaXModbusSensorEntityDescription(
+        name="House Load",
+        key="house_load",
+        native_unit_of_measurement=POWER_WATT,
         device_class=DEVICE_CLASS_POWER,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=ALLDEFAULT,
     ),    
-    "inverter_voltage": SolaXModbusSensorEntityDescription(
-    	name="Inverter Voltage",
-    	key="inverter_voltage",
-    	native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Voltage",
+        key="inverter_voltage",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
         device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes=ALLDEFAULT,
     ),
-    "inverter_current": SolaXModbusSensorEntityDescription(
-    	name="Inverter Current",
-    	key="inverter_current",
-    	native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Current",
+        key="inverter_current",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
         device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes=ALLDEFAULT,
     ),
-    "inverter_load": SolaXModbusSensorEntityDescription(
-    	name="Inverter Power",
-    	key="inverter_load",
-    	native_unit_of_measurement=POWER_WATT,
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Model Number",
+        key="inverter_model_number",
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN3,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Power",
+        key="inverter_load",
+        native_unit_of_measurement=POWER_WATT,
         device_class=DEVICE_CLASS_POWER,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=ALLDEFAULT,
     ),
-    "inverter_temperature": SolaXModbusSensorEntityDescription(
-    	name="Inverter Temperature",
-    	key="inverter_temperature",
-    	native_unit_of_measurement=TEMP_CELSIUS,
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Temperature",
+        key="inverter_temperature",
+        native_unit_of_measurement=TEMP_CELSIUS,
         device_class=DEVICE_CLASS_TEMPERATURE,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=ALLDEFAULT,
     ),
-    "language": SolaXModbusSensorEntityDescription(
-		name="Language",
-		key="language",
-		entity_registry_enabled_default=False,
-	),
-	"lock_state": SolaXModbusSensorEntityDescription(
-		name="Lock State",
-		key="lock_state",
-		entity_registry_enabled_default=False,
-	),
-    "bootloader_version": SolaXModbusSensorEntityDescription(
+    SolaXModbusSensorEntityDescription(
+        name="Language",
+        key="language",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Lock State",
+        key="lock_state",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
         name="Bootloader Version",
         key="bootloader_version",
         entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-	"modulename": SolaXModbusSensorEntityDescription(
-		name="Module Name",
-		key="modulename",
-		entity_registry_enabled_default=False,
-	),
-	"normal_runtime": SolaXModbusSensorEntityDescription(
-		name="Normal Runtime",
-		key="normal_runtime",
-		native_unit_of_measurement=TIME_HOURS,
-		entity_registry_enabled_default=False,
-	),
-	"overload_fault_val": SolaXModbusSensorEntityDescription(
-		name="Overload Fault Val",
-		key="overload_fault_val",
-		entity_registry_enabled_default=False,
-	),
-    "pv_current_1": SolaXModbusSensorEntityDescription(
-    	name="PV Current 1",
-    	key="pv_current_1",
-    	native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+    SolaXModbusSensorEntityDescription(
+        name="Normal Runtime",
+        key="normal_runtime",
+        native_unit_of_measurement=TIME_HOURS,
+        entity_registry_enabled_default=False,
+        allowedtypes=GEN3,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Overload Fault Val",
+        key="overload_fault_val",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="PV Current 1",
+        key="pv_current_1",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
         device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes=HYBRID | PV,
     ),
-    "pv_current_2": SolaXModbusSensorEntityDescription(
-    	name="PV Current 2",
-    	key="pv_current_2",
-    	native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+    SolaXModbusSensorEntityDescription(
+        name="PV Current 2",
+        key="pv_current_2",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
         device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes=HYBRID | PV,
     ),
-    "pv_power_1": SolaXModbusSensorEntityDescription(
-    	name="PV Power 1",
-    	key="pv_power_1",
-    	native_unit_of_measurement=POWER_WATT,
+    SolaXModbusSensorEntityDescription(
+        name="PV Power 1",
+        key="pv_power_1",
+        native_unit_of_measurement=POWER_WATT,
         device_class=DEVICE_CLASS_POWER,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=HYBRID | PV,
     ),
-    "pv_power_2": SolaXModbusSensorEntityDescription(
-    	name="PV Power 2",
-    	key="pv_power_2",
-    	native_unit_of_measurement=POWER_WATT,
+    SolaXModbusSensorEntityDescription(
+        name="PV Power 2",
+        key="pv_power_2",
+        native_unit_of_measurement=POWER_WATT,
         device_class=DEVICE_CLASS_POWER,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=HYBRID | PV,
     ),
-    "pv_voltage_1": SolaXModbusSensorEntityDescription(
-    	name="PV Voltage 1",
-    	key="pv_voltage_1",
-    	native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+    SolaXModbusSensorEntityDescription(
+        name="PV Voltage 1",
+        key="pv_voltage_1",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
         device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes=HYBRID | PV,
     ),
-    "pv_voltage_2": SolaXModbusSensorEntityDescription(
-    	name="PV Voltage 2",
-    	key="pv_voltage_2",
-    	native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+    SolaXModbusSensorEntityDescription(
+        name="PV Voltage 2",
+        key="pv_voltage_2",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
         device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes=HYBRID | PV,
     ),
-    "pv_total_power": SolaXModbusSensorEntityDescription(
-    	name="PV Total Power",
-    	key="pv_total_power",
-    	native_unit_of_measurement=POWER_WATT,
+    SolaXModbusSensorEntityDescription(
+        name="PV Total Power",
+        key="pv_total_power",
+        native_unit_of_measurement=POWER_WATT,
         device_class=DEVICE_CLASS_POWER,
         state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes=HYBRID | PV,
     ),
-    "registration_code": SolaXModbusSensorEntityDescription(
-		name="Registration Code",
-		key="registration_code",
-		entity_registry_enabled_default=False,
-	),
-	"rtc": SolaXModbusSensorEntityDescription(
-		name="RTC",
-		key="rtc",
-		entity_registry_enabled_default=False,
-	),
-    "run_mode": SolaXModbusSensorEntityDescription(
-    	name="Run Mode",
-    	key="run_mode",
+    SolaXModbusSensorEntityDescription(
+        name="Registration Code",
+        key="registration_code",
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN2 | GEN3, #ALLDEFAULT & ~GEN4,
     ),
-    "seriesnumber": SolaXModbusSensorEntityDescription(
-		name="Series Number",
-		key="seriesnumber",
-		entity_registry_enabled_default=False,
-	),
-    "solar_energy_today": SolaXModbusSensorEntityDescription(
-    	name="Today's Solar Energy",
-    	key="solar_energy_today",
-    	native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="RTC",
+        key="rtc",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Run Mode",
+        key="run_mode",
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Series Number",
+        key="seriesnumber",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Today's Solar Energy",
+        key="solar_energy_today",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
+        allowedtypes= GEN3 | GEN4,
     ),
-    "solar_energy_total": SolaXModbusSensorEntityDescription(
-    	name="Total Solar Energy",
-    	key="solar_energy_total",
-    	native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="Today's Solar Energy",
+        key="today_yield",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+        icon="mdi:solar-power",
+        device_class=DEVICE_CLASS_ENERGY,
+        state_class=STATE_CLASS_TOTAL_INCREASING,
+        allowedtypes= GEN2,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Total Solar Energy",
+        key="solar_energy_total",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
+        allowedtypes= GEN3 | GEN4,
     ),
-        "e_charge_today": SolaXModbusSensorEntityDescription(
-    	name="E Charge Today",
-    	key="e_charge_today",
-    	native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="Total Solar Energy",
+        key="total_yield",
+        native_unit_of_measurement=ENERGY_MEGA_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
+        allowedtypes= GEN2,
     ),
-    "e_charge_total": SolaXModbusSensorEntityDescription(
-    	name="E Charge Total",
-    	key="e_charge_total",
-    	native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="Today's Yield",
+        key="today_s_yield_gen2",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+        icon="mdi:solar-power",
+        device_class=DEVICE_CLASS_ENERGY,
+        state_class=STATE_CLASS_TOTAL_INCREASING,
+        entity_registry_enabled_default=True,
+        allowedtypes= GEN2,
+        blacklist=('U50EC',)
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="E Charge Today",
+        key="e_charge_today",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
+        allowedtypes= GEN3 | GEN4,
     ),
-    "time_count_down": SolaXModbusSensorEntityDescription(
-		name="Time Count Down",
-		key="time_count_down",
-		entity_registry_enabled_default=False,
-	),
-    "inverter_rate_power": SolaXModbusSensorEntityDescription(
+    SolaXModbusSensorEntityDescription(
+        name="E Charge Total",
+        key="e_charge_total",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+        icon="mdi:solar-power",
+        device_class=DEVICE_CLASS_ENERGY,
+        state_class=STATE_CLASS_TOTAL_INCREASING,
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Time Count Down",
+        key="time_count_down",
+        entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
+    ),
+    SolaXModbusSensorEntityDescription(
         name="Inverter Rated Power",
         key="inverter_rate_power",
         entity_registry_enabled_default=False,
+        allowedtypes=ALLDEFAULT,
     ),
-	"total_yield": SolaXModbusSensorEntityDescription(
-		name="Total Yield",
-		key="total_yield",
-		native_unit_of_measurement=ENERGY_MEGA_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="Total Yield",
+        key="total_yield",
+        native_unit_of_measurement=ENERGY_MEGA_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
         entity_registry_enabled_default=False,
+        allowedtypes=GEN3 | GEN4,
     ),
-}
 
-GEN4_SENSOR_TYPES = SENSOR_TYPES.copy()
-# on Gen4, some variables are not available
-GEN4_SENSOR_TYPES.pop("allow_grid_charge")
-GEN4_SENSOR_TYPES.pop("battery_minimum_capacity")
-GEN4_SENSOR_TYPES.pop("registration_code")
-GEN4_SENSOR_TYPES.pop("normal_runtime")
 
-# add some variables for Gen4
-GEN4_SENSOR_TYPES["selfuse_nightcharge_upper_soc"] = SolaXModbusSensorEntityDescription(
+    # tranferred from GEN4_SENSOR_TYPES
+    SolaXModbusSensorEntityDescription(
         name="Selfuse Night Charge Upper SOC",
         key="selfuse_nightcharge_upper_soc",
         native_unit_of_measurement=PERCENTAGE,
-        device_class=DEVICE_CLASS_BATTERY)
-#GEN4_SENSOR_TYPES["selfuse_nightcharge_min_soc"] = SolaXModbusSensorEntityDescription(
-#        name="Selfuse Night Charge Min SOC",
-#        key="selfuse_nightcharge_min_soc",
-#        native_unit_of_measurement=PERCENTAGE,
-#        device_class=DEVICE_CLASS_BATTERY)
-GEN4_SENSOR_TYPES["selfuse_nightcharge_enable"] = SolaXModbusSensorEntityDescription(
+        device_class=DEVICE_CLASS_BATTERY,
+        allowedtypes= GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
         name="Selfuse Night Charge Enable",
-        key="selfuse_nightcharge_enable")
-GEN4_SENSOR_TYPES["charge_period2_enable"] = SolaXModbusSensorEntityDescription(
+        key="selfuse_nightcharge_enable",
+        allowedtypes = GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
         name="Charge Period2 Enable",
         key="charge_period2_enable",
-        entity_registry_enabled_default=False)
-GEN4_SENSOR_TYPES["selfuse_discharge_min_soc"] = SolaXModbusSensorEntityDescription(
+        entity_registry_enabled_default=False,
+        allowedtypes = GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
         name="Selfuse Discharge Min SOC",
-        key="selfuse_discharge_min_soc")
-GEN4_SENSOR_TYPES["discharger_start_time_1"] = SolaXModbusSensorEntityDescription(
-        name="Discharger Start Time 1",
-        key="discharger_start_time_1",
-        entity_registry_enabled_default=False)
-GEN4_SENSOR_TYPES["discharger_start_time_2"] = SolaXModbusSensorEntityDescription(
-        name="Discharger Start Time 2",
-        key="discharger_start_time_2",
-        entity_registry_enabled_default=False)
-GEN4_SENSOR_TYPES["discharger_end_time_1"] = SolaXModbusSensorEntityDescription(
-        name="Discharger End Time 1",
-        key="discharger_end_time_1",
-        entity_registry_enabled_default=False)
-GEN4_SENSOR_TYPES["discharger_end_time_2"] = SolaXModbusSensorEntityDescription(
-        name="Discharger End Time 2",
-        key="discharger_end_time_2",
-        entity_registry_enabled_default=False)
-GEN4_SENSOR_TYPES["shadow_fix_enable"] = SolaXModbusSensorEntityDescription(
+        key="selfuse_discharge_min_soc",
+        allowedtypes = GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
         name="Shadow Fix Function Level",
         key="shadow_fix_enable",
-        entity_registry_enabled_default=False)
-GEN4_SENSOR_TYPES["machine_type"] = SolaXModbusSensorEntityDescription(
+        entity_registry_enabled_default=False,
+        allowedtypes = GEN4,
+     ),
+    SolaXModbusSensorEntityDescription(
         name="Machine Type X1/X3",
         key="machine_type",
-        entity_registry_enabled_default=False)
-GEN4_SENSOR_TYPES["manual_mode"] = SolaXModbusSensorEntityDescription(
-        name="Manual Mode Integer",
-        key="manual_mode_int")
-GEN4_SENSOR_TYPES["manual_mode"] = SolaXModbusSensorEntityDescription(
+        entity_registry_enabled_default=False,
+        allowedtypes = GEN4,
+     ),
+    SolaXModbusSensorEntityDescription(
         name="Manual Mode",
-        key="manual_mode")
-GEN4_SENSOR_TYPES["feedin_nightcharge_min_soc"] = SolaXModbusSensorEntityDescription(
+        key="manual_mode",
+        allowedtypes = GEN4,
+     ),
+    SolaXModbusSensorEntityDescription(
         name="Feedin Night Charge Min SOC",
         key="feedin_nightcharge_min_soc",
         native_unit_of_measurement=PERCENTAGE,
-        device_class=DEVICE_CLASS_BATTERY)
-GEN4_SENSOR_TYPES["feedine_nightcharge_upper_soc"] = SolaXModbusSensorEntityDescription(
+        device_class=DEVICE_CLASS_BATTERY,
+        allowedtypes = GEN4,
+     ),
+    SolaXModbusSensorEntityDescription(
         name="Feedin Night Charge Upper SOC",
         key="feedin_nightcharge_upper_soc",
         native_unit_of_measurement=PERCENTAGE,
-        device_class=DEVICE_CLASS_BATTERY)
-GEN4_SENSOR_TYPES["backupnightcharge_min_soc"] = SolaXModbusSensorEntityDescription(
+        device_class=DEVICE_CLASS_BATTERY,
+        allowedtypes = GEN4,
+     ),
+    SolaXModbusSensorEntityDescription(
         name="Backup Night Charge Min SOC",
         key="backup_nightcharge_min_soc",
         native_unit_of_measurement=PERCENTAGE,
-        device_class=DEVICE_CLASS_BATTERY)
-GEN4_SENSOR_TYPES["backup_nightcharge_upper_soc"] = SolaXModbusSensorEntityDescription(
+        device_class=DEVICE_CLASS_BATTERY,
+        allowedtypes = GEN4,
+     ),
+    SolaXModbusSensorEntityDescription(
         name="Backup Night Charge Upper SOC",
         key="backup_nightcharge_upper_soc",
         native_unit_of_measurement=PERCENTAGE,
-        device_class=DEVICE_CLASS_BATTERY)
+        device_class=DEVICE_CLASS_BATTERY,
+        allowedtypes = GEN4,
+     ),
 
-GEN3_X1_SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {
-	"backup_charge_end": SolaXModbusSensorEntityDescription(
-		name="Backup Charge End",
-		key="backup_charge_end",
-		entity_registry_enabled_default=False,
-	),
-	"backup_charge_start": SolaXModbusSensorEntityDescription(
-		name="Backup Charge Start",
-		key="backup_charge_start",
-		entity_registry_enabled_default=False,
-	),
-	"backup_gridcharge": SolaXModbusSensorEntityDescription(
-		name="Backup Gridcharge",
-		key="backup_gridcharge",
-		entity_registry_enabled_default=False,
-	),
-	"battery_input_energy_today": SolaXModbusSensorEntityDescription(
-		name="Battery Input Energy Today",
-		key="input_energy_charge_today",
-		native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        icon="mdi:solar-power",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-    ),
-    "battery_output_energy_today": SolaXModbusSensorEntityDescription(
-		name="Battery Output Energy Today",
-		key="output_energy_charge_today",
-		native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        icon="mdi:solar-power",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-    ),
-	"cloud_control": SolaXModbusSensorEntityDescription(
-		name="Cloud Control",
-		key="cloud_control",
-		entity_registry_enabled_default=False,
-	),
-	"ct_meter_setting": SolaXModbusSensorEntityDescription(
-		name="CT Meter Setting",
-		key="ct_meter_setting",
-		entity_registry_enabled_default=False,
-	),
-	"disch_cut_off_capacity_grid_mode": SolaXModbusSensorEntityDescription(
-		name="Discharge Cut Off Capacity Grid Mode",
-		key="disch_cut_off_capacity_grid_mode",
-		native_unit_of_measurement=PERCENTAGE,
-		entity_registry_enabled_default=False,
-	),
-	"disch_cut_off_point_different": SolaXModbusSensorEntityDescription(
-		name="Discharge Cut Off Point Different",
-		key="disch_cut_off_point_different",
-		entity_registry_enabled_default=False,
-	),
-	"disch_cut_off_voltage_grid_mode": SolaXModbusSensorEntityDescription(
-		name="Discharge Cut Off Voltage Grid Mode",
-		key="disch_cut_off_voltage_grid_mode",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-		entity_registry_enabled_default=False,
-	),
-	"export_energy_today": SolaXModbusSensorEntityDescription(
-		name="Today's Export Energy",
-		key="export_energy_today",
-		native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        icon="mdi:solar-power",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-    ),
-    "forcetime_period_1_max_capacity": SolaXModbusSensorEntityDescription(
-    	name="Forcetime Period 1 Maximum Capacity",
-    	key="forcetime_period_1_max_capacity",
-    	native_unit_of_measurement=PERCENTAGE,
-    	entity_registry_enabled_default=False,
-    ),
-    "forcetime_period_2_max_capacity": SolaXModbusSensorEntityDescription(
-    	name="Forcetime Period 2 Maximum Capacity",
-    	key="forcetime_period_2_max_capacity",
-    	native_unit_of_measurement=PERCENTAGE,
-    	entity_registry_enabled_default=False,
-    ),
-    "global_mppt_function": SolaXModbusSensorEntityDescription(
-		name="Global MPPT Function",
-		key="global_mppt_function",
-		entity_registry_enabled_default=False,
-	),
-	"import_energy_today": SolaXModbusSensorEntityDescription(
-		name="Today's Import Energy",
-		key="import_energy_today",
-		native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        icon="mdi:solar-power",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=STATE_CLASS_TOTAL_INCREASING,
-    ),
-    "machine_style": SolaXModbusSensorEntityDescription(
-		name="Machine Style",
-		key="machine_style",
-		entity_registry_enabled_default=False,
-	),
-	"meter_1_id": SolaXModbusSensorEntityDescription(
-		name="Meter 1 id",
-		key="meter_1_id",
-		entity_registry_enabled_default=False,
-	),
-	"meter_2_id": SolaXModbusSensorEntityDescription(
-		name="Meter 2 id",
-		key="meter_2_id",
-		entity_registry_enabled_default=False,
-	),
-	"meter_function": SolaXModbusSensorEntityDescription(
-		name="Meter Function",
-		key="meter_function",
-		entity_registry_enabled_default=False,
-	),
-	"power_control_timeout": SolaXModbusSensorEntityDescription(
-		name="Power Control Timeout",
-		key="power_control_timeout",
-		entity_registry_enabled_default=False,
-	),
-    "was4777_power_manager": SolaXModbusSensorEntityDescription(
-		name="wAS4777 Power Manager",
-		key="was4777_power_manager",
-		entity_registry_enabled_default=False,
-	),
-}
-X1_EPS_SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {
-	"eps_auto_restart": SolaXModbusSensorEntityDescription(
-		name="EPS Auto Restart",
-		key="eps_auto_restart",
-	),
-	"eps_current": SolaXModbusSensorEntityDescription(
-		name="EPS Current",
-		key="eps_current",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-        device_class=DEVICE_CLASS_CURRENT,
-    ),
-	"eps_frequency": SolaXModbusSensorEntityDescription(
-		name="EPS Frequency",
-		key="eps_frequency",
-		native_unit_of_measurement=FREQUENCY_HERTZ,
-	),
-	"eps_min_esc_soc": SolaXModbusSensorEntityDescription(
-		name="EPS Min Esc SOC",
-		key="eps_min_esc_soc",
-		native_unit_of_measurement=PERCENTAGE,
-    ),
-	"eps_min_esc_voltage": SolaXModbusSensorEntityDescription(
-		name="EPS Min Esc Voltage",
-		key="eps_min_esc_voltage",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-    ),
-	"eps_mute": SolaXModbusSensorEntityDescription(
-		name="EPS Mute",
-		key="eps_mute",
-	),
-	"eps_power": SolaXModbusSensorEntityDescription(
-		name="EPS Power",
-		key="eps_power",
-		native_unit_of_measurement=POWER_VOLT_AMPERE
-	),
-	"eps_set_frequency": SolaXModbusSensorEntityDescription(
-		name="EPS Set Frequency",
-		key="eps_set_frequency",
-		native_unit_of_measurement=FREQUENCY_HERTZ,
-    ),
-	"eps_voltage": SolaXModbusSensorEntityDescription(
-		name="EPS Voltage",
-		key="eps_voltage",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-        device_class=DEVICE_CLASS_VOLTAGE,
-    ),
-    "eps_yield_today": SolaXModbusSensorEntityDescription(
-        name="EPS Yield Today",
-        key="eps_yield_today",
-        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        device_class=DEVICE_CLASS_ENERGY,
-        #state_class=STATE_CLASS_TOTAL_INCREASING,
-    ),
-}
-X3_EPS_SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {
-	"eps_auto_restart": SolaXModbusSensorEntityDescription(
-		name="EPS Auto Restart",
-		key="eps_auto_restart",
-	),
-	"eps_current_r": SolaXModbusSensorEntityDescription(
-		name="EPS Current R",
-		key="eps_current_r",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-        device_class=DEVICE_CLASS_CURRENT,
-    ),
-	"eps_current_s": SolaXModbusSensorEntityDescription(
-		name="EPS Current S",
-		key="eps_current_s",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-        device_class=DEVICE_CLASS_CURRENT,
-    ),
-	"eps_current_t": SolaXModbusSensorEntityDescription(
-		name="EPS Current T",
-		key="eps_current_t",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-        device_class=DEVICE_CLASS_CURRENT,
-    ),
-    "eps_min_esc_soc": SolaXModbusSensorEntityDescription(
-		name="EPS Min Esc SOC",
-		key="eps_min_esc_soc",
-		native_unit_of_measurement=PERCENTAGE,
-    ),
-	"eps_min_esc_voltage": SolaXModbusSensorEntityDescription(
-		name="EPS Min Esc Voltage",
-		key="eps_min_esc_voltage",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-    ),
-	"eps_mode_runtime": SolaXModbusSensorEntityDescription(
-		name="EPS Mode Runtime",
-		key="eps_mode_runtime",
-	),
-	"eps_mute": SolaXModbusSensorEntityDescription(
-		name="EPS Mute",
-		key="eps_mute",
-	),
-	"eps_power_r": SolaXModbusSensorEntityDescription(
-		name="EPS Power R",
-		key="eps_power_r",
-		native_unit_of_measurement=POWER_VOLT_AMPERE,
-    ),
-	"eps_power_s": SolaXModbusSensorEntityDescription(
-		name="EPS Power S",
-		key="eps_power_s",
-		native_unit_of_measurement=POWER_VOLT_AMPERE,
-    ),
-	"eps_power_t": SolaXModbusSensorEntityDescription(
-		name="EPS Power T",
-		key="eps_power_t",
-		native_unit_of_measurement=POWER_VOLT_AMPERE,
-    ),
-	"eps_power_active_r": SolaXModbusSensorEntityDescription(
-		name="EPS Power Active R",
-		key="eps_power_active_r",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
-    ),
-	"eps_power_active_s": SolaXModbusSensorEntityDescription(
-		name="EPS Power Active S",
-		key="eps_power_active_s",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
-    ),
-	"eps_power_active_t": SolaXModbusSensorEntityDescription(
-		name="EPS Power Active T",
-		key="eps_power_active_t",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
-    ),
-    "eps_set_frequency": SolaXModbusSensorEntityDescription(
-		name="EPS Set Frequency",
-		key="eps_set_frequency",
-		native_unit_of_measurement=FREQUENCY_HERTZ,
-    ),
-	"eps_voltage_r": SolaXModbusSensorEntityDescription(
-		name="EPS Voltage R",
-		key="eps_voltage_r",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-        device_class=DEVICE_CLASS_VOLTAGE,
-    ),
-	"eps_voltage_s": SolaXModbusSensorEntityDescription(
-		name="EPS Voltage S",
-		key="eps_voltage_s",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-        device_class=DEVICE_CLASS_VOLTAGE,
-    ),
-	"eps_voltage_t": SolaXModbusSensorEntityDescription(
-		name="EPS Voltage T",
-		key="eps_voltage_t",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-        device_class=DEVICE_CLASS_VOLTAGE,
-    ),
-    "eps_yield_today": SolaXModbusSensorEntityDescription(
-        name="EPS Yield Today",
-        key="eps_yield_today",
-        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
-        device_class=DEVICE_CLASS_ENERGY,
-        #state_class=STATE_CLASS_TOTAL_INCREASING,
-    ),
-}
-GEN3_X3_SENSOR_TYPES: dict[str, list[SolaXModbusSensorEntityDescription]] = {
-	"earth_detect_x3": SolaXModbusSensorEntityDescription(
-		name="Earth Detect X3",
-		key="earth_detect_x3",
-	),
-    "ct_meter_setting": SolaXModbusSensorEntityDescription(
-        name="CT Meter Setting",
-        key="ct_meter_setting",
+
+     # transferred fromm GEN3_X1_SENSOR_TYPES, some also from GEN3_X3_SENSOR_TYPES
+
+    SolaXModbusSensorEntityDescription(
+        name="Backup Charge End",
+        key="backup_charge_end",
         entity_registry_enabled_default=False,
+        allowedtypes= X1 | GEN3 | GEN4,
     ),
-    "battery_input_energy_today": SolaXModbusSensorEntityDescription(
+    SolaXModbusSensorEntityDescription(
+        name="Backup Charge Start",
+        key="backup_charge_start",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Backup Gridcharge",
+        key="backup_gridcharge",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
         name="Battery Input Energy Today",
         key="input_energy_charge_today",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
     ),
-    "battery_output_energy_today": SolaXModbusSensorEntityDescription(
+    SolaXModbusSensorEntityDescription(
         name="Battery Output Energy Today",
         key="output_energy_charge_today",
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
     ),
-	"export_energy_today": SolaXModbusSensorEntityDescription(
-		name="Today's Export Energy",
-		key="export_energy_today",
-		native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    # cloud_control should be X3 as well?
+    SolaXModbusSensorEntityDescription(
+        name="Cloud Control",
+        key="cloud_control",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | GEN3,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="CT Meter Setting",
+        key="ct_meter_setting",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Discharge Cut Off Point Different",
+        key="disch_cut_off_point_different",
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Discharge Cut Off Voltage Grid Mode",
+        key="disch_cut_off_voltage_grid_mode",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        entity_registry_enabled_default=False,
+        allowedtypes= GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Today's Export Energy",
+        key="export_energy_today",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
     ),
-	"feedin_power_r": SolaXModbusSensorEntityDescription(
-		name="Measured Power R",
-		key="feedin_power_r",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
+    SolaXModbusSensorEntityDescription(
+        name="Forcetime Period 1 Maximum Capacity",
+        key="forcetime_period_1_max_capacity",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3,
     ),
-	"feedin_power_s": SolaXModbusSensorEntityDescription(
-		name="Measured Power S",
-		key="feedin_power_s",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
+    SolaXModbusSensorEntityDescription(
+        name="Forcetime Period 2 Maximum Capacity",
+        key="forcetime_period_2_max_capacity",
+        native_unit_of_measurement=PERCENTAGE,
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3,
     ),
-	"feedin_power_t": SolaXModbusSensorEntityDescription(
-		name="Measured Power T",
-		key="feedin_power_t",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
+    SolaXModbusSensorEntityDescription(
+        name="Global MPPT Function",
+        key="global_mppt_function",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3,
     ),
-	"grid_current_r": SolaXModbusSensorEntityDescription(
-		name="Inverter Current R",
-		key="grid_current_r",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-        device_class=DEVICE_CLASS_CURRENT,
-    ),
-	"grid_current_s": SolaXModbusSensorEntityDescription(
-		name="Inverter Current S",
-		key="grid_current_s",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-        device_class=DEVICE_CLASS_CURRENT,
-    ),
-	"grid_current_t": SolaXModbusSensorEntityDescription(
-		name="Inverter Current T",
-		key="grid_current_t",
-		native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
-        device_class=DEVICE_CLASS_CURRENT,
-    ),
-	"grid_mode_runtime": SolaXModbusSensorEntityDescription(
-		name="Grid Mode Runtime",
-		key="grid_mode_runtime",
-		native_unit_of_measurement=TIME_HOURS,
-	),
-	"grid_power_r": SolaXModbusSensorEntityDescription(
-		name="Inverter Power R",
-		key="grid_power_r",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
-    ),
-	"grid_power_s": SolaXModbusSensorEntityDescription(
-		name="Inverter Power S",
-		key="grid_power_s",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
-    ),
-	"grid_power_t": SolaXModbusSensorEntityDescription(
-		name="Inverter Power T",
-		key="grid_power_t",
-		native_unit_of_measurement=POWER_WATT,
-        device_class=DEVICE_CLASS_POWER,
-        state_class=STATE_CLASS_MEASUREMENT,
-    ),
-    "grid_service_x3": SolaXModbusSensorEntityDescription(
-		name="Grid Service X3",
-		key="grid_service_x3",
-	),
-	"grid_voltage_r": SolaXModbusSensorEntityDescription(
-		name="Inverter Voltage R",
-		key="grid_voltage_r",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-        device_class=DEVICE_CLASS_VOLTAGE,
-    ),
-	"grid_voltage_s": SolaXModbusSensorEntityDescription(
-		name="Inverter Voltage S",
-		key="grid_voltage_s",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-        device_class=DEVICE_CLASS_VOLTAGE,
-    ),
-	"grid_voltage_t": SolaXModbusSensorEntityDescription(
-		name="Inverter Voltage T",
-		key="grid_voltage_t",
-		native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
-        device_class=DEVICE_CLASS_VOLTAGE,
-    ),
-	"import_energy_today": SolaXModbusSensorEntityDescription(
-		name="Today's Import Energy",
-		key="import_energy_today",
-		native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+    SolaXModbusSensorEntityDescription(
+        name="Today's Import Energy",
+        key="import_energy_today",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         icon="mdi:solar-power",
         device_class=DEVICE_CLASS_ENERGY,
         state_class=STATE_CLASS_TOTAL_INCREASING,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
     ),
-    "phase_power_balance_x3": SolaXModbusSensorEntityDescription(
-		name="Phase Power Balance X3",
-		key="phase_power_balance_x3",
-	),
-}
+    # Should be X3 as well?
+    SolaXModbusSensorEntityDescription(
+        name="Machine Style",
+        key="machine_style",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
+    ),
+    # Should be X3 as well?
+    SolaXModbusSensorEntityDescription(
+        name="Meter 1 id",
+        key="meter_1_id",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
+    ),
+    # Should be X3 as well?
+    SolaXModbusSensorEntityDescription(
+        name="Meter 2 id",
+        key="meter_2_id",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
+    ),
+    # Should be X3 as well?
+    SolaXModbusSensorEntityDescription(
+        name="Meter Function",
+        key="meter_function",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Power Control Timeout",
+        key="power_control_timeout",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="wAS4777 Power Manager",
+        key="was4777_power_manager",
+        entity_registry_enabled_default=False,
+        allowedtypes= X1 | X3 |  GEN3,
+    ),
 
-GEN4_X1_SENSOR_TYPES = GEN3_X1_SENSOR_TYPES.copy()
-GEN4_X1_SENSOR_TYPES.pop("was4777_power_manager", None)
-GEN4_X1_SENSOR_TYPES.pop("cloud_control", None)
-GEN4_X1_SENSOR_TYPES.pop("global_mppt_function", None)
 
-# remove some variables not available in Gen4
-GEN4_X3_SENSOR_TYPES = GEN3_X3_SENSOR_TYPES.copy()
-GEN4_X3_SENSOR_TYPES.pop("earth_detect_x3", None)
-GEN4_X3_SENSOR_TYPES.pop("grid_service_x3", None)
+    # transferred fromm GEN3_X3_SENSOR_TYPES
+    SolaXModbusSensorEntityDescription(
+        name="Earth Detect X3",
+        key="earth_detect_x3",
+        allowedtypes = X3 | GEN3,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Measured Power R",
+        key="feedin_power_r",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Measured Power S",
+        key="feedin_power_s",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Measured Power T",
+        key="feedin_power_t",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Current R",
+        key="grid_current_r",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Current S",
+        key="grid_current_s",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Current T",
+        key="grid_current_t",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Grid Mode Runtime",
+        key="grid_mode_runtime",
+        native_unit_of_measurement=TIME_HOURS,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Power R",
+        key="grid_power_r",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Power S",
+        key="grid_power_s",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Power T",
+        key="grid_power_t",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Grid Service X3",
+        key="grid_service_x3",
+        allowedtypes = X3 | GEN3,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Voltage R",
+        key="grid_voltage_r",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Voltage S",
+        key="grid_voltage_s",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Inverter Voltage T",
+        key="grid_voltage_t",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="Phase Power Balance X3",
+        key="phase_power_balance_x3",
+        allowedtypes = X3 | GEN3 | GEN4,
+    ),
 
-# remove some variables not available in Gen4
-GEN4_X1_EPS_SENSOR_TYPES = X1_EPS_SENSOR_TYPES.copy()
-GEN4_X1_EPS_SENSOR_TYPES.pop("eps_set_frequency", None)
-GEN4_X1_EPS_SENSOR_TYPES.pop("eps_auto_restart", None)
-GEN4_X1_EPS_SENSOR_TYPES.pop("eps_min_esc_soc", None)
-GEN4_X1_EPS_SENSOR_TYPES.pop("eps_min_esc_voltage", None)
+    # transferred from X1_EPS_SENSOR_TYPES
 
-# remove some variables not available in Gen4
-GEN4_X3_EPS_SENSOR_TYPES = X3_EPS_SENSOR_TYPES.copy()
-GEN4_X3_EPS_SENSOR_TYPES.pop("eps_set_frequency", None)
-GEN4_X3_EPS_SENSOR_TYPES.pop("eps_auto_restart")
-GEN4_X3_EPS_SENSOR_TYPES.pop("eps_min_esc_soc")
-GEN4_X3_EPS_SENSOR_TYPES.pop("eps_min_esc_voltage")
+    SolaXModbusSensorEntityDescription(
+        name="EPS Auto Restart",
+        key="eps_auto_restart",
+        allowedtypes = X1 | X3 | GEN2 | GEN3 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Current",
+        key="eps_current",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes = X1 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Frequency",
+        key="eps_frequency",
+        native_unit_of_measurement=FREQUENCY_HERTZ,
+        allowedtypes = X1 | X3  | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Min Esc SOC",
+        key="eps_min_esc_soc",
+        native_unit_of_measurement=PERCENTAGE,
+        allowedtypes = X1 | X3 | GEN2 | GEN3 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Min Esc Voltage",
+        key="eps_min_esc_voltage",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        allowedtypes = X1 | X3 | GEN2 | GEN3 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Mute",
+        key="eps_mute",
+        allowedtypes = X1 | X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Power",
+        key="eps_power",
+        native_unit_of_measurement=POWER_VOLT_AMPERE,
+        allowedtypes = X1 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Set Frequency",
+        key="eps_set_frequency",
+        native_unit_of_measurement=FREQUENCY_HERTZ,
+        allowedtypes = X1 | X3 | GEN2 | GEN3 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Voltage",
+        key="eps_voltage",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes = X1 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Yield Today",
+        key="eps_yield_today",
+        native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
+        device_class=DEVICE_CLASS_ENERGY,
+        #state_class=STATE_CLASS_TOTAL_INCREASING,
+        allowedtypes = X1 | X3 | GEN3 | GEN4 | EPS,
+    ),
+
+    # transferred from X3_EPS_SENSOR_TYPES
+
+    SolaXModbusSensorEntityDescription(
+        name="EPS Current R",
+        key="eps_current_r",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+        ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Current S",
+        key="eps_current_s",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Current T",
+        key="eps_current_t",
+        native_unit_of_measurement=ELECTRIC_CURRENT_AMPERE,
+        device_class=DEVICE_CLASS_CURRENT,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Mode Runtime",
+        key="eps_mode_runtime",
+        allowedtypes = X3 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Power R",
+        key="eps_power_r",
+        native_unit_of_measurement=POWER_VOLT_AMPERE,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Power S",
+        key="eps_power_s",
+        native_unit_of_measurement=POWER_VOLT_AMPERE,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Power T",
+        key="eps_power_t",
+        native_unit_of_measurement=POWER_VOLT_AMPERE,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Power Active R",
+        key="eps_power_active_r",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Power Active S",
+        key="eps_power_active_s",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Power Active T",
+        key="eps_power_active_t",
+        native_unit_of_measurement=POWER_WATT,
+        device_class=DEVICE_CLASS_POWER,
+        state_class=STATE_CLASS_MEASUREMENT,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Voltage R",
+        key="eps_voltage_r",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Voltage S",
+        key="eps_voltage_s",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+    SolaXModbusSensorEntityDescription(
+        name="EPS Voltage T",
+        key="eps_voltage_t",
+        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        device_class=DEVICE_CLASS_VOLTAGE,
+        allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
+    ),
+
+]
+
