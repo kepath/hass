@@ -1,0 +1,194 @@
+
+########################################################
+#####  BUTTON TEMPLATES                             ####
+########################################################
+
+remote_standard_button:
+  type: 'custom:button-card'
+  template: widget_icon
+  variables:
+    var_entity: '[[[ return variables.var_entity ]]]'
+    var_remote_standard_button:
+      tap:
+        action: "call-service"
+        service: androidtv.adb_command
+        command:
+        haptic: "success"
+      double_tap:
+        action: "none"
+        service:
+        command:
+        haptic: "none"
+      hold:
+        action: "more-info"
+        service:
+        command:
+        haptic: "heavy"
+      background_color: "rgba(var(--color-theme),0.05)"
+      type: "normal"
+      icon:
+        mdi:
+        color:
+
+  remote_button_presses:
+    type: 'custom:button-card'
+    template: widget_icon
+    variables:
+      var_entity: '[[[ return variables.var_entity ]]]'
+      var_remote_button_presses:
+        tap:
+          entity: '[[[ return variables.var_entity ]]]'
+          action: '[[[ return variables.var_remote_standard_button.tap.action ]]]'
+          service: '[[[ return variables.var_remote_standard_button.tap.service ]]]'
+          haptic: '[[[ return variables.var_remote_standard_button.tap.haptic ]]]'
+        double_tap:
+          entity: '[[[ return variables.var_entity ]]]'
+          action: '[[[ return variables.var_remote_standard_button.double_tap.action ]]]'
+          haptic: '[[[ return variables.var_remote_standard_button.double_tap.haptic ]]]'
+        hold:
+          entity: '[[[ return variables.var_entity ]]]'
+          action: '[[[ return variables.var_remote_standard_button.hold.action ]]]'
+          haptic: '[[[ return variables.var_remote_standard_button.hold.haptic ]]]'
+  icon: >
+    [[[ 
+      var icon = variables.var_remote_standard_button.icon.mdi;
+      if (variables.var_remote_standard_button.type == 'play') {
+        if (states[variables.var_entity].state == 'off' 
+            || states[variables.var_entity].state == 'PowerOff' 
+            || states[variables.var_entity].state == 'idle' 
+            || states[variables.var_entity].state == 'paused') {
+          var icon = 'mdi:play';
+        }  
+      }
+      return icon;
+    ]]]
+  styles:
+    icon:
+      - color: '[[[ return variables.var_remote_standard_button.icon.color ]]]'
+    img_cell:
+      - background-color: >
+          [[[
+              var color = variables.var_remote_standard_button.background_color;
+              if (variables.var_remote_standard_button.type == 'mute') {
+                if (typeof states[variables.var_entity].attributes.is_volume_muted !== 'undefined') {
+                  if (states[variables.var_entity].attributes.is_volume_muted){
+                    var color = "rgba(var(--color-green), 0.2)";
+                  }
+                }
+              }
+              if (variables.var_remote_standard_button.type == 'power') {
+                if (states[variables.var_entity].state == 'off' 
+                    || states[variables.var_entity].state == 'PowerOff') {
+                  var color = variables.var_remote_standard_button.background_color;
+                } else {
+                  var color = "rgba(var(--color-red), 0.2)";
+                }
+              }
+              return color;
+          ]]]
+
+remote_button_presses:
+  type: 'custom:button-card'
+  template: widget_icon
+  variables:
+    var_entity: '[[[ return variables.var_entity ]]]'
+    var_remote_button_presses:
+      tap:
+        entity: '[[[ return variables.var_entity ]]]'
+        action: "call-service"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
+      double_tap:
+        entity: '[[[ return variables.var_entity ]]]'
+        action: "none"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
+      hold: 
+        entity: '[[[ return variables.var_entity ]]]'
+        action: "more-info"
+        service:
+        command:
+        haptic: "none"
+        harmony:
+          device:
+          delay: 0.6
+  tap_action:
+    remote_button_actions:
+      type: 'custom:button-card'
+      template: widget_icon
+      variables:
+        var_remote_button_actions: '[[[ return var_remote_button_presses.tap_action ]]]'
+  double_tap_action:
+    remote_button_actions:
+      type: 'custom:button-card'
+      template: widget_icon
+      variables:
+        var_remote_button_actions: '[[[ return var_remote_button_presses.double_tap_action ]]]'
+  hold_action:
+    remote_button_actions:
+      type: 'custom:button-card'
+      template: widget_icon
+      variables:
+        var_remote_button_actions: '[[[ return var_remote_button_presses.hold_action ]]]'
+
+remote_button_actions:
+  type: 'custom:button-card'
+  template: widget_icon
+  variables: 
+    var_remote_button_actions:
+  action: >
+    {% if variables.var_remote_button_actions.action == "call-service" %}
+      {% if variables.var_remote_button_actions.service.startswith("androidtv") %}
+        action: call-service
+        service: androidtv.adb_command
+        service_data:
+          command: '[[[ return variables.var_remote_button_actions.command ]]]'
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+      {% elif variables.var_remote_button_actions.service.startswith("media") %}
+        service: media_player.play_media
+        data:
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+          media_content_id: '[[[ return variables.var_remote_button_actions.command ]]]'
+          media_content_type: "send_key"
+      {% elif variables.var_remote_button_actions.service.startswith("remote") %}
+        service: remote.send_command
+        target:
+          entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+        data:
+          command:
+            - '[[[ return variables.var_remote_button_actions.command ]]]'
+          device: '[[[ return variables.var_remote_button_actions.harmony.device ]]]'
+          delay_secs: '[[[ return variables.var_remote_button_actions.harmony.delay ]]]'
+      {% else %}
+        "none"
+      {% endif%}
+    {% elif variables.var_remote_button_actions.action == "more-info" %}
+      action: more-info
+      entity_id: '[[[ return variables.var_remote_button_actions.entity ]]]'
+    {% elif variables.var_remote_button_actions.action == "toggle" %}
+      action: toggle
+    {% elif variables.var_remote_button_actions.action == "navigate" %}
+      action: navigate  
+      navigation_path: '[[[ return variables.var_remote_button_actions.command ]]]'
+    {% elif variables.var_remote_button_actions.action == "url" %}
+    {% else %}
+      "none"
+    {% endif %}
+    haptic: '[[[ return variables.var_remote_button_actions.haptic ]]]'
+
+
+##  success	Indicates that a task or action has completed.
+##  warning	Indicates that a task or action has produced a warning of some kind.
+##  failure	Indicates that a task or action has failed.
+##  light	Provides a physical metaphor that complements the visual experience.
+##  medium	Provides a physical metaphor that complements the visual experience.
+##  heavy	Provides a physical metaphor that complements the visual experience.
+##  selection	Indicates that the selection is actively changing.
