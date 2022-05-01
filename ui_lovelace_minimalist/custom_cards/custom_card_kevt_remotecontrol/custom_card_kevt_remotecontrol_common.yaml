@@ -5,64 +5,28 @@
 
 remote_grid_three_by_four:
   variables:
-    ulm_remote_grid_three_by_four_entity:
-    ulm_card_remote_standard_button_background_color:
-
-    ulm_remote_grid_three_by_four_command_01: 
-    ulm_remote_grid_three_by_four_command_02: 
-    ulm_remote_grid_three_by_four_command_03: 
-    ulm_remote_grid_three_by_four_command_04: 
-    ulm_remote_grid_three_by_four_command_05: 
-    ulm_remote_grid_three_by_four_command_06: 
-    ulm_remote_grid_three_by_four_command_07: 
-    ulm_remote_grid_three_by_four_command_08: 
-    ulm_remote_grid_three_by_four_command_09: 
-    ulm_remote_grid_three_by_four_command_10: 
-    ulm_remote_grid_three_by_four_command_11: 
-    ulm_remote_grid_three_by_four_command_12: 
-
-    ulm_remote_grid_three_by_four_haptic_01: ""
-    ulm_remote_grid_three_by_four_haptic_02: ""
-    ulm_remote_grid_three_by_four_haptic_03: ""
-    ulm_remote_grid_three_by_four_haptic_04: ""
-    ulm_remote_grid_three_by_four_haptic_05: ""
-    ulm_remote_grid_three_by_four_haptic_06: ""
-    ulm_remote_grid_three_by_four_haptic_07: ""
-    ulm_remote_grid_three_by_four_haptic_08: ""
-    ulm_remote_grid_three_by_four_haptic_09: ""
-    ulm_remote_grid_three_by_four_haptic_10: ""
-    ulm_remote_grid_three_by_four_haptic_11: ""
-    ulm_remote_grid_three_by_four_haptic_12: ""
-
-    ulm_remote_grid_three_by_four_icon_01: 'mdi:numeric-1-circle'
-    ulm_remote_grid_three_by_four_icon_02: 'mdi:numeric-2-circle'
-    ulm_remote_grid_three_by_four_icon_03: 'mdi:numeric-3-circle'
-    ulm_remote_grid_three_by_four_icon_04: 'mdi:numeric-4-circle'
-    ulm_remote_grid_three_by_four_icon_05: 'mdi:numeric-5-circle'
-    ulm_remote_grid_three_by_four_icon_06: 'mdi:numeric-6-circle'
-    ulm_remote_grid_three_by_four_icon_07: 'mdi:numeric-7-circle'
-    ulm_remote_grid_three_by_four_icon_08: 'mdi:numeric-8-circle'
-    ulm_remote_grid_three_by_four_icon_09: 'mdi:numeric-9-circle'
-    ulm_remote_grid_three_by_four_icon_10: 
-    ulm_remote_grid_three_by_four_icon_11: 'mdi:numeric-0-circle'
-    ulm_remote_grid_three_by_four_icon_12: 
-
-    ulm_remote_grid_three_by_four_color_01: 
-    ulm_remote_grid_three_by_four_color_02: 
-    ulm_remote_grid_three_by_four_color_03: 
-    ulm_remote_grid_three_by_four_color_04: 
-    ulm_remote_grid_three_by_four_color_05: 
-    ulm_remote_grid_three_by_four_color_06: 
-    ulm_remote_grid_three_by_four_color_07: 
-    ulm_remote_grid_three_by_four_color_08: 
-    ulm_remote_grid_three_by_four_color_09: 
-    ulm_remote_grid_three_by_four_color_10: 
-    ulm_remote_grid_three_by_four_color_11: 
-    ulm_remote_grid_three_by_four_color_12: 
+    entity: '[[[ return variables.entity ]]]'
+    background_color: '[[[ return variables.entity ]]]'
+    row1:
+      item1:
+      item2:
+      item3:
+    row2:
+      item1:
+      item2:
+      item3:
+    row3:
+      item1:
+      item2:
+      item3:
+    row4:
+      item1:
+      item2:
+      item3:
 
   styles:
     grid:
-      - grid-template-areas: '"item1" "item2" "item3" "item4"'
+      - grid-template-areas: '"row1" "row2" "row3" "row4"'
       - grid-template-columns: 1fr
       - grid-template-rows: min-content
       - row-gap: 12px
@@ -71,172 +35,77 @@ remote_grid_three_by_four:
       - box-shadow: var(--box-shadow)
       - padding: 12px
   custom_fields:
-    item1:
+    row1:
       card:
         type: 'custom:button-card'
         template: remote_standard_row_three_column
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_three_by_four_entity ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.row1.item1 ]]]'
+          item2: '[[[ return variables.row1.item2 ]]]'
+          item3: '[[[ return variables.row1.item3 ]]]'
 
-          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_three_by_four_command_01 ]]]'
-          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_01 ]]]'
-          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_three_by_four_icon_01 ]]]'
-          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_three_by_four_color_01 ]]]'
-          
-          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_three_by_four_command_02 ]]]'
-          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_02 ]]]'
-          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_three_by_four_icon_02 ]]]'
-          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_three_by_four_color_02 ]]]'
-
-          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_three_by_four_command_03 ]]]'
-          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_03 ]]]'
-          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_three_by_four_icon_03 ]]]'
-          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_three_by_four_color_03 ]]]'
-
-    item2:
+    row2:
       card:
         type: 'custom:button-card'
         template: remote_standard_row_three_column
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_three_by_four_entity ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
-
-          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_three_by_four_command_04 ]]]'
-          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_04 ]]]'
-          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_three_by_four_icon_04 ]]]'
-          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_three_by_four_color_04 ]]]'
-          
-          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_three_by_four_command_05 ]]]'
-          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_05 ]]]'
-          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_three_by_four_icon_05 ]]]'
-          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_three_by_four_color_05 ]]]'
-
-          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_three_by_four_command_06 ]]]'
-          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_06 ]]]'
-          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_three_by_four_icon_06 ]]]'
-          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_three_by_four_color_06 ]]]'
-    item3:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.row2.item1 ]]]'
+          item2: '[[[ return variables.row2.item2 ]]]'
+          item3: '[[[ return variables.row2.item3 ]]]'
+    row3:
       card:
         type: 'custom:button-card'
         template: remote_standard_row_three_column
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_three_by_four_entity ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
-
-          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_three_by_four_command_07 ]]]'
-          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_07 ]]]'
-          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_three_by_four_icon_07 ]]]'
-          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_three_by_four_color_07 ]]]'
-          
-          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_three_by_four_command_08 ]]]'
-          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_08 ]]]'
-          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_three_by_four_icon_08 ]]]'
-          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_three_by_four_color_08 ]]]'
-
-          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_three_by_four_command_09 ]]]'
-          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_09 ]]]'
-          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_three_by_four_icon_09 ]]]'
-          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_three_by_four_color_09 ]]]'
-    item4:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.row3.item1 ]]]'
+          item2: '[[[ return variables.row3.item2 ]]]'
+          item3: '[[[ return variables.row3.item3 ]]]'
+    row4:
       card:
         type: 'custom:button-card'
         template: remote_standard_row_three_column
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_three_by_four_entity ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.row4.item1 ]]]'
+          item2: '[[[ return variables.row4.item2 ]]]'
+          item3: '[[[ return variables.row4.item3 ]]]'
 
-          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_three_by_four_command_10 ]]]'
-          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_10 ]]]'
-          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_three_by_four_icon_10 ]]]'
-          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_three_by_four_color_10 ]]]'
-          
-          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_three_by_four_command_11 ]]]'
-          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_11 ]]]'
-          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_three_by_four_icon_11 ]]]'
-          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_three_by_four_color_11 ]]]'
-
-          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_three_by_four_command_12 ]]]'
-          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_three_by_four_haptic_12 ]]]'
-          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_three_by_four_icon_12 ]]]'
-          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_three_by_four_color_12 ]]]'
 
 remote_grid_four_by_four:
   variables:
-    ulm_remote_grid_four_by_four_entity:
-    ulm_card_remote_standard_button_background_color:
-
-    ulm_remote_grid_four_by_four_command_01: ""
-    ulm_remote_grid_four_by_four_command_02: ""
-    ulm_remote_grid_four_by_four_command_03: ""
-    ulm_remote_grid_four_by_four_command_04: ""
-    ulm_remote_grid_four_by_four_command_05: ""
-    ulm_remote_grid_four_by_four_command_06: ""
-    ulm_remote_grid_four_by_four_command_07: ""
-    ulm_remote_grid_four_by_four_command_08: ""
-    ulm_remote_grid_four_by_four_command_09: ""
-    ulm_remote_grid_four_by_four_command_10: ""
-    ulm_remote_grid_four_by_four_command_11: ""
-    ulm_remote_grid_four_by_four_command_12: ""
-    ulm_remote_grid_four_by_four_command_13: ""
-    ulm_remote_grid_four_by_four_command_14: ""
-    ulm_remote_grid_four_by_four_command_15: ""
-    ulm_remote_grid_four_by_four_command_16: ""
-
-    ulm_remote_grid_four_by_four_haptic_01: ""
-    ulm_remote_grid_four_by_four_haptic_02: ""
-    ulm_remote_grid_four_by_four_haptic_03: ""
-    ulm_remote_grid_four_by_four_haptic_04: ""
-    ulm_remote_grid_four_by_four_haptic_05: ""
-    ulm_remote_grid_four_by_four_haptic_06: ""
-    ulm_remote_grid_four_by_four_haptic_07: ""
-    ulm_remote_grid_four_by_four_haptic_08: ""
-    ulm_remote_grid_four_by_four_haptic_09: ""
-    ulm_remote_grid_four_by_four_haptic_10: ""
-    ulm_remote_grid_four_by_four_haptic_11: ""
-    ulm_remote_grid_four_by_four_haptic_12: ""
-    ulm_remote_grid_four_by_four_haptic_13: ""
-    ulm_remote_grid_four_by_four_haptic_14: ""
-    ulm_remote_grid_four_by_four_haptic_15: ""
-    ulm_remote_grid_four_by_four_haptic_16: ""
-
-    ulm_remote_grid_four_by_four_icon_01: 'mdi:alpha-a-box'
-    ulm_remote_grid_four_by_four_icon_02: 'mdi:alpha-b-box'
-    ulm_remote_grid_four_by_four_icon_03: 'mdi:alpha-c-box'
-    ulm_remote_grid_four_by_four_icon_04: 'mdi:alpha-d-box'
-    ulm_remote_grid_four_by_four_icon_05: 'mdi:alpha-e-box'
-    ulm_remote_grid_four_by_four_icon_06: 'mdi:alpha-f-box'
-    ulm_remote_grid_four_by_four_icon_07: 'mdi:alpha-g-box'
-    ulm_remote_grid_four_by_four_icon_08: 'mdi:alpha-h-box'
-    ulm_remote_grid_four_by_four_icon_09: 'mdi:alpha-i-box'
-    ulm_remote_grid_four_by_four_icon_10: 'mdi:alpha-j-box'
-    ulm_remote_grid_four_by_four_icon_11: 'mdi:alpha-k-box'
-    ulm_remote_grid_four_by_four_icon_12: 'mdi:alpha-l-box'
-    ulm_remote_grid_four_by_four_icon_13: 'mdi:alpha-m-box'
-    ulm_remote_grid_four_by_four_icon_14: 'mdi:alpha-n-box'
-    ulm_remote_grid_four_by_four_icon_15: 'mdi:alpha-o-box'
-    ulm_remote_grid_four_by_four_icon_16: 'mdi:alpha-p-box'
-
-    ulm_remote_grid_four_by_four_color_01: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_02: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_03: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_04: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_05: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_06: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_07: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_08: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_09: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_10: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_11: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_12: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_13: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_14: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_15: "var(--google-grey)"
-    ulm_remote_grid_four_by_four_color_16: "var(--google-grey)"
+    entity: '[[[ return variables.entity ]]]'
+    background_color: '[[[ return variables.background_color ]]]'
+    row1:
+      item1:
+      item2:
+      item3:
+      item4:
+    row2:
+      item1:
+      item2:
+      item3:
+      item4:
+    row3:
+      item1:
+      item2:
+      item3:
+      item4:
+    row4:
+      item1:
+      item2:
+      item3:
+      item4:
 
   styles:
     grid:
-      - grid-template-areas: '"item1" "item2" "item3" "item4"'
+      - grid-template-areas: '"row1" "row2" "row3" "row4"'
       - grid-template-columns: 1fr
       - grid-template-rows: min-content
       - row-gap: 12px
@@ -245,114 +114,50 @@ remote_grid_four_by_four:
       - box-shadow: var(--box-shadow)
       - padding: 12px
   custom_fields:
-    item1:
+    row1:
       card:
         type: 'custom:button-card'
         template: remote_standard_row_four_column
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_four_by_four_entity ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
-
-          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_four_by_four_command_01 ]]]'
-          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_01 ]]]'
-          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_four_by_four_icon_01 ]]]'
-          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_four_by_four_color_01 ]]]'
-          
-          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_four_by_four_command_02 ]]]'
-          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_02 ]]]'
-          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_four_by_four_icon_02 ]]]'
-          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_four_by_four_color_02 ]]]'
-
-          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_four_by_four_command_03 ]]]'
-          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_03 ]]]'
-          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_four_by_four_icon_03 ]]]'
-          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_four_by_four_color_03 ]]]'
-
-          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_remote_grid_four_by_four_command_04 ]]]'
-          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_04 ]]]'
-          ulm_card_remote_standard_button_icon_item4: '[[[ return variables.ulm_remote_grid_four_by_four_icon_04 ]]]'
-          ulm_card_remote_standard_button_icon_color_item4: '[[[ return variables.ulm_remote_grid_four_by_four_color_04 ]]]'
-    item2:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.row1.item1 ]]]'
+          item2: '[[[ return variables.row1.item2 ]]]'
+          item3: '[[[ return variables.row1.item3 ]]]'
+          item4: '[[[ return variables.row1.item4 ]]]'
+    row2:
       card:
         type: 'custom:button-card'
         template: remote_standard_row_four_column
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_four_by_four_entity ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
-
-          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_four_by_four_command_05 ]]]'
-          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_05 ]]]'
-          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_four_by_four_icon_05 ]]]'
-          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_four_by_four_color_05 ]]]'
-          
-          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_four_by_four_command_06 ]]]'
-          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_06 ]]]'
-          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_four_by_four_icon_06 ]]]'
-          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_four_by_four_color_06 ]]]'
-
-          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_four_by_four_command_07 ]]]'
-          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_07 ]]]'
-          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_four_by_four_icon_07 ]]]'
-          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_four_by_four_color_07 ]]]'
-
-          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_remote_grid_four_by_four_command_08 ]]]'
-          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_08 ]]]'
-          ulm_card_remote_standard_button_icon_item4: '[[[ return variables.ulm_remote_grid_four_by_four_icon_08 ]]]'
-          ulm_card_remote_standard_button_icon_color_item4: '[[[ return variables.ulm_remote_grid_four_by_four_color_08 ]]]'
-    item3:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.row2.item1 ]]]'
+          item2: '[[[ return variables.row2.item2 ]]]'
+          item3: '[[[ return variables.row2.item3 ]]]'
+          item4: '[[[ return variables.row2.item4 ]]]'
+    row3:
       card:
         type: 'custom:button-card'
         template: remote_standard_row_four_column
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_four_by_four_entity ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
-
-          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_four_by_four_command_09 ]]]'
-          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_09 ]]]'
-          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_four_by_four_icon_09 ]]]'
-          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_four_by_four_color_09 ]]]'
-          
-          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_four_by_four_command_10 ]]]'
-          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_10 ]]]'
-          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_four_by_four_icon_10 ]]]'
-          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_four_by_four_color_10 ]]]'
-
-          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_four_by_four_command_11 ]]]'
-          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_11 ]]]'
-          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_four_by_four_icon_11 ]]]'
-          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_four_by_four_color_11 ]]]'
-
-          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_remote_grid_four_by_four_command_12 ]]]'
-          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_12 ]]]'
-          ulm_card_remote_standard_button_icon_item4: '[[[ return variables.ulm_remote_grid_four_by_four_icon_12 ]]]'
-          ulm_card_remote_standard_button_icon_color_item4: '[[[ return variables.ulm_remote_grid_four_by_four_color_12 ]]]'
-    item4:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.row3.item1 ]]]'
+          item2: '[[[ return variables.row3.item2 ]]]'
+          item3: '[[[ return variables.row3.item3 ]]]'
+          item4: '[[[ return variables.row3.item4 ]]]'
+    row4:
       card:
         type: 'custom:button-card'
         template: remote_standard_row_four_column
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_remote_grid_four_by_four_entity ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
-
-          ulm_card_remote_standard_button_command_item1: '[[[ return variables.ulm_remote_grid_four_by_four_command_13 ]]]'
-          ulm_card_remote_standard_button_haptic_item1: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_13 ]]]'
-          ulm_card_remote_standard_button_icon_item1: '[[[ return variables.ulm_remote_grid_four_by_four_icon_13 ]]]'
-          ulm_card_remote_standard_button_icon_color_item1: '[[[ return variables.ulm_remote_grid_four_by_four_color_13 ]]]'
-          
-          ulm_card_remote_standard_button_command_item2: '[[[ return variables.ulm_remote_grid_four_by_four_command_14 ]]]'
-          ulm_card_remote_standard_button_haptic_item2: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_14 ]]]'
-          ulm_card_remote_standard_button_icon_item2: '[[[ return variables.ulm_remote_grid_four_by_four_icon_14 ]]]'
-          ulm_card_remote_standard_button_icon_color_item2: '[[[ return variables.ulm_remote_grid_four_by_four_color_14 ]]]'
-
-          ulm_card_remote_standard_button_command_item3: '[[[ return variables.ulm_remote_grid_four_by_four_command_15 ]]]'
-          ulm_card_remote_standard_button_haptic_item3: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_15 ]]]'
-          ulm_card_remote_standard_button_icon_item3: '[[[ return variables.ulm_remote_grid_four_by_four_icon_15 ]]]'
-          ulm_card_remote_standard_button_icon_color_item3: '[[[ return variables.ulm_remote_grid_four_by_four_color_15 ]]]'
-
-          ulm_card_remote_standard_button_command_item4: '[[[ return variables.ulm_remote_grid_four_by_four_command_16 ]]]'
-          ulm_card_remote_standard_button_haptic_item4: '[[[ return variables.ulm_remote_grid_four_by_four_haptic_16 ]]]'
-          ulm_card_remote_standard_button_icon_item4: '[[[ return variables.ulm_remote_grid_four_by_four_icon_16 ]]]'
-          ulm_card_remote_standard_button_icon_color_item4: '[[[ return variables.ulm_remote_grid_four_by_four_color_16 ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.row4.item1 ]]]'
+          item2: '[[[ return variables.row4.item2 ]]]'
+          item3: '[[[ return variables.row4.item3 ]]]'
+          item4: '[[[ return variables.row4.item4 ]]]'
 
 
 ########################################################
@@ -363,23 +168,116 @@ remote_standard_row_three_column:
   type: 'custom:button-card'
   template: list_items
   variables:
-    ulm_card_remote_standard_button_entity:
-    ulm_card_remote_standard_button_background_color:
-
-    ulm_card_remote_standard_button_command_item1:
-    ulm_card_remote_standard_button_haptic_item1:
-    ulm_card_remote_standard_button_icon_item1:
-    ulm_card_remote_standard_button_icon_color_item1:
-    
-    ulm_card_remote_standard_button_command_item2:
-    ulm_card_remote_standard_button_haptic_item2:
-    ulm_card_remote_standard_button_icon_item2:
-    ulm_card_remote_standard_button_icon_color_item2:
-
-    ulm_card_remote_standard_button_command_item3:
-    ulm_card_remote_standard_button_haptic_item3:
-    ulm_card_remote_standard_button_icon_item3:
-    ulm_card_remote_standard_button_icon_color_item3:
+    entity: '[[[ return variables.entity ]]]'
+    background_color: '[[[ return variables.background_color ]]]'
+    item1:
+      entity: '[[[ return variables.entity ]]]'
+      button:
+        background_color: '[[[ return variables.background_color ]]]'
+        type:
+        icon:
+          name:
+          color:      
+        actions:
+          tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          hold:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+    item2:
+      entity: '[[[ return variables.entity ]]]'
+      button:
+        background_color: '[[[ return variables.background_color ]]]'
+        type:
+        icon:
+          name:
+          color:      
+        actions:
+          tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          hold:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+    item3:
+        entity: '[[[ return variables.entity ]]]'
+        button:
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity:
+              action:
+              service:
+              command:
+              haptic:
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity:
+              action:
+              service:
+              command:
+              haptic:
+              harmony:
+                device:
+                delay:
+            hold:
+              entity:
+              action:
+              service:
+              command:
+              haptic:
+              harmony:
+                device:
+                delay:
 
   custom_fields:
     item1:            
@@ -387,75 +285,175 @@ remote_standard_row_three_column:
         type: 'custom:button-card'
         template: remote_standard_button
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
-          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item1 ]]]'
-          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item1 ]]]'
-          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item1 ]]]'
-          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item1 ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          button: '[[[ return variables.item1.button ]]]'
 
     item2:
       card:
         type: 'custom:button-card'
         template: remote_standard_button
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
-          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item2 ]]]'
-          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item2 ]]]'
-          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item2 ]]]'
-          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item2 ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          button: '[[[ return variables.item1.button ]]]'
 
     item3:
       card:
         type: 'custom:button-card'
         template: remote_standard_button
         variables:
-          ulm_card_remote_standard_button_entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
-          ulm_card_remote_standard_button_command: '[[[ return variables.ulm_card_remote_standard_button_command_item3 ]]]'
-          ulm_card_remote_standard_button_haptic: '[[[ return variables.ulm_card_remote_standard_button_haptic_item3 ]]]'
-          ulm_card_remote_standard_button_icon: '[[[ return variables.ulm_card_remote_standard_button_icon_item3 ]]]'
-          ulm_card_remote_standard_button_icon_color: '[[[ return variables.ulm_card_remote_standard_button_icon_color_item3 ]]]'
-          ulm_card_remote_standard_button_background_color: '[[[ return variables.ulm_card_remote_standard_button_background_color ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          button: '[[[ return variables.item1.button ]]]'
 
 remote_standard_row_four_column:
   type: 'custom:button-card'
   template: list_item1_to_item4
   variables:
-    var_entity:
-    var_remote_standard_row_four_column:
-      background_color:
-      item1:
-        tap:
-          command:
-          haptic:
-        double_tap:
-          command:
-          haptic:
-        hold:
-          command:
-          haptic:
+    entity: '[[[ return variables.entity ]]]'
+    background_color: '[[[ return variables.background_color ]]]'
+    item1:
+      entity: '[[[ return variables.entity ]]]'
+      button:
+        background_color: '[[[ return variables.background_color ]]]'
+        type:
         icon:
-          mdi:
-          color:
-      item2:
-        command:
-        haptic:
+          name:
+          color:      
+        actions:
+          tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          hold:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+    item2:
+      entity: '[[[ return variables.entity ]]]'
+      button:
+        background_color: '[[[ return variables.background_color ]]]'
+        type:
         icon:
-          mdi:
-          color:
-      item3:
-        command:
-        haptic:
+          name:
+          color:      
+        actions:
+          tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          hold:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+    item3:
+      entity: '[[[ return variables.entity ]]]'
+      button:
+        background_color: '[[[ return variables.background_color ]]]'
+        type:
         icon:
-          mdi:
-          color:
-      item4:
-        command:
-        haptic:
-        icon:
-          mdi:
-          color:
+          name:
+          color:      
+        actions:
+          tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+          hold:
+            entity:
+            action:
+            service:
+            command:
+            haptic:
+            harmony:
+              device:
+              delay:
+    item4:
+        entity: '[[[ return variables.entity ]]]'
+        button:
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity:
+              action:
+              service:
+              command:
+              haptic:
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity:
+              action:
+              service:
+              command:
+              haptic:
+              harmony:
+                device:
+                delay:
+            hold:
+              entity:
+              action:
+              service:
+              command:
+              haptic:
+              harmony:
+                device:
+                delay:
 
   custom_fields:
     item1:            
@@ -463,51 +461,32 @@ remote_standard_row_four_column:
         type: 'custom:button-card'
         template: remote_standard_button
         variables:
-          var_entity: '[[[ return variables.var_entity ]]]'
-          var_remote_standard_button:
-            background_color: '[[[ return variables.var_remote_standard_row_four_column.background_color ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          button: '[[[ return variables.item1.button ]]]'
 
     item2:
       card:
         type: 'custom:button-card'
         template: remote_standard_button
         variables:
-          var_entity: '[[[ return variables.var_entity ]]]'
-          var_remote_standard_button:
-            command: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-            haptic: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-            background_color: '[[[ return variables.var_remote_standard_row_four_column.background_color ]]]'
-            icon:
-              mdi: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-              color: '[[[ return variables.var_remote_standard_row_four_column ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          button: '[[[ return variables.item2.button ]]]'
 
     item3:
       card:
         type: 'custom:button-card'
         template: remote_standard_button
         variables:
-          var_entity: '[[[ return variables.var_entity ]]]'
-          var_remote_standard_button:
-            command: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-            haptic: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-            background_color: '[[[ return variables.var_remote_standard_row_four_column.background_color ]]]'
-            icon:
-              mdi: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-              color: '[[[ return variables.var_remote_standard_row_four_column ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          button: '[[[ return variables.item3.button ]]]'
 
     item4:
       card:
         type: 'custom:button-card'
         template: remote_standard_button
         variables:
-          var_entity: '[[[ return variables.var_entity ]]]'
-          var_remote_standard_button:
-            command: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-            haptic: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-            background_color: '[[[ return variables.var_remote_standard_row_four_column.background_color ]]]'
-            icon:
-              mdi: '[[[ return variables.var_remote_standard_row_four_column ]]]'
-              color: '[[[ return variables.var_remote_standard_row_four_column ]]]'
+          entity: '[[[ return variables.entity ]]]'
+          button: '[[[ return variables.item4.button ]]]'
 
 
 ########################################################
@@ -561,37 +540,38 @@ list_items_arrow_select:
 
 remote_standard_button_variables:
   variables:
-    var_entity:
-    var_remote_standard_button:
-      tap:
-        entity:
-        action:
-        service:
-        command:
-        haptic:
-        harmony:
-          device:
-          delay:
-      double_tap:
-        entity:
-        action:
-        service:
-        command:
-        haptic:
-        harmony:
-          device:
-          delay:
-      hold:
-        entity:
-        action:
-        service:
-        command:
-        haptic:
-        harmony:
-          device:
-          delay:
+    entity:
+    button:
       background_color:
       type:
       icon:
-        mdi:
-        color:
+        name:
+        color:      
+      actions:
+        tap:
+          entity:
+          action:
+          service:
+          command:
+          haptic:
+          harmony:
+            device:
+            delay:
+        double_tap:
+          entity:
+          action:
+          service:
+          command:
+          haptic:
+          harmony:
+            device:
+            delay:
+        hold:
+          entity:
+          action:
+          service:
+          command:
+          haptic:
+          harmony:
+            device:
+            delay:
