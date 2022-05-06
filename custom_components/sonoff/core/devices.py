@@ -11,10 +11,9 @@ XEntity properties:
 
 Developer can change global properties of existing classes via spec function.
 """
-from typing import Optional
-
+from .ewelink import XDevice
 from ..binary_sensor import *
-from ..climate import XClimateTH, XClimateNS
+from ..climate import XClimateTH, XClimateNS, XThermostat
 from ..cover import XCover, XCoverDualR3
 from ..fan import XFan, XDiffuserFan, XToggleFan
 from ..light import *
@@ -70,7 +69,12 @@ DEVICES = {
     2: SPEC_2CH,
     3: SPEC_3CH,
     4: SPEC_4CH,
-    5: SPEC_SWITCH,
+    5: [
+        XSwitch, LED, RSSI,
+        spec(XSensor, param="power"),
+        spec(XEnergySensor, param="hundredDaysKwhData", uid="energy",
+             get_params={"hundredDaysKwh": "get"}),
+    ],  # Sonoff POW (first)
     6: SPEC_SWITCH,
     7: SPEC_2CH,  # Sonoff T1 2CH
     8: SPEC_3CH,  # Sonoff T1 3CH
@@ -101,7 +105,7 @@ DEVICES = {
         spec(XSensor, param="voltage"),
         spec(XEnergySensor, param="hundredDaysKwhData", uid="energy",
              get_params={"hundredDaysKwh": "get"}),
-    ],  # Sonoff Pow
+    ],  # Sonoff POWR2
     34: [
         XFan, XFanLight, LED, RSSI,
     ],  # Sonoff iFan02 and iFan03
@@ -116,7 +120,7 @@ DEVICES = {
     82: SPEC_2CH,
     83: SPEC_3CH,
     84: SPEC_4CH,
-    102: [XWiFiDoor, Battery, RSSI],  # Sonoff DW2 Door/Window sensor
+    102: [XWiFiDoor, XWiFiDoorBattery, RSSI],  # Sonoff DW2 Door/Window sensor
     103: [XLightB02, RSSI],  # Sonoff B02 CCT bulb
     104: [XLightB05B, RSSI],  # Sonoff B05-B RGB+CCT color bulb
     107: SPEC_1CH,
@@ -133,11 +137,11 @@ DEVICES = {
         spec(XEnergySensor, param="kwhHistories_01", uid="energy_2",
              get_params={"getKwh_01": 2}),
     ],  # Sonoff DualR3
+    127: [XThermostat],  # https://github.com/AlexxIT/SonoffLAN/issues/358
     133: [
         # Humidity. ALWAYS 50... NSPanel DOESN'T HAVE HUMIDITY SENSOR
         # https://github.com/AlexxIT/SonoffLAN/issues/751
-        Switch1, Switch2, XNSOutdoorTemp, XClimateNS,
-        spec(XSensor, param="temperature"),
+        Switch1, Switch2, XClimateNS, XTemperatureNS, XOutdoorTempNS,
     ],  # Sonoff NS Panel
     # https://github.com/AlexxIT/SonoffLAN/issues/766
     136: [XLightB05B, RSSI],  # Sonoff B05-BL
@@ -170,19 +174,20 @@ DEVICES = {
 }
 
 # Pow devices sends sensors data via Cloud only in uiActive mode
+# - Sonoff POW1 fw 2.6.1 UIID5 sends power data even without uiActive
+# - Sonoff S40 fw 1.1.0 UIID182 has very low uiActive maximum
+# - Sonoff DualR3 fw 1.4.0 UIID126 has another uiActive format
 # UUID, refresh time in seconds, params payload
 POW_UI_ACTIVE = {
+    5: (3600, {"uiActive": 7200}),
     32: (3600, {"uiActive": 7200}),
     126: (3600, {"uiActive": {"all": 1, "time": 7200}}),
     182: (0, {"uiActive": 180}),  # maximum for this model
 }
 
 
-def get_spec(device: dict) -> Optional[list]:
+def get_spec(device: dict) -> list:
     uiid = device["extra"]["uiid"]
-    # DualR3 in cover mode
-    if uiid in (126, 165) and device["params"].get("workMode") == 2:
-        return [XCoverDualR3, RSSI]
 
     if uiid in DEVICES:
         classes = DEVICES[uiid]
@@ -192,6 +197,11 @@ def get_spec(device: dict) -> Optional[list]:
         classes = SPEC_4CH
     else:
         classes = [XUnknown]
+
+    # DualR3 in cover mode
+    if uiid in (126, 165) and device["params"].get("workMode") == 2:
+        classes = [cls for cls in classes if XSwitches not in cls.__bases__]
+        classes.append(XCoverDualR3)
 
     if "device_class" in device:
         classes = get_custom_spec(classes, device["device_class"])
@@ -246,6 +256,19 @@ def get_custom_spec(classes: list, device_class):
     return classes
 
 
+def get_spec_wrapper(func, sensors: list):
+    def wrapped(device: dict) -> list:
+        classes = func(device)
+        for uid in sensors:
+            if (uid in device["params"] or uid == "host") and all(
+                    cls.param != uid and cls.uid != uid for cls in classes
+            ):
+                classes.append(spec(XSensor, param=uid))
+        return classes
+
+    return wrapped
+
+
 def set_default_class(device_class: str):
     XSwitch.__bases__ = XSwitches.__bases__ = (
         XEntity, LightEntity if device_class == "light" else SwitchEntity
@@ -266,9 +289,9 @@ DIY = {
 }
 
 
-def setup_diy(device: dict) -> dict:
+def setup_diy(device: dict) -> XDevice:
     try:
-        uiid, brand, model = DIY[device["diy"]]
+        uiid, brand, model = DIY[device["localtype"]]
         device["name"] = model
         device["brandName"] = brand
         device["extra"] = {"uiid": uiid}
@@ -276,6 +299,6 @@ def setup_diy(device: dict) -> dict:
     except Exception:
         device["name"] = "Unknown DIY"
         device["extra"] = {"uiid": 0}
-        device["productModel"] = device["diy"]
-    device["online"] = False
+        device["productModel"] = device["localtype"]
+    # device["online"] = False
     return device

@@ -22,12 +22,15 @@ class XClimateTH(XEntity, ClimateEntity):
     params = {"targets", "deviceType", "currentTemperature", "temperature"}
 
     _attr_entity_registry_enabled_default = False
+    _attr_hvac_mode = None
     _attr_hvac_modes = [
         HVAC_MODE_OFF, HVAC_MODE_HEAT, HVAC_MODE_COOL, HVAC_MODE_DRY
     ]
     _attr_max_temp = 99
     _attr_min_temp = 1
     _attr_supported_features = SUPPORT_TARGET_TEMPERATURE_RANGE
+    _attr_target_temperature_high = None
+    _attr_target_temperature_low = None
     _attr_temperature_unit = TEMP_CELSIUS
     _attr_target_temperature_step = 1
 
@@ -159,9 +162,11 @@ class XClimateNS(XEntity, ClimateEntity):
         if "ATCExpect0" in params:
             self._attr_target_temperature = cache["ATCExpect0"]
 
+        # correction could be optional
+        # https://github.com/AlexxIT/SonoffLAN/issues/812
         if "temperature" in params or "tempCorrection" in params:
             self._attr_current_temperature = \
-                cache["temperature"] + cache["tempCorrection"]
+                cache["temperature"] + cache.get("tempCorrection", 0)
 
     @staticmethod
     def get_params(hvac_mode: str) -> dict:
@@ -189,3 +194,65 @@ class XClimateNS(XEntity, ClimateEntity):
         if not params:
             params["ATCEnable"] = 1
         await self.ewelink.cloud.send(self.device, params)
+
+
+# noinspection PyAbstractClass
+class XThermostat(XEntity, ClimateEntity):
+    params = {"switch", "targetTemp", "temperature", "workMode", "workState"}
+
+    # @bwp91 https://github.com/AlexxIT/SonoffLAN/issues/358
+    _attr_hvac_modes = [HVAC_MODE_OFF, HVAC_MODE_HEAT, HVAC_MODE_AUTO]
+    _attr_max_temp = 45
+    _attr_min_temp = 5
+    _attr_preset_modes = ["manual", "programmed", "economical"]
+    _attr_supported_features = SUPPORT_TARGET_TEMPERATURE | SUPPORT_PRESET_MODE
+    _attr_temperature_unit = TEMP_CELSIUS
+    _attr_target_temperature_step = 0.5
+
+    def set_state(self, params: dict):
+        cache = self.device["params"]
+        if cache != params:
+            cache.update(params)
+
+        if cache["switch"] == "on":
+            # workState: 1=heating, 2=auto
+            self._attr_hvac_mode = self.hvac_modes[cache["workState"]]
+        else:
+            self._attr_hvac_mode = HVAC_MODE_OFF
+
+        if "workMode" in params:
+            self._attr_preset_mode = self.preset_modes[params["workMode"] - 1]
+
+        if "targetTemp" in params:
+            self._attr_target_temperature = params["targetTemp"]
+        if "temperature" in params:
+            self._attr_current_temperature = params["temperature"]
+
+    async def async_set_hvac_mode(self, hvac_mode: str) -> None:
+        i = self.hvac_modes.index(hvac_mode)
+        params = {"switch": "on", "workState": i} if i else {"switch": "off"}
+        await self.ewelink.send(self.device, params)
+
+    async def async_set_preset_mode(self, preset_mode: str) -> None:
+        i = self.preset_modes.index(preset_mode) + 1
+        await self.ewelink.send(self.device, {"workMode": i})
+
+    async def async_set_temperature(
+            self, temperature: float = None, hvac_mode: str = None,
+            preset_mode: str = None, **kwargs
+    ) -> None:
+        if hvac_mode is None:
+            params = {}
+        elif hvac_mode is HVAC_MODE_OFF:
+            params = {"switch": "off"}
+        else:
+            i = self.hvac_modes.index(hvac_mode)
+            params = {"switch": "on", "workState": i}
+
+        if preset_mode is not None:
+            params["workMode"] = self.preset_modes.index(preset_mode) + 1
+
+        if temperature is not None:
+            params["targetTemp"] = temperature
+
+        await self.ewelink.send(self.device, params)

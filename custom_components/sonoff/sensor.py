@@ -23,6 +23,7 @@ async def async_setup_entry(hass, config_entry, add_entities):
 
 DEVICE_CLASSES = {
     "battery": SensorDeviceClass.BATTERY,
+    "battery_voltage": SensorDeviceClass.VOLTAGE,
     "current": SensorDeviceClass.CURRENT,
     "current_1": SensorDeviceClass.CURRENT,
     "current_2": SensorDeviceClass.CURRENT,
@@ -40,6 +41,7 @@ DEVICE_CLASSES = {
 
 UNITS = {
     "battery": PERCENTAGE,
+    "battery_voltage": ELECTRIC_POTENTIAL_VOLT,
     "current": ELECTRIC_CURRENT_AMPERE,
     "current_1": ELECTRIC_CURRENT_AMPERE,
     "current_2": ELECTRIC_CURRENT_AMPERE,
@@ -71,7 +73,8 @@ class XSensor(XEntity, SensorEntity):
     report_value = None
 
     def __init__(self, ewelink: XRegistry, device: dict):
-        XEntity.__init__(self, ewelink, device)
+        if self.param and self.uid is None:
+            self.uid = self.param
 
         self._attr_device_class = DEVICE_CLASSES.get(self.uid)
 
@@ -80,37 +83,40 @@ class XSensor(XEntity, SensorEntity):
             self._attr_state_class = SensorStateClass.MEASUREMENT
             self._attr_native_unit_of_measurement = UNITS[self.uid]
 
+        XEntity.__init__(self, ewelink, device)
+
         reporting = device.get("reporting", {}).get(self.uid)
         if reporting:
             self.report_mint, self.report_maxt, self.report_delta = reporting
             self.report_ts = time.time()
-            self._attr_force_update = True
+            self._attr_should_poll = True
 
     def set_state(self, params: dict = None, value: float = None):
         if params:
-            try:
-                value = float(params[self.param])
-                if self.multiply:
-                    value *= self.multiply
-                if self.round is not None:
-                    # convert to int when round is zero
-                    value = round(value, self.round or None)
-            except (TypeError, ValueError):
-                pass
+            value = params[self.param]
+            if self.native_unit_of_measurement and isinstance(value, str):
+                value = float(value)
+            if self.multiply:
+                value *= self.multiply
+            if self.round is not None:
+                # convert to int when round is zero
+                value = round(value, self.round or None)
 
         if self.report_ts is not None:
             ts = time.time()
 
-            if (ts - self.report_ts < self.report_mint) or (
-                    ts - self.report_ts < self.report_maxt and
-                    value is not None and
-                    self._attr_native_value is not None and
-                    abs(value - self._attr_native_value) <= self.report_delta
-            ):
-                self.report_value = value
-                return
+            try:
+                if (ts - self.report_ts < self.report_mint) or (
+                        ts - self.report_ts < self.report_maxt and
+                        abs(value - self.native_value) <= self.report_delta
+                ):
+                    self.report_value = value
+                    return
 
-            self.report_value = None
+                self.report_value = None
+            except Exception:
+                pass
+
             self.report_ts = ts
 
         self._attr_native_value = value
@@ -169,8 +175,7 @@ class XEnergySensor(XEntity, SensorEntity):
         value = params[self.param]
         try:
             self._attr_native_value = round(
-                int(value[0:2], 16) + int(value[2:4], 16) * 0.01 +
-                int(value[4:6], 16) * 0.0001, 2
+                int(value[0:2], 16) + int(value[3] + value[5]) * 0.01, 2
             )
         except Exception:
             pass
@@ -182,7 +187,19 @@ class XEnergySensor(XEntity, SensorEntity):
             await self.ewelink.cloud.send(self.device, self.get_params)
 
 
-class XNSOutdoorTemp(XSensor):
+class XTemperatureNS(XSensor):
+    params = {"temperature", "tempCorrection"}
+    uid = "temperature"
+
+    def set_state(self, params: dict = None, value: float = None):
+        if params:
+            # cache updated in XClimateNS entity
+            cache = self.device["params"]
+            value = cache["temperature"] + cache.get("tempCorrection", 0)
+        XSensor.set_state(self, value=value)
+
+
+class XOutdoorTempNS(XSensor):
     param = "HMI_outdoorTemp"
     uid = "outdoor_temp"
 
@@ -199,6 +216,15 @@ class XNSOutdoorTemp(XSensor):
             }
         except Exception:
             pass
+
+
+class XWiFiDoorBattery(XSensor):
+    param = "battery"
+    uid = "battery_voltage"
+
+    def internal_available(self) -> bool:
+        # device with buggy online status
+        return self.ewelink.cloud.online
 
 
 BUTTON_STATES = ["single", "double", "hold"]
