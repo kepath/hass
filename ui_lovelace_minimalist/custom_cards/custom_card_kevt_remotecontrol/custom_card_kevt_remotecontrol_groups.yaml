@@ -11,14 +11,30 @@ card_remote_group_arrows_and_volume:
     background_color:
     group1:
       item1:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
       item2:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
       item3:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
       item4:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
       item5:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
     group2:
       item1:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
       item2:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
       item3:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
   styles:
     card:
     - background-color: var(--primary-background-color)
@@ -32,13 +48,13 @@ card_remote_group_arrows_and_volume:
           - border-radius: var(--border-radius)
           - box-shadow: var(--box-shadow)
         variables:
-          entity:
-          background_color:
-          item1:
-          item2:
-          item3:
-          item4:
-          item5:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.group1.item1 ]]]'
+          item2: '[[[ return variables.group1.item2 ]]]'
+          item3: '[[[ return variables.group1.item3 ]]]'
+          item4: '[[[ return variables.group1.item4 ]]]'
+          item5: '[[[ return variables.group1.item5 ]]]'
     group2:
       card:
         type: 'custom:button-card'
@@ -48,11 +64,11 @@ card_remote_group_arrows_and_volume:
           - border-radius: var(--border-radius)
           - box-shadow: var(--box-shadow)
         variables:
-          entity:
-          background_color:
-          item1:
-          item2:
-          item3:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          item1: '[[[ return variables.group2.item1 ]]]'
+          item2: '[[[ return variables.group2.item2 ]]]'
+          item3: '[[[ return variables.group2.item3 ]]]'
  
 card_remote_group_power:
   variables:
@@ -242,7 +258,6 @@ card_remote_group_play:
       button:
         icon:
           name: 'mdi:fast-forward'
-
   styles:
     grid:
       - grid-template-areas: '"item1"'
@@ -399,6 +414,7 @@ card_remote_group_volume:
           color: 'var(--google-green)'
         actions:
           hold:
+            command: '[[[ return variables.item1.button.tap.command ]]]'
             repeat: 200
     item2:
       entity: '[[[ return variables.entity ]]]'
@@ -411,6 +427,7 @@ card_remote_group_volume:
           color: 'var(--google-green)'
         actions:
           hold:
+            command: '[[[ return variables.item2.button.tap.command ]]]'
             repeat: 200
 
     item3:
@@ -544,7 +561,6 @@ card_remote_group_numbers:
           icon:
             name: 'mdi:numeric-9-circle'
     row4:
-
       item2:
         button:
           icon:
