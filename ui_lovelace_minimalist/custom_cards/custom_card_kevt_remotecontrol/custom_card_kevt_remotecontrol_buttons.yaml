@@ -3,7 +3,7 @@
 #####  BUTTON TEMPLATES                             ####
 ########################################################
 
-remote_standard_button:
+remotecontrol_button:
   type: 'custom:button-card'
   template: widget_icon
 
@@ -44,12 +44,12 @@ remote_standard_button:
           harmony:
             device:
             delay:
-  remote_button_presses:
+  remotecontrol_button_presses:
     type: 'custom:button-card'
     template: widget_icon
     variables:
       entity: '[[[ return variables.entity ]]]'
-      remote_button_presses:
+      remotecontrol_button_presses:
         tap:
           entity: '[[[ return variables.entity ]]]'
           action: '[[[ return variables.button.actions.tap.action ]]]'
@@ -104,12 +104,12 @@ remote_standard_button:
               return color;
           ]]]
 
-remote_button_presses:
+remotecontrol_button_presses:
   type: 'custom:button-card'
   template: widget_icon
   variables:
     entity: '[[[ return variables.entity ]]]'
-    remote_button_presses:
+    remotecontrol_button_presses:
       tap:
         entity: '[[[ return variables.entity ]]]'
         action: "call-service"
@@ -139,68 +139,68 @@ remote_button_presses:
           device:
           delay: 0.6
   tap_action:
-    remote_button_actions:
+    remotecontrol_button_action:
       type: 'custom:button-card'
       template: widget_icon
       variables:
-        remote_button_actions: '[[[ return variables.button.actions.tap ]]]'
+        remotecontrol_button_action: '[[[ return variables.button.actions.tap ]]]'
   double_tap_action:
-    remote_button_actions:
+    remotecontrol_button_action:
       type: 'custom:button-card'
       template: widget_icon
       variables:
-        remote_button_actions: '[[[ return variables.button.actions.double_tap]]]'
+        remotecontrol_button_action: '[[[ return variables.button.actions.double_tap]]]'
   hold_action:
-    remote_button_actions:
+    remotecontrol_button_action:
       type: 'custom:button-card'
       template: widget_icon
       variables:
-        remote_button_actions: '[[[ return variables.button.actions.hold ]]]'
+        remotecontrol_button_action: '[[[ return variables.button.actions.hold ]]]'
 
-remote_button_actions:
+remotecontrol_button_action:
   type: 'custom:button-card'
   template: widget_icon
   variables:
-    remote_button_actions:
+    remotecontrol_button_action:
   action: >
-    {% if variables.remote_button_actions.action == "call-service" %}
-      {% if variables.remote_button_actions.service.startswith("androidtv") %}
+    {% if variables.remotecontrol_button_action.action == "call-service" %}
+      {% if variables.remotecontrol_button_action.service.startswith("androidtv") %}
         action: call-service
         service: androidtv.adb_command
         service_data:
-          command: '[[[ return variables.remote_button_actions.command ]]]'
-          entity_id: '[[[ return variables.remote_button_actions.entity ]]]'
-      {% elif variables.remote_button_actions.service.startswith("media") %}
+          command: '[[[ return variables.remotecontrol_button_action.command ]]]'
+          entity_id: '[[[ return variables.remotecontrol_button_action.entity ]]]'
+      {% elif variables.remotecontrol_button_action.service.startswith("media") %}
         service: media_player.play_media
         data:
-          entity_id: '[[[ return variables.remote_button_actions.entity ]]]'
-          media_content_id: '[[[ return variables.remote_button_actions.command ]]]'
+          entity_id: '[[[ return variables.remotecontrol_button_action.entity ]]]'
+          media_content_id: '[[[ return variables.remotecontrol_button_action.command ]]]'
           media_content_type: "send_key"
-      {% elif variables.remote_button_actions.service.startswith("remote") %}
+      {% elif variables.remotecontrol_button_action.service.startswith("remote") %}
         service: remote.send_command
         target:
-          entity_id: '[[[ return variables.remote_button_actions.entity ]]]'
+          entity_id: '[[[ return variables.remotecontrol_button_action.entity ]]]'
         data:
           command:
-            - '[[[ return variables.remote_button_actions.command ]]]'
-          device: '[[[ return variables.remote_button_actions.harmony.device ]]]'
-          delay_secs: '[[[ return variables.remote_button_actions.harmony.delay ]]]'
+            - '[[[ return variables.remotecontrol_button_action.command ]]]'
+          device: '[[[ return variables.remotecontrol_button_action.harmony.device ]]]'
+          delay_secs: '[[[ return variables.remotecontrol_button_action.harmony.delay ]]]'
       {% else %}
         "none"
       {% endif%}
-    {% elif variables.remote_button_actions.action == "more-info" %}
+    {% elif variables.remotecontrol_button_action.action == "more-info" %}
       action: more-info
-      entity_id: '[[[ return variables.remote_button_actions.entity ]]]'
-    {% elif variables.remote_button_actions.action == "toggle" %}
+      entity_id: '[[[ return variables.remotecontrol_button_action.entity ]]]'
+    {% elif variables.remotecontrol_button_action.action == "toggle" %}
       action: toggle
-    {% elif variables.remote_button_actions.action == "navigate" %}
+    {% elif variables.remotecontrol_button_action.action == "navigate" %}
       action: navigate
-      navigation_path: '[[[ return variables.remote_button_actions.command ]]]'
-    {% elif variables.remote_button_actions.action == "url" %}
+      navigation_path: '[[[ return variables.remotecontrol_button_action.command ]]]'
+    {% elif variables.remotecontrol_button_action.action == "url" %}
     {% else %}
       "none"
     {% endif %}
-    haptic: '[[[ return variables.remote_button_actions.haptic ]]]'
+    haptic: '[[[ return variables.remotecontrol_button_action.haptic ]]]'
 
 
 ##  success	Indicates that a task or action has completed.
