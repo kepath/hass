@@ -4,7 +4,7 @@
 
 remotecontrol_group_arrows_and_volume:
   type: 'custom:button-card'
-  template: layout_item_item_item
+  template: layout_itemitem_item
   variables:
     entity:
     background_color:
@@ -38,7 +38,7 @@ remotecontrol_group_arrows_and_volume:
     card:
     - background-color: var(--primary-background-color)
   custom_fields:
-    group1:
+    item1:
       card:
         type: 'custom:button-card'
         template: remotecontrol_group_arrow_select
@@ -54,7 +54,7 @@ remotecontrol_group_arrows_and_volume:
           item3: '[[[ return variables.group1.item3 ]]]'
           item4: '[[[ return variables.group1.item4 ]]]'
           item5: '[[[ return variables.group1.item5 ]]]'
-    group2:
+    item2:
       card:
         type: 'custom:button-card'
         template: remotecontrol_group_volume
@@ -70,6 +70,9 @@ remotecontrol_group_arrows_and_volume:
           item3: '[[[ return variables.group2.item3 ]]]'
  
 remotecontrol_group_power:
+  type: 'custom:button-card'
+  template: layout_group
+  triggers_update: all  
   variables:
     entity:
     background_color: 'var(--google-grey)'
@@ -87,18 +90,7 @@ remotecontrol_group_power:
       button:
         icon:
           name: 'mdi:import'
-    
-  triggers_update: all
-  styles:
-    grid:
-      - grid-template-areas: '"item1"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: min-content
-      - row-gap: 12px
-    card:
-      - border-radius: var(--border-radius)
-      - box-shadow: var(--box-shadow)
-      - padding: 12px
+
   custom_fields:
     item1:
       card:
@@ -123,6 +115,8 @@ remotecontrol_group_power:
                 button: '[[[ return variables.item2.button ]]]'
 
 remotecontrol_group_home_3_button:
+  type: 'custom:button-card'
+  template: layout_group
   variables:
     entity:
     background_color: 'var(--google-grey)'
@@ -145,16 +139,6 @@ remotecontrol_group_home_3_button:
         icon:
           name: 'mdi:menu'
 
-  styles:
-    grid:
-      - grid-template-areas: '"item1"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: min-content
-      - row-gap: 12px
-    card:
-      - border-radius: var(--border-radius)
-      - box-shadow: var(--box-shadow)
-      - padding: 12px
   custom_fields:
     item1:
       card:
@@ -187,6 +171,8 @@ remotecontrol_group_home_3_button:
                 button: '[[[ return variables.item3.button ]]]'
 
 remotecontrol_group_home_2_button:
+  type: 'custom:button-card'
+  template: layout_group
   variables:
     item1:
       entity: '[[[ return variables.entity ]]]'
@@ -201,16 +187,6 @@ remotecontrol_group_home_2_button:
         icon:
           name: 'mdi:menu'
 
-  styles:
-    grid:
-      - grid-template-areas: '"item1"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: min-content
-      - row-gap: 12px
-    card:
-      - border-radius: var(--border-radius)
-      - box-shadow: var(--box-shadow)
-      - padding: 12px
   custom_fields:
     item1:
       card:
@@ -235,6 +211,8 @@ remotecontrol_group_home_2_button:
                 button: '[[[ return variables.item2.button ]]]'
 
 remotecontrol_group_play:
+  type: 'custom:button-card'
+  template: layout_group
   variables:
     entity:
     background_color: 'rgba(var(--color-grey), 0.2)'
@@ -257,16 +235,7 @@ remotecontrol_group_play:
       button:
         icon:
           name: 'mdi:fast-forward'
-  styles:
-    grid:
-      - grid-template-areas: '"item1"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: min-content
-      - row-gap: 12px
-    card:
-      - border-radius: var(--border-radius)
-      - box-shadow: var(--box-shadow)
-      - padding: 12px
+
   custom_fields:
     item1:
       card:
@@ -300,6 +269,8 @@ remotecontrol_group_play:
                 button: '[[[ return variables.item3.button ]]]'
 
 remotecontrol_group_arrow_select:
+  type: 'custom:button-card'
+  template: layout_group
   variables:
     entity:
     background_color:
@@ -339,16 +310,6 @@ remotecontrol_group_arrow_select:
           name: 'mdi:arrow-down-bold'
           color: 'var(--google-blue)'    
 
-  styles:
-    grid:
-      - grid-template-areas: '"item1"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: min-content
-      - row-gap: 12px
-    card:
-      - border-radius: var(--border-radius)
-      - box-shadow: var(--box-shadow)
-      - padding: 12px
   custom_fields:
     item1:
       card:
@@ -399,6 +360,8 @@ remotecontrol_group_arrow_select:
                 button: '[[[ return variables.item5.button ]]]'
 
 remotecontrol_group_volume:
+  type: 'custom:button-card'
+  template: layout_row_row_row
   variables:
     entity:
     background_color:
@@ -438,18 +401,9 @@ remotecontrol_group_volume:
         icon:
           name: 'mdi:volume-off'
           color: 'var(--google-green)'
-  styles:
-    grid:
-      - grid-template-areas: '"item1" "item2" "item3"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: min-content
-      - row-gap: 12px
-    card:
-      - border-radius: var(--border-radius)
-      - box-shadow: var(--box-shadow)
-      - padding: 12px
+
   custom_fields:
-    item1:
+    row1:
       card:
         type: 'custom:button-card'
         template: remotecontrol_button
@@ -458,7 +412,7 @@ remotecontrol_group_volume:
           background_color: '[[[ return variables.item1.background_color ]]]'
           button: '[[[ return variables.item1.button ]]]'
 
-    item2:
+    row2:
       card:
         type: 'custom:button-card'
         template: remotecontrol_button
@@ -467,8 +421,7 @@ remotecontrol_group_volume:
           background_color: '[[[ return variables.item2.background_color ]]]'
           button: '[[[ return variables.item2.button ]]]'
 
-
-    item3:
+    row3:
       card:
         type: 'custom:button-card'
         template: remotecontrol_button
@@ -477,45 +430,42 @@ remotecontrol_group_volume:
           background_color: '[[[ return variables.item3.background_color ]]]'
           button: '[[[ return variables.item3.button ]]]'
 
-card_remote_group_colors:
-  styles:
-    grid:
-      - grid-template-areas: '"item1"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: min-content
-      - row-gap: 12px
-    card:
-      - border-radius: var(--border-radius)
-      - box-shadow: var(--box-shadow)
-      - padding: 12px
-  custom_fields:
-    item1:
-      card:
-        type: 'custom:button-card'
-        template: button_row_4_column
-        variables:
-          item1:
-            button:
-              icon:
-                name: 'mdi:card'
-                color: "var(--google-red)"
-          item2:
-            button:
-              icon:
-                name: 'mdi:card'
-                color: "var(--google-blue)"
-          item3:
-            button:
-              icon:
-                name: 'mdi:card'
-                color: "var(--google-yellow)"
-          item4:
-            button:
-              icon:
-                name: 'mdi:card'
-                color: "var(--google-blue)"
+########################################################
+#####  PRESET STYLING                               ####
+########################################################
 
-card_remote_group_numbers:
+remotecontrol_style_colors:
+  # type: 'custom:button-card'
+  # template: layout_group
+  # custom_fields:
+  #   item1:
+  #     card:
+  type: 'custom:button-card'
+  template: button_row_4_column
+  variables:
+    item1:
+      button:
+        icon:
+          name: 'mdi:card'
+          color: "var(--google-red)"
+    item2:
+      button:
+        icon:
+          name: 'mdi:card'
+          color: "var(--google-blue)"
+    item3:
+      button:
+        icon:
+          name: 'mdi:card'
+          color: "var(--google-yellow)"
+    item4:
+      button:
+        icon:
+          name: 'mdi:card'
+          color: "var(--google-blue)"
+
+remotecontrol_style_numbers:
+  type: 'custom:button-card'
   template: button_grid_3_by_4
   variables:
     entity:
@@ -565,10 +515,9 @@ card_remote_group_numbers:
           icon:
             name: 'mdi:numeric-0-circle'
 
-remotecontrol_group_apps:
+remotecontrol_style_apps:
   type: 'custom:button-card'
-  template: 
-    - button_grid_4_by_4
+  template: button_grid_4_by_4
   variables:
     entity:
     background_color:
