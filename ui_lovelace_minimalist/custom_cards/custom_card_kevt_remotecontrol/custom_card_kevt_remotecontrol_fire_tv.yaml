@@ -3,135 +3,160 @@
 ########################################################
 
 card_remotecontrol_firestick_group_power:
-  template: remotecontrol_group_power
+  type: 'custom:button-card'
+  template: layout_group
+  triggers_update: all 
   variables:
     entity:
     background_color: 'var(--google-grey)'
     item1:
-      entity: '[[[ return variables.entity ]]]'
-      background_color: '[[[ return variables.background_color ]]]'
+      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        background_color:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
         type: 'power'
         icon:
           name: 'mdi:power'
           color: 'var(--google-red)'
         actions:
           tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
             command: 'input keyevent 26'
-            haptic:
+            haptic: 'heavy'
             harmony:
               device:
               delay:
           double_tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             repeat:
             harmony:
               device:
               delay:
     item2:
-      entity: '[[[ return variables.entity ]]]'
-      background_color: '[[[ return variables.background_color ]]]'
+      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        background_color:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
         type:
         icon:
           name: 'mdi:import'
           color: 'var(--google-grey)'
         actions:
           tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
             command:
-            haptic:
+            haptic: 'success'
             harmony:
               device:
               delay:
           double_tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             repeat:
             harmony:
               device:
               delay:
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: layout_item_gap_item 
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item1.entity ]]]'
+                background_color: '[[[ return variables.item1.background_color ]]]'
+                button: '[[[ return variables.item1.button ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item2.entity ]]]'
+                background_color: '[[[ return variables.item2.background_color ]]]'
+                button: '[[[ return variables.item2.button ]]]'
 
 card_remotecontrol_firestick_group_home:
-  template: remotecontrol_group_home_3_button
+  type: 'custom:button-card'
+  template: layout_group
   variables:
     entity:
     background_color: 'var(--google-grey)'
     item1:
-      entity: '[[[ return variables.entity ]]]'
-      background_color: '[[[ return variables.background_color ]]]'
+      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        background_color:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
         type:
         icon:
           name: 'mdi:arrow-u-left-top-bold'
           color:      
         actions:
           tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
             command: 'BACK'
-            haptic:
+            haptic: 'success'
             harmony:
               device:
               delay:
           double_tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             repeat:
             harmony:
               device:
               delay:
     item2:
-      entity: '[[[ return variables.entity ]]]'
-      background_color: '[[[ return variables.background_color ]]]'
+      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        background_color:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
         type:
         icon:
           name: 'mdi:home'
@@ -139,581 +164,1350 @@ card_remotecontrol_firestick_group_home:
         actions:
           tap:
             entity:
-            action:
-            service:
+            action: "none"
+            service: "call-service"
             command: "HOME"
-            haptic:
+            haptic: 'success'
             harmony:
               device:
               delay:
           double_tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             repeat:
             harmony:
               device:
               delay:
     item3:
-      entity: '[[[ return variables.entity ]]]'
-      background_color: '[[[ return variables.background_color ]]]'
+      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        background_color:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
         type:
         icon:
           name: 'mdi:menu'
           color:      
         actions:
           tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
             command: "MENU"
-            haptic:
+            haptic: 'success'
             harmony:
               device:
               delay:
           double_tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             repeat:
             harmony:
               device:
               delay:
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: layout_item_item_item
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item1.entity ]]]'
+                background_color: '[[[ return variables.item1.background_color ]]]'
+                button: '[[[ return variables.item1.button ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item2.entity ]]]'
+                background_color: '[[[ return variables.item2.background_color ]]]'
+                button: '[[[ return variables.item2.button ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item3.entity ]]]'
+                background_color: '[[[ return variables.item3.background_color ]]]'
+                button: '[[[ return variables.item3.button ]]]'
 
 card_remotecontrol_firestick_group_play:
-  template: remotecontrol_group_play
+  type: 'custom:button-card'
+  template: layout_group
   variables:
     entity:
     background_color: "rgba(var(--color-grey), 0.2)"
     item1:
-      entity: '[[[ return variables.entity ]]]'
-      background_color: '[[[ return variables.background_color ]]]'
+      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        background_color:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
         type:
         icon:
-          name:
+          name: 'mdi:rewind'
           color:      
         actions:
           tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
             command: "input keyevent 89"
-            haptic:
+            haptic: 'success'
             harmony:
               device:
               delay:
           double_tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
-            repeat:
+            haptic: 'selection'
+            repeat: 200
             harmony:
               device:
               delay:
     item2:
-      entity: '[[[ return variables.entity ]]]'
-      background_color: '[[[ return variables.background_color ]]]'
+      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        background_color:
-        type:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
+        type: 'play'
         icon:
-          name:
+          name: 'mdi:pause'
           color:      
         actions:
           tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
             command: "input keyevent 85"
-            haptic:
+            haptic: 'success'
             harmony:
               device:
               delay:
           double_tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             repeat:
             harmony:
               device:
               delay:
     item3:
-      entity: '[[[ return variables.entity ]]]'
-      background_color: '[[[ return variables.background_color ]]]'
+      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        background_color:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
         type:
         icon:
-          name:
+          name: 'mdi:fast-forward'
           color:      
         actions:
           tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
             command: "input keyevent 90"
-            haptic:
+            haptic: 'success'
             harmony:
               device:
               delay:
           double_tap:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
+            haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity:
-            action:
-            service:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
             command:
-            haptic:
-            repeat:
+            haptic: 'selection'
+            repeat: 200
             harmony:
               device:
               delay:
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: layout_item_item_item
+        custom_fields:
+          item1:
+
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item1.entity ]]]'
+                background_color: '[[[ return variables.item1.background_color ]]]'
+                button: '[[[ return variables.item1.button ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item2.entity ]]]'
+                background_color: '[[[ return variables.item2.background_color ]]]'
+                button: '[[[ return variables.item2.button ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item3.entity ]]]'
+                background_color: '[[[ return variables.item3.background_color ]]]'
+                button: '[[[ return variables.item3.button ]]]'
 
 card_remotecontrol_firestick_group_arrows_and_volume:
-  template: remotecontrol_group_arrows_and_volume
+  type: 'custom:button-card'
+  template: layout_itemitem_item
   variables:
     entity:
-    background_color:
+  styles:
+    card:
+    - background-color: var(--primary-background-color)
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: card_remotecontrol_firestick_group_arrow_select
+        variables:
+          entity: '[[[ return variables.entity ]]]'
+        styles:
+          card:
+          - border-radius: var(--border-radius)
+          - box-shadow: var(--box-shadow)
+    item2:
+      card:
+        type: 'custom:button-card'
+        template: card_remotecontrol_firestick_group_volume
+        variables:
+          entity: '[[[ return variables.entity ]]]'
+        styles:
+          card:
+          - border-radius: var(--border-radius)
+          - box-shadow: var(--box-shadow)
+ 
+card_remotecontrol_firestick_group_arrow_select:
+  type: 'custom:button-card'
+  template: layout_group
+  variables:
+    entity:
+    background_color: 'var(--google-grey)'
     group1:
       item1:
-        entity: '[[[ return variables.entity ]]]'
-        background_color: '[[[ return variables.background_color ]]]'
+        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          background_color:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
           type:
           icon:
-            name:
+            name: 'mdi:arrow-up-bold'
             color: "var(--google-blue)"
           actions:
             tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
               command: "UP"
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             double_tap:
-              entity:
-              action:
-              service:
-              command:
-              haptic:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              haptic: 'selection'
+              repeat: 200
               harmony:
                 device:
                 delay:
             hold:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
               command:
-              haptic:
+              haptic: "none"
               repeat:
               harmony:
                 device:
                 delay:
       item2:
-        entity: '[[[ return variables.entity ]]]'
-        background_color: '[[[ return variables.background_color ]]]'
+        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          background_color:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
           type:
           icon:
-            name:
+            name: 'mdi:arrow-left-bold'
             color: "var(--google-blue)"
           actions:
             tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
               command: "LEFT"
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             double_tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
               command:
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
               command:
-              haptic:
-              repeat:
+              haptic: 'selection'
+              repeat: 200
               harmony:
                 device:
                 delay:      
       item3:
-        entity: '[[[ return variables.entity ]]]'
-        background_color: '[[[ return variables.background_color ]]]'
+        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          background_color:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
           type:
           icon:
-            name:
+            name: 'mdi:circle-slice-8'
             color: "var(--google-blue)"
           actions:
             tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
               command: "input keyevent 23"
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             double_tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
               command:
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
               command:
-              haptic:
+              haptic: "none"
               repeat:
               harmony:
                 device:
                 delay:      
       item4:
-        entity: '[[[ return variables.entity ]]]'
-        background_color: '[[[ return variables.background_color ]]]'
+        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          background_color:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
           type:
           icon:
-            name:
+            name: 'mdi:arrow-right-bold'
             color: "var(--google-blue)"
           actions:
             tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
               command: "RIGHT"
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             double_tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
               command:
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
               command:
-              haptic:
-              repeat:
+              haptic: 'selection'
+              repeat: 200
               harmony:
                 device:
                 delay:      
       item5:
-        entity: '[[[ return variables.entity ]]]'
-        background_color: '[[[ return variables.background_color ]]]'
+        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          background_color:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
           type:
           icon:
-            name:
+            name: 'mdi:arrow-down-bold'
             color: "var(--google-blue)"
           actions:
             tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
               command: "DOWN"
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             double_tap:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
               command:
-              haptic:
+              haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity:
-              action:
-              service:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
               command:
-              haptic:
-              repeat:
-              harmony:
-                device:
-                delay:    
-    group2:
-      item1:
-        entity: '[[[ return variables.entity ]]]'
-        background_color: "var(--google-green)"
-        button:
-          background_color:
-          type:
-          icon:
-            name:
-            color:      
-          actions:
-            tap:
-              entity:
-              action:
-              service:
-              command: "input keyevent 89"
-              haptic:
+              haptic: 'selection'
+              repeat: 200
               harmony:
                 device:
                 delay:
-            double_tap:
-              entity:
-              action:
-              service:
-              command:
-              haptic:
-              harmony:
-                device:
-                delay:
-            hold:
-              entity:
-              action:
-              service:
-              command:
-              haptic:
-              repeat:
-              harmony:
-                device:
-                delay:      
-      item2:
-        entity: '[[[ return variables.entity ]]]'
-        background_color: "var(--google-green)"
-        button:
-          background_color:
-          type:
-          icon:
-            name:
-            color:      
-          actions:
-            tap:
-              entity:
-              action:
-              service:
-              command: "input keyevent 85"
-              haptic:
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity:
-              action:
-              service:
-              command:
-              haptic:
-              harmony:
-                device:
-                delay:
-            hold:
-              entity:
-              action:
-              service:
-              command:
-              haptic:
-              repeat:
-              harmony:
-                device:
-                delay:      
-      item3:
-        entity: '[[[ return variables.entity ]]]'
-        background_color: "var(--google-green)"
-        button:
-          background_color:
-          type:
-          icon:
-            name:
-            color:      
-          actions:
-            tap:
-              entity:
-              action:
-              service:
-              command: "input keyevent 90"
-              haptic:
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity:
-              action:
-              service:
-              command:
-              haptic:
-              harmony:
-                device:
-                delay:
-            hold:
-              entity:
-              action:
-              service:
-              command:
-              haptic:
-              repeat:
-              harmony:
-                device:
-                delay:
+  custom_fields:
+    item1:
+      card:
+        type: 'custom:button-card'
+        template: layout_gap_item_gap-item_item_item-gap_item_gap
+        custom_fields:
+          item1:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item1.entity ]]]'
+                background_color: '[[[ return variables.item1.background_color ]]]'
+                button: '[[[ return variables.item1.button ]]]'
+          item2:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item2.entity ]]]'
+                background_color: '[[[ return variables.item2.background_color ]]]'
+                button: '[[[ return variables.item2.button ]]]'
+          item3:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item3.entity ]]]'
+                background_color: '[[[ return variables.item3.background_color ]]]'
+                button: '[[[ return variables.item3.button ]]]'
 
+          item4:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item4.entity ]]]'
+                background_color: '[[[ return variables.item4.background_color ]]]'
+                button: '[[[ return variables.item4.button ]]]'
 
-    ulm_remotecontrol_group_arrow_select_color_up:
-    ulm_remotecontrol_group_arrow_select_color_down: "var(--google-blue)"
-    ulm_remotecontrol_group_arrow_select_color_left: "var(--google-blue)"
-    ulm_remotecontrol_group_arrow_select_color_right: "var(--google-blue)"
-    ulm_remotecontrol_group_arrow_select_color_select: "var(--google-blue)"
+          item5:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                entity: '[[[ return variables.item5.entity ]]]'
+                background_color: '[[[ return variables.item5.background_color ]]]'
+                button: '[[[ return variables.item5.button ]]]'
+
+card_remotecontrol_firestick_group_volume:
+  type: 'custom:button-card'
+  template: layout_row_row_row
+  variables:
+    entity:
+    background_color: 'var(--google-grey)'
+    row1:
+      # background_color: '[[[ return variables.background_color ]]]'
+      button:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
+        type:
+        icon:
+          name: 'mdi:volume-plus'
+          color: "var(--google-green)"
+        actions:
+          tap:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 89"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: 'selection'
+            repeat: 200
+            harmony:
+              device:
+              delay:      
+    row2:
+      # background_color: '[[[ return variables.background_color ]]]'
+      button:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
+        type:
+        icon:
+          name: 'mdi:volume-minus'
+          color: "var(--google-green)"    
+        actions:
+          tap:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 85"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: 'selection'
+            repeat: 200
+            harmony:
+              device:
+              delay:      
+    row3:
+      # background_color: '[[[ return variables.background_color ]]]'
+      button:
+        entity: '[[[ return variables.entity ]]]'
+        background_color: '[[[ return variables.background_color ]]]'
+        type: 'mute'
+        icon:
+          name: 'mdi:volume-off'
+          color: "var(--google-green)"
+        actions:
+          tap:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 90"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity: '[[[ return variables.entity ]]]'
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            entity: '[[[ return variables.entity ]]]'
+            action: "more-info"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            repeat:
+            harmony:
+              device:
+              delay:
+  custom_fields:
+    row1:
+      card:
+        type: 'custom:button-card'
+        template: remotecontrol_button
+        variables:
+          entity: '[[[ return variables.item1.entity ]]]'
+          background_color: '[[[ return variables.item1.background_color ]]]'
+          button: '[[[ return variables.item1.button ]]]'
+
+    row2:
+      card:
+        type: 'custom:button-card'
+        template: remotecontrol_button
+        variables:
+          entity: '[[[ return variables.item2.entity ]]]'
+          background_color: '[[[ return variables.item2.background_color ]]]'
+          button: '[[[ return variables.item2.button ]]]'
+
+    row3:
+      card:
+        type: 'custom:button-card'
+        template: remotecontrol_button
+        variables:
+          entity: '[[[ return variables.item3.entity ]]]'
+          background_color: '[[[ return variables.item3.background_color ]]]'
+          button: '[[[ return variables.item3.button ]]]'
 
 card_remotecontrol_firestick_group_apps:
-  template: remotecontrol_style_apps
+  type: 'custom:button-card'
+  template: layout_group
   variables:
-    ulm_button_grid_4_by_4_entity: 
-    ulm_card_remotecontrol_button_background_color:
-
-    ulm_button_grid_4_by_4_command_01: ""
-    ulm_button_grid_4_by_4_command_02: ""
-    ulm_button_grid_4_by_4_command_03: ""
-    ulm_button_grid_4_by_4_command_04: ""
-    ulm_button_grid_4_by_4_command_05: ""
-    ulm_button_grid_4_by_4_command_06: ""
-    ulm_button_grid_4_by_4_command_07: ""
-    ulm_button_grid_4_by_4_command_08: ""
-    ulm_button_grid_4_by_4_command_09: ""
-    ulm_button_grid_4_by_4_command_10: ""
-    ulm_button_grid_4_by_4_command_11: ""
-    ulm_button_grid_4_by_4_command_12: ""
-    ulm_button_grid_4_by_4_command_13: ""
-    ulm_button_grid_4_by_4_command_14: ""
-    ulm_button_grid_4_by_4_command_15: ""
-    ulm_button_grid_4_by_4_command_16: ""
-
-    ulm_button_grid_4_by_4_haptic_01: ""
-    ulm_button_grid_4_by_4_haptic_02: ""
-    ulm_button_grid_4_by_4_haptic_03: ""
-    ulm_button_grid_4_by_4_haptic_04: ""
-    ulm_button_grid_4_by_4_haptic_05: ""
-    ulm_button_grid_4_by_4_haptic_06: ""
-    ulm_button_grid_4_by_4_haptic_07: ""
-    ulm_button_grid_4_by_4_haptic_08: ""
-    ulm_button_grid_4_by_4_haptic_09: ""
-    ulm_button_grid_4_by_4_haptic_10: ""
-    ulm_button_grid_4_by_4_haptic_11: ""
-    ulm_button_grid_4_by_4_haptic_12: ""
-    ulm_button_grid_4_by_4_haptic_13: ""
-    ulm_button_grid_4_by_4_haptic_14: ""
-    ulm_button_grid_4_by_4_haptic_15: ""
-    ulm_button_grid_4_by_4_haptic_16: ""
-
-    ulm_button_grid_4_by_4_icon_01: 'phu:netflix'
-    ulm_button_grid_4_by_4_icon_02: 'phu:disney-plus'
-    ulm_button_grid_4_by_4_icon_03: 'phu:prime-video'
-    ulm_button_grid_4_by_4_icon_04: 'phu:apple-tv'
-    ulm_button_grid_4_by_4_icon_05: 'mdi:plex'
-    ulm_button_grid_4_by_4_icon_06: 'mdi:spotify'
-    ulm_button_grid_4_by_4_icon_07: 'mdi:youtube'
-    ulm_button_grid_4_by_4_icon_08: 
-    ulm_button_grid_4_by_4_icon_09: 
-    ulm_button_grid_4_by_4_icon_10: 
-    ulm_button_grid_4_by_4_icon_11: 
-    ulm_button_grid_4_by_4_icon_12: 
-    ulm_button_grid_4_by_4_icon_13: 
-    ulm_button_grid_4_by_4_icon_14: 
-    ulm_button_grid_4_by_4_icon_15: 
-    ulm_button_grid_4_by_4_icon_16: 
-
-
-    ulm_button_grid_4_by_4_color_01: "var(--google-red)"
-    ulm_button_grid_4_by_4_color_02: "var(--google-blue)"
-    ulm_button_grid_4_by_4_color_03: "var(--google-blue)"
-    ulm_button_grid_4_by_4_color_04: 
-    ulm_button_grid_4_by_4_color_05: "var(--google-yellow)"
-    ulm_button_grid_4_by_4_color_06: "var(--google-green)"
-    ulm_button_grid_4_by_4_color_07: "var(--google-red)"
-    ulm_button_grid_4_by_4_color_08: 
-    ulm_button_grid_4_by_4_color_09: 
-    ulm_button_grid_4_by_4_color_10: 
-    ulm_button_grid_4_by_4_color_11: 
-    ulm_button_grid_4_by_4_color_12: 
-    ulm_button_grid_4_by_4_color_13: 
-    ulm_button_grid_4_by_4_color_14: 
-    ulm_button_grid_4_by_4_color_15: 
-    ulm_button_grid_4_by_4_color_16: "var(--google-red)"
+    entity:
+    background_color:
+    row1:
+      item1:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item2:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item3:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item4:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+    row2:
+      item1:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item2:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item3:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item4:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+    row3:
+      item1:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item2:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item3:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item4:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+    row4:
+      item1:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item2:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item3:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      item4:
+        # background_color: '[[[ return variables.background_color ]]]'
+        button:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          type:
+          icon:
+            name:
+            color:      
+          actions:
+            tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              entity: '[[[ return variables.entity ]]]'
+              action: "none"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              entity: '[[[ return variables.entity ]]]'
+              action: "more-info"
+              service: androidtv.adb_command
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+  custom_fields:
+    type: 'custom:button-card'
+    template: layout_row_row_row_row
+    variables:
+      entity:
+      background_color:
+      row1:
+        item1:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item2:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item3:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item4:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+      row2:
+        item1:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item2:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item3:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item4:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+      row3:
+        item1:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item2:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item3:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item4:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+      row4:
+        item1:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item2:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item3:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+        item4:
+          entity: '[[[ return variables.entity ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
