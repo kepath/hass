@@ -1,128 +1,139 @@
 import logging
-from datetime import datetime
-from typing import Optional, Dict
 
-from meross_iot.controller.device import BaseDevice
-from meross_iot.controller.mixins.consumption import ConsumptionXMixin
-from meross_iot.controller.mixins.electricity import ElectricityMixin
-from meross_iot.controller.mixins.garage import GarageOpenerMixin
-from meross_iot.controller.mixins.light import LightMixin
-from meross_iot.controller.mixins.toggle import ToggleXMixin, ToggleMixin
+from homeassistant.components.switch import SwitchDevice
+from meross_iot.cloud.devices.power_plugs import GenericPlug
 from meross_iot.manager import MerossManager
-from meross_iot.model.http.device import HttpDeviceInfo
+from meross_iot.meross_event import (DeviceOnlineStatusEvent,
+                                     DeviceSwitchStatusEvent)
 
-# Conditional import for switch device
-from homeassistant.components.switch import SwitchEntity
-from homeassistant.helpers.typing import HomeAssistantType
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from . import MerossDevice
-from .common import (DOMAIN, MANAGER, DEVICE_LIST_COORDINATOR, HA_SWITCH)
+from .common import (DOMAIN, HA_SWITCH, MANAGER, calculate_switch_id, ConnectionWatchDog, cloud_io)
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class MerossSwitchDevice(ToggleXMixin, BaseDevice):
-    """
-    Type hints helper
-    """
-    pass
-
-
-class SwitchEntityWrapper(MerossDevice, SwitchEntity):
+class SwitchEntityWrapper(SwitchDevice):
     """Wrapper class to adapt the Meross switches into the Homeassistant platform"""
-    _device: MerossSwitchDevice
 
-    def __init__(self,
-                 channel: int,
-                 device: MerossSwitchDevice,
-                 device_list_coordinator: DataUpdateCoordinator[Dict[str, HttpDeviceInfo]]):
-        super().__init__(
-            device=device,
-            channel=channel,
-            device_list_coordinator=device_list_coordinator,
-            platform=HA_SWITCH)
+    def __init__(self, device: GenericPlug, channel: int):
+        self._device = device
+
+        # If the current device has more than 1 channel, we need to setup the device name and id accordingly
+        if len(device.get_channels()) > 1:
+            self._id = calculate_switch_id(device.uuid, channel)
+            channelData = device.get_channels()[channel]
+            self._entity_name = "{} - {}".format(device.name, channelData.get('devName', 'Main Switch'))
+        else:
+            self._id = device.uuid
+            self._entity_name = device.name
 
         # Device properties
-        self._last_power_sample = None
-        self._daily_consumption = None
+        self._channel_id = channel
+        self._device_id = device.uuid
+        self._device_name = device.name
 
-    async def async_update(self):
-        if self.online:
-            await super().async_update()
+        # Device state
+        self._is_on = None
+        self._is_online = self._device.online
+        if self._is_online:
+            self.update()
 
-            # If the device supports power reading, update it
-            if isinstance(self._device, ElectricityMixin):
-                self._last_power_sample = await self._device.async_get_instant_metrics(channel=self._channel_id)
+    @cloud_io()
+    def update(self):
+        self._device.get_status(force_status_refresh=True)
+        self._is_online = self._device.online
 
-            if isinstance(self._device, ConsumptionXMixin):
-                self._daily_consumption = await self._device.async_get_daily_power_consumption(channel=self._channel_id)
+        if self._is_online:
+            self._is_on = self._device.get_channel_status(self._channel_id)
+
+    def device_event_handler(self, evt):
+        # Handle here events that are common to all the wrappers
+        if isinstance(evt, DeviceOnlineStatusEvent):
+            _LOGGER.info("Device %s reported online status: %s" % (self._device.name, evt.status))
+            if evt.status not in ["online", "offline"]:
+                raise ValueError("Invalid online status")
+            self._is_online = evt.status == "online"
+
+        elif isinstance(evt, DeviceSwitchStatusEvent):
+            if evt.channel_id == self._channel_id:
+                self._is_on = evt.switch_state
+        else:
+            _LOGGER.warning("Unhandled/ignored event: %s" % str(evt))
+
+        # When receiving an event, let's immediately trigger the update state
+        self.schedule_update_ha_state(False)
+
+    @property
+    def unique_id(self) -> str:
+        # Since Meross plugs may have more than 1 switch, we need to provide a composed ID
+        # made of uuid and channel
+        return self._id
+
+    @property
+    def name(self) -> str:
+        return self._entity_name
+
+    @property
+    def device_info(self):
+        return {
+            'identifiers': {(DOMAIN, self._device_id)},
+            'name': self._device_name,
+            'manufacturer': 'Meross',
+            'model': self._device.type + " " + self._device.hwversion,
+            'sw_version': self._device.fwversion
+        }
+
+    @property
+    def available(self) -> bool:
+        # A device is available if it's online
+        return self._is_online
+
+    @property
+    def should_poll(self) -> bool:
+        # The current state propagation is handled via PUSH notification from the server.
+        # Therefore, we don't want Homeassistant to waste resources to poll the server.
+        return False
 
     @property
     def is_on(self) -> bool:
-        dev = self._device
-        return dev.is_on(channel=self._channel_id)
+        return self._is_on
 
-    async def async_turn_off(self, **kwargs) -> None:
-        dev = self._device
-        await dev.async_turn_off(channel=self._channel_id, skip_rate_limits=True)
+    @cloud_io()
+    def turn_off(self, **kwargs) -> None:
+        self._device.turn_off_channel(self._channel_id)
 
-    async def async_turn_on(self, **kwargs) -> None:
-        dev = self._device
-        await dev.async_turn_on(channel=self._channel_id, skip_rate_limits=True)
+    @cloud_io()
+    def turn_on(self, **kwargs) -> None:
+        self._device.turn_on_channel(self._channel_id)
 
-    @property
-    def current_power_w(self) -> Optional[float]:
-        if self._last_power_sample is not None:
-            return self._last_power_sample.power
+    async def async_added_to_hass(self) -> None:
+        self._device.register_event_callback(self.device_event_handler)
 
-    @property
-    def today_energy_kwh(self) -> Optional[float]:
-        if self._daily_consumption is not None:
-            today = datetime.today()
-            total = 0
-            daystart = datetime(year=today.year, month=today.month, day=today.day, hour=0, second=0)
-            for x in self._daily_consumption:
-              if x['date'] == daystart:
-                total = x['total_consumption_kwh']
-            return total
+    async def async_will_remove_from_hass(self) -> None:
+        self._device.unregister_event_callback(self.device_event_handler)
 
 
-async def async_setup_entry(hass: HomeAssistantType, config_entry, async_add_entities):
-    def entity_adder_callback():
-        """Discover and adds new Meross entities"""
-        manager: MerossManager = hass.data[DOMAIN][MANAGER]  # type
-        coordinator = hass.data[DOMAIN][DEVICE_LIST_COORDINATOR]
-        devices = manager.find_devices()
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    def sync_logic():
+        switch_entities = []
+        manager = hass.data[DOMAIN][MANAGER]  # type:MerossManager
+        plugs = manager.get_devices_by_kind(GenericPlug)
 
-        new_entities = []
+        for plug in plugs:  # type: GenericPlug
+            # Every Meross plug might have multiple switches onboard. For this reason we need to
+            # instantiate multiple switch entities for every channel.
+            for channel_index, channel in enumerate(plug.get_channels()):
+                w = SwitchEntityWrapper(device=plug, channel=channel_index)
+                switch_entities.append(w)
+                hass.data[DOMAIN][HA_SWITCH][w.unique_id] = w
+        return switch_entities
 
-        # Identify all the devices that expose the Toggle or ToggleX capabilities
-        devs = filter(lambda d: isinstance(d, ToggleXMixin) or isinstance(d, ToggleMixin), devices)
+    # Register a connection watchdog to notify devices when connection to the cloud MQTT goes down.
+    manager = hass.data[DOMAIN][MANAGER]  # type:MerossManager
+    watchdog = ConnectionWatchDog(hass=hass, platform=HA_SWITCH)
+    manager.register_event_handler(watchdog.connection_handler)
 
-        # Exclude garage openers and lights.
-        devs = filter(lambda d: not (isinstance(d, GarageOpenerMixin) or isinstance(d, LightMixin)), devs)
-
-        try:
-            for d in devs:
-                channels = [c.index for c in d.channels] if len(d.channels) > 0 else [0]
-                for channel_index in channels:
-                    w = SwitchEntityWrapper(device=d, channel=channel_index,
-                                            device_list_coordinator=coordinator)
-                    if w.unique_id not in hass.data[DOMAIN]["ADDED_ENTITIES_IDS"]:
-                        new_entities.append(w)
-        except Exception as e:
-            raise(e)
-
-        async_add_entities(new_entities, True)
-
-    coordinator = hass.data[DOMAIN][DEVICE_LIST_COORDINATOR]
-    coordinator.async_add_listener(entity_adder_callback)
-    # Run the entity adder a first time during setup
-    entity_adder_callback()
-
-# TODO: Implement entry unload
-# TODO: Unload entry
-# TODO: Remove entry
+    switch_entities = await hass.async_add_executor_job(sync_logic)
+    async_add_entities(switch_entities)
 
 
 def setup_platform(hass, config, async_add_entities, discovery_info=None):

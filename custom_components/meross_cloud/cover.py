@@ -1,55 +1,137 @@
 import logging
-from typing import Any, Dict
 
-from meross_iot.controller.device import BaseDevice
-from meross_iot.controller.mixins.garage import GarageOpenerMixin
-from meross_iot.manager import MerossManager
-from meross_iot.model.http.device import HttpDeviceInfo
+from homeassistant.components.cover import (
+    DEVICE_CLASS_GARAGE, SUPPORT_CLOSE, SUPPORT_OPEN, CoverDevice)
+from homeassistant.const import (STATE_CLOSED, STATE_CLOSING, STATE_OPEN,
+                                 STATE_OPENING, STATE_UNKNOWN)
+from meross_iot.cloud.devices.door_openers import GenericGarageDoorOpener
+from meross_iot.meross_event import (DeviceDoorStatusEvent,
+                                     DeviceOnlineStatusEvent)
 
-# Conditional Light import with backwards compatibility
-from homeassistant.components.cover import CoverEntity
-from homeassistant.components.cover import DEVICE_CLASS_GARAGE, SUPPORT_OPEN, SUPPORT_CLOSE
-from homeassistant.helpers.typing import HomeAssistantType
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from . import MerossDevice
-from .common import (DOMAIN, MANAGER, HA_COVER, DEVICE_LIST_COORDINATOR)
+from .common import (DOMAIN, HA_COVER, MANAGER, ConnectionWatchDog)
 
 _LOGGER = logging.getLogger(__name__)
 
-
-class MerossCoverDevice(GarageOpenerMixin, BaseDevice):
-    """
-    Type hints helper
-    """
-    pass
+ATTR_DOOR_STATE = 'door_state'
 
 
-class CoverEntityWrapper(MerossDevice, CoverEntity):
-    """Wrapper class to adapt the Meross bulbs into the Homeassistant platform"""
+class OpenGarageCover(CoverDevice):
+    """Representation of a OpenGarage cover."""
 
-    _device: MerossCoverDevice
+    def __init__(self, device: GenericGarageDoorOpener):
 
-    def __init__(self,
-                 channel: int,
-                 device: MerossCoverDevice,
-                 device_list_coordinator: DataUpdateCoordinator[Dict[str, HttpDeviceInfo]]):
-        super().__init__(
-            device=device,
-            channel=channel,
-            device_list_coordinator=device_list_coordinator,
-            platform=HA_COVER)
+        # Device properties
+        self._device = device
+        self._device_id = device.uuid
+        self._id = device.uuid
+        self._device_name = self._device.name
+        self._channel = 0
 
-    async def async_close_cover(self, **kwargs):
-        await self._device.async_close(channel=self._channel_id, skip_rate_limits=True)
+        if len(self._device.get_channels()) > 1:
+            _LOGGER.error(f"Garage opener {self._id} has more than 1 channel. This is currently not supported.")
 
-    async def async_open_cover(self, **kwargs):
-        await self._device.async_open(channel=self._channel_id, skip_rate_limits=True)
+        # Device specific state
+        self._state = STATE_UNKNOWN
+        self._state_before_move = STATE_UNKNOWN
 
-    def open_cover(self, **kwargs: Any) -> None:
-        self.hass.async_add_executor_job(self.async_open_cover, **kwargs)
+        self._is_online = self._device.online
+        if self._is_online:
+            self.update()
 
-    def close_cover(self, **kwargs: Any) -> None:
-        self.hass.async_add_executor_job(self.async_close_cover, **kwargs)
+    @cloud_io()
+    def update(self):
+        data = self._device.get_status(force_status_refresh=True)
+        self._is_online = self._device.online
+        if self._is_online:
+            open = data.get(self._channel)
+            if open:
+                self._state = STATE_OPEN
+            else:
+                self._state = STATE_CLOSED
+
+    def device_event_handler(self, evt):
+        # Handle here events that are common to all the wrappers
+        if isinstance(evt, DeviceOnlineStatusEvent):
+            _LOGGER.info("Device %s reported online status: %s" % (self._device.name, evt.status))
+            if evt.status not in ["online", "offline"]:
+                raise ValueError("Invalid online status")
+            self._is_online = evt.status == "online"
+
+        elif isinstance(evt, DeviceDoorStatusEvent) and evt.channel == self._channel:
+            # The underlying library only exposes "open" and "closed" statuses
+            if evt.door_state == 'open':
+                self._state = STATE_OPEN
+            elif evt.door_state == 'closed':
+                self._state = STATE_CLOSED
+            else:
+                _LOGGER.error("Unknown/Invalid event door_state: %s" % evt.door_state)
+        else:
+            _LOGGER.warning("Unhandled/ignored event: %s" % str(evt))
+
+        # When receiving an event, let's immediately trigger the update state
+        self.schedule_update_ha_state(False)
+
+    @property
+    def name(self) -> str:
+        """Return the name of the cover."""
+        return self._device_name
+
+    @property
+    def available(self) -> bool:
+        """Return True if entity is available."""
+        return self._is_online
+
+    @property
+    def is_closed(self):
+        """Return if the cover is closed."""
+        return self._state == STATE_CLOSED
+
+    @property
+    def is_open(self):
+        """Return if the cover is closed."""
+        return self._state == STATE_OPEN
+
+    @property
+    def is_opening(self):
+        return self._state == STATE_OPENING
+
+    @property
+    def is_closing(self):
+        return self._state == STATE_CLOSING
+
+    @cloud_io()
+    def close_cover(self, **kwargs):
+        """Close the cover."""
+        if self._state not in [STATE_CLOSED, STATE_CLOSING]:
+            self._state_before_move = self._state
+            self._state = STATE_CLOSING
+            self._device.close_door(channel=self._channel, ensure_closed=True)
+
+            # We changed the state, thus we need to notify HA about it
+            if self.enabled:
+                self.schedule_update_ha_state(False)
+
+    @cloud_io()
+    def open_cover(self, **kwargs):
+        """Open the cover."""
+        if self._state not in [STATE_OPEN, STATE_OPENING]:
+            self._state_before_move = self._state
+            self._state = STATE_OPENING
+            self._device.open_door(channel=self._channel, ensure_opened=True)
+
+            # We changed the state, thus we need to notify HA about it
+            if self.enabled:
+                self.schedule_update_ha_state(False)
+
+    @property
+    def should_poll(self) -> bool:
+        return False
+
+    @property
+    def unique_id(self) -> str:
+        # Since Meross plugs may have more than 1 switch, we need to provide a composed ID
+        # made of uuid and channel
+        return self._id
 
     @property
     def device_class(self):
@@ -62,52 +144,41 @@ class CoverEntityWrapper(MerossDevice, CoverEntity):
         return SUPPORT_OPEN | SUPPORT_CLOSE
 
     @property
-    def is_closed(self):
-        open_status = self._device.get_is_open(channel=self._channel_id)
-        return not open_status
+    def device_info(self):
+        return {
+            'identifiers': {(DOMAIN, self._device_id)},
+            'name': self._device_name,
+            'manufacturer': 'Meross',
+            'model': self._device.type + " " + self._device.hwversion,
+            'sw_version': self._device.fwversion
+        }
 
-    @property
-    def is_closing(self):
-        # Not supported yet
-        return None
-    
-    @property
-    def is_opening(self):
-        # Not supported yet
-        return None
+    async def async_added_to_hass(self) -> None:
+        self._device.register_event_callback(self.device_event_handler)
+
+    async def async_will_remove_from_hass(self) -> None:
+        self._device.unregister_event_callback(self.device_event_handler)
 
 
-async def async_setup_entry(hass: HomeAssistantType, config_entry, async_add_entities):
-    def entity_adder_callback():
-        """Discover and adds new Meross entities"""
-        manager: MerossManager = hass.data[DOMAIN][MANAGER]  # type
-        coordinator = hass.data[DOMAIN][DEVICE_LIST_COORDINATOR]
-        devices = manager.find_devices(device_class=GarageOpenerMixin)
-        new_entities = []
-        for d in devices:
-            # For multi-channel garage doors opener (like MSG200), the main channel is not operable and
-            # does not provide meaningful states. For this reason, we will ignore the "main channel"
-            # of any cover device which has more than 1 channels. Of course, we will keep working with channel
-            # 0 when dealing with dingle-door openers.
-            if len(d.channels) > 1:
-                channels = [c.index for c in d.channels if c.index > 0]
-            else:
-                channels = [0]
-            for channel_index in channels:
-                w = CoverEntityWrapper(device=d, channel=channel_index, device_list_coordinator=coordinator)
-                if w.unique_id not in hass.data[DOMAIN]["ADDED_ENTITIES_IDS"]:
-                    new_entities.append(w)
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    def sync_logic():
+        cover_entities = []
+        manager = hass.data[DOMAIN][MANAGER]  # type:MerossManager
+        openers = manager.get_devices_by_kind(GenericGarageDoorOpener)
 
-        async_add_entities(new_entities, True)
+        for opener in openers:  # type: GenericGarageDoorOpener
+            w = OpenGarageCover(device=opener)
+            cover_entities.append(w)
+            hass.data[DOMAIN][HA_COVER][w.unique_id] = w
+        return cover_entities
 
-    coordinator = hass.data[DOMAIN][DEVICE_LIST_COORDINATOR]
-    coordinator.async_add_listener(entity_adder_callback)
-    # Run the entity adder a first time during setup
-    entity_adder_callback()
+    # Register a connection watchdog to notify devices when connection to the cloud MQTT goes down.
+    manager = hass.data[DOMAIN][MANAGER]  # type:MerossManager
+    watchdog = ConnectionWatchDog(hass=hass, platform=HA_COVER)
+    manager.register_event_handler(watchdog.connection_handler)
 
-# TODO: Implement entry unload
-# TODO: Unload entry
-# TODO: Remove entry
+    cover_entities = await hass.async_add_executor_job(sync_logic)
+    async_add_entities(cover_entities)
 
 
 def setup_platform(hass, config, async_add_entities, discovery_info=None):
