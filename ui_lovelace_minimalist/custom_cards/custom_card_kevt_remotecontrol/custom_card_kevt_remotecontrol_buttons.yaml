@@ -9,41 +9,6 @@ remotecontrol_button:
 
   variables:
     button:
-      # entity: '[[[ return variables.entity ]]]'
-      # background_color: "rgba(var(--color-theme),0.05)"
-      # type: "normal"
-      # icon:
-      #   name:
-      #   color:
-      # actions:
-      #   tap:
-      #     entity:
-      #     action: "call-service"
-      #     service: androidtv.adb_command
-      #     command:
-      #     haptic: "success"
-      #     harmony:
-      #       device:
-      #       delay:
-      #   double_tap:
-      #     entity:
-      #     action: "none"
-      #     service:
-      #     command:
-      #     haptic: "none"
-      #     harmony:
-      #       device:
-      #       delay:
-      #   hold:
-      #     entity:
-      #     action: "more-info"
-      #     service:
-      #     command:
-      #     haptic: "heavy"
-      #     repeat:
-      #     harmony:
-      #       device:
-      #       delay:
   remotecontrol_button_presses:
     type: 'custom:button-card'
     template: widget_icon
@@ -71,9 +36,9 @@ remotecontrol_button:
       var icon = variables.button.icon.name;
       if (variables.button.type == 'play') {
         if (states[variables.button.entity].state == 'off'
-            || states[variables.button.entity].state == 'PowerOff'
-            || states[variables.button.entity].state == 'idle'
-            || states[variables.button.entity].state == 'paused') {
+            || states[variables.button.entity_id].state == 'PowerOff'
+            || states[variables.button.entity_id].state == 'idle'
+            || states[variables.button.entity_id].state == 'paused') {
           var icon = 'mdi:play';
         }
       }
@@ -87,15 +52,15 @@ remotecontrol_button:
           [[[
               var color = variables.button.background_color;
               if (variables.button.type == 'mute') {
-                if (typeof states[variables.button.entity].attributes.is_volume_muted !== 'undefined') {
-                  if (states[variables.button.entity].attributes.is_volume_muted){
+                if (typeof states[variables.button.entity_id].attributes.is_volume_muted !== 'undefined') {
+                  if (states[variables.button.entity_id].attributes.is_volume_muted){
                     var color = "rgba(var(--color-green), 0.2)";
                   }
                 }
               }
               if (variables.button.type == 'power') {
-                if (states[variables.button.entity].state == 'off'
-                    || states[variables.button.entity].state == 'PowerOff') {
+                if (states[variables.button.entity_id].state == 'off'
+                    || states[variables.button.entity_id].state == 'PowerOff') {
                   var color = variables.button.background_color;
                 } else {
                   var color = "rgba(var(--color-red), 0.2)";
@@ -110,34 +75,34 @@ remotecontrol_button_presses:
   variables:
     # entity:
     button_actions:
-      tap:
-        # entity: '[[[ return variables.entity ]]]'
-        # action: "call-service"
-        # service:
-        # command:
-        # haptic: "none"
-        # harmony:
-        #   device:
-        #   delay: 0.6
-      double_tap:
-        # entity: '[[[ return variables.entity ]]]'
-        # action: "none"
-        # service:
-        # command:
-        # haptic: "none"
-        # harmony:
-        #   device:
-        #   delay: 0.6
-      hold:
-        # entity: '[[[ return variables.entity ]]]'
-        # action: "more-info"
-        # service:
-        # command:
-        # haptic: "none"
-        # repeat:
-        # harmony:
-        #   device:
-        #   delay: 0.6
+      # tap:
+      #   # entity: '[[[ return variables.entity ]]]'
+      #   # action: "call-service"
+      #   # service:
+      #   # command:
+      #   # haptic: "none"
+      #   # harmony:
+      #   #   device:
+      #   #   delay: 0.6
+      # double_tap:
+      #   # entity: '[[[ return variables.entity ]]]'
+      #   # action: "none"
+      #   # service:
+      #   # command:
+      #   # haptic: "none"
+      #   # harmony:
+      #   #   device:
+      #   #   delay: 0.6
+      # hold:
+      #   # entity: '[[[ return variables.entity ]]]'
+      #   # action: "more-info"
+      #   # service:
+      #   # command:
+      #   # haptic: "none"
+      #   # repeat:
+      #   # harmony:
+      #   #   device:
+      #   #   delay: 0.6
   tap_action:
     remotecontrol_button_action:
       type: 'custom:button-card'
@@ -169,17 +134,17 @@ remotecontrol_button_action:
         service: androidtv.adb_command
         service_data:
           command: '[[[ return variables.button_action.command ]]]'
-          entity_id: '[[[ return variables.button_action.entity ]]]'
+          entity_id: '[[[ return variables.button_action.entity_id ]]]'
       {% elif variables.button_action.service.startswith("media") %}
         service: media_player.play_media
         data:
-          entity_id: '[[[ return variables.button_action.entity ]]]'
+          entity_id: '[[[ return variables.button_action.entity_id ]]]'
           media_content_id: '[[[ return variables.button_action.command ]]]'
           media_content_type: "send_key"
       {% elif variables.button_action.service.startswith("remote") %}
         service: remote.send_command
         target:
-          entity_id: '[[[ return variables.button_action.entity ]]]'
+          entity_id: '[[[ return variables.button_action.entity_id ]]]'
         data:
           command:
             - '[[[ return variables.button_action.command ]]]'
@@ -190,7 +155,7 @@ remotecontrol_button_action:
       {% endif%}
     {% elif variables.button_action.action == "more-info" %}
       action: more-info
-      entity_id: '[[[ return variables.button_action.entity ]]]'
+      entity_id: '[[[ return variables.button_action.entity_id ]]]'
     {% elif variables.button_action.action == "toggle" %}
       action: toggle
     {% elif variables.button_action.action == "navigate" %}
