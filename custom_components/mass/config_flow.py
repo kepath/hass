@@ -1,5 +1,6 @@
 """Config flow for Music Assistant integration."""
 
+import os
 from typing import List
 
 import homeassistant.helpers.config_validation as cv
@@ -12,7 +13,6 @@ from homeassistant.components.media_player import (
     SUPPORT_PLAY_MEDIA,
     SUPPORT_VOLUME_SET,
 )
-from homeassistant.const import ATTR_SUPPORTED_FEATURES
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
@@ -59,27 +59,6 @@ def async_get_mass_entities(hass: HomeAssistant) -> List[str]:
 
 
 @callback
-def async_get_control_entities(hass: HomeAssistant) -> List[str]:
-    """Return all media_player entities that can be used as source."""
-    exclude_entities = async_get_mass_entities(hass)
-    result = []
-    for state in hass.states.async_all(MP_DOMAIN):
-        # exclude MA entities
-        if state.entity_id in exclude_entities:
-            continue
-        # we only want entities that support some features
-        sup_features = state.attributes.get(ATTR_SUPPORTED_FEATURES, 0)
-        supported = 0
-        for req in REQUIRED_FEATURES:
-            if bool(sup_features & req):
-                supported += 1
-        if supported != len(REQUIRED_FEATURES):
-            continue
-        result.append(state.entity_id)
-    return result
-
-
-@callback
 def hide_player_entities(hass: HomeAssistant, entity_ids: List[str], hide: bool):
     """Hide/unhide media_player entities that are used as source for Music Assistant."""
     # Hide the wrapped entry if registered
@@ -116,13 +95,24 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle getting base config from the user."""
 
+        errors = None
+
         if self._async_current_entries():
             return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
-            return self.async_create_entry(
-                title=DEFAULT_NAME, data={}, options=user_input
-            )
+
+            # check if music directory is valid
+            music_dir = user_input.get(CONF_FILE_DIRECTORY)
+            playlists_dir = user_input.get(CONF_PLAYLISTS_DIRECTORY)
+            if music_dir and not os.path.isdir(music_dir):
+                errors = {CONF_FILE_DIRECTORY: "directory_not_exists"}
+            elif playlists_dir and not os.path.isdir(playlists_dir):
+                errors = {CONF_PLAYLISTS_DIRECTORY: "directory_not_exists"}
+            else:
+                return self.async_create_entry(
+                    title=DEFAULT_NAME, data={}, options=user_input
+                )
 
         return self.async_show_form(
             step_id="user",
@@ -141,6 +131,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Optional(CONF_PLAYLISTS_DIRECTORY): str,
                 }
             ),
+            errors=errors,
         )
 
 
@@ -162,7 +153,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         conf = self.config_entry.options
 
         # filter any non existing device id's from the list
-        control_entities = async_get_control_entities(self.hass)
+        control_entities = self.hass.states.async_entity_ids("media_player")
         cur_ids = [
             item
             for item in conf.get(CONF_PLAYER_ENTITIES, control_entities)
@@ -201,9 +192,20 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_music(self, user_input=None):
         """Handle getting music provider config from the user."""
 
+        errors = None
+
         if user_input is not None:
             self.data.update(user_input)
-            return await self.async_step_adv()
+
+            # check if music directory is valid
+            music_dir = user_input.get(CONF_FILE_DIRECTORY)
+            playlists_dir = user_input.get(CONF_PLAYLISTS_DIRECTORY)
+            if music_dir and not os.path.isdir(music_dir):
+                errors = {CONF_FILE_DIRECTORY: "directory_not_exists"}
+            elif playlists_dir and not os.path.isdir(playlists_dir):
+                errors = {CONF_PLAYLISTS_DIRECTORY: "directory_not_exists"}
+            else:
+                return await self.async_step_adv()
 
         conf = self.config_entry.options
         return self.async_show_form(
@@ -252,6 +254,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 }
             ),
             last_step=False,
+            errors=errors,
         )
 
     async def async_step_adv(self, user_input=None):
