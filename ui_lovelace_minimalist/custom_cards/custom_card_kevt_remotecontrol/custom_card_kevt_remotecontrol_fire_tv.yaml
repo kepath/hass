@@ -5,21 +5,23 @@
 card_remotecontrol_firestick_group_power:
   type: 'custom:button-card'
   template: layout_group
-  triggers_update: all 
+  triggers_update: all
   variables:
-    # entity: 
-    background_color: 'var(--google-grey)'
+    entity_id:
+    background_color:
     cell1:
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
+        entity_id:
         background_color:
-        type: 'power'
+        templates:
+        class: 'power'
         icon:
           name: 'mdi:power'
           color: 'var(--google-red)'
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
             command: 'input keyevent 26'
@@ -28,7 +30,7 @@ card_remotecontrol_firestick_group_power:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -37,7 +39,7 @@ card_remotecontrol_firestick_group_power:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -48,15 +50,17 @@ card_remotecontrol_firestick_group_power:
               delay:
     cell2:
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: 
-        type:
+        entity_id:
+        background_color:
+        templates:
+        class:
         icon:
           name: 'mdi:import'
-          color: 'var(--google-grey)'
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
             command:
@@ -65,7 +69,7 @@ card_remotecontrol_firestick_group_power:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -74,7 +78,7 @@ card_remotecontrol_firestick_group_power:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -87,43 +91,72 @@ card_remotecontrol_firestick_group_power:
     group1:
       card:
         type: 'custom:button-card'
-        template: layout_item_gap_item 
+        template: layout_cell_gap_cell 
         custom_fields:
           cell1:
             card:
               type: 'custom:button-card'
               template: remotecontrol_button
               variables:
-                # entity_id: "[[[ return entity.entity_id ]]]"
-                # background_color: '[[[ return variables.cell1.background_color ]]]'
-                button: '[[[ return variables.cell1.button ]]]'
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell1.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell1.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell1.button.class ]]]'
+                  icon: '[[[ return variables.cell1.button.icon ]]]'
+                  actions: '[[[ return variables.cell1.button.actions ]]]'
           cell2:
             card:
               type: 'custom:button-card'
               template: remotecontrol_button
               variables:
-                # entity: '[[[ return variables.cell2.entity ]]]'
-                # background_color: '[[[ return variables.cell2.background_color ]]]'
-                button: '[[[ return variables.cell2.button ]]]'
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell2.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell2.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell2.button.class ]]]'
+                  icon: '[[[ return variables.cell2.button.icon ]]]'
+                  actions: '[[[ return variables.cell2.button.actions ]]]'
 
 card_remotecontrol_firestick_group_home:
   type: 'custom:button-card'
   template: layout_group
   variables:
-    # entity:
-    background_color: 'var(--google-grey)'
-    group1:
-      # background_color: '[[[ return variables.background_color ]]]'
+    entity_id:
+    background_color:
+    cell1:
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type:
+        entity_id:
+        background_color:
+        templates:
+        class:
         icon:
           name: 'mdi:arrow-u-left-top-bold'
-          color:      
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
             command: 'BACK'
@@ -132,7 +165,7 @@ card_remotecontrol_firestick_group_home:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -141,7 +174,7 @@ card_remotecontrol_firestick_group_home:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -151,14 +184,15 @@ card_remotecontrol_firestick_group_home:
               device:
               delay:
     cell2:
-      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type:
+        entity_id:
+        background_color:
+        templates:
+        class:
         icon:
           name: 'mdi:home'
-          color:      
+          color:
+          size:
         actions:
           tap:
             entity:
@@ -170,7 +204,7 @@ card_remotecontrol_firestick_group_home:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -179,7 +213,7 @@ card_remotecontrol_firestick_group_home:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -189,17 +223,18 @@ card_remotecontrol_firestick_group_home:
               device:
               delay:
     cell3:
-      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type:
+        entity_id:
+        background_color: 
+        templates:
+        class:
         icon:
           name: 'mdi:menu'
-          color:      
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
             command: "MENU"
@@ -208,7 +243,7 @@ card_remotecontrol_firestick_group_home:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -217,7 +252,7 @@ card_remotecontrol_firestick_group_home:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -230,51 +265,94 @@ card_remotecontrol_firestick_group_home:
     group1:
       card:
         type: 'custom:button-card'
-        template: layout_item_item_item
+        template: layout_cell_cell_cell
         custom_fields:
           cell1:
             card:
               type: 'custom:button-card'
               template: remotecontrol_button
               variables:
-                # entity: '[[[ return variables.cell1.entity ]]]'
-                # background_color: '[[[ return variables.cell1.background_color ]]]'
-                button: '[[[ return variables.cell1.button ]]]'
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell1.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell1.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell1.button.class ]]]'
+                  icon: '[[[ return variables.cell1.button.icon ]]]'
+                  actions: '[[[ return variables.cell1.button.actions ]]]'
           cell2:
             card:
               type: 'custom:button-card'
               template: remotecontrol_button
               variables:
-                # entity: '[[[ return variables.cell2.entity ]]]'
-                # background_color: '[[[ return variables.cell2.background_color ]]]'
-                button: '[[[ return variables.cell2.button ]]]'
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell2.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell2.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell2.button.class ]]]'
+                  icon: '[[[ return variables.cell2.button.icon ]]]'
+                  actions: '[[[ return variables.cell2.button.actions ]]]'
           cell3:
             card:
               type: 'custom:button-card'
               template: remotecontrol_button
               variables:
-                # entity: '[[[ return variables.cell3.entity ]]]'
-                # background_color: '[[[ return variables.cell3.background_color ]]]'
-                button: '[[[ return variables.cell3.button ]]]'
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell3.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell3.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell3.button.class ]]]'
+                  icon: '[[[ return variables.cell3.button.icon ]]]'
+                  actions: '[[[ return variables.cell3.button.actions ]]]'
 
 card_remotecontrol_firestick_group_play:
   type: 'custom:button-card'
   template: layout_group
   variables:
-    # entity:
+    entity_id:
     background_color: "rgba(var(--color-grey), 0.2)"
     cell1:
-      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type:
+        entity_id:
+        background_color:
+        templates:
+        class:
         icon:
           name: 'mdi:rewind'
-          color:      
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 89"
@@ -283,7 +361,7 @@ card_remotecontrol_firestick_group_play:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -292,7 +370,7 @@ card_remotecontrol_firestick_group_play:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id: 
             action: "none"
             service: androidtv.adb_command
             command:
@@ -302,17 +380,18 @@ card_remotecontrol_firestick_group_play:
               device:
               delay:
     cell2:
-      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type: 'play'
+        entity_id:
+        background_color:
+        templates:
+        class: 'play'
         icon:
           name: 'mdi:pause'
-          color:      
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id: 
             action: "none"
             service: "call-service"
             command: "input keyevent 85"
@@ -321,7 +400,7 @@ card_remotecontrol_firestick_group_play:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id: 
             action: "none"
             service: androidtv.adb_command
             command:
@@ -330,7 +409,7 @@ card_remotecontrol_firestick_group_play:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -340,17 +419,18 @@ card_remotecontrol_firestick_group_play:
               device:
               delay:
     cell3:
-      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type:
+        entity_id:
+        background_color:
+        templates:
+        class:
         icon:
           name: 'mdi:fast-forward'
-          color:      
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 90"
@@ -359,7 +439,7 @@ card_remotecontrol_firestick_group_play:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -368,7 +448,7 @@ card_remotecontrol_firestick_group_play:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id: 
             action: "none"
             service: androidtv.adb_command
             command:
@@ -381,39 +461,80 @@ card_remotecontrol_firestick_group_play:
     group1:
       card:
         type: 'custom:button-card'
-        template: layout_item_item_item
+        template: layout_cell_cell_cell
         custom_fields:
           cell1:
-
             card:
               type: 'custom:button-card'
               template: remotecontrol_button
               variables:
-                entity: '[[[ return variables.cell1.entity ]]]'
-                background_color: '[[[ return variables.cell1.background_color ]]]'
-                button: '[[[ return variables.cell1.button ]]]'
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell1.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell1.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell1.button.class ]]]'
+                  icon: '[[[ return variables.cell1.button.icon ]]]'
+                  actions: '[[[ return variables.cell1.button.actions ]]]'          
           cell2:
             card:
               type: 'custom:button-card'
               template: remotecontrol_button
               variables:
-                entity: '[[[ return variables.cell2.entity ]]]'
-                background_color: '[[[ return variables.cell2.background_color ]]]'
-                button: '[[[ return variables.cell2.button ]]]'
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell2.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell2.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell2.button.class ]]]'
+                  icon: '[[[ return variables.cell2.button.icon ]]]'
+                  actions: '[[[ return variables.cell2.button.actions ]]]'          
           cell3:
             card:
               type: 'custom:button-card'
               template: remotecontrol_button
               variables:
-                entity: '[[[ return variables.cell3.entity ]]]'
-                background_color: '[[[ return variables.cell3.background_color ]]]'
-                button: '[[[ return variables.cell3.button ]]]'
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell3.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell3.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell3.button.class ]]]'
+                  icon: '[[[ return variables.cell3.button.icon ]]]'
+                  actions: '[[[ return variables.cell3.button.actions ]]]'
 
 card_remotecontrol_firestick_group_arrows_and_volume:
   type: 'custom:button-card'
   template: layout_sectionsection_section
-  # variables:
-  #   entity:
+  variables:
+    entity_id:
   styles:
     card:
     - background-color: var(--primary-background-color)
@@ -422,8 +543,13 @@ card_remotecontrol_firestick_group_arrows_and_volume:
       card:
         type: 'custom:button-card'
         template: card_remotecontrol_firestick_group_arrow_select
-        # variables:
-        #   entity_id: "[[[ return entity.entity_id ]]]"
+        variables:
+          entity_id: > 
+            [[[
+              if (variables?.entity_id) {
+                return variables.entity_id;
+              }
+            ]]]
         styles:
           card:
           - border-radius: var(--border-radius)
@@ -432,8 +558,13 @@ card_remotecontrol_firestick_group_arrows_and_volume:
       card:
         type: 'custom:button-card'
         template: card_remotecontrol_firestick_group_volume
-        # variables:
-        #   entity_id: "[[[ return entity.entity_id ]]]"
+        variables:
+          entity_id: > 
+            [[[
+              if (variables?.entity_id) {
+                return variables.entity_id;
+              }
+            ]]]
         styles:
           card:
           - border-radius: var(--border-radius)
@@ -443,275 +574,71 @@ card_remotecontrol_firestick_group_arrow_select:
   type: 'custom:button-card'
   template: layout_group
   variables:
-    # entity:
-    background_color: 'var(--google-grey)'
-    group1:
-      cell1:
-        # background_color: '[[[ return variables.background_color ]]]'
-        button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
-          icon:
-            name: 'mdi:arrow-up-bold'
-            color: "var(--google-blue)"
-          actions:
-            tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: "call-service"
-              command: "UP"
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              haptic: 'selection'
-              repeat: 200
-              harmony:
-                device:
-                delay:
-            hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "more-info"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              repeat:
-              harmony:
-                device:
-                delay:
-      cell2:
-        # background_color: '[[[ return variables.background_color ]]]'
-        button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
-          icon:
-            name: 'mdi:arrow-left-bold'
-            color: "var(--google-blue)"
-          actions:
-            tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: "call-service"
-              command: "LEFT"
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: 'selection'
-              repeat: 200
-              harmony:
-                device:
-                delay:      
-      cell3:
-        # background_color: '[[[ return variables.background_color ]]]'
-        button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
-          icon:
-            name: 'mdi:circle-slice-8'
-            color: "var(--google-blue)"
-          actions:
-            tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: "call-service"
-              command: "input keyevent 23"
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              repeat:
-              harmony:
-                device:
-                delay:      
-      cell4:
-        # background_color: '[[[ return variables.background_color ]]]'
-        button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
-          icon:
-            name: 'mdi:arrow-right-bold'
-            color: "var(--google-blue)"
-          actions:
-            tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: "call-service"
-              command: "RIGHT"
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: 'selection'
-              repeat: 200
-              harmony:
-                device:
-                delay:      
-      cell5:
-        # background_color: '[[[ return variables.background_color ]]]'
-        button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
-          icon:
-            name: 'mdi:arrow-down-bold'
-            color: "var(--google-blue)"
-          actions:
-            tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: "call-service"
-              command: "DOWN"
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: 'selection'
-              repeat: 200
-              harmony:
-                device:
-                delay:
-  custom_fields:
-    group1:
-      card:
-        type: 'custom:button-card'
-        template: layout_gap_item_gap-item_item_item-gap_item_gap
-        custom_fields:
-          cell1:
-            card:
-              type: 'custom:button-card'
-              template: remotecontrol_button
-              variables:
-                # entity: '[[[ return variables.cell1.entity ]]]'
-                # background_color: '[[[ return variables.cell1.background_color ]]]'
-                button: '[[[ return variables.cell1.button ]]]'
-          cell2:
-            card:
-              type: 'custom:button-card'
-              template: remotecontrol_button
-              variables:
-                # entity: '[[[ return variables.cell2.entity ]]]'
-                # background_color: '[[[ return variables.cell2.background_color ]]]'
-                button: '[[[ return variables.cell2.button ]]]'
-          cell3:
-            card:
-              type: 'custom:button-card'
-              template: remotecontrol_button
-              variables:
-                # entity: '[[[ return variables.cell3.entity ]]]'
-                # background_color: '[[[ return variables.cell3.background_color ]]]'
-                button: '[[[ return variables.cell3.button ]]]'
-
-          cell4:
-            card:
-              type: 'custom:button-card'
-              template: remotecontrol_button
-              variables:
-                # entity: '[[[ return variables.cell4.entity ]]]'
-                # background_color: '[[[ return variables.cell4.background_color ]]]'
-                button: '[[[ return variables.cell4.button ]]]'
-
-          cell5:
-            card:
-              type: 'custom:button-card'
-              template: remotecontrol_button
-              variables:
-                # entity: '[[[ return variables.cell5.entity ]]]'
-                # background_color: '[[[ return variables.item5.background_color ]]]'
-                button: '[[[ return variables.item5.button ]]]'
-
-card_remotecontrol_firestick_group_volume:
-  type: 'custom:button-card'
-  template: layout_row_row_row
-  variables:
-    # entity:
-    background_color: 'var(--google-grey)'
-    row1:
-      # background_color: '[[[ return variables.background_color ]]]'
+    entity_id:
+    background_color:
+    cell1:
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type:
+        entity_id:
+        background_color:
+        templates:
+          - blue_on
+        class:
         icon:
-          name: 'mdi:volume-plus'
-          color: "var(--google-green)"
+          name: 'mdi:arrow-up-bold'
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
-            command: "input keyevent 89"
+            command: "UP"
             haptic: "none"
             harmony:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            haptic: 'selection'
+            repeat: 200
+            harmony:
+              device:
+              delay:
+          hold:
+            entity_id:
+            action: "more-info"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            repeat:
+            harmony:
+              device:
+              delay:
+    cell2:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - blue_on
+        class:
+        icon:
+          name: 'mdi:arrow-left-bold'
+          color:
+          size:
+        actions:
+          tap:
+            entity_id:
+            action: "none"
+            service: "call-service"
+            command: "LEFT"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -720,7 +647,291 @@ card_remotecontrol_firestick_group_volume:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: 'selection'
+            repeat: 200
+            harmony:
+              device:
+              delay:      
+    cell3:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - blue_on
+        class:
+        icon:
+          name: 'mdi:circle-slice-8'
+          color:
+          size:
+        actions:
+          tap:
+            entity_id:
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 23"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            repeat:
+            harmony:
+              device:
+              delay:      
+    cell4:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - blue_on
+        class:
+        icon:
+          name: 'mdi:arrow-right-bold'
+          color:
+          size:
+        actions:
+          tap:
+            entity_id:
+            action: "none"
+            service: "call-service"
+            command: "RIGHT"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: 'selection'
+            repeat: 200
+            harmony:
+              device:
+              delay:      
+    cell5:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - blue_on
+        class:
+        icon:
+          name: 'mdi:arrow-down-bold'
+          color:
+          size:
+        actions:
+          tap:
+            entity_id:
+            action: "none"
+            service: "call-service"
+            command: "DOWN"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: 'selection'
+            repeat: 200
+            harmony:
+              device:
+              delay:
+  custom_fields:
+    group1:
+      card:
+        type: 'custom:button-card'
+        template: layout_gap_cell_gap-cell_cell_cell-gap_cell_gap
+        custom_fields:
+          cell1:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell1.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell1.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell1.button.class ]]]'
+                  icon: '[[[ return variables.cell1.button.icon ]]]'
+                  actions: '[[[ return variables.cell1.button.actions ]]]'
+          cell2:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell2.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell2.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell2.button.class ]]]'
+                  icon: '[[[ return variables.cell2.button.icon ]]]'
+                  actions: '[[[ return variables.cell2.button.actions ]]]'          
+          cell3:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell3.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell3.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell3.button.class ]]]'
+                  icon: '[[[ return variables.cell3.button.icon ]]]'
+                  actions: '[[[ return variables.cell3.button.actions ]]]'
+          cell4:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell4.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell4.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell4.button.class ]]]'
+                  icon: '[[[ return variables.cell4.button.icon ]]]'
+                  actions: '[[[ return variables.cell4.button.actions ]]]'
+          cell5:
+            card:
+              type: 'custom:button-card'
+              template: remotecontrol_button
+              variables:
+                button:
+                  entity_id: "[[[ return variables.entity_id ]]]"
+                  background_color: >
+                    [[[
+                      if (variables.cell5.button.background_color == null) {
+                        if (variables.background_color == null) {
+                          return 'rgba(var(--color-theme),0.05)';
+                        } else {
+                          return variables.background_color;
+                        }
+                      } else {
+                        return variables.cell5.button.background_color;
+                      }
+                    ]]]
+                  class: '[[[ return variables.cell5.button.class ]]]'
+                  icon: '[[[ return variables.cell5.button.icon ]]]'
+                  actions: '[[[ return variables.cell5.button.actions ]]]'
+
+card_remotecontrol_firestick_group_volume:
+  type: 'custom:button-card'
+  template: 
+    - layout_row_row_row
+  variables:
+    entity_id:
+    background_color:
+    row1:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - green_on
+        class:
+        icon:
+          name: 'mdi:volume-plus'
+          color:
+          size:
+        actions:
+          tap:
+            entity_id:
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 89"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            entity_id:
+            action: "none"
+            service: androidtv.adb_command
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -730,17 +941,19 @@ card_remotecontrol_firestick_group_volume:
               device:
               delay:      
     row2:
-      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type:
+        entity_id:
+        background_color:
+        templates:
+          - green_on
+        class:
         icon:
           name: 'mdi:volume-minus'
-          color: "var(--google-green)"    
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 85"
@@ -749,7 +962,7 @@ card_remotecontrol_firestick_group_volume:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -758,7 +971,7 @@ card_remotecontrol_firestick_group_volume:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -768,17 +981,19 @@ card_remotecontrol_firestick_group_volume:
               device:
               delay:      
     row3:
-      # background_color: '[[[ return variables.background_color ]]]'
       button:
-        entity_id: "[[[ return entity.entity_id ]]]"
-        background_color: '[[[ return variables.background_color ]]]'
-        type: 'mute'
+        entity_id:
+        background_color:
+        templates:
+          - green_on
+        class: 'mute'
         icon:
           name: 'mdi:volume-off'
-          color: "var(--google-green)"
+          color:
+          size:
         actions:
           tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 90"
@@ -787,7 +1002,7 @@ card_remotecontrol_firestick_group_volume:
               device:
               delay:
           double_tap:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "none"
             service: androidtv.adb_command
             command:
@@ -796,7 +1011,7 @@ card_remotecontrol_firestick_group_volume:
               device:
               delay:
           hold:
-            entity_id: "[[[ return entity.entity_id ]]]"
+            entity_id:
             action: "more-info"
             service: androidtv.adb_command
             command:
@@ -811,47 +1026,90 @@ card_remotecontrol_firestick_group_volume:
         type: 'custom:button-card'
         template: remotecontrol_button
         variables:
-          entity: '[[[ return variables.cell1.entity ]]]'
-          background_color: '[[[ return variables.cell1.background_color ]]]'
-          button: '[[[ return variables.cell1.button ]]]'
-
+          button:
+            entity_id: "[[[ return variables.entity_id ]]]"
+            background_color: >
+              [[[
+                if (variables.row1.button.background_color == null) {
+                  if (variables.background_color == null) {
+                    return 'rgba(var(--color-theme),0.05)';
+                  } else {
+                    return variables.background_color;
+                  }
+                } else {
+                  return variables.row1.button.background_color;
+                }
+              ]]]
+            class: '[[[ return variables.row1.button.class ]]]'
+            icon: '[[[ return variables.row1.button.icon ]]]'
+            actions: '[[[ return variables.row1.button.actions ]]]'
     row2:
       card:
         type: 'custom:button-card'
         template: remotecontrol_button
         variables:
-          entity: '[[[ return variables.cell2.entity ]]]'
-          background_color: '[[[ return variables.cell2.background_color ]]]'
-          button: '[[[ return variables.cell2.button ]]]'
-
+          button:
+            entity_id: "[[[ return variables.entity_id ]]]"
+            background_color: >
+              [[[
+                if (variables.row2.button.background_color == null) {
+                  if (variables.background_color == null) {
+                    return 'rgba(var(--color-theme),0.05)';
+                  } else {
+                    return variables.background_color;
+                  }
+                } else {
+                  return variables.row2.button.background_color;
+                }
+              ]]]
+            class: '[[[ return variables.row2.button.class ]]]'
+            icon: '[[[ return variables.row2.button.icon ]]]'
+            actions: '[[[ return variables.row2.button.actions ]]]'
     row3:
       card:
         type: 'custom:button-card'
         template: remotecontrol_button
         variables:
-          entity: '[[[ return variables.cell3.entity ]]]'
-          background_color: '[[[ return variables.cell3.background_color ]]]'
-          button: '[[[ return variables.cell3.button ]]]'
+          button:
+            entity_id: "[[[ return variables.entity_id ]]]"
+            background_color: >
+              [[[
+                if (variables.row3.button.background_color == null) {
+                  if (variables.background_color == null) {
+                    return 'rgba(var(--color-theme),0.05)';
+                  } else {
+                    return variables.background_color;
+                  }
+                } else {
+                  return variables.row3.button.background_color;
+                }
+              ]]]
+            class: '[[[ return variables.row3.button.class ]]]'
+            icon: '[[[ return variables.row3.button.icon ]]]'
+            actions: '[[[ return variables.row3.button.actions ]]]'
 
 card_remotecontrol_firestick_group_apps:
   type: 'custom:button-card'
-  template: layout_group
+  template: button_grid_4_by_4 
   variables:
-    # entity:
+    entity_id:
     background_color:
     row1:
+      entity_id:
+      background_color:
       cell1:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#FFFFFF'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:netflix
+            color: '#E50914'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -860,7 +1118,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -869,7 +1127,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -879,17 +1137,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell2:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#00A8E1'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:prime
+            color: '#FFFFFF'
+            size: '90%'
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -898,7 +1157,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -907,7 +1166,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -917,17 +1176,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell3:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color:
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:plex
+            color: '#E5A00D'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -936,7 +1196,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -945,7 +1205,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -955,17 +1215,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell4:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#FFFFFF'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:youtube
+            color: '#FF0000'
+            size: '85%'
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -974,7 +1235,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -983,7 +1244,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -993,18 +1254,21 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
     row2:
+      entity_id:
+      background_color:
       cell1:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color:
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:spotify
+            color: '#1DB954'   
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1013,7 +1277,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1022,7 +1286,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1032,17 +1296,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell2:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color:
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:airplayvideo
+            color: "var(--primary-text-color)"
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1051,7 +1316,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1060,7 +1325,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1070,17 +1335,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell3:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color:
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:appletv
+            color: "var(--primary-text-color)"
+            size: '85%'
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1089,7 +1355,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1098,7 +1364,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1108,17 +1374,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell4:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#FFFFFF'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:applemusic
+            color: '#FA243C'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1127,7 +1394,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1136,7 +1403,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1146,18 +1413,21 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
     row3:
+      entity_id:
+      background_color:
       cell1:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color:
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:bbciplayer
+            color: '#F54997'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1166,7 +1436,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1175,7 +1445,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1185,17 +1455,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell2:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color:
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:emby
+            color: '#52B54B'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1204,7 +1475,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1213,7 +1484,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1223,17 +1494,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell3:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#FFFFFF'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:googleplay
+            color: '#414141'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1242,7 +1514,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1251,7 +1523,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1261,17 +1533,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell4:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#0000FF'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: phu:disney-plus
+            color: '#FFFFFF'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1280,7 +1553,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1289,7 +1562,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1299,18 +1572,21 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
     row4:
+      entity_id:
+      background_color:
       cell1:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#F15B2A'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:pluralsight
+            color: '#FFFFFF'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1319,7 +1595,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1328,7 +1604,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1338,17 +1614,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell2:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#9146FF'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:twitch
+            color: '#FFFFFF'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1357,7 +1634,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1366,7 +1643,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1376,17 +1653,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell3:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#FFFFFF'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:ted
+            color: '#E62B1E'
+            size: '85%'
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1395,7 +1673,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1404,7 +1682,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1414,17 +1692,18 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
       cell4:
-        # background_color: '[[[ return variables.background_color ]]]'
         button:
-          entity_id: "[[[ return entity.entity_id ]]]"
-          background_color: '[[[ return variables.background_color ]]]'
-          type:
+          entity_id:
+          background_color: '#FF8800'
+          templates:
+          class:
           icon:
-            name:
-            color:      
+            name: si:vlcmediaplayer
+            color: '#FFFFFF'
+            size:
           actions:
             tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1433,7 +1712,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "none"
               service: androidtv.adb_command
               command:
@@ -1442,7 +1721,7 @@ card_remotecontrol_firestick_group_apps:
                 device:
                 delay:
             hold:
-              entity_id: "[[[ return entity.entity_id ]]]"
+              entity_id:
               action: "more-info"
               service: androidtv.adb_command
               command:
@@ -1451,71 +1730,49 @@ card_remotecontrol_firestick_group_apps:
               harmony:
                 device:
                 delay:
+
   custom_fields:
-    group1:
+    row1:
       card:
         type: 'custom:button-card'
-        template: button_grid_4_by_4 
-        custom_fields:
-          row1: '[[[ return variables.row1 ]]]'
-          row2: '[[[ return variables.row2 ]]]'
-          row3: '[[[ return variables.row3 ]]]'
-          row4: '[[[ return variables.row4 ]]]'
-
-    # type: 'custom:button-card'
-    # template: layout_row_row_row_row
-    # variables:
-    #   entity:
-    #   background_color:
-    #   row1:
-    #     cell1:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell2:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell3:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell4:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #   row2:
-    #     cell1:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell2:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell3:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell4:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #   row3:
-    #     cell1:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell2:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell3:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell4:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #   row4:
-    #     cell1:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell2:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell3:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
-    #     cell4:
-    #       entity_id: "[[[ return entity.entity_id ]]]"
-    #       background_color: '[[[ return variables.background_color ]]]'
+        template: button_row_4_column
+        variables:
+          entity_id: '[[[ return variables.entity_id ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          cell1: '[[[ return variables.row1.cell1 ]]]'
+          cell2: '[[[ return variables.row1.cell2 ]]]'
+          cell3: '[[[ return variables.row1.cell3 ]]]'
+          cell4: '[[[ return variables.row1.cell4 ]]]'
+    row2: 
+      card:
+        type: 'custom:button-card'
+        template: button_row_4_column
+        variables:
+          entity_id: '[[[ return variables.entity_id ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          cell1: '[[[ return variables.row2.cell1 ]]]'
+          cell2: '[[[ return variables.row2.cell2 ]]]'
+          cell3: '[[[ return variables.row2.cell3 ]]]'
+          cell4: '[[[ return variables.row2.cell4 ]]]'
+    row3: 
+      card:
+        type: 'custom:button-card'
+        template: button_row_4_column
+        variables:
+          entity_id: '[[[ return variables.entity_id ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          cell1: '[[[ return variables.row3.cell1 ]]]'
+          cell2: '[[[ return variables.row3.cell2 ]]]'
+          cell3: '[[[ return variables.row3.cell3 ]]]'
+          cell4: '[[[ return variables.row3.cell4 ]]]'
+    row4: 
+      card:
+        type: 'custom:button-card'
+        template: button_row_4_column
+        variables:
+          entity_id: '[[[ return variables.entity_id ]]]'
+          background_color: '[[[ return variables.background_color ]]]'
+          cell1: '[[[ return variables.row4.cell1 ]]]'
+          cell2: '[[[ return variables.row4.cell2 ]]]'
+          cell3: '[[[ return variables.row4.cell3 ]]]'
+          cell4: '[[[ return variables.row4.cell4 ]]]'

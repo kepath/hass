@@ -6,36 +6,64 @@
 remotecontrol_button:
   type: 'custom:button-card'
   template: widget_icon
-
   variables:
     button:
+  custom_fields:
   remotecontrol_button_presses:
     type: 'custom:button-card'
-    template: widget_icon
+    template: >
+      [[[
+        var templates = ['widget_icon'];
+        if (variables?.button?.templates?.length) {
+          return ['widget_icon'].concat(variables.button.templates);
+        }
+        return templates;
+      ]]]
     variables:
-      # entity: '[[[ return variables.entity ]]]'
-      button_actions:  '[[[ return variables.button.actions ]]]'
-        # tap:
-          # entity: '[[[ return variables.button.actions.tap.entity ]]]'
-          # action: '[[[ return variables.button.actions.tap.action ]]]'
-          # service: '[[[ return variables.button.actions.tap.service ]]]'
-          # haptic: '[[[ return variables.button.actions.tap.haptic ]]]'
-        # double_tap:
-          # entity: '[[[ return variables.button.actions.double_tap.entity ]]]'
-          # action: '[[[ return variables.button.actions.double_tap.action ]]]'
-          # service: '[[[ return variables.button.actions.double_tap.service ]]]'
-          # haptic: '[[[ return variables.button.actions.double_tap.haptic ]]]'
-        # hold: '[[[ return variables.button.actions.hold.entity ]]]'
-          # entity: '[[[ return variables.button.actions.hold.entity ]]]'
-          # action: '[[[ return variables.button.actions.hold.action ]]]'
-          # service: '[[[ return variables.button.actions.hold.service ]]]'
-          # haptic: '[[[ return variables.button.actions.hold.haptic ]]]'
-          # repeat:
+      entity_id:
+      button_actions:
+        tap:
+          entity_id: >
+            [[[
+              if (variables.button.actions.tap.entity_id == null) {
+                return variables.button.entity_id;
+              } else {
+                return variables.button.actions.tap.entity_id;
+              }
+            ]]]
+          action: '[[[ return variables.button.actions.tap.action ]]]'
+          service: '[[[ return variables.button.actions.tap.service ]]]'
+          haptic: '[[[ return variables.button.actions.tap.haptic ]]]'
+        double_tap:
+          entity_id: >
+            [[[
+              if (variables.button.actions.double_tap.entity_id == null) {
+                return variables.button.entity_id;
+              } else {
+                return variables.button.actions.double_tap.entity_id;
+              }
+            ]]]
+          action: '[[[ return variables.button.actions.double_tap.action ]]]'
+          service: '[[[ return variables.button.actions.double_tap.service ]]]'
+          haptic: '[[[ return variables.button.actions.double_tap.haptic ]]]'
+        hold:
+          entity_id: >
+            [[[
+              if (variables.button.actions.hold.entity_id == null) {
+                return variables.button.entity_id;
+              } else {
+                return variables.button.actions.hold.entity_id;
+              }
+            ]]]
+          action: '[[[ return variables.button.actions.hold.action ]]]'
+          service: '[[[ return variables.button.actions.hold.service ]]]'
+          haptic: '[[[ return variables.button.actions.hold.haptic ]]]'
+          repeat: '[[[ return variables.button.actions.hold.repeat ]]]'
   icon: >
     [[[
       var icon = variables.button.icon.name;
-      if (variables.button.type == 'play') {
-        if (states[variables.button.entity].state == 'off'
+      if (variables.button.class == 'play') {
+        if (states[variables.button.entity_id].state == 'off'
             || states[variables.button.entity_id].state == 'PowerOff'
             || states[variables.button.entity_id].state == 'idle'
             || states[variables.button.entity_id].state == 'paused') {
@@ -47,18 +75,34 @@ remotecontrol_button:
   styles:
     icon:
       - color: '[[[ return variables.button.icon.color ]]]'
+      - width: > 
+          [[[
+            var size = '70%';
+            if (variables.button.icon.size != null) {
+              size = variables.button.icon.size;
+            }
+            return size;
+          ]]] 
+      - height: > 
+          [[[
+            var size = '70%';
+            if (variables.button.icon.size != null) {
+              size = variables.button.icon.size;
+            }
+            return size;
+          ]]]
     img_cell:
       - background-color: >
           [[[
               var color = variables.button.background_color;
-              if (variables.button.type == 'mute') {
+              if (variables.button.class == 'mute') {
                 if (typeof states[variables.button.entity_id].attributes.is_volume_muted !== 'undefined') {
                   if (states[variables.button.entity_id].attributes.is_volume_muted){
                     var color = "rgba(var(--color-green), 0.2)";
                   }
                 }
               }
-              if (variables.button.type == 'power') {
+              if (variables.button.class == 'power') {
                 if (states[variables.button.entity_id].state == 'off'
                     || states[variables.button.entity_id].state == 'PowerOff') {
                   var color = variables.button.background_color;
@@ -68,41 +112,14 @@ remotecontrol_button:
               }
               return color;
           ]]]
+  color: "var(--google-grey)"
+         
 
 remotecontrol_button_presses:
   type: 'custom:button-card'
   template: widget_icon
   variables:
-    # entity:
     button_actions:
-      # tap:
-      #   # entity: '[[[ return variables.entity ]]]'
-      #   # action: "call-service"
-      #   # service:
-      #   # command:
-      #   # haptic: "none"
-      #   # harmony:
-      #   #   device:
-      #   #   delay: 0.6
-      # double_tap:
-      #   # entity: '[[[ return variables.entity ]]]'
-      #   # action: "none"
-      #   # service:
-      #   # command:
-      #   # haptic: "none"
-      #   # harmony:
-      #   #   device:
-      #   #   delay: 0.6
-      # hold:
-      #   # entity: '[[[ return variables.entity ]]]'
-      #   # action: "more-info"
-      #   # service:
-      #   # command:
-      #   # haptic: "none"
-      #   # repeat:
-      #   # harmony:
-      #   #   device:
-      #   #   delay: 0.6
   tap_action:
     remotecontrol_button_action:
       type: 'custom:button-card'

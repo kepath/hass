@@ -268,7 +268,7 @@ card_remotecontrol_logitechharmony_group_play:
     ulm_card_harmony_remote_button_icon:
     ulm_card_harmony_remote_button_icon_color:
     ulm_card_harmony_remote_button_background_color:
-    ulm_card_harmony_remote_button_type: "normal"
+    ulm_card_harmony_remote_button_class: "normal"
 
     ulm_card_harmony_remote_activity_01:
     ulm_card_harmony_remote_device_01:
@@ -544,7 +544,7 @@ remotecontrol_logitechharmony_button:
     ulm_card_harmony_remote_button_icon:
     ulm_card_harmony_remote_button_icon_color:
     ulm_card_harmony_remote_button_background_color:
-    ulm_card_harmony_remote_button_type: "normal"
+    ulm_card_harmony_remote_button_class: "normal"
     ulm_card_harmony_remote_activity_01:
     ulm_card_harmony_remote_device_01:
     ulm_card_harmony_remote_delay_01:
@@ -650,7 +650,7 @@ remotecontrol_logitechharmony_button:
   icon: >
     [[[ 
       var icon = variables.ulm_card_remote_standard_button_icon;
-      if (variables.ulm_card_remote_standard_button_type == 'play') {
+      if (variables.ulm_card_remote_standard_button_class == 'play') {
         if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
             || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff' 
             || states[variables.ulm_card_remote_standard_button_entity].state == 'idle' 
@@ -667,14 +667,14 @@ remotecontrol_logitechharmony_button:
       - background-color: >
           [[[
               var color = variables.ulm_card_remote_standard_button_background_color;
-              if (variables.ulm_card_remote_standard_button_type == 'mute') {
+              if (variables.ulm_card_remote_standard_button_class == 'mute') {
                 if (typeof states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted !== 'undefined') {
                   if (states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted){
                     var color = "rgba(var(--color-green), 0.2)";
                   }
                 }
               }
-              if (variables.ulm_card_remote_standard_button_type == 'power') {
+              if (variables.ulm_card_remote_standard_button_class == 'power') {
                 if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
                     || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff') {
                   var color = variables.ulm_card_remote_standard_button_background_color;

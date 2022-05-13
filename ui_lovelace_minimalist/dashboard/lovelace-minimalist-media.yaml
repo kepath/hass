@@ -154,31 +154,33 @@ views:
             cards:
             - type: 'custom:button-card'
               template: card_remotecontrol_firestick_group_power
-              entity: media_player.amazon_firestick_bed_a_adb
+              variables:
+                entity_id: media_player.amazon_firestick_bed_a_adb
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: card_remotecontrol_firestick_group_home
-              entity: media_player.amazon_firestick_bed_a_adb
+              variables:
+                entity_id: media_player.amazon_firestick_bed_a_adb
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: card_remotecontrol_firestick_group_arrows_and_volume
-              entity: media_player.amazon_firestick_bed_a_adb
-
+              variables:
+                entity_id: media_player.amazon_firestick_bed_a_adb
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: card_remotecontrol_firestick_group_play
-              entity: media_player.amazon_firestick_bed_a_adb
-
+              variables:
+                entity_id: media_player.amazon_firestick_bed_a_adb
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: card_remotecontrol_firestick_group_apps
-              entity: media_player.amazon_firestick_bed_a_adb
-
-
+              variables:
+                entity_id: media_player.amazon_firestick_bed_a_adb
+#dsdfdfdfsgfgdfdgftretetertr
 
   - title: Bed C
     icon: mdi:remote-tv
@@ -209,9 +211,7 @@ views:
               template: 
                 - card_harmony_remote_group_actions
                 - variable_definitions_harmony_remote_group_actions
-              variables:
-                var_harmony_remote_group_actions:
-                  entity: 'remote.harmony_hub'
+              entity: 'remote.harmony_hub'  
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
@@ -313,15 +313,16 @@ views:
             - type: 'custom:button-card'
               template: 
                 - card_shield_remote_group_power
-              variables:
-                ulm_remotecontrol_group_power_entity: media_player.nvidia_shield_adb_bed_e
+              entity: media_player.nvidia_shield_adb_bed_e
+              # variables:
+              #   ulm_remotecontrol_group_power_entity: 
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
               template: 
                 - card_shield_remote_group_home
-              variables:
-                ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
+              # variables:
+              #   ulm_card_remote_group_home_entity: "media_player.nvidia_shield_adb_bed_e"
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
@@ -365,38 +366,33 @@ views:
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: 
-                - card_remotecontrol_firestick_group_power
+              template: card_remotecontrol_firestick_group_power
               variables:
-                ulm_remotecontrol_group_power_entity: media_player.amazon_fire_tv_kitchen_adb
+                entity_id: media_player.amazon_fire_tv_kitchen_adb
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: 
-                - card_remotecontrol_firestick_group_home
+              template: card_remotecontrol_firestick_group_home
               variables:
-                ulm_card_remote_group_home_entity: "media_player.amazon_fire_tv_kitchen_adb"
+                entity_id: media_player.amazon_fire_tv_kitchen_adb
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: card_firestick_remote_group_arrows_and_volume
+              template: card_remotecontrol_firestick_group_arrows_and_volume
               variables:
-                ulm_remotecontrol_group_volume_entity: "media_player.amazon_fire_tv_kitchen_adb"
-                ulm_remotecontrol_group_arrow_select_entity: "media_player.amazon_fire_tv_kitchen_adb"
+                entity_id: media_player.amazon_fire_tv_kitchen_adb
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: 
-                - card_remotecontrol_firestick_group_play
+              template: card_remotecontrol_firestick_group_play
               variables:
-                ulm_remotecontrol_group_play_entity: "media_player.amazon_fire_tv_kitchen_adb"
+                entity_id: media_player.amazon_fire_tv_kitchen_adb
           - type: horizontal-stack
             cards:
             - type: 'custom:button-card'
-              template: 
-                - card_firestick_remote_group_apps
+              template: card_remotecontrol_firestick_group_apps
               variables:
-                ulm_button_grid_4_by_4_entity: "media_player.amazon_fire_tv_kitchen_adb"
+                entity_id: media_player.amazon_fire_tv_kitchen_adb
 
   - title: Apple TV
     icon: mdi:cast-variant
