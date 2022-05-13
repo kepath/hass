@@ -1,6 +1,7 @@
 """MediaPlayer platform for Music Assistant integration."""
 from __future__ import annotations
 
+from base64 import b64decode
 from typing import Any, Mapping
 
 from homeassistant.components import media_source
@@ -32,8 +33,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.dt import utcnow
 from music_assistant import MusicAssistant
-from music_assistant.constants import EventType, MassEvent
 from music_assistant.helpers.images import get_image_url
+from music_assistant.models.enums import EventType
+from music_assistant.models.event import MassEvent
 from music_assistant.models.media_items import MediaType
 from music_assistant.models.player import Player, PlayerState
 from music_assistant.models.player_queue import QueueOption, RepeatMode
@@ -110,6 +112,7 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
         super().__init__(mass, player)
         # prefix suggested/default entity_id with 'mass'
         self.entity_id = f'media_player.mass_{player.player_id.split(".")[-1]}'
+        self._attr_media_image_remotely_accessible = True
         self._attr_supported_features = SUPPORTED_FEATURES
         self._attr_device_class = MediaPlayerDeviceClass.SPEAKER
         self._attr_media_position_updated_at = None
@@ -119,7 +122,7 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
         self._attr_media_album_name = None
         self._attr_media_title = None
         self._attr_media_content_id = None
-        self._attr_media_content_type = None
+        self._attr_media_content_type = "music"
         self._attr_media_image_url = None
 
     @property
@@ -178,18 +181,12 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
         album_name = None
         media_title = None
         content_id = None
-        content_type = None
         image_url = None
         current_item = self.player.active_queue.current_item
-        if (
-            self.player.active_queue.active
-            and current_item
-            and current_item.is_media_item
-        ):
-            media_item = await self.mass.music.get_item_by_uri(current_item.uri)
+        if self.player.active_queue.active and current_item and current_item.media_item:
+            media_item = current_item.media_item
             media_title = media_item.name
             content_id = current_item.uri
-            content_type = media_item.media_type.value
             image_url = await get_image_url(self.mass, media_item)
             if media_item.media_type == MediaType.TRACK:
                 artist = ", ".join([x.name for x in media_item.artists])
@@ -198,24 +195,31 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
                 if media_item.album:
                     album_name = media_item.album.name
                     album_artist = media_item.album.artist.name
-        elif current_item and not current_item.is_media_item:
+        elif current_item and not current_item.media_item:
             media_title = current_item.name
-            content_type = "music"
+            image_url = current_item.image
         elif (
             not self.player.active_queue.active
             and self.player.state in [PlayerState.PLAYING, PlayerState.PAUSED]
             and self.player.current_url
         ):
             media_title = self.player.current_url
-            content_type = "music"
         # set the attributes
         self._attr_media_artist = artist
         self._attr_media_album_artist = album_artist
         self._attr_media_album_name = album_name
         self._attr_media_title = media_title
         self._attr_media_content_id = content_id
-        self._attr_media_content_type = content_type
         self._attr_media_image_url = image_url
+
+    async def async_get_media_image(self) -> tuple[bytes | None, str | None]:
+        """Fetch media image of current playing image."""
+        if url := self._attr_media_image_url:
+            if url.startswith("data:image"):
+                # base64 encoded image
+                img_data = url.split(",")[1]
+                return b64decode(img_data), "image/png"
+        return await super().async_get_media_image()
 
     async def async_media_play(self) -> None:
         """Send play command to device."""

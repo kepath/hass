@@ -11,8 +11,8 @@ from homeassistant.components.websocket_api.connection import ActiveConnection
 from homeassistant.components.websocket_api.const import ERR_NOT_FOUND
 from homeassistant.core import HomeAssistant, callback
 from music_assistant import MusicAssistant
-from music_assistant.constants import MassEvent
-from music_assistant.models.player_queue import CrossFadeMode, QueueOption, RepeatMode
+from music_assistant.models.enums import CrossFadeMode, QueueOption, RepeatMode
+from music_assistant.models.event import MassEvent
 
 from .const import DOMAIN
 
