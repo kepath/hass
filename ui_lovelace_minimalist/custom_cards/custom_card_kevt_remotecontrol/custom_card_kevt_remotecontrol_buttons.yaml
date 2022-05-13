@@ -5,143 +5,150 @@
 
 remotecontrol_button:
   type: 'custom:button-card'
-  template: widget_icon
+  template: layout_button
   variables:
     button:
   custom_fields:
-  remotecontrol_button_presses:
-    type: 'custom:button-card'
-    template: >
-      [[[
-        var templates = ['widget_icon'];
-        if (variables?.button?.templates?.length) {
-          return ['widget_icon'].concat(variables.button.templates);
-        }
-        return templates;
-      ]]]
-    variables:
-      entity_id:
-      button_actions:
-        tap:
-          entity_id: >
-            [[[
-              if (variables.button.actions.tap.entity_id == null) {
-                return variables.button.entity_id;
-              } else {
-                return variables.button.actions.tap.entity_id;
-              }
-            ]]]
-          action: '[[[ return variables.button.actions.tap.action ]]]'
-          service: '[[[ return variables.button.actions.tap.service ]]]'
-          haptic: '[[[ return variables.button.actions.tap.haptic ]]]'
-        double_tap:
-          entity_id: >
-            [[[
-              if (variables.button.actions.double_tap.entity_id == null) {
-                return variables.button.entity_id;
-              } else {
-                return variables.button.actions.double_tap.entity_id;
-              }
-            ]]]
-          action: '[[[ return variables.button.actions.double_tap.action ]]]'
-          service: '[[[ return variables.button.actions.double_tap.service ]]]'
-          haptic: '[[[ return variables.button.actions.double_tap.haptic ]]]'
-        hold:
-          entity_id: >
-            [[[
-              if (variables.button.actions.hold.entity_id == null) {
-                return variables.button.entity_id;
-              } else {
-                return variables.button.actions.hold.entity_id;
-              }
-            ]]]
-          action: '[[[ return variables.button.actions.hold.action ]]]'
-          service: '[[[ return variables.button.actions.hold.service ]]]'
-          haptic: '[[[ return variables.button.actions.hold.haptic ]]]'
-          repeat: '[[[ return variables.button.actions.hold.repeat ]]]'
-  icon: >
-    [[[
-      var icon = variables.button.icon.name;
-      if (variables.button.class == 'play') {
-        if (states[variables.button.entity_id].state == 'off'
-            || states[variables.button.entity_id].state == 'PowerOff'
-            || states[variables.button.entity_id].state == 'idle'
-            || states[variables.button.entity_id].state == 'paused') {
-          var icon = 'mdi:play';
-        }
-      }
-      return icon;
-    ]]]
-  styles:
-    icon:
-      - color: '[[[ return variables.button.icon.color ]]]'
-      - width: > 
+    button1:
+      card:
+        type: 'custom:button-card'
+        template: >
           [[[
-            var size = '70%';
-            if (variables.button.icon.size != null) {
-              size = variables.button.icon.size;
+            var templates = ['remotecontrol_button_presses'];
+            if (variables?.button?.templates?.length) {
+              return ['remotecontrol_button_presses'].concat(variables.button.templates);
             }
-            return size;
-          ]]] 
-      - height: > 
-          [[[
-            var size = '70%';
-            if (variables.button.icon.size != null) {
-              size = variables.button.icon.size;
-            }
-            return size;
+            return templates;
           ]]]
-    img_cell:
-      - background-color: >
-          [[[
-              var color = variables.button.background_color;
-              if (variables.button.class == 'mute') {
-                if (typeof states[variables.button.entity_id].attributes.is_volume_muted !== 'undefined') {
-                  if (states[variables.button.entity_id].attributes.is_volume_muted){
-                    var color = "rgba(var(--color-green), 0.2)";
+        variables:
+          entity_id:
+          button_actions:
+            tap:
+              entity_id: >
+                [[[
+                  if (variables.button.actions.tap.entity_id == null) {
+                    return variables.button.entity_id;
+                  } else {
+                    return variables.button.actions.tap.entity_id;
                   }
+                ]]]
+              action: '[[[ return variables.button.actions.tap.action ]]]'
+              service: '[[[ return variables.button.actions.tap.service ]]]'
+              haptic: '[[[ return variables.button.actions.tap.haptic ]]]'
+            double_tap:
+              entity_id: >
+                [[[
+                  if (variables.button.actions.double_tap.entity_id == null) {
+                    return variables.button.entity_id;
+                  } else {
+                    return variables.button.actions.double_tap.entity_id;
+                  }
+                ]]]
+              action: '[[[ return variables.button.actions.double_tap.action ]]]'
+              service: '[[[ return variables.button.actions.double_tap.service ]]]'
+              haptic: '[[[ return variables.button.actions.double_tap.haptic ]]]'
+            hold:
+              entity_id: >
+                [[[
+                  if (variables.button.actions.hold.entity_id == null) {
+                    return variables.button.entity_id;
+                  } else {
+                    return variables.button.actions.hold.entity_id;
+                  }
+                ]]]
+              action: '[[[ return variables.button.actions.hold.action ]]]'
+              service: '[[[ return variables.button.actions.hold.service ]]]'
+              haptic: '[[[ return variables.button.actions.hold.haptic ]]]'
+              repeat: '[[[ return variables.button.actions.hold.repeat ]]]'
+      icon: >
+        [[[
+          var icon = variables.button.icon.name;
+          if (variables.button.class == 'play') {
+            if (states[variables.button.entity_id].state == 'off'
+                || states[variables.button.entity_id].state == 'PowerOff'
+                || states[variables.button.entity_id].state == 'idle'
+                || states[variables.button.entity_id].state == 'paused') {
+              var icon = 'mdi:play';
+            }
+          }
+          return icon;
+        ]]]
+      styles:
+        icon:
+          - color: '[[[ return variables.button.icon.color ]]]'
+          - width: > 
+              [[[
+                var size = '70%';
+                if (variables.button.icon.size != null) {
+                  size = variables.button.icon.size;
                 }
-              }
-              if (variables.button.class == 'power') {
-                if (states[variables.button.entity_id].state == 'off'
-                    || states[variables.button.entity_id].state == 'PowerOff') {
+                return size;
+              ]]] 
+          - height: > 
+              [[[
+                var size = '70%';
+                if (variables.button.icon.size != null) {
+                  size = variables.button.icon.size;
+                }
+                return size;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
                   var color = variables.button.background_color;
-                } else {
-                  var color = "rgba(var(--color-red), 0.2)";
-                }
-              }
-              return color;
-          ]]]
-  color: "var(--google-grey)"
-         
+                  if (variables.button.class == 'mute') {
+                    if (typeof states[variables.button.entity_id].attributes.is_volume_muted !== 'undefined') {
+                      if (states[variables.button.entity_id].attributes.is_volume_muted){
+                        var color = "rgba(var(--color-green), 0.2)";
+                      }
+                    }
+                  }
+                  if (variables.button.class == 'power') {
+                    if (states[variables.button.entity_id].state == 'off'
+                        || states[variables.button.entity_id].state == 'PowerOff') {
+                      var color = variables.button.background_color;
+                    } else {
+                      var color = "rgba(var(--color-red), 0.2)";
+                    }
+                  }
+                  return color;
+              ]]]
+      color: "var(--google-grey)"
+          
 
 remotecontrol_button_presses:
   type: 'custom:button-card'
-  template: widget_icon
+  template: layout_button
   variables:
     button_actions:
   tap_action:
-    remotecontrol_button_action:
-      type: 'custom:button-card'
-      template: widget_icon
-      variables:
-        button_action: '[[[ return variables.button_actions.tap ]]]'
+    custom_fields:
+      button1:
+        card:
+          type: 'custom:button-card'
+          template: remotecontrol_button_action
+          variables:
+            button_action: '[[[ return variables.button_actions.tap ]]]'
   double_tap_action:
-    remotecontrol_button_action:
-      type: 'custom:button-card'
-      template: widget_icon
-      variables:
-        button_action: '[[[ return variables.button_actions.double_tap]]]'
+    custom_fields:
+      button1:
+        card:
+          type: 'custom:button-card'
+          template: remotecontrol_button_action
+          variables:
+            button_action: '[[[ return variables.button_actions.double_tap]]]'
   hold_action:
-    remotecontrol_button_action:
-      type: 'custom:button-card'
-      template: widget_icon
-      variables:
-        button_action: '[[[ return variables.button_actions.hold ]]]'
+    custom_fields:
+      button1:
+        card:
+          type: 'custom:button-card'
+          template: remotecontrol_button_action
+          variables:
+            button_action: '[[[ return variables.button_actions.hold ]]]'
 
 remotecontrol_button_action:
   type: 'custom:button-card'
-  template: widget_icon
+  template: layout_button
   variables:
     button_action:
   action: >
