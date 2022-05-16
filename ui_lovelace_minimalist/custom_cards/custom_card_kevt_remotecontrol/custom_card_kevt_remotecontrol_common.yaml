@@ -236,6 +236,52 @@ button_row_3_column:
             icon: '[[[ return variables.cell3.button.icon ]]]'
             actions: '[[[ return variables.cell3.button.actions ]]]'
 
+button_row_3_column_gap_cell_gap:
+  type: 'custom:button-card'
+  template: layout_gap_cell_gap
+  variables:
+    entity_id:
+    background_color:
+    cell1:
+  custom_fields:
+    cell1:
+      card:
+        type: 'custom:button-card'
+        template: >
+          [[[
+            var templates = ['remotecontrol_button'];
+            if (variables.cell1.button.templates != null) {
+              return ['remotecontrol_button'].concat(variables.cell1.button.templates);
+            }
+            return templates;
+          ]]]
+        variables:
+          button:
+            entity_id: >
+              [[[
+                if (variables.cell1.button.entity_id == null) {
+                  return variables.entity_id;
+                } else {
+                  return variables.cell1.button.entity_id;
+                }
+              ]]]
+            background_color: >
+              [[[
+                if (variables.cell1.button.background_color == null) {
+                  if (variables.background_color == null) {
+                    return 'rgba(var(--color-theme),0.05)';
+                  } else {
+                    return variables.background_color;
+                  }
+                } else {
+                  return variables.cell1.button.background_color;
+                }
+              ]]]
+            templates: '[[[ return variables.cell1.button.templates ]]]'
+            class: '[[[ return variables.cell1.button.class ]]]'
+            icon: '[[[ return variables.cell1.button.icon ]]]'
+            actions: '[[[ return variables.cell1.button.actions ]]]'
+
 button_row_4_column:
   type: 'custom:button-card'
   template: layout_cell_cell_cell_cell
@@ -396,6 +442,8 @@ button_row_4_column:
             icon: '[[[ return variables.cell4.button.icon ]]]'
             actions: '[[[ return variables.cell4.button.actions ]]]'
 
+
+
 ########################################################
 #####  LAYOUTS                                      ####
 ########################################################
@@ -414,6 +462,17 @@ layout_cell_gap_cell:
   styles:
     grid:
       - grid-template-areas: '"cell1 . cell2"'
+      - grid-template-columns: 1fr 1fr 1fr
+      - grid-template-rows: min-content
+      - column-gap: 7px
+    card:
+      - box-shadow: none
+      - padding: 0px
+
+layout_gap_cell_gap:
+  styles:
+    grid:
+      - grid-template-areas: '". cell1 ."'
       - grid-template-columns: 1fr 1fr 1fr
       - grid-template-rows: min-content
       - column-gap: 7px

@@ -86,25 +86,21 @@ remotecontrol_button:
             return size;
           ]]]
     img_cell:
-      - background-color: >
-          [[[
-              var color = variables.button.background_color;
-              if (variables.button.class == 'mute') {
-                if (typeof states[variables.button.entity_id].attributes.is_volume_muted !== 'undefined') {
-                  if (states[variables.button.entity_id].attributes.is_volume_muted){
-                    var color = "rgba(var(--color-green), 0.2)";
-                  }
-                }
-              }
-              return color;
-          ]]]
+      - background-color: '[[[ return variables.button.background_color ]]]'
+
+      # - background-color: >
+      #     [[[
+      #         var color = variables.button.background_color;
+      #         if (variables.button.class == 'mute') {
+      #           if (typeof states[variables.button.entity_id].attributes.is_volume_muted !== 'undefined') {
+      #             if (states[variables.button.entity_id].attributes.is_volume_muted){
+      #               var color = "rgba(var(--color-green), 0.2)";
+      #             }
+      #           }
+      #         }
+      #         return color;
+      #     ]]]
   color: "var(--google-grey)"
-              # if (variables.button.class == 'power') {
-              #   if (states[variables.button.entity_id].state == 'off'
-              #       || states[variables.button.entity_id].state == 'PowerOff') {
-              #     var color = "var(--google-grey)";
-              #   }
-              # }
 
 remotecontrol_button_presses:
   type: 'custom:button-card'
