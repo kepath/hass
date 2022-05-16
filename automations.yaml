@@ -39,7 +39,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: media_player.yamaha_rx_v777_reciever_integration_bed_c
+    entity_id:
+    - binary_sensor.yamaha_reciever_state
     from: 'on'
     to: 'off'
     id: dfsdfsdewwer21
@@ -47,7 +48,7 @@
   action:
   - type: turn_on
     device_id: 6f37a034cb0c0dcefa7c4a92426c9912
-    entity_id: switch.0x00124b00226aa136
+    entity_id: switch.zigbee_plug_fridge_bed_c
     domain: switch
   mode: single
 - id: '1609788662612'
@@ -55,7 +56,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: media_player.yamaha_rx_v777_reciever_integration_bed_c
+    entity_id:
+    - binary_sensor.yamaha_reciever_state
     from: 'off'
     to: 'on'
     id: 345343gges4
@@ -63,7 +65,7 @@
   action:
   - type: turn_off
     device_id: 6f37a034cb0c0dcefa7c4a92426c9912
-    entity_id: switch.0x00124b00226aa136
+    entity_id: switch.zigbee_plug_fridge_bed_c
     domain: switch
   - type: turn_off
     device_id: ecdc93708d2afbf8f645e3eb84d0e39c
@@ -156,14 +158,9 @@
   - type: motion
     platform: device
     device_id: a41beba7d038fb84cb5f9b81cfe4d189
-    entity_id: binary_sensor.motion_uvc_g3_flex_back
+    entity_id: binary_sensor.back_g3_flex_motion
     domain: binary_sensor
     id: '351179'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
   condition:
   - condition: state
     entity_id: binary_sensor.nighttime
@@ -177,15 +174,18 @@
   - service: automation.trigger
     target:
       entity_id: automation.turn_on_garage_light_when_the_garage_door_is_opened
+    data: {}
   - delay:
       minutes: 12
   - service: automation.trigger
     target:
       entity_id: automation.turn_back_light_off_if_not_activated_by_script
+    data: {}
   - service: automation.trigger
     target:
       entity_id:
       - automation.turn_off_garage_light_10_mins_after_garage_door_shut
+    data: {}
   mode: restart
 - id: '1634659565583'
   alias: Back Light mark on
@@ -282,3 +282,36 @@
     target:
       entity_id: input_boolean.doorbell_rung
   mode: restart
+- id: '1652733399421'
+  alias: Monitor the status of the Tumble Dryer
+  description: ''
+  use_blueprint:
+    path: leofabri/appliance-status-monitor.yaml
+    input:
+      appliance_socket: switch.zigbee_plug_tumble_dryer
+      appliance_power_sensor: sensor.zigbee_plug_tumble_dryer_power
+      appliance_job_cycle: input_boolean.tumble_dryer_job_cycle
+      appliance_state_machine: input_select.tumble_dryer_state_machine
+      appliance_suspended_sensor: input_number.tumble_dryer_power_threshold
+      actions_off:
+      - service: tts.cloud_say
+        data:
+          entity_id: media_player.amazon_echo_dot_bed_c_alexa_integration
+          message: The Tumble Dryer has finished
+- id: '1652735403383'
+  alias: Monitor the status of the Washing Machine
+  description: ''
+  use_blueprint:
+    path: leofabri/appliance-status-monitor.yaml
+    input:
+      appliance_socket: switch.zigbee_plug_washing_machine
+      appliance_power_sensor: sensor.zigbee_plug_washing_machine_power
+      appliance_job_cycle: input_boolean.washing_machine_job_cycle
+      appliance_state_machine: input_select.washing_machine_state_machine
+      appliance_suspended_sensor: input_number.washing_machine_power_threshold
+      actions_unplugged_overload: []
+      actions_off:
+      - service: tts.cloud_say
+        data:
+          entity_id: media_player.amazon_echo_dot_bed_c_alexa_integration
+          message: The Washing Machine has finished
