@@ -27,7 +27,6 @@ from homeassistant.components.media_source.models import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from music_assistant import MusicAssistant
-from music_assistant.helpers.images import get_image_url
 from music_assistant.models.media_items import Album, Track
 
 from .const import DOMAIN
@@ -187,7 +186,7 @@ class MusicAssistentSource(MediaSource):
                     media_content_type=MEDIA_TYPE_PLAYLIST,
                     can_play=True,
                     can_expand=True,
-                    thumbnail=await get_image_url(mass, playlist),
+                    thumbnail=await mass.metadata.get_image_url_for_item(playlist),
                 )
                 for playlist in await mass.music.playlists.library()
             ],
@@ -208,7 +207,7 @@ class MusicAssistentSource(MediaSource):
                 media_content_type=MEDIA_CONTENT_TYPE_FLAC,
                 can_play=True,
                 can_expand=False,
-                thumbnail=await get_image_url(mass, track),
+                thumbnail=await mass.metadata.get_image_url_for_item(track),
             )
 
         return BrowseMediaSource(
@@ -247,7 +246,7 @@ class MusicAssistentSource(MediaSource):
                     media_content_type=MEDIA_TYPE_ARTIST,
                     can_play=True,
                     can_expand=True,
-                    thumbnail=await get_image_url(mass, artist),
+                    thumbnail=await mass.metadata.get_image_url_for_item(artist),
                 )
                 for artist in await mass.music.artists.library()
             ],
@@ -268,7 +267,7 @@ class MusicAssistentSource(MediaSource):
                 media_content_type=MEDIA_TYPE_ALBUM,
                 can_play=True,
                 can_expand=True,
-                thumbnail=await get_image_url(mass, album),
+                thumbnail=await mass.metadata.get_image_url_for_item(album),
             )
 
         return BrowseMediaSource(
@@ -307,7 +306,7 @@ class MusicAssistentSource(MediaSource):
                     media_content_type=MEDIA_TYPE_ALBUM,
                     can_play=True,
                     can_expand=True,
-                    thumbnail=await get_image_url(mass, album),
+                    thumbnail=await mass.metadata.get_image_url_for_item(album),
                 )
                 for album in await mass.music.albums.library()
             ],
@@ -328,7 +327,7 @@ class MusicAssistentSource(MediaSource):
                 media_content_type=MEDIA_CONTENT_TYPE_FLAC,
                 can_play=True,
                 can_expand=False,
-                thumbnail=await get_image_url(mass, track),
+                thumbnail=await mass.metadata.get_image_url_for_item(track),
             )
 
         return BrowseMediaSource(
@@ -367,7 +366,7 @@ class MusicAssistentSource(MediaSource):
                     media_content_type=MEDIA_CONTENT_TYPE_FLAC,
                     can_play=True,
                     can_expand=False,
-                    thumbnail=await get_image_url(mass, track),
+                    thumbnail=await mass.metadata.get_image_url_for_item(track),
                 )
                 for track in await mass.music.tracks.library()
             ],
@@ -395,7 +394,7 @@ class MusicAssistentSource(MediaSource):
                     media_content_type=MEDIA_CONTENT_TYPE_FLAC,
                     can_play=True,
                     can_expand=False,
-                    thumbnail=await get_image_url(mass, radio),
+                    thumbnail=await mass.metadata.get_image_url_for_item(radio),
                 )
                 for radio in await mass.music.radio.library()
             ],
