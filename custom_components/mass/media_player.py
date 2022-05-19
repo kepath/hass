@@ -232,7 +232,8 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
                     media_title += f" ({media_item.version})"
                 if media_item.album:
                     media_album_name = media_item.album.name
-                    media_album_artist = media_item.album.artist.name
+                    if media_item.album.artist:
+                        media_album_artist = media_item.album.artist.name
         # Music Assistant is NOT the active source
         elif not self.player.active_queue.active:
             # grab details from 'origin' media player
