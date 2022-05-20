@@ -53,19 +53,19 @@ remotecontrol_button:
           service: '[[[ return variables.button.actions.hold.service ]]]'
           haptic: '[[[ return variables.button.actions.hold.haptic ]]]'
           repeat: '[[[ return variables.button.actions.hold.repeat ]]]'
-  icon: >
-    [[[
-      var icon = variables.button.icon.name;
-      if (variables.button.class == 'play') {
-        if (states[variables.button.entity_id].state == 'off'
-            || states[variables.button.entity_id].state == 'PowerOff'
-            || states[variables.button.entity_id].state == 'idle'
-            || states[variables.button.entity_id].state == 'paused') {
-          var icon = 'mdi:play';
-        }
-      }
-      return icon;
-    ]]]
+  # icon: >
+  #   [[[
+  #     var icon = variables.button.icon.name;
+  #     if (variables.button.class == 'play') {
+  #       if (states[variables.button.entity_id].state == 'off'
+  #           || states[variables.button.entity_id].state == 'PowerOff'
+  #           || states[variables.button.entity_id].state == 'idle'
+  #           || states[variables.button.entity_id].state == 'paused') {
+  #         var icon = 'mdi:play';
+  #       }
+  #     }
+  #     return icon;
+  #   ]]]
   styles:
     icon:
       - color: '[[[ return variables.button.icon.color ]]]'
