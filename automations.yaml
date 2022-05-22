@@ -315,3 +315,23 @@
         data:
           entity_id: media_player.amazon_echo_dot_bed_c_alexa_integration
           message: The Washing Machine has finished
+- id: '1653152874332'
+  alias: Tumble Dryer Monitor
+  description: ''
+  trigger:
+  - type: energy
+    platform: device
+    device_id: 7818184ba76139c45c68e06d7968ac38
+    entity_id: sensor.zigbee_plug_tumble_dryer_energy
+    domain: sensor
+    above: 30
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - condition: state
+    entity_id: input_boolean.tumble_dryer_job_cycle
+    state: 'On'
+  mode: single
