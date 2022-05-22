@@ -50,7 +50,7 @@ def register_services(hass: HomeAssistant, mass: MusicAssistant):
     async def handle_queue_command(call: ServiceCall) -> None:
         """Handle queue_command service."""
         data = call.data
-        if isinstance(data["entity_id"]):
+        if isinstance(data["entity_id"], list):
             entity_ids = data["entity_id"]
         else:
             entity_ids = [data["entity_id"]]

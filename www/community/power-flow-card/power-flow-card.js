@@ -14,13 +14,13 @@ function t(t,e,i,r){var s,o=arguments.length,n=o<3?e:null===r?r=Object.getOwnPro
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var $;f.finalized=!0,f.elementProperties=new Map,f.elementStyles=[],f.shadowRootOptions={mode:"open"},null==v||v({ReactiveElement:f}),(null!==(h=globalThis.reactiveElementVersions)&&void 0!==h?h:globalThis.reactiveElementVersions=[]).push("1.3.1");const _=globalThis.trustedTypes,b=_?_.createPolicy("lit-html",{createHTML:t=>t}):void 0,w=`lit$${(Math.random()+"").slice(9)}$`,A="?"+w,x=`<${A}>`,M=document,H=(t="")=>M.createComment(t),E=t=>null===t||"object"!=typeof t&&"function"!=typeof t,C=Array.isArray,S=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,k=/-->/g,L=/>/g,V=/>|[ 	\n\r](?:([^\s"'>=/]+)([ 	\n\r]*=[ 	\n\r]*(?:[^ 	\n\r"'`<>=]|("|')|))|$)/g,T=/'/g,N=/"/g,P=/^(?:script|style|textarea|title)$/i,U=t=>(e,...i)=>({_$litType$:t,strings:e,values:i}),R=U(1),O=U(2),z=Symbol.for("lit-noChange"),D=Symbol.for("lit-nothing"),B=new WeakMap,j=M.createTreeWalker(M,129,null,!1),W=(t,e)=>{const i=t.length-1,r=[];let s,o=2===e?"<svg>":"",n=S;for(let e=0;e<i;e++){const i=t[e];let a,l,c=-1,d=0;for(;d<i.length&&(n.lastIndex=d,l=n.exec(i),null!==l);)d=n.lastIndex,n===S?"!--"===l[1]?n=k:void 0!==l[1]?n=L:void 0!==l[2]?(P.test(l[2])&&(s=RegExp("</"+l[2],"g")),n=V):void 0!==l[3]&&(n=V):n===V?">"===l[0]?(n=null!=s?s:S,c=-1):void 0===l[1]?c=-2:(c=n.lastIndex-l[2].length,a=l[1],n=void 0===l[3]?V:'"'===l[3]?N:T):n===N||n===T?n=V:n===k||n===L?n=S:(n=V,s=void 0);const h=n===V&&t[e+1].startsWith("/>")?" ":"";o+=n===S?i+x:c>=0?(r.push(a),i.slice(0,c)+"$lit$"+i.slice(c)+w+h):i+w+(-2===c?(r.push(void 0),e):h)}const a=o+(t[i]||"<?>")+(2===e?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return[void 0!==b?b.createHTML(a):a,r]};class I{constructor({strings:t,_$litType$:e},i){let r;this.parts=[];let s=0,o=0;const n=t.length-1,a=this.parts,[l,c]=W(t,e);if(this.el=I.createElement(l,i),j.currentNode=this.el.content,2===e){const t=this.el.content,e=t.firstChild;e.remove(),t.append(...e.childNodes)}for(;null!==(r=j.nextNode())&&a.length<n;){if(1===r.nodeType){if(r.hasAttributes()){const t=[];for(const e of r.getAttributeNames())if(e.endsWith("$lit$")||e.startsWith(w)){const i=c[o++];if(t.push(e),void 0!==i){const t=r.getAttribute(i.toLowerCase()+"$lit$").split(w),e=/([.?@])?(.*)/.exec(i);a.push({type:1,index:s,name:e[2],strings:t,ctor:"."===e[1]?q:"?"===e[1]?J:"@"===e[1]?Q:Y})}else a.push({type:6,index:s})}for(const e of t)r.removeAttribute(e)}if(P.test(r.tagName)){const t=r.textContent.split(w),e=t.length-1;if(e>0){r.textContent=_?_.emptyScript:"";for(let i=0;i<e;i++)r.append(t[i],H()),j.nextNode(),a.push({type:2,index:++s});r.append(t[e],H())}}}else if(8===r.nodeType)if(r.data===A)a.push({type:2,index:s});else{let t=-1;for(;-1!==(t=r.data.indexOf(w,t+1));)a.push({type:7,index:s}),t+=w.length-1}s++}}static createElement(t,e){const i=M.createElement("template");return i.innerHTML=t,i}}function F(t,e,i=t,r){var s,o,n,a;if(e===z)return e;let l=void 0!==r?null===(s=i._$Cl)||void 0===s?void 0:s[r]:i._$Cu;const c=E(e)?void 0:e._$litDirective$;return(null==l?void 0:l.constructor)!==c&&(null===(o=null==l?void 0:l._$AO)||void 0===o||o.call(l,!1),void 0===c?l=void 0:(l=new c(t),l._$AT(t,i,r)),void 0!==r?(null!==(n=(a=i)._$Cl)&&void 0!==n?n:a._$Cl=[])[r]=l:i._$Cu=l),void 0!==l&&(e=F(t,l._$AS(t,e.values),l,r)),e}class Z{constructor(t,e){this.v=[],this._$AN=void 0,this._$AD=t,this._$AM=e}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}p(t){var e;const{el:{content:i},parts:r}=this._$AD,s=(null!==(e=null==t?void 0:t.creationScope)&&void 0!==e?e:M).importNode(i,!0);j.currentNode=s;let o=j.nextNode(),n=0,a=0,l=r[0];for(;void 0!==l;){if(n===l.index){let e;2===l.type?e=new G(o,o.nextSibling,this,t):1===l.type?e=new l.ctor(o,l.name,l.strings,this,t):6===l.type&&(e=new X(o,this,t)),this.v.push(e),l=r[++a]}n!==(null==l?void 0:l.index)&&(o=j.nextNode(),n++)}return s}m(t){let e=0;for(const i of this.v)void 0!==i&&(void 0!==i.strings?(i._$AI(t,i,e),e+=i.strings.length-2):i._$AI(t[e])),e++}}class G{constructor(t,e,i,r){var s;this.type=2,this._$AH=D,this._$AN=void 0,this._$AA=t,this._$AB=e,this._$AM=i,this.options=r,this._$Cg=null===(s=null==r?void 0:r.isConnected)||void 0===s||s}get _$AU(){var t,e;return null!==(e=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==e?e:this._$Cg}get parentNode(){let t=this._$AA.parentNode;const e=this._$AM;return void 0!==e&&11===t.nodeType&&(t=e.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,e=this){t=F(this,t,e),E(t)?t===D||null==t||""===t?(this._$AH!==D&&this._$AR(),this._$AH=D):t!==this._$AH&&t!==z&&this.$(t):void 0!==t._$litType$?this.T(t):void 0!==t.nodeType?this.k(t):(t=>{var e;return C(t)||"function"==typeof(null===(e=t)||void 0===e?void 0:e[Symbol.iterator])})(t)?this.S(t):this.$(t)}M(t,e=this._$AB){return this._$AA.parentNode.insertBefore(t,e)}k(t){this._$AH!==t&&(this._$AR(),this._$AH=this.M(t))}$(t){this._$AH!==D&&E(this._$AH)?this._$AA.nextSibling.data=t:this.k(M.createTextNode(t)),this._$AH=t}T(t){var e;const{values:i,_$litType$:r}=t,s="number"==typeof r?this._$AC(t):(void 0===r.el&&(r.el=I.createElement(r.h,this.options)),r);if((null===(e=this._$AH)||void 0===e?void 0:e._$AD)===s)this._$AH.m(i);else{const t=new Z(s,this),e=t.p(this.options);t.m(i),this.k(e),this._$AH=t}}_$AC(t){let e=B.get(t.strings);return void 0===e&&B.set(t.strings,e=new I(t)),e}S(t){C(this._$AH)||(this._$AH=[],this._$AR());const e=this._$AH;let i,r=0;for(const s of t)r===e.length?e.push(i=new G(this.M(H()),this.M(H()),this,this.options)):i=e[r],i._$AI(s),r++;r<e.length&&(this._$AR(i&&i._$AB.nextSibling,r),e.length=r)}_$AR(t=this._$AA.nextSibling,e){var i;for(null===(i=this._$AP)||void 0===i||i.call(this,!1,!0,e);t&&t!==this._$AB;){const e=t.nextSibling;t.remove(),t=e}}setConnected(t){var e;void 0===this._$AM&&(this._$Cg=t,null===(e=this._$AP)||void 0===e||e.call(this,t))}}class Y{constructor(t,e,i,r,s){this.type=1,this._$AH=D,this._$AN=void 0,this.element=t,this.name=e,this._$AM=r,this.options=s,i.length>2||""!==i[0]||""!==i[1]?(this._$AH=Array(i.length-1).fill(new String),this.strings=i):this._$AH=D}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,e=this,i,r){const s=this.strings;let o=!1;if(void 0===s)t=F(this,t,e,0),o=!E(t)||t!==this._$AH&&t!==z,o&&(this._$AH=t);else{const r=t;let n,a;for(t=s[0],n=0;n<s.length-1;n++)a=F(this,r[i+n],e,n),a===z&&(a=this._$AH[n]),o||(o=!E(a)||a!==this._$AH[n]),a===D?t=D:t!==D&&(t+=(null!=a?a:"")+s[n+1]),this._$AH[n]=a}o&&!r&&this.C(t)}C(t){t===D?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"")}}class q extends Y{constructor(){super(...arguments),this.type=3}C(t){this.element[this.name]=t===D?void 0:t}}const K=_?_.emptyScript:"";class J extends Y{constructor(){super(...arguments),this.type=4}C(t){t&&t!==D?this.element.setAttribute(this.name,K):this.element.removeAttribute(this.name)}}class Q extends Y{constructor(t,e,i,r,s){super(t,e,i,r,s),this.type=5}_$AI(t,e=this){var i;if((t=null!==(i=F(this,t,e,0))&&void 0!==i?i:D)===z)return;const r=this._$AH,s=t===D&&r!==D||t.capture!==r.capture||t.once!==r.once||t.passive!==r.passive,o=t!==D&&(r===D||s);s&&this.element.removeEventListener(this.name,this,r),o&&this.element.addEventListener(this.name,this,t),this._$AH=t}handleEvent(t){var e,i;"function"==typeof this._$AH?this._$AH.call(null!==(i=null===(e=this.options)||void 0===e?void 0:e.host)&&void 0!==i?i:this.element,t):this._$AH.handleEvent(t)}}class X{constructor(t,e,i){this.element=t,this.type=6,this._$AN=void 0,this._$AM=e,this.options=i}get _$AU(){return this._$AM._$AU}_$AI(t){F(this,t)}}const tt=window.litHtmlPolyfillSupport;
+var $;f.finalized=!0,f.elementProperties=new Map,f.elementStyles=[],f.shadowRootOptions={mode:"open"},null==v||v({ReactiveElement:f}),(null!==(h=globalThis.reactiveElementVersions)&&void 0!==h?h:globalThis.reactiveElementVersions=[]).push("1.3.1");const b=globalThis.trustedTypes,_=b?b.createPolicy("lit-html",{createHTML:t=>t}):void 0,w=`lit$${(Math.random()+"").slice(9)}$`,A="?"+w,x=`<${A}>`,M=document,H=(t="")=>M.createComment(t),E=t=>null===t||"object"!=typeof t&&"function"!=typeof t,C=Array.isArray,S=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,k=/-->/g,L=/>/g,V=/>|[ 	\n\r](?:([^\s"'>=/]+)([ 	\n\r]*=[ 	\n\r]*(?:[^ 	\n\r"'`<>=]|("|')|))|$)/g,T=/'/g,N=/"/g,P=/^(?:script|style|textarea|title)$/i,U=t=>(e,...i)=>({_$litType$:t,strings:e,values:i}),R=U(1),O=U(2),z=Symbol.for("lit-noChange"),D=Symbol.for("lit-nothing"),B=new WeakMap,j=M.createTreeWalker(M,129,null,!1),W=(t,e)=>{const i=t.length-1,r=[];let s,o=2===e?"<svg>":"",n=S;for(let e=0;e<i;e++){const i=t[e];let a,l,c=-1,d=0;for(;d<i.length&&(n.lastIndex=d,l=n.exec(i),null!==l);)d=n.lastIndex,n===S?"!--"===l[1]?n=k:void 0!==l[1]?n=L:void 0!==l[2]?(P.test(l[2])&&(s=RegExp("</"+l[2],"g")),n=V):void 0!==l[3]&&(n=V):n===V?">"===l[0]?(n=null!=s?s:S,c=-1):void 0===l[1]?c=-2:(c=n.lastIndex-l[2].length,a=l[1],n=void 0===l[3]?V:'"'===l[3]?N:T):n===N||n===T?n=V:n===k||n===L?n=S:(n=V,s=void 0);const h=n===V&&t[e+1].startsWith("/>")?" ":"";o+=n===S?i+x:c>=0?(r.push(a),i.slice(0,c)+"$lit$"+i.slice(c)+w+h):i+w+(-2===c?(r.push(void 0),e):h)}const a=o+(t[i]||"<?>")+(2===e?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return[void 0!==_?_.createHTML(a):a,r]};class F{constructor({strings:t,_$litType$:e},i){let r;this.parts=[];let s=0,o=0;const n=t.length-1,a=this.parts,[l,c]=W(t,e);if(this.el=F.createElement(l,i),j.currentNode=this.el.content,2===e){const t=this.el.content,e=t.firstChild;e.remove(),t.append(...e.childNodes)}for(;null!==(r=j.nextNode())&&a.length<n;){if(1===r.nodeType){if(r.hasAttributes()){const t=[];for(const e of r.getAttributeNames())if(e.endsWith("$lit$")||e.startsWith(w)){const i=c[o++];if(t.push(e),void 0!==i){const t=r.getAttribute(i.toLowerCase()+"$lit$").split(w),e=/([.?@])?(.*)/.exec(i);a.push({type:1,index:s,name:e[2],strings:t,ctor:"."===e[1]?q:"?"===e[1]?J:"@"===e[1]?Q:Y})}else a.push({type:6,index:s})}for(const e of t)r.removeAttribute(e)}if(P.test(r.tagName)){const t=r.textContent.split(w),e=t.length-1;if(e>0){r.textContent=b?b.emptyScript:"";for(let i=0;i<e;i++)r.append(t[i],H()),j.nextNode(),a.push({type:2,index:++s});r.append(t[e],H())}}}else if(8===r.nodeType)if(r.data===A)a.push({type:2,index:s});else{let t=-1;for(;-1!==(t=r.data.indexOf(w,t+1));)a.push({type:7,index:s}),t+=w.length-1}s++}}static createElement(t,e){const i=M.createElement("template");return i.innerHTML=t,i}}function I(t,e,i=t,r){var s,o,n,a;if(e===z)return e;let l=void 0!==r?null===(s=i._$Cl)||void 0===s?void 0:s[r]:i._$Cu;const c=E(e)?void 0:e._$litDirective$;return(null==l?void 0:l.constructor)!==c&&(null===(o=null==l?void 0:l._$AO)||void 0===o||o.call(l,!1),void 0===c?l=void 0:(l=new c(t),l._$AT(t,i,r)),void 0!==r?(null!==(n=(a=i)._$Cl)&&void 0!==n?n:a._$Cl=[])[r]=l:i._$Cu=l),void 0!==l&&(e=I(t,l._$AS(t,e.values),l,r)),e}class Z{constructor(t,e){this.v=[],this._$AN=void 0,this._$AD=t,this._$AM=e}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}p(t){var e;const{el:{content:i},parts:r}=this._$AD,s=(null!==(e=null==t?void 0:t.creationScope)&&void 0!==e?e:M).importNode(i,!0);j.currentNode=s;let o=j.nextNode(),n=0,a=0,l=r[0];for(;void 0!==l;){if(n===l.index){let e;2===l.type?e=new G(o,o.nextSibling,this,t):1===l.type?e=new l.ctor(o,l.name,l.strings,this,t):6===l.type&&(e=new X(o,this,t)),this.v.push(e),l=r[++a]}n!==(null==l?void 0:l.index)&&(o=j.nextNode(),n++)}return s}m(t){let e=0;for(const i of this.v)void 0!==i&&(void 0!==i.strings?(i._$AI(t,i,e),e+=i.strings.length-2):i._$AI(t[e])),e++}}class G{constructor(t,e,i,r){var s;this.type=2,this._$AH=D,this._$AN=void 0,this._$AA=t,this._$AB=e,this._$AM=i,this.options=r,this._$Cg=null===(s=null==r?void 0:r.isConnected)||void 0===s||s}get _$AU(){var t,e;return null!==(e=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==e?e:this._$Cg}get parentNode(){let t=this._$AA.parentNode;const e=this._$AM;return void 0!==e&&11===t.nodeType&&(t=e.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,e=this){t=I(this,t,e),E(t)?t===D||null==t||""===t?(this._$AH!==D&&this._$AR(),this._$AH=D):t!==this._$AH&&t!==z&&this.$(t):void 0!==t._$litType$?this.T(t):void 0!==t.nodeType?this.k(t):(t=>{var e;return C(t)||"function"==typeof(null===(e=t)||void 0===e?void 0:e[Symbol.iterator])})(t)?this.S(t):this.$(t)}M(t,e=this._$AB){return this._$AA.parentNode.insertBefore(t,e)}k(t){this._$AH!==t&&(this._$AR(),this._$AH=this.M(t))}$(t){this._$AH!==D&&E(this._$AH)?this._$AA.nextSibling.data=t:this.k(M.createTextNode(t)),this._$AH=t}T(t){var e;const{values:i,_$litType$:r}=t,s="number"==typeof r?this._$AC(t):(void 0===r.el&&(r.el=F.createElement(r.h,this.options)),r);if((null===(e=this._$AH)||void 0===e?void 0:e._$AD)===s)this._$AH.m(i);else{const t=new Z(s,this),e=t.p(this.options);t.m(i),this.k(e),this._$AH=t}}_$AC(t){let e=B.get(t.strings);return void 0===e&&B.set(t.strings,e=new F(t)),e}S(t){C(this._$AH)||(this._$AH=[],this._$AR());const e=this._$AH;let i,r=0;for(const s of t)r===e.length?e.push(i=new G(this.M(H()),this.M(H()),this,this.options)):i=e[r],i._$AI(s),r++;r<e.length&&(this._$AR(i&&i._$AB.nextSibling,r),e.length=r)}_$AR(t=this._$AA.nextSibling,e){var i;for(null===(i=this._$AP)||void 0===i||i.call(this,!1,!0,e);t&&t!==this._$AB;){const e=t.nextSibling;t.remove(),t=e}}setConnected(t){var e;void 0===this._$AM&&(this._$Cg=t,null===(e=this._$AP)||void 0===e||e.call(this,t))}}class Y{constructor(t,e,i,r,s){this.type=1,this._$AH=D,this._$AN=void 0,this.element=t,this.name=e,this._$AM=r,this.options=s,i.length>2||""!==i[0]||""!==i[1]?(this._$AH=Array(i.length-1).fill(new String),this.strings=i):this._$AH=D}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,e=this,i,r){const s=this.strings;let o=!1;if(void 0===s)t=I(this,t,e,0),o=!E(t)||t!==this._$AH&&t!==z,o&&(this._$AH=t);else{const r=t;let n,a;for(t=s[0],n=0;n<s.length-1;n++)a=I(this,r[i+n],e,n),a===z&&(a=this._$AH[n]),o||(o=!E(a)||a!==this._$AH[n]),a===D?t=D:t!==D&&(t+=(null!=a?a:"")+s[n+1]),this._$AH[n]=a}o&&!r&&this.C(t)}C(t){t===D?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"")}}class q extends Y{constructor(){super(...arguments),this.type=3}C(t){this.element[this.name]=t===D?void 0:t}}const K=b?b.emptyScript:"";class J extends Y{constructor(){super(...arguments),this.type=4}C(t){t&&t!==D?this.element.setAttribute(this.name,K):this.element.removeAttribute(this.name)}}class Q extends Y{constructor(t,e,i,r,s){super(t,e,i,r,s),this.type=5}_$AI(t,e=this){var i;if((t=null!==(i=I(this,t,e,0))&&void 0!==i?i:D)===z)return;const r=this._$AH,s=t===D&&r!==D||t.capture!==r.capture||t.once!==r.once||t.passive!==r.passive,o=t!==D&&(r===D||s);s&&this.element.removeEventListener(this.name,this,r),o&&this.element.addEventListener(this.name,this,t),this._$AH=t}handleEvent(t){var e,i;"function"==typeof this._$AH?this._$AH.call(null!==(i=null===(e=this.options)||void 0===e?void 0:e.host)&&void 0!==i?i:this.element,t):this._$AH.handleEvent(t)}}class X{constructor(t,e,i){this.element=t,this.type=6,this._$AN=void 0,this._$AM=e,this.options=i}get _$AU(){return this._$AM._$AU}_$AI(t){I(this,t)}}const tt=window.litHtmlPolyfillSupport;
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var et,it;null==tt||tt(I,G),(null!==($=globalThis.litHtmlVersions)&&void 0!==$?$:globalThis.litHtmlVersions=[]).push("2.2.2");class rt extends f{constructor(){super(...arguments),this.renderOptions={host:this},this._$Dt=void 0}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const e=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Dt=((t,e,i)=>{var r,s;const o=null!==(r=null==i?void 0:i.renderBefore)&&void 0!==r?r:e;let n=o._$litPart$;if(void 0===n){const t=null!==(s=null==i?void 0:i.renderBefore)&&void 0!==s?s:null;o._$litPart$=n=new G(e.insertBefore(H(),t),t,void 0,null!=i?i:{})}return n._$AI(t),n})(e,this.renderRoot,this.renderOptions)}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Dt)||void 0===t||t.setConnected(!0)}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Dt)||void 0===t||t.setConnected(!1)}render(){return z}}rt.finalized=!0,rt._$litElement$=!0,null===(et=globalThis.litElementHydrateSupport)||void 0===et||et.call(globalThis,{LitElement:rt});const st=globalThis.litElementPolyfillSupport;null==st||st({LitElement:rt}),(null!==(it=globalThis.litElementVersions)&&void 0!==it?it:globalThis.litElementVersions=[]).push("3.2.0");
+var et,it;null==tt||tt(F,G),(null!==($=globalThis.litHtmlVersions)&&void 0!==$?$:globalThis.litHtmlVersions=[]).push("2.2.2");class rt extends f{constructor(){super(...arguments),this.renderOptions={host:this},this._$Dt=void 0}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const e=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Dt=((t,e,i)=>{var r,s;const o=null!==(r=null==i?void 0:i.renderBefore)&&void 0!==r?r:e;let n=o._$litPart$;if(void 0===n){const t=null!==(s=null==i?void 0:i.renderBefore)&&void 0!==s?s:null;o._$litPart$=n=new G(e.insertBefore(H(),t),t,void 0,null!=i?i:{})}return n._$AI(t),n})(e,this.renderRoot,this.renderOptions)}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Dt)||void 0===t||t.setConnected(!0)}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Dt)||void 0===t||t.setConnected(!1)}render(){return z}}rt.finalized=!0,rt._$litElement$=!0,null===(et=globalThis.litElementHydrateSupport)||void 0===et||et.call(globalThis,{LitElement:rt});const st=globalThis.litElementPolyfillSupport;null==st||st({LitElement:rt}),(null!==(it=globalThis.litElementVersions)&&void 0!==it?it:globalThis.litElementVersions=[]).push("3.2.0");
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -59,12 +59,10 @@ const ct=1;
  * Copyright 2018 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const dt=(t=>(...e)=>({_$litDirective$:t,values:e}))(class extends class{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}}{constructor(t){var e;if(super(t),t.type!==ct||"class"!==t.name||(null===(e=t.strings)||void 0===e?void 0:e.length)>2)throw Error("`classMap()` can only be used in the `class` attribute and must be the only part in the attribute.")}render(t){return" "+Object.keys(t).filter((e=>t[e])).join(" ")+" "}update(t,[e]){var i,r;if(void 0===this.et){this.et=new Set,void 0!==t.strings&&(this.st=new Set(t.strings.join(" ").split(/\s/).filter((t=>""!==t))));for(const t in e)e[t]&&!(null===(i=this.st)||void 0===i?void 0:i.has(t))&&this.et.add(t);return this.render(e)}const s=t.element.classList;this.et.forEach((t=>{t in e||(s.remove(t),this.et.delete(t))}));for(const t in e){const i=!!e[t];i===this.et.has(t)||(null===(r=this.st)||void 0===r?void 0:r.has(t))||(i?(s.add(t),this.et.add(t)):(s.remove(t),this.et.delete(t)))}return z}});function ht(t,e=0){return function(t){return!isNaN(parseFloat(t))&&!isNaN(Number(t))}(t)?Number(t):e}function ut(t,e=/\s+/){const i=[];if(null!=t){const r=Array.isArray(t)?t:`${t}`.split(e);for(const t of r){const e=`${t}`.trim();e&&i.push(e)}}return i}const pt=(t,e)=>Number(`${Math.round(Number(`${t}e${e}`))}e-${e}`);console.groupCollapsed("%c⚡ Power Flow Card v2.4.0 is installed","color: #488fc2; font-weight: bold"),console.log("Readme:","https://github.com/ulic75/power-flow-card"),console.groupEnd();let vt=class extends rt{constructor(){super(...arguments),this.entityInverted=t=>this._config.inverted_entities.includes(t),this.previousDur={},this.circleRate=(t,e)=>{var i,r;const s=null===(i=this._config)||void 0===i?void 0:i.min_flow_rate,o=null===(r=this._config)||void 0===r?void 0:r.max_flow_rate;return o-t/e*(o-s)},this.getEntityState=t=>t?ht(this.hass.states[t].state):0,this.getEntityStateWatts=t=>{if(!t)return 0;const e=this.hass.states[t],i=ht(e.state);return"W"===e.attributes.unit_of_measurement?i:1e3*i},this.displayValue=t=>null===t?0:t>=this._config.watt_threshold?`${pt(t/1e3,this._config.kw_decimals)} kW`:`${pt(t,this._config.w_decimals)} W`}setConfig(t){this._config=Object.assign(Object.assign({},t),{inverted_entities:ut(t.inverted_entities,","),kw_decimals:ht(t.kw_decimals,1),min_flow_rate:ht(t.min_flow_rate,.75),max_flow_rate:ht(t.max_flow_rate,6),w_decimals:ht(t.w_decimals,1),watt_threshold:ht(t.watt_threshold)})}getCardSize(){return 3}render(){var t,e,i,r;if(!this._config||!this.hass)return R``;const{entities:o}=this._config,n=void 0!==o.battery,a=void 0!==o.solar,l="string"==typeof o.grid||o.grid.production;let c=0;c="string"==typeof o.grid?this.entityInverted("grid")?Math.abs(Math.min(this.getEntityStateWatts(o.grid),0)):Math.max(this.getEntityStateWatts(o.grid),0):this.getEntityStateWatts(o.grid.consumption);let d=0;a&&(d=this.entityInverted("solar")?Math.abs(Math.min(this.getEntityStateWatts(o.solar),0)):Math.max(this.getEntityStateWatts(o.solar),0));let h=null,u=null;n&&("string"==typeof o.battery?(h=this.entityInverted("battery")?Math.max(this.getEntityStateWatts(o.battery),0):Math.abs(Math.min(this.getEntityStateWatts(o.battery),0)),u=this.entityInverted("battery")?Math.abs(Math.min(this.getEntityStateWatts(o.battery),0)):Math.max(this.getEntityStateWatts(o.battery),0)):(h=this.getEntityStateWatts(null===(t=o.battery)||void 0===t?void 0:t.production),u=this.getEntityStateWatts(null===(e=o.battery)||void 0===e?void 0:e.consumption)));let p=null;l&&(p="string"==typeof o.grid?this.entityInverted("grid")?Math.max(this.getEntityStateWatts(o.grid),0):Math.abs(Math.min(this.getEntityStateWatts(o.grid),0)):this.getEntityStateWatts(o.grid.production));let v=null;a&&(v=d-(null!=p?p:0)-(null!=h?h:0));let g=null,y=null;null!==v&&v<0&&(n&&(g=Math.abs(v),g>c&&(y=Math.min(g-c,0),g=c)),v=0);let m=null;a&&n?(y||(y=Math.max(0,(p||0)-(d||0)-(h||0)-(g||0))),m=h-(g||0)):!a&&n&&(y=p);
-//! Clean up this name
-let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));const _=Math.max(c-(null!=g?g:0),0),b=Math.max(_+(null!=v?v:0)+(null!=$?$:0),0);let w,A;$&&(w=$/b*238.76104),a&&(A=v/b*238.76104);const x=(b-(null!=$?$:0)-(null!=v?v:0))/b*238.76104,M=_+(null!=v?v:0)+f+(null!=m?m:0)+(null!=$?$:0)+(null!=g?g:0)+(null!=y?y:0),H=(null===(i=o.battery_charge)||void 0===i?void 0:i.length)?this.getEntityState(o.battery_charge):null;let E="M16 20H8V6H16M16.67 4H15V2H9V4H7.33C6.6 4 6 4.6 6 5.33V20.67C6 21.4 6.6 22 7.33 22H16.67C17.41 22 18 21.41 18 20.67V5.33C18 4.6 17.4 4 16.67 4M15 16H9V19H15V16M15 7H9V10H15V7M15 11.5H9V14.5H15V11.5Z";null===H?E="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z":H<=72&&H>44?E="M16 20H8V6H16M16.67 4H15V2H9V4H7.33C6.6 4 6 4.6 6 5.33V20.67C6 21.4 6.6 22 7.33 22H16.67C17.41 22 18 21.41 18 20.67V5.33C18 4.6 17.4 4 16.67 4M15 16H9V19H15V16M15 11.5H9V14.5H15V11.5Z":H<=44&&H>16?E="M16 20H8V6H16M16.67 4H15V2H9V4H7.33C6.6 4 6 4.6 6 5.33V20.67C6 21.4 6.6 22 7.33 22H16.67C17.41 22 18 21.41 18 20.67V5.33C18 4.6 17.4 4 16.67 4M15 16H9V19H15V16":H<=16&&(E="M16,20H8V6H16M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z");const C={batteryGrid:this.circleRate(null!==(r=null!=g?g:y)&&void 0!==r?r:0,M),batteryToHome:this.circleRate(null!=$?$:0,M),gridToHome:this.circleRate(_,M),solarToBattery:this.circleRate(null!=m?m:0,M),solarToGrid:this.circleRate(f,M),solarToHome:this.circleRate(null!=v?v:0,M)};return["batteryGrid","batteryToHome","gridToHome","solarToBattery","solarToGrid","solarToHome"].forEach((t=>{const e=this[`${t}Flow`];e&&this.previousDur[t]&&this.previousDur[t]!==C[t]&&e.setCurrentTime(e.getCurrentTime()*(C[t]/this.previousDur[t])),this.previousDur[t]=C[t]})),R`
+const dt=(t=>(...e)=>({_$litDirective$:t,values:e}))(class extends class{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}}{constructor(t){var e;if(super(t),t.type!==ct||"class"!==t.name||(null===(e=t.strings)||void 0===e?void 0:e.length)>2)throw Error("`classMap()` can only be used in the `class` attribute and must be the only part in the attribute.")}render(t){return" "+Object.keys(t).filter((e=>t[e])).join(" ")+" "}update(t,[e]){var i,r;if(void 0===this.et){this.et=new Set,void 0!==t.strings&&(this.st=new Set(t.strings.join(" ").split(/\s/).filter((t=>""!==t))));for(const t in e)e[t]&&!(null===(i=this.st)||void 0===i?void 0:i.has(t))&&this.et.add(t);return this.render(e)}const s=t.element.classList;this.et.forEach((t=>{t in e||(s.remove(t),this.et.delete(t))}));for(const t in e){const i=!!e[t];i===this.et.has(t)||(null===(r=this.st)||void 0===r?void 0:r.has(t))||(i?(s.add(t),this.et.add(t)):(s.remove(t),this.et.delete(t)))}return z}});function ht(t){return!isNaN(parseFloat(t))&&!isNaN(Number(t))}function ut(t,e=0){return ht(t)?Number(t):e}function pt(t,e=/\s+/){const i=[];if(null!=t){const r=Array.isArray(t)?t:`${t}`.split(e);for(const t of r){const e=`${t}`.trim();e&&i.push(e)}}return i}const vt=(t,e)=>Number(`${Math.round(Number(`${t}e${e}`))}e-${e}`);console.groupCollapsed("%c⚡ Power Flow Card v2.5.0 is installed","color: #488fc2; font-weight: bold"),console.log("Readme:","https://github.com/ulic75/power-flow-card"),console.groupEnd();const gt=function(t,e,i){var r;return void 0===i&&(i=!1),function(){var s=[].slice.call(arguments),o=this,n=function(){r=null,i||t.apply(o,s)},a=i&&!r;clearTimeout(r),r=setTimeout(n,e),a&&t.apply(o,s)}}((t=>{console.log(`%c⚡ Power Flow Card v2.5.0 %cError: ${t}`,"color: #488fc2; font-weight: bold","color: #b33a3a; font-weight: normal")}),500);let yt=class extends rt{constructor(){super(...arguments),this.unavailableOrMisconfiguredError=t=>gt(`entity "${null!=t?t:"Unknown"}" is not available or misconfigured`),this.entityAvailable=t=>{var e;return ht(null===(e=this.hass.states[t])||void 0===e?void 0:e.state)},this.entityInverted=t=>this._config.inverted_entities.includes(t),this.previousDur={},this.circleRate=(t,e)=>{var i,r;const s=null===(i=this._config)||void 0===i?void 0:i.min_flow_rate,o=null===(r=this._config)||void 0===r?void 0:r.max_flow_rate;return o-t/e*(o-s)},this.getEntityState=t=>t&&this.entityAvailable(t)?ut(this.hass.states[t].state):(this.unavailableOrMisconfiguredError(t),0),this.getEntityStateWatts=t=>{if(!t||!this.entityAvailable(t))return this.unavailableOrMisconfiguredError(t),0;const e=this.hass.states[t],i=ut(e.state);return"W"===e.attributes.unit_of_measurement?i:1e3*i},this.displayValue=t=>null===t?0:t>=this._config.watt_threshold?`${vt(t/1e3,this._config.kw_decimals)} kW`:`${vt(t,this._config.w_decimals)} W`}setConfig(t){if(!t.entities||!t.entities.battery&&!t.entities.grid&&!t.entities.solar)throw new Error("At least one entity for battery, grid or solar must be defined");this._config=Object.assign(Object.assign({},t),{inverted_entities:pt(t.inverted_entities,","),kw_decimals:ut(t.kw_decimals,1),min_flow_rate:ut(t.min_flow_rate,.75),max_flow_rate:ut(t.max_flow_rate,6),w_decimals:ut(t.w_decimals,1),watt_threshold:ut(t.watt_threshold)})}getCardSize(){return 3}render(){var t,e,i,r;if(!this._config||!this.hass)return R``;const{entities:o}=this._config,n=void 0!==o.grid,a=void 0!==o.battery,l=void 0!==o.solar,c=n&&("string"==typeof o.grid||o.grid.production);let d=0;n&&(d="string"==typeof o.grid?this.entityInverted("grid")?Math.abs(Math.min(this.getEntityStateWatts(o.grid),0)):Math.max(this.getEntityStateWatts(o.grid),0):this.getEntityStateWatts(o.grid.consumption));let h=0;l&&(h=this.entityInverted("solar")?Math.abs(Math.min(this.getEntityStateWatts(o.solar),0)):Math.max(this.getEntityStateWatts(o.solar),0));let u=null,p=null;a&&("string"==typeof o.battery?(u=this.entityInverted("battery")?Math.max(this.getEntityStateWatts(o.battery),0):Math.abs(Math.min(this.getEntityStateWatts(o.battery),0)),p=this.entityInverted("battery")?Math.abs(Math.min(this.getEntityStateWatts(o.battery),0)):Math.max(this.getEntityStateWatts(o.battery),0)):(u=this.getEntityStateWatts(null===(t=o.battery)||void 0===t?void 0:t.production),p=this.getEntityStateWatts(null===(e=o.battery)||void 0===e?void 0:e.consumption)));let v=null;c&&(v="string"==typeof o.grid?this.entityInverted("grid")?Math.max(this.getEntityStateWatts(o.grid),0):Math.abs(Math.min(this.getEntityStateWatts(o.grid),0)):this.getEntityStateWatts(o.grid.production));let g=null;l&&(g=h-(null!=v?v:0)-(null!=u?u:0));let y=null,m=null;null!==g&&g<0&&(a&&(y=Math.abs(g),y>d&&(m=Math.min(y-d,0),y=d)),g=0);let f=null;l&&a?(m||(m=Math.max(0,(v||0)-(h||0)-(u||0)-(y||0))),f=u-(y||0)):!l&&a&&(m=v);let $=0;l&&v&&($=v-(null!=m?m:0));let b=null;a&&(b=(null!=p?p:0)-(null!=m?m:0));const _=Math.max(d-(null!=y?y:0),0),w=Math.max(_+(null!=g?g:0)+(null!=b?b:0),0);let A,x;b&&(A=b/w*238.76104),l&&(x=g/w*238.76104);const M=(w-(null!=b?b:0)-(null!=g?g:0))/w*238.76104,H=_+(null!=g?g:0)+$+(null!=f?f:0)+(null!=b?b:0)+(null!=y?y:0)+(null!=m?m:0),E=(null===(i=o.battery_charge)||void 0===i?void 0:i.length)?this.getEntityState(o.battery_charge):null;let C="M16 20H8V6H16M16.67 4H15V2H9V4H7.33C6.6 4 6 4.6 6 5.33V20.67C6 21.4 6.6 22 7.33 22H16.67C17.41 22 18 21.41 18 20.67V5.33C18 4.6 17.4 4 16.67 4M15 16H9V19H15V16M15 7H9V10H15V7M15 11.5H9V14.5H15V11.5Z";null===E?C="M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z":E<=72&&E>44?C="M16 20H8V6H16M16.67 4H15V2H9V4H7.33C6.6 4 6 4.6 6 5.33V20.67C6 21.4 6.6 22 7.33 22H16.67C17.41 22 18 21.41 18 20.67V5.33C18 4.6 17.4 4 16.67 4M15 16H9V19H15V16M15 11.5H9V14.5H15V11.5Z":E<=44&&E>16?C="M16 20H8V6H16M16.67 4H15V2H9V4H7.33C6.6 4 6 4.6 6 5.33V20.67C6 21.4 6.6 22 7.33 22H16.67C17.41 22 18 21.41 18 20.67V5.33C18 4.6 17.4 4 16.67 4M15 16H9V19H15V16":E<=16&&(C="M16,20H8V6H16M16.67,4H15V2H9V4H7.33A1.33,1.33 0 0,0 6,5.33V20.67C6,21.4 6.6,22 7.33,22H16.67A1.33,1.33 0 0,0 18,20.67V5.33C18,4.6 17.4,4 16.67,4Z");const S={batteryGrid:this.circleRate(null!==(r=null!=y?y:m)&&void 0!==r?r:0,H),batteryToHome:this.circleRate(null!=b?b:0,H),gridToHome:this.circleRate(_,H),solarToBattery:this.circleRate(null!=f?f:0,H),solarToGrid:this.circleRate($,H),solarToHome:this.circleRate(null!=g?g:0,H)};return["batteryGrid","batteryToHome","gridToHome","solarToBattery","solarToGrid","solarToHome"].forEach((t=>{const e=this[`${t}Flow`];e&&this.previousDur[t]&&this.previousDur[t]!==S[t]&&e.setCurrentTime(e.getCurrentTime()*(S[t]/this.previousDur[t])),this.previousDur[t]=S[t]})),R`
       <ha-card .header=${this._config.title}>
         <div class="card-content">
-          ${a?R` <div class="row">
+          ${l?R` <div class="row">
                 <div class="spacer"></div>
                 <div class="circle-container solar">
                   <span class="label"
@@ -73,97 +71,95 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                   <div class="circle">
                     <ha-svg-icon .path=${"M11.45,2V5.55L15,3.77L11.45,2M10.45,8L8,10.46L11.75,11.71L10.45,8M2,11.45L3.77,15L5.55,11.45H2M10,2H2V10C2.57,10.17 3.17,10.25 3.77,10.25C7.35,10.26 10.26,7.35 10.27,3.75C10.26,3.16 10.17,2.57 10,2M17,22V16H14L19,7V13H22L17,22Z"}></ha-svg-icon>
                     <span class="solar">
-                      ${this.displayValue(d)}</span
+                      ${this.displayValue(h)}</span
                     >
                   </div>
                 </div>
                 <div class="spacer"></div>
               </div>`:R``}
           <div class="row">
-            <div class="circle-container grid">
-              <div class="circle">
-                <ha-svg-icon .path=${"M8.28,5.45L6.5,4.55L7.76,2H16.23L17.5,4.55L15.72,5.44L15,4H9L8.28,5.45M18.62,8H14.09L13.3,5H10.7L9.91,8H5.38L4.1,10.55L5.89,11.44L6.62,10H17.38L18.1,11.45L19.89,10.56L18.62,8M17.77,22H15.7L15.46,21.1L12,15.9L8.53,21.1L8.3,22H6.23L9.12,11H11.19L10.83,12.35L12,14.1L13.16,12.35L12.81,11H14.88L17.77,22M11.4,15L10.5,13.65L9.32,18.13L11.4,15M14.68,18.12L13.5,13.64L12.6,15L14.68,18.12Z"}></ha-svg-icon>
-                ${null!==p?R`<span class="return">
+            ${n?R` <div class="circle-container grid">
+                  <div class="circle">
+                    <ha-svg-icon .path=${"M8.28,5.45L6.5,4.55L7.76,2H16.23L17.5,4.55L15.72,5.44L15,4H9L8.28,5.45M18.62,8H14.09L13.3,5H10.7L9.91,8H5.38L4.1,10.55L5.89,11.44L6.62,10H17.38L18.1,11.45L19.89,10.56L18.62,8M17.77,22H15.7L15.46,21.1L12,15.9L8.53,21.1L8.3,22H6.23L9.12,11H11.19L10.83,12.35L12,14.1L13.16,12.35L12.81,11H14.88L17.77,22M11.4,15L10.5,13.65L9.32,18.13L11.4,15M14.68,18.12L13.5,13.64L12.6,15L14.68,18.12Z"}></ha-svg-icon>
+                    ${null!==v?R`<span class="return">
+                          <ha-svg-icon
+                            class="small"
+                            .path=${"M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"}
+                          ></ha-svg-icon
+                          >${this.displayValue(v)}
+                        </span>`:null}
+                    <span class="consumption">
                       <ha-svg-icon
                         class="small"
-                        .path=${"M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"}
+                        .path=${"M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"}
                       ></ha-svg-icon
-                      >${this.displayValue(p)}
-                    </span>`:null}
-                <span class="consumption">
-                  <ha-svg-icon
-                    class="small"
-                    .path=${"M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"}
-                  ></ha-svg-icon
-                  >${this.displayValue(c)}
-                </span>
-              </div>
-              <span class="label"
-                >${this.hass.localize("ui.panel.lovelace.cards.energy.energy_distribution.grid")}</span
-              >
-            </div>
+                      >${this.displayValue(d)}
+                    </span>
+                  </div>
+                  <span class="label"
+                    >${this.hass.localize("ui.panel.lovelace.cards.energy.energy_distribution.grid")}</span
+                  >
+                </div>`:R`<div class="spacer"></div>`}
             <div class="circle-container home">
-              <div
-                class="circle ${dt({border:void 0===A})}"
-              >
+              <div class="circle">
                 <ha-svg-icon .path=${"M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"}></ha-svg-icon>
-                ${this.displayValue(b)}
-                ${void 0!==A?R`<svg>
-                      ${void 0!==A?O`<circle
+                ${this.displayValue(w)}
+                <svg>
+                  ${void 0!==x?O`<circle
                             class="solar"
                             cx="40"
                             cy="40"
                             r="38"
-                            stroke-dasharray="${A} ${238.76104-A}"
+                            stroke-dasharray="${x} ${238.76104-x}"
                             shape-rendering="geometricPrecision"
-                            stroke-dashoffset="-${238.76104-A}"
+                            stroke-dashoffset="-${238.76104-x}"
                           />`:""}
-                      ${w?O`<circle
+                  ${A?O`<circle
                             class="battery"
                             cx="40"
                             cy="40"
                             r="38"
-                            stroke-dasharray="${w} ${238.76104-w}"
-                            stroke-dashoffset="-${238.76104-w-(A||0)}"
+                            stroke-dasharray="${A} ${238.76104-A}"
+                            stroke-dashoffset="-${238.76104-A-(x||0)}"
                             shape-rendering="geometricPrecision"
                           />`:""}
-                      <circle
-                        class="grid"
-                        cx="40"
-                        cy="40"
-                        r="38"
-                        stroke-dasharray="${null!=x?x:238.76104-A-(w||0)} ${void 0!==x?238.76104-x:A+(w||0)}"
-                        stroke-dashoffset="0"
-                        shape-rendering="geometricPrecision"
-                      />
-                    </svg>`:""}
+                  <circle
+                    class="grid"
+                    cx="40"
+                    cy="40"
+                    r="38"
+                    stroke-dasharray="${null!=M?M:238.76104-x-(A||0)} ${void 0!==M?238.76104-M:x+(A||0)}"
+                    stroke-dashoffset="0"
+                    shape-rendering="geometricPrecision"
+                  />
+                </svg>
               </div>
               <span class="label"
                 >${this.hass.localize("ui.panel.lovelace.cards.energy.energy_distribution.home")}</span
               >
             </div>
           </div>
-          ${n?R`<div class="row">
+          ${a?R`<div class="row">
                 <div class="spacer"></div>
                 <div class="circle-container battery">
                   <div class="circle">
-                    ${null!==H?R` <span>
-                          ${s(H,this.hass.locale,{maximumFractionDigits:0,minimumFractionDigits:0})}%
+                    ${null!==E?R` <span>
+                          ${s(E,this.hass.locale,{maximumFractionDigits:0,minimumFractionDigits:0})}%
                         </span>`:null}
-                    <ha-svg-icon .path=${E}></ha-svg-icon>
+                    <ha-svg-icon .path=${C}></ha-svg-icon>
                     <span class="battery-in">
                       <ha-svg-icon
                         class="small"
                         .path=${"M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z"}
                       ></ha-svg-icon
-                      >${this.displayValue(h)}</span
+                      >${this.displayValue(u)}</span
                     >
                     <span class="battery-out">
                       <ha-svg-icon
                         class="small"
                         .path=${"M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z"}
                       ></ha-svg-icon
-                      >${this.displayValue(u)}</span
+                      >${this.displayValue(p)}</span
                     >
                   </div>
                   <span class="label"
@@ -172,7 +168,7 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                 </div>
                 <div class="spacer"></div>
               </div>`:""}
-          ${a?R`<div class="lines ${dt({battery:n})}">
+          ${l?R`<div class="lines ${dt({battery:a})}">
                 <svg
                   viewBox="0 0 100 100"
                   xmlns="http://www.w3.org/2000/svg"
@@ -182,16 +178,16 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                   <path
                     id="solar"
                     class="solar"
-                    d="M${n?55:53},0 v15 c0,${n?"35 10,30 30,30":"40 10,35 30,35"} h25"
+                    d="M${a?55:53},0 v${n?15:17} c0,${a?"35 10,30 30,30":"40 10,35 30,35"} h25"
                     vector-effect="non-scaling-stroke"
                   ></path>
-                  ${v?O`<circle
+                  ${g?O`<circle
                             r="1"
                             class="solar"
                             vector-effect="non-scaling-stroke"
                           >
                             <animateMotion
-                              dur="${C.solarToHome}s"
+                              dur="${S.solarToHome}s"
                               repeatCount="indefinite"
                               calcMode="linear"
                             >
@@ -200,7 +196,7 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                           </circle>`:""}
                 </svg>
               </div>`:""}
-          ${l&&a?R`<div class="lines ${dt({battery:n})}">
+          ${c&&l?R`<div class="lines ${dt({battery:a})}">
                 <svg
                   viewBox="0 0 100 100"
                   xmlns="http://www.w3.org/2000/svg"
@@ -210,16 +206,16 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                   <path
                     id="return"
                     class="return"
-                    d="M${n?45:47},0 v15 c0,${n?"35 -10,30 -30,30":"40 -10,35 -30,35"} h-20"
+                    d="M${a?45:47},0 v15 c0,${a?"35 -10,30 -30,30":"40 -10,35 -30,35"} h-20"
                     vector-effect="non-scaling-stroke"
                   ></path>
-                  ${f&&a?O`<circle
+                  ${$&&l?O`<circle
                         r="1"
                         class="return"
                         vector-effect="non-scaling-stroke"
                       >
                         <animateMotion
-                          dur="${C.solarToGrid}s"
+                          dur="${S.solarToGrid}s"
                           repeatCount="indefinite"
                           calcMode="linear"
                         >
@@ -228,7 +224,7 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                       </circle>`:""}
                 </svg>
               </div>`:""}
-          ${n&&a?R`<div class="lines ${dt({battery:n})}">
+          ${a&&l?R`<div class="lines ${dt({battery:a})}">
                 <svg
                   viewBox="0 0 100 100"
                   xmlns="http://www.w3.org/2000/svg"
@@ -241,13 +237,13 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                     d="M50,0 V100"
                     vector-effect="non-scaling-stroke"
                   ></path>
-                  ${m?O`<circle
+                  ${f?O`<circle
                             r="1"
                             class="battery-solar"
                             vector-effect="non-scaling-stroke"
                           >
                             <animateMotion
-                              dur="${C.solarToBattery}s"
+                              dur="${S.solarToBattery}s"
                               repeatCount="indefinite"
                               calcMode="linear"
                             >
@@ -256,35 +252,35 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                           </circle>`:""}
                 </svg>
               </div>`:""}
-          <div class="lines ${dt({battery:n})}">
-            <svg
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="xMidYMid slice"
-              id="grid-home-flow"
-            >
-              <path
-                class="grid"
-                id="grid"
-                d="M0,${n?50:a?56:53} H100"
-                vector-effect="non-scaling-stroke"
-              ></path>
-              ${_?O`<circle
+          ${n?R`<div class="lines ${dt({battery:a})}">
+                <svg
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                  preserveAspectRatio="xMidYMid slice"
+                  id="grid-home-flow"
+                >
+                  <path
+                    class="grid"
+                    id="grid"
+                    d="M0,${a?50:l?56:53} H100"
+                    vector-effect="non-scaling-stroke"
+                  ></path>
+                  ${_?O`<circle
                     r="1"
                     class="grid"
                     vector-effect="non-scaling-stroke"
                   >
                     <animateMotion
-                      dur="${C.gridToHome}s"
+                      dur="${S.gridToHome}s"
                       repeatCount="indefinite"
                       calcMode="linear"
                     >
                       <mpath xlink:href="#grid" />
                     </animateMotion>
                   </circle>`:""}
-            </svg>
-          </div>
-          ${n?R`<div class="lines ${dt({battery:n})}">
+                </svg>
+              </div>`:null}
+          ${a?R`<div class="lines ${dt({battery:a})}">
                 <svg
                   viewBox="0 0 100 100"
                   xmlns="http://www.w3.org/2000/svg"
@@ -294,16 +290,16 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                   <path
                     id="battery-home"
                     class="battery-home"
-                    d="M55,100 v-15 c0,-35 10,-30 30,-30 h20"
+                    d="M55,100 v-${n?15:17} c0,-35 10,-30 30,-30 h20"
                     vector-effect="non-scaling-stroke"
                   ></path>
-                  ${$?O`<circle
+                  ${b?O`<circle
                         r="1"
                         class="battery-home"
                         vector-effect="non-scaling-stroke"
                       >
                         <animateMotion
-                          dur="${C.batteryToHome}s"
+                          dur="${S.batteryToHome}s"
                           repeatCount="indefinite"
                           calcMode="linear"
                         >
@@ -312,7 +308,7 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                       </circle>`:""}
                 </svg>
               </div>`:""}
-          ${n?R`<div class="lines ${dt({battery:n})}">
+          ${n&&a?R`<div class="lines ${dt({battery:a})}">
                 <svg
                   viewBox="0 0 100 100"
                   xmlns="http://www.w3.org/2000/svg"
@@ -321,17 +317,17 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                 >
                   <path
                     id="battery-grid"
-                    class=${dt({"battery-from-grid":Boolean(g),"battery-to-grid":Boolean(y)})}
+                    class=${dt({"battery-from-grid":Boolean(y),"battery-to-grid":Boolean(m)})}
                     d="M45,100 v-15 c0,-35 -10,-30 -30,-30 h-20"
                     vector-effect="non-scaling-stroke"
                   ></path>
-                  ${g?O`<circle
+                  ${y?O`<circle
                     r="1"
                     class="battery-from-grid"
                     vector-effect="non-scaling-stroke"
                   >
                     <animateMotion
-                      dur="${C.batteryGrid}s"
+                      dur="${S.batteryGrid}s"
                       repeatCount="indefinite"
                       keyPoints="1;0" keyTimes="0;1"
                       calcMode="linear"
@@ -339,13 +335,13 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
                       <mpath xlink:href="#battery-grid" />
                     </animateMotion>
                   </circle>`:""}
-                  ${y?O`<circle
+                  ${m?O`<circle
                         r="1"
                         class="battery-to-grid"
                         vector-effect="non-scaling-stroke"
                       >
                         <animateMotion
-                          dur="${C.batteryGrid}s"
+                          dur="${S.batteryGrid}s"
                           repeatCount="indefinite"
                           calcMode="linear"
                         >
@@ -365,7 +361,7 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
               </div>
             `:""}
       </ha-card>
-    `}};vt.styles=((t,...e)=>{const i=1===t.length?t[0]:e.reduce(((e,i,r)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(i)+t[r+1]),t[0]);return new c(i,a)})`
+    `}};yt.styles=((t,...e)=>{const i=1===t.length?t[0]:e.reduce(((e,i,r)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(i)+t[r+1]),t[0]);return new c(i,a)})`
     :host {
       --mdc-icon-size: 24px;
     }
@@ -555,9 +551,9 @@ let f=0;a&&p&&(f=p-(null!=y?y:0));let $=null;n&&($=(null!=u?u:0)-(null!=y?y:0));
     .card-actions a {
       text-decoration: none;
     }
-  `,t([nt({attribute:!1})],vt.prototype,"hass",void 0),t([function(t){return nt({...t,state:!0})}
+  `,t([nt({attribute:!1})],yt.prototype,"hass",void 0),t([function(t){return nt({...t,state:!0})}
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */()],vt.prototype,"_config",void 0),t([at("#battery-grid-flow")],vt.prototype,"batteryGridFlow",void 0),t([at("#battery-home-flow")],vt.prototype,"batteryToHomeFlow",void 0),t([at("#grid-home-flow")],vt.prototype,"gridToHomeFlow",void 0),t([at("#solar-battery-flow")],vt.prototype,"solarToBatteryFlow",void 0),t([at("#solar-grid-flow")],vt.prototype,"solarToGridFlow",void 0),t([at("#solar-home-flow")],vt.prototype,"solarToHomeFlow",void 0),vt=t([(t=>e=>"function"==typeof e?((t,e)=>(window.customElements.define(t,e),e))(t,e):((t,e)=>{const{kind:i,elements:r}=e;return{kind:i,elements:r,finisher(e){window.customElements.define(t,e)}}})(t,e))("power-flow-card")],vt);const gt=window;gt.customCards=gt.customCards||[],gt.customCards.push({type:"power-flow-card",name:"Power Flow Card",description:"A power distribution card inspired by the official Energy Distribution card for Home Assistant"});export{vt as PowerFlowCard};
+ */()],yt.prototype,"_config",void 0),t([at("#battery-grid-flow")],yt.prototype,"batteryGridFlow",void 0),t([at("#battery-home-flow")],yt.prototype,"batteryToHomeFlow",void 0),t([at("#grid-home-flow")],yt.prototype,"gridToHomeFlow",void 0),t([at("#solar-battery-flow")],yt.prototype,"solarToBatteryFlow",void 0),t([at("#solar-grid-flow")],yt.prototype,"solarToGridFlow",void 0),t([at("#solar-home-flow")],yt.prototype,"solarToHomeFlow",void 0),yt=t([(t=>e=>"function"==typeof e?((t,e)=>(window.customElements.define(t,e),e))(t,e):((t,e)=>{const{kind:i,elements:r}=e;return{kind:i,elements:r,finisher(e){window.customElements.define(t,e)}}})(t,e))("power-flow-card")],yt);const mt=window;mt.customCards=mt.customCards||[],mt.customCards.push({type:"power-flow-card",name:"Power Flow Card",description:"A power distribution card inspired by the official Energy Distribution card for Home Assistant"});export{yt as PowerFlowCard};

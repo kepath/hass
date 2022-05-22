@@ -74,7 +74,7 @@ def async_register_websockets(hass: HomeAssistant) -> None:
     websocket_api.async_register_command(hass, websocket_artist_tracks)
     websocket_api.async_register_command(hass, websocket_artist_albums)
     websocket_api.async_register_command(hass, websocket_jobs)
-    websocket_api.async_register_command(hass, websocket_stats)
+    websocket_api.async_register_command(hass, websocket_providers)
     websocket_api.async_register_command(hass, websocket_subscribe_events)
 
 
@@ -116,7 +116,7 @@ async def websocket_artists(
 ) -> None:
     """Return artists."""
     result = [item.to_dict() for item in await mass.music.artists.library()]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -178,7 +178,7 @@ async def websocket_artist_tracks(
         item.to_dict()
         for item in await mass.music.artists.toptracks(msg[ITEM_ID], msg[PROVIDER])
     ]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -205,7 +205,7 @@ async def websocket_artist_albums(
         item.to_dict()
         for item in await mass.music.artists.albums(msg[ITEM_ID], msg[PROVIDER])
     ]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -229,7 +229,7 @@ async def websocket_albums(
 ) -> None:
     """Return albums."""
     result = [item.to_dict() for item in await mass.music.albums.library()]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -291,7 +291,7 @@ async def websocket_album_tracks(
         item.to_dict()
         for item in await mass.music.albums.tracks(msg[ITEM_ID], msg[PROVIDER])
     ]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -318,7 +318,7 @@ async def websocket_album_versions(
         item.to_dict()
         for item in await mass.music.albums.versions(msg[ITEM_ID], msg[PROVIDER])
     ]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -342,7 +342,7 @@ async def websocket_tracks(
 ) -> None:
     """Return library tracks."""
     result = [item.to_dict() for item in await mass.music.tracks.library()]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -369,7 +369,7 @@ async def websocket_track_versions(
         item.to_dict()
         for item in await mass.music.tracks.versions(msg[ITEM_ID], msg[PROVIDER])
     ]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -513,7 +513,7 @@ async def websocket_playlist_tracks(
         item.to_dict()
         for item in await mass.music.playlists.tracks(msg[ITEM_ID], msg[PROVIDER])
     ]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -592,7 +592,7 @@ async def websocket_radios(
 ) -> None:
     """Return radios."""
     result = [item.to_dict() for item in await mass.music.radio.library()]
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -834,7 +834,7 @@ async def websocket_playerqueue_items(
         return
     result = [x.to_dict() for x in queue.items]
 
-    connection.send_result(
+    await connection.send_big_result(
         msg[ID],
         result,
     )
@@ -1003,29 +1003,22 @@ async def websocket_jobs(
     )
 
 
-# generic stats endpoint
+# generic providers endpoint
 @websocket_api.websocket_command(
     {
-        vol.Required(TYPE): f"{DOMAIN}/stats",
+        vol.Required(TYPE): f"{DOMAIN}/providers",
     }
 )
 @websocket_api.async_response
 @async_get_mass
-async def websocket_stats(
+async def websocket_providers(
     hass: HomeAssistant,
     connection: ActiveConnection,
     msg: dict,
     mass: MusicAssistant,
 ) -> None:
-    """Return stats."""
-    result = {
-        "providers": [x.type.value for x in mass.music.providers],
-        "library_artists": await mass.music.artists.count(),
-        "library_albums": await mass.music.albums.count(),
-        "library_tracks": await mass.music.tracks.count(),
-        "library_playlists": await mass.music.playlists.count(),
-        "library_radios": await mass.music.radio.count(),
-    }
+    """Return providers."""
+    result = {x.id: x.to_dict() for x in mass.music.providers}
     connection.send_result(
         msg[ID],
         result,
