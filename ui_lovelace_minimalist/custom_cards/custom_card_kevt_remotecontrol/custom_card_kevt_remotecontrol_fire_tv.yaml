@@ -1,11 +1,12 @@
+---
 ########################################################
 #####  AMAZON FIRESTICK CARDS                       ####
 ########################################################
 
 card_remotecontrol_firestick_group_power:
-  type: 'custom:button-card'
-  template: layout_group
-  triggers_update: all
+  type: "custom:button-card"
+  template: "layout_group"
+  triggers_update: "all"
   variables:
     entity_id:
     background_color:
@@ -14,26 +15,26 @@ card_remotecontrol_firestick_group_power:
         entity_id:
         background_color:
         templates:
-          - power_state_button_style
+          - "power_state_button_style"
         icon:
           name:
           color:
           size:
-        tooltip: 'Turns on power. A red background shows the power is on.'
+        tooltip: "Power"
         actions:
           tap:
             entity_id:
             action: "none"
             service: "call-service"
-            command: 'input keyevent 26'
-            haptic: 'heavy'
+            command: "input keyevent 26"
+            haptic: "heavy"
             harmony:
               device:
               delay:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -42,7 +43,7 @@ card_remotecontrol_firestick_group_power:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -55,24 +56,24 @@ card_remotecontrol_firestick_group_power:
         background_color:
         templates:
         icon:
-          name: 'mdi:import'
+          name: "mdi:import"
           color:
           size:
-        tooltip: 'Changes the input on the display device'
+        tooltip: "Input"
         actions:
           tap:
             entity_id:
             action: "none"
             service: "call-service"
             command:
-            haptic: 'success'
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -81,7 +82,7 @@ card_remotecontrol_firestick_group_power:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -91,12 +92,12 @@ card_remotecontrol_firestick_group_power:
   custom_fields:
     group1:
       card:
-        type: 'custom:button-card'
-        template: layout_cell_gap_cell 
+        type: "custom:button-card"
+        template: "layout_cell_gap_cell"
         custom_fields:
           cell1:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -118,14 +119,14 @@ card_remotecontrol_firestick_group_power:
                         }
                       } else {
                         return variables.cell1.button.background_color;
-                      }                        
+                      }
                     ]]]
-                  tooltip: '[[[ return variables.cell1.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell1.button.icon ]]]'
-                  actions: '[[[ return variables.cell1.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell1.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell1.button.icon ]]]"
+                  actions: "[[[ return variables.cell1.button.actions ]]]"
           cell2:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -149,13 +150,13 @@ card_remotecontrol_firestick_group_power:
                         return variables.cell2.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell2.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell2.button.icon ]]]'
-                  actions: '[[[ return variables.cell2.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell2.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell2.button.icon ]]]"
+                  actions: "[[[ return variables.cell2.button.actions ]]]"
 
 card_remotecontrol_firestick_group_home:
-  type: 'custom:button-card'
-  template: layout_group
+  type: "custom:button-card"
+  template: "layout_group"
   variables:
     entity_id:
     background_color: "rgba(var(--color-grey), 0.2)"
@@ -165,24 +166,24 @@ card_remotecontrol_firestick_group_home:
         background_color:
         templates:
         icon:
-          name: 'mdi:arrow-u-left-top-bold'
+          name: "mdi:arrow-u-left-top-bold"
           color:
           size:
-        tooltip: 'Back'
+        tooltip: "Back"
         actions:
           tap:
             entity_id:
             action: "none"
             service: "call-service"
-            command: 'BACK'
-            haptic: 'success'
+            command: "BACK"
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -191,7 +192,7 @@ card_remotecontrol_firestick_group_home:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -204,24 +205,24 @@ card_remotecontrol_firestick_group_home:
         background_color:
         templates:
         icon:
-          name: 'mdi:home'
+          name: "mdi:home"
           color:
           size:
-        tooltip: 'Home'
+        tooltip: "Home"
         actions:
           tap:
             entity:
             action: "none"
             service: "call-service"
             command: "HOME"
-            haptic: 'success'
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -230,7 +231,7 @@ card_remotecontrol_firestick_group_home:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -240,27 +241,27 @@ card_remotecontrol_firestick_group_home:
     cell3:
       button:
         entity_id:
-        background_color: 
+        background_color:
         templates:
         icon:
-          name: 'mdi:menu'
+          name: "mdi:menu"
           color:
           size:
-        tooltip: 'Menu'
+        tooltip: "Menu"
         actions:
           tap:
             entity_id:
             action: "none"
             service: "call-service"
             command: "MENU"
-            haptic: 'success'
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -269,7 +270,7 @@ card_remotecontrol_firestick_group_home:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -279,12 +280,12 @@ card_remotecontrol_firestick_group_home:
   custom_fields:
     group1:
       card:
-        type: 'custom:button-card'
-        template: layout_cell_cell_cell
+        type: "custom:button-card"
+        template: "layout_cell_cell_cell"
         custom_fields:
           cell1:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -308,12 +309,12 @@ card_remotecontrol_firestick_group_home:
                         return variables.cell1.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell1.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell1.button.icon ]]]'
-                  actions: '[[[ return variables.cell1.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell1.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell1.button.icon ]]]"
+                  actions: "[[[ return variables.cell1.button.actions ]]]"
           cell2:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -337,12 +338,12 @@ card_remotecontrol_firestick_group_home:
                         return variables.cell2.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell2.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell2.button.icon ]]]'
-                  actions: '[[[ return variables.cell2.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell2.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell2.button.icon ]]]"
+                  actions: "[[[ return variables.cell2.button.actions ]]]"
           cell3:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -366,13 +367,13 @@ card_remotecontrol_firestick_group_home:
                         return variables.cell3.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell3.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell3.button.icon ]]]'
-                  actions: '[[[ return variables.cell3.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell3.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell3.button.icon ]]]"
+                  actions: "[[[ return variables.cell3.button.actions ]]]"
 
 card_remotecontrol_firestick_group_play:
-  type: 'custom:button-card'
-  template: layout_group
+  type: "custom:button-card"
+  template: "layout_group"
   variables:
     entity_id:
     background_color: "rgba(var(--color-grey), 0.2)"
@@ -382,35 +383,35 @@ card_remotecontrol_firestick_group_play:
         background_color:
         templates:
         icon:
-          name: 'mdi:rewind'
+          name: "mdi:rewind"
           color:
           size:
-        tooltip: 'Rewind'
+        tooltip: "Rewind"
         actions:
           tap:
             entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 89"
-            haptic: 'success'
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id: 
+            entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
@@ -420,26 +421,26 @@ card_remotecontrol_firestick_group_play:
         entity_id:
         background_color:
         templates:
-          - play_button_style
+          - "play_button_style"
         icon:
           name:
           color:
           size:
-        tooltip: 'Play or Pause. The icon changes to the currently occuring activity.'
+        tooltip: "Play"
         actions:
           tap:
-            entity_id: 
+            entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 85"
-            haptic: 'success'
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
-            entity_id: 
+            entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -448,7 +449,7 @@ card_remotecontrol_firestick_group_play:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -461,35 +462,35 @@ card_remotecontrol_firestick_group_play:
         background_color:
         templates:
         icon:
-          name: 'mdi:fast-forward'
+          name: "mdi:fast-forward"
           color:
           size:
-        tooltip: 'Fast Forward'
+        tooltip: "Fast Forward"
         actions:
           tap:
             entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 90"
-            haptic: 'success'
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id: 
+            entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
@@ -497,12 +498,12 @@ card_remotecontrol_firestick_group_play:
   custom_fields:
     group1:
       card:
-        type: 'custom:button-card'
-        template: layout_cell_cell_cell
+        type: "custom:button-card"
+        template: "layout_cell_cell_cell"
         custom_fields:
           cell1:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -526,12 +527,12 @@ card_remotecontrol_firestick_group_play:
                         return variables.cell1.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell1.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell1.button.icon ]]]'
-                  actions: '[[[ return variables.cell1.button.actions ]]]'          
+                  tooltip: "[[[ return variables.cell1.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell1.button.icon ]]]"
+                  actions: "[[[ return variables.cell1.button.actions ]]]"
           cell2:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -555,12 +556,12 @@ card_remotecontrol_firestick_group_play:
                         return variables.cell2.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell2.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell2.button.icon ]]]'
-                  actions: '[[[ return variables.cell2.button.actions ]]]'          
+                  tooltip: "[[[ return variables.cell2.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell2.button.icon ]]]"
+                  actions: "[[[ return variables.cell2.button.actions ]]]"
           cell3:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -584,25 +585,25 @@ card_remotecontrol_firestick_group_play:
                         return variables.cell3.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell3.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell3.button.icon ]]]'
-                  actions: '[[[ return variables.cell3.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell3.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell3.button.icon ]]]"
+                  actions: "[[[ return variables.cell3.button.actions ]]]"
 
 card_remotecontrol_firestick_group_arrows_and_volume:
-  type: 'custom:button-card'
-  template: layout_sectionsection_section
+  type: "custom:button-card"
+  template: "layout_sectionsection_section"
   variables:
     entity_id:
   styles:
     card:
-    - background-color: var(--primary-background-color)
+      - background-color: "var(--primary-background-color)"
   custom_fields:
     section1:
       card:
-        type: 'custom:button-card'
-        template: card_remotecontrol_firestick_group_arrow_select
+        type: "custom:button-card"
+        template: "card_remotecontrol_firestick_group_arrow_select"
         variables:
-          entity_id: > 
+          entity_id: >
             [[[
               if (variables?.entity_id) {
                 return variables.entity_id;
@@ -610,14 +611,14 @@ card_remotecontrol_firestick_group_arrows_and_volume:
             ]]]
         styles:
           card:
-          - border-radius: var(--border-radius)
-          - box-shadow: var(--box-shadow)
+            - border-radius: "var(--border-radius)"
+            - box-shadow: "var(--box-shadow)"
     section2:
       card:
-        type: 'custom:button-card'
-        template: card_remotecontrol_firestick_group_volume
+        type: "custom:button-card"
+        template: "card_remotecontrol_firestick_group_volume"
         variables:
-          entity_id: > 
+          entity_id: >
             [[[
               if (variables?.entity_id) {
                 return variables.entity_id;
@@ -625,12 +626,12 @@ card_remotecontrol_firestick_group_arrows_and_volume:
             ]]]
         styles:
           card:
-          - border-radius: var(--border-radius)
-          - box-shadow: var(--box-shadow)
- 
+            - border-radius: "var(--border-radius)"
+            - box-shadow: "var(--box-shadow)"
+
 card_remotecontrol_firestick_group_arrow_select:
-  type: 'custom:button-card'
-  template: layout_group
+  type: "custom:button-card"
+  template: "layout_group"
   variables:
     entity_id:
     background_color:
@@ -639,12 +640,12 @@ card_remotecontrol_firestick_group_arrow_select:
         entity_id:
         background_color:
         templates:
-          - blue_text
+          - "blue_text"
         icon:
-          name: 'mdi:arrow-up-bold'
+          name: "mdi:arrow-up-bold"
           color:
           size:
-        tooltip: 'Arrow up. Primary device controlled using single tap, secondary using double-tap.'
+        tooltip: "Arrow Up"
         actions:
           tap:
             entity_id:
@@ -658,8 +659,8 @@ card_remotecontrol_firestick_group_arrow_select:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
-            haptic: 'selection'
+            service: "androidtv.adb_command"
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
@@ -667,7 +668,7 @@ card_remotecontrol_firestick_group_arrow_select:
           hold:
             entity_id:
             action: "more-info"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -679,12 +680,12 @@ card_remotecontrol_firestick_group_arrow_select:
         entity_id:
         background_color:
         templates:
-          - blue_text
+          - "blue_text"
         icon:
-          name: 'mdi:arrow-left-bold'
+          name: "mdi:arrow-left-bold"
           color:
           size:
-        tooltip: 'Arrow left. Primary device controlled using single tap, secondary using double-tap.'
+        tooltip: "Arrow Left"
         actions:
           tap:
             entity_id:
@@ -698,7 +699,7 @@ card_remotecontrol_firestick_group_arrow_select:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -707,24 +708,24 @@ card_remotecontrol_firestick_group_arrow_select:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
-              delay:      
+              delay:
     cell3:
       button:
         entity_id:
         background_color:
         templates:
-          - blue_text
+          - "blue_text"
         icon:
-          name: 'mdi:circle-slice-8'
+          name: "mdi:circle-slice-8"
           color:
           size:
-        tooltip: 'Select. Primary device controlled using single tap, secondary using double-tap.'
+        tooltip: "Select"
         actions:
           tap:
             entity_id:
@@ -738,7 +739,7 @@ card_remotecontrol_firestick_group_arrow_select:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -747,24 +748,24 @@ card_remotecontrol_firestick_group_arrow_select:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
             harmony:
               device:
-              delay:      
+              delay:
     cell4:
       button:
         entity_id:
         background_color:
         templates:
-          - blue_text
+          - "blue_text"
         icon:
-          name: 'mdi:arrow-right-bold'
+          name: "mdi:arrow-right-bold"
           color:
           size:
-        tooltip: 'Arrow right. Primary device controlled using single tap, secondary using double-tap.'
+        tooltip: "Arrow Right"
         actions:
           tap:
             entity_id:
@@ -778,7 +779,7 @@ card_remotecontrol_firestick_group_arrow_select:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -787,24 +788,24 @@ card_remotecontrol_firestick_group_arrow_select:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
-              delay:      
+              delay:
     cell5:
       button:
         entity_id:
         background_color:
         templates:
-          - blue_text
+          - "blue_text"
         icon:
-          name: 'mdi:arrow-down-bold'
+          name: "mdi:arrow-down-bold"
           color:
           size:
-        tooltip: 'Arrow down. Primary device controlled using single tap, secondary using double-tap.'
+        tooltip: "Arrow Down"
         actions:
           tap:
             entity_id:
@@ -818,7 +819,7 @@ card_remotecontrol_firestick_group_arrow_select:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -827,9 +828,9 @@ card_remotecontrol_firestick_group_arrow_select:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
@@ -837,12 +838,12 @@ card_remotecontrol_firestick_group_arrow_select:
   custom_fields:
     group1:
       card:
-        type: 'custom:button-card'
-        template: layout_gap_cell_gap-cell_cell_cell-gap_cell_gap
+        type: "custom:button-card"
+        template: "layout_gap_cell_gap-cell_cell_cell-gap_cell_gap"
         custom_fields:
           cell1:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -866,12 +867,12 @@ card_remotecontrol_firestick_group_arrow_select:
                         return variables.cell1.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell1.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell1.button.icon ]]]'
-                  actions: '[[[ return variables.cell1.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell1.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell1.button.icon ]]]"
+                  actions: "[[[ return variables.cell1.button.actions ]]]"
           cell2:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -895,12 +896,12 @@ card_remotecontrol_firestick_group_arrow_select:
                         return variables.cell2.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell2.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell2.button.icon ]]]'
-                  actions: '[[[ return variables.cell2.button.actions ]]]'          
+                  tooltip: "[[[ return variables.cell2.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell2.button.icon ]]]"
+                  actions: "[[[ return variables.cell2.button.actions ]]]"
           cell3:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -924,12 +925,12 @@ card_remotecontrol_firestick_group_arrow_select:
                         return variables.cell3.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell3.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell3.button.icon ]]]'
-                  actions: '[[[ return variables.cell3.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell3.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell3.button.icon ]]]"
+                  actions: "[[[ return variables.cell3.button.actions ]]]"
           cell4:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -953,12 +954,12 @@ card_remotecontrol_firestick_group_arrow_select:
                         return variables.cell4.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell4.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell4.button.icon ]]]'
-                  actions: '[[[ return variables.cell4.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell4.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell4.button.icon ]]]"
+                  actions: "[[[ return variables.cell4.button.actions ]]]"
           cell5:
             card:
-              type: 'custom:button-card'
+              type: "custom:button-card"
               template: >
                 [[[
                   var templates = ['remotecontrol_button'];
@@ -982,14 +983,14 @@ card_remotecontrol_firestick_group_arrow_select:
                         return variables.cell5.button.background_color;
                       }
                     ]]]
-                  tooltip: '[[[ return variables.cell5.button.tooltip ]]]'
-                  icon: '[[[ return variables.cell5.button.icon ]]]'
-                  actions: '[[[ return variables.cell5.button.actions ]]]'
+                  tooltip: "[[[ return variables.cell5.button.tooltip ]]]"
+                  icon: "[[[ return variables.cell5.button.icon ]]]"
+                  actions: "[[[ return variables.cell5.button.actions ]]]"
 
 card_remotecontrol_firestick_group_volume:
-  type: 'custom:button-card'
-  template: 
-    - layout_row_row_row
+  type: "custom:button-card"
+  template:
+    - "layout_row_row_row"
   variables:
     entity_id:
     background_color:
@@ -998,12 +999,12 @@ card_remotecontrol_firestick_group_volume:
         entity_id:
         background_color:
         templates:
-          - green_text
+          - "green_text"
         icon:
-          name: 'mdi:volume-plus'
+          name: "mdi:volume-plus"
           color:
           size:
-        tooltip: 'Increase volume'
+        tooltip: "Volume Up"
         actions:
           tap:
             entity_id:
@@ -1017,7 +1018,7 @@ card_remotecontrol_firestick_group_volume:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -1026,24 +1027,24 @@ card_remotecontrol_firestick_group_volume:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
-              delay:      
+              delay:
     row2:
       button:
         entity_id:
         background_color:
         templates:
-          - green_text
+          - "green_text"
         icon:
-          name: 'mdi:volume-minus'
+          name: "mdi:volume-minus"
           color:
           size:
-        tooltip: 'Decrease Volume'
+        tooltip: "Volume Down"
         actions:
           tap:
             entity_id:
@@ -1057,7 +1058,7 @@ card_remotecontrol_firestick_group_volume:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -1066,24 +1067,24 @@ card_remotecontrol_firestick_group_volume:
           hold:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
-              delay:      
+              delay:
     row3:
       button:
         entity_id:
         background_color:
         templates:
-          - volume_mute_button_style
+          - "volume_mute_button_style"
         icon:
-          name: 'mdi:volume-off'
+          name: "mdi:volume-off"
           color:
           size:
-        tooltip: 'Volueme Mute. If enabled the button is red.'
+        tooltip: "Volume Mute"
         actions:
           tap:
             entity_id:
@@ -1097,7 +1098,7 @@ card_remotecontrol_firestick_group_volume:
           double_tap:
             entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
@@ -1106,7 +1107,7 @@ card_remotecontrol_firestick_group_volume:
           hold:
             entity_id:
             action: "more-info"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -1116,7 +1117,7 @@ card_remotecontrol_firestick_group_volume:
   custom_fields:
     row1:
       card:
-        type: 'custom:button-card'
+        type: "custom:button-card"
         template: >
           [[[
             var templates = ['remotecontrol_button'];
@@ -1140,12 +1141,12 @@ card_remotecontrol_firestick_group_volume:
                   return variables.row1.button.background_color;
                 }
               ]]]
-            tooltip: '[[[ return variables.row1.button.tooltip ]]]'
-            icon: '[[[ return variables.row1.button.icon ]]]'
-            actions: '[[[ return variables.row1.button.actions ]]]'
+            tooltip: "[[[ return variables.row1.button.tooltip ]]]"
+            icon: "[[[ return variables.row1.button.icon ]]]"
+            actions: "[[[ return variables.row1.button.actions ]]]"
     row2:
       card:
-        type: 'custom:button-card'
+        type: "custom:button-card"
         template: >
           [[[
             var templates = ['remotecontrol_button'];
@@ -1169,12 +1170,12 @@ card_remotecontrol_firestick_group_volume:
                   return variables.row2.button.background_color;
                 }
               ]]]
-            tooltip: '[[[ return variables.row2.button.tooltip ]]]'
-            icon: '[[[ return variables.row2.button.icon ]]]'
-            actions: '[[[ return variables.row2.button.actions ]]]'
+            tooltip: "[[[ return variables.row2.button.tooltip ]]]"
+            icon: "[[[ return variables.row2.button.icon ]]]"
+            actions: "[[[ return variables.row2.button.actions ]]]"
     row3:
       card:
-        type: 'custom:button-card'
+        type: "custom:button-card"
         template: >
           [[[
             var templates = ['remotecontrol_button'];
@@ -1198,13 +1199,13 @@ card_remotecontrol_firestick_group_volume:
                   return variables.row3.button.background_color;
                 }
               ]]]
-            tooltip: '[[[ return variables.row3.button.tooltip ]]]'
-            icon: '[[[ return variables.row3.button.icon ]]]'
-            actions: '[[[ return variables.row3.button.actions ]]]'
+            tooltip: "[[[ return variables.row3.button.tooltip ]]]"
+            icon: "[[[ return variables.row3.button.icon ]]]"
+            actions: "[[[ return variables.row3.button.actions ]]]"
 
 card_remotecontrol_firestick_group_numbers:
-  type: 'custom:button-card'
-  template: button_grid_4_by_4 
+  type: "custom:button-card"
+  template: "button_grid_4_by_4"
   variables:
     entity_id:
     background_color:
@@ -1216,12 +1217,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-1-circle-outline
+            name: "mdi:numeric-1-circle-outline"
             color:
             size:
-          tooltip: 'Number 1'
+          tooltip: "Number 1"
           actions:
             tap:
               entity_id:
@@ -1235,7 +1236,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1244,7 +1245,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1256,12 +1257,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-2-circle-outline
+            name: "mdi:numeric-2-circle-outline"
             color: "rgba(var(--color-blue),1)"
             size:
-          tooltip: 'Number 2'
+          tooltip: "Number 2"
           actions:
             tap:
               entity_id:
@@ -1275,7 +1276,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1284,7 +1285,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1296,12 +1297,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-3-circle-outline
+            name: "mdi:numeric-3-circle-outline"
             color:
             size:
-          tooltip: 'Number 3'
+          tooltip: "Number 3"
           actions:
             tap:
               entity_id:
@@ -1315,7 +1316,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1324,7 +1325,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1339,12 +1340,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-4-circle-outline
+            name: "mdi:numeric-4-circle-outline"
             color:
             size:
-          tooltip: 'Number 4'
+          tooltip: "Number 4"
           actions:
             tap:
               entity_id:
@@ -1358,7 +1359,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1367,7 +1368,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1379,12 +1380,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-5-circle-outline
+            name: "mdi:numeric-5-circle-outline"
             color:
             size:
-          tooltip: 'Number 5'
+          tooltip: "Number 5"
           actions:
             tap:
               entity_id:
@@ -1398,7 +1399,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1407,7 +1408,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1419,12 +1420,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-6-circle-outline
+            name: "mdi:numeric-6-circle-outline"
             color:
             size:
-          tooltip: 'Number 6'
+          tooltip: "Number 6"
           actions:
             tap:
               entity_id:
@@ -1438,7 +1439,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1447,7 +1448,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1462,12 +1463,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-7-circle-outline
+            name: "mdi:numeric-7-circle-outline"
             color:
             size:
-          tooltip: 'Number 7'
+          tooltip: "Number 7"
           actions:
             tap:
               entity_id:
@@ -1481,7 +1482,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1490,7 +1491,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1502,12 +1503,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-8-circle-outline
+            name: "mdi:numeric-8-circle-outline"
             color:
             size:
-          tooltip: 'Number 8'
+          tooltip: "Number 8"
           actions:
             tap:
               entity_id:
@@ -1521,7 +1522,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1530,7 +1531,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1542,12 +1543,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-9-circle-outline
+            name: "mdi:numeric-9-circle-outline"
             color:
             size:
-          tooltip: 'Number 9'
+          tooltip: "Number 9"
           actions:
             tap:
               entity_id:
@@ -1561,7 +1562,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1570,7 +1571,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1585,12 +1586,12 @@ card_remotecontrol_firestick_group_numbers:
           entity_id:
           background_color:
           templates:
-            - blue_text
+            - "blue_text"
           icon:
-            name: mdi:numeric-0-circle-outline
+            name: "mdi:numeric-0-circle-outline"
             color:
             size:
-          tooltip: 'Number 0'
+          tooltip: "Number 0"
           actions:
             tap:
               entity_id:
@@ -1604,7 +1605,7 @@ card_remotecontrol_firestick_group_numbers:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1613,7 +1614,7 @@ card_remotecontrol_firestick_group_numbers:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1624,46 +1625,46 @@ card_remotecontrol_firestick_group_numbers:
   custom_fields:
     row1:
       card:
-        type: 'custom:button-card'
-        template: button_row_3_column
+        type: "custom:button-card"
+        template: "button_row_3_column"
         variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row1.cell1 ]]]'
-          cell2: '[[[ return variables.row1.cell2 ]]]'
-          cell3: '[[[ return variables.row1.cell3 ]]]'
-    row2: 
+          entity_id: "[[[ return variables.entity_id ]]]"
+          background_color: "[[[ return variables.background_color ]]]"
+          cell1: "[[[ return variables.row1.cell1 ]]]"
+          cell2: "[[[ return variables.row1.cell2 ]]]"
+          cell3: "[[[ return variables.row1.cell3 ]]]"
+    row2:
       card:
-        type: 'custom:button-card'
-        template: button_row_3_column
+        type: "custom:button-card"
+        template: "button_row_3_column"
         variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row2.cell1 ]]]'
-          cell2: '[[[ return variables.row2.cell2 ]]]'
-          cell3: '[[[ return variables.row2.cell3 ]]]'
-    row3: 
+          entity_id: "[[[ return variables.entity_id ]]]"
+          background_color: "[[[ return variables.background_color ]]]"
+          cell1: "[[[ return variables.row2.cell1 ]]]"
+          cell2: "[[[ return variables.row2.cell2 ]]]"
+          cell3: "[[[ return variables.row2.cell3 ]]]"
+    row3:
       card:
-        type: 'custom:button-card'
-        template: button_row_3_column
+        type: "custom:button-card"
+        template: "button_row_3_column"
         variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row3.cell1 ]]]'
-          cell2: '[[[ return variables.row3.cell2 ]]]'
-          cell3: '[[[ return variables.row3.cell3 ]]]'
-    row4: 
+          entity_id: "[[[ return variables.entity_id ]]]"
+          background_color: "[[[ return variables.background_color ]]]"
+          cell1: "[[[ return variables.row3.cell1 ]]]"
+          cell2: "[[[ return variables.row3.cell2 ]]]"
+          cell3: "[[[ return variables.row3.cell3 ]]]"
+    row4:
       card:
-        type: 'custom:button-card'
-        template: button_row_3_column_gap_cell_gap
+        type: "custom:button-card"
+        template: "button_row_3_column_gap_cell_gap"
         variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row4.cell1 ]]]'
+          entity_id: "[[[ return variables.entity_id ]]]"
+          background_color: "[[[ return variables.background_color ]]]"
+          cell1: "[[[ return variables.row4.cell1 ]]]"
 
 card_remotecontrol_firestick_group_apps:
-  type: 'custom:button-card'
-  template: button_grid_4_by_4 
+  type: "custom:button-card"
+  template: "button_grid_4_by_4"
   variables:
     entity_id:
     background_color:
@@ -1673,13 +1674,13 @@ card_remotecontrol_firestick_group_apps:
       cell1:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color: "#FFFFFF"
           templates:
           icon:
-            name: si:netflix
-            color: '#E50914'
+            name: "si:netflix"
+            color: "#E50914"
             size:
-          tooltip:
+          tooltip: "Netflix"
           actions:
             tap:
               entity_id:
@@ -1693,7 +1694,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1702,7 +1703,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1712,13 +1713,13 @@ card_remotecontrol_firestick_group_apps:
       cell2:
         button:
           entity_id:
-          background_color: '#00A8E1'
+          background_color: "#00A8E1"
           templates:
           icon:
-            name: si:prime
-            color: '#FFFFFF'
-            size: '90%'
-          tooltip:
+            name: "si:prime"
+            color: "#FFFFFF"
+            size: "90%"
+          tooltip: "Amazon Prime"
           actions:
             tap:
               entity_id:
@@ -1732,7 +1733,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1741,7 +1742,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1751,11 +1752,11 @@ card_remotecontrol_firestick_group_apps:
       cell3:
         button:
           entity_id:
-          background_color: '#0000FF'
+          background_color: "#0000FF"
           templates:
           icon:
-            name: phu:disney-plus
-            color: '#FFFFFF'
+            name: "phu:disney-plus"
+            color: "#FFFFFF"
             size:
           tooltip:
           actions:
@@ -1771,7 +1772,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1780,7 +1781,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1790,13 +1791,13 @@ card_remotecontrol_firestick_group_apps:
       cell4:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color: "#FFFFFF"
           templates:
           icon:
-            name: si:youtube
-            color: '#FF0000'
-            size: '85%'
-          tooltip:
+            name: "si:youtube"
+            color: "#FF0000"
+            size: "85%"
+          tooltip: "YouTube"
           actions:
             tap:
               entity_id:
@@ -1810,7 +1811,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1819,7 +1820,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1832,13 +1833,13 @@ card_remotecontrol_firestick_group_apps:
       cell1:
         button:
           entity_id:
-          background_color: '#434343'
+          background_color: "#434343"
           templates:
           icon:
-            name: si:plex
-            color: '#E5A00D' 
+            name: "si:plex"
+            color: "#E5A00D"
             size:
-          tooltip:
+          tooltip: "Plex"
           actions:
             tap:
               entity_id:
@@ -1852,7 +1853,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1861,7 +1862,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1871,13 +1872,13 @@ card_remotecontrol_firestick_group_apps:
       cell2:
         button:
           entity_id:
-          background_color: '#434343'
+          background_color: "#434343"
           templates:
           icon:
-            name: si:spotify
-            color: '#1DB954'   
+            name: "si:spotify"
+            color: "#1DB954"
             size:
-          tooltip:
+          tooltip: "Spotify"
           actions:
             tap:
               entity_id:
@@ -1891,7 +1892,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1900,7 +1901,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1910,13 +1911,13 @@ card_remotecontrol_firestick_group_apps:
       cell3:
         button:
           entity_id:
-          background_color: '#434343'
+          background_color: "#434343"
           templates:
           icon:
-            name: si:appletv
-            color: '#FFFFFF'
-            size: '85%'
-          tooltip:
+            name: "si:appletv"
+            color: "#FFFFFF"
+            size: "85%"
+          tooltip: "Apple TV"
           actions:
             tap:
               entity_id:
@@ -1930,7 +1931,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1939,7 +1940,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1949,13 +1950,13 @@ card_remotecontrol_firestick_group_apps:
       cell4:
         button:
           entity_id:
-          background_color: '#434343'
+          background_color: "#434343"
           templates:
           icon:
-            name: si:bbciplayer
-            color: '#F54997'
+            name: "si:bbciplayer"
+            color: "#F54997"
             size:
-          tooltip:
+          tooltip: "BBC iPlayer"
           actions:
             tap:
               entity_id:
@@ -1969,7 +1970,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -1978,7 +1979,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1991,13 +1992,13 @@ card_remotecontrol_firestick_group_apps:
       cell1:
         button:
           entity_id:
-          background_color: '#434343'
+          background_color: "#434343"
           templates:
           icon:
-            name: si:ubiquiti
-            color: '#0559C9'
+            name: "si:ubiquiti"
+            color: "#0559C9"
             size:
-          tooltip:
+          tooltip: "Unifi Protect"
           actions:
             tap:
               entity_id:
@@ -2011,7 +2012,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -2020,7 +2021,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -2030,13 +2031,13 @@ card_remotecontrol_firestick_group_apps:
       cell2:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color: "#FFFFFF"
           templates:
           icon:
-            name: si:youtubemusic
-            color: '#FF0000'
+            name: "si:youtubemusic"
+            color: "#FF0000"
             size:
-          tooltip:
+          tooltip: "YouTube Music"
           actions:
             tap:
               entity_id:
@@ -2050,7 +2051,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -2059,7 +2060,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -2069,13 +2070,13 @@ card_remotecontrol_firestick_group_apps:
       cell3:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color: "#FFFFFF"
           templates:
           icon:
-            name: si:applemusic
-            color: '#FA243C'
+            name: "si:applemusic"
+            color: "#FA243C"
             size:
-          tooltip:
+          tooltip: "Apple Music"
           actions:
             tap:
               entity_id:
@@ -2089,7 +2090,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -2098,7 +2099,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -2108,13 +2109,13 @@ card_remotecontrol_firestick_group_apps:
       cell4:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color: "#FFFFFF"
           templates:
           icon:
-            name: si:googleplay
-            color: '#414141'
+            name: "si:googleplay"
+            color: "#414141"
             size:
-          tooltip:
+          tooltip: "Google Play"
           actions:
             tap:
               entity_id:
@@ -2128,7 +2129,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -2137,7 +2138,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -2150,13 +2151,13 @@ card_remotecontrol_firestick_group_apps:
       cell1:
         button:
           entity_id:
-          background_color: '#F15B2A'
+          background_color: "#F15B2A"
           templates:
           icon:
-            name: si:pluralsight
-            color: '#FFFFFF'
+            name: "si:pluralsight"
+            color: "#FFFFFF"
             size:
-          tooltip:
+          tooltip: "Pluralsight"
           actions:
             tap:
               entity_id:
@@ -2170,7 +2171,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -2179,7 +2180,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -2189,13 +2190,13 @@ card_remotecontrol_firestick_group_apps:
       cell2:
         button:
           entity_id:
-          background_color: '#9146FF'
+          background_color: "#9146FF"
           templates:
           icon:
-            name: si:twitch
-            color: '#FFFFFF'
+            name: "si:twitch"
+            color: "#FFFFFF"
             size:
-          tooltip:
+          tooltip: "Twitch"
           actions:
             tap:
               entity_id:
@@ -2209,7 +2210,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -2218,7 +2219,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -2228,13 +2229,13 @@ card_remotecontrol_firestick_group_apps:
       cell3:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color: "#FFFFFF"
           templates:
           icon:
-            name: si:ted
-            color: '#E62B1E'
-            size: '85%'
-          tooltip:
+            name: "si:ted"
+            color: "#E62B1E"
+            size: "85%"
+          tooltip: "TED"
           actions:
             tap:
               entity_id:
@@ -2248,7 +2249,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -2257,7 +2258,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -2267,13 +2268,13 @@ card_remotecontrol_firestick_group_apps:
       cell4:
         button:
           entity_id:
-          background_color: '#FF8800'
+          background_color: "#FF8800"
           templates:
           icon:
-            name: si:vlcmediaplayer
-            color: '#FFFFFF'
+            name: "si:vlcmediaplayer"
+            color: "#FFFFFF"
             size:
-          tooltip:
+          tooltip: "VLC Media Player"
           actions:
             tap:
               entity_id:
@@ -2287,7 +2288,7 @@ card_remotecontrol_firestick_group_apps:
             double_tap:
               entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
@@ -2296,7 +2297,7 @@ card_remotecontrol_firestick_group_apps:
             hold:
               entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -2307,46 +2308,45 @@ card_remotecontrol_firestick_group_apps:
   custom_fields:
     row1:
       card:
-        type: 'custom:button-card'
-        template: button_row_4_column
+        type: "custom:button-card"
+        template: "button_row_4_column"
         variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row1.cell1 ]]]'
-          cell2: '[[[ return variables.row1.cell2 ]]]'
-          cell3: '[[[ return variables.row1.cell3 ]]]'
-          cell4: '[[[ return variables.row1.cell4 ]]]'
-    row2: 
+          entity_id: "[[[ return variables.entity_id ]]]"
+          background_color: "[[[ return variables.background_color ]]]"
+          cell1: "[[[ return variables.row1.cell1 ]]]"
+          cell2: "[[[ return variables.row1.cell2 ]]]"
+          cell3: "[[[ return variables.row1.cell3 ]]]"
+          cell4: "[[[ return variables.row1.cell4 ]]]"
+    row2:
       card:
-        type: 'custom:button-card'
-        template: button_row_4_column
+        type: "custom:button-card"
+        template: "button_row_4_column"
         variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row2.cell1 ]]]'
-          cell2: '[[[ return variables.row2.cell2 ]]]'
-          cell3: '[[[ return variables.row2.cell3 ]]]'
-          cell4: '[[[ return variables.row2.cell4 ]]]'
-    row3: 
+          entity_id: "[[[ return variables.entity_id ]]]"
+          background_color: "[[[ return variables.background_color ]]]"
+          cell1: "[[[ return variables.row2.cell1 ]]]"
+          cell2: "[[[ return variables.row2.cell2 ]]]"
+          cell3: "[[[ return variables.row2.cell3 ]]]"
+          cell4: "[[[ return variables.row2.cell4 ]]]"
+    row3:
       card:
-        type: 'custom:button-card'
-        template: button_row_4_column
+        type: "custom:button-card"
+        template: "button_row_4_column"
         variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row3.cell1 ]]]'
-          cell2: '[[[ return variables.row3.cell2 ]]]'
-          cell3: '[[[ return variables.row3.cell3 ]]]'
-          cell4: '[[[ return variables.row3.cell4 ]]]'
-    row4: 
+          entity_id: "[[[ return variables.entity_id ]]]"
+          background_color: "[[[ return variables.background_color ]]]"
+          cell1: "[[[ return variables.row3.cell1 ]]]"
+          cell2: "[[[ return variables.row3.cell2 ]]]"
+          cell3: "[[[ return variables.row3.cell3 ]]]"
+          cell4: "[[[ return variables.row3.cell4 ]]]"
+    row4:
       card:
-        type: 'custom:button-card'
-        template: button_row_4_column
+        type: "custom:button-card"
+        template: "button_row_4_column"
         variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row4.cell1 ]]]'
-          cell2: '[[[ return variables.row4.cell2 ]]]'
-          cell3: '[[[ return variables.row4.cell3 ]]]'
-          cell4: '[[[ return variables.row4.cell4 ]]]'
-          
+          entity_id: "[[[ return variables.entity_id ]]]"
+          background_color: "[[[ return variables.background_color ]]]"
+          cell1: "[[[ return variables.row4.cell1; ]]]"
+          cell2: "[[[ return variables.row4.cell2; ]]]"
+          cell3: "[[[ return variables.row4.cell3; ]]]"
+          cell4: "[[[ return variables.row4.cell4; ]]]"
