@@ -130,6 +130,10 @@ BUTTON_TYPES = [
 # ================================= Number Declarations ============================================================
 
 MAX_CURRENTS = [
+    ('L30E',  100 ), # Gen2 X1 SK-TL
+    ('U30',    50 ), # Gen2 X1 SK-SU
+    ('L37E',  100 ), # Gen2 X1 SK-TL
+    ('U37',    50 ), # Gen2 X1 SK-SU
     ('L50E',  100 ), # Gen2 X1 SK-TL
     ('U50',    50 ), # Gen2 X1 SK-SU
     ('F3E',    25 ), # RetroFit X3
@@ -567,6 +571,15 @@ SELECT_TYPES = [
         register = 0x2B,
         options = TIME_OPTIONS,
         allowedtypes = GEN2 | GEN3, 
+    ),
+    SolaxModbusSelectEntityDescription( name = "Cloud Control",
+        key = "cloud_control",
+        register = 0x99,
+        options =  {
+                0: "Disabled",
+                1: "Enabled",
+            },
+        allowedtypes = AC | HYBRID | GEN3,
     ),
     SolaxModbusSelectEntityDescription( name = "Discharger Start Time 1",
         key = "discharger_start_time_1",

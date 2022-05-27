@@ -143,7 +143,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         """Start sync actions when Home Assistant is started."""
         register_services(hass, mass)
         await controls.async_register_player_controls()
-        await mass.music.start_sync(3)
+        await mass.music.start_sync(schedule=3)
 
     # setup event listeners, register their unsubscribe in the unload
 
