@@ -3,10 +3,20 @@
 #####  BUTTON TEMPLATES                             ####
 ########################################################
 
-remotecontrol_button:
+remotecontrol_double_height_button:
+  type: "custom:button-card"
+  template:
+    - "layout_double_height_button"
+    - "remotecontrol_button"
+
+remotecontrol_single_height_button:
   type: "custom:button-card"
   template:
     - "layout_button"
+    - "remotecontrol_button"
+
+remotecontrol_button:
+  type: "custom:button-card"
   variables:
     button:
   card:
@@ -59,6 +69,12 @@ remotecontrol_button:
         return variables.button.tooltip;
       }
     ]]]
+  name: >
+    [[[ 
+      if (variables.button.name != null) {
+        return variables.button.name;
+      }
+    ]]]
   icon: "[[[ return variables.button.icon.name; ]]]"
   styles:
     icon:
@@ -79,8 +95,10 @@ remotecontrol_button:
             }
             return size;
           ]]]
-    img_cell:
-      - background-color: "[[[ return variables.button.background_color ]]]"
+    # img_cell:
+    #   - background-color: "[[[ return variables.button.background_color ]]]"
+    # name:
+    #   - background-color: "[[[ return variables.button.background_color ]]]"
   color: "var(--google-grey)"
 
 remotecontrol_button_presses:
