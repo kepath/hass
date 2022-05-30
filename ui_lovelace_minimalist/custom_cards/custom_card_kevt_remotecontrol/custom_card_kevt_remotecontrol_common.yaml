@@ -661,7 +661,7 @@ card_remotecontrol_group_channel_selector:
 card_remotecontrol_group_numbers:
   type: "custom:button-card"
   template: 
-    - "button_grid_4_by_4"
+    - "button_grid_4row_3column"
     - "vars_remotecontrol_shared"
   custom_fields:
     row1:
@@ -715,7 +715,7 @@ card_remotecontrol_group_numbers:
 card_remotecontrol_group_apps:
   type: "custom:button-card"
   template: 
-    - "button_grid_4_by_4"
+    - "layout_row_row_row_row"
     - "vars_remotecontrol_shared"
   custom_fields:
     row1:
@@ -723,6 +723,7 @@ card_remotecontrol_group_apps:
         type: "custom:button-card"
         template: "button_row_4_column"
         variables:
+          entity_id: "[[[ return variables.entity_id ]]]"
           entity_id_tap: "[[[ return variables.entity_id_apps_tap ]]]"
           entity_id_double_tap: "[[[ return variables.entity_id_apps_double_tap ]]]"
           entity_id_hold: "[[[ return variables.entity_id_apps_hold ]]]"
@@ -736,6 +737,7 @@ card_remotecontrol_group_apps:
         type: "custom:button-card"
         template: "button_row_4_column"
         variables:
+          entity_id: "[[[ return variables.entity_id ]]]"
           entity_id_tap: "[[[ return variables.entity_id_apps_tap ]]]"
           entity_id_double_tap: "[[[ return variables.entity_id_apps_double_tap ]]]"
           entity_id_hold: "[[[ return variables.entity_id_apps_hold ]]]"
@@ -749,6 +751,7 @@ card_remotecontrol_group_apps:
         type: "custom:button-card"
         template: "button_row_4_column"
         variables:
+          entity_id: "[[[ return variables.entity_id ]]]"
           entity_id_tap: "[[[ return variables.entity_id_apps_tap ]]]"
           entity_id_double_tap: "[[[ return variables.entity_id_apps_double_tap ]]]"
           entity_id_hold: "[[[ return variables.entity_id_apps_hold ]]]"
@@ -762,6 +765,7 @@ card_remotecontrol_group_apps:
         type: "custom:button-card"
         template: "button_row_4_column"
         variables:
+          entity_id: "[[[ return variables.entity_id ]]]"
           entity_id_tap: "[[[ return variables.entity_id_apps_tap ]]]"
           entity_id_double_tap: "[[[ return variables.entity_id_apps_double_tap ]]]"
           entity_id_hold: "[[[ return variables.entity_id_apps_hold ]]]"
@@ -1163,7 +1167,7 @@ card_remotecontrol_group_channel_and_numbers:
 #####  GRID TEMPLATES                              #####
 ########################################################
 
-button_grid_3_by_4:
+button_grid_4row_3column:
   type: "custom:button-card"
   template: "layout_row_row_row_row"
   variables:
@@ -1222,7 +1226,7 @@ button_grid_3_by_4:
           cell2: "[[[ return variables.row4.cell2 ]]]"
           cell3: "[[[ return variables.row4.cell3 ]]]"
 
-button_grid_4_by_4:
+button_grid_4row_4column:
   type: "custom:button-card"
   template: "layout_row_row_row_row"
   variables:
@@ -1835,6 +1839,7 @@ layout_cell_gap_cell:
     card:
       - box-shadow: "none"
       - padding: "0px"
+      - border-radius: "0px"
 
 layout_gap_cell_gap:
   styles:
