@@ -7,7 +7,11 @@ from homeassistant.components import media_source
 from homeassistant.components.media_player import (
     BrowseMedia,
     MediaPlayerDeviceClass,
+    MediaPlayerEnqueue,
     MediaPlayerEntity,
+)
+from homeassistant.components.media_player.browse_media import (
+    async_process_play_media_url,
 )
 from homeassistant.components.media_player.const import (
     ATTR_APP_ID,
@@ -17,7 +21,6 @@ from homeassistant.components.media_player.const import (
     ATTR_MEDIA_ARTIST,
     ATTR_MEDIA_CONTENT_ID,
     ATTR_MEDIA_DURATION,
-    ATTR_MEDIA_ENQUEUE,
     ATTR_MEDIA_REPEAT,
     ATTR_MEDIA_SHUFFLE,
     ATTR_MEDIA_TITLE,
@@ -29,10 +32,12 @@ from homeassistant.components.media_player.const import (
     SUPPORT_PLAY_MEDIA,
     SUPPORT_PREVIOUS_TRACK,
     SUPPORT_REPEAT_SET,
+    SUPPORT_SEEK,
     SUPPORT_SHUFFLE_SET,
     SUPPORT_STOP,
     SUPPORT_TURN_OFF,
     SUPPORT_TURN_ON,
+    SUPPORT_VOLUME_MUTE,
     SUPPORT_VOLUME_SET,
     SUPPORT_VOLUME_STEP,
 )
@@ -81,6 +86,8 @@ SUPPORTED_FEATURES = (
     | SUPPORT_VOLUME_STEP
     | SUPPORT_CLEAR_PLAYLIST
     | SUPPORT_BROWSE_MEDIA
+    | SUPPORT_SEEK
+    | SUPPORT_VOLUME_MUTE
 )
 
 STATE_MAPPING = {
@@ -88,6 +95,15 @@ STATE_MAPPING = {
     PlayerState.IDLE: STATE_IDLE,
     PlayerState.PLAYING: STATE_PLAYING,
     PlayerState.PAUSED: STATE_PAUSED,
+}
+
+QUEUE_OPTION_MAP = {
+    # map from HA enqueue options to MA enqueue options
+    # which are the same but just in case
+    MediaPlayerEnqueue.ADD: QueueOption.ADD,
+    MediaPlayerEnqueue.NEXT: QueueOption.NEXT,
+    MediaPlayerEnqueue.PLAY: QueueOption.PLAY,
+    MediaPlayerEnqueue.REPLACE: QueueOption.REPLACE,
 }
 
 
@@ -162,6 +178,11 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
     def volume_level(self) -> float:
         """Return current volume level."""
         return self.player.volume_level / 100
+
+    @property
+    def is_volume_muted(self) -> bool | None:
+        """Boolean if volume is currently muted."""
+        return self.player.volume_muted
 
     @property
     def state(self) -> str:
@@ -304,6 +325,14 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
             return
         await self.player.active_queue.previous()
 
+    async def async_media_seek(self, position: int) -> None:
+        """Send seek command."""
+        await self.player.active_queue.seek(position)
+
+    async def async_mute_volume(self, mute: bool) -> None:
+        """Mute the volume."""
+        await self.player.volume_mute(mute)
+
     async def async_set_volume_level(self, volume: float) -> None:
         """Send new volume_level to device."""
         volume = int(volume * 100)
@@ -337,17 +366,33 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
         """Clear players playlist."""
         await self.player.active_queue.clear()
 
-    async def async_play_media(self, media_type: str, media_id: str, **kwargs) -> None:
+    async def async_play_media(
+        self,
+        media_type: str,
+        media_id: str,
+        enqueue: MediaPlayerEnqueue | None = None,
+        announce: bool | None = None,
+        **kwargs: Any,
+    ) -> None:
         """Send the play_media command to the media player."""
         # Handle media_source
         if media_source.is_media_source_id(media_id):
-            sourced_media = await media_source.async_resolve_media(self.hass, media_id)
+            sourced_media = await media_source.async_resolve_media(
+                self.hass, media_id, self.entity_id
+            )
             media_id = sourced_media.url
 
-        queue_opt = (
-            QueueOption.ADD if kwargs.get(ATTR_MEDIA_ENQUEUE) else QueueOption.PLAY
-        )
-        await self.player.active_queue.play_media(media_id, queue_opt)
+        media_id = async_process_play_media_url(self.hass, media_id)
+
+        queue_opt = QUEUE_OPTION_MAP.get(enqueue, QueueOption.PLAY)
+        if announce is None:
+            announce = "/api/tts_proxy" in media_id
+
+        if announce:
+            announce_sound = "/api/tts_proxy" in media_id
+            await self.player.active_queue.play_alert(media_id, announce_sound)
+        else:
+            await self.player.active_queue.play_media(media_id, queue_opt)
 
     async def async_browse_media(
         self, media_content_type=None, media_content_id=None
