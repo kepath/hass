@@ -1,53 +1,54 @@
+---
+########################################################
+#####  LOGITECH HARMONY CARDS                      #####
+########################################################
+
 variable_definitions_harmony_remote_group_actions:
   variables:
     var_harmony_remote_group_actions:
       entity:
       activity0:
-        entity: 
-        name: 
-        icon: 
-        haptic: 
+        entity:
+        name:
+        icon:
+        haptic:
       activity1:
-        entity: 
-        name: 
-        icon: 
-        haptic: 
+        entity:
+        name:
+        icon:
+        haptic:
       activity2:
-        entity: 
-        name: 
-        icon: 
-        haptic: 
+        entity:
+        name:
+        icon:
+        haptic:
       activity3:
-        entity: 
-        name: 
-        icon: 
-        haptic: 
+        entity:
+        name:
+        icon:
+        haptic:
       activity4:
-        entity: 
-        name: 
-        icon: 
-        haptic: 
+        entity:
+        name:
+        icon:
+        haptic:
       activity5:
-        entity: 
-        name: 
-        icon: 
-        haptic: 
-
-########################################################
-#####  LOGITECH HARMONY CARDS                       ####
-########################################################
+        entity:
+        name:
+        icon:
+        haptic:
 
 card_remotecontrol_logitechharmony_group_actions:
   variables:
     ulm_card_harmony_remote_group_actions_entity:
     ulm_card_harmony_remote_current_activity: >
-      "[[[
+      [[[
         var currentActivity = "PowerOff";
-        if (typeof states[variables.ulm_card_harmony_remote_group_actions_entity].attributes.current_activity !== 'undefined'){
+        if (typeof states[variables.ulm_card_harmony_remote_group_actions_entity].attributes.current_activity !== "undefined"){
           currentActivity = states[variables.ulm_card_harmony_remote_group_actions_entity].attributes.current_activity;
         }
         return currentActivity;
-      ]]]"
+      ]]]
 
     ulm_card_harmony_remote_group_actions_activity_01: "Xbox Series X"
     ulm_card_harmony_remote_group_actions_activity_02: "Watch Apple TV"
@@ -63,94 +64,94 @@ card_remotecontrol_logitechharmony_group_actions:
     ulm_card_harmony_remote_group_actions_haptic_05: "success"
     ulm_card_harmony_remote_group_actions_haptic_06: "success"
 
-    ulm_card_harmony_remote_group_actions_icon_01: 'mdi:microsoft-xbox'
-    ulm_card_harmony_remote_group_actions_icon_02: 'phu:apple-tv-box'
-    ulm_card_harmony_remote_group_actions_icon_03: 'mdi:set-top-box'
-    ulm_card_harmony_remote_group_actions_icon_04: 'mdi:nintendo-wii'
-    ulm_card_harmony_remote_group_actions_icon_05: 'mdi:sony-playstation'
-    ulm_card_harmony_remote_group_actions_icon_06: 'mdi:spotify'
+    ulm_card_harmony_remote_group_actions_icon_01: "mdi:microsoft-xbox"
+    ulm_card_harmony_remote_group_actions_icon_02: "phu:apple-tv-box"
+    ulm_card_harmony_remote_group_actions_icon_03: "mdi:set-top-box"
+    ulm_card_harmony_remote_group_actions_icon_04: "mdi:nintendo-wii"
+    ulm_card_harmony_remote_group_actions_icon_05: "mdi:sony-playstation"
+    ulm_card_harmony_remote_group_actions_icon_06: "mdi:spotify"
 
-  triggers_update: all
+  triggers_update: "all"
   styles:
     grid:
-      - grid-template-areas: '"cell1" "cell2"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: min-content
-      - row-gap: 12px
+      - grid-template-areas: "'cell1' 'cell2'"
+      - grid-template-columns: "1fr"
+      - grid-template-rows: "min-content"
+      - row-gap: "12px"
     card:
-      - border-radius: var(--border-radius)
-      - box-shadow: var(--box-shadow)
-      - padding: 12px
+      - border-radius: "var(--border-radius)"
+      - box-shadow: "var(--box-shadow)"
+      - padding: "12px"
   custom_fields:
     cell1:
       card:
-        type: 'custom:button-card'
-        template: layout_item_item_item_item
+        type: "custom:button-card"
+        template: "layout_item_item_item_item"
         custom_fields:
           cell1:
             card:
-              type: 'custom:button-card'
-              template: remote_harmony_activity_button
+              type: "custom:button-card"
+              template: "remote_harmony_activity_button"
               variables:
-                ulm_card_remote_harmony_activity_button_entity: '[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]'
-                ulm_card_remote_harmony_activity_button_activity: '[[[ return variables.ulm_card_harmony_remote_group_actions_activity_01 ]]]'
-                ulm_card_remote_harmony_activity_button_icon: '[[[ return variables.ulm_card_harmony_remote_group_actions_icon_01 ]]]'
-                ulm_card_remote_harmony_activity_button_haptic: '[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_01 ]]]'
+                ulm_card_remote_harmony_activity_button_entity: "[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]"
+                ulm_card_remote_harmony_activity_button_activity: "[[[ return variables.ulm_card_harmony_remote_group_actions_activity_01 ]]]"
+                ulm_card_remote_harmony_activity_button_icon: "[[[ return variables.ulm_card_harmony_remote_group_actions_icon_01 ]]]"
+                ulm_card_remote_harmony_activity_button_haptic: "[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_01 ]]]"
 
           cell2:
             card:
-              type: 'custom:button-card'
-              template: remote_harmony_activity_button
+              type: "custom:button-card"
+              template: "remote_harmony_activity_button"
               variables:
-                ulm_card_remote_harmony_activity_button_entity: '[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]'
-                ulm_card_remote_harmony_activity_button_activity: '[[[ return variables.ulm_card_harmony_remote_group_actions_activity_02 ]]]'
-                ulm_card_remote_harmony_activity_button_icon: '[[[ return variables.ulm_card_harmony_remote_group_actions_icon_02 ]]]'
-                ulm_card_remote_harmony_activity_button_haptic: '[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_02 ]]]'
+                ulm_card_remote_harmony_activity_button_entity: "[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]"
+                ulm_card_remote_harmony_activity_button_activity: "[[[ return variables.ulm_card_harmony_remote_group_actions_activity_02 ]]]"
+                ulm_card_remote_harmony_activity_button_icon: "[[[ return variables.ulm_card_harmony_remote_group_actions_icon_02 ]]]"
+                ulm_card_remote_harmony_activity_button_haptic: "[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_02 ]]]"
           cell3:
             card:
-              type: 'custom:button-card'
-              template: remote_harmony_activity_button
+              type: "custom:button-card"
+              template: "remote_harmony_activity_button"
               variables:
-                ulm_card_remote_harmony_activity_button_entity: '[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]'
-                ulm_card_remote_harmony_activity_button_activity: '[[[ return variables.ulm_card_harmony_remote_group_actions_activity_03 ]]]'
-                ulm_card_remote_harmony_activity_button_icon: '[[[ return variables.ulm_card_harmony_remote_group_actions_icon_03 ]]]'
-                ulm_card_remote_harmony_activity_button_haptic: '[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_03 ]]]'
+                ulm_card_remote_harmony_activity_button_entity: "[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]"
+                ulm_card_remote_harmony_activity_button_activity: "[[[ return variables.ulm_card_harmony_remote_group_actions_activity_03 ]]]"
+                ulm_card_remote_harmony_activity_button_icon: "[[[ return variables.ulm_card_harmony_remote_group_actions_icon_03 ]]]"
+                ulm_card_remote_harmony_activity_button_haptic: "[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_03 ]]]"
 
           cell4:
             card:
-              type: 'custom:button-card'
-              template: remote_harmony_activity_button
+              type: "custom:button-card"
+              template: "remote_harmony_activity_button"
               variables:
-                ulm_card_remote_harmony_activity_button_entity: '[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]'
-                ulm_card_remote_harmony_activity_button_activity: '[[[ return variables.ulm_card_harmony_remote_group_actions_activity_04 ]]]'
-                ulm_card_remote_harmony_activity_button_icon: '[[[ return variables.ulm_card_harmony_remote_group_actions_icon_04 ]]]'
-                ulm_card_remote_harmony_activity_button_haptic: '[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_04 ]]]'
+                ulm_card_remote_harmony_activity_button_entity: "[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]"
+                ulm_card_remote_harmony_activity_button_activity: "[[[ return variables.ulm_card_harmony_remote_group_actions_activity_04 ]]]"
+                ulm_card_remote_harmony_activity_button_icon: "[[[ return variables.ulm_card_harmony_remote_group_actions_icon_04 ]]]"
+                ulm_card_remote_harmony_activity_button_haptic: "[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_04 ]]]"
     cell2:
       card:
-        type: 'custom:button-card'
-        template: layout_item_item_item_item
+        type: "custom:button-card"
+        template: "layout_item_item_item_item"
         custom_fields:
           cell1:
             card:
-              type: 'custom:button-card'
-              template: remote_harmony_activity_button
+              type: "custom:button-card"
+              template: "remote_harmony_activity_button"
               variables:
-                ulm_card_remote_harmony_activity_button_entity: '[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]'
-                ulm_card_remote_harmony_activity_button_activity: '[[[ return variables.ulm_card_harmony_remote_group_actions_activity_05 ]]]'
-                ulm_card_remote_harmony_activity_button_icon: '[[[ return variables.ulm_card_harmony_remote_group_actions_icon_05 ]]]'
-                ulm_card_remote_harmony_activity_button_haptic: '[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_05 ]]]'
+                ulm_card_remote_harmony_activity_button_entity: "[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]"
+                ulm_card_remote_harmony_activity_button_activity: "[[[ return variables.ulm_card_harmony_remote_group_actions_activity_05 ]]]"
+                ulm_card_remote_harmony_activity_button_icon: "[[[ return variables.ulm_card_harmony_remote_group_actions_icon_05 ]]]"
+                ulm_card_remote_harmony_activity_button_haptic: "[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_05 ]]]"
           cell2:
             card:
-              type: 'custom:button-card'
-              template: remote_harmony_activity_button
+              type: "custom:button-card"
+              template: "remote_harmony_activity_button"
               variables:
-                ulm_card_remote_harmony_activity_button_entity: '[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]'
-                ulm_card_remote_harmony_activity_button_activity: '[[[ return variables.ulm_card_harmony_remote_group_actions_activity_06 ]]]'
-                ulm_card_remote_harmony_activity_button_icon: '[[[ return variables.ulm_card_harmony_remote_group_actions_icon_06 ]]]'
-                ulm_card_remote_harmony_activity_button_haptic: '[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_06 ]]]'
+                ulm_card_remote_harmony_activity_button_entity: "[[[ return variables.ulm_card_harmony_remote_group_actions_entity ]]]"
+                ulm_card_remote_harmony_activity_button_activity: "[[[ return variables.ulm_card_harmony_remote_group_actions_activity_06 ]]]"
+                ulm_card_remote_harmony_activity_button_icon: "[[[ return variables.ulm_card_harmony_remote_group_actions_icon_06 ]]]"
+                ulm_card_remote_harmony_activity_button_haptic: "[[[ return variables.ulm_card_harmony_remote_group_actions_haptic_06 ]]]"
 
 card_remotecontrol_logitechharmony_group_power:
-  template: remotecontrol_group_power
+  template: "remotecontrol_group_power"
   variables:
     ulm_remotecontrol_group_power_entity:
     ulm_remotecontrol_group_power_command_power: "input keyevent 26"
@@ -163,84 +164,81 @@ card_remotecontrol_logitechharmony_group_power:
 
 # card_harmony_remote_current_activity:
 #   variables:
-#     harmony_activity_0: '[[[ return states('remote.harmony_hub').attributes.devices_list[0] ]]]'
+#     harmony_activity_0: "[[[ return states('remote.harmony_hub').attributes.devices_list[0] ]]]"
 
 card_remotecontrol_logitechharmony_group_home_layout_chooser:
   variables:
     ulm_card_remote_group_home_entity:
-    # ulm_card_harmony_remote_layout: >
-    #   "[[[ 
-    #     var currentActivity = 'poweroff';
-    #     if (typeof states[variables.ulm_card_remote_group_home_entity].attributes.current_activity !== 'undefined'){
-    #       switch (states[variables.ulm_card_remote_group_home_entity].attributes.current_activity) {
-    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[0]:
-    #           currentActivity = "0";
-    #           break;
-    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[1]:
-    #           currentActivity = "1";
-    #           break;
-    #         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[2]:
-    #           currentActivity = "2";
-      #         break;
-      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[3]:
-      #         currentActivity = "3";
-      #         break;
-      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[4]:
-      #         currentActivity = "4";
-      #         break;
-      #       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[5]:
-      #         currentActivity = "5";
-      #         break;
-      #       default:
-      #         break;
-      #     }
-      #   }
-      #   return 'card_harmony_remote_group_home_layout_' + currentActivity;
-      # ]]]"
-  
-  
+# ulm_card_harmony_remote_layout: >
+#   [[[
+#     var currentActivity = "poweroff";
+#     if (typeof states[variables.ulm_card_remote_group_home_entity].attributes.current_activity !== "undefined"){
+#       switch (states[variables.ulm_card_remote_group_home_entity].attributes.current_activity) {
+#         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[0]:
+#           currentActivity = "0";
+#           break;
+#         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[1]:
+#           currentActivity = "1";
+#           break;
+#         case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[2]:
+#           currentActivity = "2";
+#         break;
+#       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[3]:
+#         currentActivity = "3";
+#         break;
+#       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[4]:
+#         currentActivity = "4";
+#         break;
+#       case states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[5]:
+#         currentActivity = "5";
+#         break;
+#       default:
+#         break;
+#     }
+#   }
+#   return "card_harmony_remote_group_home_layout_" + currentActivity;
+# ]]]
+
 # card_harmony_remote_group_home_poweroff
-        # return 'card_harmony_remote_group_home_poweroff' 
-
-
+# return "card_harmony_remote_group_home_poweroff"
 
 # if (states[variables.ulm_card_remote_group_home_entity].attributes.current_activity == states[variables.ulm_card_remote_group_home_entity].attributes.devices_list[0] ){
 #   var currentActivity =  "0";
 # }
 
 card_remotecontrol_logitechharmony_group_home_poweroff:
-  type: 'custom:button-card'
+  type: "custom:button-card"
   tap_action:
-    action: none
-  # ulm_card_harmony_remote_group_current_activity: >
-  #   [[[
-  #     var currentActivity = "PowerOff";
-  #     if (typeof states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity !== 'undefined'){
-  #       currentActivity = states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity
-  #     }
-  #     return currentActivity;
-  #   ]]]
+    action: "none"
+# ulm_card_harmony_remote_group_current_activity: >
+#   [[[
+#     var currentActivity = "PowerOff";
+#     if (typeof states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity !== "undefined"){
+#       currentActivity = states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity
+#     }
+#     return currentActivity;
+#   ]]]
 
-  # {{ states[ulm_card_harmony_remote_group_actions_entity].attributes.devices_list[0] }}
-  
-  # remotecontrol_group_home_3_button
-  # variables:
-  #   ulm_card_remote_group_home_entity:
+# {{ states[ulm_card_harmony_remote_group_actions_entity].attributes.devices_list[0] }}
 
-  #   ulm_card_remote_group_home_command_back: "BACK"
-  #   ulm_card_remote_group_home_command_home: "HOME"
-  #   ulm_card_remote_group_home_command_menu: "MENU"
+# remotecontrol_group_home_3_button
+# variables:
+#   ulm_card_remote_group_home_entity:
 
-  #   ulm_card_remote_group_home_haptic_back: "BACK"
-  #   ulm_card_remote_group_home_haptic_home: "HOME"
-  #   ulm_card_remote_group_home_haptic_menu: "MENU"
+#   ulm_card_remote_group_home_command_back: "BACK"
+#   ulm_card_remote_group_home_command_home: "HOME"
+#   ulm_card_remote_group_home_command_menu: "MENU"
 
-  #   ulm_card_remote_group_home_color_back: "var(--google-grey)"
-  #   ulm_card_remote_group_home_color_home: "var(--google-grey)"
-  #   ulm_card_remote_group_home_color_menu: "var(--google-grey)"
+#   ulm_card_remote_group_home_haptic_back: "BACK"
+#   ulm_card_remote_group_home_haptic_home: "HOME"
+#   ulm_card_remote_group_home_haptic_menu: "MENU"
+
+#   ulm_card_remote_group_home_color_back: "var(--google-grey)"
+#   ulm_card_remote_group_home_color_home: "var(--google-grey)"
+#   ulm_card_remote_group_home_color_menu: "var(--google-grey)"
 
 card_remotecontrol_logitechharmony_group_home:
-  template: remotecontrol_group_home_3_button
+  template: "remotecontrol_group_home_3_button"
   variables:
     ulm_card_remote_group_home_entity:
 
@@ -257,10 +255,8 @@ card_remotecontrol_logitechharmony_group_home:
     ulm_card_remote_group_home_color_menu: "var(--google-grey)"
 
 card_remotecontrol_logitechharmony_group_play:
-  template: remotecontrol_group_play
+  template: "remotecontrol_group_play"
   variables:
-
-
     ulm_card_harmony_remote_activity_current:
     ulm_card_harmony_remote_entity:
     ulm_card_harmony_remote_group_current_activity:
@@ -301,7 +297,7 @@ card_remotecontrol_logitechharmony_group_play:
     ulm_card_harmony_remote_hold_action_service_02:
     ulm_card_harmony_remote_hold_action_command_02:
     ulm_card_harmony_remote_hold_action_haptic_02: "none"
-    
+
     ulm_card_harmony_remote_activity_03:
     ulm_card_harmony_remote_device_03:
     ulm_card_harmony_remote_delay_03:
@@ -366,7 +362,6 @@ card_remotecontrol_logitechharmony_group_play:
     ulm_card_harmony_remote_hold_action_command_06:
     ulm_card_harmony_remote_hold_action_haptic_06: "none"
 
-
     ulm_remotecontrol_group_play_entity:
     ulm_card_remote_standard_button_background_color: "rgba(var(--color-grey), 0.2)"
     ulm_remotecontrol_group_play_command_rewind: "input keyevent 89"
@@ -377,16 +372,16 @@ card_remotecontrol_logitechharmony_group_play:
     ulm_remotecontrol_group_play_haptic_play: "input keyevent 85"
     ulm_remotecontrol_group_play_haptic_fastforward: "input keyevent 90"
 
-    ulm_remotecontrol_group_play_color_rewind: 
-    ulm_remotecontrol_group_play_color_play: 
-    ulm_remotecontrol_group_play_color_fastforward: 
+    ulm_remotecontrol_group_play_color_rewind:
+    ulm_remotecontrol_group_play_color_play:
+    ulm_remotecontrol_group_play_color_fastforward:
 
 card_remotecontrol_logitechharmony_group_arrows_and_volume:
-  template: remotecontrol_group_arrows_and_volume
+  template: "remotecontrol_group_arrows_and_volume"
   variables:
     ulm_remotecontrol_group_volume_entity:
     ulm_card_harmony_remote_group_current_activity:
-    
+
     ulm_remotecontrol_group_volume_command_volumeup: "input keyevent 89"
     ulm_remotecontrol_group_volume_command_volumedown: "input keyevent 85"
     ulm_remotecontrol_group_volume_command_volumemute: "input keyevent 90"
@@ -406,11 +401,11 @@ card_remotecontrol_logitechharmony_group_arrows_and_volume:
     ulm_remotecontrol_group_arrow_select_command_right: "RIGHT"
     ulm_remotecontrol_group_arrow_select_command_select: "input keyevent 23"
 
-    ulm_remotecontrol_group_arrow_select_haptic_up: 
-    ulm_remotecontrol_group_arrow_select_haptic_down: 
-    ulm_remotecontrol_group_arrow_select_haptic_left: 
-    ulm_remotecontrol_group_arrow_select_haptic_right: 
-    ulm_remotecontrol_group_arrow_select_haptic_select: 
+    ulm_remotecontrol_group_arrow_select_haptic_up:
+    ulm_remotecontrol_group_arrow_select_haptic_down:
+    ulm_remotecontrol_group_arrow_select_haptic_left:
+    ulm_remotecontrol_group_arrow_select_haptic_right:
+    ulm_remotecontrol_group_arrow_select_haptic_select:
 
     ulm_remotecontrol_group_arrow_select_color_up: "var(--google-blue)"
     ulm_remotecontrol_group_arrow_select_color_down: "var(--google-blue)"
@@ -419,62 +414,62 @@ card_remotecontrol_logitechharmony_group_arrows_and_volume:
     ulm_remotecontrol_group_arrow_select_color_select: "var(--google-blue)"
 
 card_remotecontrol_logitechharmony_group_numbers:
-  template: card_remote_group_numbers
+  template: "card_remote_group_numbers"
   variables:
-    ulm_button_grid_4row_3column_command_01: 
-    ulm_button_grid_4row_3column_command_02: 
-    ulm_button_grid_4row_3column_command_03: 
-    ulm_button_grid_4row_3column_command_04: 
-    ulm_button_grid_4row_3column_command_05: 
+    ulm_button_grid_4row_3column_command_01:
+    ulm_button_grid_4row_3column_command_02:
+    ulm_button_grid_4row_3column_command_03:
+    ulm_button_grid_4row_3column_command_04:
+    ulm_button_grid_4row_3column_command_05:
     ulm_button_grid_4row_3column_command_06:
-    ulm_button_grid_4row_3column_command_07: 
-    ulm_button_grid_4row_3column_command_08: 
-    ulm_button_grid_4row_3column_command_09: 
-    ulm_button_grid_4row_3column_command_10: 
-    ulm_button_grid_4row_3column_command_11: 
-    ulm_button_grid_4row_3column_command_12: 
+    ulm_button_grid_4row_3column_command_07:
+    ulm_button_grid_4row_3column_command_08:
+    ulm_button_grid_4row_3column_command_09:
+    ulm_button_grid_4row_3column_command_10:
+    ulm_button_grid_4row_3column_command_11:
+    ulm_button_grid_4row_3column_command_12:
 
-    ulm_button_grid_4row_3column_haptic_01: 
-    ulm_button_grid_4row_3column_haptic_02: 
-    ulm_button_grid_4row_3column_haptic_03: 
-    ulm_button_grid_4row_3column_haptic_04: 
-    ulm_button_grid_4row_3column_haptic_05: 
+    ulm_button_grid_4row_3column_haptic_01:
+    ulm_button_grid_4row_3column_haptic_02:
+    ulm_button_grid_4row_3column_haptic_03:
+    ulm_button_grid_4row_3column_haptic_04:
+    ulm_button_grid_4row_3column_haptic_05:
     ulm_button_grid_4row_3column_haptic_06:
-    ulm_button_grid_4row_3column_haptic_07: 
-    ulm_button_grid_4row_3column_haptic_08: 
-    ulm_button_grid_4row_3column_haptic_09: 
-    ulm_button_grid_4row_3column_haptic_10: 
-    ulm_button_grid_4row_3column_haptic_11: 
-    ulm_button_grid_4row_3column_haptic_12: 
+    ulm_button_grid_4row_3column_haptic_07:
+    ulm_button_grid_4row_3column_haptic_08:
+    ulm_button_grid_4row_3column_haptic_09:
+    ulm_button_grid_4row_3column_haptic_10:
+    ulm_button_grid_4row_3column_haptic_11:
+    ulm_button_grid_4row_3column_haptic_12:
 
-    ulm_button_grid_4row_3column_icon_01: 'mdi:numeric-1-circle'
-    ulm_button_grid_4row_3column_icon_02: 'mdi:numeric-2-circle'
-    ulm_button_grid_4row_3column_icon_03: 'mdi:numeric-3-circle'
-    ulm_button_grid_4row_3column_icon_04: 'mdi:numeric-4-circle'
-    ulm_button_grid_4row_3column_icon_05: 'mdi:numeric-5-circle'
-    ulm_button_grid_4row_3column_icon_06: 'mdi:numeric-6-circle'
-    ulm_button_grid_4row_3column_icon_07: 'mdi:numeric-7-circle'
-    ulm_button_grid_4row_3column_icon_08: 'mdi:numeric-8-circle'
-    ulm_button_grid_4row_3column_icon_09: 'mdi:numeric-9-circle'
-    ulm_button_grid_4row_3column_icon_10: 'mdi:plus-circle'
-    ulm_button_grid_4row_3column_icon_11: 'mdi:numeric-0-circle'
-    ulm_button_grid_4row_3column_icon_12: 'mdi:dots-horizontal-circle'
+    ulm_button_grid_4row_3column_icon_01: "mdi:numeric-1-circle"
+    ulm_button_grid_4row_3column_icon_02: "mdi:numeric-2-circle"
+    ulm_button_grid_4row_3column_icon_03: "mdi:numeric-3-circle"
+    ulm_button_grid_4row_3column_icon_04: "mdi:numeric-4-circle"
+    ulm_button_grid_4row_3column_icon_05: "mdi:numeric-5-circle"
+    ulm_button_grid_4row_3column_icon_06: "mdi:numeric-6-circle"
+    ulm_button_grid_4row_3column_icon_07: "mdi:numeric-7-circle"
+    ulm_button_grid_4row_3column_icon_08: "mdi:numeric-8-circle"
+    ulm_button_grid_4row_3column_icon_09: "mdi:numeric-9-circle"
+    ulm_button_grid_4row_3column_icon_10: "mdi:plus-circle"
+    ulm_button_grid_4row_3column_icon_11: "mdi:numeric-0-circle"
+    ulm_button_grid_4row_3column_icon_12: "mdi:dots-horizontal-circle"
 
-    ulm_button_grid_4row_3column_color_01: 
-    ulm_button_grid_4row_3column_color_02: 
-    ulm_button_grid_4row_3column_color_03: 
-    ulm_button_grid_4row_3column_color_04: 
-    ulm_button_grid_4row_3column_color_05: 
-    ulm_button_grid_4row_3column_color_06: 
-    ulm_button_grid_4row_3column_color_07: 
-    ulm_button_grid_4row_3column_color_08: 
-    ulm_button_grid_4row_3column_color_09: 
-    ulm_button_grid_4row_3column_color_10: 
-    ulm_button_grid_4row_3column_color_11: 
-    ulm_button_grid_4row_3column_color_12: 
+    ulm_button_grid_4row_3column_color_01:
+    ulm_button_grid_4row_3column_color_02:
+    ulm_button_grid_4row_3column_color_03:
+    ulm_button_grid_4row_3column_color_04:
+    ulm_button_grid_4row_3column_color_05:
+    ulm_button_grid_4row_3column_color_06:
+    ulm_button_grid_4row_3column_color_07:
+    ulm_button_grid_4row_3column_color_08:
+    ulm_button_grid_4row_3column_color_09:
+    ulm_button_grid_4row_3column_color_10:
+    ulm_button_grid_4row_3column_color_11:
+    ulm_button_grid_4row_3column_color_12:
 
 card_remotecontrol_logitechharmony_group_colors:
-  template: card_remote_group_colors
+  template: "card_remote_group_colors"
   variables:
     ulm_card_remote_group_colors_entity:
     ulm_card_harmony_remote_group_current_activity:
@@ -490,32 +485,30 @@ card_remotecontrol_logitechharmony_group_colors:
     ulm_card_remote_group_colors_haptic_yellow:
     ulm_card_remote_group_colors_haptic_blue:
 
-
 ########################################################
 #####  BUTTON TEMPLATES                             ####
 ########################################################
 
 remote_harmony_activity_button:
-  type: 'custom:button-card'
-  template: widget_icon
+  type: "custom:button-card"
+  template: "widget_icon"
   variables:
     ulm_card_remote_harmony_activity_button_entity:
     ulm_card_remote_harmony_activity_button_activity:
     ulm_card_remote_harmony_activity_button_icon:
   tap_action:
-
-    action: call-service
-    service: remote.turn_on                  
+    action: "call-service"
+    service: "remote.turn_on"
     service_data:
-      entity_id: '[[[ return variables.ulm_card_remote_harmony_activity_button_entity ]]]'
-      activity: '[[[ return variables.ulm_card_remote_harmony_activity_button_activity ]]]'
-  icon: '[[[ return variables.ulm_card_remote_harmony_activity_button_icon ]]]'
+      entity_id: "[[[ return variables.ulm_card_remote_harmony_activity_button_entity ]]]"
+      activity: "[[[ return variables.ulm_card_remote_harmony_activity_button_activity ]]]"
+  icon: "[[[ return variables.ulm_card_remote_harmony_activity_button_icon ]]]"
   styles:
     icon:
       - color: >
           [[[
               var color = "var(--google-grey)";
-              if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== 'undefined'){
+              if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== "undefined"){
                 if (states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity == variables.ulm_card_remote_harmony_activity_button_activity){
                   var color =  "var(--google-green)";
                 }
@@ -526,7 +519,7 @@ remote_harmony_activity_button:
       - background-color: >
           [[[
               var color = "rgba(var(--color-grey), 0.2)";
-              if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== 'undefined'){
+              if (typeof states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity !== "undefined"){
                 if (states[variables.ulm_card_remote_harmony_activity_button_entity].attributes.current_activity == variables.ulm_card_remote_harmony_activity_button_activity){
                   var color =  "rgba(var(--color-green), 0.2)";
                 }
@@ -535,10 +528,9 @@ remote_harmony_activity_button:
           ]]]
 
 remotecontrol_logitechharmony_button:
-  type: 'custom:button-card'
-  template: widget_icon
+  type: "custom:button-card"
+  template: "widget_icon"
   variables:
-
     ulm_card_harmony_remote_activity_current:
     ulm_card_harmony_remote_entity:
     ulm_card_harmony_remote_button_icon:
@@ -637,46 +629,46 @@ remotecontrol_logitechharmony_button:
     ulm_card_harmony_remote_hold_action_haptic_06: "none"
 
   tap_action:
-    action: call-service
-    service: androidtv.adb_command
+    action: "call-service"
+    service: "androidtv.adb_command"
     service_data:
-      command: '[[[ return variables.ulm_card_remote_standard_button_command ]]]'
-      entity_id: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+      command: "[[[ return variables.ulm_card_remote_standard_button_command ]]]"
+      entity_id: "[[[ return variables.ulm_card_remote_standard_button_entity ]]]"
   hold_action:
-    action: '[[[ return variables.ulm_card_remote_standard_button_hold_action ]]]'
-    entity: '[[[ return variables.ulm_card_remote_standard_button_entity ]]]'
+    action: "[[[ return variables.ulm_card_remote_standard_button_hold_action ]]]"
+    entity: "[[[ return variables.ulm_card_remote_standard_button_entity ]]]"
   double_tap_action:
-    action: '[[[ return variables.ulm_card_remote_standard_button_double_tap_action ]]]'
+    action: "[[[ return variables.ulm_card_remote_standard_button_double_tap_action ]]]"
   icon: >
-    [[[ 
+    [[[
       var icon = variables.ulm_card_remote_standard_button_icon;
-      if (variables.ulm_card_remote_standard_button_class == 'play') {
-        if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
-            || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff' 
-            || states[variables.ulm_card_remote_standard_button_entity].state == 'idle' 
-            || states[variables.ulm_card_remote_standard_button_entity].state == 'paused') {
-          var icon = 'mdi:play';
-        }  
+      if (variables.ulm_card_remote_standard_button_class == "play") {
+        if (states[variables.ulm_card_remote_standard_button_entity].state == "off"
+            || states[variables.ulm_card_remote_standard_button_entity].state == "PowerOff"
+            || states[variables.ulm_card_remote_standard_button_entity].state == "idle"
+            || states[variables.ulm_card_remote_standard_button_entity].state == "paused") {
+          var icon = "mdi:play";
+        }
       }
       return icon;
     ]]]
   styles:
     icon:
-      - color: '[[[ return variables.ulm_card_remote_standard_button_icon_color ]]]'
+      - color: "[[[ return variables.ulm_card_remote_standard_button_icon_color ]]]"
     img_cell:
       - background-color: >
           [[[
               var color = variables.ulm_card_remote_standard_button_background_color;
-              if (variables.ulm_card_remote_standard_button_class == 'mute') {
-                if (typeof states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted !== 'undefined') {
+              if (variables.ulm_card_remote_standard_button_class == "mute") {
+                if (typeof states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted !== "undefined") {
                   if (states[variables.ulm_card_remote_standard_button_entity].attributes.is_volume_muted){
                     var color = "rgba(var(--color-green), 0.2)";
                   }
                 }
               }
-              if (variables.ulm_card_remote_standard_button_class == 'power') {
-                if (states[variables.ulm_card_remote_standard_button_entity].state == 'off' 
-                    || states[variables.ulm_card_remote_standard_button_entity].state == 'PowerOff') {
+              if (variables.ulm_card_remote_standard_button_class == "power") {
+                if (states[variables.ulm_card_remote_standard_button_entity].state == "off"
+                    || states[variables.ulm_card_remote_standard_button_entity].state == "PowerOff") {
                   var color = variables.ulm_card_remote_standard_button_background_color;
                 } else {
                   var color = "rgba(var(--color-red), 0.2)";

@@ -20,12 +20,11 @@ vars_remotecontrol_shared_grey:
 card_remotecontrol_group_power:
   type: "custom:button-card"
   template:
-    - "layout_group"
-    - "vars_remotecontrol_shared"
+    - "layout_subgroup"
+    # - "vars_remotecontrol_shared"
   triggers_update: "all"
-  # entity: "[[[ return variables.entity_id ]]]"
   custom_fields:
-    group1:
+    subgroup1:
       card:
         type: "custom:button-card"
         template: "layout_cell_gap_cell"
@@ -2116,6 +2115,17 @@ layout_group:
       - border-radius: "var(--border-radius)"
       - box-shadow: "var(--box-shadow)"
       - padding: "12px"
+
+layout_subgroup:
+  styles:
+    grid:
+      - grid-template-areas: "'subgroup1'"
+      - grid-template-columns: "1fr"
+      - grid-template-rows: "min-content"
+      - row-gap: "0px"
+    card:
+      - box-shadow: "none"
+      - padding: "0px"
 
 layout_common_button:
   styles:

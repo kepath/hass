@@ -1,48 +1,44 @@
+---
 ########################################################
-#####  NVIDIA SHIELD CARDS                          ####
+#####  NVIDIA SHIELD CARDS                         #####
 ########################################################
 
-card_remotecontrol_nvidiashield_group_power:
-  type: 'custom:button-card'
-  template: layout_group
-  triggers_update: all
+vars_remotecontrol_firestick_group_power:
   variables:
-    entity_id:
-    background_color:
     cell1:
       button:
         entity_id:
-        background_color:
         templates:
-          - red_on
-        class: 'power'
+          - "red_text"
+          - "power_state_button_style"
         icon:
-          name: 'mdi:power'
-          color: "var(--google-red)"
+          name: "mdi:power"
+          color:
           size:
+        tooltip: "Power"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 26"
-            haptic: 'heavy'
+            haptic: "heavy"
             harmony:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -54,144 +50,76 @@ card_remotecontrol_nvidiashield_group_power:
         entity_id:
         background_color:
         templates:
-        class:
         icon:
-          name: 'mdi:import'
+          name: "mdi:import"
           color:
           size:
+        tooltip: "Input"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command:
-            haptic: 'success'
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
             harmony:
               device:
               delay:
-  custom_fields:
-    group1:
-      card:
-        type: 'custom:button-card'
-        template: layout_cell_gap_cell 
-        custom_fields:
-          cell1:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell1.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell1.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell1.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell1.button.background_color;
-                      }                        
-                    ]]]
-                  class: '[[[ return variables.cell1.button.class ]]]'
-                  icon: '[[[ return variables.cell1.button.icon ]]]'
-                  actions: '[[[ return variables.cell1.button.actions ]]]'
-          cell2:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell2.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell2.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell2.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell2.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell2.button.class ]]]'
-                  icon: '[[[ return variables.cell2.button.icon ]]]'
-                  actions: '[[[ return variables.cell2.button.actions ]]]'
 
-card_remotecontrol_nvidiashield_group_home:
-  type: 'custom:button-card'
-  template: layout_group
+vars_remotecontrol_firestick_group_home:
   variables:
-    entity_id:
-    background_color:
     cell1:
       button:
         entity_id:
         background_color:
         templates:
-        class:
         icon:
-          name: 'mdi:arrow-u-left-top-bold'
+          name: "mdi:arrow-u-left-top-bold"
           color:
           size:
+        tooltip: "Back"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
-            command: 'BACK'
-            haptic: 'success'
+            command: "BACK"
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -203,184 +131,34 @@ card_remotecontrol_nvidiashield_group_home:
         entity_id:
         background_color:
         templates:
-        class:
         icon:
-          name: 'mdi:home'
+          name: "mdi:home"
           color:
           size:
+        tooltip: "Home"
         actions:
           tap:
-            entity:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "HOME"
-            haptic: 'success'
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
-            command:
-            haptic: "none"
-            repeat:
-            harmony:
-              device:
-              delay:
-
-  custom_fields:
-    group1:
-      card:
-        type: 'custom:button-card'
-        template: layout_cell_gap_cell
-        custom_fields:
-          cell1:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell1.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell1.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell1.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell1.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell1.button.class ]]]'
-                  icon: '[[[ return variables.cell1.button.icon ]]]'
-                  actions: '[[[ return variables.cell1.button.actions ]]]'
-          cell2:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell2.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell2.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell2.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell2.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell2.button.class ]]]'
-                  icon: '[[[ return variables.cell2.button.icon ]]]'
-                  actions: '[[[ return variables.cell2.button.actions ]]]'
-
-card_remotecontrol_nvidiashield_group_play:
-  type: 'custom:button-card'
-  template: layout_group
-  variables:
-    entity_id:
-    background_color: "rgba(var(--color-grey), 0.2)"
-    cell1:
-      button:
-        entity_id:
-        background_color:
-        templates:
-        class:
-        icon:
-          name: 'mdi:rewind'
-          color:
-          size:
-        actions:
-          tap:
-            entity_id:
-            action: "none"
-            service: "call-service"
-            command: "input keyevent 89"
-            haptic: 'success'
-            harmony:
-              device:
-              delay:
-          double_tap:
-            entity_id:
-            action: "none"
-            service: androidtv.adb_command
-            command:
-            haptic: "none"
-            harmony:
-              device:
-              delay:
-          hold:
-            entity_id: 
-            action: "none"
-            service: androidtv.adb_command
-            command:
-            haptic: 'selection'
-            repeat: 200
-            harmony:
-              device:
-              delay:
-    cell2:
-      button:
-        entity_id:
-        background_color:
-        templates:
-        class: 'play'
-        icon:
-          name: 'mdi:pause'
-          color:
-          size:
-        actions:
-          tap:
-            entity_id: 
-            action: "none"
-            service: "call-service"
-            command: "input keyevent 85"
-            haptic: 'success'
-            harmony:
-              device:
-              delay:
-          double_tap:
-            entity_id: 
-            action: "none"
-            service: androidtv.adb_command
-            command:
-            haptic: "none"
-            harmony:
-              device:
-              delay:
-          hold:
-            entity_id:
-            action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -392,194 +170,178 @@ card_remotecontrol_nvidiashield_group_play:
         entity_id:
         background_color:
         templates:
-        class:
         icon:
-          name: 'mdi:fast-forward'
+          name: "mdi:menu"
           color:
           size:
+        tooltip: "Menu"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
-            command: "input keyevent 90"
-            haptic: 'success'
+            command: "MENU"
+            haptic: "success"
             harmony:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id: 
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
-            repeat: 200
+            haptic: "none"
+            repeat:
             harmony:
               device:
               delay:
-  custom_fields:
-    group1:
-      card:
-        type: 'custom:button-card'
-        template: layout_cell_cell_cell
-        custom_fields:
-          cell1:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell1.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell1.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell1.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell1.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell1.button.class ]]]'
-                  icon: '[[[ return variables.cell1.button.icon ]]]'
-                  actions: '[[[ return variables.cell1.button.actions ]]]'          
-          cell2:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell2.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell2.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell2.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell2.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell2.button.class ]]]'
-                  icon: '[[[ return variables.cell2.button.icon ]]]'
-                  actions: '[[[ return variables.cell2.button.actions ]]]'          
-          cell3:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell3.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell3.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell3.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell3.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell3.button.class ]]]'
-                  icon: '[[[ return variables.cell3.button.icon ]]]'
-                  actions: '[[[ return variables.cell3.button.actions ]]]'
 
-card_remotecontrol_nvidiashield_group_arrows_and_volume:
-  type: 'custom:button-card'
-  template: layout_sectionsection_section
+vars_remotecontrol_firestick_group_play:
   variables:
-    entity_id:
-  styles:
-    card:
-    - background-color: var(--primary-background-color)
-  custom_fields:
-    section1:
-      card:
-        type: 'custom:button-card'
-        template: card_remotecontrol_nvidiashield_group_arrow_select
-        variables:
-          entity_id: > 
-            [[[
-              if (variables?.entity_id) {
-                return variables.entity_id;
-              }
-            ]]]
-        styles:
-          card:
-          - border-radius: var(--border-radius)
-          - box-shadow: var(--box-shadow)
-    section2:
-      card:
-        type: 'custom:button-card'
-        template: card_remotecontrol_nvidiashield_group_volume
-        variables:
-          entity_id: > 
-            [[[
-              if (variables?.entity_id) {
-                return variables.entity_id;
-              }
-            ]]]
-        styles:
-          card:
-          - border-radius: var(--border-radius)
-          - box-shadow: var(--box-shadow)
- 
-card_remotecontrol_nvidiashield_group_arrow_select:
-  type: 'custom:button-card'
-  template: layout_group
-  variables:
-    entity_id:
-    background_color:
     cell1:
       button:
         entity_id:
         background_color:
         templates:
-          - blue_no_state
-        class:
         icon:
-          name: 'mdi:arrow-up-bold'
+          name: "mdi:rewind"
           color:
           size:
+        tooltip: "Rewind"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 89"
+            haptic: "success"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "selection"
+            repeat: 200
+            harmony:
+              device:
+              delay:
+    cell2:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - "play_button_style"
+        icon:
+          name:
+          color:
+          size:
+        tooltip: "Play"
+        actions:
+          tap:
+            more_info_entity_id:
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 85"
+            haptic: "success"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "none"
+            repeat:
+            harmony:
+              device:
+              delay:
+    cell3:
+      button:
+        entity_id:
+        background_color:
+        templates:
+        icon:
+          name: "mdi:fast-forward"
+          color:
+          size:
+        tooltip: "Fast Forward"
+        actions:
+          tap:
+            more_info_entity_id:
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 90"
+            haptic: "success"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "selection"
+            repeat: 200
+            harmony:
+              device:
+              delay:
+
+vars_remotecontrol_firestick_group_arrow_select:
+  variables:
+    cell1:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - "blue_text"
+        icon:
+          name: "mdi:arrow-up-bold"
+          color:
+          size:
+        tooltip: "Arrow Up"
+        actions:
+          tap:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "UP"
@@ -588,18 +350,18 @@ card_remotecontrol_nvidiashield_group_arrow_select:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
-            haptic: 'selection'
+            service: "androidtv.adb_command"
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "more-info"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
@@ -611,15 +373,15 @@ card_remotecontrol_nvidiashield_group_arrow_select:
         entity_id:
         background_color:
         templates:
-          - blue_no_state
-        class:
+          - "blue_text"
         icon:
-          name: 'mdi:arrow-left-bold'
+          name: "mdi:arrow-left-bold"
           color:
           size:
+        tooltip: "Arrow Left"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "LEFT"
@@ -628,38 +390,38 @@ card_remotecontrol_nvidiashield_group_arrow_select:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
-              delay:      
+              delay:
     cell3:
       button:
         entity_id:
         background_color:
         templates:
-          - blue_no_state
-        class:
+          - "blue_text"
         icon:
-          name: 'mdi:circle-slice-8'
+          name: "mdi:circle-slice-8"
           color:
           size:
+        tooltip: "Select"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 23"
@@ -668,38 +430,38 @@ card_remotecontrol_nvidiashield_group_arrow_select:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
             harmony:
               device:
-              delay:      
+              delay:
     cell4:
       button:
         entity_id:
         background_color:
         templates:
-          - blue_no_state
-        class:
+          - "blue_text"
         icon:
-          name: 'mdi:arrow-right-bold'
+          name: "mdi:arrow-right-bold"
           color:
           size:
+        tooltip: "Arrow Right"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "RIGHT"
@@ -708,38 +470,38 @@ card_remotecontrol_nvidiashield_group_arrow_select:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
-              delay:      
+              delay:
     cell5:
       button:
         entity_id:
         background_color:
         templates:
-          - blue_no_state
-        class:
+          - "blue_text"
         icon:
-          name: 'mdi:arrow-down-bold'
+          name: "mdi:arrow-down-bold"
           color:
           size:
+        tooltip: "Arrow Down"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "DOWN"
@@ -748,197 +510,41 @@ card_remotecontrol_nvidiashield_group_arrow_select:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
               delay:
-  custom_fields:
-    group1:
-      card:
-        type: 'custom:button-card'
-        template: layout_gap_cell_gap-cell_cell_cell-gap_cell_gap
-        custom_fields:
-          cell1:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell1.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell1.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell1.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell1.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell1.button.class ]]]'
-                  icon: '[[[ return variables.cell1.button.icon ]]]'
-                  actions: '[[[ return variables.cell1.button.actions ]]]'
-          cell2:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell2.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell2.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell2.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell2.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell2.button.class ]]]'
-                  icon: '[[[ return variables.cell2.button.icon ]]]'
-                  actions: '[[[ return variables.cell2.button.actions ]]]'          
-          cell3:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell3.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell3.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell3.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell3.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell3.button.class ]]]'
-                  icon: '[[[ return variables.cell3.button.icon ]]]'
-                  actions: '[[[ return variables.cell3.button.actions ]]]'
-          cell4:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell4.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell4.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell4.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell4.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell4.button.class ]]]'
-                  icon: '[[[ return variables.cell4.button.icon ]]]'
-                  actions: '[[[ return variables.cell4.button.actions ]]]'
-          cell5:
-            card:
-              type: 'custom:button-card'
-              template: >
-                [[[
-                  var templates = ['remotecontrol_button'];
-                  if (variables.cell5.button.templates != null) {
-                    return ['remotecontrol_button'].concat(variables.cell5.button.templates);
-                  }
-                  return templates;
-                ]]]
-              variables:
-                button:
-                  entity_id: "[[[ return variables.entity_id ]]]"
-                  background_color: >
-                    [[[
-                      if (variables.cell5.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
-                      } else {
-                        return variables.cell5.button.background_color;
-                      }
-                    ]]]
-                  class: '[[[ return variables.cell5.button.class ]]]'
-                  icon: '[[[ return variables.cell5.button.icon ]]]'
-                  actions: '[[[ return variables.cell5.button.actions ]]]'
 
-card_remotecontrol_nvidiashield_group_volume:
-  type: 'custom:button-card'
-  template: 
-    - layout_row_row_row
+vars_remotecontrol_firestick_group_volume:
   variables:
-    entity_id:
-    background_color:
     row1:
       button:
         entity_id:
         background_color:
         templates:
-          - green_no_state
-        class:
+          - "green_text"
         icon:
-          name: 'mdi:volume-plus'
+          name: "mdi:volume-plus"
           color:
           size:
+        tooltip: "Volume Up"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 89"
@@ -947,38 +553,38 @@ card_remotecontrol_nvidiashield_group_volume:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
-              delay:      
+              delay:
     row2:
       button:
         entity_id:
         background_color:
         templates:
-          - green_no_state
-        class:
+          - "green_text"
         icon:
-          name: 'mdi:volume-minus'
+          name: "mdi:volume-minus"
           color:
           size:
+        tooltip: "Volume Down"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 85"
@@ -987,38 +593,38 @@ card_remotecontrol_nvidiashield_group_volume:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
-            haptic: 'selection'
+            haptic: "selection"
             repeat: 200
             harmony:
               device:
-              delay:      
+              delay:
     row3:
       button:
         entity_id:
         background_color:
         templates:
-          - green_red_volume_mute
-        class: 'mute'
+          - "volume_mute_button_style"
         icon:
-          name: 'mdi:volume-off'
+          name: "mdi:volume-off"
           color:
           size:
+        tooltip: "Volume Mute"
         actions:
           tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
             service: "call-service"
             command: "input keyevent 90"
@@ -1027,135 +633,129 @@ card_remotecontrol_nvidiashield_group_volume:
               device:
               delay:
           double_tap:
-            entity_id:
+            more_info_entity_id:
             action: "none"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             harmony:
               device:
               delay:
           hold:
-            entity_id:
+            more_info_entity_id:
             action: "more-info"
-            service: androidtv.adb_command
+            service: "androidtv.adb_command"
             command:
             haptic: "none"
             repeat:
             harmony:
               device:
               delay:
-  custom_fields:
-    row1:
-      card:
-        type: 'custom:button-card'
-        template: >
-          [[[
-            var templates = ['remotecontrol_button'];
-            if (variables.row1.button.templates != null) {
-              return ['remotecontrol_button'].concat(variables.row1.button.templates);
-            }
-            return templates;
-          ]]]
-        variables:
-          button:
-            entity_id: "[[[ return variables.entity_id ]]]"
-            background_color: >
-              [[[
-                if (variables.row1.button.background_color == null) {
-                  if (variables.background_color == null) {
-                    return null;
-                  } else {
-                    return variables.background_color;
-                  }
-                } else {
-                  return variables.row1.button.background_color;
-                }
-              ]]]
-            class: '[[[ return variables.row1.button.class ]]]'
-            icon: '[[[ return variables.row1.button.icon ]]]'
-            actions: '[[[ return variables.row1.button.actions ]]]'
-    row2:
-      card:
-        type: 'custom:button-card'
-        template: >
-          [[[
-            var templates = ['remotecontrol_button'];
-            if (variables.row2.button.templates != null) {
-              return ['remotecontrol_button'].concat(variables.row2.button.templates);
-            }
-            return templates;
-          ]]]
-        variables:
-          button:
-            entity_id: "[[[ return variables.entity_id ]]]"
-            background_color: >
-              [[[
-                if (variables.row2.button.background_color == null) {
-                  if (variables.background_color == null) {
-                    return null;
-                  } else {
-                    return variables.background_color;
-                  }
-                } else {
-                  return variables.row2.button.background_color;
-                }
-              ]]]
-            class: '[[[ return variables.row2.button.class ]]]'
-            icon: '[[[ return variables.row2.button.icon ]]]'
-            actions: '[[[ return variables.row2.button.actions ]]]'
-    row3:
-      card:
-        type: 'custom:button-card'
-        template: >
-          [[[
-            var templates = ['remotecontrol_button'];
-            if (variables.row3.button.templates != null) {
-              return ['remotecontrol_button'].concat(variables.row3.button.templates);
-            }
-            return templates;
-          ]]]
-        variables:
-          button:
-            entity_id: "[[[ return variables.entity_id ]]]"
-            background_color: >
-              [[[
-                if (variables.row3.button.background_color == null) {
-                  if (variables.background_color == null) {
-                    return null;
-                  } else {
-                    return variables.background_color;
-                  }
-                } else {
-                  return variables.row3.button.background_color;
-                }
-              ]]]
-            class: '[[[ return variables.row3.button.class ]]]'
-            icon: '[[[ return variables.row3.button.icon ]]]'
-            actions: '[[[ return variables.row3.button.actions ]]]'
 
-card_remotecontrol_nvidiashield_group_apps:
-  type: 'custom:button-card'
-  template: button_grid_4row_4column 
+vars_remotecontrol_firestick_group_channel_selector:
   variables:
-    entity_id:
-    background_color:
+    doublerow1:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - "green_text"
+        icon:
+          name: "mdi:chevron-up"
+          color:
+          size:
+        name: "Ch"
+        tooltip: "Channel Up"
+        actions:
+          tap:
+            more_info_entity_id:
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 89"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "selection"
+            repeat:
+            harmony:
+              device:
+              delay:
+    doublerow2:
+      button:
+        entity_id:
+        background_color:
+        templates:
+          - "green_text"
+        icon:
+          name: "mdi:chevron-down"
+          color:
+          size:
+        name: "Ch"
+        tooltip: "Channel Down"
+        actions:
+          tap:
+            more_info_entity_id:
+            action: "none"
+            service: "call-service"
+            command: "input keyevent 85"
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          double_tap:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "none"
+            harmony:
+              device:
+              delay:
+          hold:
+            more_info_entity_id:
+            action: "none"
+            service: "androidtv.adb_command"
+            command:
+            haptic: "selection"
+            repeat:
+            harmony:
+              device:
+              delay:
+
+vars_remotecontrol_firestick_group_numbers:
+  variables:
     row1:
       entity_id:
       background_color:
       cell1:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:netflix
-            color: '#E50914'
+            name: "mdi:numeric-1-circle-outline"
+            color:
             size:
+          tooltip: "Number 1"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1164,18 +764,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1185,16 +785,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell2:
         button:
           entity_id:
-          background_color: '#00A8E1'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:prime
-            color: '#FFFFFF'
-            size: '90%'
+            name: "mdi:numeric-2-circle-outline"
+            color: "rgba(var(--color-blue),1)"
+            size:
+          tooltip: "Number 2"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1203,18 +804,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1224,16 +825,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell3:
         button:
           entity_id:
-          background_color: '#000000'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:plex
-            color: '#E5A00D'
+            name: "mdi:numeric-3-circle-outline"
+            color:
             size:
+          tooltip: "Number 3"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1242,57 +844,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              repeat:
-              harmony:
-                device:
-                delay:
-      cell4:
-        button:
-          entity_id:
-          background_color: '#FFFFFF'
-          templates:
-          class:
-          icon:
-            name: si:youtube
-            color: '#FF0000'
-            size: '85%'
-          actions:
-            tap:
-              entity_id:
-              action: "none"
-              service: "call-service"
-              command: "input keyevent 89"
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity_id:
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            hold:
-              entity_id:
-              action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1305,16 +868,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell1:
         button:
           entity_id:
-          background_color: '#000000'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:spotify
-            color: '#1DB954'   
+            name: "mdi:numeric-4-circle-outline"
+            color:
             size:
+          tooltip: "Number 4"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1323,18 +887,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1344,16 +908,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell2:
         button:
           entity_id:
-          background_color: '#000000'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:airplayvideo
-            color: '#FFFFFF'
+            name: "mdi:numeric-5-circle-outline"
+            color:
             size:
+          tooltip: "Number 5"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1362,18 +927,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1383,55 +948,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell3:
         button:
           entity_id:
-          background_color: '#000000'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:appletv
-            color: '#FFFFFF'
-            size: '85%'
-          actions:
-            tap:
-              entity_id:
-              action: "none"
-              service: "call-service"
-              command: "input keyevent 89"
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity_id:
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            hold:
-              entity_id:
-              action: "more-info"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              repeat:
-              harmony:
-                device:
-                delay:
-      cell4:
-        button:
-          entity_id:
-          background_color: '#FFFFFF'
-          templates:
-          class:
-          icon:
-            name: si:applemusic
-            color: '#FA243C'
+            name: "mdi:numeric-6-circle-outline"
+            color:
             size:
+          tooltip: "Number 6"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1440,18 +967,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1464,16 +991,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell1:
         button:
           entity_id:
-          background_color: '#000000'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:bbciplayer
-            color: '#F54997'
+            name: "mdi:numeric-7-circle-outline"
+            color:
             size:
+          tooltip: "Number 7"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1482,18 +1010,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1503,16 +1031,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell2:
         button:
           entity_id:
-          background_color: '#000000'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:emby
-            color: '#52B54B'
+            name: "mdi:numeric-8-circle-outline"
+            color:
             size:
+          tooltip: "Number 8"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1521,18 +1050,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1542,16 +1071,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell3:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:googleplay
-            color: '#414141'
+            name: "mdi:numeric-9-circle-outline"
+            color:
             size:
+          tooltip: "Number 9"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1560,57 +1090,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              repeat:
-              harmony:
-                device:
-                delay:
-      cell4:
-        button:
-          entity_id:
-          background_color: '#0000FF'
-          templates:
-          class:
-          icon:
-            name: phu:disney-plus
-            color: '#FFFFFF'
-            size:
-          actions:
-            tap:
-              entity_id:
-              action: "none"
-              service: "call-service"
-              command: "input keyevent 89"
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            double_tap:
-              entity_id:
-              action: "none"
-              service: androidtv.adb_command
-              command:
-              haptic: "none"
-              harmony:
-                device:
-                delay:
-            hold:
-              entity_id:
-              action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1623,16 +1114,17 @@ card_remotecontrol_nvidiashield_group_apps:
       cell1:
         button:
           entity_id:
-          background_color: '#F15B2A'
+          background_color:
           templates:
-          class:
+            - "blue_text"
           icon:
-            name: si:pluralsight
-            color: '#FFFFFF'
+            name: "mdi:numeric-0-circle-outline"
+            color:
             size:
+          tooltip: "Number 0"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1641,18 +1133,63 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+
+vars_remotecontrol_firestick_group_apps:
+  variables:
+    row1:
+      entity_id:
+      background_color:
+      cell1:
+        button:
+          entity_id:
+          background_color: "#FFFFFF"
+          templates:
+          icon:
+            name: "si:netflix"
+            color: "#E50914"
+            size:
+          tooltip: "Netflix"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1662,16 +1199,16 @@ card_remotecontrol_nvidiashield_group_apps:
       cell2:
         button:
           entity_id:
-          background_color: '#9146FF'
+          background_color: "#00A8E1"
           templates:
-          class:
           icon:
-            name: si:twitch
-            color: '#FFFFFF'
-            size:
+            name: "si:prime"
+            color: "#FFFFFF"
+            size: "90%"
+          tooltip: "Amazon Prime"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1680,18 +1217,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1701,16 +1238,16 @@ card_remotecontrol_nvidiashield_group_apps:
       cell3:
         button:
           entity_id:
-          background_color: '#FFFFFF'
+          background_color: "#0000FF"
           templates:
-          class:
           icon:
-            name: si:ted
-            color: '#E62B1E'
-            size: '85%'
+            name: "phu:disney-plus"
+            color: "#FFFFFF"
+            size:
+          tooltip:
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1719,18 +1256,18 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
@@ -1740,16 +1277,16 @@ card_remotecontrol_nvidiashield_group_apps:
       cell4:
         button:
           entity_id:
-          background_color: '#FF8800'
+          background_color: "#FFFFFF"
           templates:
-          class:
           icon:
-            name: si:vlcmediaplayer
-            color: '#FFFFFF'
-            size:
+            name: "si:youtube"
+            color: "#FF0000"
+            size: "85%"
+          tooltip: "YouTube"
           actions:
             tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
               service: "call-service"
               command: "input keyevent 89"
@@ -1758,67 +1295,498 @@ card_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
             double_tap:
-              entity_id:
+              more_info_entity_id:
               action: "none"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               harmony:
                 device:
                 delay:
             hold:
-              entity_id:
+              more_info_entity_id:
               action: "more-info"
-              service: androidtv.adb_command
+              service: "androidtv.adb_command"
               command:
               haptic: "none"
               repeat:
               harmony:
                 device:
                 delay:
-
-  custom_fields:
-    row1:
-      card:
-        type: 'custom:button-card'
-        template: button_row_4_column
-        variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row1.cell1 ]]]'
-          cell2: '[[[ return variables.row1.cell2 ]]]'
-          cell3: '[[[ return variables.row1.cell3 ]]]'
-          cell4: '[[[ return variables.row1.cell4 ]]]'
-    row2: 
-      card:
-        type: 'custom:button-card'
-        template: button_row_4_column
-        variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row2.cell1 ]]]'
-          cell2: '[[[ return variables.row2.cell2 ]]]'
-          cell3: '[[[ return variables.row2.cell3 ]]]'
-          cell4: '[[[ return variables.row2.cell4 ]]]'
-    row3: 
-      card:
-        type: 'custom:button-card'
-        template: button_row_4_column
-        variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row3.cell1 ]]]'
-          cell2: '[[[ return variables.row3.cell2 ]]]'
-          cell3: '[[[ return variables.row3.cell3 ]]]'
-          cell4: '[[[ return variables.row3.cell4 ]]]'
-    row4: 
-      card:
-        type: 'custom:button-card'
-        template: button_row_4_column
-        variables:
-          entity_id: '[[[ return variables.entity_id ]]]'
-          background_color: '[[[ return variables.background_color ]]]'
-          cell1: '[[[ return variables.row4.cell1 ]]]'
-          cell2: '[[[ return variables.row4.cell2 ]]]'
-          cell3: '[[[ return variables.row4.cell3 ]]]'
-          cell4: '[[[ return variables.row4.cell4 ]]]'
+    row2:
+      entity_id:
+      background_color:
+      cell1:
+        button:
+          entity_id:
+          background_color: "#434343"
+          templates:
+          icon:
+            name: "si:plex"
+            color: "#E5A00D"
+            size:
+          tooltip: "Plex"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell2:
+        button:
+          entity_id:
+          background_color: "#434343"
+          templates:
+          icon:
+            name: "si:spotify"
+            color: "#1DB954"
+            size:
+          tooltip: "Spotify"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell3:
+        button:
+          entity_id:
+          background_color: "#434343"
+          templates:
+          icon:
+            name: "si:appletv"
+            color: "#FFFFFF"
+            size: "85%"
+          tooltip: "Apple TV"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell4:
+        button:
+          entity_id:
+          background_color: "#434343"
+          templates:
+          icon:
+            name: "si:bbciplayer"
+            color: "#F54997"
+            size:
+          tooltip: "BBC iPlayer"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+    row3:
+      entity_id:
+      background_color:
+      cell1:
+        button:
+          entity_id:
+          background_color: "#434343"
+          templates:
+          icon:
+            name: "si:ubiquiti"
+            color: "#0559C9"
+            size:
+          tooltip: "Unifi Protect"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell2:
+        button:
+          entity_id:
+          background_color: "#FFFFFF"
+          templates:
+          icon:
+            name: "si:youtubemusic"
+            color: "#FF0000"
+            size:
+          tooltip: "YouTube Music"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell3:
+        button:
+          entity_id:
+          background_color: "#FFFFFF"
+          templates:
+          icon:
+            name: "si:applemusic"
+            color: "#FA243C"
+            size:
+          tooltip: "Apple Music"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell4:
+        button:
+          entity_id:
+          background_color: "#FFFFFF"
+          templates:
+          icon:
+            name: "si:googleplay"
+            color: "#414141"
+            size:
+          tooltip: "Google Play"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+    row4:
+      entity_id:
+      background_color:
+      cell1:
+        button:
+          entity_id:
+          background_color: "#F15B2A"
+          templates:
+          icon:
+            name: "si:pluralsight"
+            color: "#FFFFFF"
+            size:
+          tooltip: "Pluralsight"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell2:
+        button:
+          entity_id:
+          background_color: "#9146FF"
+          templates:
+          icon:
+            name: "si:twitch"
+            color: "#FFFFFF"
+            size:
+          tooltip: "Twitch"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell3:
+        button:
+          entity_id:
+          background_color: "#FFFFFF"
+          templates:
+          icon:
+            name: "si:ted"
+            color: "#E62B1E"
+            size: "85%"
+          tooltip: "TED"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
+      cell4:
+        button:
+          entity_id:
+          background_color: "#FF8800"
+          templates:
+          icon:
+            name: "si:vlcmediaplayer"
+            color: "#FFFFFF"
+            size:
+          tooltip: "VLC Media Player"
+          actions:
+            tap:
+              more_info_entity_id:
+              action: "none"
+              service: "call-service"
+              command: "input keyevent 89"
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            double_tap:
+              more_info_entity_id:
+              action: "none"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              harmony:
+                device:
+                delay:
+            hold:
+              more_info_entity_id:
+              action: "more-info"
+              service: "androidtv.adb_command"
+              command:
+              haptic: "none"
+              repeat:
+              harmony:
+                device:
+                delay:
