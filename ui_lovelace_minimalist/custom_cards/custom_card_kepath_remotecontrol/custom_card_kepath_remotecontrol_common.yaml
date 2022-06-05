@@ -3,6 +3,12 @@
 #####  COMMON VARIABLES                             ####
 ########################################################
 
+vars_remotecontrol_constants:
+  template:
+    - "ulm_custom_card_kepath_remotecontrol_language_variables"
+    - "vars_adb_androidtv_firetv_constants"
+    - "vars_adb_androidtv_nvidia_constants"
+
 vars_remotecontrol_shared:
   variables:
     entity_id:
@@ -20,11 +26,11 @@ vars_remotecontrol_shared_grey:
 card_remotecontrol_group_power:
   type: "custom:button-card"
   template:
-    - "layout_subgroup"
-    # - "vars_remotecontrol_shared"
+    - "layout_group"
+    - "vars_remotecontrol_shared"
   triggers_update: "all"
   custom_fields:
-    subgroup1:
+    group1:
       card:
         type: "custom:button-card"
         template: "layout_cell_gap_cell"
@@ -61,11 +67,7 @@ card_remotecontrol_group_power:
                   background_color: >
                     [[[
                       if (variables.cell1.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
+                        return variables.background_color;
                       } else {
                         return variables.cell1.button.background_color;
                       }
@@ -105,11 +107,7 @@ card_remotecontrol_group_power:
                   background_color: >
                     [[[
                       if (variables.cell2.button.background_color == null) {
-                        if (variables.background_color == null) {
-                          return null;
-                        } else {
-                          return variables.background_color;
-                        }
+                        return variables.background_color;
                       } else {
                         return variables.cell2.button.background_color;
                       }
@@ -764,11 +762,7 @@ card_remotecontrol_group_volume:
             background_color: >
               [[[
                 if (variables.row3.button.background_color == null) {
-                  if (variables.background_color == null) {
-                    return null;
-                  } else {
-                    return variables.background_color;
-                  }
+                  return variables.background_color;
                 } else {
                   return variables.row3.button.background_color;
                 }
@@ -2132,7 +2126,7 @@ layout_common_button:
     card:
       - box-shadow: "none"
       - padding: "0px"
-      - background-color: "rgba(var(--color-grey), 0.05)"
+      # - background-color: "rgba(var(--color-grey), 0.05)"
       - border-radius: "14px"
       - place-self: "center"
     icon:

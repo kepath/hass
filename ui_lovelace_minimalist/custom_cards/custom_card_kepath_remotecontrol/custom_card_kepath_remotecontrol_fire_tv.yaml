@@ -3,37 +3,35 @@
 #####  AMAZON FIRESTICK CARDS                      #####
 ########################################################
 
-card_remotecontrol_firestick_group_power:
-  type: "custom:button-card"
-  variables:
-    entity_id:
-    background_color: "rgba(var(--color-grey), 0.2)"
-  template:
-    - "ulm_custom_card_kepath_remotecontrol_language_variables"
-    - "vars_adb_androidtv_constants"
-    - "layout_group"
-  custom_fields:
-    group1:
-      card:
-          type: "custom:button-card"
-          variables:
-            entity_id: "[[[ variables.entity_id ]]]"
-            background_color: "[[[ variables.background_color ]]]"
-            # firetv_keycode: "[[[ variables.firetv_keycode ]]]"
-            # firetv_source: "[[[ variables.firetv_source ]]]"
-          template:
-            - "vars_remotecontrol_firestick_group_power"
-            - "card_remotecontrol_group_power"
+# card_remotecontrol_firestick_group_power:
+#   type: "custom:button-card"
+#   variables:
+#     entity_id:
+#     background_color: "rgba(var(--color-grey), 0.1)"
+#   template:
+#     # - "ulm_custom_card_kepath_remotecontrol_language_variables"
+   
+#     - "layout_group"
+#   custom_fields:
+#     group1:
+#       card:
+#           type: "custom:button-card"
+#           variables:
+#             entity_id: "[[[ return variables.entity_id ]]]"
+#             background_color: "[[[ return variables.background_color ]]]"
+#           template:
+#             - "vars_remotecontrol_firestick_group_power"
+#             - "card_remotecontrol_group_power"
 
 vars_remotecontrol_firestick_group_power:
   variables:
-    entity_id:
     cell1:
       button:
         entity_id:
+        background_color:
         templates:
           - "red_text"
-          # - "power_state_button_style"
+          - "power_state_button_style"
         icon:
           name: "mdi:power"
           color:
@@ -42,8 +40,8 @@ vars_remotecontrol_firestick_group_power:
         actions:
           tap:
             more_info_entity_id:
-            action: "none"
-            service: "call-service"
+            action: "service-adb-command"
+            service: "androidtv.adb_command"
             command:
             haptic: "success"
             harmony:
@@ -685,7 +683,7 @@ vars_remotecontrol_firestick_group_channel_selector:
           - "green_text"
         icon:
           name: "mdi:chevron-up"
-          color:
+          color: 
           size:
         name: "Ch"
         tooltip: "[[[ return variables.ulm_custom_card_kepath_remotecontrol_channel_up ]]]"
@@ -813,7 +811,7 @@ vars_remotecontrol_firestick_group_numbers:
             - "blue_text"
           icon:
             name: "mdi:numeric-2-circle-outline"
-            color: "rgba(var(--color-blue),1)"
+            color:
             size:
           tooltip: "[[[ return variables.ulm_custom_card_kepath_remotecontrol_number_2 ]]]"
           actions:
@@ -1814,7 +1812,7 @@ vars_remotecontrol_firestick_group_apps:
                 device:
                 delay:
 
-vars_adb_androidtv_constants:
+vars_adb_androidtv_firetv_constants:
   variables:
     firetv_keycode:
       KEY_BACK: 4
