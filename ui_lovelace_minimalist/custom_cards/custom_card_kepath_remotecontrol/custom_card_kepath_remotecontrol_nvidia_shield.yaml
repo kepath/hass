@@ -3,7 +3,33 @@
 #####  NVIDIA SHIELD CARDS                         #####
 ########################################################
 
+card_remotecontrol_nvidiashield_group_power:
+  type: "custom:button-card"
+  template:
+    - "ulm_custom_card_kepath_remotecontrol_language_variables"
+    - "vars_adb_androidtv_nvidia_constants"
+    - "layout_group"  
+  variables:
+    entity_id:
+    background_color: "rgba(var(--color-grey), 0.1)"
+  custom_fields:
+    group1:
+      card:
+          type: "custom:button-card"
+          variables:
+            entity_id: "[[[ return variables.entity_id ]]]"
+            background_color: "[[[ return variables.background_color ]]]"
+            # language_replacement_text: "[[[ return variables.language_replacement_text ]]]"
+            # nvidiashield_keycode: "[[[ return variables.nvidiashield_keycode ]]]"
+            # nvidiashield_source: "[[[ return variables.nvidiashield_source ]]]"
+          template:
+            - "vars_remotecontrol_firestick_group_power"
+            - "card_remotecontrol_group_power"
+
 vars_remotecontrol_nvidiashield_group_power:
+  # template:
+  #   - "ulm_custom_card_kepath_remotecontrol_language_variables"
+  #   - "vars_adb_androidtv_nvidia_constants"
   variables:
     cell1:
       button:
@@ -1792,9 +1818,9 @@ vars_remotecontrol_nvidiashield_group_apps:
                 device:
                 delay:
 
-vars_adb_androidtv_constants:
+vars_adb_androidtv_nvidia_constants:
   variables:
-    firetv_keycode:
+    nvidiashield_keycode:
       KEY_BACK: 4
       KEY_BLUE: 186
       KEY_CENTER: 23
@@ -1884,7 +1910,7 @@ vars_adb_androidtv_constants:
       KEY_X: 52
       KEY_Y: 53
       KEY_Z: 54
-    firetv_source:
+    nvidiashield_source:
       APP_AE_TV: "com.aetn.aetv.watch"
       APP_AMAZON_PRIME_VIDEO: "com.amazon.avod.thirdpartyclient"
       APP_AMAZON_VIDEO: "com.amazon.avod"
