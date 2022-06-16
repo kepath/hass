@@ -156,6 +156,28 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
         self._attr_media_content_id = None
         self._attr_media_content_type = "music"
         self._attr_media_image_url = None
+        self._prev_time = 0
+
+    async def async_added_to_hass(self) -> None:
+        """Register callbacks."""
+        await super().async_added_to_hass()
+
+        # we subscribe to player queue time update but we only
+        # accept a state change on big time jumps (e.g. seeking)
+        async def queue_time_updated(event: MassEvent):
+            if event.object_id != self.player.active_queue.queue_id:
+                return
+            if abs(self._prev_time - event.data) > 5:
+                await self.async_on_update()
+                self.async_write_ha_state()
+            self._prev_time = event.data
+
+        self.async_on_remove(
+            self.mass.subscribe(
+                queue_time_updated,
+                EventType.QUEUE_TIME_UPDATED,
+            )
+        )
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any]:
@@ -231,6 +253,7 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
         """Handle player updates."""
         self._attr_media_position = self.player.active_queue.elapsed_time
         self._attr_media_position_updated_at = utcnow()
+        self._prev_time = self.player.active_queue.elapsed_time
         # update current media item infos
         media_artist = None
         media_album_artist = None
@@ -284,6 +307,8 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
     @property
     def media_image_remotely_accessible(self) -> bool:
         """If the image url is remotely accessible."""
+        if not self.player.active_queue.active:
+            return True
         return self.media_image_url is None or self.media_image_url.startswith("http")
 
     async def async_get_media_image(self) -> tuple[bytes | None, str | None]:
@@ -390,7 +415,10 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
 
         if announce:
             announce_sound = "/api/tts_proxy" in media_id
-            await self.player.active_queue.play_alert(media_id, announce_sound)
+            announce_sound = False
+            self.hass.create_task(
+                self.player.active_queue.play_alert(media_id, announce_sound)
+            )
         else:
             await self.player.active_queue.play_media(media_id, queue_opt)
 

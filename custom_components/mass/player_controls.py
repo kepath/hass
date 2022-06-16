@@ -11,7 +11,6 @@ from homeassistant.components.media_player import MediaPlayerEntity
 from homeassistant.components.media_player.const import DOMAIN as MEDIA_PLAYER_DOMAIN
 from homeassistant.components.media_player.const import (
     MEDIA_TYPE_MUSIC,
-    SUPPORT_PLAY_MEDIA,
     SUPPORT_TURN_OFF,
     SUPPORT_TURN_ON,
     SUPPORT_VOLUME_MUTE,
@@ -19,7 +18,6 @@ from homeassistant.components.media_player.const import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     ATTR_ENTITY_ID,
-    ATTR_SUPPORTED_FEATURES,
     EVENT_STATE_CHANGED,
     STATE_IDLE,
     STATE_OFF,
@@ -48,8 +46,10 @@ from music_assistant.models.player import (
 
 from .const import (
     ATTR_SOURCE_ENTITY_ID,
+    ATV_DOMAIN,
     CONF_PLAYER_ENTITIES,
     DEFAULT_NAME,
+    DLNA_DOMAIN,
     DOMAIN,
     ESPHOME_DOMAIN,
     SLIMPROTO_DOMAIN,
@@ -93,16 +93,17 @@ class HassPlayer(Player):
         self.entity_id = entity_id
 
         # grab a reference to the underlying entity
+        # we perform all logic directly on the entity instance and bypass the state machine
         entity_comp = hass.data.get(DATA_INSTANCES, {}).get(MP_DOMAIN)
         self.entity: MediaPlayerEntity = entity_comp.get_entity(entity_id)
 
         manufacturer = "Home Assistant"
         model = entity_id
-        if entry := self.entity.registry_entry:
+        if reg_entry := self.entity.registry_entry:
             # grab device entry
-            if entry.device_id:
+            if reg_entry.device_id:
                 dev_reg = dr.async_get(hass)
-                device = dev_reg.async_get(entry.device_id)
+                device = dev_reg.async_get(reg_entry.device_id)
                 manufacturer = device.manufacturer
                 model = device.model
         self._attr_device_info = DeviceInfo(manufacturer=manufacturer, model=model)
@@ -112,18 +113,16 @@ class HassPlayer(Player):
     @property
     def name(self) -> str:
         """Return player name."""
-        if entity := self.entity:
-            return entity.registry_entry.name or entity.name
+        if reg_entry := self.entity.registry_entry:
+            return reg_entry.name or self.entity.name
         return self.entity_id
 
     @property
     def support_power(self) -> bool:
         """Return if this player supports power commands."""
-        if entity := self.entity:
-            return bool(entity.supported_features & SUPPORT_TURN_ON) and bool(
-                entity.supported_features & SUPPORT_TURN_OFF
-            )
-        return False
+        return bool(self.entity.supported_features & SUPPORT_TURN_ON) and bool(
+            self.entity.supported_features & SUPPORT_TURN_OFF
+        )
 
     @property
     def powered(self) -> bool:
@@ -156,8 +155,6 @@ class HassPlayer(Player):
     @property
     def current_url(self) -> str:
         """Return URL that is currently loaded in the player."""
-        if not self.entity:
-            return ""
         return self.entity.media_content_id
 
     @property
@@ -178,8 +175,8 @@ class HassPlayer(Player):
             return 0
         if self.is_group:
             return get_group_volume(self)
-        if self.entity and self.entity.support_volume_set:
-            return self.entity.volume_level * 100
+        if self.entity.support_volume_set:
+            return (self.entity.volume_level or 0) * 100
         return 100
 
     @property
@@ -187,7 +184,7 @@ class HassPlayer(Player):
         """Return current mute mode of player."""
         if not self.available:
             return False
-        if self.entity and self.entity.support_volume_mute:
+        if self.entity.support_volume_mute:
             return self.entity.is_volume_muted
         return self._attr_volume_muted
 
@@ -248,18 +245,13 @@ class HassPlayer(Player):
     @callback
     def update_attributes(self) -> None:
         """Update attributes of this player."""
-        if not self.entity:
-            entity_comp = self.hass.data.get(DATA_INSTANCES, {}).get(MP_DOMAIN)
-            self.entity: MediaPlayerEntity = entity_comp.get_entity(self.entity_id)
-        if not self.entity:
-            self._attr_available = False
-        else:
-            self._attr_available = self.entity.available
+        self._attr_available = self.entity.available
 
     async def play_url(self, url: str) -> None:
         """Play the specified url on the player."""
         LOGGER.debug("[%s] play_url: %s", self.entity_id, url)
-        if self.volume_muted:
+        self._attr_powered = True
+        if self.use_mute_as_power:
             await self.volume_mute(False)
         await self.entity.async_play_media(
             MEDIA_TYPE_MUSIC,
@@ -290,24 +282,16 @@ class HassPlayer(Player):
                 await self.active_queue.stop()
         if self.use_mute_as_power:
             await self.volume_mute(not powered)
-        elif (
-            powered
-            and self.entity
-            and bool(self.entity.supported_features & SUPPORT_TURN_ON)
-        ):
+        elif powered and bool(self.entity.supported_features & SUPPORT_TURN_ON):
             # regular turn_on command
             await self.entity.async_turn_on()
-        elif (
-            not powered
-            and self.entity
-            and bool(self.entity.supported_features & SUPPORT_TURN_OFF)
-        ):
+        elif not powered and bool(self.entity.supported_features & SUPPORT_TURN_OFF):
             # regular turn_off command
             await self.entity.async_turn_off()
-        else:
-            # no power support on device
-            self._attr_powered = powered
-            self.update_state()
+        # update local attribute anyway
+        # (for mute as power workaround and players without power support)
+        self._attr_powered = powered
+        self.update_state()
         # check group power: power off group when last player powers down
         if not powered:
             self.check_group_power()
@@ -315,7 +299,7 @@ class HassPlayer(Player):
     async def volume_set(self, volume_level: int) -> None:
         """Send volume level (0..100) command to player."""
         LOGGER.debug("[%s] volume_set: %s", self.entity_id, volume_level)
-        if self.entity and self.entity.support_volume_set:
+        if self.entity.support_volume_set:
             await self.entity.async_set_volume_level(volume_level / 100)
 
     async def volume_mute(self, muted: bool) -> None:
@@ -354,12 +338,28 @@ class HassPlayer(Player):
                     powered_childs.add(child_player.player_id)
             if len(powered_childs) == 0:
                 self.mass.create_task(group_player.power(False))
+        if self.is_group:
+            # schedule update of the attributes to make it refresh group childs
+            self.mass.loop.call_later(5, self.update_state)
 
 
 class SlimprotoPlayer(HassPlayer):
     """Representation of Hass player from Squeezebox Local integration."""
 
     # TODO: read max sample rate and supported codecs from player
+    _attr_supported_content_types: Tuple[ContentType] = (
+        ContentType.FLAC,
+        ContentType.MP3,
+        ContentType.WAV,
+        ContentType.PCM_S16LE,
+        ContentType.PCM_S24LE,
+    )
+    _attr_supported_sample_rates: Tuple[int] = (
+        44100,
+        48000,
+        88200,
+        96000,
+    )
 
     def __init__(self, *args, **kwargs) -> None:
         """Initialize player."""
@@ -395,6 +395,13 @@ class ESPHomePlayer(HassPlayer):
     _attr_supported_sample_rates: Tuple[int] = (44100, 48000)
 
 
+class ATVPlayer(HassPlayer):
+    """Representation of Hass player from ATV/Airplay integration."""
+
+    _attr_supported_content_types: Tuple[ContentType] = (ContentType.MP3,)
+    _attr_supported_sample_rates: Tuple[int] = (44100, 48000)
+
+
 class CastPlayer(HassPlayer):
     """Representation of Hass player from cast integration."""
 
@@ -407,6 +414,7 @@ class CastPlayer(HassPlayer):
         if self._attr_device_info.model == "Google Cast Group":
             # this is a cast group
             self._attr_is_group = True
+        self.update_attributes()
 
     @callback
     def update_attributes(self) -> None:
@@ -435,6 +443,9 @@ class CastPlayer(HassPlayer):
 
     async def play_url(self, url: str) -> None:
         """Play the specified url on the player."""
+        self._attr_powered = True
+        if self.use_mute_as_power:
+            await self.volume_mute(False)
         # pylint: disable=import-outside-toplevel,protected-access
         from homeassistant.components.cast.media_player import quick_play
 
@@ -450,6 +461,10 @@ class CastPlayer(HassPlayer):
         )
         # enqueue second item to allow on-player control of next
         # (or shout next track from google assistant)
+        if self.active_queue.stream and self.active_queue.stream.is_alert:
+            return
+        if self.active_queue.stream and len(self.active_queue.items) < 2:
+            return
         app_data["enqueue"] = True
         await self.hass.async_add_executor_job(
             quick_play, cast, "default_media_receiver", app_data
@@ -471,7 +486,6 @@ class SonosPlayer(HassPlayer):
     @property
     def state(self) -> PlayerState:
         """Return current PlayerState of player."""
-        # pylint: disable=protected-access
         # a sonos player is always either playing or paused
         # consider idle if nothing is playing and we did not pause
         if self.entity.state == STATE_PAUSED and not self._sonos_paused:
@@ -487,7 +501,7 @@ class SonosPlayer(HassPlayer):
     @property
     def elapsed_time(self) -> float:
         """Return elapsed time of current playing media in seconds."""
-        # elapsed_time is read by queue controller every second while playing
+        # elapsed_time is read by the queue controller every second while playing
         # add the poll task here to make sure we have accurate info
         self.hass.create_task(self.poll_sonos())
         return super().elapsed_time
@@ -505,6 +519,9 @@ class SonosPlayer(HassPlayer):
     async def play_url(self, url: str) -> None:
         """Play the specified url on the player."""
         self._sonos_paused = False
+        self._attr_powered = True
+        if self.use_mute_as_power:
+            await self.volume_mute(False)
 
         def _play_url():
             soco = self.entity.coordinator.soco
@@ -528,8 +545,6 @@ class SonosPlayer(HassPlayer):
 
     async def poll_sonos(self, force: Optional[bool] = None) -> None:
         """Call when the PlayerQueue polls the player for accurate info."""
-        if not self.entity:
-            return
 
         def poll_sonos():
             if self.entity.speaker.is_coordinator:
@@ -544,6 +559,51 @@ class SonosPlayer(HassPlayer):
         if force or (time() - self._last_info_fetch) > 30:
             await self.hass.loop.run_in_executor(None, poll_sonos)
             self._last_info_fetch = time()
+
+
+class DlnaPlayer(HassPlayer):
+    """Representation of Hass player from DLNA integration."""
+
+    _attr_supported_sample_rates: Tuple[int] = (44100, 48000)
+    _attr_supported_content_types: Tuple[ContentType] = (
+        ContentType.MP3,
+        ContentType.FLAC,
+    )
+
+    async def play_url(self, url: str) -> None:
+        """Play the specified url on the player."""
+        self._attr_powered = True
+        if self.use_mute_as_power:
+            await self.volume_mute(False)
+        # pylint: disable=protected-access
+        device = self.entity._device
+
+        didl_metadata = (
+            '<DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dlna="urn:schemas-dlna-org:metadata-1-0/">'
+            '<item id="1" parentID="0" restricted="1">'
+            "<dc:title>Streaming from Music Assistant</dc:title>"
+            "<dc:creator></dc:creator>"
+            "<upnp:album></upnp:album>"
+            "<upnp:channelName>Music Assistant</upnp:channelName>"
+            "<upnp:channelNr>0</upnp:channelNr>"
+            "<upnp:class>object.item.audioItem.audioBroadcast</upnp:class>"
+            f'<res protocolInfo="http-get:*:audio/flac:DLNA.ORG_OP=00;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=0d500000000000000000000000000000">{url}</res>'
+            "</item>"
+            "</DIDL-Lite>"
+        )
+        if device.can_stop:
+            await self.entity.async_media_stop()
+
+        # Queue media
+        await device.async_set_transport_uri(
+            url, "Streaming from Music Assistant", didl_metadata
+        )
+
+        if self.state == PlayerState.PLAYING:
+            return
+
+        await device.async_wait_for_can_play()
+        await self.entity.async_media_play()
 
 
 class HassGroupPlayer(HassPlayer):
@@ -620,6 +680,7 @@ class HassGroupPlayer(HassPlayer):
 
     async def play_url(self, url: str) -> None:
         """Play the specified url on the player."""
+        self._attr_powered = True
         self._attr_current_url = url
         # redirect command to all child players
         await asyncio.gather(*[x.play_url(url) for x in get_child_players(self, True)])
@@ -641,7 +702,8 @@ class HassGroupPlayer(HassPlayer):
         # collect the group childs, be prepared for the usecase where the user actually
         # added a mass player to a group, translate that to the underlying entity.
         group_childs = []
-        for entity_id in hass_state.attributes.get(ATTR_ENTITY_ID, []):
+        extra_attr = self.entity.extra_state_attributes or {}
+        for entity_id in extra_attr.get(ATTR_ENTITY_ID, []):
             if source_id := self._get_source_entity_id(entity_id):
                 group_childs.append(source_id)
         self._attr_group_childs = group_childs
@@ -657,7 +719,9 @@ class HassGroupPlayer(HassPlayer):
 
 
 PLAYER_MAPPING = {
+    ATV_DOMAIN: ATVPlayer,
     CAST_DOMAIN: CastPlayer,
+    DLNA_DOMAIN: DlnaPlayer,
     SLIMPROTO_DOMAIN: SlimprotoPlayer,
     ESPHOME_DOMAIN: ESPHomePlayer,
     SONOS_DOMAIN: SonosPlayer,
@@ -678,15 +742,22 @@ async def async_register_player_control(
     if entity is None or entity.attributes is None:
         return
 
-    if not (entity.attributes.get(ATTR_SUPPORTED_FEATURES, 0) & SUPPORT_PLAY_MEDIA):
+    entity_comp = hass.data.get(DATA_INSTANCES, {}).get(MP_DOMAIN)
+    if not entity_comp:
+        return
+    entity: MediaPlayerEntity = entity_comp.get_entity(entity_id)
+    if not entity:
         return
 
-    ent_reg = er.async_get(hass)
+    # require some basic features, most important `play_media`
+    if not entity.support_play_media:
+        return
+    if not entity.support_play or not entity.support_pause:
+        return
+
     player = None
     # Integration specific player controls
-    entry_platform = None
-    if ent_entry := ent_reg.async_get(entity_id):
-        entry_platform = ent_entry.platform
+    entry_platform = entity.platform.platform_name
     if entry_platform == DOMAIN:
         # this is already a Music assistant player
         return
@@ -702,8 +773,7 @@ async def async_register_player_controls(
     hass: HomeAssistant, mass: MusicAssistant, entry: ConfigEntry
 ):
     """Register hass entities as player controls on Music Assistant."""
-    # allowed_entities not configured = not filter (=all)
-    allowed_entities = entry.options.get(CONF_PLAYER_ENTITIES)
+    allowed_entities = entry.options.get(CONF_PLAYER_ENTITIES, [])
 
     async def async_hass_state_event(event: Event) -> None:
         """Handle hass state-changed events to update registered PlayerControls."""
@@ -717,16 +787,24 @@ async def async_register_player_controls(
             source_player.on_hass_event(event)
             return
         # entity not (yet) registered
-        if allowed_entities is None or entity_id in allowed_entities:
+        if entity_id in allowed_entities:
             await async_register_player_control(hass, mass, entity_id)
 
     # register event listener
     entry.async_on_unload(
         hass.bus.async_listen(EVENT_STATE_CHANGED, async_hass_state_event)
     )
+
     # register all current entities
-    for entity in hass.states.async_all(MEDIA_PLAYER_DOMAIN):
-        if allowed_entities is None or entity.entity_id in allowed_entities:
-            if entity.state in (STATE_UNAVAILABLE, STATE_UNKNOWN):
+    def register_all():
+        for entity in hass.states.async_all(MEDIA_PLAYER_DOMAIN):
+            if entity.entity_id not in allowed_entities:
                 continue
-            await async_register_player_control(hass, mass, entity.entity_id)
+            hass.create_task(
+                async_register_player_control(hass, mass, entity.entity_id)
+            )
+
+    register_all()
+    # schedule register a few minutes after startup to catch any slow loading platforms
+    hass.loop.call_later(30, register_all)
+    hass.loop.call_later(120, register_all)
