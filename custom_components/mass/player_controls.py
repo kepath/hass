@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from datetime import datetime
 from time import time
 from typing import Optional, Tuple
 
@@ -108,6 +109,8 @@ class HassPlayer(Player):
                 model = device.model
         self._attr_device_info = DeviceInfo(manufacturer=manufacturer, model=model)
         self._attr_powered = False
+        self._attr_current_url = ""
+        self._attr_elapsed_time = 0
         self.update_attributes()
 
     @property
@@ -146,7 +149,6 @@ class HassPlayer(Player):
             "media_position_mass", self.entity.media_position
         )
         last_upd = self.entity.media_position_updated_at
-        # LOGGER.debug("[%s] - media_position: %s - updated_at: %s", self.name, self.entity.media_position,  self.entity.media_position_updated_at)
         if last_upd is None or media_position is None:
             return 0
         diff = (utcnow() - last_upd).seconds
@@ -155,7 +157,7 @@ class HassPlayer(Player):
     @property
     def current_url(self) -> str:
         """Return URL that is currently loaded in the player."""
-        return self.entity.media_content_id
+        return self.entity.media_content_id or self._attr_current_url
 
     @property
     def state(self) -> PlayerState:
@@ -241,6 +243,8 @@ class HassPlayer(Player):
             old_state.state,
             new_state.state,
         )
+        if new_state.state in OFF_STATES:
+            self._attr_current_url = None
 
     @callback
     def update_attributes(self) -> None:
@@ -251,6 +255,7 @@ class HassPlayer(Player):
         """Play the specified url on the player."""
         LOGGER.debug("[%s] play_url: %s", self.entity_id, url)
         self._attr_powered = True
+        self._attr_current_url = url
         if self.use_mute_as_power:
             await self.volume_mute(False)
         await self.entity.async_play_media(
@@ -261,6 +266,7 @@ class HassPlayer(Player):
     async def stop(self) -> None:
         """Send STOP command to player."""
         LOGGER.debug("[%s] stop", self.entity_id)
+        self._attr_current_url = None
         await self.entity.async_media_stop()
 
     async def play(self) -> None:
@@ -391,8 +397,50 @@ class SlimprotoPlayer(HassPlayer):
 class ESPHomePlayer(HassPlayer):
     """Representation of Hass player from ESPHome integration."""
 
+    use_mute_as_power: bool = True
+
     _attr_supported_content_types: Tuple[ContentType] = (ContentType.MP3,)
     _attr_supported_sample_rates: Tuple[int] = (44100, 48000)
+    _attr_media_pos_updated_at: Optional[datetime] = None
+
+    @property
+    def elapsed_time(self) -> float:
+        """Return elapsed time of current playing media in seconds."""
+        if self.state == PlayerState.PLAYING:
+            last_upd = self._attr_media_pos_updated_at
+            media_pos = self._attr_elapsed_time
+            if last_upd is None or media_pos is None:
+                return 0
+            diff = (utcnow() - last_upd).seconds
+            return media_pos + diff
+        if self.state == PlayerState.PAUSED:
+            return self._attr_elapsed_time
+        return 0
+
+    @callback
+    def on_state_changed(self, old_state: State, new_state: State) -> None:
+        """Call when state changes from HA player."""
+        super().on_state_changed(old_state, new_state)
+        # TEMP! This needs to be fixed upstream in the ESPHome integration
+        old_state = old_state.state
+        new_state = new_state.state
+        if old_state == STATE_PAUSED and new_state == STATE_PLAYING:
+            self._attr_media_pos_updated_at = utcnow()
+        elif new_state == STATE_PAUSED:
+            last_upd = self._attr_media_pos_updated_at
+            media_pos = self._attr_elapsed_time
+            if last_upd is not None and media_pos is not None:
+                diff = (utcnow() - last_upd).seconds
+                self._attr_elapsed_time = media_pos + diff
+        elif old_state != STATE_PLAYING and new_state == STATE_PLAYING:
+            self._attr_media_pos_updated_at = utcnow()
+            self._attr_elapsed_time = 0
+
+    async def play_url(self, url: str) -> None:
+        """Play the specified url on the player."""
+        await super().play_url(url)
+        self._attr_media_pos_updated_at = utcnow()
+        self._attr_elapsed_time = 0
 
 
 class ATVPlayer(HassPlayer):
@@ -461,13 +509,18 @@ class CastPlayer(HassPlayer):
         )
         # enqueue second item to allow on-player control of next
         # (or shout next track from google assistant)
+        await asyncio.sleep(1)
         if self.active_queue.stream and self.active_queue.stream.is_alert:
             return
         if self.active_queue.stream and len(self.active_queue.items) < 2:
             return
-        app_data["enqueue"] = True
+        enqueue_data = {**app_data}
+        enqueue_data["enqueue"] = True
+        enqueue_data["media_id"] = self.mass.streams.get_control_url(
+            self.active_queue.queue_id
+        )
         await self.hass.async_add_executor_job(
-            quick_play, cast, "default_media_receiver", app_data
+            quick_play, cast, "default_media_receiver", enqueue_data
         )
 
 
@@ -621,7 +674,22 @@ class HassGroupPlayer(HassPlayer):
         self.update_attributes()
 
     @property
-    def current_url(self) -> PlayerState:
+    def support_power(self) -> bool:
+        """Return if this player supports power commands."""
+        return False
+
+    @property
+    def state(self) -> PlayerState:
+        """Return the state of the grouped player."""
+        # grab details from first (powered) group child
+        for child_player in get_child_players(self, True):
+            if not child_player.current_url:
+                continue
+            return child_player.state
+        return super().state
+
+    @property
+    def current_url(self) -> str:
         """Return the current_url of the grouped player."""
         # grab details from first (powered) group child
         for child_player in get_child_players(self, True):
@@ -629,22 +697,6 @@ class HassGroupPlayer(HassPlayer):
                 continue
             return child_player.current_url
         return super().state
-
-    @property
-    def powered(self) -> bool:
-        """Return the current_url of the grouped player."""
-        # powered if all powered players have same url loaded
-        prev_url = None
-        powered_players = 0
-        for child_player in get_child_players(self, True):
-            if not child_player.current_url:
-                continue
-            powered_players += 1
-            if not prev_url:
-                prev_url = child_player.current_url
-            if prev_url != child_player.current_url:
-                return False
-        return powered_players > 0
 
     @property
     def elapsed_time(self) -> float:
@@ -673,10 +725,8 @@ class HassGroupPlayer(HassPlayer):
 
     async def power(self, powered: bool) -> None:
         """Send POWER command to player."""
-        # redirect command to all child players
-        await asyncio.gather(
-            *[x.power(powered) for x in get_child_players(self, False)]
-        )
+        self._attr_powered = powered
+        self.update_state()
 
     async def play_url(self, url: str) -> None:
         """Play the specified url on the player."""
@@ -697,7 +747,6 @@ class HassGroupPlayer(HassPlayer):
         hass_state = self.hass.states.get(self.entity_id)
         self._attr_available = hass_state.state not in UNAVAILABLE_STATES
         self._attr_name = hass_state.name
-        self._attr_powered = hass_state.state not in OFF_STATES
 
         # collect the group childs, be prepared for the usecase where the user actually
         # added a mass player to a group, translate that to the underlying entity.
@@ -707,6 +756,20 @@ class HassGroupPlayer(HassPlayer):
             if source_id := self._get_source_entity_id(entity_id):
                 group_childs.append(source_id)
         self._attr_group_childs = group_childs
+
+    def on_child_update(self, player_id: str, changed_keys: set) -> None:
+        """Call when one of the child players of a playergroup updates."""
+        # resume queue if a child player turns on while this queue is playing
+        if (
+            "powered" in changed_keys
+            and self.active_queue.active
+            and self.state == PlayerState.PLAYING
+        ):
+            if child_player := self.mass.players.get_player(player_id):
+                if child_player.powered:
+                    self.mass.create_task(self.active_queue.resume())
+                    return
+        self.update_state(skip_forward=True)
 
     def _get_source_entity_id(self, entity_id: str) -> str | None:
         """Return source entity_id from child entity_id."""

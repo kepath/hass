@@ -112,10 +112,10 @@ class MusicAssistentSource(MediaSource):
             return PlayMedia(item.identifier, MEDIA_TYPE_MUSIC)
 
         # send the mass library uri to the player(queue)
-        stream_url = await player.active_queue.play_media(item.identifier, passive=True)
+        await player.active_queue.play_media(item.identifier, passive=True)
         # tell the actual player to play the stream url
         content_type = player.active_queue.settings.stream_type.value
-        return PlayMedia(stream_url, f"audio/{content_type}")
+        return PlayMedia(player.active_queue.stream.url, f"audio/{content_type}")
 
     async def async_browse_media(
         self,
