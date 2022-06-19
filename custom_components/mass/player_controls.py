@@ -60,8 +60,7 @@ from .const import (
 
 LOGGER = logging.getLogger(__name__)
 
-OFF_STATES = (STATE_OFF, STATE_UNAVAILABLE, STATE_UNKNOWN, STATE_STANDBY)
-UNAVAILABLE_STATES = (STATE_UNAVAILABLE, STATE_UNKNOWN)
+OFF_STATES = (STATE_OFF, STATE_UNAVAILABLE, STATE_STANDBY)
 CAST_DOMAIN = "cast"
 CAST_MULTIZONE_MANAGER_KEY = "cast_multizone_manager"
 
@@ -72,7 +71,7 @@ GROUP_DOMAIN = "group"
 STATE_MAPPING = {
     STATE_OFF: PlayerState.OFF,
     STATE_ON: PlayerState.IDLE,
-    STATE_UNKNOWN: PlayerState.OFF,
+    STATE_UNKNOWN: PlayerState.IDLE,
     STATE_UNAVAILABLE: PlayerState.OFF,
     STATE_IDLE: PlayerState.IDLE,
     STATE_PLAYING: PlayerState.PLAYING,
@@ -253,8 +252,10 @@ class HassPlayer(Player):
 
     async def play_url(self, url: str) -> None:
         """Play the specified url on the player."""
+        # a lot of players do not power on at playback request so send power on from here
+        if not self.powered:
+            await self.power(True)
         LOGGER.debug("[%s] play_url: %s", self.entity_id, url)
-        self._attr_powered = True
         self._attr_current_url = url
         if self.use_mute_as_power:
             await self.volume_mute(False)
@@ -745,7 +746,7 @@ class HassGroupPlayer(HassPlayer):
     def update_attributes(self) -> None:
         """Call when player state is about to be updated in the player manager."""
         hass_state = self.hass.states.get(self.entity_id)
-        self._attr_available = hass_state.state not in UNAVAILABLE_STATES
+        self._attr_available = hass_state.state != STATE_UNAVAILABLE
         self._attr_name = hass_state.name
 
         # collect the group childs, be prepared for the usecase where the user actually
