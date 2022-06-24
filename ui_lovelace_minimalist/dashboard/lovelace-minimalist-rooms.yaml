@@ -876,7 +876,6 @@ views:
           template:
             - card_room
             - blue_no_state
-            # - card_room_add_trigger_entities
           name: Bed E
           entity: input_boolean.placeholder
           icon: mdi:alpha-e-circle
@@ -884,37 +883,9 @@ views:
             action: more-info
           hold_action:
             action: more-info
-          # label: '[[[ return states[`switch.big_pc_unifi`].state ]]]'
-          # label: '[[[ return `${variables.entity_2.tap_action.service_data.entity_id}` ]]]'
-          # label: '[[[ return `${variables.service_data_entity}` ]]]'
-          # label: >
-          #   [[[
-          #     if (variables?.entity_2?.tap_action?.service_data?.entity_id) {
-          #       return variables.entity_2.tap_action.service_data.entity_id;
-          #     } else {
-          #       return "input_boolean.placeholder";
-          #     }
-          #   ]]]
-          # label: >
-          #   [[[
-          #     return ['widget_icon_room'].concat(variables.entity_2.templates);
-          #   ]]]
-          
-
           variables:
             label_use_temperature: false
             label_use_brightness: false
-            # entity_2_trigger_entity: switch.big_pc_unifi
-            # trigger_entity: switch.big_pc_unifi
-            # trigger_entity: '[[[ return ${variables.entity_2.tap_action.service_data.entity_id} ]]]'
-            # service_data_entity: >
-              # [[[
-              #   //if (variables?.entity_2.tap_action.service_data.entity_id) {
-              #     return '${variables.entity_2.tap_action.service_data.entity_id}';
-              #   //} else {
-              #   //  return "input_boolean.placeholder";
-              #   //}
-              # ]]]
             entity_1:
               entity_id: light.bed_e_light_light_1
               templates:
@@ -924,22 +895,11 @@ views:
               hold_action:
                 action: more-info
             entity_2:
-              # type: 'custom:button-card'
-              entity_id: device_tracker.big_pc_unifi
+              entity_id: light.lamp
               templates:
-                # - blue_presence_home
-                - icon_desktop_classic
-                # - yellow_other_entity_on
-              # variables:
-              #   trigger_entity: switch.big_pc_unifi
-              #   # trigger_entity: '[[[ return variables.entity_2.tap_action.service_data.entity_id ]]]'
-              #   trigger_entity: '[[[ return ${variables.entity_2.tap_action.service_data.entity_id} ]]]'
-                # dgdefggkko
+                - yellow_on
               tap_action:
-                action: call-service
-                service: switch.toggle
-                service_data: 
-                  entity_id: switch.big_pc_unifi
+                action: toggle
               hold_action:
                 action: more-info
               
@@ -952,9 +912,9 @@ views:
               hold_action:
                 action: more-info
             entity_4:
-              entity_id: input_boolean.placeholder
+              entity_id: fan.fanorheater
               templates:
-                - grey_no_state
+                - yellow_on
               tap_action:
                 action: toggle
               hold_action:
