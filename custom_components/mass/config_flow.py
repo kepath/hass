@@ -18,6 +18,7 @@ from homeassistant.helpers import selector
 from homeassistant.helpers.entity_component import DATA_INSTANCES
 
 from .const import (
+    BLACKLIST_DOMAINS,
     CONF_CREATE_MASS_PLAYERS,
     CONF_FILE_DIRECTORY,
     CONF_FILE_ENABLED,
@@ -90,21 +91,20 @@ def get_players_schema(hass: HomeAssistant, cur_conf: dict) -> vol.Schema:
     for entity_id in hass.states.async_entity_ids(MP_DOMAIN):
         entity_comp = hass.data.get(DATA_INSTANCES, {}).get(MP_DOMAIN)
         entity: MediaPlayerEntity = entity_comp.get_entity(entity_id)
-        if not entity or entity.platform.domain == DOMAIN:
+        if (
+            not entity
+            or entity.platform.domain == DOMAIN
+            or entity.platform.domain in BLACKLIST_DOMAINS
+        ):
             exclude_entities.append(entity_id)
             continue
         # require some basic features, most important `play_media`
         if not (
-            entity.support_play_media and entity.support_play and entity.support_pause
+            entity.support_play_media
+            and entity.support_play
+            and entity.support_volume_set
         ):
             exclude_entities.append(entity_id)
-
-    ent_reg = er.async_get(hass)
-    exclude_entities = [
-        x.entity_id
-        for x in ent_reg.entities.values()
-        if x.domain == MP_DOMAIN and x.platform == DOMAIN
-    ]
 
     return vol.Schema(
         {
@@ -169,10 +169,12 @@ def get_music_schema(cur_conf: dict):
 def validate_config(user_input: dict) -> dict:
     """Validate config and return dict with any errors."""
     errors = {}
-    # check if music directory is valid
-    music_dir = user_input.get(CONF_FILE_DIRECTORY)
-    if music_dir and not os.path.isdir(music_dir):
-        errors[CONF_FILE_DIRECTORY] = "directory_not_exists"
+    # check file provider config
+    if user_input.get(CONF_FILE_ENABLED):
+        # check if music directory is valid
+        music_dir = user_input.get(CONF_FILE_DIRECTORY)
+        if music_dir and not os.path.isdir(music_dir):
+            errors[CONF_FILE_DIRECTORY] = "directory_not_exists"
     return errors
 
 

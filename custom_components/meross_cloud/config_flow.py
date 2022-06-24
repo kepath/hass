@@ -8,7 +8,6 @@ from aiohttp import ClientConnectorSSLError, ClientConnectorError
 from zeroconf import ServiceStateChange, Zeroconf
 from zeroconf.asyncio import AsyncServiceBrowser, AsyncServiceInfo
 
-from homeassistant.components.zeroconf import ZeroconfServiceInfo
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry, OptionsFlow, ConfigError
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
@@ -26,10 +25,21 @@ from .common import DOMAIN, CONF_STORED_CREDS, CONF_WORKING_MODE, CONF_WORKING_M
     CONF_WORKING_MODE_CLOUD_MODE, \
     CONF_HTTP_ENDPOINT, CONF_MQTT_SKIP_CERT_VALIDATION, CONF_OPT_CUSTOM_USER_AGENT, HTTP_API_RE, MEROSS_CLOUD_API_URL, \
     MEROSS_LOCAL_API_URL, MEROSS_LOCAL_MDNS_SERVICE_TYPES, MEROSS_LOCAL_MDNS_MQTT_SERVICE_TYPE, \
-    MEROSS_LOCAL_MDNS_API_SERVICE_TYPE, CONF_OVERRIDE_MQTT_ENDPOINT
+    MEROSS_LOCAL_MDNS_API_SERVICE_TYPE, CONF_OVERRIDE_MQTT_ENDPOINT, MULTIPLE_APIS_FOUND, MULTIPLE_BROKERS_FOUND, UNKNOWN_ERROR, \
+    DIFFERENT_HOSTS_FOR_BROKER_AND_API, MEROSS_LOCAL_MQTT_BROKER_URI
 
 _LOGGER = logging.getLogger(__name__)
 PARALLEL_UPDATES = 1
+
+
+class ConfigUiException(Exception):
+    def __init__(self, error_code = UNKNOWN_ERROR, *args: object) -> None:
+        super().__init__(*args)
+        self._code = error_code
+
+    @property
+    def code(self):
+        return self._code
 
 
 class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -41,8 +51,10 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     def __init__(self) -> None:
         """Initialize flow."""
         self._http_api: Optional[str] = None
+        self._mqtt_boker: Optional[str] = None
         self._username: Optional[str] = None
         self._password: Optional[str] = None
+        self._local_mode: bool = False
         self._skip_cert_validation: Optional[bool] = None
         self._discovered_services: List[AsyncServiceInfo] = []
 
@@ -52,18 +64,18 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             username: str = None,
             password: str = None,
             override_mqtt_endpoint: str = None,
-            skip_cert_validation: bool = None,
-            local_mode: bool = False
+            skip_cert_validation: bool = None
     ) -> vol.Schema:
         http_endpoint_default = http_endpoint if http_endpoint is not None else self._http_api
+        mqtt_endpoint_default = override_mqtt_endpoint if override_mqtt_endpoint is not None else self._mqtt_boker
         username_default = username if username is not None else self._username
         password_default = password if password is not None else self._password
         skip_cert_validation_default = skip_cert_validation if skip_cert_validation is not None else self._skip_cert_validation
 
-        if local_mode:
+        if self._local_mode:
             schema = vol.Schema({
                 vol.Required(CONF_HTTP_ENDPOINT, default=http_endpoint_default): str,
-                vol.Required(CONF_OVERRIDE_MQTT_ENDPOINT, default=override_mqtt_endpoint): str,
+                vol.Required(CONF_OVERRIDE_MQTT_ENDPOINT, default=mqtt_endpoint_default): str,
                 vol.Required(CONF_USERNAME, default=username_default): str,
                 vol.Required(CONF_PASSWORD, default=password_default): str,
                 vol.Required(CONF_MQTT_SKIP_CERT_VALIDATION, default=skip_cert_validation_default): bool,
@@ -92,12 +104,14 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         return await self.async_step_user()
 
     async def _resolve_service(self, zeroconf: Zeroconf, service_type: str, name: str):
+        _LOGGER.debug("MDNS resolving service type: %s, name: %s", service_type, name)
         info = AsyncServiceInfo(service_type, name)
         await info.async_request(zeroconf, 3000)
         if info:
             self._discovered_services.append(info)
 
     def _async_on_service_state_change(self, zeroconf: Zeroconf, service_type: str, name: str, state_change: ServiceStateChange) -> None:
+        _LOGGER.debug("MDNS discovery state: %s, service type: %s, name: %s", str(state_change), service_type, name)
         if state_change is not ServiceStateChange.Added:
             return
         # Resolve the service on a different async task
@@ -106,8 +120,7 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def _discover_services(self) -> Tuple[Optional[str], Optional[str]]:
         self._discovered_services.clear()
         aiozc = await zeroconf.async_get_async_instance(self.hass)
-        browser = AsyncServiceBrowser(aiozc.zeroconf, MEROSS_LOCAL_MDNS_SERVICE_TYPES,
-                                      handlers=[self._async_on_service_state_change])
+        browser = AsyncServiceBrowser(aiozc.zeroconf, MEROSS_LOCAL_MDNS_SERVICE_TYPES, handlers=[self._async_on_service_state_change])
         # Wait a bit to collect MDNS responses and then stop the browser
         await asyncio.sleep(5)
         await browser.async_cancel()
@@ -116,22 +129,29 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         mqtt_count = 0
         api_count = 0
+        _LOGGER.info("Found %d mdns services.", len(self._discovered_services))
         for info in self._discovered_services:
             if info.type == MEROSS_LOCAL_MDNS_API_SERVICE_TYPE:
                 api_count += 1
                 api_endpoint_info = info
+                _LOGGER.info("Found [%d] Local Meross API service listening on %s:%d", api_count, api_endpoint_info.server, api_endpoint_info.port)
             elif info.type == MEROSS_LOCAL_MDNS_MQTT_SERVICE_TYPE:
                 mqtt_count += 1
                 mqtt_endpoint_info = info
+                _LOGGER.info("Found [%d] Local Meross MQTT service listening on %s:%d", mqtt_count, mqtt_endpoint_info.server, mqtt_endpoint_info.port)
 
         if mqtt_count < 1 or api_count <1:
-            raise ConfigError("No MQTT/API endpoints discovered.")
+            _LOGGER.info("The API/MQTT discovery was unable to find any relevant service.")
+            return None, None
 
-        if mqtt_count > 1 or api_count > 1:
-            raise ConfigError("Multiple broker found on the network. This topology is unsupported.")
+        if mqtt_count > 1:
+            raise ConfigUiException(MULTIPLE_BROKERS_FOUND)
+        
+        if api_count > 1:
+            raise ConfigUiException(MULTIPLE_APIS_FOUND)
 
         if api_endpoint_info.server != mqtt_endpoint_info.server:
-            raise ConfigError("Using broker and api endpoints from different hosts. This topology is unsupported.")
+            raise ConfigUiException(DIFFERENT_HOSTS_FOR_BROKER_AND_API)
 
         api_endpoint = f"http://{api_endpoint_info.server[:-1]}:{api_endpoint_info.port}"
         mqtt_endpoint = f"{mqtt_endpoint_info.server[:-1]}:{mqtt_endpoint_info.port}"
@@ -154,6 +174,7 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         mode = user_input.get(CONF_WORKING_MODE)
         if mode == CONF_WORKING_MODE_CLOUD_MODE:
+            self._local_mode = False
             self._http_api = MEROSS_CLOUD_API_URL
             self._skip_cert_validation = False
             return self.async_show_form(
@@ -162,15 +183,32 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 errors={},
             )
         elif mode == CONF_WORKING_MODE_LOCAL_MODE:
+            self._local_mode = True
             self._http_api = MEROSS_LOCAL_API_URL
+            self._mqtt_boker = MEROSS_LOCAL_MQTT_BROKER_URI
             self._skip_cert_validation = True
 
             # Look for local brokers via zeroconf
-            api, mqtt = await self._discover_services()
+            api = None
+            mqtt = None
+            try:
+                api, mqtt = await self._discover_services()
+            except ConfigUiException as e:
+                return self.async_show_form(
+                step_id="configure_manager",
+                data_schema=self._build_setup_schema(http_endpoint=api, override_mqtt_endpoint=mqtt),
+                errors={"base": e.code},
+            )
+
+            # If no service was found, set an error
+            errors = {}
+            if api is None or mqtt is None:
+                errors["base"] = "mdns_lookup_failed"
+
             return self.async_show_form(
                 step_id="configure_manager",
-                data_schema=self._build_setup_schema(http_endpoint=api, override_mqtt_endpoint=mqtt, local_mode=True),
-                errors={},
+                data_schema=self._build_setup_schema(http_endpoint=api, override_mqtt_endpoint=mqtt),
+                errors=errors,
             )
         else:
             raise ConfigError("Invalid selection")
@@ -193,23 +231,23 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         mqtt_host = user_input.get(CONF_OVERRIDE_MQTT_ENDPOINT)
         skip_cert_validation = user_input.get(CONF_MQTT_SKIP_CERT_VALIDATION)
 
+        data_schema = self._build_setup_schema(
+            http_endpoint=http_api_endpoint,
+            username=username,
+            password=password,
+            override_mqtt_endpoint=mqtt_host
+        )
+
         # Check if we have everything we need
         if username is None or password is None or http_api_endpoint is None:
             return self.async_show_form(
                 step_id="configure_manager",
-                data_schema=self._build_setup_schema(
-                    http_endpoint=http_api_endpoint),
+                data_schema=data_schema,
                 errors={"base": "missing_credentials"},
             )
 
         # Check the base-url is valid
         match = HTTP_API_RE.fullmatch(http_api_endpoint)
-
-        data_schema = self._build_setup_schema(
-            http_endpoint=http_api_endpoint,
-            username=username,
-            password=password,
-        )
 
         if match is None:
             _LOGGER.error("Invalid Meross HTTTP API endpoint: %s", http_api_endpoint)
@@ -234,6 +272,7 @@ class MerossFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             _LOGGER.info("HTTP API successful tested against %s.", http_api_endpoint)
         except (BadLoginException, UnauthorizedException) as ex:
             _LOGGER.error("Unable to connect to Meross HTTP api: %s", str(ex))
+            _LOGGER.debug("Passing data_schema: %s", str(data_schema))
             return self.async_show_form(
                 step_id="configure_manager",
                 data_schema=data_schema,
