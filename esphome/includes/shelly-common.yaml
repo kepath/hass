@@ -16,10 +16,16 @@ esphome:
   #   - light.turn_off: lightid1
   #   - logger.log: 'startup - light should be off'
 
+  # globals:
+  #   - id: last_value_from_ha
+  #     type: int
+  #     initial_value: '0'
+    
 wifi:
   ssid: ${ssid}
   password: !secret not_wifi_password
   domain: .localdomain
+  reboot_timeout: 30min
   # use_address: 192.168.30.15
   manual_ip:
     static_ip: ${device_ip}
@@ -36,6 +42,7 @@ wifi:
       subnet: 255.255.255.0
       dns1: 8.8.8.8
       dns2: 8.8.4.4
+    ap_timeout: 15min    
       
 captive_portal:
 
@@ -50,6 +57,7 @@ web_server:
 time:
   - platform: homeassistant
     id: homeassistant_time
+
   # - platform: sntp
   #   id: sntp_time
   #   servers: !secret ha_rj45_ip
@@ -61,6 +69,15 @@ text_sensor:
   # Expose ESPHome version as sensor.
   - platform: version
     name: ${device_name} ESPHome Version
+    # - platform: homeassistant
+    #   name: ${device_name}-uptime
+    #   id: watchdog
+    #   entity_id: sensor.time
+    #   on_value:
+    #     then:
+    #       - lambda: !lambda |-
+    #           auto time_now = id(homeassistant_time).utcnow();
+    #           id(last_value_from_ha) = time_now.timestamp;
   - platform: template
     name: ${device_name}-uptime
     id: uptime_human
@@ -138,6 +155,21 @@ sensor:
                 (minutes ? to_string(minutes) + "m " : "") +
                 (to_string(seconds) + "s")
               ).c_str();
+
+  # interval:
+  #   - interval: 15s
+  #     then:
+  #     - if:
+  #         condition:
+  #           - lambda: !lambda |-
+  #               auto time_now = id(homeassistant_time).utcnow();
+                
+  #               if(time_now.timestamp - id(last_value_from_ha) > 120)
+  #                 return true;
+                
+  #               return false;
+  #         then:
+  #           - light.turn_off: lightid1 # lost connection, turn off
 
 status_led:
   pin: GPIO0
