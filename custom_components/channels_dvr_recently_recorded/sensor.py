@@ -169,6 +169,7 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
                 FLAG: recording.get("Watched", False),
                 TITLE: episode.get("Title", ""),
                 EPISODE: episode.get("EpisodeTitle", ""),
+                RELEASE: "$day, $date $time",
                 NUMBER: "S%02d" % episode.get("SeasonNumber", 0)
                 + "E%02d" % episode.get("EpisodeNumber", 0),
                 RUNTIME: episode["Raw"].get("duration", 0),
