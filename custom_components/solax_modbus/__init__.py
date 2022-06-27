@@ -115,7 +115,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     elif seriesnumber.startswith('H3PE'):  invertertype = HYBRID | GEN3 | X3 # Gen3 X3
     elif seriesnumber.startswith('H3UE'):  invertertype = HYBRID | GEN3 | X3 # Gen3 X3
     elif seriesnumber.startswith('F3E'):   invertertype = HYBRID | GEN3 | X3 # RetroFit
-    elif seriesnumber.startswith('H450'):  invertertype = HYBRID | GEN4 | X1 # Gen4 X1
+    elif seriesnumber.startswith('H437'):  invertertype = HYBRID | GEN4 | X1 # Gen4 X1 3.7kW
+    elif seriesnumber.startswith('H450'):  invertertype = HYBRID | GEN4 | X1 # Gen4 X1 5.0kW
     elif seriesnumber.startswith('H460'):  invertertype = HYBRID | GEN4 | X1 # Gen4 X1 6kW?
     elif seriesnumber.startswith('H475'):  invertertype = HYBRID | GEN4 | X1 # Gen4 X1 7.5kW
     elif seriesnumber.startswith('H34'):  invertertype = HYBRID | GEN4 | X3 # Gen4 X3
@@ -396,10 +397,10 @@ class SolaXModbusHub:
             self.data["selfuse_nightcharge_upper_soc"] = selfuse_nightcharge_upper_soc
             tmp = decoder.decode_16bit_uint()
             self.data["feedin_nightcharge_upper_soc"] = tmp >> 8
-            self.data["feedin_nightcharge_min_soc"] = tmp % 256	
+            self.data["feedin_discharge_min_soc"] = tmp % 256	
             tmp = decoder.decode_16bit_uint()
             self.data["backup_nightcharge_upper_soc"] = tmp >> 8
-            self.data["backup_nightcharge_min_soc"] = tmp % 256 	
+            self.data["backup_discharge_min_soc"] = tmp % 256 	
             tmp = decoder.decode_16bit_uint()
             self.data["charger_start_time_1"] = Gen4Timestring(tmp)
             tmp = decoder.decode_16bit_uint()
