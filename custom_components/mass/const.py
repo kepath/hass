@@ -40,3 +40,10 @@ SLIMPROTO_DOMAIN = "slimproto"
 SLIMPROTO_EVENT = "slimproto_event"
 
 ESPHOME_DOMAIN = "esphome"
+SONOS_DOMAIN = "sonos"
+DLNA_DOMAIN = "dlna_dmr"
+ATV_DOMAIN = "apple_tv"
+KODI_DOMAIN = "kodi"
+GROUP_DOMAIN = "group"
+
+BLACKLIST_DOMAINS = (ATV_DOMAIN,)

@@ -13,6 +13,7 @@ from homeassistant.core import HomeAssistant, callback
 from music_assistant import MusicAssistant
 from music_assistant.models.enums import (
     CrossFadeMode,
+    MediaType,
     ProviderType,
     QueueOption,
     RepeatMode,
@@ -27,6 +28,7 @@ ID = "id"
 ITEM_ID = "item_id"
 PROVIDER = "provider"
 URI = "uri"
+MEDIA = "media"
 POSITION = "position"
 PLAYER_ID = "player_id"
 QUEUE_ID = "queue_id"
@@ -34,6 +36,9 @@ COMMAND = "command"
 COMMAND_ARG = "command_arg"
 LAZY = "lazy"
 REFRESH = "refresh"
+
+OFFSET = "offset"
+LIMIT = "limit"
 
 ERR_NOT_LOADED = "not_loaded"
 
@@ -67,6 +72,7 @@ def async_register_websockets(hass: HomeAssistant) -> None:
     websocket_api.async_register_command(hass, websocket_playerqueue_command)
     websocket_api.async_register_command(hass, websocket_playerqueue_settings)
     websocket_api.async_register_command(hass, websocket_play_media)
+    websocket_api.async_register_command(hass, websocket_start_sync)
     websocket_api.async_register_command(hass, websocket_item)
     websocket_api.async_register_command(hass, websocket_thumb)
     websocket_api.async_register_command(hass, websocket_library_add)
@@ -74,7 +80,7 @@ def async_register_websockets(hass: HomeAssistant) -> None:
     websocket_api.async_register_command(hass, websocket_artist_tracks)
     websocket_api.async_register_command(hass, websocket_artist_albums)
     websocket_api.async_register_command(hass, websocket_jobs)
-    websocket_api.async_register_command(hass, websocket_providers)
+    websocket_api.async_register_command(hass, websocket_stats)
     websocket_api.async_register_command(hass, websocket_subscribe_events)
 
 
@@ -104,6 +110,8 @@ def async_get_mass(orig_func: Callable) -> Callable:
 @websocket_api.websocket_command(
     {
         vol.Required(TYPE): f"{DOMAIN}/artists",
+        vol.Optional(OFFSET, default=0): int,
+        vol.Optional(LIMIT, default=500): int,
     }
 )
 @websocket_api.async_response
@@ -115,7 +123,12 @@ async def websocket_artists(
     mass: MusicAssistant,
 ) -> None:
     """Return artists."""
-    result = [item.to_dict() for item in await mass.music.artists.library()]
+    result = [
+        item.to_dict()
+        for item in await mass.music.artists.library(
+            limit=msg[LIMIT], offset=msg[OFFSET]
+        )
+    ]
     await connection.send_big_result(
         msg[ID],
         result,
@@ -217,6 +230,8 @@ async def websocket_artist_albums(
 @websocket_api.websocket_command(
     {
         vol.Required(TYPE): f"{DOMAIN}/albums",
+        vol.Optional(OFFSET, default=0): int,
+        vol.Optional(LIMIT, default=500): int,
     }
 )
 @websocket_api.async_response
@@ -228,7 +243,12 @@ async def websocket_albums(
     mass: MusicAssistant,
 ) -> None:
     """Return albums."""
-    result = [item.to_dict() for item in await mass.music.albums.library()]
+    result = [
+        item.to_dict()
+        for item in await mass.music.albums.library(
+            limit=msg[LIMIT], offset=msg[OFFSET]
+        )
+    ]
     await connection.send_big_result(
         msg[ID],
         result,
@@ -330,6 +350,8 @@ async def websocket_album_versions(
 @websocket_api.websocket_command(
     {
         vol.Required(TYPE): f"{DOMAIN}/tracks",
+        vol.Optional(OFFSET, default=0): int,
+        vol.Optional(LIMIT, default=500): int,
     }
 )
 @websocket_api.async_response
@@ -341,7 +363,12 @@ async def websocket_tracks(
     mass: MusicAssistant,
 ) -> None:
     """Return library tracks."""
-    result = [item.to_dict() for item in await mass.music.tracks.library()]
+    result = [
+        item.to_dict()
+        for item in await mass.music.tracks.library(
+            limit=msg[LIMIT], offset=msg[OFFSET]
+        )
+    ]
     await connection.send_big_result(
         msg[ID],
         result,
@@ -440,6 +467,8 @@ async def websocket_track_preview(
 @websocket_api.websocket_command(
     {
         vol.Required(TYPE): f"{DOMAIN}/playlists",
+        vol.Optional(OFFSET, default=0): int,
+        vol.Optional(LIMIT, default=500): int,
     }
 )
 @websocket_api.async_response
@@ -451,7 +480,12 @@ async def websocket_playlists(
     mass: MusicAssistant,
 ) -> None:
     """Return playlists."""
-    result = [item.to_dict() for item in await mass.music.playlists.library()]
+    result = [
+        item.to_dict()
+        for item in await mass.music.playlists.library(
+            limit=msg[LIMIT], offset=msg[OFFSET]
+        )
+    ]
     connection.send_result(
         msg[ID],
         result,
@@ -580,6 +614,8 @@ async def websocket_remove_playlist_tracks(
 @websocket_api.websocket_command(
     {
         vol.Required(TYPE): f"{DOMAIN}/radios",
+        vol.Optional(OFFSET, default=0): int,
+        vol.Optional(LIMIT, default=500): int,
     }
 )
 @websocket_api.async_response
@@ -591,7 +627,10 @@ async def websocket_radios(
     mass: MusicAssistant,
 ) -> None:
     """Return radios."""
-    result = [item.to_dict() for item in await mass.music.radio.library()]
+    result = [
+        item.to_dict()
+        for item in await mass.music.radio.library(limit=msg[LIMIT], offset=msg[OFFSET])
+    ]
     await connection.send_big_result(
         msg[ID],
         result,
@@ -848,6 +887,9 @@ class QueueCommand(str, Enum):
     PLAY_PAUSE = "play_pause"
     NEXT = "next"
     PREVIOUS = "previous"
+    SEEK = "seek"
+    SKIP_AHEAD = "skip_ahead"
+    SKIP_BACK = "skip_back"
     STOP = "stop"
     POWER = "power"
     POWER_TOGGLE = "power_toggle"
@@ -892,6 +934,12 @@ async def websocket_playerqueue_command(
             await player_queue.stop()
         elif msg[COMMAND] == QueueCommand.PLAY_PAUSE:
             await player_queue.play_pause()
+        elif msg[COMMAND] == QueueCommand.SEEK:
+            await player_queue.seek(int(msg[COMMAND_ARG]))
+        elif msg[COMMAND] == QueueCommand.SKIP_AHEAD:
+            await player_queue.skip_ahead()
+        elif msg[COMMAND] == QueueCommand.SKIP_BACK:
+            await player_queue.skip_back()
         elif msg[COMMAND] == QueueCommand.POWER_TOGGLE:
             await player_queue.player.power_toggle()
         elif msg[COMMAND] == QueueCommand.VOLUME:
@@ -962,7 +1010,7 @@ async def websocket_playerqueue_settings(
     {
         vol.Required(TYPE): f"{DOMAIN}/play_media",
         vol.Required(QUEUE_ID): str,
-        vol.Required(URI): vol.Any(str, list),
+        vol.Required(MEDIA): vol.Any(str, list, dict),
         vol.Optional(COMMAND, default=QueueOption.PLAY): vol.Coerce(QueueOption),
     }
 )
@@ -976,7 +1024,7 @@ async def websocket_play_media(
 ) -> None:
     """Execute play_media command on PlayerQueue."""
     if player_queue := mass.players.get_player_queue(msg[QUEUE_ID]):
-        await player_queue.play_media(msg[URI], msg[COMMAND])
+        await player_queue.play_media(msg[MEDIA], msg[COMMAND])
 
         connection.send_result(
             msg[ID],
@@ -984,6 +1032,33 @@ async def websocket_play_media(
         )
         return
     connection.send_error(msg[ID], ERR_NOT_FOUND, f"Queue not found: {msg[QUEUE_ID]}")
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required(TYPE): f"{DOMAIN}/start_sync",
+        vol.Optional("media_type"): vol.Coerce(MediaType),
+        vol.Optional("prov_type"): vol.Coerce(ProviderType),
+    }
+)
+@websocket_api.async_response
+@async_get_mass
+async def websocket_start_sync(
+    hass: HomeAssistant,
+    connection: ActiveConnection,
+    msg: dict,
+    mass: MusicAssistant,
+) -> None:
+    """Execute play_media command on PlayerQueue."""
+    if media_type := msg.get("media_type"):
+        media_types = (media_type,)
+    else:
+        media_types = None
+    if prov_type := msg.get("prov_type"):
+        prov_types = (prov_type,)
+    else:
+        prov_types = None
+    await mass.music.start_sync(media_types, prov_types)
 
 
 @websocket_api.websocket_command(
@@ -1006,22 +1081,31 @@ async def websocket_jobs(
     )
 
 
-# generic providers endpoint
+# generic stats endpoint
 @websocket_api.websocket_command(
     {
-        vol.Required(TYPE): f"{DOMAIN}/providers",
+        vol.Required(TYPE): f"{DOMAIN}/stats",
     }
 )
 @websocket_api.async_response
 @async_get_mass
-async def websocket_providers(
+async def websocket_stats(
     hass: HomeAssistant,
     connection: ActiveConnection,
     msg: dict,
     mass: MusicAssistant,
 ) -> None:
-    """Return providers."""
-    result = {x.id: x.to_dict() for x in mass.music.providers}
+    """Return some statistics and generic info."""
+    result = {
+        "providers": {x.id: x.to_dict() for x in mass.music.providers},
+        "count": {
+            "artists": await mass.music.artists.count(),
+            "albums": await mass.music.albums.count(),
+            "tracks": await mass.music.tracks.count(),
+            "playlists": await mass.music.playlists.count(),
+            "radios": await mass.music.radio.count(),
+        },
+    }
     connection.send_result(
         msg[ID],
         result,
