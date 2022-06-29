@@ -25,3 +25,69 @@ card_met_office_weather:
       icon: mdi:weather-snowy-rainy
     - value: "sunny"
       icon: mdi:weather-sunny
+  styles:
+    icon:
+      - color: >
+          [[[
+            var color = "rgba(var(--color-blue),1)";
+            if (entity.attributes.temperature  >= 20) {
+                color = "rgba(var(--color-red),1)";
+            } else if(entity.attributes.temperature < 20 && entity.attributes.temperature >= 10) {
+                color = "rgba(var(--color-yellow),1)";
+            } else if(entity.attributes.temperature < 10 && entity.attributes.temperature >= 0) {
+                color = "rgba(var(--color-green),1)";
+            }
+            return color;
+          ]]]
+    label:
+      - color: >
+          [[[
+            var color = "rgba(var(--color-blue-text),1)";
+            if (entity.attributes.temperature  >= 20) {
+                color = "rgba(var(--color-red-text),1)";
+            } else if(entity.attributes.temperature < 20 && entity.attributes.temperature >= 10) {
+                color = "rgba(var(--color-yellow-text),1)";
+            } else if(entity.attributes.temperature < 10 && entity.attributes.temperature >= 0) {
+                color = "rgba(var(--color-green-text),1)";
+            }
+            return color;
+          ]]]
+    name:
+      - color: >
+          [[[
+            var color = "rgba(var(--color-blue-text),1)";
+            if (entity.attributes.temperature  >= 20) {
+                color = "rgba(var(--color-red-text),1)";
+            } else if(entity.attributes.temperature < 20 && entity.attributes.temperature >= 10) {
+                color = "rgba(var(--color-yellow-text),1)";
+            } else if(entity.attributes.temperature < 10 && entity.attributes.temperature >= 0) {
+                color = "rgba(var(--color-green-text),1)";
+            }
+            return color;
+          ]]]
+    img_cell:
+      - background-color: >
+          [[[
+            var color = "rgba(var(--color-blue), 0.2)";
+            if (entity.attributes.temperature  >= 20) {
+                color = "rgba(var(--color-red), 0.2)";
+            } else if(entity.attributes.temperature < 20 && entity.attributes.temperature >= 10) {
+                color = "rgba(var(--color-yellow), 0.2)";
+            } else if(entity.attributes.temperature < 10 && entity.attributes.temperature >= 0) {
+                color = "rgba(var(--color-green), 0.2)";
+            }
+            return color;
+          ]]]
+    card:
+      - background-color: >
+          [[[
+            var color = "rgba(var(--color-background-blue),var(--opacity-bg))";
+            if (entity.attributes.temperature  >= 20) {
+                color = "rgba(var(--color-background-red),var(--opacity-bg))";
+            } else if(entity.attributes.temperature < 20 && entity.attributes.temperature >= 10) {
+                color = "rgba(var(--color-background-yellow),var(--opacity-bg))";
+            } else if(entity.attributes.temperature < 10 && entity.attributes.temperature >= 0) {
+                color = "rgba(var(--color-background-green),var(--opacity-bg))";
+            }
+            return color;
+          ]]]

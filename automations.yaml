@@ -224,8 +224,9 @@
   condition: []
   action:
   - service: input_boolean.turn_on
+    data: {}
     target:
-      entity_id: input_boolean.doorbell_rung
+      entity_id: input_boolean.front_door_open
   - delay:
       hours: 0
       minutes: 5
@@ -234,6 +235,7 @@
   - service: input_boolean.turn_off
     target:
       entity_id: input_boolean.front_door_open
+    data: {}
   mode: restart
 - id: '1639347854414'
   alias: Back Door Open
