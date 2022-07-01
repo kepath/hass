@@ -116,7 +116,7 @@ views:
             entity_3:
               entity_id: vacuum.moe
               templates:
-                - mower_state
+                - card_room_mower_state
               tap_action:
                 action: more-info
               hold_action:
@@ -128,6 +128,8 @@ views:
                 - red_on
                 - icon_door_sliding
               tap_action:
+                action: more-info
+              hold_action:
                 action: more-info
       - type: horizontal-stack
         cards:
@@ -155,21 +157,21 @@ views:
               hold_action:
                 action: more-info
             entity_2:
-              entity_id: switch.zigbee_plug_garage
-              templates:
-                - yellow_on
-                - icon_power_plug
-              tap_action:
-                action: toggle
-              hold_action:
-                action: more-info
-            entity_3:
               entity_id: device_tracker.solar_battery_1_unifi
-              device_class: presence
+              device_class: presence              
               templates:
                 - blue_presence_home
                 - red_presence_away
                 - icon_solar_power
+              tap_action:
+                action: more-info
+              hold_action:
+                action: more-info
+                entity: switch.zigbee_plug_garage
+            entity_3:
+              entity_id: input_boolean.placeholder
+              templates:
+                - grey_no_state
               tap_action:
                 action: more-info
               hold_action:
@@ -179,7 +181,7 @@ views:
               templates:
                 - grey_no_state
               tap_action:
-                action: toggle
+                action: more-info
               hold_action:
                 action: more-info
         - type: 'custom:button-card'
@@ -266,7 +268,9 @@ views:
                 - red_on
                 - icon_motion_sensor
               tap_action:
-                action: more-info  
+                action: more-info
+              hold_action:
+                action: more-info
             entity_3:
               entity_id: binary_sensor.lounge_g3_instant_motion
               templates:
@@ -284,7 +288,9 @@ views:
                 - purple_on
                 - icon_fire_alert
               tap_action:
-                action: more-info  
+                action: more-info
+              hold_action:
+                action: more-info
         - type: 'custom:button-card'
           template:
             - card_room
@@ -314,7 +320,9 @@ views:
                 - red_on
                 - icon_motion_sensor
               tap_action:
-                action: more-info  
+                action: more-info
+              hold_action:
+                action: more-info
             entity_3:
               entity_id: binary_sensor.middle_hallway_g3_flex_motion
               templates:
@@ -332,7 +340,9 @@ views:
                 - purple_on
                 - icon_fire_alert
               tap_action:
-                action: more-info  
+                action: more-info
+              hold_action:
+                action: more-info
       - type: horizontal-stack
         cards:
         - type: 'custom:button-card'
@@ -365,21 +375,27 @@ views:
                 - red_on
                 - icon_motion_sensor
               tap_action:
-                action: more-info  
+                action: more-info
+              hold_action:
+                action: more-info
             entity_3:
               entity_id: binary_sensor.zigbee_motion_sensor_bed_e_occupancy
               templates:
                 - green_off                
                 - red_on
               tap_action:
-                action: more-info 
+                action: more-info
+              hold_action:
+                action: more-info
             entity_4:
               entity_id: binary_sensor.nest_protect_top_floor_smoke_status
               templates:
                 - purple_on
                 - icon_fire_alert
               tap_action:
-                action: more-info  
+                action: more-info
+              hold_action:
+                action: more-info
         - type: 'custom:button-card'
           template:
             - card_room
@@ -427,7 +443,9 @@ views:
                 - purple_on
                 - icon_file_video
               tap_action:
-                action: more-info  
+                action: more-info
+              hold_action:
+                action: more-info
 
     - type: vertical-stack
       cards:
@@ -473,7 +491,9 @@ views:
               templates:
                 - green_on
               tap_action:
-                action: more-info 
+                action: more-info
+              hold_action:
+                action: more-info
             entity_4:
               entity_id: input_boolean.placeholder
               templates:
@@ -505,25 +525,27 @@ views:
               hold_action:
                 action: more-info
             entity_2:
-              entity_id: input_boolean.placeholder
+              entity_id: sensor.zigbee_plug_washing_machine_power
               templates:
-                - grey_no_state
+                - card_room_power_state
+                - icon_washing_machine
               tap_action:
-                action: toggle
+                action: more-info
               hold_action:
                 action: more-info
             entity_3:
-              entity_id: binary_sensor.fire_stick_tv_kitchen_state
+              entity_id: sensor.zigbee_plug_tumble_dryer_power
               templates:
-                - green_on
+                - card_room_power_state
+                - icon_tumble_dryer
               tap_action:
-                action: toggle
+                action: more-info
               hold_action:
                 action: more-info
             entity_4:
-              entity_id: input_boolean.placeholder
+              entity_id: binary_sensor.fire_stick_tv_kitchen_state
               templates:
-                - grey_no_state
+                - green_on
               tap_action:
                 action: toggle
               hold_action:
@@ -607,7 +629,9 @@ views:
                 - red_on
                 - icon_motion_sensor
               tap_action:
-                action: more-info 
+                action: more-info
+              hold_action:
+                action: more-info
             entity_3:
               entity_id: input_boolean.placeholder
               templates:
@@ -826,6 +850,8 @@ views:
                 - icon_nas
               tap_action:
                 action: more-info
+              hold_action:
+                action: more-info
       - type: horizontal-stack
         cards:
         - type: 'custom:button-card'
@@ -925,3 +951,54 @@ views:
                 action: toggle
               hold_action:
                 action: more-info
+
+      - type: horizontal-stack
+        cards:
+        - type: 'custom:button-card'
+          template:
+            - card_room
+          name: Top Bathroom
+          entity: input_boolean.placeholder
+          icon: mdi:toilet
+          tap_action:
+            action: more-info  
+          hold_action:
+            action: more-info            
+          variables:
+            label_use_temperature: false
+            label_use_brightness: false
+            entity_1:
+              entity_id: input_boolean.placeholder
+              templates:
+                - grey_no_state
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info
+            entity_2:
+              entity_id: input_boolean.placeholder
+              templates:
+                - grey_no_state
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info
+            entity_3:
+              entity_id: input_boolean.placeholder
+              templates:
+                - grey_no_state
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info               
+            entity_4:
+              entity_id: input_boolean.placeholder
+              templates:
+                - grey_no_state
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info
+        - type: 'custom:button-card'
+          template:
+            - card_room
