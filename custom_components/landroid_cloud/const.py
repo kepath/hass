@@ -1,21 +1,21 @@
 """Constants used by Landroid Cloud integration."""
 from __future__ import annotations
+
+import inspect
 from dataclasses import dataclass
 from enum import IntEnum
-import inspect
-from homeassistant.backports.enum import StrEnum
 
+from homeassistant.backports.enum import StrEnum
 from homeassistant.components.vacuum import (
     STATE_DOCKED,
-    STATE_RETURNING,
     STATE_ERROR,
-    STATE_PAUSED,
     STATE_IDLE,
+    STATE_PAUSED,
+    STATE_RETURNING,
 )
 from pyworxcloud.clouds import CloudType
 
 from .utils.logger import LogLevel
-
 
 # Startup banner
 STARTUP = """
@@ -32,8 +32,8 @@ https://github.com/mtrab/landroid_cloud/issues
 # Some defaults
 DEFAULT_NAME = "landroid"
 DOMAIN = "landroid_cloud"
-PLATFORMS = ["vacuum", "select", "button"]
-# PLATFORMS = ["vacuum"]
+PLATFORMS_SECONDARY = []
+PLATFORMS_PRIMARY = ["vacuum"]
 UPDATE_SIGNAL = "landroid_cloud_update"
 LOGLEVEL = LogLevel.DEBUG
 
@@ -102,6 +102,8 @@ ATTR_CAPABILITIES = "capabilities"
 ATTR_ERROR = "error"
 ATTR_FIRMWARE = "firmware"
 ATTR_LANDROIDFEATURES = "supported_landroid_features"
+ATTR_LATITUDE = "latitude"
+ATTR_LONGITUDE = "longitude"
 ATTR_LAWN = "lawn"
 ATTR_MACADDRESS = "mac_address"
 ATTR_MQTTCONNECTED = "mqtt_connected"
@@ -126,6 +128,7 @@ ATTR_DEVICES = "devices"
 ATTR_DEVICEIDS = "device_ids"
 ATTR_DEVICE = "device"
 ATTR_API = "api"
+ATTR_FEATUREBITS = "feature_bits"
 
 # Available cloud vendors
 CLOUDS = []

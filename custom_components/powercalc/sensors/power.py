@@ -6,14 +6,18 @@ from typing import Optional
 
 import homeassistant.helpers.entity_registry as er
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
-from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, SensorEntity
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
 from homeassistant.const import (
     CONF_NAME,
     CONF_SCAN_INTERVAL,
     CONF_UNIQUE_ID,
-    DEVICE_CLASS_POWER,
     EVENT_HOMEASSISTANT_START,
     POWER_WATT,
+    STATE_ON,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
 )
@@ -53,6 +57,7 @@ from custom_components.powercalc.const import (
     DATA_CALCULATOR_FACTORY,
     DISCOVERY_LIGHT_MODEL,
     DOMAIN,
+    DUMMY_ENTITY_ID,
     MODE_FIXED,
     MODE_LINEAR,
     MODE_WLED,
@@ -273,8 +278,8 @@ class PowerSensor:
 class VirtualPowerSensor(SensorEntity, PowerSensor):
     """Virtual power sensor"""
 
-    _attr_device_class = DEVICE_CLASS_POWER
-    _attr_state_class = STATE_CLASS_MEASUREMENT
+    _attr_device_class = SensorDeviceClass.POWER
+    _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = POWER_WATT
 
     def __init__(
@@ -357,7 +362,10 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
                 )
 
             for entity_id in track_entities:
-                new_state = self.hass.states.get(entity_id)
+                if entity_id == DUMMY_ENTITY_ID:
+                    new_state = State(entity_id, STATE_ON)
+                else:
+                    new_state = self.hass.states.get(entity_id)
 
                 await self._update_power_sensor(entity_id, new_state)
 
@@ -415,7 +423,7 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
                 standby_power = await self._power_calculator.calculate(state)
 
             if self._multiply_factor_standby and self._multiply_factor:
-                standby_power *= self._multiply_factor
+                standby_power *= Decimal(self._multiply_factor)
             return Decimal(standby_power)
 
         if not await self.is_calculation_enabled():
@@ -431,7 +439,7 @@ class VirtualPowerSensor(SensorEntity, PowerSensor):
         if self._standby_power_on:
             standby_power = self._standby_power_on
             if self._multiply_factor_standby and self._multiply_factor:
-                standby_power *= self._multiply_factor
+                standby_power *= Decimal(self._multiply_factor)
             power += standby_power
 
         return Decimal(power)

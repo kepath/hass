@@ -1,7 +1,7 @@
 """Services definitions."""
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import cast
 
 from homeassistant.const import CONF_ENTITY_ID, CONF_DEVICE_ID
 from homeassistant.core import HomeAssistant, ServiceCall, callback
@@ -11,15 +11,12 @@ from homeassistant.helpers import (
 )
 from homeassistant.helpers.device_registry import DeviceEntry
 
-from pyworxcloud import WorxCloud
-
 from .api import LandroidAPI
 from .const import (
     ATTR_API,
     ATTR_DEVICEIDS,
     ATTR_DEVICES,
     ATTR_SERVICE,
-    ATTR_SERVICES,
     DOMAIN,
     LOGLEVEL,
     SERVICE_CONFIG,
@@ -138,6 +135,14 @@ def async_setup_services(hass: HomeAssistant) -> None:
                     LoggerType.SERVICE_CALL,
                     "The called service, %s, is not supported by this device!",
                     service,
+                    log_level=LogLevel.ERROR,
+                    device=api.friendly_name,
+                )
+                supported = [service for service in api.services]
+                logger.log(
+                    LoggerType.SERVICE_CALL,
+                    "Supported services for this device: %s",
+                    supported,
                     log_level=LogLevel.ERROR,
                     device=api.friendly_name,
                 )

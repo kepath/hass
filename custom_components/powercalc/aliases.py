@@ -7,6 +7,7 @@ MANUFACTURER_ALIASES = {
     "LUMI": "Aqara",
     "ADEO": "Lexman",
     "MLI": "Müller Licht",
+    "LightZone": "MeLiTec",
 }
 
 MANUFACTURER_DIRECTORY_MAPPING = {
@@ -20,6 +21,7 @@ MANUFACTURER_DIRECTORY_MAPPING = {
     "Lexman": "lexman",
     "Yeelight": "yeelight",
     "TuYa": "tuya",
+    "MeLiTec": "melitec",
 }
 
 MODEL_DIRECTORY_MAPPING = {
@@ -89,6 +91,8 @@ MODEL_DIRECTORY_MAPPING = {
         "8718699703424": "LCL001",
         "8718699671211": "LWE002",
         "9290020399": "LWE002",
+        "915005106701": "LST002",
+        "7299355PH":"LST001",
         # US Versions. Alias to EU versions
         "LCA005": "LCA001",
         "9290022266A": "LCA001",

@@ -1,21 +1,14 @@
 """Define device classes."""
 # pylint: disable=unused-argument,too-many-instance-attributes,no-self-use
 from __future__ import annotations
+
+import json
 from datetime import timedelta
 from functools import partial
-import json
 from typing import Any
 
-from homeassistant.components.button import (
-    ButtonEntity,
-    ButtonEntityDescription,
-)
-
-from homeassistant.components.select import (
-    SelectEntity,
-    SelectEntityDescription,
-)
-
+from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
+from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.components.vacuum import (
     ENTITY_ID_FORMAT,
     STATE_DOCKED,
@@ -24,17 +17,14 @@ from homeassistant.components.vacuum import (
     StateVacuumEntity,
     VacuumEntityFeature,
 )
-
-from homeassistant.core import callback, HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers import (
-    entity_registry as er,
-    device_registry as dr,
-)
+from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers.dispatcher import async_dispatcher_connect, dispatcher_send
 from homeassistant.helpers.entity_registry import EntityRegistry
 from homeassistant.helpers.event import async_call_later
-from homeassistant.helpers.dispatcher import async_dispatcher_connect, dispatcher_send
-
+from homeassistant.util import slugify as util_slugify
 from pyworxcloud import WorxCloud
 from pyworxcloud.exceptions import (
     MQTTException,
@@ -45,23 +35,23 @@ from pyworxcloud.exceptions import (
 from pyworxcloud.utils import Capability, DeviceCapability
 from pyworxcloud.utils.capability import CAPABILITY_TO_TEXT
 
-
 from .api import LandroidAPI
-
 from .attribute_map import ATTR_MAP
-
 from .const import (
-    ATTR_DEVICEIDS,
-    ATTR_LANDROIDFEATURES,
-    ATTR_MQTTCONNECTED,
     ATTR_BOUNDARY,
     ATTR_CAPABILITIES,
+    ATTR_DEVICEIDS,
+    ATTR_LANDROIDFEATURES,
+    ATTR_LATITUDE,
+    ATTR_LONGITUDE,
+    ATTR_MQTTCONNECTED,
     ATTR_RUNTIME,
     ATTR_SERVICE,
     ATTR_TORQUE,
     ATTR_ZONE,
     BUTTONTYPE_TO_SERVICE,
     DOMAIN,
+    PLATFORMS_SECONDARY,
     SCHEDULE_TO_DAY,
     SCHEDULE_TYPE_MAP,
     SERVICE_CONFIG,
@@ -82,9 +72,8 @@ from .const import (
     UPDATE_SIGNAL,
     LandroidFeatureSupport,
 )
-
-from .utils.schedules import pass_thru, parseday
 from .utils.logger import LandroidLogger, LoggerType, LogLevel
+from .utils.schedules import parseday, pass_thru
 
 # Commonly supported features
 SUPPORT_LANDROID_BASE = (
@@ -134,6 +123,11 @@ class LandroidCloudBaseEntity(LandroidLogger):
 
         super().__init__()
 
+    @property
+    def base_features(self) -> int:
+        """Called to get the base features."""
+        return None
+
     async def async_edgecut(self, data: dict | None = None) -> None:
         """Called to start edge cut task."""
         return None
@@ -175,7 +169,7 @@ class LandroidCloudBaseEntity(LandroidLogger):
         try:
             self.api.device.refresh()
         except RateLimit as exc:
-            self.log(LoggerType.SERVICE_CALL, exc.message, log_level=LogLevel.ERROR)
+            self.log(LoggerType.SERVICE_CALL, exc.message, log_level=LogLevel.WARNING)
         return None
 
     @staticmethod
@@ -228,19 +222,13 @@ class LandroidCloudBaseEntity(LandroidLogger):
         self.log(
             LoggerType.SETUP,
             "Connecting to dispatcher signal '%s'",
-            f"{UPDATE_SIGNAL}_{self.api.device.name}",
+            util_slugify(f"{UPDATE_SIGNAL}_{self.api.device.name}"),
         )
         async_dispatcher_connect(
             self.hass,
-            f"{UPDATE_SIGNAL}_{self.api.device.name}",
+            util_slugify(f"{UPDATE_SIGNAL}_{self.api.device.name}"),
             self.update_callback,
         )
-
-        # async_dispatcher_connect(
-        #     self.hass,
-        #     f"{UPDATE_SIGNAL_ZONES}_{self.api.device.name}",
-        #     self.update_selected_zone,
-        # )
 
     @callback
     def update_callback(self):
@@ -259,6 +247,8 @@ class LandroidCloudBaseEntity(LandroidLogger):
     @callback
     def register_services(self) -> None:
         """Register services."""
+        self.log_set_name(__name__)
+        self.log_set_api(self.api)
         if self.api.features == 0:
             self.log(
                 LoggerType.SERVICE_REGISTER,
@@ -329,6 +319,7 @@ class LandroidCloudBaseEntity(LandroidLogger):
         self.log_set_api(self.api)
         self.log(LoggerType.DATA_UPDATE, "Updating")
 
+        # self.api.check_features(self.base_features)
         device: WorxCloud = self.api.device
 
         data = {}
@@ -353,9 +344,19 @@ class LandroidCloudBaseEntity(LandroidLogger):
         if not capabilities.check(DeviceCapability.TORQUE) and ATTR_TORQUE in data:
             data.pop(ATTR_TORQUE)
 
-        data[ATTR_MQTTCONNECTED] = device.mqtt.connected
+        data[ATTR_MQTTCONNECTED] = (
+            device.mqtt.connected if hasattr(device, "mqtt") else False
+        )
 
         data[ATTR_LANDROIDFEATURES] = self.api.features
+
+        if hasattr(data, "gps"):
+            data.update(
+                {
+                    ATTR_LATITUDE: data.gps["latitude"],
+                    ATTR_LONGITUDE: data.gps["longitude"],
+                }
+            )
 
         self._attributes.update(data)
 
@@ -388,7 +389,8 @@ class LandroidCloudBaseEntity(LandroidLogger):
         if "percent" in device.battery:
             self._battery_level = device.battery["percent"]
 
-        if not device.mqtt.connected:
+        mqtt = device.mqtt.connected if hasattr(device, "mqtt") else False
+        if not mqtt:
             # If MQTT is not connected, then pull state from API
             self.log(
                 LoggerType.DATA_UPDATE,
@@ -408,7 +410,9 @@ class LandroidCloudBaseEntity(LandroidLogger):
         self.log(LoggerType.DATA_UPDATE, "Starting forced Web API refresh.")
 
         self.hass.async_add_executor_job(self.api.device.update)
-        dispatcher_send(self.hass, f"{UPDATE_SIGNAL}_{self.api.device.name}")
+        dispatcher_send(
+            self.hass, util_slugify(f"{UPDATE_SIGNAL}_{self.api.device.name}")
+        )
 
 
 class LandroidCloudSelectEntity(LandroidCloudBaseEntity, SelectEntity):
@@ -523,6 +527,32 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
     _battery_level: int | None = None
     _attr_state = STATE_INITIALIZING
 
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        logger = LandroidLogger(name=__name__, api=self.api, log_level=LogLevel.DEBUG)
+        logger.log(
+            LoggerType.SETUP,
+            "Features not assessed, calling assessment with base features at %s",
+            self.base_features,
+        )
+
+        while not self.api.device.capabilities.ready:
+            pass
+
+        self.api.check_features(int(self.base_features))
+        self.api.features_loaded = True
+        while not self.api.features_loaded:
+            self.log(
+                LoggerType.FEATURE_ASSESSMENT,
+                "Waiting for features to be fully loaded, before continuing",
+            )
+
+        self.register_services()
+
+        self.hass.config_entries.async_setup_platforms(
+            self.api.entry, PLATFORMS_SECONDARY
+        )
+
     @property
     def extra_state_attributes(self) -> str:
         """Return sensor attributes."""
@@ -567,6 +597,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
     def update_callback(self) -> None:
         """Get new data and update state."""
         self.data_update()
+        self.api.features_loaded = True
         self.schedule_update_ha_state(True)
 
     async def async_start(self) -> None:
@@ -585,7 +616,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_pause(self) -> None:
@@ -604,7 +635,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_start_pause(self) -> None:
@@ -625,7 +656,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_return_to_base(self, **kwargs: Any) -> None:
@@ -648,7 +679,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
                 self.log(
                     LoggerType.SERVICE_CALL,
                     exc.message,
-                    log_level=LogLevel.ERROR,
+                    log_level=LogLevel.WARNING,
                 )
 
     async def async_stop(self, **kwargs: Any) -> None:
@@ -665,7 +696,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_set_zone(self, data: dict | None = None) -> None:
@@ -685,7 +716,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_set_schedule(self, data: dict | None = None) -> None:
@@ -744,7 +775,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_toggle_lock(self, data: dict | None = None) -> None:
@@ -764,7 +795,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_edgecut(self, data: dict | None = None) -> None:
@@ -792,7 +823,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_toggle_partymode(self, data: dict | None = None) -> None:
@@ -818,7 +849,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_restart(self, data: dict | None = None):
@@ -837,7 +868,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_ots(self, data: dict | None = None) -> None:
@@ -863,7 +894,7 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
             self.log(
                 LoggerType.SERVICE_CALL,
                 exc.message,
-                log_level=LogLevel.ERROR,
+                log_level=LogLevel.WARNING,
             )
 
     async def async_config(self, data: dict | None = None) -> None:
@@ -956,5 +987,5 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
                 self.log(
                     LoggerType.SERVICE_CALL,
                     exc.message,
-                    log_level=LogLevel.ERROR,
+                    log_level=LogLevel.WARNING,
                 )
