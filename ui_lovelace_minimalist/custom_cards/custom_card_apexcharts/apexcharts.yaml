@@ -21,6 +21,16 @@ custom_card_apexcharts:
           var color = colors[Math.floor(Math.random() * colors.length)];
           return color;
         ]]]
+    entity_3:
+      entity_id:
+      icon: "[[[ return entity.attributes.icon  ]]]"
+      name: "[[[ return entity.attributes.friendly_name ]]]"
+      color: >
+        [[[
+          var colors = ['yellow', 'blue', 'red','green'];
+          var color = colors[Math.floor(Math.random() * colors.length)];
+          return color;
+        ]]]
   color: "auto"
   variable: "spin"
   spin: false
@@ -35,9 +45,9 @@ custom_card_apexcharts:
   aspect_ratio: "2/1"
   styles:
     grid:
-      - grid-template-areas: "'item1 radial' 'item2 radial'"
+      - grid-template-areas: "'item1 radial' 'item2 radial' 'item3 radial'"
       - grid-template-columns: "35% 65%"
-      - grid-template-rows: "1fr 1fr"
+      - grid-template-rows: "1fr 1fr 1fr"
     card:
       - border-radius: "var(--border-radius)"
       - box-shadow: "var(--box-shadow)"
@@ -47,15 +57,25 @@ custom_card_apexcharts:
       card:
         type: "custom:button-card"
         entity: "[[[ return variables.entity_1.entity_id ]]]"
-        icon: "[[[ return variables.entity_1.icon ]]]"
-        name: "[[[ return variables.entity_1.name ]]]"
         template:
           - "card_generic_swap"
+        variables:
+          ulm_card_generic_swap_name: "[[[ return variables.entity_1.name ]]]"
+          ulm_card_generic_swap_icon: "[[[ return variables.entity_1.icon ]]]"
+        custom_fields:
+          item1:
+            card:
+              type: "custom:button-card"
+              custom_fields:
+                item1:
+                  card:
+                    type: "custom:button-card"
+                    styles:
+                      icon:
+                        - color: "[[[ return `rgba(var(--color-${variables.entity_1.color}), 1)`;]]]"
+                      img_cell:
+                        - background-color: "[[[ return `rgba(var(--color-${variables.entity_1.color}), 0.20)`;]]]"
         styles:
-          icon:
-            - color: "[[[ return `rgba(var(--color-${variables.entity_1.color}), 1)`;]]]"
-          img_cell:
-            - background-color: "[[[ return `rgba(var(--color-${variables.entity_1.color}), 0.20)`;]]]"
           card:
             - box-shadow: "none"
             - border-radius: "none"
@@ -65,15 +85,53 @@ custom_card_apexcharts:
       card:
         type: "custom:button-card"
         entity: "[[[ return variables.entity_2.entity_id ]]]"
-        icon: "[[[ return variables.entity_2.icon ]]]"
-        name: "[[[ return variables.entity_2.name ]]]"
         template:
           - "card_generic_swap"
+        variables:
+          ulm_card_generic_swap_name: "[[[ return variables.entity_2.name ]]]"
+          ulm_card_generic_swap_icon: "[[[ return variables.entity_2.icon ]]]"
+        custom_fields:
+          item1:
+            card:
+              type: "custom:button-card"
+              custom_fields:
+                item1:
+                  card:
+                    type: "custom:button-card"
+                    styles:
+                      icon:
+                        - color: "[[[ return `rgba(var(--color-${variables.entity_2.color}), 1)`;]]]"
+                      img_cell:
+                        - background-color: "[[[ return `rgba(var(--color-${variables.entity_2.color}), 0.20)`;]]]"
         styles:
-          icon:
-            - color: "[[[ return `rgba(var(--color-${variables.entity_2.color}), 1)`;]]]"
-          img_cell:
-            - background-color: "[[[ return `rgba(var(--color-${variables.entity_2.color}), 0.20)`;]]]"
+          card:
+            - box-shadow: "none"
+            - border-radius: "none"
+            - padding-top: "1px"
+            - padding-bottom: "1px"
+    item3:
+      card:
+        type: "custom:button-card"
+        entity: "[[[ return variables.entity_3.entity_id ]]]"
+        template:
+          - "card_generic_swap"
+        variables:
+          ulm_card_generic_swap_name: "[[[ return variables.entity_3.name ]]]"
+          ulm_card_generic_swap_icon: "[[[ return variables.entity_3.icon ]]]"
+        custom_fields:
+          item1:
+            card:
+              type: "custom:button-card"
+              custom_fields:
+                item1:
+                  card:
+                    type: "custom:button-card"
+                    styles:
+                      icon:
+                        - color: "[[[ return `rgba(var(--color-${variables.entity_3.color}), 1)`;]]]"
+                      img_cell:
+                        - background-color: "[[[ return `rgba(var(--color-${variables.entity_3.color}), 0.20)`;]]]"
+        styles:
           card:
             - box-shadow: "none"
             - border-radius: "none"
@@ -114,3 +172,7 @@ custom_card_apexcharts:
             name: "[[[ return variables.entity_2_name ]]]"
             color: "[[[ return `var(--google-${variables.entity_2.color})`;]]]"
             max: "[[[ return variables.entity_2.max_value ]]]"
+          - entity: "[[[ return variables.entity_3.entity_id ]]]"
+            name: "[[[ return variables.entity_3_name ]]]"
+            color: "[[[ return `var(--google-${variables.entity_3.color})`;]]]"
+            max: "[[[ return variables.entity_3.max_value ]]]"

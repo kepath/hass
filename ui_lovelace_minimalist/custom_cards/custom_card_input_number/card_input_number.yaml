@@ -1,8 +1,11 @@
 ---
 card_input_number:
   variables:
-    ulm_card_input_number_name: "n/a"
+    ulm_card_input_number_name: "[[[ return entity.attributes.friendly_name ]]]"
   triggers_update: "all"
+  show_icon: false
+  show_label: false
+  show_name: false
   styles:
     grid:
       - grid-template-areas: "'item1' 'item2'"
@@ -19,11 +22,11 @@ card_input_number:
         type: "custom:button-card"
         template:
           - "icon_info"
-          - "ulm_language_variables"
+          - "ulm_translation_engine"
           - "input_number"
         tap_action:
           action: "more-info"
-        entity: "[[[ return variables.ulm_card_input_number_entity ]]]"
+        entity: "[[[ return entity.entity_id ]]]"
         name: "[[[ return variables.ulm_card_input_number_name ]]]"
     item2:
       card:
@@ -36,29 +39,43 @@ card_input_number:
               template: "widget_icon"
               tap_action:
                 action: "call-service"
-                service: "input_number.decrement"
+                service: |
+                      [[[
+                        if( entity.entity_id.startsWith("input_number.") )
+                          return "input_number.decrement";
+                        if( entity.entity_id.startsWith("counter.") )
+                          return "counter.decrement";
+                        return "";
+                      ]]]
                 service_data:
-                  entity_id: "[[[ return variables.ulm_card_input_number_entity ]]]"
+                  entity_id: "[[[ return entity.entity_id ]]]"
               icon: "mdi:arrow-down"
           item2:
             card:
               type: "custom:button-card"
               template: "widget_text"
-              entity: "[[[ return variables.ulm_card_input_number_entity ]]]"
+              entity: "[[[ return entity.entity_id ]]]"
               tap_action:
                 action: "call-service"
                 service: "cover.stop_cover"
                 service_data:
-                  entity_id: "[[[ return variables.ulm_card_input_number_entity ]]]"
+                  entity_id: "[[[ return entity.entity_id ]]]"
           item3:
             card:
               type: "custom:button-card"
               template: "widget_icon"
               tap_action:
                 action: "call-service"
-                service: "input_number.increment"
+                service: |
+                      [[[
+                        if( entity.entity_id.startsWith("input_number.") )
+                          return "input_number.increment";
+                        if( entity.entity_id.startsWith("counter.") )
+                          return "counter.increment";
+                        return "";
+                      ]]]
                 service_data:
-                  entity_id: "[[[ return variables.ulm_card_input_number_entity ]]]"
+                  entity_id: "[[[ return entity.entity_id ]]]"
               icon: "mdi:arrow-up"
 
 input_number:
@@ -72,32 +89,13 @@ widget_text:
   show_icon: false
   show_label: true
   show_name: false
-  label: >-
-    [[[
-      var unit = entity.attributes.unit_of_measurement != null ? ' ' + entity.attributes.unit_of_measurement : ''
-      if (entity.state == 'on') {
-        return variables.ulm_on;
-      } else if (entity.state == 'off') {
-        return variables.ulm_off;
-      } else if (entity.state == 'unavailable') {
-        return variables.ulm_unavailable;
-      } else if (entity.state == 'idle') {
-        return variables.ulm_idle;
-      } else if (entity.state == 'open') {
-        return variables.ulm_open;
-      } else if (entity.state == 'closed') {
-        return variables.ulm_closed;
-      } else {
-        return entity.state + unit;
-      }
-    ]]]
+  label: "[[[ return variables.ulm_translation_state_unit ]]]"
   styles:
     grid:
       - grid-template-areas: "'l'"
     card:
       - box-shadow: "none"
       - padding: "0px"
-      - background-color: "rgba(var(--color-theme),0.05)"
       - border-radius: "14px"
       - place-self: "center"
       - height: "42px"
