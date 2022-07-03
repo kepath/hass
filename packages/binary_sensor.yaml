@@ -1,6 +1,21 @@
 binary_sensor:
   - platform: template
     sensors:
+      apple_tv_bed_c_state:
+        friendly_name: "Apple TV Bed C State"
+        unique_id: binary_state_fire_tv_kitchen
+        icon_template: mdi:television-play
+        value_template: >-
+          {% if states('media_player.') == 'unknown' or 
+            states('media_player.amazon_fire_tv_kitchen_adb') == 'unavailable' or
+            states('media_player.amazon_fire_tv_kitchen_adb') == 'off' %}
+              {{ "off" }}
+          {% else %}
+              {{ "on" }}
+          {% endif %}
+
+  - platform: template
+    sensors:
       fire_stick_tv_kitchen_state:
         friendly_name: "Fire TV Kitchen State"
         unique_id: binary_state_fire_tv_kitchen
