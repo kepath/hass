@@ -215,6 +215,7 @@ views:
               tap_action:
                 action: more-info
               hold_action:
+                action: call-service
                 service: icloud.play_sound
                 data:
                   account: itunes@kevinthorn.com
@@ -226,6 +227,7 @@ views:
               tap_action:
                 action: more-info
               hold_action:
+                action: call-service
                 service: icloud.play_sound
                 data:
                   account: itunes@kevinthorn.com
@@ -237,6 +239,7 @@ views:
               tap_action:
                 action: more-info
               hold_action:
+                action: call-service
                 service: icloud.play_sound
                 data:
                   account: itunes@kevinthorn.com
@@ -248,6 +251,7 @@ views:
               tap_action:
                 action: more-info
               hold_action:
+                action: call-service
                 service: icloud.play_sound
                 data:
                   account: itunes@kevinthorn.com
@@ -272,7 +276,8 @@ views:
           entity: climate.nest_bottom_floor
           icon: mdi:home-floor-g
           tap_action:
-            action: more-info  
+            action: navigate
+            navigation_path: /lovelace-minimalist-climate/0 
           hold_action:
             action: more-info            
           variables:
@@ -295,7 +300,8 @@ views:
               tap_action:
                 action: more-info
               hold_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
             entity_3:
               entity_id: binary_sensor.lounge_g3_instant_motion
               templates:
@@ -313,7 +319,8 @@ views:
                 - purple_on
                 - icon_fire_alert
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info
 # Middle Hallway
@@ -325,7 +332,8 @@ views:
           entity: climate.nest_middle_floor
           icon: mdi:home-floor-1
           tap_action:
-            action: more-info  
+            action: navigate
+            navigation_path: /lovelace-minimalist-climate/0
           hold_action:
             action: more-info            
           variables:
@@ -348,7 +356,8 @@ views:
               tap_action:
                 action: more-info
               hold_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
             entity_3:
               entity_id: binary_sensor.middle_hallway_g3_flex_motion
               templates:
@@ -366,7 +375,8 @@ views:
                 - purple_on
                 - icon_fire_alert
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info
       - type: horizontal-stack
@@ -379,7 +389,8 @@ views:
           entity: binary_sensor.zigbee_door_sensor_loft_contact
           icon: mdi:home-floor-2
           tap_action:
-            action: more-info  
+            action: navigate
+            navigation_path: /lovelace-minimalist-climate/0 
           hold_action:
             action: more-info
           variables:
@@ -389,9 +400,10 @@ views:
               entity_id: device_tracker.u6_lr
               templates:
                 - blue_presence_home
-                - icon_wifi_cog
+                - icon_lan
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info 
             entity_2:
@@ -403,7 +415,8 @@ views:
               tap_action:
                 action: more-info
               hold_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
             entity_3:
               entity_id: binary_sensor.zigbee_motion_sensor_bed_e_occupancy
               templates:
@@ -412,14 +425,16 @@ views:
               tap_action:
                 action: more-info
               hold_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
             entity_4:
               entity_id: binary_sensor.nest_protect_top_floor_smoke_status
               templates:
                 - purple_on
                 - icon_fire_alert
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info
 # Loft
@@ -432,7 +447,8 @@ views:
           entity: binary_sensor.zigbee_door_sensor_loft_contact
           icon: mdi:home-floor-l
           tap_action:
-            action: more-info  
+            action: navigate
+            navigation_path: /lovelace-minimalist-climate/0
           hold_action:
             action: more-info 
           variables:
@@ -442,8 +458,10 @@ views:
               entity_id: input_boolean.placeholder
               templates:
                 - grey_no_state
+                - icon_filmstrip
               tap_action:
-                action: toggle
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info
             entity_2:
@@ -454,23 +472,29 @@ views:
               tap_action:
                 action: more-info
               hold_action:
-                action: toggle
-                entity: switch.download_pc_unifi
+                action: call-service
+                service: icloud.play_sound
+                data:
+                  account: itunes@kevinthorn.com
+                  device_name: REPL iPhone 11
             entity_3:
-              entity_id: input_boolean.placeholder
+              entity_id: binary_sensor.diskstation_security_status
               templates:
-                - grey_no_state
+                - purple_on
+                - icon_nas
               tap_action:
-                action: toggle
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info 
             entity_4:
               entity_id: binary_sensor.udmpro_disk_0_health
               templates:
                 - purple_on
-                - icon_file_video
+                - icon_cctv
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info
 
@@ -520,7 +544,8 @@ views:
               templates:
                 - green_on
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info
             entity_4:
@@ -571,7 +596,8 @@ views:
               tap_action:
                 action: more-info
               hold_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
             entity_4:
               entity_id: binary_sensor.fire_stick_tv_kitchen_state
               templates:
@@ -579,7 +605,8 @@ views:
               tap_action:
                 action: toggle
               hold_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
 # Study
       - type: horizontal-stack
         cards:
@@ -611,7 +638,8 @@ views:
                 - blue_presence_home
                 - icon_desktop_classic
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: toggle
             entity_3:
@@ -662,7 +690,8 @@ views:
               tap_action:
                 action: more-info
               hold_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
             entity_3:
               entity_id: input_boolean.placeholder
               templates:
@@ -719,7 +748,8 @@ views:
                 - blue_presence_home
                 - icon_desktop_classic
               tap_action:
-                action: toggle
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info
             entity_3:
@@ -727,7 +757,8 @@ views:
               templates:
                 - green_on
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-climate/0
               hold_action:
                 action: more-info
             entity_4:
@@ -749,7 +780,11 @@ views:
           tap_action:
             action: toggle  
           hold_action:
-            action: more-info            
+            action: call-service
+            service: icloud.play_sound
+            data:
+              account: itunes@kevinthorn.com
+              device_name: REPL iPhone 11
           variables:
             label_use_temperature: false
             label_use_brightness: false
@@ -818,8 +853,11 @@ views:
               tap_action:
                 action: more-info
               hold_action:
-                action: toggle
-                entity: group.blocked_devices_tracker_emily
+                action: call-service
+                service: icloud.play_sound
+                data:
+                  account: itunes@kevinthorn.com
+                  device_name: REPL iPhone 11
             entity_3:
               entity_id: input_boolean.placeholder
               templates:
@@ -871,7 +909,10 @@ views:
                 navigation_path: /lovelace-minimalist-media/1
               hold_action:
                 action: call-service
-                service: 
+                service: icloud.play_sound
+                data:
+                  account: itunes@kevinthorn.com
+                  device_name: REPL iPhone 11
             entity_3:
               entity_id: binary_sensor.harmony_hub_bed_c_state
               templates:
@@ -880,14 +921,15 @@ views:
                 action: navigate
                 navigation_path: /lovelace-minimalist-media/1
               hold_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-media/1
             entity_4:
-              entity_id: binary_sensor.diskstation_security_status
+              entity_id: sensor.mfc_j870dw_status
               templates:
-                - purple_on
-                - icon_nas
+                - card_room_printer_state
               tap_action:
-                action: more-info
+                action: navigate
+                navigation_path: /lovelace-minimalist-media/1
               hold_action:
                 action: more-info
 # Bed D
@@ -897,10 +939,10 @@ views:
           template:
             - card_room
           name: Bed D
-          entity: input_boolean.placeholder
+          entity: group.light
           icon: mdi:alpha-d-circle
           tap_action:
-            action: more-info  
+            action: toggle 
           hold_action:
             action: more-info            
           variables:
@@ -924,7 +966,10 @@ views:
                 navigation_path: /lovelace-minimalist-media/1
               hold_action:
                 action: call-service
-                service: 
+                service: icloud.play_sound
+                data:
+                  account: itunes@kevinthorn.com
+                  device_name: REPL iPhone 11
             entity_3:
               entity_id: input_boolean.placeholder
               templates:
@@ -974,7 +1019,10 @@ views:
                 navigation_path: /lovelace-minimalist-media/1
               hold_action:
                 action: call-service
-                service: 
+                service: icloud.play_sound
+                data:
+                  account: itunes@kevinthorn.com
+                  device_name: REPL iPhone 11
             entity_3:
               entity_id: binary_sensor.nvidia_shield_bed_e_state
               templates:
