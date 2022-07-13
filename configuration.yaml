@@ -30,7 +30,11 @@ homeassistant:
 http:
 
 logger:
-  default: warning
+  default: info
+  logs:
+    custom_components.google_home: debug
+    custom_components.growatt: debug
+    custom_components.ui_lovelace_minimalist: debug
 
 influxdb:
   username: !secret influx_db_user
@@ -91,9 +95,9 @@ notify:
     vapid_prv_key: !secret google_vapid_prv_key
     vapid_email: !secret google_vapid_email
 
-spotify:
-  client_id: !secret spotify_client_id
-  client_secret: !secret spotify_client_secret
+# spotify:
+#   client_id: !secret spotify_client_id
+#   client_secret: !secret spotify_client_secret
 
 lovelace_gen:
 lovelace:
@@ -109,37 +113,37 @@ lovelace:
     lovelace-minimalist-network:
       mode: yaml
       title: Minimalist Network
-      icon: mdi:cellphone-text
+      icon: mdi:lan
       show_in_sidebar: true
       filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-network.yaml
     lovelace-minimalist-devices:
       mode: yaml
       title: Minimalist Devices
-      icon: mdi:cellphone-text
+      icon: mdi:devices
       show_in_sidebar: true
       filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-devices.yaml
     lovelace-minimalist-automation:
       mode: yaml
       title: Minimalist Automation
       icon: mdi:cellphone-text
-      show_in_sidebar: true
+      show_in_sidebar: false
       filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-automation.yaml
     lovelace-minimalist-security:
       mode: yaml
       title: Minimalist Security
-      icon: mdi:cellphone-text
+      icon: mdi:shield-home
       show_in_sidebar: true
       filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-security.yaml
     lovelace-minimalist-climate:
       mode: yaml
       title: Minimalist Climate
-      icon: mdi:cellphone-text
+      icon: mdi:home-thermometer
       show_in_sidebar: true
       filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-climate.yaml
     lovelace-minimalist-media:
       mode: yaml
       title: Minimalist Media
-      icon: mdi:cellphone-text
+      icon: mdi:remote-tv
       show_in_sidebar: true
       filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-media.yaml
     lovelace-minimalist-rooms:
@@ -148,3 +152,21 @@ lovelace:
       icon: mdi:floor-plan
       show_in_sidebar: true
       filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-rooms.yaml
+    lovelace-minimalist-energy:
+      mode: yaml
+      title: Minimalist Energy
+      icon: mdi:home-battery
+      show_in_sidebar: true
+      filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-energy.yaml
+    lovelace-minimalist-downloads:
+      mode: yaml
+      title: Minimalist Downloads
+      icon: mdi:cloud-download
+      show_in_sidebar: true
+      filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-downloads.yaml
+    lovelace-minimalist-testing:
+      mode: yaml
+      title: Minimalist Testing
+      icon: mdi:test-tube
+      show_in_sidebar: true
+      filename: ui_lovelace_minimalist/dashboard/lovelace-minimalist-testing.yaml

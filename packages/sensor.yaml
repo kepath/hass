@@ -1,10 +1,10 @@
 sensor:
 
   # Own public IPv4 address
-  - platform: dnsip
-    name: WAN IP
+  # - platform: dnsip
+  #   name: WAN IP
 
-  - platform: launch_library
+  # - platform: launch_library
 
   - platform: feedparser
     name: RSS Hass Alerts
@@ -25,20 +25,18 @@ sensor:
     host: !secret ha_rj45_ip
     api_key: !secret tautulli_api_key
 
-  - platform: mqtt
-    name: Plex State MQTT
-    state_topic: homeassistant/sensor/tautulli/all
-    value_template: '{{ value_json.body }}'
-    unique_id: tautulli_mqtt_status
+  # - platform: "mqtt"
+  #   state_topic: "homeassistant/sensor/tautulli/all"
+  #   unique_id: "tautulli_mqtt_status"
+  #   name: "Plex State MQTT"
+  #   value_template: "'{{ value_json.body }}'"    
 
-  - platform: mqtt
-    name: Zigbee2mqtt Networkmap
-    # if you change base_topic of Zigbee2mqtt, change state_topic accordingly
-    state_topic: zigbee2mqtt/bridge/networkmap/raw
-    value_template: >-
-      {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
-    # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
-    json_attributes_topic: zigbee2mqtt/bridge/networkmap/raw
+  # - platform: "mqtt"
+  #   state_topic: "zigbee2mqtt/bridge/networkmap/raw"
+  #   name: "Zigbee2mqtt Networkmap"
+  #   value_template: >-
+  #     {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
+  #   json_attributes_topic: zigbee2mqtt/bridge/networkmap/raw
 
   - platform: sql
     db_url: !secret hass_addon_mariadb_url
@@ -54,6 +52,14 @@ sensor:
       - exchangerate
       - trade_volume_btc
 
+  - platform: template
+    sensors:
+      date_long:
+        friendly_name: 'Date and Day of week'
+        value_template: >
+          {% set months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] %}
+          {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+          {{ months[now().month-1] }}.{{ now().day }}th. {{ days[now().weekday()] }}
 
 #sensors for HA updates
   - platform: command_line
@@ -76,21 +82,50 @@ sensor:
       - latest_version
       - installed_version
 
-  - platform: command_line
-    name: os_updates
-    command: 'curl http://supervisor/os/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"latest_version":.data.version_latest,"installed_version":.data.version,"update_available":.data.update_available}'''
-    value_template: '{{ value_json.update_available }}'
-    scan_interval: 600
-    json_attributes:
-      - update_available
-      - latest_version
-      - installed_version
-
   - platform: template
     sensors:
-      date_long:
-        friendly_name: 'Date and Day of week'
-        value_template: >
-          {% set months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] %}
-          {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
-          {{ months[now().month-1] }}.{{ now().day }}th. {{ days[now().weekday()] }}
+      os_updates:
+        friendly_name: "OS Updates"
+        value_template: "false"
+
+  # - platform: command_line
+  #   name: os_updates
+  #   command: 'curl http://supervisor/os/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"latest_version":.data.version_latest,"installed_version":.data.version,"update_available":.data.update_available}'''
+  #   value_template: '{{ value_json.update_available }}'
+  #   scan_interval: 600
+  #   json_attributes:
+  #     - update_available
+  #     - latest_version
+  #     - installed_version
+
+  # - platform: command_line
+  #   name: host_updates
+  #   # command: 'curl http://supervisor/host/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)"'
+  #   command: 'curl http://supervisor/host/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"agent_version":.data.agent_version,"apparmor_version":.data.apparmor_version,"kernel":.data.kernel}'''
+  #   # value_template: '{{ value_json.kernel }}'
+  #   scan_interval: 600
+  #   json_attributes:
+  #     - agent_version
+  #     - apparmor_version
+  #     - kernel
+  #     # - features
+
+  - platform: command_line
+    name: addons_updates
+    command: 'curl http://supervisor/addons -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"addons":[.data.addons[] | select(.update_available)]}'''
+    value_template: '{{ value_json.addons | length }}'
+    scan_interval: 600
+    unit_of_measurement: pending update(s)
+    json_attributes:
+      - addons
+
+binary_sensor:
+  - platform: template
+    sensors:
+      updater_core:
+        friendly_name: Core
+        device_class: problem
+        value_template: "{{ states('sensor.core_updates') }}"
+        attribute_templates:
+          installed_version: "{{ state_attr('sensor.core_updates', 'installed_version') }}"
+          latest_version: "{{ state_attr('sensor.core_updates', 'latest_version') }}"
