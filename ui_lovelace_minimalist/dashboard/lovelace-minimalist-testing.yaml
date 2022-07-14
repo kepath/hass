@@ -4,22 +4,22 @@ views:
   - title: Testing
     icon: mdi:test-tube
     theme: minimalist-mobile
-    cards:
+    cards: 
       - type: vertical-stack
         cards:
           - type: custom:button-card
             template: custom_card_irmajavi_entities
             variables:
-              ulm_custom_card_irmajavi_entities_entity_1: sensor.diskstation_drive_1_status_smart
-              ulm_custom_card_irmajavi_entities_entity_2: binary_sensor.diskstation_drive_1_below_min_remaining_life
-              ulm_custom_card_irmajavi_entities_entity_3: binary_sensor.diskstation_drive_1_exceeded_max_bad_sectors
-              ulm_custom_card_irmajavi_entities_entity_4: sensor.diskstation_drive_1_temperature
-              ulm_custom_card_irmajavi_entities_name_1: Download Throughput
-              ulm_custom_card_irmajavi_entities_name_2: Upload Throughput
-              ulm_custom_card_irmajavi_entities_name_3: Temperature
-              ulm_custom_card_irmajavi_entities_name_4: Update Available
+              ulm_custom_card_irmajavi_entities_entity_1: sensor.diskstation_drive_1_temperature
+              ulm_custom_card_irmajavi_entities_entity_2: sensor.diskstation_drive_2_temperature
+              ulm_custom_card_irmajavi_entities_entity_3: sensor.diskstation_drive_3_temperature
+              ulm_custom_card_irmajavi_entities_entity_4: sensor.diskstation_drive_4_temperature
+              ulm_custom_card_irmajavi_entities_name_1: Drive 1 Temp
+              ulm_custom_card_irmajavi_entities_name_2: Drive 2 Temp
+              ulm_custom_card_irmajavi_entities_name_3: Drive 3 Temp
+              ulm_custom_card_irmajavi_entities_name_4: Drive 4 Temp
               ulm_custom_card_irmajavi_entities_name: DSM Drive 1 Status
-              ulm_custom_card_irmajavi_entities: sensor.diskstation_drive_1_status
+              ulm_custom_card_irmajavi_entities: sensor.diskstation_volume_1_status
 
           - type: "custom:button-card"
             template: "custom_card_apexcharts"
@@ -44,6 +44,15 @@ views:
                 name: "Speedtest Ping"
                 color: "green"
                 max_value: 100
+
+          - type: custom:button-card
+            template: custom_card_irmajavi_speedtest
+            variables:
+              ulm_custom_card_irmajavi_speedtest_download_speed_entity: sensor.speedtest_download
+              ulm_custom_card_irmajavi_speedtest_upload_speed_entity: sensor.speedtest_upload
+              ulm_custom_card_irmajavi_speedtest_color: blue
+              ulm_custom_card_irmajavi_speedtest_router_name: Unifi
+              ulm_custom_card_irmajavi_speedtest_router_model: UDM Pro
 
           - type: "custom:button-card"
             template: custom_card_bar_card
@@ -107,18 +116,37 @@ views:
                 name: Lab
                 color: "red"
 
-          - type: "custom:button-card"
-            template: "card_homeassistant_updates"
+          - type: custom:button-card
+            template: card_neekster_update
+            entity: update.home_assistant_core_update
             variables:
-              ulm_card_homeassistant_entity: "binary_sensor.updates"
-              ulm_card_homeassistant_core: "sensor.core_updates"
-              ulm_card_homeassistant_supervisor: "sensor.supervisor_updates"
-              ulm_card_homeassistant_os: "sensor.host_updates"
+              ulm_card_neekster_update_enable_controls: true
+              ulm_card_neekster_update_collapsible: false
+              ulm_card_neekster_update_horizontal: false
+              ulm_card_neekster_update_narrow_buttons: true
+
+          - type: custom:button-card
+            template: card_neekster_update
+            entity: update.home_assistant_supervisor_update
+            variables:
+              ulm_card_neekster_update_enable_controls: true
+              ulm_card_neekster_update_collapsible: false
+              ulm_card_neekster_update_horizontal: false
+              ulm_card_neekster_update_narrow_buttons: true
+
+          - type: custom:button-card
+            template: card_neekster_update
+            entity: update.esphome_update_2
+            variables:
+              ulm_card_neekster_update_enable_controls: true
+              ulm_card_neekster_update_collapsible: true
+              ulm_card_neekster_update_horizontal: false
+              ulm_card_neekster_update_narrow_buttons: true
 
           - type: custom:button-card
             template: custom_card_httpedo13_sun
             variables:
-              language: 'en'
+              language: 'en' 
 
           - type: custom:button-card
             template: custom_card_httpedo13_thermostat_with_buttons
@@ -139,3 +167,48 @@ views:
                 - zone.bloxham_school
                 - zone.jus_parents
                 - zone.kevs_parents
+
+          - type: custom:button-card
+            template: card_light_colorpick
+            entity: light.tybf82abce93da177c79kymc
+            variables:
+              ulm_card_light_slider_horizontal_colors_name: Back-door Light
+              ulm_card_light_slider_horizontal_colors_transition: 1
+
+          - type: "custom:button-card"
+            template: custom_card_more_power_outlet
+            variables:
+              custom_card_more_power_outlet_power_sensor: sensor.zigbee_plug_washing_machine_power
+              custom_card_more_power_outlet_energy_sensor: sensor.zigbee_plug_washing_machine_energy
+              # custom_card_more_power_outlet_time_sensor: sensor.time_immersion_heater_heating
+            entity: switch.zigbee_plug_washing_machine
+            name: Washing Machine
+
+          - type: "custom:button-card"
+            template: custom_card_mpse_gauge
+            entity: sensor.big_pc_win11_memory_usage
+            variables:
+              ulm_card_mpse_gauge_min: 0
+              ulm_card_mpse_gauge_max: 100
+
+          - type: "custom:button-card"
+            template: custom_card_mpse_printer
+            entity: sensor.mfc_j870dw_status
+            variables:
+              ulm_card_printer_name: Brother MFC-J870DW Printer
+              ulm_card_printer_black_name: sensor.mfc_j870dw_black_ink_remaining
+              ulm_card_printer_yellow_name: sensor.mfc_j870dw_yellow_ink_remaining
+              ulm_card_printer_cyan_name: sensor.mfc_j870dw_cyan_ink_remaining
+              ulm_card_printer_magenta_name: sensor.mfc_j870dw_magenta_ink_remaining
+
+          - type: "custom:button-card"
+            template: custom_card_mpse_wifisignal
+            entity: sensor.bed_a_light_rssi
+
+          - type: "custom:button-card"
+            template:
+              - custom_card_nas
+            variables:
+              ulm_custom_card_nas_sensor: sensor.diskstation_volume_1_volume_used
+              ulm_custom_card_nas_text: "Diskstation Volume 1 Usage"
+              ulm_custom_cad_nas_unit: "%"
