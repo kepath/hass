@@ -211,4 +211,35 @@ views:
             variables:
               ulm_custom_card_nas_sensor: sensor.diskstation_volume_1_volume_used
               ulm_custom_card_nas_text: "Diskstation Volume 1 Usage"
-              ulm_custom_cad_nas_unit: "%"
+              ulm_custom_cad_nas_unit: "&#37;"
+
+          - type: "custom:button-card"
+            template: "custom_card_nik_nas"
+            entity: button.diskstation_reboot
+            variables:
+              graph_span: "1h"
+              chart_type: "line"
+              entity_1:
+                entity_id: "sensor.diskstation_temperature"
+                icon: ''
+                name: "Temp"
+                color: "yellow"
+                max_value: 100
+              entity_2:
+                entity_id: "sensor.diskstation_memory_usage_real"
+                icon: ''
+                name: "Memory"
+                color: "blue"
+                max_value: 100
+              entity_3: 
+                entity_id: "sensor.diskstation_cpu_utilization_total"
+                icon: ''
+                name: "CPU"
+                color: "green"
+                max_value: 100
+              entity_4:
+                entity_id: "sensor.diskstation_volume_1_volume_used"
+                icon: "mdi:harddisk"
+                name: "Disk"
+                color: "red"
+                max_value: 100
