@@ -1,0 +1,18 @@
+---
+chip_long_date:
+  template: "chips"
+  variables:
+    ulm_language: >
+      [[[
+        return hass["language"];
+      ]]]
+  triggers_update: "all"
+  label: |
+    [[[
+      var locale = variables.ulm_language;
+      let o = new Intl.DateTimeFormat(locale , {
+        dateStyle: "full"
+      });
+      let formatted_date = o.format(Date.now())
+      return formatted_date
+    ]]]

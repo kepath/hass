@@ -1,0 +1,70 @@
+button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
+
+views:
+
+  - title: Main
+    icon: mdi:cellphone-text
+    theme: minimalist-mobile
+    cards:
+      - type: vertical-stack
+        cards:
+        - type: horizontal-stack
+          cards:
+            - type: "custom:button-card"
+              template: "card_kepath_welcome"
+              triggers_update: "input_boolean.welcome_toggle"
+              variables: 
+                ulm_card_kepath_welcome_collapse: input_boolean.welcome_toggle
+                ulm_chip_temperature_inside: sensor.nest_bottom_floor_temperature
+                ulm_chip_temperature_outside: sensor.banbury_temperature
+                ulm_chip_temperature_weather: weather.met_office_banbury
+                entity_1:
+                  nav: "house"
+                  icon: "mdi:home"
+                  name: "House"
+                  color: "blue"
+                entity_2:
+                  nav: "lights"
+                  icon: "mdi:lightbulb"
+                  name: "Lights"
+                  color: "yellow"
+                entity_3:
+                  nav: "security"
+                  icon: "mdi:shield"
+                  name: Secure
+                  color: "green"
+                entity_4:
+                  nav: "network"
+                  icon: "mdi:nas"
+                  name: Lab
+                  color: "purple"
+                entity_5:
+                  nav: "network"
+                  icon: "mdi:flask"
+                  name: Lab
+                  color: "red"
+                entity_6:
+                  nav: "house"
+                  icon: "mdi:home"
+                  name: "House"
+                  color: "red"
+                entity_7:
+                  nav: "lights"
+                  icon: "mdi:lightbulb"
+                  name: "Lights"
+                  color: "purple"
+                entity_8:
+                  nav: "security"
+                  icon: "mdi:shield"
+                  name: Secure
+                  color: "green"
+                entity_9:
+                  nav: "network"
+                  icon: "mdi:nas"
+                  name: Lab
+                  color: "yellow"
+                entity_10:
+                  nav: "network"
+                  icon: "mdi:flask"
+                  name: Lab
+                  color: "blue"
