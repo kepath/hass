@@ -5,11 +5,11 @@ import voluptuous as vol
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, CONF_TYPE
 from homeassistant.helpers import config_validation as cv
 
-
 from .const import (
     ATTR_FRIDAY_BOUNDARY,
     ATTR_FRIDAY_END,
     ATTR_FRIDAY_START,
+    ATTR_JSON,
     ATTR_MONDAY_BOUNDARY,
     ATTR_MONDAY_END,
     ATTR_MONDAY_START,
@@ -96,5 +96,13 @@ SET_ZONE_SCHEME = vol.Schema(
     {vol.Required(ATTR_ZONE): vol.All(vol.Coerce(int), vol.Range(0, 3))},
     extra=vol.ALLOW_EXTRA,
 )
+
+RAW_SCHEME = vol.Schema(
+    {
+        vol.Required(ATTR_JSON): str,
+    },
+    extra=vol.ALLOW_EXTRA,
+)
+
 
 OTS_SCHEME = ""

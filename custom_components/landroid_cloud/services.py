@@ -3,12 +3,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from homeassistant.const import CONF_ENTITY_ID, CONF_DEVICE_ID
+from homeassistant.const import CONF_DEVICE_ID, CONF_ENTITY_ID
 from homeassistant.core import HomeAssistant, ServiceCall, callback
-from homeassistant.helpers import (
-    device_registry as dr,
-    entity_registry as er,
-)
+from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceEntry
 
 from .api import LandroidAPI
@@ -27,6 +25,7 @@ from .const import (
     SERVICE_REFRESH,
     SERVICE_RESTART,
     SERVICE_SCHEDULE,
+    SERVICE_SEND_RAW,
     SERVICE_SETZONE,
     SERVICE_TORQUE,
     LandroidFeatureSupport,
@@ -35,11 +34,12 @@ from .scheme import (
     CONFIG_SCHEMA,
     EMPTY_SCHEME,
     OTS_SCHEME,
+    RAW_SCHEME,
     SCHEDULE_SCHEME,
     SET_ZONE_SCHEME,
     TORQUE_SCHEME,
 )
-from .utils.logger import LandroidLogger, LogLevel, LoggerType
+from .utils.logger import LandroidLogger, LoggerType, LogLevel
 
 
 @dataclass
@@ -84,6 +84,9 @@ SUPPORTED_SERVICES = [
     ),
     LandroidServiceDescription(
         key=SERVICE_REFRESH, feature=LandroidFeatureSupport.REFRESH
+    ),
+    LandroidServiceDescription(
+        key=SERVICE_SEND_RAW, feature=LandroidFeatureSupport.CONFIG, schema=RAW_SCHEME
     ),
 ]
 

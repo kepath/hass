@@ -1,8 +1,8 @@
 """Define device classes."""
 # pylint: disable=unused-argument,too-many-instance-attributes,no-self-use
 from __future__ import annotations
-import asyncio
 
+import asyncio
 import json
 from datetime import timedelta
 from functools import partial
@@ -32,6 +32,7 @@ from pyworxcloud.exceptions import (
     NoOneTimeScheduleError,
     NoPartymodeError,
     RateLimit,
+    RequestException,
 )
 from pyworxcloud.utils import Capability, DeviceCapability
 from pyworxcloud.utils.capability import CAPABILITY_TO_TEXT
@@ -42,6 +43,7 @@ from .const import (
     ATTR_BOUNDARY,
     ATTR_CAPABILITIES,
     ATTR_DEVICEIDS,
+    ATTR_JSON,
     ATTR_LANDROIDFEATURES,
     ATTR_LATITUDE,
     ATTR_LONGITUDE,
@@ -63,6 +65,7 @@ from .const import (
     SERVICE_REFRESH,
     SERVICE_RESTART,
     SERVICE_SCHEDULE,
+    SERVICE_SEND_RAW,
     SERVICE_SETZONE,
     SERVICE_TORQUE,
     STATE_INITIALIZING,
@@ -121,6 +124,7 @@ class LandroidCloudBaseEntity(LandroidLogger):
         self._name = f"{api.friendly_name}"
         self._mac = api.device.mac_address
         self._connections = {(dr.CONNECTION_NETWORK_MAC, self._mac)}
+        self._features_known = 0
 
         super().__init__()
 
@@ -163,6 +167,10 @@ class LandroidCloudBaseEntity(LandroidLogger):
 
     async def async_set_torque(self, data: dict | None = None) -> None:
         """Set wheel torque."""
+        return None
+
+    async def async_send_raw(self, data: dict | None = None) -> None:
+        """Send a raw command."""
         return None
 
     async def async_refresh(self, data: dict | None = None) -> None:
@@ -250,6 +258,9 @@ class LandroidCloudBaseEntity(LandroidLogger):
         """Register services."""
         self.log_set_name(__name__)
         self.log_set_api(self.api)
+
+        self.api.check_features()
+
         if self.api.features == 0:
             self.log(
                 LoggerType.SERVICE_REGISTER,
@@ -257,6 +268,9 @@ class LandroidCloudBaseEntity(LandroidLogger):
                 self.api.features,
             )
             return
+
+        if self.api.features == self._features_known:
+            return  # No new features known
 
         self.log(
             LoggerType.SERVICE_REGISTER,
@@ -313,6 +327,12 @@ class LandroidCloudBaseEntity(LandroidLogger):
             self.api.services[SERVICE_TORQUE] = {
                 ATTR_SERVICE: self.async_set_torque,
             }
+        if self.api.features & LandroidFeatureSupport.RAW:
+            self.api.services[SERVICE_SEND_RAW] = {
+                ATTR_SERVICE: self.async_send_raw,
+            }
+
+        self._features_known = self.api.features
 
     def data_update(self):
         """Update the device."""
@@ -320,7 +340,6 @@ class LandroidCloudBaseEntity(LandroidLogger):
         self.log_set_api(self.api)
         self.log(LoggerType.DATA_UPDATE, "Updating")
 
-        # self.api.check_features(self.base_features)
         device: WorxCloud = self.api.device
 
         data = {}
@@ -390,6 +409,7 @@ class LandroidCloudBaseEntity(LandroidLogger):
         if "percent" in device.battery:
             self._battery_level = device.battery["percent"]
 
+        self.register_services()
         mqtt = device.mqtt.connected if hasattr(device, "mqtt") else False
         if not mqtt:
             # If MQTT is not connected, then pull state from API
@@ -725,6 +745,14 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
                 exc.message,
                 log_level=LogLevel.WARNING,
             )
+        except RequestException as exc:
+            self.log(
+                LoggerType.SERVICE_CALL,
+                "%s Zone requested: %s",
+                exc.args[0],
+                zone,
+                log_level=LogLevel.ERROR,
+            )
 
     async def async_set_schedule(self, data: dict | None = None) -> None:
         """Set or change the schedule."""
@@ -890,6 +918,28 @@ class LandroidCloudMowerBase(LandroidCloudBaseEntity, StateVacuumEntity):
         try:
             await self.hass.async_add_executor_job(
                 partial(device.ots, data[ATTR_BOUNDARY], data[ATTR_RUNTIME])
+            )
+        except MQTTException:
+            self.log(
+                LoggerType.SERVICE_CALL,
+                "Couldn't send command, MQTT was not connected",
+                log_level=LogLevel.ERROR,
+            )
+        except RateLimit as exc:
+            self.log(
+                LoggerType.SERVICE_CALL,
+                exc.message,
+                log_level=LogLevel.WARNING,
+            )
+
+    async def async_send_raw(self, data: dict | None = None) -> None:
+        """Send a raw command to the device."""
+        device: WorxCloud = self.api.device
+
+        self.log(LoggerType.SERVICE_CALL, "Data being sent: %s", data[ATTR_JSON])
+        try:
+            await self.hass.async_add_executor_job(
+                partial(device.send, data[ATTR_JSON])
             )
         except MQTTException:
             self.log(
