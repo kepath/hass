@@ -196,3 +196,19 @@ sensor:
             {% endif %}
           {%- endfor -%}
         {%- endfor -%}
+
+    count_updates:
+      #entity_id: sensor.date
+      friendly_name: Updates Available
+      unit_of_measurement: 'Count'
+      unique_id: available_update_domain_count
+      icon_template: mdi:update
+      value_template: >
+        {%- set domains = ['update'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] if not item.state == "off" -%}
+            {% if loop.first %}
+              {{loop.length}}
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}

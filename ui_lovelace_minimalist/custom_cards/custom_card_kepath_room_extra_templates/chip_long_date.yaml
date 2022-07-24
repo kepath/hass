@@ -11,7 +11,9 @@ chip_long_date:
     [[[
       var locale = variables.ulm_language;
       let o = new Intl.DateTimeFormat(locale , {
-        dateStyle: "full"
+        weekday: "short",
+        day: "numeric",
+        month: "short"
       });
       let formatted_date = o.format(Date.now())
       return formatted_date

@@ -68,3 +68,51 @@ views:
                   icon: "mdi:flask"
                   name: Lab
                   color: "blue"
+
+        - type: horizontal-stack
+          cards:
+            - type: custom:button-card
+              template: "ulm_language_variables"
+              styles:
+                grid:
+                  - grid-template-areas: "'item1 item2' 'item3 item4'"
+                  - grid-template-columns: "1fr 1fr"
+                  - grid-template-rows: "min-content min-content"
+                card:
+                  - margin: "0px 12px"
+              custom_fields:
+                item1:
+                  card:
+                    type: custom:button-card
+                    template: card_neekster_update
+                    entity: update.home_assistant_core_update
+                    variables:
+                      ulm_card_neekster_update_enable_controls: true
+                      ulm_card_neekster_update_collapsible: false
+                      ulm_card_neekster_update_horizontal: false
+                      ulm_card_neekster_update_narrow_buttons: true
+                item2:
+                  card:
+                    type: custom:button-card
+                    template: card_neekster_update
+                    entity: update.home_assistant_supervisor_update
+                    variables:
+                      ulm_card_neekster_update_enable_controls: true
+                      ulm_card_neekster_update_collapsible: false
+                      ulm_card_neekster_update_horizontal: false
+                      ulm_card_neekster_update_narrow_buttons: true
+                item3:
+                  card:
+                    type: 'custom:button-card'
+                    template: card_navigate_generic
+                    entity: sensor.hacs
+                    variables:
+                      ulm_card_navigate_path: "/hacs"
+                      ulm_card_generic_name: HACS Updates
+                item4: 
+                  card: 
+                    type: 'custom:button-card'
+                    template: card_navigate_generic
+                    entity: sensor.count_updates
+                    variables:
+                      ulm_card_navigate_path: "/hassio/dashboard"
