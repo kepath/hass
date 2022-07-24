@@ -38,13 +38,13 @@ sensor:
   #     {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
   #   json_attributes_topic: zigbee2mqtt/bridge/networkmap/raw
 
-  - platform: sql
-    db_url: !secret hass_addon_mariadb_url
-    queries:
-    - name: HASS DB size
-      query: !secret hass_addon_mariadb_size_query
-      column: 'value'
-      unit_of_measurement: MB
+  # - platform: sql
+  #   db_url: !secret hass_addon_mariadb_url
+  #   queries:
+  #   - name: HASS DB size
+  #     query: !secret hass_addon_mariadb_size_query
+  #     column: 'value'
+  #     unit_of_measurement: MB
 
   - platform: bitcoin
     currency: GBP
