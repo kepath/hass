@@ -27,6 +27,7 @@ from homeassistant.const import (
     POWER_WATT,
     TEMP_CELSIUS,
     TIME_HOURS,
+    TIME_MINUTES,
 )
 
 
@@ -140,7 +141,7 @@ MAX_CURRENTS = [
     ('H3DE',    25 ), # Gen3 X3 might need changing?
     ('H3PE',    25 ), # Gen3 X3 might need changing?
     ('H3UE',    25 ), # Gen3 X3
-    ('H437',   30 ), # Gen4 X1 3.7kW
+    ('H43',   30 ), # Gen4 X1 3 / 3.7kW
     ('H450',   30 ), # Gen4 X1 5kW
     ('H460',   30 ), # Gen4 X1 6kW
     ('H475',   30 ), # Gen4 X1 7.5kW
@@ -149,13 +150,75 @@ MAX_CURRENTS = [
     ### All known Inverters added
 ]
 
+MAX_EXPORT = [
+    ('L30E',    3000 ), # Gen2 X1 SK-TL
+    ('U30',     3000 ), # Gen2 X1 SK-SU
+    ('L37E',    3680 ), # Gen2 X1 SK-TL
+    ('U37',     3680 ), # Gen2 X1 SK-SU
+    ('L50E',    4600 ), # Gen2 X1 SK-TL
+    ('U50',     4600 ), # Gen2 X1 SK-SU
+    ('H1E30',   3000 ), # Gen3 X1
+    ('H1E37',   3680 ), # Gen3 X1
+    ('H1E46',   4600 ), # Gen3 X1
+    ('H1E5',    5000 ), # Gen3 X1
+    ('HCC30',   3000 ), # Gen3 X1
+    ('HCC37',   3680 ), # Gen3 X1
+    ('HCC46',   4600 ), # Gen3 X1
+    ('HCC5',    5000 ), # Gen3 X1
+    ('HUE30',   3000 ), # Gen3 X1
+    ('HUE37',   3680 ), # Gen3 X1
+    ('HUE46',   4600 ), # Gen3 X1
+    ('HUE5',    5000 ), # Gen3 X1
+    ('XRE30',   3000 ), # Gen3 X1
+    ('XRE37',   3680 ), # Gen3 X1
+    ('XRE46',   4600 ), # Gen3 X1
+    ('XRE5',    5000 ), # Gen3 X1
+    ('F3E6',    6000 ), # RetroFit X3
+    ('F3E8',    8000 ), # RetroFit X3
+    ('F3E10',  10000 ), # RetroFit X3
+    ('F3E10',  15000 ), # RetroFit X3
+    ('H3DE06',  6000 ), # Gen3 X3
+    ('H3DE08',  8000 ), # Gen3 X3
+    ('H3DE10', 10000 ), # Gen3 X3
+    ('H3PE06',  6000 ), # Gen3 X3
+    ('H3PE08',  8000 ), # Gen3 X3
+    ('H3PE10', 10000 ), # Gen3 X3
+    ('H3UE06',  6000 ), # Gen3 X3
+    ('H3UE08',  8000 ), # Gen3 X3
+    ('H3UE10', 10000 ), # Gen3 X3
+    ('H430',    3000 ), # Gen4 X1 3kW?
+    ('H437',    3680 ), # Gen4 X1 3.7kW
+    ('H450',    5000 ), # Gen4 X1 5kW
+    ('H460',    6000 ), # Gen4 X1 6kW
+    ('H475',    7500 ), # Gen4 X1 7.5kW
+    ('H34B05',  5000 ), # Gen4 X3 B
+    ('H34B08',  8000 ), # Gen4 X3 B
+    ('H34B12', 12000 ), # Gen4 X3 B
+    ('H34B15', 15000 ), # Gen4 X3 B
+    ('H34T05',  5000 ), # Gen4 X3 T
+    ('H34T08',  8000 ), # Gen4 X3 T
+    ('H34T12', 12000 ), # Gen4 X3 T
+    ('H34T15', 15000 ), # Gen4 X3 T
+    ### All known Inverters added
+]
+
+EXPORT_LIMIT_SCALE_EXCEPTIONS = [
+    ('H34', 10), # assuming all Gen4s 
+    ('H4', 10 ), # assuming all Gen4s
+#    ('H1E', 10 ), # assuming all Gen4s
+]
+
+
+
 @dataclass
 class SolaxModbusNumberEntityDescription(NumberEntityDescription):
     allowedtypes: int = ALLDEFAULT # maybe 0x0000 (nothing) is a better default choice
     register: int = None
     fmt: str = None
+    scale: float = 1 
     state: str = None
-    max_exceptions: list = None  #  None or dict with structue { 'U50EC' : 40 } 
+    max_exceptions: list = None   #  None or list with structue [ ('U50EC' , 40,) ]
+    scale_exceptions: list = None #
     blacklist: list = None # None or list of serial number prefixes like 
 
 NUMBER_TYPES = [
@@ -163,10 +226,10 @@ NUMBER_TYPES = [
         key = "battery_minimum_capacity",
         register = 0x20,
         fmt = "i",
-        min_value = 0,
-        max_value = 99,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 10,
+        native_max_value = 99,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         state = "battery_capacity_charge",
         allowedtypes = GEN2 | GEN3,
     ),
@@ -174,10 +237,10 @@ NUMBER_TYPES = [
         key = "battery_minimum_capacity_gridtied",
         register = 0xa7,
         fmt = "i",
-        min_value = 28,
-        max_value = 99,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 28,
+        native_max_value = 99,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         state = "battery_minimum_capacity_gridtied",
         allowedtypes = HYBRID | GEN3,
     ),
@@ -185,10 +248,10 @@ NUMBER_TYPES = [
         key = "battery_charge_max_current",
         register = 0x24,
         fmt = "f",
-        min_value = 0,
-        max_value = 20, # default (new default, was 50)
-        step = 0.1,
-        unit_of_measurement = ELECTRIC_CURRENT_AMPERE,
+        native_min_value = 0,
+        native_max_value = 20, # default (new default, was 50)
+        native_step = 0.1,
+        native_unit_of_measurement = ELECTRIC_CURRENT_AMPERE,
         allowedtypes = GEN2 | GEN3 | GEN4,
         max_exceptions = MAX_CURRENTS,
     ),
@@ -196,10 +259,10 @@ NUMBER_TYPES = [
         key = "battery_discharge_max_current",
         register = 0x25,
         fmt = "f",
-        min_value = 0,
-        max_value = 20, # universal default
-        step = 0.1,
-        unit_of_measurement = ELECTRIC_CURRENT_AMPERE,
+        native_min_value = 0,
+        native_max_value = 20, # universal default
+        native_step = 0.1,
+        native_unit_of_measurement = ELECTRIC_CURRENT_AMPERE,
         allowedtypes = GEN2 | GEN3 | GEN4,
         max_exceptions = MAX_CURRENTS,
     ),
@@ -207,91 +270,134 @@ NUMBER_TYPES = [
         key ="forcetime_period_1_max_capacity",
         register = 0xA4,
         fmt = "i",
-        min_value = 5,
-        max_value = 100,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 5,
+        native_max_value = 100,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         allowedtypes = GEN3,
     ),
     SolaxModbusNumberEntityDescription( name = "ForceTime Period 2 Max Capacity",
         key = "forcetime_period_2_max_capacity",
         register = 0xA5,
         fmt = "i",
-        min_value = 5,
-        max_value = 100,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 5,
+        native_max_value = 100,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         allowedtypes = GEN3,
     ),
     SolaxModbusNumberEntityDescription( name = "Export Control User Limit",
         key = "export_control_user_limit", 
         register = 0x42,
         fmt = "i",
-        min_value = 0,
-        max_value = 60000,
-        step = 500,
-        unit_of_measurement = POWER_WATT,
-        allowedtypes = GEN4,
+        native_min_value = 0,
+        native_max_value = 2500,
+        scale = 1, # GEN 2,3 scale
+        native_step = 500,
+        native_unit_of_measurement = POWER_WATT,
+        scale_exceptions=EXPORT_LIMIT_SCALE_EXCEPTIONS,
+        allowedtypes = GEN2 | GEN3 | GEN4 ,
+        max_exceptions = MAX_EXPORT,
     ),
     SolaxModbusNumberEntityDescription( name = "Selfuse Discharge Min SOC",
         key ="selfuse_discharge_min_soc",
         register = 0x61,
         fmt = "i",
-        min_value = 10,
-        max_value = 100,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 10,
+        native_max_value = 100,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         allowedtypes = GEN4,
     ),
     SolaxModbusNumberEntityDescription( name = "Selfuse Nightcharge Upper SOC",
         key = "selfuse_nightcharge_upper_soc", 
         register = 0x63,
         fmt = "i",
-        min_value = 10,
-        max_value = 100,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 10,
+        native_max_value = 100,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         allowedtypes = GEN4,
     ),
     SolaxModbusNumberEntityDescription( name = "Feedin Nightcharge Upper SOC",
         key = "feedin_nightcharge_upper_soc", 
         register = 0x64,
         fmt = "i",
-        min_value = 10,
-        max_value = 100,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 10,
+        native_max_value = 100,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         allowedtypes = GEN4,
     ),
     SolaxModbusNumberEntityDescription( name = "Feedin Discharge Min SOC",
         key = "feedin_discharge_min_soc",
         register = 0x65,
         fmt = "i",
-        min_value = 10,
-        max_value = 100,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 10,
+        native_max_value = 100,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         allowedtypes = GEN4,
     ),
     SolaxModbusNumberEntityDescription( name = "Backup Nightcharge Upper SOC",
         key = "backup_nightcharge_upper_soc", 
         register = 0x66,
         fmt = "i",
-        min_value = 10,
-        max_value = 100,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 10,
+        native_max_value = 100,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         allowedtypes = GEN4,
     ),
     SolaxModbusNumberEntityDescription( name = "Backup Discharge Min SOC",
         key = "backup_discharge_min_soc",
         register = 0x67,
         fmt = "i",
-        min_value = 10,
-        max_value = 100,
-        step = 1,
-        unit_of_measurement = PERCENTAGE,
+        native_min_value = 10,
+        native_max_value = 100,
+        native_step = 1,
+        native_unit_of_measurement = PERCENTAGE,
         allowedtypes = GEN4,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Backup Charge Start Hours",
+        key = "backup_charge_start_h", 
+        register = 0x95,
+        fmt = "i",
+        native_min_value = 0,
+        native_max_value = 23,
+        native_step = 1,
+        native_unit_of_measurement = TIME_HOURS,
+        allowedtypes = GEN3,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Backup Charge Start Minutes",
+        key = "backup_charge_start_m",
+        register = 0x96,
+        fmt = "i",
+        native_min_value = 0,
+        native_max_value = 59,
+        native_step = 1,
+        native_unit_of_measurement = TIME_MINUTES,
+        allowedtypes = GEN3,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Backup Charge End Hours",
+        key = "backup_charge_end_h", 
+        register = 0x97,
+        fmt = "i",
+        native_min_value = 0,
+        native_max_value = 23,
+        native_step = 1,
+        native_unit_of_measurement = TIME_HOURS,
+        allowedtypes = GEN3,
+    ),
+    SolaxModbusNumberEntityDescription( name = "Backup Charge End Minutes",
+        key = "backup_charge_end_m",
+        register = 0x98,
+        fmt = "i",
+        native_min_value = 0,
+        native_max_value = 59,
+        native_step = 1,
+        native_unit_of_measurement = TIME_MINUTES,
+        allowedtypes = GEN3,
     ),
 ]
 
@@ -549,6 +655,15 @@ SELECT_TYPES = [
             },
         allowedtypes = GEN2 | GEN3, 
     ),
+    SolaxModbusSelectEntityDescription( name = "Backup Grid Charge",
+        key = "backup_gridcharge",
+        register = 0x94,
+        options =  {
+                0: "Disabled",
+                1: "Enabled",
+            },
+        allowedtypes = GEN3, 
+    ),
     SolaxModbusSelectEntityDescription( name = "Charger Start Time 1",
         key = "charger_start_time_1",
         register = 0x26,
@@ -681,6 +796,8 @@ SELECT_TYPES = [
 class SolaXModbusSensorEntityDescription(SensorEntityDescription):
     """A class that describes SolaX Power Modbus sensor entities."""
     allowedtypes: int = ALLDEFAULT # maybe 0x0000 (nothing) is a better default choice
+    scale: float = 1
+    scale_exceptions: list = None
     blacklist: list = None # None or list of serial number prefixes
 
 
@@ -943,6 +1060,7 @@ SENSOR_TYPES: list[SolaXModbusSensorEntityDescription] = [
         native_unit_of_measurement=POWER_WATT,
         entity_registry_enabled_default=False,
         allowedtypes=ALLDEFAULT,
+        scale_exceptions=EXPORT_LIMIT_SCALE_EXCEPTIONS,
     ),
     SolaXModbusSensorEntityDescription(
         name="Grid Export Total",

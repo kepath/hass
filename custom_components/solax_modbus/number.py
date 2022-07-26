@@ -48,13 +48,17 @@ class SolaXModbusNumber(NumberEntity):
         self._key = number_info.key
         self._register = number_info.register
         self._fmt = number_info.fmt
-        self._attr_min_value = number_info.min_value
-        self._attr_max_value = number_info.max_value
+        self._attr_native_min_value = number_info.native_min_value
+        self._attr_native_max_value = number_info.native_max_value
+        self._attr_scale     = number_info.scale
         if number_info.max_exceptions:
-            for (prefix, value,) in number_info.max_exceptions: 
-                if hub.seriesnumber.startswith(prefix): self._attr_max_value = value
-        self._attr_step = number_info.step
-        self._attr_unit_of_measurement = number_info.unit_of_measurement
+            for (prefix, native_value,) in number_info.max_exceptions: 
+                if hub.seriesnumber.startswith(prefix): self._attr_native_max_value = native_value
+        if number_info.scale_exceptions:
+            for (prefix, native_value,) in number_info.scale_exceptions: 
+                if hub.seriesnumber.startswith(prefix): self._attr_scale = native_value
+        self._attr_native_step = number_info.native_step
+        self._attr_native_unit_of_measurement = number_info.native_unit_of_measurement
         self._state = number_info.state
 
     async def async_added_to_hass(self) -> None:
@@ -64,8 +68,10 @@ class SolaXModbusNumber(NumberEntity):
     async def async_will_remove_from_hass(self) -> None:
         self._hub.async_remove_solax_modbus_sensor(self._modbus_data_updated)
     
-    async def async_set_value(self, value: float) -> None:
+    """ remove duplicate declaration
+    async def async_set_value(self, native_value: float) -> None:
     	return self._hub.data[self._state]
+    """
 
     @callback
     def _modbus_data_updated(self) -> None:
@@ -91,11 +97,11 @@ class SolaXModbusNumber(NumberEntity):
         return f"{self._platform_name}_{self._key}"
 
     @property
-    def value(self) -> float:
+    def native_value(self) -> float:
         if self._key in self._hub.data:
-            return self._hub.data[self._key]
+            return self._hub.data[self._key]*self._attr_scale
 
-    async def async_set_value(self, value: float) -> None:
+    async def async_set_native_value(self, value: float) -> None:
         """Change the number value."""
         
         if self._hub._invertertype & GEN2:
@@ -104,11 +110,11 @@ class SolaXModbusNumber(NumberEntity):
             mult = 10
         
         if self._fmt == "i":
-            payload = int(value)
+            payload = int(value/self._attr_scale)
         elif self._fmt == "f":
-            payload = int(value * mult)
+            payload = int(value * mult/self._attr_scale)
 
         self._hub.write_register(unit=self._modbus_addr, address=self._register, payload=payload)
 
-        self._hub.data[self._key] = value
+        self._hub.data[self._key] = value/self._attr_scale
         self.async_write_ha_state()
