@@ -230,7 +230,7 @@ NUMBER_TYPES = [
         native_max_value = 99,
         native_step = 1,
         native_unit_of_measurement = PERCENTAGE,
-        state = "battery_capacity_charge",
+        state = "battery_minimum_capacity",
         allowedtypes = GEN2 | GEN3,
     ),
     SolaxModbusNumberEntityDescription( name = "Battery Minimum Capacity - Grid-tied",
@@ -849,6 +849,7 @@ SENSOR_TYPES: list[SolaXModbusSensorEntityDescription] = [
         native_unit_of_measurement=ENERGY_KILO_WATT_HOUR,
         entity_registry_enabled_default=False,
         allowedtypes= GEN3,
+        blacklist=('XRE',)
     ),
     SolaXModbusSensorEntityDescription(
         name="Battery Minimum Capacity",
@@ -1160,6 +1161,7 @@ SENSOR_TYPES: list[SolaXModbusSensorEntityDescription] = [
         key="inverter_model_number",
         entity_registry_enabled_default=False,
         allowedtypes= GEN3,
+        blacklist=('XRE',)
     ),
     SolaXModbusSensorEntityDescription(
         name="Inverter Power",
@@ -1860,6 +1862,4 @@ SENSOR_TYPES: list[SolaXModbusSensorEntityDescription] = [
         device_class=DEVICE_CLASS_VOLTAGE,
         allowedtypes = X3 | GEN2 | GEN3 | GEN4 | EPS,
     ),
-
 ]
-
