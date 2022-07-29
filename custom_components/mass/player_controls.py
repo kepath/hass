@@ -194,7 +194,9 @@ class HassPlayer(Player):
     @callback
     def on_hass_event(self, event: Event) -> None:
         """Call on Home Assistant event."""
-        self.logger.debug("on_hass_event")
+        if not self.available:
+            entity_comp = self.hass.data.get(DATA_INSTANCES, {}).get(MP_DOMAIN)
+            self.entity: MediaPlayerEntity = entity_comp.get_entity(self.entity_id)
         if event.event_type == "state_changed":
             old_state = event.data.get("old_state")
             new_state = event.data.get("new_state")
@@ -234,6 +236,10 @@ class HassPlayer(Player):
     @callback
     def on_update(self) -> None:
         """Update attributes of this player."""
+        if not self.entity:
+            # edge case: entity is being removed/re-added to HA
+            self._attr_available = False
+            return
         self._attr_available = self.entity.available
         # figure out grouping support
         group_members = []
@@ -385,7 +391,6 @@ class SlimprotoPlayer(HassPlayer):
     @callback
     def on_squeezebox_event(self, event: Event) -> None:
         """Handle special events from squeezebox players."""
-        print(event)
         if event.data["entity_id"] != self.entity_id:
             return
         cmd = event.data["command_str"]
@@ -468,22 +473,64 @@ class KodiPlayer(HassPlayer):
 class CastPlayer(HassPlayer):
     """Representation of Hass player from cast integration."""
 
+    # pylint: disable=protected-access
+
     _attr_max_sample_rate: int = 96000
     _attr_stream_type: ContentType = ContentType.FLAC
     _attr_use_mute_as_power = True
-    _attr_is_group = False
+    _attr_is_stereo_pair = False
+
+    @property
+    def elapsed_time(self) -> float:
+        """Return elapsed time of current playing media in seconds."""
+        if not self.available:
+            return 0
+        if self._attr_is_stereo_pair:
+            # edge case: handle stereo pair playing in group
+            for group_parent in self.get_group_parents(True):
+                return group_parent.elapsed_time
+        return super().elapsed_time
+
+    @property
+    def current_url(self) -> str:
+        """Return URL that is currently loaded in the player."""
+        if self._attr_is_stereo_pair:
+            # edge case: stereo pair playing in group
+            for group_parent in self.get_group_parents(True):
+                return group_parent.current_url
+        return super().current_url
+
+    @property
+    def state(self) -> PlayerState:
+        """Return current state of player."""
+        if not self.available or not self.powered:
+            return PlayerState.OFF
+        if self._attr_is_stereo_pair:
+            # edge case: stereo pair playing in group
+            for group_parent in self.get_group_parents(True):
+                return group_parent.state
+        return super().state
 
     @property
     def is_group(self) -> bool:
         """Return bool if this player represents a playergroup(leader)."""
-        return self._attr_is_group
+        return self.entity._cast_info.is_audio_group and not self._attr_is_stereo_pair
 
     @property
     def powered(self) -> bool:
         """Return power state."""
-        if self._attr_is_group:
-            return self.group_powered
+        if self.is_group:
+            # chromecast group player is dedicated player
+            return self.entity.state not in OFF_STATES
         return super().powered
+
+    @property
+    def group_powered(self) -> bool:
+        """Return power state."""
+        if self.is_group:
+            # chromecast group player is dedicated player
+            return self.entity.state not in OFF_STATES
+        return False
 
     @property
     def group_name(self) -> str:
@@ -493,7 +540,7 @@ class CastPlayer(HassPlayer):
     @property
     def group_leader(self) -> str | None:
         """Return the leader's player_id of this playergroup."""
-        if not self._attr_is_group:
+        if not self.is_group:
             return None
         # pylint:disable=protected-access
         ipaddr = self.entity._cast_info.cast_info.host
@@ -505,76 +552,97 @@ class CastPlayer(HassPlayer):
     @callback
     def on_update(self) -> None:
         """Update attributes of this player."""
-        super().on_update()
-        self._attr_group_members = group_members = self._get_group_members()
-        # a stereo pair is also detected as google cast group
-        # only consider this a group if it actually has members
-        self._attr_is_group = is_group = len(group_members) > 0
-        self._attr_use_mute_as_power = not is_group
+        HassPlayer.on_update(self)
+        self._attr_group_members = self._get_group_members()
 
-    # async def play_url(self, url: str) -> None:
-    #     """Play the specified url on the player."""
-    #     if self.mass.streams.base_url not in url:
-    #         # use base implementation if 3rd party url provided...
-    #         await super().play_url(url)
-    #         return
-    #     self._attr_powered = True
-    #     if self._attr_use_mute_as_power:
-    #         await self.volume_mute(False)
-    #     # pylint: disable=import-outside-toplevel,protected-access
-    #     from homeassistant.components.cast.media_player import quick_play
+    async def play_url(self, url: str) -> None:
+        """Play the specified url on the player."""
+        if self.mass.streams.base_url not in url or "announce" in url:
+            # use base implementation if 3rd party url provided...
+            await super().play_url(url)
+            return
+        self._attr_powered = True
+        if not self.is_group:
+            await self.volume_mute(False)
 
-    #     cast = self.entity._chromecast
-    #     app_data = {
-    #         "media_id": url,
-    #         "media_type": f"audio/{self.active_queue.settings.stream_type.value}",
-    #         "enqueue": False,
-    #         "stream_type": "BUFFERED",
-    #         "title": f" Streaming from {DEFAULT_NAME}",
-    #     }
-    #     await self.hass.async_add_executor_job(
-    #         quick_play, cast, "default_media_receiver", app_data
-    #     )
-    #     # enqueue second item to allow on-player control of next
-    #     # (or shout next track from google assistant)
-    #     await asyncio.sleep(1)
-    #     if self.active_queue.stream and len(self.active_queue.items) < 2:
-    #         return
-    #     enqueue_data = {**app_data}
-    #     enqueue_data["enqueue"] = True
-    #     enqueue_data["media_id"] = self.mass.streams.get_control_url(
-    #         self.active_queue.queue_id
-    #     )
-    #     await self.hass.async_add_executor_job(
-    #         quick_play, cast, "default_media_receiver", enqueue_data
-    #     )
+        # create (fake) CC queue wih repeat enabled to allow on-player control of next
+        # (or shout next track from google assistant)
+        cast = self.entity._chromecast
+        fmt = url.rsplit(".", 1)[-1]
+        queuedata = {
+            "type": "QUEUE_LOAD",
+            "repeatMode": "REPEAT_ALL",
+            "shuffle": False,  # handled by our queue controller
+            "queueType": "PLAYLIST",
+            "startIndex": 0,
+            "items": [
+                {
+                    "opt_itemId": url,
+                    "autoplay": True,
+                    "preloadTime": 0,
+                    "startTime": 0,
+                    "activeTrackIds": [],
+                    "media": {
+                        "contentId": url,
+                        "contentType": f"audio/{fmt}",
+                        "streamType": "LIVE",
+                        "metadata": {
+                            "title": f"Streaming from {DEFAULT_NAME}",
+                        },
+                    },
+                },
+                {
+                    "opt_itemId": "control/next",
+                    "autoplay": False,
+                    "media": {
+                        "contentId": self.mass.streams.get_control_url(
+                            self.player_id, "next"
+                        ),
+                        "contentType": f"audio/{fmt}",
+                    },
+                },
+            ],
+        }
+        media_controller = cast.media_controller
+        queuedata["mediaSessionId"] = media_controller.status.media_session_id
+
+        def launched_callback():
+            media_controller.send_message(queuedata, False)
+
+        receiver_ctrl = media_controller._socket_client.receiver_controller
+        await self.hass.loop.run_in_executor(
+            None,
+            receiver_ctrl.launch_app,
+            media_controller.supporting_app_id,
+            False,
+            launched_callback,
+        )
 
     async def volume_set(self, volume_level: int) -> None:
         """Send volume level (0..100) command to player."""
         if self.is_group:
             # redirect to set_group_volume
             await self.set_group_volume(volume_level)
-        else:
-            await super().volume_set(volume_level)
+            return
+        await super().volume_set(volume_level)
 
     async def power(self, powered: bool) -> None:
         """Send volume level (0..100) command to player."""
         if self.is_group:
             # redirect to set_group_power
             await self.set_group_power(powered)
-        else:
-            await super().power(powered)
+            return
+        await super().power(powered)
 
     async def set_group_power(self, powered: bool) -> None:
         """Send power command to the group player."""
         # a cast group player is a dedicated player which we need to power off
         if not powered:
             await self.entity.async_turn_off()
-        if powered and not self.group_powered:
-            # turn on (all) group clients if none are on now
-            await super().set_group_power(True)
-        else:
+            # turn off group childs if group turns off
             await super().set_group_power(False)
+        else:
+            await self.entity.async_turn_on()
 
     def _get_group_members(self) -> List[str]:
         """Get list of group members if this group is a cast group."""
@@ -598,6 +666,7 @@ class CastPlayer(HassPlayer):
                 member_uuid = str(UUID(member_uuid))
             if member_uuid == cast_uuid:
                 # filter out itself (happens with stereo pairs)
+                self._attr_is_stereo_pair = True
                 continue
             if entity_id := ent_reg.entities.get_entity_id(
                 (MP_DOMAIN, CAST_DOMAIN, member_uuid)
@@ -684,7 +753,7 @@ class SonosPlayer(HassPlayer):
         async def poll():
             if not self.entity.speaker.is_coordinator:
                 return
-            self.logger.debug("poll_media")
+            self.logger.debug("polling sonos media")
             await self.hass.loop.run_in_executor(None, self.entity.media.poll_media)
 
         self.hass.loop.call_later(delay, self.hass.create_task, poll())
@@ -921,10 +990,10 @@ class HassGroupPlayer(HassPlayer):
             if child_player := self.mass.players.get_player(player_id):
                 # resume queue if a child player turns on while this queue is playing
                 if child_player.powered:
-                    self.mass.create_task(self.active_queue.resume())
+                    self.hass.create_task(self.active_queue.resume())
                 # make sure that stop is called on the player
                 else:
-                    self.mass.create_task(child_player.stop())
+                    self.hass.create_task(child_player.stop())
 
         super().on_child_update(player_id, changed_keys)
 
