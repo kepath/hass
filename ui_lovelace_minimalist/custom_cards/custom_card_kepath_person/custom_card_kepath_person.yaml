@@ -1,5 +1,5 @@
 ---
-find_my_phone_button:
+find_my_phone_button_kepath:
   template:
     - "ulm_custom_card_kepath_person_language_variables"
   tap_action:
@@ -29,7 +29,6 @@ find_my_phone_button:
 
 custom_card_kepath_person:
   template:
-    - "icon_info_bg"
     - "ulm_translation_engine"
     - "ulm_custom_card_kepath_person_language_variables"
     - "custom_popup_kepath_person"
@@ -65,6 +64,15 @@ custom_card_kepath_person:
   name: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
   entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
   styles:
+    grid:
+      - grid-template-areas:
+          "'i i . zone' 
+          'i i . battery'
+          'n n n n' 
+          'l l l l'"          
+      - grid-template-columns: "1fr 1fr 1fr 1fr"
+      - grid-template-rows: "1fr 1fr 1fr 1fr"
+      - justify-items: "center"
     icon:
       - color: "rgba(var(--color-theme), 0.9)"
       - width: >
@@ -212,7 +220,7 @@ custom_popup_kepath_person:
                 style: *state
           - type: "custom:button-card"
             template:
-              - "find_my_phone_button"
+              - "find_my_phone_button_kepath"
             entity: "[[[ return variables.ulm_card_kepath_person_findmy_script; ]]]"
           - type: "map"
             aspect_ratio: "12x10"
