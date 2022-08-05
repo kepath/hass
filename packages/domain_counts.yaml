@@ -199,16 +199,18 @@ sensor:
 
     count_updates:
       #entity_id: sensor.date
-      friendly_name: Updates Available
-      unit_of_measurement: 'Count'
+      friendly_name: Add-on Updates Available
+      unit_of_measurement: 'Update Count'
       unique_id: available_update_domain_count
       icon_template: mdi:update
       value_template: >
+        {%- set update_count = 0 -%}
         {%- set domains = ['update'] -%}
         {%- for domain in domains -%}
           {%- for item in states[domain] if not item.state == "off" -%}
             {% if loop.first %}
-              {{loop.length}}
+              {% set update_count = loop.length %}}
             {% endif %}
           {%- endfor -%}
         {%- endfor -%}
+        {{update_count}}

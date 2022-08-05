@@ -19,54 +19,54 @@ views:
                 ulm_chip_temperature_outside: sensor.banbury_temperature
                 ulm_chip_temperature_weather: weather.met_office_banbury
                 entity_1:
-                  nav: "house"
-                  icon: "mdi:home"
-                  name: "House"
+                  nav: "/lovelace-minimalist-rooms"
+                  icon: "mdi:floor-plan"
+                  name: "Rooms"
                   color: "blue"
                 entity_2:
-                  nav: "lights"
-                  icon: "mdi:lightbulb"
-                  name: "Lights"
+                  nav: "/lovelace-minimalist-devices"
+                  icon: "mdi:devices"
+                  name: "Device"
                   color: "yellow"
                 entity_3:
-                  nav: "security"
-                  icon: "mdi:shield"
-                  name: Secure
+                  nav: "/lovelace-minimalist-network"
+                  icon: "mdi:lan"
+                  name: "Net"
                   color: "green"
                 entity_4:
-                  nav: "network"
-                  icon: "mdi:nas"
-                  name: Lab
+                  nav: "/lovelace-minimalist-downloads"
+                  icon: "mdi:download"
+                  name: "Down"
                   color: "purple"
                 entity_5:
-                  nav: "network"
-                  icon: "mdi:flask"
-                  name: Lab
+                  nav: "/lovelace-minimalist-security"
+                  icon: "mdi:shield"
+                  name: "Secure"
                   color: "red"
                 entity_6:
-                  nav: "house"
-                  icon: "mdi:home"
-                  name: "House"
-                  color: "red"
-                entity_7:
-                  nav: "lights"
-                  icon: "mdi:lightbulb"
-                  name: "Lights"
+                  nav: "/lovelace-minimalist-media"
+                  icon: "mdi:remote-tv"
+                  name: "Media"
                   color: "purple"
+                entity_7:
+                  nav: "/lovelace-minimalist-climate"
+                  icon: "mdi:home-thermometer"
+                  name: "Temp"
+                  color: "red"
                 entity_8:
-                  nav: "security"
-                  icon: "mdi:shield"
-                  name: Secure
+                  nav: "/lovelace-minimalist-energy"
+                  icon: "mdi:lightning-bolt"
+                  name: "Energy"
                   color: "green"
                 entity_9:
-                  nav: "network"
-                  icon: "mdi:nas"
-                  name: Lab
+                  nav: "/a0d7b954_grafana"
+                  icon: "si:grafana"
+                  name: "Data"
                   color: "yellow"
                 entity_10:
-                  nav: "network"
-                  icon: "mdi:flask"
-                  name: Lab
+                  nav: "/lovelace-minimalist-misc"
+                  icon: "mdi:link-variant"
+                  name: "Links"
                   color: "blue"
 
         - type: horizontal-stack
@@ -86,9 +86,9 @@ views:
                     - padding: "0 6px 0 12px"
                   item4:
                     - padding: "0 12px 0 6px"
-              custom_fields:
+              custom_fields: 
                 item1:
-                  card:
+                  card: 
                     type: custom:button-card
                     template: card_neekster_update
                     entity: update.home_assistant_core_update
@@ -110,23 +110,24 @@ views:
                 item3:
                   card:
                     type: 'custom:button-card'
-                    template: card_navigate_generic
+                    template: card_generic
                     entity: sensor.hacs
                     variables:
-                      ulm_card_navigate_path: "/hacs"
-                      ulm_card_generic_name: HACS Updates
+                      ulm_card_tap_action: "navigate"
+                      ulm_card_tap_navigate_path: "/hacs"
                 item4: 
                   card: 
                     type: 'custom:button-card'
-                    template: card_navigate_generic
+                    template: card_generic
                     entity: sensor.count_updates
                     variables:
-                      ulm_card_navigate_path: "/hassio/dashboard"
+                      ulm_card_tap_action: "navigate"
+                      ulm_card_tap_navigate_path: "/hassio/dashboard"
 
         - type: horizontal-stack
-          cards:
+          cards: 
             - type: "custom:button-card"
-              styles:
+              styles: 
                 grid:
                   - grid-template-areas: "'item1 item2 item3 item4'"
                   - grid-template-columns: "1fr 1fr 1fr 1fr"
@@ -141,60 +142,41 @@ views:
                   item4:
                     - padding: "0 12px 0 6px"
               custom_fields:
-                item1:
-                  card: 
+                item1: 
+                  card:
                     type: custom:button-card
-                    template: custom_card_kepath_person
-                    variables: 
+                    template: custom_card_kepath_person_info
+                    variables:
                       ulm_card_kepath_person_entity: person.kevin_thorn
                       ulm_card_kepath_person_wifi_tracker: device_tracker.kev_iphone_11_unifi
                       ulm_card_kepath_person_gps_tracker: device_tracker.repl_iphone_11
                       ulm_card_kepath_person_findmy_script: script.find_my_oneplus_6t
-                      ulm_card_kepath_person_use_entity_picture: false
-                      ulm_card_kepath_person_zones: group.zones
+                      ulm_card_kepath_person_driving_entity: binary_sensor.binary_state_is_kev_driving
+                      ulm_card_kepath_person_commute_entity: sensor.eta_to_home
                 item2:
                   card:
                     type: custom:button-card
-                    template: custom_card_kepath_person
+                    template: custom_card_kepath_person_info
                     variables: 
                       ulm_card_kepath_person_entity: person.julia_thorn
                       ulm_card_kepath_person_wifi_tracker: device_tracker.ju_iphone_8_unifi
                       ulm_card_kepath_person_gps_tracker: device_tracker.julia_s_iphone_6
                       ulm_card_kepath_person_findmy_script: script.find_my_oneplus_6t
-                      ulm_card_kepath_person_use_entity_picture: false
-                      ulm_card_kepath_person_zones:
-                        - zone.repl_group
-                        - zone.bloxham_school
-                        - zone.jus_parents
-                        - zone.kevs_parents
                 item3:
                   card:
                     type: custom:button-card
-                    template: custom_card_kepath_person
-                    variables: 
+                    template: custom_card_kepath_person_info
+                    variables:
                       ulm_card_kepath_person_entity: person.daniel_thorn
                       ulm_card_kepath_person_wifi_tracker: device_tracker.iphone_12_dan_unifi
                       ulm_card_kepath_person_gps_tracker: device_tracker.dans_iphone_12_2
                       ulm_card_kepath_person_findmy_script: script.find_my_oneplus_6t
-                      ulm_card_kepath_person_use_entity_picture: false
-                      ulm_card_kepath_person_zones:
-                        - zone.repl_group
-                        - zone.bloxham_school
-                        - zone.jus_parents
-                        - zone.kevs_parents
                 item4:
                   card:
-                    type: custom:button-card
-                    template: custom_card_kepath_person
+                    type: "custom:button-card"
+                    template: custom_card_kepath_person_info
                     variables: 
                       ulm_card_kepath_person_entity: person.emily_thorn
-                      ulm_card_kepath_person_wifi_tracker: device_tracker.emilys_ipad_4th_gen_unifi
-                      ulm_card_kepath_person_gps_tracker: device_tracker.emilys_ipad_air_4th_gen
+                      ulm_card_kepath_person_wifi_tracker: device_tracker.unifi_ee_89_73_8a_bf_4a_default
+                      ulm_card_kepath_person_gps_tracker: device_tracker.emilys_iphone_7
                       ulm_card_kepath_person_findmy_script: script.find_my_oneplus_6t
-                      ulm_card_kepath_person_use_entity_picture: false
-                      ulm_card_kepath_person_zones:
-                        - zone.repl_group
-                        - zone.bloxham_school
-                        - zone.jus_parents
-                        - zone.kevs_parents
-                        - zone.kks_house
