@@ -146,33 +146,47 @@ custom_card_kepath_person_info:
       [[[
         var zones = variables.ulm_card_kepath_person_zones;
         var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
-        if ((person_location == 'home') || (person_location == 'away') || (person_location == 'not_home')) {
-          return
-        } else {
-          var color = "var(--primary-background-color)"
-          if (person_location == 'unknown') || (person_location == 'unavailable') {
-            var icon = 'mdi:account-alert'
-          } else if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
-            var icon = 'mdi:car'
-            var commute = states[variables.ulm_card_kepath_person_commute_entity]?.state;
-            var color = "rgba(var(--color-green),1)";
+        var color = "var(--primary-background-color)";
+        var returnIcon = false;
+
+        if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
+          var commute = states[variables.ulm_card_kepath_person_commute_entity]?.state;
+          if (!isNaN(commute)) {
+            var icon = "mdi:car"
+            color = "rgba(var(--color-green),1)";
             if (commute > 60) {
               color = "rgba(var(--color-red),1)"
             }            
             if (commute > 30) {
               color = "rgba(var(--color-yellow),1)"
             }
-          } else {
-            var icon = "mdi:account-question"
-            for (const item of zones){
-              if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "_").toLowerCase()){
-                if (states[item].attributes.icon != null) {
-                  var icon = states[item].attributes.icon;
-                }
-              }
-            }            
+            returnIcon = true;
           }
+        } else {
+          if ((person_location == 'unknown') || (person_location == 'unavailable')) {
+            var icon = 'mdi:account-alert'
+            returnIcon = true;
+          } else {
+            if ((person_location == 'home') || (person_location == 'away') || (person_location == 'not_home')) {
+              return
+            } else {
+              var icon = "mdi:account-question"
+              returnIcon = true;
+              for (const item of zones){
+                if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "_").toLowerCase()){
+                  if (states[item].attributes.icon != null) {
+                    var icon = states[item].attributes.icon;
+                  }
+                }
+              } 
+            }         
+          }          
+        }
+
+        if (returnIcon) {
           return '<ha-icon icon="' + icon + '" style="width: 10px; height: 10px; color: ' + color + ';"></ha-icon>';
+        } else {
+          retrurn
         }
       ]]]
     battery: >
