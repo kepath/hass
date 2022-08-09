@@ -10,7 +10,7 @@ import async_timeout
 from aiohttp.hdrs import AUTHORIZATION
 from homeassistant.components.backup import BackupManager
 
-from . import DEFAULT_BACKUP_TIMEOUT_SECONDS
+from .const import DEFAULT_BACKUP_TIMEOUT_SECONDS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -185,7 +185,7 @@ class BackupHandler(HandlerBase):
     ):
         backup = await self._manager.get_backup(slug)
         if backup:
-            shutil.copy(backup.path, destination)
+            shutil.copyfile(backup.path, destination)
         else:
             _LOGGER.error(
                 "Cannot move backup (%s) to '%s' as it does not exist.",
