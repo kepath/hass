@@ -165,6 +165,7 @@ views:
           ulm_card_navigate_icon: mdi:sony-playstation
       - type: custom:button-card
         template: edge
+
   - title: Printer
     icon: mdi:printer
     theme: minimalist-mobile
@@ -239,8 +240,19 @@ views:
         entity: sensor.mfc_j870dw_uptime
         #value_template: '{{int((as_timestamp(now()) - as_timestamp(states("sensor.mfc_j870dw_uptime"))) / 86400)}} days'
         #label:  #use network?
+      - type: 'custom:button-card'
+        template: card_generic_swap
+        entity: sensor.brother_mfc_j870dw_printer_unifi_rx
+        value_template: >
+          [[[
+            
+          ]]]
+      - type: 'custom:button-card'
+        template: card_generic_swap
+        entity: sensor.brother_mfc_j870dw_printer_unifi_tx
       - type: custom:button-card
         template: edge
+
   - title: NAS
     icon: mdi:nas
     theme: minimalist-mobile
@@ -468,6 +480,7 @@ views:
       - type: 'custom:button-card'
         template: card_input_boolean
         entity: button.diskstation_shutdown
+
   - title: NUT (UPS)
     icon: mdi:home-battery
     theme: minimalist-mobile
