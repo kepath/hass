@@ -7,318 +7,321 @@ views:
     cards: 
       - type: vertical-stack
         cards: 
-          - type: custom:button-card
-            template: custom_card_irmajavi_entities
-            variables: 
-              ulm_custom_card_irmajavi_entities_entity_1: sensor.diskstation_drive_1_temperature
-              ulm_custom_card_irmajavi_entities_entity_2: sensor.diskstation_drive_2_temperature
-              ulm_custom_card_irmajavi_entities_entity_3: sensor.diskstation_drive_3_temperature
-              ulm_custom_card_irmajavi_entities_entity_4: sensor.diskstation_drive_4_temperature
-              ulm_custom_card_irmajavi_entities_name_1: Drive 1 Temp
-              ulm_custom_card_irmajavi_entities_name_2: Drive 2 Temp
-              ulm_custom_card_irmajavi_entities_name_3: Drive 3 Temp
-              ulm_custom_card_irmajavi_entities_name_4: Drive 4 Temp
-              ulm_custom_card_irmajavi_entities_name: DSM Drive 1 Status
-              ulm_custom_card_irmajavi_entities: sensor.diskstation_volume_1_status
+      #     - type: custom:button-card
+      #       template: custom_card_irmajavi_entities
+      #       variables: 
+      #         ulm_custom_card_irmajavi_entities_entity_1: sensor.diskstation_drive_1_temperature
+      #         ulm_custom_card_irmajavi_entities_entity_2: sensor.diskstation_drive_2_temperature
+      #         ulm_custom_card_irmajavi_entities_entity_3: sensor.diskstation_drive_3_temperature
+      #         ulm_custom_card_irmajavi_entities_entity_4: sensor.diskstation_drive_4_temperature
+      #         ulm_custom_card_irmajavi_entities_name_1: Drive 1 Temp
+      #         ulm_custom_card_irmajavi_entities_name_2: Drive 2 Temp
+      #         ulm_custom_card_irmajavi_entities_name_3: Drive 3 Temp
+      #         ulm_custom_card_irmajavi_entities_name_4: Drive 4 Temp
+      #         ulm_custom_card_irmajavi_entities_name: DSM Drive 1 Status
+      #         ulm_custom_card_irmajavi_entities: sensor.diskstation_volume_1_status
 
-          - type: "custom:button-card"
-            template: "custom_card_apexcharts"
-            variables:
-              chart_type: "radialBar"
-              graph_span: "1d"
-              entity_1:
-                entity_id: "sensor.speedtest_download"
-                icon: ""
-                name: "Speedtest Download"
-                color: "blue"
-                max_value: 55
-              entity_2:
-                entity_id: "sensor.speedtest_upload"
-                icon: ""
-                name: "Speedtest Upload"
-                color: "yellow"
-                max_value: 20
-              entity_3:
-                entity_id: "sensor.speedtest_ping"
-                icon: ""
-                name: "Speedtest Ping"
-                color: "green"
-                max_value: 100
+      #     - type: "custom:button-card"
+      #       template: "custom_card_apexcharts"
+      #       variables:
+      #         chart_type: "radialBar"
+      #         graph_span: "1d"
+      #         entity_1:
+      #           entity_id: "sensor.speedtest_download"
+      #           icon: ""
+      #           name: "Speedtest Download"
+      #           color: "blue"
+      #           max_value: 55
+      #         entity_2:
+      #           entity_id: "sensor.speedtest_upload"
+      #           icon: ""
+      #           name: "Speedtest Upload"
+      #           color: "yellow"
+      #           max_value: 20
+      #         entity_3:
+      #           entity_id: "sensor.speedtest_ping"
+      #           icon: ""
+      #           name: "Speedtest Ping"
+      #           color: "green"
+      #           max_value: 100
 
-          - type: custom:button-card
-            template: custom_card_irmajavi_speedtest
-            variables:
-              ulm_custom_card_irmajavi_speedtest_download_speed_entity: sensor.speedtest_download
-              ulm_custom_card_irmajavi_speedtest_upload_speed_entity: sensor.speedtest_upload
-              ulm_custom_card_irmajavi_speedtest_color: blue
-              ulm_custom_card_irmajavi_speedtest_router_name: Unifi
-              ulm_custom_card_irmajavi_speedtest_router_model: UDM Pro
+      #     - type: custom:button-card
+      #       template: custom_card_irmajavi_speedtest
+      #       variables:
+      #         ulm_custom_card_irmajavi_speedtest_download_speed_entity: sensor.speedtest_download
+      #         ulm_custom_card_irmajavi_speedtest_upload_speed_entity: sensor.speedtest_upload
+      #         ulm_custom_card_irmajavi_speedtest_color: blue
+      #         ulm_custom_card_irmajavi_speedtest_router_name: Unifi
+      #         ulm_custom_card_irmajavi_speedtest_router_model: UDM Pro
 
-          - type: "custom:button-card"
-            template: custom_card_bar_card
-            variables:
-              ulm_custom_card_bar_card_entity: sensor.diskstation_volume_1_volume_used
-              ulm_custom_card_bar_card_name: DSM Volume 1 Usage
-              ulm_custom_card_bar_card_value: true
-              ulm_custom_card_bar_card_indicator: true
-              ulm_custom_card_bar_card_color: "var(--google-green)"
-              # ulm_custom_card_bar_card_min: 10
-              # ulm_custom_card_bar_card_max: 20
+      #     - type: "custom:button-card"
+      #       template: custom_card_bar_card
+      #       variables:
+      #         ulm_custom_card_bar_card_entity: sensor.diskstation_volume_1_volume_used
+      #         ulm_custom_card_bar_card_name: DSM Volume 1 Usage
+      #         ulm_custom_card_bar_card_value: true
+      #         ulm_custom_card_bar_card_indicator: true
+      #         ulm_custom_card_bar_card_color: "var(--google-green)"
+      #         # ulm_custom_card_bar_card_min: 10
+      #         # ulm_custom_card_bar_card_max: 20
 
-          # - type: "custom:button-card"
-          #   entity: "camera.back_g3_flex_medium"
-          #   template: "custom_card_camera"
-          #   show_icon: false #True if you set ulm_custom_card_camera_title: true
-          #   variables:
-          #     ulm_custom_card_camera_title: false
-          #     ulm_custom_card_camera_name: "Back"
-          #     # ulm_custom_card_camera_label: "label"
+      #     # - type: "custom:button-card"
+      #     #   entity: "camera.back_g3_flex_medium"
+      #     #   template: "custom_card_camera"
+      #     #   show_icon: false #True if you set ulm_custom_card_camera_title: true
+      #     #   variables:
+      #     #     ulm_custom_card_camera_title: false
+      #     #     ulm_custom_card_camera_name: "Back"
+      #     #     # ulm_custom_card_camera_label: "label"
 
-          - type: 'custom:button-card'
-            template: custom_card_device_tracker
-            entity: group.active_devices_tracker_emily
-            variables:
-              ulm_custom_card_device_tracker_icon: mdi:cellphone
-              ulm_custom_card_device_tracker_tracker_1_entity: device_tracker.emily_s_iphone_xs_family_unifi
-              ulm_custom_card_device_tracker_tracker_1_type: 'lan'
-              ulm_custom_card_device_tracker_tracker_2_entity: device_tracker.emilys_ipad_4th_gen_unifi
-              ulm_custom_card_device_tracker_tracker_2_type: 'lan'
+      #     - type: 'custom:button-card'
+      #       template: custom_card_device_tracker
+      #       entity: group.active_devices_tracker_emily
+      #       variables:
+      #         ulm_custom_card_device_tracker_icon: mdi:cellphone
+      #         ulm_custom_card_device_tracker_tracker_1_entity: device_tracker.emily_s_iphone_xs_family_unifi
+      #         ulm_custom_card_device_tracker_tracker_1_type: 'lan'
+      #         ulm_custom_card_device_tracker_tracker_2_entity: device_tracker.emilys_ipad_4th_gen_unifi
+      #         ulm_custom_card_device_tracker_tracker_2_type: 'lan'
 
-          - type: "custom:button-card"
-            template: "card_esh_welcome"
-            triggers_update: "input_boolean.welcome_toggle"
-            variables:
-              ulm_card_esh_welcome_collapse: input_boolean.welcome_toggle
-              ulm_weather: "weather.met_office_banbury_daily"
-              entity_1:
-                nav: "house"
-                icon: "mdi:home"
-                name: "House"
-                color: "blue"
-              entity_2:
-                nav: "lights"
-                icon: "mdi:lightbulb"
-                name: "Lights"
-                color: "yellow"
-              entity_3:
-                nav: "security"
-                icon: "mdi:shield"
-                name: Secure
-                color: "green"
-              entity_4:
-                nav: "network"
-                icon: "mdi:nas"
-                name: Lab
-                color: "purple"
-              entity_5:
-                nav: "network"
-                icon: "mdi:flask"
-                name: Lab
-                color: "red"
+      #     - type: "custom:button-card"
+      #       template: "card_esh_welcome"
+      #       triggers_update: "input_boolean.welcome_toggle"
+      #       variables:
+      #         ulm_card_esh_welcome_collapse: input_boolean.welcome_toggle
+      #         ulm_weather: "weather.met_office_banbury_daily"
+      #         entity_1:
+      #           nav: "house"
+      #           icon: "mdi:home"
+      #           name: "House"
+      #           color: "blue"
+      #         entity_2:
+      #           nav: "lights"
+      #           icon: "mdi:lightbulb"
+      #           name: "Lights"
+      #           color: "yellow"
+      #         entity_3:
+      #           nav: "security"
+      #           icon: "mdi:shield"
+      #           name: Secure
+      #           color: "green"
+      #         entity_4:
+      #           nav: "network"
+      #           icon: "mdi:nas"
+      #           name: Lab
+      #           color: "purple"
+      #         entity_5:
+      #           nav: "network"
+      #           icon: "mdi:flask"
+      #           name: Lab
+      #           color: "red"
 
-          - type: "custom:button-card"
-            template:
-              - card_scenes
-            variables:
-              entity_1:
-                nav: "house"
-                icon: "mdi:home"
-                name: "House"
-                icon_color: "blue"
-                bg_color: "blue"
-              entity_2:
-                nav: "lights"
-                icon: "mdi:lightbulb"
-                name: "Lights"
-                icon_color: "yellow"
-                bg_color: "yellow"
-              entity_3:
-                nav: "security"
-                icon: "mdi:shield"
-                name: Secure
-                icon_color: "green"
-                bg_color: "green"
-              entity_4:
-                nav: "network"
-                icon: "mdi:nas"
-                name: Lab
-                icon_color: "purple"
-                bg_color: "purple"
-              entity_5:
-                nav: "network"
-                icon: "mdi:flask"
-                name: Lab
-                icon_color: "red"
-                bg_color: "red"
+      #     - type: "custom:button-card"
+      #       template:
+      #         - card_scenes
+      #       variables:
+      #         entity_1:
+      #           nav: "house"
+      #           icon: "mdi:home"
+      #           name: "House"
+      #           icon_color: "blue"
+      #           bg_color: "blue"
+      #         entity_2:
+      #           nav: "lights"
+      #           icon: "mdi:lightbulb"
+      #           name: "Lights"
+      #           icon_color: "yellow"
+      #           bg_color: "yellow"
+      #         entity_3:
+      #           nav: "security"
+      #           icon: "mdi:shield"
+      #           name: Secure
+      #           icon_color: "green"
+      #           bg_color: "green"
+      #         entity_4:
+      #           nav: "network"
+      #           icon: "mdi:nas"
+      #           name: Lab
+      #           icon_color: "purple"
+      #           bg_color: "purple"
+      #         entity_5:
+      #           nav: "network"
+      #           icon: "mdi:flask"
+      #           name: Lab
+      #           icon_color: "red"
+      #           bg_color: "red"
 
-          - type: custom:button-card
-            template: card_neekster_update
-            entity: update.home_assistant_core_update
-            variables:
-              ulm_card_neekster_update_enable_controls: true
-              ulm_card_neekster_update_collapsible: false
-              ulm_card_neekster_update_horizontal: false
-              ulm_card_neekster_update_narrow_buttons: true
+      #     - type: custom:button-card
+      #       template: card_neekster_update
+      #       entity: update.home_assistant_core_update
+      #       variables:
+      #         ulm_card_neekster_update_enable_controls: true
+      #         ulm_card_neekster_update_collapsible: false
+      #         ulm_card_neekster_update_horizontal: false
+      #         ulm_card_neekster_update_narrow_buttons: true
 
-          - type: custom:button-card
-            template: card_neekster_update
-            entity: update.home_assistant_supervisor_update
-            variables:
-              ulm_card_neekster_update_enable_controls: true
-              ulm_card_neekster_update_collapsible: false
-              ulm_card_neekster_update_horizontal: false
-              ulm_card_neekster_update_narrow_buttons: true
+      #     - type: custom:button-card
+      #       template: card_neekster_update
+      #       entity: update.home_assistant_supervisor_update
+      #       variables:
+      #         ulm_card_neekster_update_enable_controls: true
+      #         ulm_card_neekster_update_collapsible: false
+      #         ulm_card_neekster_update_horizontal: false
+      #         ulm_card_neekster_update_narrow_buttons: true
 
-          - type: custom:button-card
-            template: card_neekster_update
-            entity: update.esphome_update_2
-            variables:
-              ulm_card_neekster_update_enable_controls: true
-              ulm_card_neekster_update_collapsible: true
-              ulm_card_neekster_update_horizontal: false
-              ulm_card_neekster_update_narrow_buttons: true
+      #     - type: custom:button-card
+      #       template: card_neekster_update
+      #       entity: update.esphome_update_2
+      #       variables:
+      #         ulm_card_neekster_update_enable_controls: true
+      #         ulm_card_neekster_update_collapsible: true
+      #         ulm_card_neekster_update_horizontal: false
+      #         ulm_card_neekster_update_narrow_buttons: true
 
-          - type: custom:button-card
-            template: custom_card_httpedo13_sun
-            variables:
-              language: 'en' 
+      #     - type: custom:button-card
+      #       template: custom_card_httpedo13_sun
+      #       variables:
+      #         language: 'en' 
 
-          - type: custom:button-card
-            template: custom_card_httpedo13_thermostat_with_buttons
-            variables:
-              entity: climate.nest_bottom_floor
-              name: Nest Ground Floor
+      #     - type: custom:button-card
+      #       template: custom_card_httpedo13_thermostat_with_buttons
+      #       variables:
+      #         entity: climate.nest_bottom_floor
+      #         name: Nest Ground Floor
 
-          - type: "custom:button-card"
-            template: custom_card_kepath_person
-            variables: 
-              ulm_card_kepath_person_entity: person.kevin_thorn
-              ulm_card_kepath_person_wifi_tracker: device_tracker.repl_iphone_11
-              ulm_card_kepath_person_gps_tracker: device_tracker.kevin_iphone_ha_app
-              ulm_card_kepath_person_findmy_script: script.find_my_oneplus_6t
-              ulm_card_kepath_person_use_entity_picture: false
-              ulm_card_kepath_person_zones:
-                - zone.repl_group
-                - zone.bloxham_school
-                - zone.jus_parents
-                - zone.kevs_parents
+      #     # - type: "custom:button-card"
+      #     #   template: custom_card_kepath_person
+      #     #   variables: 
+      #     #     ulm_card_kepath_person_entity: person.kevin_thorn
+      #     #     ulm_card_kepath_person_wifi_tracker: device_tracker.repl_iphone_11
+      #     #     ulm_card_kepath_person_gps_tracker: device_tracker.kevin_iphone_ha_app
+      #     #     ulm_card_kepath_person_findmy_script: script.find_my_oneplus_6t
+      #     #     ulm_card_kepath_person_use_entity_picture: false
+      #     #     ulm_card_kepath_person_zones:
+      #     #       - zone.repl_group
+      #     #       - zone.bloxham_school
+      #     #       - zone.jus_parents
+      #     #       - zone.kevs_parents
 
-          - type: custom:button-card
-            template: card_light_colorpick
-            entity: light.tybf82abce93da177c79kymc
-            variables:
-              ulm_card_light_slider_horizontal_colors_name: Back-door Light
-              ulm_card_light_slider_horizontal_colors_transition: 1
+      #     - type: custom:button-card
+      #       template: card_light_colorpick
+      #       entity: light.back_door_smartbulb
+      #       variables:
+      #         ulm_card_light_slider_horizontal_colors_name: Back-door Light
+      #         ulm_card_light_slider_horizontal_colors_transition: 1
 
-          - type: "custom:button-card"
-            template: custom_card_more_power_outlet
-            variables:
-              custom_card_more_power_outlet_power_sensor: sensor.zigbee_plug_washing_machine_power
-              custom_card_more_power_outlet_energy_sensor: sensor.zigbee_plug_washing_machine_energy
-              # custom_card_more_power_outlet_time_sensor: sensor.time_immersion_heater_heating
-            entity: switch.zigbee_plug_washing_machine
-            name: Washing Machine
+      #     - type: "custom:button-card"
+      #       template: custom_card_more_power_outlet
+      #       variables:
+      #         custom_card_more_power_outlet_power_sensor: sensor.zigbee_plug_washing_machine_power
+      #         custom_card_more_power_outlet_energy_sensor: sensor.zigbee_plug_washing_machine_energy
+      #         # custom_card_more_power_outlet_time_sensor: sensor.time_immersion_heater_heating
+      #       entity: switch.zigbee_plug_washing_machine
+      #       name: Washing Machine
 
-          - type: "custom:button-card"
-            template: custom_card_mpse_gauge
-            entity: sensor.big_pc_win11_memory_usage
-            variables:
-              ulm_card_mpse_gauge_min: 0
-              ulm_card_mpse_gauge_max: 100
+      #     - type: "custom:button-card"
+      #       template: custom_card_mpse_gauge
+      #       entity: sensor.big_pc_win11_memory_usage
+      #       variables:
+      #         ulm_card_mpse_gauge_min: 0
+      #         ulm_card_mpse_gauge_max: 100
 
-          - type: "custom:button-card"
-            template: custom_card_mpse_printer
-            entity: sensor.mfc_j870dw_status
-            variables:
-              ulm_card_printer_name: Brother MFC-J870DW Printer
-              ulm_card_printer_black_name: sensor.mfc_j870dw_black_ink_remaining
-              ulm_card_printer_yellow_name: sensor.mfc_j870dw_yellow_ink_remaining
-              ulm_card_printer_cyan_name: sensor.mfc_j870dw_cyan_ink_remaining
-              ulm_card_printer_magenta_name: sensor.mfc_j870dw_magenta_ink_remaining
+      #     - type: "custom:button-card"
+      #       template: custom_card_mpse_printer
+      #       entity: sensor.mfc_j870dw_status
+      #       variables:
+      #         ulm_card_printer_name: Brother MFC-J870DW Printer
+      #         ulm_card_printer_black_name: sensor.mfc_j870dw_black_ink_remaining
+      #         ulm_card_printer_yellow_name: sensor.mfc_j870dw_yellow_ink_remaining
+      #         ulm_card_printer_cyan_name: sensor.mfc_j870dw_cyan_ink_remaining
+      #         ulm_card_printer_magenta_name: sensor.mfc_j870dw_magenta_ink_remaining
 
-          - type: "custom:button-card"
-            template: custom_card_mpse_wifisignal
-            entity: sensor.bed_a_light_rssi
+      #     - type: "custom:button-card"
+      #       template: custom_card_mpse_wifisignal
+      #       entity: sensor.bed_a_light_rssi
 
-          - type: "custom:button-card"
-            template:
-              - custom_card_nas
-            variables:
-              ulm_custom_card_nas_sensor: sensor.diskstation_volume_1_volume_used
-              ulm_custom_card_nas_text: "Diskstation Volume 1 Usage"
-              ulm_custom_cad_nas_unit: "&#37;"
+      #     - type: "custom:button-card"
+      #       template:
+      #         - custom_card_nas
+      #       variables:
+      #         ulm_custom_card_nas_sensor: sensor.diskstation_volume_1_volume_used
+      #         ulm_custom_card_nas_text: "Diskstation Volume 1 Usage"
+      #         ulm_custom_cad_nas_unit: "&#37;"
 
-          - type: "custom:button-card"
-            template: "custom_card_nik_nas"
-            entity: button.diskstation_reboot
-            variables:
-              graph_span: "1h"
-              chart_type: "line"
-              entity_1:
-                entity_id: "sensor.diskstation_temperature"
-                icon: ''
-                name: "Temp"
-                color: "yellow"
-                max_value: 100
-              entity_2:
-                entity_id: "sensor.diskstation_memory_usage_real"
-                icon: ''
-                name: "Memory"
-                color: "blue"
-                max_value: 100
-              entity_3: 
-                entity_id: "sensor.diskstation_cpu_utilization_total"
-                icon: ''
-                name: "CPU"
-                color: "green"
-                max_value: 100
-              entity_4:
-                entity_id: "sensor.diskstation_volume_1_volume_used"
-                icon: "mdi:harddisk"
-                name: "Disk"
-                color: "red"
-                max_value: 100
+      #     - type: "custom:button-card"
+      #       template: "custom_card_nik_nas"
+      #       entity: button.diskstation_reboot
+      #       variables:
+      #         graph_span: "1h"
+      #         chart_type: "line"
+      #         entity_1:
+      #           entity_id: "sensor.diskstation_temperature"
+      #           icon: ''
+      #           name: "Temp"
+      #           color: "yellow"
+      #           max_value: 100
+      #         entity_2:
+      #           entity_id: "sensor.diskstation_memory_usage_real"
+      #           icon: ''
+      #           name: "Memory"
+      #           color: "blue"
+      #           max_value: 100
+      #         entity_3: 
+      #           entity_id: "sensor.diskstation_cpu_utilization_total"
+      #           icon: ''
+      #           name: "CPU"
+      #           color: "green"
+      #           max_value: 100
+      #         entity_4:
+      #           entity_id: "sensor.diskstation_volume_1_volume_used"
+      #           icon: "mdi:harddisk"
+      #           name: "Disk"
+      #           color: "red"
+      #           max_value: 100
 
-          # - type: "custom:button-card"
-          #   template: "custom_card_nik_tablet"
-          #   variables:
-          #     ulm_custom_card_nik_tablet_main: sensor.amazon_fire_hd_8_tablet_unifi_uptime
-          #     ulm_custom_card_nik_tablet_name: "Tablet 1P"
-          #     ulm_custom_card_nik_tablet_battery: sensor.kfkawi_battery_level
-          #     ulm_custom_card_nik_tablet_battery_name: "Battery"
-          #     ulm_custom_card_nik_tablet_button1: switch.sonoff_tablet_1p
-          #     ulm_custom_card_nik_tablet_button2: switch.tablet_1p_motion_detection
-          #     ulm_custom_card_nik_tablet_button3: light.tablet_1p_screen
-          #     ulm_custom_card_nik_tablet_restart: button.tablet_1p_restart_browser
-          #     ulm_custom_card_nik_tablet_reload: button.tablet_1p_load_start_url
-          #     ulm_custom_card_nik_tablet_maintenance: switch.tablet_1p_maintenance_mode
-          #     ulm_custom_card_nik_tablet_par1: sensor.tablet_1p_ram_free_memory
-          #     ulm_custom_card_nik_tablet_par1_name: "RAM"
-          #     ulm_custom_card_nik_tablet_par2: sensor.tablet_1p_internal_storage_free_space
-          #     ulm_custom_card_nik_tablet_par2_name: "Disk"
-          #     ulm_custom_card_nik_tablet_par3: binary_sensor.tablet_1p_plugged_in
-          #     ulm_custom_card_nik_tablet_par3_name: "Power"
+      #     # - type: "custom:button-card"
+      #     #   template: "custom_card_nik_tablet"
+      #     #   variables:
+      #     #     ulm_custom_card_nik_tablet_main: sensor.amazon_fire_hd_8_tablet_unifi_uptime
+      #     #     ulm_custom_card_nik_tablet_name: "Tablet 1P"
+      #     #     ulm_custom_card_nik_tablet_battery: sensor.kfkawi_battery_level
+      #     #     ulm_custom_card_nik_tablet_battery_name: "Battery"
+      #     #     ulm_custom_card_nik_tablet_button1: switch.sonoff_tablet_1p
+      #     #     ulm_custom_card_nik_tablet_button2: switch.tablet_1p_motion_detection
+      #     #     ulm_custom_card_nik_tablet_button3: light.tablet_1p_screen
+      #     #     ulm_custom_card_nik_tablet_restart: button.tablet_1p_restart_browser
+      #     #     ulm_custom_card_nik_tablet_reload: button.tablet_1p_load_start_url
+      #     #     ulm_custom_card_nik_tablet_maintenance: switch.tablet_1p_maintenance_mode
+      #     #     ulm_custom_card_nik_tablet_par1: sensor.tablet_1p_ram_free_memory
+      #     #     ulm_custom_card_nik_tablet_par1_name: "RAM"
+      #     #     ulm_custom_card_nik_tablet_par2: sensor.tablet_1p_internal_storage_free_space
+      #     #     ulm_custom_card_nik_tablet_par2_name: "Disk"
+      #     #     ulm_custom_card_nik_tablet_par3: binary_sensor.tablet_1p_plugged_in
+      #     #     ulm_custom_card_nik_tablet_par3_name: "Power"
 
-          - type: "custom:button-card"
-            template: card_kepath_person_info
-            variables:
-              ulm_card_kepath_person_entity: person.kevin_thorn
-              ulm_card_kepath_person_use_entity_picture: true
-              ulm_card_kepath_person_zone1: zone.bloxham_school
-              ulm_card_kepath_person_zone2: zone.jus_parents
-              ulm_multiline: true 
-              ulm_card_kepath_person_driving_entity: binary_sensor.binary_state_is_kev_driving
-              ulm_card_kepath_person_commute_entity: sensor.eta_to_home
-              ulm_card_kepath_person_battery_entity: sensor.iphone_battery_level
-              ulm_card_kepath_person_battery_state_entity: sensor.iphone_battery_state
+      #     # - type: "custom:button-card"
+      #     #   template: card_kepath_person_info
+      #     #   variables:
+      #     #     ulm_card_kepath_person_entity: person.kevin_thorn
+      #     #     ulm_card_kepath_person_use_entity_picture: true
+      #     #     ulm_card_kepath_person_zone1: zone.bloxham_school
+      #     #     ulm_card_kepath_person_zone2: zone.jus_parents
+      #     #     ulm_multiline: true 
+      #     #     ulm_card_kepath_person_driving_entity: binary_sensor.binary_state_is_kev_driving
+      #     #     ulm_card_kepath_person_commute_entity: sensor.eta_to_home
+      #     #     ulm_card_kepath_person_battery_entity: sensor.iphone_battery_level
+      #     #     ulm_card_kepath_person_battery_state_entity: sensor.iphone_battery_state
 
-          - type: "custom:button-card"
-            template: card_weather
-            entity: weather.met_office_banbury
-            variables:
-              ulm_card_weather_name: " "
-              # ulm_card_weather_backdrop:
-              #   fade: true
-              # ulm_card_weather_primary_info: 
-              #   - sensor.banbury_wind_speed
-              #   - sensor.banbury_probability_of_precipitation
+      #     - type: "custom:button-card"
+      #       template: card_weather
+      #       entity: weather.met_office_banbury
+      #       variables:
+      #         ulm_card_weather_name: " "
+      #         # ulm_card_weather_backdrop:
+      #         #   fade: true
+      #         # ulm_card_weather_primary_info: 
+      #         #   - sensor.banbury_wind_speed
+      #         #   - sensor.banbury_probability_of_precipitation
+
+          - type: custom:light-entity-card
+            entity: light.back_door_smartbulb

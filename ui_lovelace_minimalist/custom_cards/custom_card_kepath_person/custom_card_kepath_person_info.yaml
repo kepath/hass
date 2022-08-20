@@ -27,9 +27,10 @@ custom_card_kepath_person_info:
     ulm_card_kepath_person_driving_entity: ""
     ulm_card_kepath_person_commute_entity: ""
   triggers_update: "all"
-  show_label: true
-  show_name: false
-  label: >
+  show_label: false
+  show_name: false 
+  label: ""
+  tooltip: >
     [[[
       var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
       if (variables.ulm_address){
@@ -65,10 +66,12 @@ custom_card_kepath_person_info:
             var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
             if (person_location == 'home') {
               return "rgba(var(--color-blue),1)";
-            } else if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'unknown') || (person_location == 'unavailable')) {
+            } else if ((person_location == 'away') || (person_location == 'not_home')) {
               return "rgba(var(--color-red),1)";
-            } else {
+            } else if ((person_location == 'unknown') || (person_location == 'unavailable')) {
               return "rgba(var(--color-theme),1)";
+            } else {
+              return "rgba(var(--color-yellow),1)";
             }
           ]]]
       - width: "20px"
@@ -79,20 +82,14 @@ custom_card_kepath_person_info:
             var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
             if (person_location == 'home') {
               return "rgba(var(--color-blue),0.2)";
-            } else if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'unknown') || (person_location == 'unavailable')) {
+            } else if ((person_location == 'away') || (person_location == 'not_home')) {
               return "rgba(var(--color-red),0.2)";
-            } else {
+            } else if ((person_location == 'unknown') || (person_location == 'unavailable')) {
               return "rgba(var(--color-theme),0.2)";
+            } else {
+              return "rgba(var(--color-yellow),0.2)";
             }
           ]]]
-    label:
-      - justify-self: "start"
-      - align-self: "start"
-      - font-weight: "bolder"
-      - font-size: "12px"
-      - filter: "opacity(40%)"
-      - margin-top: "6px"
-      - margin-left: "0"
     custom_fields:
       notification:
         - border-radius: "50%"
@@ -107,21 +104,25 @@ custom_card_kepath_person_info:
         - background-color: >
             [[[
               var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
-              if (states[variables.ulm_card_kepath_person_driving_entity]?.state === "on") {
-                return "rgba(var(--color-red),1)";
-              } else if ((person_location == 'unknown') || (person_location == 'unavailable')) {
-                return "rgba(var(--color-grey),1)";
+              var color = "rgba(var(--color-red),1)";
+              if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
+                var commute = states[variables.ulm_card_kepath_person_commute_entity]?.state;
+                if (!isNaN(commute)) {
+                  color = "rgba(var(--color-green),1)";
+                  if (commute > 60) {
+                    color = "rgba(var(--color-red),1)";
+                  }            
+                  if (commute > 30) {
+                    color = "rgba(var(--color-yellow),1)";
+                  }
+                }
               } else {
-                return "rgba(var(--color-yellow),1)";
+                if ((person_location == 'unknown') || (person_location == 'unavailable')) {
+                  color = "rgba(var(--color-grey),1)";
+                }
               }
+              return color;
             ]]]
-      # battery:
-      #   - align-self: "middle"
-      #   - justify-self: "start"
-      #   - display: "flex"
-      #   - align-items: "center"
-      #   - margin-top: "6px"
-      #   - font-size: "12px"
       battery:
         - border-radius: "50%"
         - position: "absolute"
@@ -133,49 +134,34 @@ custom_card_kepath_person_info:
         - font-size: "12px"
         - line-height: "14px"
         - background-color: "var(--card-background-color)"
-      # commute:
-      #   - align-self: "middle"
-      #   - justify-self: "end"
-      #   - display: "flex"
-      #   - align-items: "center"
-      #   - margin-top: "6px"
-      #   - font-size: "12px"
 
   custom_fields:
     notification: >
       [[[
         var zones = variables.ulm_card_kepath_person_zones;
         var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
-        var color = "var(--primary-background-color)";
         var returnIcon = false;
-
+        var color = "rgba(var(--card-background-color),1)";
         if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
           var commute = states[variables.ulm_card_kepath_person_commute_entity]?.state;
           if (!isNaN(commute)) {
-            var icon = "mdi:car"
-            color = "rgba(var(--color-green),1)";
-            if (commute > 60) {
-              color = "rgba(var(--color-red),1)"
-            }            
-            if (commute > 30) {
-              color = "rgba(var(--color-yellow),1)"
-            }
+            var icon = "mdi:car";
             returnIcon = true;
           }
         } else {
           if ((person_location == 'unknown') || (person_location == 'unavailable')) {
-            var icon = 'mdi:account-alert'
+            var icon = "mdi:account-alert";
             returnIcon = true;
           } else {
             if ((person_location == 'home') || (person_location == 'away') || (person_location == 'not_home')) {
               return
             } else {
-              var icon = "mdi:account-question"
+              var icon = "mdi:account-question";
               returnIcon = true;
               for (const item of zones){
                 if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "_").toLowerCase()){
                   if (states[item].attributes.icon != null) {
-                    var icon = states[item].attributes.icon;
+                    icon = states[item].attributes.icon;
                   }
                 }
               } 
@@ -184,37 +170,37 @@ custom_card_kepath_person_info:
         }
 
         if (returnIcon) {
-          return '<ha-icon icon="' + icon + '" style="width: 10px; height: 10px; color: ' + color + ';"></ha-icon>';
+          return '<ha-icon icon="' + icon + '" style="width: 10px; height: 10px; color: var(--card-background-color);"></ha-icon>';
         } else {
-          retrurn
+          return
         }
       ]]]
     battery: >
       [[[
         var icon = "mdi:battery-unknown";
-        var color = "var(--primary-color)";
+        var color = "var(--color-grey)";
         if (states[variables.ulm_card_kepath_person_gps_tracker]?.state) {
           var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery;
           if (!isNaN(battery)) {
             var charging = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_status?.toLowerCase() == "charging";
-            var iconBase = charging ? "mdi:battery-charging" : "mdi:battery"
+            var iconBase = charging ? "mdi:battery-charging" : "mdi:battery";
             var roundedBattery = Math.ceil(battery / 10) * 10;
             if (roundedBattery == 0) {
-              var icon = "mdi:battery-outline"
+              var icon = "mdi:battery-outline";
             } else {
               var icon = roundedBattery == 100 ? iconBase : `${iconBase}-${roundedBattery}`;
             }
             if (battery > 50) {
-              color = "rgba(var(--color-green),1)"
+              color = "rgba(var(--color-green),1)";
             } else if (battery > 25) {
-              color = "rgba(var(--color-yellow),1)"
+              color = "rgba(var(--color-yellow),1)";
             } else if (battery > 10) {
-              color = "rgba(var(--color-red),1)"
+              color = "rgba(var(--color-red),1)";
             } else if (battery > 0) {
-              color = "rgba(var(--color-purple),1)";
+              color = "rgba(var(--color-grey),1)";
             }
           } else {
-            var icon = "mdi:battery-alert";       
+            var icon = "mdi:battery-alert";
           }
         }
         return '<ha-icon icon="' + icon + '" style="width: 12px; height: 12px; color: ' + color + '; margin: 0 2px 0 0"></ha-icon>';

@@ -243,13 +243,11 @@ views:
       - type: 'custom:button-card'
         template: card_generic_swap
         entity: sensor.brother_mfc_j870dw_printer_unifi_rx
-        value_template: >
-          [[[
-            
-          ]]]
+        value_template: "{{states('sensor.brother_mfc_j870dw_printer_unifi_rx') | round(2, 'floor')}}"
       - type: 'custom:button-card'
         template: card_generic_swap
         entity: sensor.brother_mfc_j870dw_printer_unifi_tx
+        value_template: "{{states('sensor.brother_mfc_j870dw_printer_unifi_tx') | round(2, 'floor')}}"
       - type: custom:button-card
         template: edge
 
