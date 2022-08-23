@@ -10,9 +10,13 @@ import logging
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities) -> None:
-    hub_name = entry.data[CONF_NAME]
+    if entry.data: # old style - remove soon
+        hub_name = entry.data[CONF_NAME]
+        modbus_addr = entry.data.get(CONF_MODBUS_ADDR, DEFAULT_MODBUS_ADDR)
+    else: # new style
+        hub_name = entry.options[CONF_NAME]
+        modbus_addr = entry.options.get(CONF_MODBUS_ADDR, DEFAULT_MODBUS_ADDR)
     hub = hass.data[DOMAIN][hub_name]["hub"]
-    modbus_addr = entry.data.get(CONF_MODBUS_ADDR, DEFAULT_MODBUS_ADDR)
     device_info = {
         "identifiers": {(DOMAIN, hub_name)},
         "name": hub_name,
@@ -43,7 +47,7 @@ class SolaXModbusNumber(NumberEntity):
         self._platform_name = platform_name
         self._hub = hub
         self._modbus_addr = modbus_addr
-        self._device_info = device_info
+        self._attr_device_info = device_info
         self._name = number_info.name
         self._key = number_info.key
         self._register = number_info.register
@@ -51,6 +55,7 @@ class SolaXModbusNumber(NumberEntity):
         self._attr_native_min_value = number_info.native_min_value
         self._attr_native_max_value = number_info.native_max_value
         self._attr_scale     = number_info.scale
+        self.entity_description = number_info
         if number_info.max_exceptions:
             for (prefix, native_value,) in number_info.max_exceptions: 
                 if hub.seriesnumber.startswith(prefix): self._attr_native_max_value = native_value
@@ -60,6 +65,7 @@ class SolaXModbusNumber(NumberEntity):
         self._attr_native_step = number_info.native_step
         self._attr_native_unit_of_measurement = number_info.native_unit_of_measurement
         self._state = number_info.state
+        self.entity_description = number_info
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks."""
@@ -81,7 +87,7 @@ class SolaXModbusNumber(NumberEntity):
     def name(self) -> str:
         """Return the name."""
         return f"{self._platform_name} {self._name}"
-        
+
 #    @property
 #    def state(self) -> str:
 #        """Return the state? """
@@ -114,6 +120,7 @@ class SolaXModbusNumber(NumberEntity):
         elif self._fmt == "f":
             payload = int(value * mult/self._attr_scale)
 
+        _LOGGER.info(f"writing {self._platform_name} number register {self._register} value {payload}")
         self._hub.write_register(unit=self._modbus_addr, address=self._register, payload=payload)
 
         self._hub.data[self._key] = value/self._attr_scale

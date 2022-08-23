@@ -10,8 +10,12 @@ import logging
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities) -> None:
-    hub_name = entry.data[CONF_NAME]
-    modbus_addr = entry.data.get(CONF_MODBUS_ADDR, DEFAULT_MODBUS_ADDR)
+    if entry.data: # old style - remove soon
+        hub_name = entry.data[CONF_NAME]
+        modbus_addr = entry.data.get(CONF_MODBUS_ADDR, DEFAULT_MODBUS_ADDR)
+    else: # new style
+        hub_name = entry.options[CONF_NAME]
+        modbus_addr = entry.options.get(CONF_MODBUS_ADDR, DEFAULT_MODBUS_ADDR)
     hub = hass.data[DOMAIN][hub_name]["hub"]
 
     device_info = {
@@ -44,12 +48,12 @@ class SolaXModbusButton(ButtonEntity):
         self._platform_name = platform_name
         self._hub = hub
         self._modbus_addr = modbus_addr
-        self._device_info = device_info
+        self._attr_device_info = device_info
         self._name = button_info.name
         self._key = button_info.key
         self._register = button_info.register
         self._command = button_info.command
-
+        self._attr_icon = button_info.icon
 
     @property
     def name(self) -> str:
@@ -62,4 +66,5 @@ class SolaXModbusButton(ButtonEntity):
 
     async def async_press(self) -> None:
         """Write the button value."""
+        _LOGGER.info(f"writing {self._platform_name} button register {self._register} value {self._command}")
         self._hub.write_register(unit=self._modbus_addr, address=self._register, payload=self._command)
