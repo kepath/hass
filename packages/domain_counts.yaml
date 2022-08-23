@@ -206,11 +206,15 @@ sensor:
       value_template: >
         {%- set update_count = 0 -%}
         {%- set domains = ['update'] -%}
+        {%- set domain_count = 0 -%}
         {%- for domain in domains -%}
+          {% if loop.first %}
+            {% set domain_count = loop.length %}
+          {% endif %}        
           {%- for item in states[domain] if not item.state == "off" -%}
             {% if loop.first %}
               {% set update_count = loop.length %}
             {% endif %}
           {%- endfor -%}
         {%- endfor -%}
-        {{update_count}}
+        {{update_count}}/{{domain_count}}
