@@ -33,7 +33,7 @@ async def get_power_profile(
             manufacturer = config.get(CONF_MANUFACTURER) or model_info.manufacturer
             model = config.get(CONF_MODEL) or model_info.model
 
-    if manufacturer is None or model is None:
+    if not manufacturer or not model:
         return None
 
     custom_model_directory = config.get(CONF_CUSTOM_MODEL_DIRECTORY)
@@ -89,7 +89,7 @@ async def autodiscover_model(
 
     # Make sure we don't have a literal / in model_id, so we don't get issues with sublut directory matching down the road
     # See github #658
-    model_id = model_id.replace("/", "#slash#")
+    model_id = str(model_id).replace("/", "#slash#")
 
     model_info = ModelInfo(manufacturer, model_id)
 
