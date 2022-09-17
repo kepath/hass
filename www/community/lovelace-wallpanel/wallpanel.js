@@ -108,7 +108,7 @@
 	}
 }
 
-const version = "3.4";
+const version = "4.0";
 const defaultConfig = {
 	enabled: false,
 	debug: false,
@@ -136,8 +136,9 @@ const defaultConfig = {
 	info_animation_duration_y: 0,
 	info_animation_timing_function_x: 'ease',
 	info_animation_timing_function_y: 'ease',
-	info_random_move_interval: 0,
-	info_random_move_fade_duration: 2.0,
+	info_move_pattern: 'random',
+	info_move_interval: 0,
+	info_move_fade_duration: 2.0,
 	style: {},
 	badges: [],
 	cards: [
@@ -165,12 +166,24 @@ let classStyles = {
 		"border-radius": "0.1em"
 	}
 }
+let nominatimCache = {};
 
 const elHass = document.querySelector("body > home-assistant");
 const elHaMain = elHass.shadowRoot.querySelector("home-assistant-main");
 const LitElement = Object.getPrototypeOf(customElements.get("hui-masonry-view"));
 const HuiView = customElements.get("hui-view");
 
+let browserId = null;
+if (window.browser_mod) {
+	if (window.browser_mod.entity_id) {
+		// V1
+		browserId = window.browser_mod.entity_id;
+	}
+	else if (window.browser_mod.browserID) {
+		// V2
+		browserId = window.browser_mod.browserID.replace('-', '_');
+	}
+}
 
 function isObject(item) {
 	return (item && typeof item === 'object' && !Array.isArray(item));
@@ -213,8 +226,8 @@ function updateConfig() {
 		}
 	}
 	config = mergeConfig(config, paramConfig);
-	if (config.profiles && config.profile && config.profiles[config.profile]) {
-		let profile = config.profile;
+	const profile = insertBrowserID(config.profile);
+	if (config.profiles && profile && config.profiles[profile]) {
 		config = mergeConfig(config, config.profiles[profile]);
 		if (config.debug) console.debug(`Profile set from config: ${profile}`);
 	}
@@ -224,8 +237,9 @@ function updateConfig() {
 		if (config.debug) console.debug(`Profile set from user: ${profile}`);
 	}
 	config = mergeConfig(config, paramConfig);
-	if (config.profiles && config.profile_entity && elHass.__hass.states[config.profile_entity] && config.profiles[elHass.__hass.states[config.profile_entity].state]) {
-		let profile = elHass.__hass.states[config.profile_entity].state;
+	const profile_entity = insertBrowserID(config.profile_entity);
+	if (config.profiles && profile_entity && elHass.__hass.states[profile_entity] && config.profiles[elHass.__hass.states[profile_entity].state]) {
+		let profile = elHass.__hass.states[profile_entity].state;
 		config = mergeConfig(config, config.profiles[profile]);
 		if (config.debug) console.debug(`Profile set from entity state: ${profile}`);
 	}
@@ -396,6 +410,21 @@ function findImages(hass, mediaContentId) {
 }
 
 
+function insertBrowserID(string) {
+	if (!string) {
+		if (config.debug) console.debug(`insertBrowserID(${string}): no string`);
+		return string
+	}
+	if (!browserId) {
+		if (config.debug) console.debug(`insertBrowserID(${string}): no browser_mod`);
+		return string
+	}
+	let res = string.replace("${browser_id}", browserId);
+	if (config.debug) console.debug(`insertBrowserID(${string}): return ${res}`);
+	return res;
+}
+
+
 document.addEventListener('fullscreenerror', (event) => {
 	console.error('Failed to enter fullscreen');
 });
@@ -447,10 +476,11 @@ class WallpanelView extends HuiView {
 		this.screensaverStoppedAt = new Date();
 		this.idleSince = Date.now();
 		this.bodyOverflowOrig = null;
-		this.lastProfileSet = config.profile;
-		this.lastRandomMove = null;
+		this.lastProfileSet = insertBrowserID(config.profile);
+		this.lastMove = null;
+		this.lastCorner = 0; // 0 - top left, 1 - bottom left, 2 - bottom right, 3 - top right
 		this.translateInterval = null;
-
+		
 		this.__hass = elHass.__hass;
 		this.__cards = [];
 		this.__badges = [];
@@ -470,9 +500,11 @@ class WallpanelView extends HuiView {
 			return;
 		}
 
-		if (config.screensaver_entity && this.__hass.states[config.screensaver_entity]) {
-			let lastChanged = new Date(this.__hass.states[config.screensaver_entity].last_changed);
-			let state = this.__hass.states[config.screensaver_entity].state;
+		const screensaver_entity = insertBrowserID(config.screensaver_entity);
+
+		if (screensaver_entity && this.__hass.states[screensaver_entity]) {
+			let lastChanged = new Date(this.__hass.states[screensaver_entity].last_changed);
+			let state = this.__hass.states[screensaver_entity].state;
 			
 			if (state == "off" && this.screensaverStartedAt && lastChanged.getTime() - this.screensaverStartedAt > 0) {
 				this.stopScreensaver();
@@ -497,12 +529,13 @@ class WallpanelView extends HuiView {
 	}
 
 	setScreensaverEntityState() {
-		if (!config.screensaver_entity || !this.__hass.states[config.screensaver_entity]) return;
-		if (this.screensaverStartedAt && this.__hass.states[config.screensaver_entity].state == 'on') return;
-		if (!this.screensaverStartedAt && this.__hass.states[config.screensaver_entity].state == 'off') return;
+		const screensaver_entity = insertBrowserID(config.screensaver_entity);
+		if (!screensaver_entity || !this.__hass.states[screensaver_entity]) return;
+		if (this.screensaverStartedAt && this.__hass.states[screensaver_entity].state == 'on') return;
+		if (!this.screensaverStartedAt && this.__hass.states[screensaver_entity].state == 'off') return;
 
 		this.__hass.callService('input_boolean', this.screensaverStartedAt ? "turn_on" : "turn_off", {
-			entity_id: config.screensaver_entity
+			entity_id: screensaver_entity
 		}).then(
 			result => {
 				if (config.debug) console.debug(result);
@@ -514,8 +547,9 @@ class WallpanelView extends HuiView {
 	}
 
 	updateProfile() {
-		if (config.profile_entity && this.__hass.states[config.profile_entity]) {
-			const profile = this.__hass.states[config.profile_entity].state;
+		const profile_entity = insertBrowserID(config.profile_entity);
+		if (profile_entity && this.__hass.states[profile_entity]) {
+			const profile = this.__hass.states[profile_entity].state;
 			if ((profile && profile != this.lastProfileSet) || (!profile && this.lastProfileSet)) {
 				if (config.debug) console.debug(`Set profile to ${profile}`);
 				this.lastProfileSet = profile;
@@ -733,16 +767,27 @@ class WallpanelView extends HuiView {
 			${classCss}
 		`
 	}
-	
+
 	randomMove() {
-		this.lastRandomMove = Date.now();
 		let computed = getComputedStyle(this.infoContainer);
 		let maxX = this.infoContainer.offsetWidth - parseInt(computed.paddingLeft) * 2 - parseInt(computed.paddingRight) * 2 - this.infoBox.offsetWidth;
 		let maxY = this.infoContainer.offsetHeight - parseInt(computed.paddingTop) * 2 - parseInt(computed.paddingBottom) * 2 - this.infoBox.offsetHeight;
 		let x = Math.floor(Math.random() * maxX);
 		let y = Math.floor(Math.random() * maxY);
-		
-		if (config.info_random_move_fade_duration > 0) {
+		this.moveInfoBox(x, y);
+	}
+
+	moveAroundCorners() {
+		this.lastCorner = (this.lastCorner + 1) % 4;
+		let computed = getComputedStyle(this.infoContainer);
+		let x = [2, 3].includes(this.lastCorner) ? this.infoContainer.offsetWidth - parseInt(computed.paddingLeft) * 2 - parseInt(computed.paddingRight) * 2 - this.infoBox.offsetWidth : 0;
+		let y = [1, 2].includes(this.lastCorner) ? this.infoContainer.offsetHeight - parseInt(computed.paddingTop) * 2 - parseInt(computed.paddingBottom) * 2 - this.infoBox.offsetHeight : 0;
+		this.moveInfoBox(x, y);
+	}
+
+	moveInfoBox(x, y) {
+		this.lastMove = Date.now();
+		if (config.info_move_fade_duration > 0) {
 			let keyframes = [
 				{ opacity: 1 },
 				{ opacity: 0, offset: 0.5 },
@@ -750,13 +795,13 @@ class WallpanelView extends HuiView {
 			];
 			this.infoBox.animate(
 				keyframes, { 
-					duration: Math.round(config.info_random_move_fade_duration * 1000),
+					duration: Math.round(config.info_move_fade_duration * 1000),
 					iterations: 1 
 				}
 			);
 		}
 		let wp = this;
-		let ms = Math.round(config.info_random_move_fade_duration * 500);
+		let ms = Math.round(config.info_move_fade_duration * 500);
 		if (ms < 0) {
 			ms = 0;
 		}
@@ -767,7 +812,6 @@ class WallpanelView extends HuiView {
 			wp.infoBoxPosX.style.transform = `translate3d(${x}px, 0px, 0px)`;
 			wp.infoBoxPosY.style.transform = `translate3d(0px, ${y}px, 0px)`;	
 		}, ms);
-		
 	}
 
 	createInfoBoxContent() {
@@ -937,59 +981,90 @@ class WallpanelView extends HuiView {
 			if (!img) return;
 			img.addEventListener('load', function() {
 				img.setAttribute('data-loading', false);
-				if (config.show_exif_info && config.image_url.startsWith("media-source://media_source") && img.imagePath && /\.jpe?g$/.test(img.imagePath)) {
-					EXIF.getData(img, function() {
-						if (config.debug) console.debug("EXIF data:", img.exifdata);
-						let exifLong = img.exifdata["GPSLongitude"];
-						let exifLat = img.exifdata["GPSLatitude"];
-						if (config.fetch_address_data && exifLong && !isNaN(exifLong[0]) && exifLat && !isNaN(exifLat[0])) {
-							let m = (img.exifdata["GPSLatitudeRef"] == "S") ? -1 : 1;
-							let latitude = (exifLat[0] * m) + (((exifLat[1] * m  * 60) + (exifLat[2] * m)) / 3600);
-							m = (img.exifdata["GPSLongitudeRef"] == "W") ? -1 : 1;
-							let longitude = (exifLong[0] * m) + (((exifLong[1] * m * 60) + (exifLong[2] * m)) / 3600);
-							
-							let xhr = new XMLHttpRequest();
-							xhr.onload = function(event) {
-								let info = JSON.parse(xhr.responseText); 
-								if (config.debug) console.debug("nominatim data:", info);
-								img.exifdata.address = info.address;
-								wp.setEXIFImageInfo(img);
-							}
-							xhr.onerror = function(event) { 
-								console.error("nominatim error:", event);
-							}
-							xhr.open("GET", `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-							//xhr.setRequestHeader("User-Agent", `lovelace-wallpanel/${version}`);
-							xhr.timeout = 5000;
-							xhr.send();
-						}
-						wp.setEXIFImageInfo(img);
-					});
+				if (config.show_exif_info && img.imagePath && /.*\.jpe?g$/.test(img.imagePath)) {
+					wp.fetchEXIFInfo(img);
 				}
 			});
 			img.addEventListener('error', function() {
 				img.setAttribute('data-loading', false);
 				console.error(`Failed to load image: ${img.src}`);
-				if (config.image_url.startsWith("media-source://media_source") && (!wp.updatingImageList)) {
-					wp.updateImageList(wp.switchActiveImage.bind(wp));
+				if (img.imagePath) {
+					const idx = wp.imageList.indexOf(img.imagePath);
+					if (idx > -1) {
+						if (config.debug) console.debug(`Removing image from list: ${img.imagePath}`);
+						wp.imageList.splice(idx, 1);
+					}
 				}
+				wp.updateImage(img);
 			})
 		});
 	}
 
+	fetchEXIFInfo(img) {
+		let wp = this;
+		EXIF.getData(img, function() {
+			if (config.debug) console.debug("EXIF data:", img.exifdata);
+			let exifLong = img.exifdata["GPSLongitude"];
+			let exifLat = img.exifdata["GPSLatitude"];
+			if (config.fetch_address_data && exifLong && !isNaN(exifLong[0]) && exifLat && !isNaN(exifLat[0])) {
+				let m = (img.exifdata["GPSLatitudeRef"] == "S") ? -1 : 1;
+				let latitude = (exifLat[0] * m) + (((exifLat[1] * m  * 60) + (exifLat[2] * m)) / 3600);
+				m = (img.exifdata["GPSLongitudeRef"] == "W") ? -1 : 1;
+				let longitude = (exifLong[0] * m) + (((exifLong[1] * m * 60) + (exifLong[2] * m)) / 3600);
+				
+				const cacheKey = `${latitude},${longitude}`;
+				if (nominatimCache[cacheKey]) {
+					if (config.debug) console.debug(`Use nominatim cache: ${cacheKey}`);
+					img.exifdata.address = nominatimCache[cacheKey];
+					wp.setEXIFImageInfo(img);
+				}
+				else {
+					const xhr = new XMLHttpRequest();
+					xhr.onload = function(event) {
+						if (this.status == 200 || this.status === 0) {	
+							let info = JSON.parse(xhr.responseText); 
+							if (config.debug) console.debug("nominatim data:", info);
+							if (info && info.address) {
+								nominatimCache[cacheKey] = info.address;
+								if (img && img.exifdata) {
+									img.exifdata.address = nominatimCache[cacheKey];
+									wp.setEXIFImageInfo(img);
+								}
+							}
+						}
+						else {
+							console.error("nominatim error:", this.status, xhr.status, xhr.responseText);
+						}
+					}
+					xhr.onerror = function(event) { 
+						console.error("nominatim error:", event);
+					}
+					xhr.ontimeout = function(event) { 
+						console.error("nominatim timeout:", event);
+					}
+					xhr.open("GET", `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+					//xhr.setRequestHeader("User-Agent", `lovelace-wallpanel/${version}`);
+					xhr.timeout = 15000;
+					xhr.send();
+				}
+			}
+			wp.setEXIFImageInfo(img);
+		});
+	}
+	
 	setEXIFImageInfo(img) {
 		let exifElement = img.parentElement.querySelector('.wallpanel-screensaver-image-info-exif');
 			let html = config.exif_info_template;
-			html = html.replace(/\${([^}]+)}/g, function (match, tag, offset, string) {
+			html = html.replace(/\${([^}]+)}/g, function (match, tags, offset, string) {
 				if (!img.exifdata) {
 					return "";
 				}
-				
 				let prefix = "";
 				let suffix = "";
-				if (tag.includes("!")) {
-					let tmp = tag.split("!");
-					tag = tmp[0];
+				let options = null;
+				if (tags.includes("!")) {
+					let tmp = tags.split("!");
+					tags = tmp[0];
 					for (let i=1; i<tmp.length; i++) {
 						let tmp2 = tmp[i].split("=", 2);
 						if (tmp2[0] == "prefix") {
@@ -998,21 +1073,43 @@ class WallpanelView extends HuiView {
 						else if (tmp2[0] == "suffix") {
 							suffix = tmp2[1];
 						}
+						else if (tmp2[0] == "options") {
+							options = {};
+							tmp2[1].split(",").forEach(optVal => {
+								let tmp3 = optVal.split(":", 2);
+								if (tmp3[0] && tmp3[1]) {
+									options[tmp3[0].replace(/\s/g, '')] = tmp3[1].replace(/\s/g, '');
+								}
+							});
+						}
 					}
 				}
 				
-				let keys = tag.split(".");
-				let val = img.exifdata;
-				keys.forEach(key => {
+				let val = "";
+				let tagList = tags.split("|");
+				let tag = "";
+				for (let i=0; i<tagList.length; i++) {
+					tag = tagList[i];
+					let keys = tag.replace(/\s/g, '').split(".");
+					val = img.exifdata;
+					keys.forEach(key => {
+						if (val) {
+							val = val[key];
+						}
+					});
 					if (val) {
-						val = val[key];
+						break
 					}
-				});
+				};
 				if (!val) {
 					return "";
 				}
 				if (/DateTime/.test(tag)) {
-					val = val.replace(/(\d\d\d\d):(\d\d):(\d\d)/, '$1-$2-$3');
+					let date = new Date(val.replace(/(\d\d\d\d):(\d\d):(\d\d) (\d\d):(\d\d):(\d\d)/, '$1-$2-$3T$4:$5:$6'));
+					if (!options) {
+						options = {year: "numeric", month: "2-digit", day: "2-digit"};
+					}
+					val = date.toLocaleDateString(undefined, options);
 				}
 				return prefix + val + suffix;
 			});
@@ -1090,12 +1187,12 @@ class WallpanelView extends HuiView {
 		if (!imagePath) {
 			return;
 		}
-		imagePath = imagePath.replace(/^media-source:\/\/media_source/, '/media');
 		img.imagePath = imagePath;
+		imagePath = imagePath.replace(/^media-source:\/\/media_source/, '/media');
 		this.hass.callWS({
 			type: "auth/sign_path",
 			path: imagePath,
-			expires: 30
+			expires: 60
 		}).then(
 			result => {
 				img.src = `${document.location.origin}${result.path}`;
@@ -1215,7 +1312,7 @@ class WallpanelView extends HuiView {
 			}, 2000);
 		}
 		
-		this.lastRandomMove = Date.now();
+		this.lastMove = Date.now();
 		this.lastImageUpdate = Date.now();
 		this.screensaverStartedAt = Date.now();
 		this.screensaverStoppedAt = null;
@@ -1230,6 +1327,12 @@ class WallpanelView extends HuiView {
 		this.style.opacity = 1;
 
 		this.setScreensaverEntityState();
+
+		if (config.screensaver_stop_navigation_path) {
+			setTimeout(() => {
+				navigate(config.screensaver_stop_navigation_path);
+			}, (config.fade_in_time+1)*1000);
+		}
 	}
 	
 	stopScreensaver() {
@@ -1239,9 +1342,6 @@ class WallpanelView extends HuiView {
 		this.screensaverStoppedAt = Date.now();
 		document.body.style.overflow = this.bodyOverflowOrig;
 		
-		if (config.screensaver_stop_navigation_path) {
-			navigate(config.screensaver_stop_navigation_path);
-		}
 		this.hideMessage();
 
 		this.style.transition = '';
@@ -1261,10 +1361,18 @@ class WallpanelView extends HuiView {
 	updateScreensaver() {
 		let now = Date.now();
 		
-		if (config.info_random_move_interval > 0 && now - this.lastRandomMove >= config.info_random_move_interval*1000) {
-			this.randomMove();
+		if (config.info_move_interval > 0 && now - this.lastMove >= config.info_move_interval*1000) {
+			if (config.info_move_pattern === 'random') {
+				this.randomMove();
+			}
+			else if (config.info_move_pattern === 'corners') {
+				this.moveAroundCorners();
+			}
+			else {
+				console.error(`Unknown info move type ${config.info_move_pattern}`);
+			}
 		}
-		
+
 		if (config.black_screen_after_time > 0 && now - this.screensaverStartedAt >= config.black_screen_after_time*1000) {
 			if (config.debug) console.debug("Setting screen to black");
 			if (this.imageOneContainer.style.visibility != 'hidden') {
