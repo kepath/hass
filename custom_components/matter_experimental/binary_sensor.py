@@ -44,7 +44,9 @@ class MatterBinarySensor(MatterEntity, BinarySensorEntity):
     @callback
     def _update_from_device(self) -> None:
         """Update from device."""
-        self._attr_is_on = self._device.get_cluster(clusters.BooleanState).stateValue
+        self._attr_is_on = self._device_type_instance.get_cluster(
+            clusters.BooleanState
+        ).stateValue
 
 
 class MatterOccupancySensor(MatterBinarySensor):
@@ -55,7 +57,9 @@ class MatterOccupancySensor(MatterBinarySensor):
     @callback
     def _update_from_device(self) -> None:
         """Update from device."""
-        occupancy = self._device.get_cluster(clusters.OccupancySensing).occupancy
+        occupancy = self._device_type_instance.get_cluster(
+            clusters.OccupancySensing
+        ).occupancy
         # The first bit = if occupied
         self._attr_is_on = occupancy & 1 == 1
 
@@ -79,11 +83,13 @@ DEVICE_ENTITY: dict[
 ] = {
     device_types.ContactSensor: MatterSensorEntityDescriptionFactory(
         key=device_types.ContactSensor,
+        name="Contact",
         subscribe_attributes=(clusters.BooleanState.Attributes.StateValue,),
         device_class=BinarySensorDeviceClass.DOOR,
     ),
     device_types.OccupancySensor: MatterSensorEntityDescriptionFactory(
         key=device_types.OccupancySensor,
+        name="Occupancy",
         entity_cls=MatterOccupancySensor,
         subscribe_attributes=(clusters.OccupancySensing.Attributes.Occupancy,),
     ),
