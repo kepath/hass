@@ -8,6 +8,7 @@ custom_card_kepath_person_info:
   variables:
     ulm_card_kepath_person_zones: #group.zones #"{{ expand('group.zones') }}"
       - "zone.bloxham_school"
+      - "zone.dan_uni_accomodation"
       - "zone.gym"
       - "zone.hollys_house"
       - "zone.jason_beer"
@@ -30,22 +31,22 @@ custom_card_kepath_person_info:
   show_label: false
   show_name: false 
   label: ""
-  tooltip: >
-    [[[
-      var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
-      if (variables.ulm_address){
-        return states[variables.ulm_address].state;
-      } else if (variables.ulm_address_locality){
-        return states[variables.ulm_address_locality].attributes.Locality;
-      }
-      else if (states[variables.ulm_card_kepath_person_driving_entity]?.state === "on") {
-        let state = states[variables.ulm_card_kepath_person_entity].state;
-        return `ETA - ${variables.ulm_translation_state}`;
-      } else {
-        let state = states[variables.ulm_card_kepath_person_entity].state;
-        return hass.resources[hass["language"]]["component.person" + ".state._." + state] ? hass.resources[hass["language"]]["component.person" + ".state._." + state] : state;
-      }
-    ]]]
+  # tooltip: >
+  #   [[[
+  #     var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
+  #     if (variables.ulm_address){
+  #       return states[variables.ulm_address].state;
+  #     } else if (variables.ulm_address_locality){
+  #       return states[variables.ulm_address_locality].attributes.Locality;
+  #     }
+  #     else if (states[variables.ulm_card_kepath_person_driving_entity]?.state === "on") {
+  #       let state = states[variables.ulm_card_kepath_person_entity].state;
+  #       return `ETA - ${variables.ulm_translation_state}`;
+  #     } else {
+  #       let state = states[variables.ulm_card_kepath_person_entity].state;
+  #       return hass.resources[hass["language"]]["component.person" + ".state._." + state] ? hass.resources[hass["language"]]["component.person" + ".state._." + state] : state;
+  #     }
+  #   ]]]
   name: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
   entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
   icon: > 
