@@ -1,5 +1,5 @@
 ---
-chip_long_date:
+chip_short_date_with_day:
   template: "chips"
   variables:
     ulm_language: >
@@ -10,11 +10,11 @@ chip_long_date:
   label: |
     [[[
       var locale = variables.ulm_language;
-      let o = new Intl.DateTimeFormat(locale , {
+      let dt = new Intl.DateTimeFormat(locale , {
         weekday: "short",
         day: "numeric",
         month: "short"
       });
-      let formatted_date = o.format(Date.now())
+      let formatted_date = dt.format(Date.now())
       return formatted_date
     ]]]
