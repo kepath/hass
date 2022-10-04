@@ -13,6 +13,7 @@ from homeassistant.const import (
     ATTR_ENTITY_ID,
     CONF_CONDITION,
     CONF_ICON,
+    CONF_ID,
     CONF_NAME,
     CONF_STATE,
 )
@@ -123,9 +124,10 @@ RECALCULATE_SERVICE_SCHEMA = vol.Schema(
     }
 )
 
-OVERRIDE_SERVICE_SCHEMA = vol.Schema(
+SET_OVERRIDE_SERVICE_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
+        vol.Optional(CONF_ID): cv.string,
         vol.Required(CONF_STATE): cv.string,
         vol.Optional(CONF_DURATION): cv.positive_int,
         vol.Optional(CONF_START): cv.time,
@@ -135,6 +137,14 @@ OVERRIDE_SERVICE_SCHEMA = vol.Schema(
     }
 )
 
+REMOVE_OVERRIDE_SERVICE_SCHEMA = vol.Schema(
+    {
+        vol.Optional(ATTR_ENTITY_ID): cv.entity_ids,
+        vol.Required(CONF_ID): cv.string,
+    }
+)
+
+
 CLEAR_OVERRIDES_SERVICE_SCHEMA = vol.Schema(
     {
         vol.Optional(ATTR_ENTITY_ID): cv.entity_ids,
@@ -143,8 +153,8 @@ CLEAR_OVERRIDES_SERVICE_SCHEMA = vol.Schema(
 
 
 class Override(dict):
-    def __init__(self, state, start, end, expires, icon, extra_attributes):
-        # _LOGGER.info(f"New Override: {state} s={start} e={end} expires={expires}")
+    def __init__(self, id, state, start, end, expires, icon, extra_attributes):
+        self["id"] = id
         self["state"] = state
         self["start"] = start
         self["end"] = end
@@ -195,12 +205,25 @@ async def async_setup_platform(
         update_tasks = []
         for target_device in target_devices:
             await target_device.async_set_override(
+                service.data.get(CONF_ID, None),
                 service.data[CONF_STATE],
                 service.data.get(CONF_START, None),
                 service.data.get(CONF_END, None),
                 service.data.get(CONF_DURATION, None),
                 service.data.get(CONF_ICON, None),
                 service.data.get(CONF_EXTRA_ATTRIBUTES, None),
+            )
+            update_tasks.append(target_device.async_update_ha_state(True))
+
+        if update_tasks:
+            await asyncio.wait(update_tasks)
+
+    async def async_remove_override_service_handler(service):
+        target_devices = get_target_devices(service)
+        update_tasks = []
+        for target_device in target_devices:
+            await target_device.async_remove_override(
+                service.data[CONF_ID],
             )
             update_tasks.append(target_device.async_update_ha_state(True))
 
@@ -227,7 +250,13 @@ async def async_setup_platform(
         DOMAIN,
         "set_override",
         async_set_override_service_handler,
-        schema=OVERRIDE_SERVICE_SCHEMA,
+        schema=SET_OVERRIDE_SERVICE_SCHEMA,
+    )
+    hass.services.async_register(
+        DOMAIN,
+        "remove_override",
+        async_remove_override_service_handler,
+        schema=REMOVE_OVERRIDE_SERVICE_SCHEMA,
     )
     hass.services.async_register(
         DOMAIN,
@@ -322,13 +351,25 @@ class ScheduleSensor(SensorEntity):
         await self.data.process_events()
 
     async def async_set_override(
-        self, state: str, start, end, duration, icon, extra_attributes
+        self, id, state: str, start, end, duration, icon, extra_attributes
     ):
         """Set override state."""
         _LOGGER.info(
-            f"{self._name}: override to {state} for s={start} e={end} d={duration} ea={extra_attributes}"
+            f"{self._name}: override to {state} for id={id} s={start} e={end} d={duration} ea={extra_attributes}"
         )
-        if self.data.set_override(state, start, end, duration, icon, extra_attributes):
+        if self.data.set_override(
+            id, state, start, end, duration, icon, extra_attributes
+        ):
+            return await self.data.process_events()
+        return False
+
+    async def async_remove_override(
+        self,
+        id: str,
+    ):
+        """Remove override state."""
+        _LOGGER.info(f"{self._name}: remove override {id}")
+        if self.data.remove_override(id):
             return await self.data.process_events()
         return False
 
@@ -395,9 +436,6 @@ class ScheduleSensorData:
             CONF_DEFAULT_STATE,
             default=DEFAULT_STATE,
         )
-        if self.default_state is None:
-            # error evaluating template - use the default
-            self.default_state = DEFAULT_STATE
         self.known_states.add(self.default_state)
 
         # TODO we should handle 'icon' the same as other extra attributes
@@ -411,6 +449,7 @@ class ScheduleSensorData:
                 event,
                 CONF_STATE,
                 default=self.default_state,
+                return_none_on_error=True,
             )
             if state is None:
                 # error evaluating template - skip this event
@@ -482,6 +521,7 @@ class ScheduleSensorData:
             icon = self.evaluate_template(
                 event,
                 CONF_ICON,
+                return_none_on_error=True,
             )
             if icon is not None:
                 self.icon_map[state] = icon
@@ -500,7 +540,7 @@ class ScheduleSensorData:
                         interval,
                     )
 
-        _LOGGER.info(f"{self.name}(alt):\n{pformat(states)}\n{pformat(attrs)}")
+        _LOGGER.info(f"{self.name}:\n{pformat(states)}\n{pformat(attrs)}")
         self._states = states
         self._custom_attributes = attrs
         self._refresh_time = dt.as_local(dt_now())
@@ -532,6 +572,7 @@ class ScheduleSensorData:
             CONF_START,
             CONF_START_TEMPLATE,
             time.min,
+            return_none_on_error=True,
         )
         ret2 = self.guess_value(ret)
         ret = ret2
@@ -546,6 +587,7 @@ class ScheduleSensorData:
             CONF_END,
             CONF_END_TEMPLATE,
             time.max,
+            return_none_on_error=True,
         )
         ret2 = self.guess_value(ret)
         ret = ret2
@@ -561,32 +603,36 @@ class ScheduleSensorData:
         prefixt: str = None,
         default=None,
         track_entities: bool = True,
+        return_none_on_error: bool = False,
     ):
-        s = obj.get(prefix, None)
-        st = obj.get(prefixt, None)
+        value = obj.get(prefix, None)
+        value_template = obj.get(prefixt, None)
 
-        s = s or st
-        st = s or st
+        # 'thing' and 'thing'_template are now aliases, and it is only allowed to provide one or the other,
+        # so we can safely combine them knowing that at least one of them will be 'None'
+        value = value or value_template
+        del value_template
+        del prefixt
 
         debugmsg = ""
 
-        if s is None and st is None:
+        if value is None:
             debugmsg = "(default)"
             ret = default
 
-        elif not isinstance(s, Template):
+        elif not isinstance(value, Template):
             debugmsg = "(value)"
-            ret = s
+            ret = value
 
         else:
-            st.hass = self.hass
+            value.hass = self.hass
             # TODO should be able to combine these two
             try:
-                temp = st.async_render_with_possible_json_value(st, time.min)
-                info = st.async_render_to_info(None, parse_result=False)
+                temp = value.async_render_with_possible_json_value(value, time.min)
+                info = value.async_render_to_info(None, parse_result=False)
             except (ValueError, TypeError) as e:
-                _LOGGER.error(f"{self.name}: ... failed to evaluate {prefixt}: {e}")
-                return None
+                _LOGGER.error(f"{self.name}: ... >> {prefix}: failed to evaluate: {e}")
+                return None if return_none_on_error else default
 
             if track_entities:
                 if len(info.entities):
@@ -599,15 +645,15 @@ class ScheduleSensorData:
         _LOGGER.debug(f"{self.name}: >> {prefix}: {ret} {debugmsg}")
         return ret
 
-    def guess_value(self, text):
+    def guess_value(self, value):
         """After evaluating a template, try to figure out what the resulting value means.
         We are looking for a time value. Dates don't matter."""
 
-        if not isinstance(text, str):
-            return text
+        if not isinstance(value, str):
+            return value
 
         try:
-            date = dt.parse_datetime(text)
+            date = dt.parse_datetime(value)
             if date is not None:
                 _LOGGER.debug(f"{self.name}: ...... found datetime: {date}")
                 tme = dt.as_local(date).time()
@@ -616,7 +662,7 @@ class ScheduleSensorData:
             pass
 
         try:
-            date = datetime.fromisoformat(text)
+            date = datetime.fromisoformat(value)
             _LOGGER.debug(f"{self.name}: ...... found isoformat date: {date}")
             tme = dt.as_local(date).time()
             return tme
@@ -624,7 +670,7 @@ class ScheduleSensorData:
             pass
 
         try:
-            tme = dt.parse_time(text)
+            tme = dt.parse_time(value)
             if tme is not None:
                 _LOGGER.debug(f"{self.name}: ...... found time: {tme}")
                 return localtime_from_time(tme)
@@ -632,7 +678,7 @@ class ScheduleSensorData:
             pass
 
         try:
-            tme = time.fromisoformat(text)
+            tme = time.fromisoformat(value)
             if tme is not None:
                 _LOGGER.debug(f"{self.name}: ...... found isoformat time: {tme}")
                 return localtime_from_time(tme)
@@ -640,7 +686,7 @@ class ScheduleSensorData:
             pass
 
         try:
-            date = dt.utc_from_timestamp(int(float(text)))
+            date = dt.utc_from_timestamp(int(float(value)))
             _LOGGER.debug(f"{self.name}: ...... found timestamp: {date}")
             tme = dt.as_local(date).time()
             return tme
@@ -654,12 +700,14 @@ class ScheduleSensorData:
         now = dt.as_local(dt_now())
         nu = time(now.hour, now.minute)
 
+        # clear out overrides that have expired
         self.overrides = [o for o in self.overrides if dt.as_local(o["expires"]) > now]
         for o in self.overrides:
             _LOGGER.debug(
                 f"{self.name}: override = {o['start']} - {o['end']} == {o['state']} [expires {o['expires']}]"
             )
 
+        # periodically re-evaluate (refresh) the schedule
         self.attributes = {}
         time_since_refresh = now - self._refresh_time
         if time_since_refresh.total_seconds() >= self.refresh.total_seconds() or (
@@ -668,6 +716,7 @@ class ScheduleSensorData:
             await self.process_events()
             self.force_refresh = None
 
+        # find that state and interval that matches the current time
         state, interval = self.find_interval(self._states, nu)
         if state is not None:
             _LOGGER.debug(f"{self.name}: current state is {state} ({nu})")
@@ -689,29 +738,31 @@ class ScheduleSensorData:
 
         # process extra attributes
         for attr in self._attr_keys:
-            # get the default value
-            dv = self.extra_attributes[attr]
-            default_val = self.evaluate_template(
-                {attr: dv},
-                attr,
-                track_entities=False,
-                default=dv,
-            )
-
             # find an event in which the attribute is defined
             attr_val, _ = self.find_interval(self._custom_attributes[attr], nu)
+
+            # figure out the attribute value
+            val = None
             if attr_val is not None:
-                # figure out the attribute value
                 val = self.evaluate_template(
                     {attr: attr_val},
                     attr,
                     track_entities=False,
-                    default=default_val,
+                    default=None,
                 )
-                self.attributes[attr] = val
-            else:
-                # no value specified - revert to the default
-                self.attributes[attr] = default_val
+
+            if val is None:
+                # no value specified or template evaluation failed; get the default value
+                # the default here if the template evaluation fails is the "template" itself - YMMV
+                dv = self.extra_attributes[attr]
+                val = self.evaluate_template(
+                    {attr: dv},
+                    attr,
+                    track_entities=False,
+                    default=dv,
+                )
+
+            self.attributes[attr] = val
 
     def find_interval(self, states, nu):
         for state in states:
@@ -725,10 +776,11 @@ class ScheduleSensorData:
 
         return None, None
 
-    def set_override(self, state, start, end, duration, icon, extra_attributes):
+    def set_override(self, id, state, start, end, duration, icon, extra_attributes):
         now = dt.as_local(dt_now())
         allow_split = True
 
+        # FIXME weed out invalid cases using Voluptuous schema
         if start is None and end is None and duration is None:
             # 000
             _LOGGER.error("override failed: must provide one of start/end/duration")
@@ -786,22 +838,65 @@ class ScheduleSensorData:
             extra_attributes = {}
 
         if not (start > end):
-            pass
+            ev = Override(id, state, start, end, expires, icon, extra_attributes)
+            self._add_or_edit_override(id, ev)
+
         elif start > end and allow_split:
             # split into two overrides if there is a wraparound (eg: 23:55 to 00:10)
+            # note: this will create 2 overrides with the same id; this is the only way
+            # it can happen
             ev = Override(
-                state, start, time.max, start_of_next_day(now), icon, extra_attributes
+                id,
+                state,
+                start,
+                time.max,
+                start_of_next_day(now),
+                icon,
+                extra_attributes,
             )
             _LOGGER.info(f"adding override: {ev} (split)")
-            self.overrides.append(ev)
+            self._add_or_edit_override(id, ev)
             start = time.min
+            ev = Override(id, state, start, end, expires, icon, extra_attributes)
+            self._add_or_edit_override(id, ev, expect_duplicate_id=True)
         else:
             _LOGGER.error(f"override failed: start ({start}) > end ({end})")
             return False
 
-        ev = Override(state, start, end, expires, icon, extra_attributes)
-        self.overrides.append(ev)
         return True
+
+    def remove_override(self, id: str):
+        # find and delete overrides with id
+        idxs = self._find_override_by_id(id)
+        if idxs is None:
+            _LOGGER.warning(f"{self.name}: remove_override id={id} not found")
+            return False
+        for idx in reversed(sorted(idxs)):
+            self.overrides.pop(idx)
+        return True
+
+    def _add_or_edit_override(
+        self, id: str, ev: Override, expect_duplicate_id: bool = False
+    ):
+        # search for an override with id; if it exists, modify it, else add a new one
+        idxs = self._find_override_by_id(id)
+        if idxs is None or expect_duplicate_id:
+            self.overrides.append(ev)
+        else:
+            idxs = [idx for idx in sorted(idxs)]
+            idx = idxs.pop(0)
+            self.overrides[idx] = ev
+            for idx in reversed(sorted(idxs)):
+                self.overrides.pop(idx)
+
+    def _find_override_by_id(self, id: str):
+        if id is None:
+            return None
+        idx = [idx for idx, el in enumerate(self.overrides) if el["id"] == id]
+        if len(idx):
+            return idx
+        else:
+            return None
 
     def clear_overrides(self):
         if len(self.overrides):
