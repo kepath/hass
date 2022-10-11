@@ -94,13 +94,14 @@ homekit:
   filter:
     include_domains:
       - climate
+      - fan
       - light      
       - person
       - vacuum
-      - weather
-      - zone
+      # - zone
     include_entity_globs:
       - binary_sensor.*_occupancy
+      - binary_sensor.*_motion
       - binary_sensor.zigbee_door*
       - binary_sensor.zigbee_vibration*
       - binary_sensor.nest*
@@ -111,12 +112,15 @@ homekit:
       - switch.zigbee*
     include_entities:
       - binary_sensor.diskstation_security_status
-      - remote.bed_c_xbox_remote
+      # - remote.bed_c_xbox_remote
       - sensor.mfc_j870dw_status
       - sensor.ups_status
       - sensor.diskstation_volume_1_status
-      - switch.lounge_lamp
       - sensor.banbury_temperature
+      - sensor.banbury_humidity
+      # - select.harmony_hub_activities
+      - switch.lounge_lamp
+      - switch.mss425e_6025_outlet_2
     exclude_entities:
       - binary_sensor.nest_protect_bottom_floor_battery_health
       - binary_sensor.nest_protect_bottom_floor_buzzer_test
@@ -130,6 +134,7 @@ homekit:
       - binary_sensor.nest_protect_bottom_floor_smoke_test
       - binary_sensor.nest_protect_bottom_floor_speaker_test
       - binary_sensor.nest_protect_bottom_floor_online
+      - sensor.nest_protect_bottom_floor_battery_level
 
       - binary_sensor.nest_protect_middle_floor_battery_health
       - binary_sensor.nest_protect_middle_floor_buzzer_test
@@ -143,6 +148,7 @@ homekit:
       - binary_sensor.nest_protect_middle_floor_smoke_test
       - binary_sensor.nest_protect_middle_floor_speaker_test
       - binary_sensor.nest_protect_middle_floor_online
+      - sensor.nest_protect_middle_floor_battery_level
 
       - binary_sensor.nest_protect_top_floor_battery_health
       - binary_sensor.nest_protect_top_floor_buzzer_test
@@ -156,41 +162,54 @@ homekit:
       - binary_sensor.nest_protect_top_floor_smoke_test
       - binary_sensor.nest_protect_top_floor_speaker_test
       - binary_sensor.nest_protect_top_floor_online
+      - sensor.nest_protect_top_floor_battery_level
 
       - light.kitchen_utility_light_light_2
       - light.lamp
       - person.tablet
       - binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2
       - binary_sensor.zigbee_motion_sensor_bed_e_occupancy
+      - switch.zigbee_plug_tumble_dryer
+      - switch.zigbee_plug_washing_machine
   entity_config:
     camera.doorbell_g4_medium:
       linked_doorbell_sensor: binary_sensor.doorbell_g4_doorbell
+    switch.zigbee_plug_arcade_pc_bed_c:
+      name: "Bed C Arcade Power"
+      type: outlet
+    switch.zigbee_plug_fire_stick_bed_a:
+      name: "Bed A Firestick Power"
+      type: outlet
+    switch.zigbee_plug_fridge_bed_c:
+      name: "Bed C Fridge Power"
+      type: outlet
+    switch.zigbee_plug_g4_doorbell_bottom_hallway:
+      name: "Hallway - Bottom Doorbell Power"
+      type: outlet
+    switch.zigbee_plug_garage:
+      name: "Garage Network Power"
+      type: outlet
+    light.zigbee_bulb_garage:
+      name: "Garage Light"
+    switch.mss425e_6025_outlet_2:
+      name: "Bed E Laptop Dock"
 
     media_player.bed_a_firestick_androidtv:
-      name: "Lounge-ADB"
-      feature_list:
-        - feature: on_off
-        - feature: play_pause
-        - feature: play_stop
-        - feature: toggle_mute
-
-    media_player.kitchen_firestick_androidtv:
-      name: "Kitchen_ADB"
-      feature_list:
-        - feature: on_off
-        - feature: play_pause
-        - feature: play_stop
-        - feature: toggle_mute
-    media_player.media_player.fire_tv_192_168_20_69:
       name: "Bed_A_ADB"
       feature_list:
         - feature: on_off
         - feature: play_pause
         - feature: play_stop
         - feature: toggle_mute
-
     media_player.bed_e_nvidia_androidtv:
       name: "Bed_E_ADB"
+      feature_list:
+        - feature: on_off
+        - feature: play_pause
+        - feature: play_stop
+        - feature: toggle_mute
+    media_player.kitchen_firestick_androidtv:
+      name: "Kitchen_ADB"
       feature_list:
         - feature: on_off
         - feature: play_pause
@@ -203,6 +222,28 @@ homekit:
         - feature: play_pause
         - feature: play_stop
         - feature: toggle_mute
+    media_player.bed_c_xbox:
+      name: "XBox"
+      feature_list:
+        - feature: on_off
+        - feature: play_pause
+        - feature: play_stop
+        - feature: toggle_mute
+    media_player.lounge_samsung_tv_smarttv:
+      name: "XBox"
+      feature_list:
+        - feature: on_off
+        - feature: play_pause
+        - feature: play_stop
+        - feature: toggle_mute
+    media_player.bed_a_samsung_tv_smarttv:
+      name: "XBox"
+      feature_list:
+        - feature: on_off
+        - feature: play_pause
+        - feature: play_stop
+        - feature: toggle_mute
+
 
     # media_player.nvidia_shield_adb_lounge:
     #   name: "Lounge-ADB"
