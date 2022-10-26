@@ -337,3 +337,59 @@
     entity_id: input_boolean.tumble_dryer_job_cycle
     state: 'On'
   mode: single
+- id: '1666811718812'
+  alias: all fans group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_all_group
+    data:
+      domain: fan
+      group: all_fans
+      icon: mdi:fan
+  mode: single
+- id: '1666812613473'
+  alias: all entities group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_all_group
+    data:
+      domain: all
+      group: all_entities
+      icon: mdi:arrow-expand-all
+  mode: single
+- id: '1666812617895'
+  alias: all lights group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_all_group
+    data:
+      domain: light
+      group: all_lights
+      icon: mdi:lightbulb-alert-outline
+  mode: single
+- id: '1666812616320'
+  alias: all zones group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_all_group
+    data:
+      domain: zone
+      group: all_zones
+      icon: mdi:map-marker
+  mode: single

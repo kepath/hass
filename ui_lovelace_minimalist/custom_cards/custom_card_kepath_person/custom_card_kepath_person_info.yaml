@@ -1,4 +1,15 @@
 ---
+group:
+  all_zones:
+    name: "list of all zones"
+    entities: >
+      {%- set zones = ['zone'] -%}
+      {%- for zone in zones -%}
+        {%- for item in states[zone] %}
+          - "{{ item.entity_id }}"
+        {%- endfor -%}
+      {%- endfor %}
+
 custom_card_kepath_person_info:
   template:
     - "icon_info_bg"
@@ -6,21 +17,7 @@ custom_card_kepath_person_info:
     - "ulm_custom_card_kepath_person_language_variables"
     - "custom_popup_kepath_person"
   variables:
-    ulm_card_kepath_person_zones: #group.zones #"{{ expand('group.zones') }}"
-      - "zone.bloxham_school"
-      - "zone.dan_uni_accomodation"
-      - "zone.gym"
-      - "zone.hollys_house"
-      - "zone.jason_beer"
-      - "zone.jus_parents"
-      - "zone.kevs_parents"
-      - "zone.kks_house"
-      - "zone.louises_house"
-      - "zone.martin_della"
-      - "zone.repl_group"
-      - "zone.sandy_balls"
-      - "zone.tudor_hall_school"
-      - "zone.whittlebury_spa"
+    ulm_card_kepath_person_zones: ""
     ulm_address: ""
     ulm_address_locality: ""
     ulm_card_kepath_person_wifi_tracker: ""
@@ -31,22 +28,6 @@ custom_card_kepath_person_info:
   show_label: false
   show_name: false 
   label: ""
-  # tooltip: >
-  #   [[[
-  #     var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "_").toLowerCase();
-  #     if (variables.ulm_address){
-  #       return states[variables.ulm_address].state;
-  #     } else if (variables.ulm_address_locality){
-  #       return states[variables.ulm_address_locality].attributes.Locality;
-  #     }
-  #     else if (states[variables.ulm_card_kepath_person_driving_entity]?.state === "on") {
-  #       let state = states[variables.ulm_card_kepath_person_entity].state;
-  #       return `ETA - ${variables.ulm_translation_state}`;
-  #     } else {
-  #       let state = states[variables.ulm_card_kepath_person_entity].state;
-  #       return hass.resources[hass["language"]]["component.person" + ".state._." + state] ? hass.resources[hass["language"]]["component.person" + ".state._." + state] : state;
-  #     }
-  #   ]]]
   name: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
   entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
   icon: > 
@@ -212,108 +193,108 @@ custom_popup_kepath_person:
   tap_action:
     action: "fire-dom-event"
     browser_mod:
-      command: "popup"
-      title: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
-      style:
-        $: >
-          [[[
-            if (hass.themes.theme.includes("desktop")){
-              var dialog = `
-                .mdc-dialog__surface{
-                  border-radius: var(--border-radius) !important;
-                }
-              `;
-            } else{
-              var dialog = "";
-            }
-            return `
-              *{
-                --secondary-background-color: none !important;
-              }
-              ${dialog}
-            `;
-          ]]]
-        hui-vertical-stack-card:
+      service: "browser_mod.popup"
+      data:
+        title: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
+        style:
           $: >
-            button-card {
-              align-self: center;
-              padding: 0.2em 0 2.3em 0;
-            }
-            hui-entities-card{
-              padding: 0.8em 1.4em;
-            }
-          $hui-entities-card$: >
-            ha-card{
-              box-shadow: none;
-            }
-          $hui-history-graph-card$: >
-            .content {
-              padding: 0 2.4em !important;
-            }
-            ha-card{
-              box-shadow: none;
-            }
-          $hui-glance-card$: >
-            ha-card{
-              box-shadow: none;
-            }
-          $hui-map-card:
-            $: >
-              ha-icon-button {
-                color: rgba(var(--color-blue),1);
-              }
-            $ha-map:
-              $: >
-                .leaflet-control-attribution {
-                  display: none;
-                }
-                .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
-                  border: 2px solid rgba(var(--color-blue),0.4) !important;
-                }
-                .leaflet-bar a {
-                  background-color: rgba(var(--color-blue),0.2) !important;
-                  color: rgba(var(--color-blue),1) !important;
-                }
-                .leaflet-bar a:first-child {
-                  border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
-                }
-                .leaflet-pane.leaflet-tile-pane {
-                  filter: contrast(95%);
-                }
-      card:
-        type: "vertical-stack"
-        cards:
-          - type: "entities"
-            entities:
-              - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
-                secondary_info: "last-changed"
-          - type: "history-graph"
-            entities:
-              - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
-          - type: "glance"
-            show_state: false
-            entities:
-              - entity: "[[[ return variables.ulm_card_kepath_person_wifi_tracker; ]]]"
-                name: "WiFi"
-                icon: "mdi:wifi"
-                style: &state >
-                  state-badge{
-                    color: {{ 'rgba(var(--color-blue),1)' if is_state(config.entity, 'home') }};
-                    filter: {{ 'opacity(100%)' if is_state(config.entity, 'home') else 'opacity(40%)'}};
+            [[[
+              if (hass.themes.theme.includes("desktop")){
+                var dialog = `
+                  .mdc-dialog__surface{
+                    border-radius: var(--border-radius) !important;
                   }
-              - entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker; ]]]"
-                name: "GPS"
-                icon: "mdi:map-marker"
-                style: *state
-          - type: "custom:button-card"
-            template:
-              - "find_my_phone_button_kepath"
-            entity: "[[[ return variables.ulm_card_kepath_person_findmy_script; ]]]"
-          - type: "map"
-            aspect_ratio: "12x10"
-            default_zoom: 16
-            entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
-
+                `;
+              } else{
+                var dialog = "";
+              }
+              return `
+                *{
+                  --secondary-background-color: none !important;
+                }
+                ${dialog}
+              `;
+            ]]]
+          hui-vertical-stack-card:
+            $: >
+              button-card {
+                align-self: center;
+                padding: 0.2em 0 2.3em 0;
+              }
+              hui-entities-card{
+                padding: 0.8em 1.4em;
+              }
+            $hui-entities-card$: >
+              ha-card{
+                box-shadow: none;
+              }
+            $hui-history-graph-card$: >
+              .content {
+                padding: 0 2.4em !important;
+              }
+              ha-card{
+                box-shadow: none;
+              }
+            $hui-glance-card$: >
+              ha-card{
+                box-shadow: none;
+              }
+            $hui-map-card:
+              $: >
+                ha-icon-button {
+                  color: rgba(var(--color-blue),1);
+                }
+              $ha-map:
+                $: >
+                  .leaflet-control-attribution {
+                    display: none;
+                  }
+                  .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+                    border: 2px solid rgba(var(--color-blue),0.4) !important;
+                  }
+                  .leaflet-bar a {
+                    background-color: rgba(var(--color-blue),0.2) !important;
+                    color: rgba(var(--color-blue),1) !important;
+                  }
+                  .leaflet-bar a:first-child {
+                    border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
+                  }
+                  .leaflet-pane.leaflet-tile-pane {
+                    filter: contrast(95%);
+                  }
+        content:
+          type: "vertical-stack"
+          cards:
+            - type: "entities"
+              entities:
+                - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
+                  secondary_info: "last-changed"
+            - type: "history-graph"
+              entities:
+                - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
+            - type: "glance"
+              show_state: false
+              entities:
+                - entity: "[[[ return variables.ulm_card_kepath_person_wifi_tracker; ]]]"
+                  name: "WiFi"
+                  icon: "mdi:wifi"
+                  style: &state >
+                    state-badge{
+                      color: {{ 'rgba(var(--color-blue),1)' if is_state(config.entity, 'home') }};
+                      filter: {{ 'opacity(100%)' if is_state(config.entity, 'home') else 'opacity(40%)'}};
+                    }
+                - entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker; ]]]"
+                  name: "GPS"
+                  icon: "mdi:map-marker"
+                  style: *state
+            - type: "custom:button-card"
+              template:
+                - "find_my_phone_button_kepath"
+              entity: "[[[ return variables.ulm_card_kepath_person_findmy_script; ]]]"
+            - type: "map"
+              aspect_ratio: "12x10"
+              default_zoom: 16
+              entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
 
 find_my_phone_button_kepath:
   template:
