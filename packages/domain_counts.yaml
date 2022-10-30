@@ -220,6 +220,60 @@ sensor:
           {%- endfor -%}
         {%- endfor -%}
 
+    count_lights_on:
+      #entity_id: sensor.date
+      friendly_name: "lights currently on"
+      unit_of_measurement: 'Count'
+      unique_id: on_light_domain_count
+      icon_template: mdi:lightbulb-group
+      value_template: >
+        {%- set domains = ['light'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] if item.state == "on" -%}
+            {%- if loop.first -%}
+              {{ loop.length|int }}
+            {%- endif -%}
+          {%- else -%}
+            {{'0'}}
+          {%- endfor -%}
+        {%- endfor -%}
+
+    count_all_unavailable:
+      #entity_id: sensor.date
+      friendly_name: "unavailable entities"
+      unit_of_measurement: 'Count'
+      unique_id: unavailable_domain_count
+      icon_template: mdi:lightbulb-group
+      value_template: >
+        {%- set domains = ['all'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] if item.state == "unavailable" -%}
+            {%- if loop.first -%}
+              {{ loop.length|int }}
+            {%- endif -%}
+          {%- else -%}
+            {{'0'}}
+          {%- endfor -%}
+        {%- endfor -%}
+
+    count_all_unknown:
+      #entity_id: sensor.date
+      friendly_name: "unknown entities"
+      unit_of_measurement: 'Count'
+      unique_id: unknown_domain_count
+      icon_template: mdi:lightbulb-group
+      value_template: >
+        {%- set domains = ['all'] -%}
+        {%- for domain in domains -%}
+          {%- for item in states[domain] if item.state == "unknown" -%}
+            {%- if loop.first -%}
+              {{ loop.length|int }}
+            {%- endif -%}
+          {%- else -%}
+            {{'0'}}
+          {%- endfor -%}
+        {%- endfor -%}
+
     # all_zones:
     #   friendly_name: "list of all zones"
     #   unique_id: list_of_all_zones
