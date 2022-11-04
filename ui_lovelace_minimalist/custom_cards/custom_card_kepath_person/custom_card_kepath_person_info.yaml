@@ -1,14 +1,19 @@
 ---
-group:
-  all_zones:
-    name: "list of all zones"
-    entities: >
-      {%- set zones = ['zone'] -%}
-      {%- for zone in zones -%}
-        {%- for item in states[zone] %}
-          - "{{ item.entity_id }}"
-        {%- endfor -%}
-      {%- endfor %}
+# group:
+#   all_zones:
+#     name: "list of all zones"
+#     entities: >
+#       {%- set zones = ['zone'] -%}
+#       {%- for zone in zones -%}
+#         {%- for item in states[zone] %}
+#           - "{{ item.entity_id }}"
+#         {%- endfor -%}
+#       {%- endfor %}
+
+# unavailable {{ expand(states) | selectattr('state', 'eq', 'unavailable') | map(attribute='entity_id') | list | count }}
+# unknown {{ expand(states) | selectattr('state', 'eq', 'unknown') | map(attribute='entity_id') | list | count }}
+# lights on {{ expand(states.light) | selectattr('state','eq', 'on') | map(attribute='entity_id') | list | count }}
+
 
 custom_card_kepath_person_info:
   template:
