@@ -1,19 +1,16 @@
 ---
-# group:
-#   all_zones:
-#     name: "list of all zones"
-#     entities: >
-#       {%- set zones = ['zone'] -%}
-#       {%- for zone in zones -%}
-#         {%- for item in states[zone] %}
-#           - "{{ item.entity_id }}"
-#         {%- endfor -%}
-#       {%- endfor %}
-
-# unavailable {{ expand(states) | selectattr('state', 'eq', 'unavailable') | map(attribute='entity_id') | list | count }}
-# unknown {{ expand(states) | selectattr('state', 'eq', 'unknown') | map(attribute='entity_id') | list | count }}
-# lights on {{ expand(states.light) | selectattr('state','eq', 'on') | map(attribute='entity_id') | list | count }}
-
+template:
+  sensor:
+    - name:
+      state:
+      
+# sensor:
+#   - platform: template
+#     select_list:
+#       zones_select_list:
+#         value_template: >
+#           {% set zones = states.zone | map(attribute='entity_id') | list %}
+#           {{ zones }}
 
 custom_card_kepath_person_info:
   template:
@@ -30,9 +27,9 @@ custom_card_kepath_person_info:
     ulm_card_kepath_person_driving_entity: ""
     ulm_card_kepath_person_commute_entity: ""
   triggers_update: "all"
-  show_label: false
+  show_label: true
   show_name: false 
-  label: ""
+  label: "[[[ return entity.zones_select_list ]]]"
   name: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
   entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
   icon: > 
@@ -193,7 +190,6 @@ custom_card_kepath_person_info:
         return '<ha-icon icon="' + icon + '" style="width: 12px; height: 12px; color: ' + color + '; margin: 0 2px 0 0"></ha-icon>';
       ]]]
 
-
 custom_popup_kepath_person:
   tap_action:
     action: "fire-dom-event"
@@ -328,3 +324,31 @@ find_my_phone_button_kepath:
       - font-weight: "500"
       - letter-spacing: "0.015em"
       - box-shadow: "none"
+
+# get_all_zones:
+#   - platform: template
+
+
+
+# unavailable {{ expand(states) | selectattr('state', 'eq', 'unavailable') | map(attribute='entity_id') | list | count }}
+# unknown {{ expand(states) | selectattr('state', 'eq', 'unknown') | map(attribute='entity_id') | list | count }}
+# lights on {{ expand(states.light) | selectattr('state','eq', 'on') | map(attribute='entity_id') | list | count }}
+# Distance from K to D {{ distance('device_tracker.iphone_11_kev_icloud','device_tracker.iphone_12_dan_icloud_4') }}
+# {{ distance('zone.dan_uni_accomodation','device_tracker.iphone_12_dan_icloud_4') }}
+
+# unavailable {{ expand(states) | selectattr('state', 'eq', 'unavailable') | map(attribute='entity_id') | list | count }}
+# unknown {{ expand(states) | selectattr('state', 'eq', 'unknown') | map(attribute='entity_id') | list | count }}
+# lights on {{ expand(states.light) | selectattr('state','eq', 'on') | map(attribute='entity_id') | list | count }}
+# doors open
+
+# {{ expand('group.all_fans') | selectattr('state', 'defined') | map(attribute='entity_id') | list  }}
+# {{ expand('group.all_zones') | selectattr('state', 'defined') | map(attribute='entity_id') | list }}
+
+# {{ state_attr('zone.sandy_balls', 'latitude') }}
+
+# {{ distance('zone.dan_uni_accomodation') }}
+
+# {{ distance('device_tracker.iphone_11_kev_icloud','device_tracker.iphone_12_dan_icloud_4') }}
+# {{ distance('zone.dan_uni_accomodation','device_tracker.iphone_12_dan_icloud_4') }}
+
+# {{ states.zone | map(attribute='entity_id') | list }}
