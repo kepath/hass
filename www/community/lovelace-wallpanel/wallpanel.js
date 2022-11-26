@@ -108,7 +108,7 @@
 	}
 }
 
-const version = "4.3";
+const version = "4.5";
 const defaultConfig = {
 	enabled: false,
 	enabled_on_tabs: [],
@@ -615,6 +615,7 @@ class WallpanelView extends HuiView {
 		this.debugBox.style.width = '100%';
 		this.debugBox.style.height = '60%';
 		this.debugBox.style.background = '#00000099';
+		this.debugBox.style.color = '#ffffff';
 		this.debugBox.style.zIndex = 1001;
 		this.debugBox.style.visibility = 'hidden';
 		this.debugBox.style.fontFamily = 'monospace';
@@ -681,6 +682,13 @@ class WallpanelView extends HuiView {
 		this.infoContainer.style.transition = 'opacity 2000ms ease-in-out';
 		this.infoContainer.style.padding = '25px';
 
+		this.fixedInfoContainer.removeAttribute('style');
+		this.fixedInfoContainer.style.position = 'fixed';
+		this.fixedInfoContainer.style.top = 0;
+		this.fixedInfoContainer.style.left = 0;
+		this.fixedInfoContainer.style.width = '100%';
+		this.fixedInfoContainer.style.height = '100%';
+		
 		this.infoBox.removeAttribute('style');
 		this.infoBox.style.width = 'fit-content';
 		this.infoBox.style.height = 'fit-content';
@@ -690,6 +698,8 @@ class WallpanelView extends HuiView {
 		this.infoBox.style.setProperty('--wp-card-margin', '5px');
 		this.infoBox.style.setProperty('--wp-card-backdrop-filter', 'none');
 		
+		this.fixedInfoBox.style.cssText = this.infoBox.style.cssText;
+
 		this.screensaverOverlay.removeAttribute('style');
 		this.screensaverOverlay.style.position = 'absolute';
 		this.screensaverOverlay.style.top = 0;
@@ -731,6 +741,12 @@ class WallpanelView extends HuiView {
 						for (const attr in config.style[elId]) {
 							if (config.debug) console.debug(`Setting style attribute ${attr} to ${config.style[elId][attr]}`);
 							el.style.setProperty(attr, config.style[elId][attr]);
+						}
+						if (el == this.infoBox) {
+							this.fixedInfoBox.style.cssText = this.infoBox.style.cssText;
+						}
+						else if (el == this.infoBoxContent) {
+							this.fixedInfoBoxContent.style.cssText = this.infoBoxContent.style.cssText;
 						}
 					}
 					else {
@@ -838,6 +854,10 @@ class WallpanelView extends HuiView {
 		this.infoBoxContent.innerHTML = '';
 		this.__badges = [];
 		this.__cards = [];
+		
+		this.shadowRoot.querySelectorAll(".wp-card").forEach(card => {
+			card.parentElement.removeChild(card);
+		})
 
 		if (config.badges) {
 			const div = document.createElement('div');
@@ -866,16 +886,26 @@ class WallpanelView extends HuiView {
 				const cardElement = this.createCardElement(cardConfig);
 				cardElement.hass = this.hass;
 				this.__cards.push(cardElement);
+				let parent = this.infoBoxContent;
 				const div = document.createElement('div');
+				div.classList.add("wp-card");
 				div.style.width = 'var(--wp-card-width)';
 				div.style.padding = 'var(--wp-card-padding)';
 				div.style.margin = 'var(--wp-card-margin)';
 				div.style.backdropFilter = 'var(--wp-card-backdrop-filter)';
 				for (const attr in style) {
-					div.style.setProperty(attr, style[attr]);
+					if (attr == "parent") {
+						let pel = this.shadowRoot.getElementById(style[attr]);
+						if (pel) {
+							parent = pel;
+						}
+					}
+					else {
+						div.style.setProperty(attr, style[attr]);
+					}
 				}
 				div.append(cardElement);
-				this.infoBoxContent.appendChild(div);
+				parent.appendChild(div);
 			});
 		}
 		
@@ -938,6 +968,15 @@ class WallpanelView extends HuiView {
 		this.infoContainer = document.createElement('div');
 		this.infoContainer.id = 'wallpanel-screensaver-info-container';
 
+		this.fixedInfoContainer = document.createElement('div');
+		this.fixedInfoContainer.id = 'wallpanel-screensaver-fixed-info-container';
+
+		this.fixedInfoBox = document.createElement('div');
+		this.fixedInfoBox.id = 'wallpanel-screensaver-fixed-info-box';
+
+		this.fixedInfoBoxContent = document.createElement('div');
+		this.fixedInfoBoxContent.id = 'wallpanel-screensaver-fixed-info-box-content';
+
 		this.screensaverContainer.appendChild(this.infoContainer);
 
 		this.infoBoxPosX = document.createElement('div');
@@ -957,6 +996,10 @@ class WallpanelView extends HuiView {
 		this.infoBoxPosX.appendChild(this.infoBox);
 		this.infoBoxPosY.appendChild(this.infoBoxPosX);
 		this.infoContainer.appendChild(this.infoBoxPosY);
+
+		this.fixedInfoBox.appendChild(this.fixedInfoBoxContent);
+		this.fixedInfoContainer.appendChild(this.fixedInfoBox);
+		this.infoContainer.appendChild(this.fixedInfoContainer);
 
 		this.screensaverOverlay = document.createElement('div');
 		this.screensaverOverlay.id = 'wallpanel-screensaver-overlay';
@@ -1013,8 +1056,11 @@ class WallpanelView extends HuiView {
 						if (config.debug) console.debug(`Removing image from list: ${img.imagePath}`);
 						wp.imageList.splice(idx, 1);
 					}
+					wp.updateImage(img);
 				}
-				wp.updateImage(img);
+				else {
+					wp.displayMessage(`Failed to load image: ${img.src}`, 5000)
+				}
 			})
 		});
 	}
@@ -1284,15 +1330,20 @@ class WallpanelView extends HuiView {
 
 		let curActive = this.imageOneContainer;
 		let newActive = this.imageTwoContainer;
+		let exifElement = this.imageTwoInfoExif;
 		if (this.imageTwoContainer.style.opacity == 1) {
 			curActive = this.imageTwoContainer;
 			newActive = this.imageOneContainer;
+			exifElement = this.imageOneInfoExif;
 		}
 		if (config.debug) console.debug(`Switching active image to '${newActive.id}'`);
 
 		let newImg = newActive.children[0];
 		if (newImg.imagePath) {
 			this.setEXIFImageInfo(newImg.imagePath);
+		}
+		else {
+			exifElement.innerHTML = "";
 		}
 
 		if (newActive.style.opacity != 1) {
@@ -1460,6 +1511,11 @@ class WallpanelView extends HuiView {
 				let p = screenWakeLock._player;
 				html += `Screen wake lock video: readyState=${p.readyState} currentTime=${p.currentTime} paused=${p.paused} ended=${p.ended}<br/>`;
 			}
+			let imagePath = wallpanel.imageList[wallpanel.imageIndex];
+			if (imagePath) {
+				html += `Current image: ${imagePath}`;
+			}
+
 			this.debugBox.innerHTML = html;
 			this.debugBox.scrollTop = this.debugBox.scrollHeight;
 		}
