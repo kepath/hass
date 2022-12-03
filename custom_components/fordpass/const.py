@@ -17,13 +17,16 @@ CONF_DISTANCE_UNIT = "distance_unit"
 PRESSURE_UNITS = ["PSI", "kPa"]
 DISTANCE_UNITS = ["mi", "km"]
 
+UPDATE_INTERVAL = "update_interval"
+UPDATE_INTERVAL_DEFAULT = 900
+
 
 REGION = "region"
 
 REGION_OPTIONS = ["UK&Europe", "Australia", "North America & Canada"]
 
 SENSORS = {
-    "odometer": {"icon": "mdi:counter"},
+    "odometer": {"icon": "mdi:counter", "state_class": "total", "device_class": "distance"},
     "fuel": {"icon": "mdi:gas-station"},
     "battery": {"icon": "mdi:car-battery"},
     "oil": {"icon": "mdi:oil"},
