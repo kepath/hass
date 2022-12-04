@@ -1,8 +1,8 @@
 ---
-template:
-  sensor:
-    - name:
-      state:
+# template:
+#   sensor:
+#     - name:
+#       state:
       
 # sensor:
 #   - platform: template
@@ -19,7 +19,7 @@ custom_card_kepath_person_info:
     - "ulm_custom_card_kepath_person_language_variables"
     - "custom_popup_kepath_person"
   variables:
-    ulm_card_kepath_person_zones: ""
+    ulm_card_kepath_person_zones: group.zones
     ulm_address: ""
     ulm_address_locality: ""
     ulm_card_kepath_person_wifi_tracker: ""
@@ -29,7 +29,7 @@ custom_card_kepath_person_info:
   triggers_update: "all"
   show_label: true
   show_name: false 
-  label: "[[[ return entity.zones_select_list ]]]"
+  label: ""
   name: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
   entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
   icon: > 
