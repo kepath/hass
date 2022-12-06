@@ -1,0 +1,69 @@
+template:
+###############################
+### domain counts
+###############################
+  - sensor:
+    - name: "dynamic_all_domain_count"
+      state_class: measurement
+      icon: mdi:home-thermometer-outline
+      state: "{{ expand(states) | map(attribute='entity_id') | list | count }}"
+      attributes:
+        entities_unavailable: "{{ expand(states) | selectattr('state', 'eq', 'unavailable') | map(attribute='entity_id') | list | count }}"
+        entities_unknown: "{{ expand(states) | selectattr('state', 'eq', 'unknown') | map(attribute='entity_id') | list | count }}"
+
+    - name: "dynamic_update_domain_count"
+      state_class: measurement
+      icon: mdi:home-thermometer-outline
+      state: "{{ expand(states.update) | map(attribute='entity_id') | list | count }}"
+      attributes:
+        entities_unavailable: "{{ expand(states.update) | selectattr('state', 'eq', 'unavailable') | map(attribute='entity_id') | list | count }}"
+        entities_unknown: "{{ expand(states.update) | selectattr('state', 'eq', 'unknown') | map(attribute='entity_id') | list | count }}"
+        updates_available: "{{ expand(states.update) | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list | count }}"
+        
+    - name: "dynamic_light_domain_count"
+      state_class: measurement
+      icon: mdi:home-thermometer-outline
+      state: "{{ expand(states.light) | map(attribute='entity_id') | list | count }}"
+      attributes:
+        entities_unavailable: "{{ expand(states.light) | selectattr('state', 'eq', 'unavailable') | map(attribute='entity_id') | list | count }}"
+        entities_unknown: "{{ expand(states.light) | selectattr('state', 'eq', 'unknown') | map(attribute='entity_id') | list | count }}"
+        lights_on: "{{ expand(states.light) | selectattr('state', 'eq', 'on') | map(attribute='entity_id') | list | count }}"
+        
+    - name: "dynamic_binary_sensor_domain_count"
+      state_class: measurement
+      icon: mdi:home-thermometer-outline
+      state: "{{ expand(states.binary_sensor) | map(attribute='entity_id') | list | count }}"
+      attributes:
+        entities_unavailable: "{{ expand(states.binary_sensor) | selectattr('state', 'eq', 'unavailable') | map(attribute='entity_id') | list | count }}"
+        entities_unknown: "{{ expand(states.binary_sensor) | selectattr('state', 'eq', 'unknown') | map(attribute='entity_id') | list | count }}"
+        doors_count: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'door') | map(attribute='entity_id') | list | count }}"
+        doors_open: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'door') | selectattr('state','eq', 'on') | map(attribute='entity_id') | list | count }}"
+        battery_count: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'battery') | map(attribute='entity_id') | list | count }}"
+        battery_unresponsive: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'battery') | selectattr('state','eq','on') | map(attribute='entity_id') | list | count }}"
+        carbon_monoxide_safety_problem_smoke_count: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','in',['carbon_monoxide','safety','problem','smoke']) | map(attribute='entity_id') | list | count }}"
+        carbon_monoxide_safety_problem_smoke_unresponsive: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','in',['carbon_monoxide','safety','problem','smoke']) | selectattr('state','in', ['unavailable','unknown']) | map(attribute='entity_id') | list | count }}"
+        carbon_monoxide_safety_problem_smoke_warning: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','in',['carbon_monoxide','safety','problem','smoke']) | selectattr('state','eq','on') | map(attribute='entity_id') | list | count }}"
+        energy_power_reactive_power_count: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','in',['energy','power','reactive_power']) | map(attribute='entity_id') | list | count }}"
+        energy_power_reactive_power_unresponsive: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','in',['energy','power','reactive_power']) | selectattr('state','in', ['unavailable','unknown']) | map(attribute='entity_id') | list | count }}"
+        connectivity_count: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'connectivity') | map(attribute='entity_id') | list | count }}"
+        connectivity_unresponsive: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'connectivity') | selectattr('state','in', ['unavailable','unknown']) | map(attribute='entity_id') | list | count }}"
+        connectivity_unconnected: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'connectivity') | selectattr('state','eq','off') | map(attribute='entity_id') | list | count }}"
+        occupancy_count: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'occupancy') | map(attribute='entity_id') | list | count }}"
+        occupancy_unresponsive: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'occupancy') | selectattr('state','in', ['unavailable','unknown']) | map(attribute='entity_id') | list | count }}"
+        occupancy_detected: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'occupancy') | selectattr('state','eq','on') | map(attribute='entity_id') | list | count }}"
+        plug_count: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'plug') | map(attribute='entity_id') | list | count }}"
+        plug_unresponsive: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'plug') | selectattr('state','in', ['unavailable','unknown']) | map(attribute='entity_id') | list | count }}"
+        plug_on: "{{ expand(states.binary_sensor) | rejectattr('attributes.device_class', 'undefined') | selectattr('attributes.device_class','eq', 'plug') | selectattr('state','eq','on') | map(attribute='entity_id') | list | count }}"
+
+
+
+#binary_sensor
+#device_class: power
+#device_class: door, battery, carbon_monoxide, energy, power, reactive_power
+#motion, connectivity, sound, safety, update, occupancy, moving, plug, battery
+#problem, carbon_monoxide, problem, heat, problem, power, smoke, door
+
+#media_player - state off, standby, unavailable, idle,
+#sensor - device_class: power
+#device_tracker
+#switch
