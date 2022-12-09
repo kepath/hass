@@ -19,15 +19,32 @@ custom_card_kepath_person_info:
     - "ulm_custom_card_kepath_person_language_variables"
     - "custom_popup_kepath_person"
   variables:
-    ulm_card_kepath_person_zones: group.zones
+    ulm_card_kepath_person_zones:
+      - zone.bloxham_school
+      - zone.dan_uni_accomodation
+      - zone.gym
+      - zone.hollys_house
+      - zone.home
+      - zone.jason_beer
+      - zone.jus_parents
+      - zone.k_n_nottingham
+      - zone.kevs_parents
+      - zone.kks_house
+      - zone.louises_house
+      - zone.martin_della
+      - zone.repl_group
+      - zone.sandy_balls
+      - zone.tudor_hall_school
+      - zone.whittlebury_spa
     ulm_address: ""
     ulm_address_locality: ""
+    ulm_card_kepath_person_entity: ""
     ulm_card_kepath_person_wifi_tracker: ""
     ulm_card_kepath_person_gps_tracker: ""
     ulm_card_kepath_person_driving_entity: ""
     ulm_card_kepath_person_commute_entity: ""
   triggers_update: "all"
-  show_label: true
+  show_label: false
   show_name: false 
   label: ""
   name: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
@@ -142,15 +159,15 @@ custom_card_kepath_person_info:
             } else {
               var icon = "mdi:account-question";
               returnIcon = true;
-              for (const item of zones){
+              for (const item of zones) {
                 if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "_").toLowerCase()){
                   if (states[item].attributes.icon != null) {
                     icon = states[item].attributes.icon;
                   }
                 }
-              } 
-            }         
-          }          
+              }
+            }
+          }
         }
 
         if (returnIcon) {
