@@ -51,6 +51,11 @@ template:
                   | rejectattr('attributes.device_class', 'undefined') 
                   | selectattr('attributes.device_class','eq', 'door') 
                   | map(attribute='entity_id') | list | count }}"
+        doors_unresponsive: "{{ expand(states.binary_sensor) 
+                  | rejectattr('attributes.device_class', 'undefined') 
+                  | selectattr('attributes.device_class','eq', 'door') 
+                  | selectattr('state','in', ['unavailable','unknown']) 
+                  | map(attribute='entity_id') | list | count }}"
         doors_open: "{{ expand(states.binary_sensor) 
                   | rejectattr('attributes.device_class', 'undefined') 
                   | selectattr('attributes.device_class','eq', 'door') 
@@ -116,21 +121,38 @@ template:
                   | selectattr('attributes.device_class','eq', 'occupancy') 
                   | selectattr('state','eq','on') 
                   | map(attribute='entity_id') | list | count }}"
-    #     plug_count: "{{ expand(states.binary_sensor) 
-    #               | rejectattr('attributes.device_class', 'undefined') 
-    #               | selectattr('attributes.device_class','eq', 'plug') 
-    #               | map(attribute='entity_id') | list | count }}"
-    #     plug_unresponsive: "{{ expand(states.binary_sensor) 
-    #               | rejectattr('attributes.device_class', 'undefined') 
-    #               | selectattr('attributes.device_class','eq', 'plug') 
+        plug_count: "{{ expand(states.binary_sensor) 
+                  | rejectattr('attributes.device_class', 'undefined') 
+                  | selectattr('attributes.device_class','eq', 'plug') 
+                  | map(attribute='entity_id') | list | count }}"
+        plug_unresponsive: "{{ expand(states.binary_sensor) 
+                  | rejectattr('attributes.device_class', 'undefined') 
+                  | selectattr('attributes.device_class','eq', 'plug') 
+                  | selectattr('state','in', ['unavailable','unknown']) 
+                  | map(attribute='entity_id') | list | count }}"
+        plug_on: "{{ expand(states.binary_sensor) 
+                  | rejectattr('attributes.device_class', 'undefined') 
+                  | selectattr('attributes.device_class','eq', 'plug') 
+                  | selectattr('state','eq','on') 
+                  | map(attribute='entity_id') | list | count }}"
+
+    # - name: "dynamic_media_player_domain_count"
+    #   state_class: measurement
+    #   icon: mdi:play-box-multiple
+    #   state: "{{ expand(states.media_player) | map(attribute='entity_id') | list | count }}"
+    #   attributes:
+    #     entities_unresponsive: "{{ expand(states.media_player) 
     #               | selectattr('state','in', ['unavailable','unknown']) 
     #               | map(attribute='entity_id') | list | count }}"
-    #     plug_on: "{{ expand(states.binary_sensor) 
-    #               | rejectattr('attributes.device_class', 'undefined') 
-    #               | selectattr('attributes.device_class','eq', 'plug') 
-    #               | selectattr('state','eq','on') 
+    #     entities_idle: "{{ expand(states.media_player) 
+    #               | selectattr('state','in', ['standby','idle'])
     #               | map(attribute='entity_id') | list | count }}"
-
+    #     entities_off: "{{ expand(states.media_player) 
+    #               | selectattr('state','eq','off') 
+    #               | map(attribute='entity_id') | list | count }}"
+    #     entities_active: "{{ expand(states.media_player) 
+    #               | selectattr('state','in', ['playing','paused'])
+    #               | map(attribute='entity_id') | list | count }}"
 
 
 #binary_sensor

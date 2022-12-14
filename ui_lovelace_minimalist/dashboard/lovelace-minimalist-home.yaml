@@ -74,7 +74,7 @@ views:
             - type: custom:button-card
               styles:
                 grid:
-                  - grid-template-areas: "'item1 item2' 'item3 item4'"
+                  - grid-template-areas: "'item1 item2' 'item3 item4 item5 item6 item7'"
                   - grid-template-columns: "1fr 1fr"
                   - grid-template-rows: "min-content min-content"
                 custom_fields:
@@ -89,9 +89,9 @@ views:
               custom_fields: 
                 item1:
                   card:
-                    type: custom:button-card
-                    template: card_neekster_update
-                    entity: update.home_assistant_core_update
+                    type: "custom:button-card"
+                    template: "card_neekster_update"
+                    entity: "update.home_assistant_core_update"
                     variables:
                       ulm_card_neekster_update_enable_controls: true
                       ulm_card_neekster_update_collapsible: false
@@ -99,9 +99,9 @@ views:
                       ulm_card_neekster_update_narrow_buttons: true
                 item2:
                   card:
-                    type: custom:button-card
-                    template: card_neekster_update
-                    entity: update.home_assistant_supervisor_update
+                    type: "custom:button-card"
+                    template: "card_neekster_update"
+                    entity: "update.home_assistant_supervisor_update"
                     variables:
                       ulm_card_neekster_update_enable_controls: true
                       ulm_card_neekster_update_collapsible: false
@@ -109,20 +109,115 @@ views:
                       ulm_card_neekster_update_narrow_buttons: true
                 item3:
                   card:
-                    type: 'custom:button-card'
-                    template: card_generic
-                    entity: sensor.hacs
+                    type: "custom:button-card"
+                    template: 
+                      - "card_kepath_binary_sensor_count"
+                      - "green_no_state"
+                    entity: "sensor.hacs"
+                    icon: "hacs:hacs"
                     variables:
-                      ulm_card_tap_action: "navigate"
-                      ulm_card_tap_navigate_path: "/hacs"
-                item4: 
-                  card: 
-                    type: 'custom:button-card'
-                    template: card_generic
-                    entity: sensor.count_updates
+                      ulm_card_kepath_binary_sensor_count_nav: "/hacs"
+                      ulm_card_kepath_binary_sensor_count_amount:
+                        attribute: "state"
+                        templates:
+                          - "red_notification"
+                        show_amount_notification: true
+                      ulm_card_kepath_binary_sensor_count_total:
+                        show_total_notification: false
+                      ulm_card_kepath_binary_sensor_count_warning:
+                        show_warning_notification: false
+
+                item4:
+                  card:
+                    type: "custom:button-card"
+                    template: 
+                      - "card_kepath_binary_sensor_count"
+                      - "blue_no_state"
+                    entity: "sensor.dynamic_update_domain_count"
+                    icon: "mdi:update"
                     variables:
-                      ulm_card_tap_action: "navigate"
-                      ulm_card_tap_navigate_path: "/config/dashboard"
+                      ulm_card_kepath_binary_sensor_count_nav: "/config/dashboard"
+                      ulm_card_kepath_binary_sensor_count_amount:
+                        attribute: "attributes.updates_available"
+                        templates:
+                          - "red_notification"
+                        show_amount_notification: true
+                      ulm_card_kepath_binary_sensor_count_total:
+                        attribute: "state"
+                        show_total_notification: false
+                      ulm_card_kepath_binary_sensor_count_warning:
+                        attribute: "attributes.entities_unresponsive"
+                        show_warning_notification: false
+                item5:
+                  card:
+                    type: "custom:button-card"
+                    template: 
+                      - "card_kepath_binary_sensor_count"
+                      - "green_no_state"
+                      - "red_warning_on"
+                    entity: "sensor.dynamic_binary_sensor_domain_count"
+                    icon: "mdi:door"
+                    variables:
+                      ulm_card_kepath_binary_sensor_count_nav:
+                      ulm_card_kepath_binary_sensor_count_amount:
+                        attribute: "attributes.doors_open"
+                        templates:
+                          - "red_notification"
+                        show_amount_notification: true
+                      ulm_card_kepath_binary_sensor_count_total:
+                        attribute: "attributes.doors_count"
+                        show_total_notification: false
+                      ulm_card_kepath_binary_sensor_count_warning:
+                        attribute: "attributes.doors_unresponsive"
+                        templates:
+                          - "red_notification"
+                        show_warning_notification: true
+                item6:
+                  card:
+                    type: "custom:button-card"
+                    template: 
+                      - "card_kepath_binary_sensor_count"
+                      - "grey_off"
+                      - "yellow_on"
+                    entity: "sensor.dynamic_binary_sensor_domain_count"
+                    icon: "mdi:lightbulb-multiple"
+                    variables:
+                      ulm_card_kepath_binary_sensor_count_nav:
+                      ulm_card_kepath_binary_sensor_count_amount:
+                        attribute: "attributes.lights_on"
+                        templates:
+                          - "red_notification"
+                        show_amount_notification: true
+                      ulm_card_kepath_binary_sensor_count_total:
+                        attribute: "state"
+                        show_total_notification: false
+                      ulm_card_kepath_binary_sensor_count_warning:
+                        attribute: "attributes.entities_unresponsive"
+                        show_warning_notification: false
+                item7:
+                  card:
+                    type: "custom:button-card"
+                    template: 
+                      - "card_kepath_binary_sensor_count"
+                      - "green_off"
+                      - "red_amount_on"
+                    entity: "sensor.dynamic_binary_sensor_domain_count"
+                    icon: "mdi:human-greeting"
+                    variables:
+                      ulm_card_kepath_binary_sensor_count_nav:
+                      ulm_card_kepath_binary_sensor_count_amount:
+                        attribute: "attributes.occupancy_detected"
+                        templates:
+                          - "red_notification"
+                        show_amount_notification: true
+                      ulm_card_kepath_binary_sensor_count_total:
+                        attribute: "attributes.occupancy_count"
+                        show_total_notification: false
+                      ulm_card_kepath_binary_sensor_count_warning:
+                        attribute: "attributes.occupancy_unresponsive"
+                        templates:
+                          - "red_notification"
+                        show_warning_notification: true
 
         - type: horizontal-stack
           cards: 
