@@ -284,22 +284,6 @@
     target:
       entity_id: input_boolean.doorbell_rung
   mode: restart
-- id: '1652733399421'
-  alias: Monitor the status of the Tumble Dryer
-  description: ''
-  use_blueprint:
-    path: leofabri/appliance-status-monitor.yaml
-    input:
-      appliance_socket: switch.zigbee_plug_tumble_dryer
-      appliance_power_sensor: sensor.zigbee_plug_tumble_dryer_power
-      appliance_job_cycle: input_boolean.tumble_dryer_job_cycle
-      appliance_state_machine: input_select.tumble_dryer_state_machine
-      appliance_suspended_sensor: input_number.tumble_dryer_power_threshold
-      actions_off:
-      - service: tts.cloud_say
-        data:
-          entity_id: media_player.amazon_echo_dot_bed_c_alexa_integration
-          message: The Tumble Dryer has finished
 - id: '1652735403383'
   alias: Monitor the status of the Washing Machine
   description: ''
@@ -317,26 +301,6 @@
         data:
           entity_id: media_player.amazon_echo_dot_bed_c_alexa_integration
           message: The Washing Machine has finished
-- id: '1653152874332'
-  alias: Tumble Dryer Monitor
-  description: ''
-  trigger:
-  - type: energy
-    platform: device
-    device_id: 7818184ba76139c45c68e06d7968ac38
-    entity_id: sensor.zigbee_plug_tumble_dryer_energy
-    domain: sensor
-    above: 30
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-  condition: []
-  action:
-  - condition: state
-    entity_id: input_boolean.tumble_dryer_job_cycle
-    state: 'On'
-  mode: single
 - id: '1666811718812'
   alias: all fans group
   description: ''
@@ -463,7 +427,6 @@
       group: all_remotes
       icon: mdi:remote
   mode: single
-
 - id: '1666812633820'
   alias: all binary sensors group
   description: ''
