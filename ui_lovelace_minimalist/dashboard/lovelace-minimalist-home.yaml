@@ -74,18 +74,43 @@ views:
             - type: custom:button-card
               styles:
                 grid:
-                  - grid-template-areas: "'item1 item2' 'item3 item4 item5 item6 item7'"
-                  - grid-template-columns: "1fr 1fr"
+                  - grid-template-areas: "'item1 item1 item1 item2 item2 item2' 'item3 item4 item5 item6 item7 item8'"
+                  - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr"
                   - grid-template-rows: "min-content min-content"
+                card:
+                  - padding: "12px"
+                  - margin: "6px"
                 custom_fields:
-                  item1:
-                    - padding: "0 6px 12px 12px"
-                  item2:
-                    - padding: "0 12px 12px 6px"
-                  item3:
-                    - padding: "0 6px 0 12px"
-                  item4:
-                    - padding: "0 12px 0 6px"
+                  item1: &widget_update_styling
+                    - border-radius: "50%"
+                    - padding-bottom: "12px"
+                    # - width: "85%"
+                    # - height: "100%"
+                    # - line-height: 0
+                    # - padding: "6px"
+                    # - display: "grid"
+                  item2: *widget_update_styling
+                  item3: &widget_icon_binary_sensor_styling
+                    - border-radius: "50%"
+                    - width: "85%"
+                    - height: "100%"
+                    - line-height: 0
+                    # - padding: "6px"
+                    # - display: "grid"
+                  item4: *widget_icon_binary_sensor_styling
+                  item5: *widget_icon_binary_sensor_styling
+                  item6: *widget_icon_binary_sensor_styling
+                  item7: *widget_icon_binary_sensor_styling
+                  item8: *widget_icon_binary_sensor_styling
+                # custom_fields:
+                #   item1:
+                #     - padding: "0 6px 12px 12px"
+                #   item2:
+                #     - padding: "0 12px 12px 6px"
+                #   item3:
+                #     - padding: "0 6px 0 12px"
+                #   item4:
+                #     - padding: "0 12px 0 6px"
               custom_fields: 
                 item1:
                   card:
@@ -107,11 +132,14 @@ views:
                       ulm_card_neekster_update_collapsible: false
                       ulm_card_neekster_update_horizontal: false
                       ulm_card_neekster_update_narrow_buttons: true
+                    style:
+                      card:
+                        - padding-left: "6px"
                 item3:
                   card:
                     type: "custom:button-card"
                     template: 
-                      - "card_kepath_binary_sensor_count"
+                      - "custom_card_kepath_binary_sensor_count"
                       - "green_no_state"
                     entity: "sensor.hacs"
                     icon: "hacs:hacs"
@@ -131,7 +159,7 @@ views:
                   card:
                     type: "custom:button-card"
                     template: 
-                      - "card_kepath_binary_sensor_count"
+                      - "custom_card_kepath_binary_sensor_count"
                       - "blue_no_state"
                     entity: "sensor.dynamic_update_domain_count"
                     icon: "mdi:update"
@@ -152,8 +180,8 @@ views:
                   card:
                     type: "custom:button-card"
                     template: 
-                      - "card_kepath_binary_sensor_count"
-                      - "green_no_state"
+                      - "custom_card_kepath_binary_sensor_count"
+                      - "green_off"
                       - "red_warning_on"
                     entity: "sensor.dynamic_binary_sensor_domain_count"
                     icon: "mdi:door"
@@ -176,7 +204,7 @@ views:
                   card:
                     type: "custom:button-card"
                     template: 
-                      - "card_kepath_binary_sensor_count"
+                      - "custom_card_kepath_binary_sensor_count"
                       - "grey_off"
                       - "yellow_on"
                     entity: "sensor.dynamic_binary_sensor_domain_count"
@@ -198,11 +226,35 @@ views:
                   card:
                     type: "custom:button-card"
                     template: 
-                      - "card_kepath_binary_sensor_count"
+                      - "custom_card_kepath_binary_sensor_count"
                       - "green_off"
                       - "red_amount_on"
                     entity: "sensor.dynamic_binary_sensor_domain_count"
                     icon: "mdi:human-greeting"
+                    variables:
+                      ulm_card_kepath_binary_sensor_count_nav:
+                      ulm_card_kepath_binary_sensor_count_amount:
+                        attribute: "attributes.occupancy_detected"
+                        templates:
+                          - "red_notification"
+                        show_amount_notification: true
+                      ulm_card_kepath_binary_sensor_count_total:
+                        attribute: "attributes.occupancy_count"
+                        show_total_notification: false
+                      ulm_card_kepath_binary_sensor_count_warning:
+                        attribute: "attributes.occupancy_unresponsive"
+                        templates:
+                          - "red_notification"
+                        show_warning_notification: true
+                item8:
+                  card:
+                    type: "custom:button-card"
+                    template: 
+                      - "custom_card_kepath_binary_sensor_count"
+                      - "green_off"
+                      - "red_warning_on"
+                    entity: "sensor.dynamic_binary_sensor_domain_count"
+                    icon: "mdi:alarm-light"
                     variables:
                       ulm_card_kepath_binary_sensor_count_nav:
                       ulm_card_kepath_binary_sensor_count_amount:
@@ -227,15 +279,27 @@ views:
                   - grid-template-areas: "'item1 item2 item3 item4'"
                   - grid-template-columns: "1fr 1fr 1fr 1fr"
                   - grid-template-rows: "min-content"
-                custom_fields: 
-                  item1:
-                    - padding: "0 6px 0 12px"
-                  item2:
-                    - padding: "0 6px 0 6px"
-                  item3:
-                    - padding: "0 6px 0 6px"
-                  item4:
-                    - padding: "0 12px 0 6px"
+                custom_fields:
+                  item1: &widget_person_styling
+                    - border-radius: "50%"
+                    - padding: "6px"
+                    # - width: "60%"
+                    # - height: "75%"
+                    # - line-height: 0
+                    # - padding: "6px"
+                    # - display: "grid"
+                  item2: *widget_person_styling
+                  item3: *widget_person_styling
+                  item4: *widget_person_styling
+                # custom_fields: 
+                #   item1:
+                #     - padding: "0 6px 0 12px"
+                #   item2:
+                #     - padding: "0 6px 0 6px"
+                #   item3:
+                #     - padding: "0 6px 0 6px"
+                #   item4:
+                #     - padding: "0 12px 0 6px"
               custom_fields:
                 item1:
                   card:
