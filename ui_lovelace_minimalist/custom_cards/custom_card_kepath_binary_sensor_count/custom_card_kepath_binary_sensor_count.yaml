@@ -1,9 +1,11 @@
 custom_card_kepath_binary_sensor_count:
   template: 
     - "ulm_translation_engine"
+    - "icon_info_bg"
   icon: "mdi:lightbulb"
   show_icon: true
-  entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
+  show_label: false
+  show_name: false
   variables:
     ulm_card_kepath_binary_sensor_count_nav: ""
     ulm_card_kepath_binary_sensor_count_amount:
@@ -18,3 +20,26 @@ custom_card_kepath_binary_sensor_count:
       attribute: ""
       templates:
       show_warning_notification: false
+  styles:
+    grid:
+      - grid-template-areas: "'i'"
+      - grid-template-rows: "min-content min-content"
+    icon:
+      - width: "20px"
+      - place-self: "left"
+    # card:
+    #   - border-radius: "20px"
+    #   - box-shadow: "var(--box-shadow)"
+    #   - padding: "12px"
+
+
+
+  # styles:
+  #   grid:
+  #     - grid-template-areas: "'i' 'i' 'l'"
+  #     - grid-template-rows: "min-content min-content"
+
+  #     - grid-template-areas: "[[[ return !variables?.entity_1 ? (!variables?.entity_2 ? `'n n n' 'l l i3' 'i i i4'` : `'n n i2' 'l l i3' 'i i i4'`) : `'n n n i1' 'l l l i2' 'i i . i3' 'i i . i4'`; ]]]"
+  #     - grid-template-columns: "[[[ return !variables?.entity_1 ? '1fr 1fr 1fr' : '1fr 1fr 1fr 1fr'; ]]]"
+  #     - grid-template-rows: "[[[ return !variables?.entity_1 ? '1fr 1fr 1fr' : '1fr 1fr 1fr 1fr'; ]]]"
+  #     - justify-items: "center"
