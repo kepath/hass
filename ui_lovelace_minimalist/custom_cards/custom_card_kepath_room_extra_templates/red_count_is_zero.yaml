@@ -1,0 +1,39 @@
+---
+red_count_is_zero:
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          return (
+            var is_zero = true
+            if (variables.ulm_card_kepath_binary_sensor_count_amount.show_notification) {
+              var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
+              if (!isNaN(count) && count !== undefined && count != 0){
+                is_zero = false;
+              }
+            }
+            if (variables.ulm_card_kepath_binary_sensor_count_amount.show_notification) {
+              var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
+              if (!isNaN(count) && count !== undefined && count != 0){
+                is_zero = false;
+              }
+            }
+            if (variables.ulm_card_kepath_binary_sensor_count_amount.show_notification) {
+              var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
+              if (!isNaN(count) && count !== undefined && count != 0){
+                is_zero = false;
+              }
+            }
+
+            return is_zero;
+          )
+        ]]]
+    - styles:
+        icon:
+          - color: "rgba(var(--color-red),1)"
+        label:
+          - color: "rgba(var(--color-red-text),1)"
+        name:
+          - color: "rgba(var(--color-red-text),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-red), 0.2)"

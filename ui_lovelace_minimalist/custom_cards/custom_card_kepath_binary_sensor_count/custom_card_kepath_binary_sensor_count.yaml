@@ -7,31 +7,118 @@ custom_card_kepath_binary_sensor_count:
   show_label: false
   show_name: false
   variables:
-    ulm_card_kepath_binary_sensor_count_nav: ""
+    ulm_card_kepath_binary_sensor_count_nav: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_nav ? variables.ulm_card_kepath_binary_sensor_count_nav : ''; ]]]"
     ulm_card_kepath_binary_sensor_count_amount:
-      attribute: ""
-      templates:
-      show_amount_notification: false
+      attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.attribute ? variables.ulm_card_kepath_binary_sensor_count_amount.attribute : ''; ]]]"
+      templates: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.templates ? variables.ulm_card_kepath_binary_sensor_count_amount.templates : ''; ]]]"
+      show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_amount.show_notification : false; ]]]"
     ulm_card_kepath_binary_sensor_count_total:
-      attribute: ""
-      templates:
-      show_total_notification: false
+      attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.attribute ? variables.ulm_card_kepath_binary_sensor_count_amount.attribute : ''; ]]]"
+      templates: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.templates ? variables.ulm_card_kepath_binary_sensor_count_amount.templates : ''; ]]]"
+      show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_amount.show_notification : false; ]]]"
     ulm_card_kepath_binary_sensor_count_warning:
-      attribute: ""
-      templates:
-      show_warning_notification: false
+      attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.attribute ? variables.ulm_card_kepath_binary_sensor_count_amount.attribute : ''; ]]]"
+      templates: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.templates ? variables.ulm_card_kepath_binary_sensor_count_amount.templates : ''; ]]]"
+      show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_amount.show_notification : false; ]]]"
+  tap_action:
+    action: navigate
+    navigation_path: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_nav ? variables?.ulm_card_kepath_binary_sensor_count_nav : more-info; ]]]"
+  hold_action:
+    action: more-info
   styles:
     grid:
-      - grid-template-areas: "'i'"
+      - grid-template-areas: "'i' 'i' 'l'"
       - grid-template-rows: "min-content min-content"
+      - justify-items: "center"
     icon:
       - width: "20px"
-      - place-self: "left"
-    # card:
-    #   - border-radius: "20px"
-    #   - box-shadow: "var(--box-shadow)"
-    #   - padding: "12px"
+    card:
+      - padding: "5px"
+      - background-color: "var(--card-background-color)"
+    custom_fields:
+      warning:
+        - border-radius: "50%"
+        - position: "absolute"
+        - left: "30px"
+        - top: "2px"
+        - height: "16px"
+        - width: "16px"
+        - border: "2px solid var(--card-background-color)"
+        - font-size: "12px"
+        - line-height: "14px"
+        - background-color: "var(--card-background-color)"
+      total_or_amount:
+        - border-radius: "50%"
+        - position: "absolute"
+        - left: "30px"
+        - top: "32px"
+        - height: "16px"
+        - width: "16px"
+        - border: "2px solid var(--card-background-color)"
+        - font-size: "12px"
+        - line-height: "14px"
+        - background-color: "var(--card-background-color)"
 
+  custom_fields:
+    warning: >
+      [[[
+        var returnIcon = false;
+        
+        if (variables.ulm_card_kepath_binary_sensor_count_warning.show_notification) {
+          var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.attribute];
+          var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.templates];
+        } else {
+          var count = 0;
+          var templates = "";
+        }
+
+        if (!isNaN(count) && count != 0 && count !== undefined){
+          if (count > 9) {
+            var count = "9-plus"
+          }
+          var returnIcon = true;
+          var icon = "mdi:numeric-0-circle".replace("0",count)
+        }
+
+        if (returnIcon) {
+          return '<ha-icon icon="' + icon + '" style="width: 12px; height: 12px; color: rgba(var(--color-red),1);"></ha-icon>';
+        } else {
+          return
+        }
+      ]]]
+    total_or_amount: >
+      [[[
+        var show_count_amount = variables.ulm_card_kepath_binary_sensor_count_amount.show_notification;
+        var show_count_total = variables.ulm_card_kepath_binary_sensor_count_total.show_notification;
+        var returnIcon = false;
+        
+        if (show_count_amount) {
+          var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
+          var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.templates];
+        } else {
+          if (show_count_total) {
+            var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.attribute];
+            var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.templates];
+          } else {
+            var count = 0;
+            var templates = "";
+          }
+        }
+
+        if (!isNaN(count) && count != 0 && count !== undefined){
+          if (count > 9) {
+            var count = "9-plus"
+          }
+          var returnIcon = true;
+          var icon = "mdi:numeric-0-circle".replace("0",count)
+        }
+
+        if (returnIcon) {
+          return '<ha-icon icon="' + icon + '" style="width: 12px; height: 12px; color: rgba(var(--color-red),1);"></ha-icon>';
+        } else {
+          return
+        }
+      ]]]
 
 
   # styles:
