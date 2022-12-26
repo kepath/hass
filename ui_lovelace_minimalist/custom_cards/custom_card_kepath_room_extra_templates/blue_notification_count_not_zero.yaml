@@ -1,26 +1,26 @@
 ---
-yellow_count_is_zero:
+blue_notification_count_not_zero:
   state:
     - operator: "template"
       value: >
         [[[
-            var is_zero = true
+            var is_zero = true;
             if (variables.ulm_card_kepath_binary_sensor_count_amount.show_notification) {
               var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
               if (!isNaN(count) && count !== undefined && count != 0){
-                is_zero = true;
+                is_zero = false;
               }
             }
             if (variables.ulm_card_kepath_binary_sensor_count_amount.show_notification) {
               var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
               if (!isNaN(count) && count !== undefined && count != 0){
-                is_zero = true;
+                is_zero = false;
               }
             }
             if (variables.ulm_card_kepath_binary_sensor_count_amount.show_notification) {
               var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
               if (!isNaN(count) && count !== undefined && count != 0){
-                is_zero = true;
+                is_zero = false;
               }
             }
 
@@ -28,10 +28,10 @@ yellow_count_is_zero:
         ]]]
       styles:
         icon:
-          - color: "rgba(var(--color-yellow),1)"
+          - color: "rgba(var(--color-blue),1)"
         label:
-          - color: "rgba(var(--color-yellow-text),1)"
+          - color: "rgba(var(--color-blue-text),1)"
         name:
-          - color: "rgba(var(--color-yellow-text),1)"
+          - color: "rgba(var(--color-blue-text),1)"
         img_cell:
-          - background-color: "rgba(var(--color-yellow), 0.2)"
+          - background-color: "rgba(var(--color-blue), 0.2)"
