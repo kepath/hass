@@ -7,7 +7,7 @@ views:
     theme: minimalist-mobile
     cards:
       - type: vertical-stack
-        cards: 
+        cards:
         - type: horizontal-stack
           cards:
             - type: "custom:button-card"
@@ -127,7 +127,7 @@ views:
                 #     - padding: "0 6px 0 12px"
                 #   item4:
                 #     - padding: "0 12px 0 6px"
-              custom_fields: 
+              custom_fields:
                 item1:
                   card:
                     type: "custom:button-card"
@@ -154,14 +154,16 @@ views:
                 item3:
                   card:
                     type: "custom:button-card"
-                    template: 
+                    template:
                       - "custom_card_kepath_binary_sensor_count"
                       - "green_count_is_zero"
                       - "yellow_notification_count_not_zero"
                     entity: "sensor.dynamic_binary_sensor_domain_count"
                     icon: "hacs:hacs"
                     variables:
-                      ulm_card_kepath_binary_sensor_count_nav: "/hacs"
+                      ulm_card_kepath_binary_sensor_count_popup:
+                        type: "navigate"
+                        page: "/hacs"
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "hacs_update_count"
                         show_notification: true
@@ -173,14 +175,17 @@ views:
                 item4:
                   card:
                     type: "custom:button-card"
-                    template: 
+                    template:
                       - "custom_card_kepath_binary_sensor_count"
                       - "green_count_is_zero"
                       - "yellow_notification_count_not_zero"
                     entity: "sensor.dynamic_update_domain_count"
                     icon: "mdi:update"
                     variables:
-                      ulm_card_kepath_binary_sensor_count_nav: "/config/dashboard"
+                      ulm_card_kepath_binary_sensor_count_entity: "[[[ return entity.entity_id]]]"
+                      ulm_card_kepath_binary_sensor_count_popup:
+                        type: "navigate"
+                        page: "/config/dashboard"
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "updates_available"
                         show_notification: true
@@ -193,7 +198,7 @@ views:
                 item5:
                   card:
                     type: "custom:button-card"
-                    template: 
+                    template:
                       - "custom_card_kepath_binary_sensor_count"
                       - "green_count_is_zero"
                       - "red_notification_count_not_zero"
@@ -201,7 +206,8 @@ views:
                     entity: "sensor.dynamic_binary_sensor_domain_count"
                     icon: "mdi:door"
                     variables:
-                      ulm_card_kepath_binary_sensor_count_nav:
+                      ulm_card_kepath_binary_sensor_count_popup:
+                        type: "doors"
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "doors_open"
                         show_notification: true
@@ -214,14 +220,15 @@ views:
                 item6:
                   card:
                     type: "custom:button-card"
-                    template: 
+                    template:
                       - "custom_card_kepath_binary_sensor_count"
                       - "grey_count_is_zero"
                       - "yellow_notification_count_not_zero"
                     entity: "sensor.dynamic_light_domain_count"
                     icon: "mdi:lightbulb-multiple"
                     variables:
-                      ulm_card_kepath_binary_sensor_count_nav:
+                      ulm_card_kepath_binary_sensor_count_popup:
+                        type: "lights"
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "lights_on"
                         show_notification: true
@@ -234,13 +241,14 @@ views:
                 item7:
                   card:
                     type: "custom:button-card"
-                    template: 
+                    template:
                       - "custom_card_kepath_binary_sensor_count"
                       - "card_occupancy_state"
                     entity: "sensor.dynamic_binary_sensor_domain_count"
                     icon: "mdi:human-greeting"
                     variables:
-                      ulm_card_kepath_binary_sensor_count_nav:
+                      ulm_card_kepath_binary_sensor_count_popup:
+                        type: "occupancy"
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "occupancy_detected"
                         show_notification: true
@@ -253,7 +261,7 @@ views:
                 item8:
                   card:
                     type: "custom:button-card"
-                    template: 
+                    template:
                       - "custom_card_kepath_binary_sensor_count"
                       - "green_count_is_zero"
                       - "red_notification_count_not_zero"
@@ -261,7 +269,8 @@ views:
                     entity: "sensor.dynamic_binary_sensor_domain_count"
                     icon: "mdi:alarm-light"
                     variables:
-                      ulm_card_kepath_binary_sensor_count_nav:
+                      ulm_card_kepath_binary_sensor_count_popup:
+                        type: "safety"
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "carbon_monoxide_safety_problem_smoke_unresponsive"
                         show_notification: true
@@ -273,7 +282,7 @@ views:
                         show_notification: true
 
         - type: horizontal-stack
-          cards: 
+          cards:
             - type: "custom:button-card"
               styles:
                 grid:
@@ -341,7 +350,7 @@ views:
                   card:
                     type: "custom:button-card"
                     template: custom_card_kepath_person_info
-                    variables: 
+                    variables:
                       ulm_card_kepath_person_entity: person.emily_thorn
                       ulm_card_kepath_person_wifi_tracker: device_tracker.iphone_5
                       ulm_card_kepath_person_gps_tracker: device_tracker.patrice
