@@ -157,15 +157,13 @@ views:
                     template: 
                       - "custom_card_kepath_binary_sensor_count"
                       - "green_count_is_zero"
-                      - "green_notification_count_not_zero"
+                      - "yellow_notification_count_not_zero"
                     entity: "sensor.dynamic_binary_sensor_domain_count"
                     icon: "hacs:hacs"
                     variables:
                       ulm_card_kepath_binary_sensor_count_nav: "/hacs"
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "hacs_update_count"
-                        # templates:
-                        #   - "green_on"
                         show_notification: true
                       ulm_card_kepath_binary_sensor_count_total:
                         show_notification: false
@@ -177,16 +175,14 @@ views:
                     type: "custom:button-card"
                     template: 
                       - "custom_card_kepath_binary_sensor_count"
-                      - "blue_count_is_zero"
-                      - "blue_notification_count_not_zero"
+                      - "green_count_is_zero"
+                      - "yellow_notification_count_not_zero"
                     entity: "sensor.dynamic_update_domain_count"
                     icon: "mdi:update"
                     variables:
                       ulm_card_kepath_binary_sensor_count_nav: "/config/dashboard"
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "updates_available"
-                        # templates:
-                        #   - "blue_on"
                         show_notification: true
                       ulm_card_kepath_binary_sensor_count_total:
                         attribute: "updates_count"
@@ -208,16 +204,12 @@ views:
                       ulm_card_kepath_binary_sensor_count_nav:
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "doors_open"
-                        # templates:
-                        #   - "red_notification"
                         show_notification: true
                       ulm_card_kepath_binary_sensor_count_total:
                         attribute: "doors_count"
                         show_notification: false
                       ulm_card_kepath_binary_sensor_count_warning:
                         attribute: "doors_unresponsive"
-                        # templates:
-                        #   - "red_notification"
                         show_notification: true
                 item6:
                   card:
@@ -232,8 +224,6 @@ views:
                       ulm_card_kepath_binary_sensor_count_nav:
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "lights_on"
-                        # templates:
-                        #   - "red_notification"
                         show_notification: true
                       ulm_card_kepath_binary_sensor_count_total:
                         attribute: "lights_count"
@@ -246,25 +236,19 @@ views:
                     type: "custom:button-card"
                     template: 
                       - "custom_card_kepath_binary_sensor_count"
-                      - "green_count_is_zero"
-                      - "blue_notification_count_not_zero"
-                      - "red_warning_count_not_zero"
+                      - "card_occupancy_state"
                     entity: "sensor.dynamic_binary_sensor_domain_count"
                     icon: "mdi:human-greeting"
                     variables:
                       ulm_card_kepath_binary_sensor_count_nav:
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "occupancy_detected"
-                        # templates:
-                        #   - "red_notification"
                         show_notification: true
                       ulm_card_kepath_binary_sensor_count_total:
-                        attribute: "occupancy_count"
+                        attribute: "occupancy_person_home"
                         show_notification: false
                       ulm_card_kepath_binary_sensor_count_warning:
                         attribute: "occupancy_unresponsive"
-                        # templates:
-                        #   - "red_notification"
                         show_notification: true
                 item8:
                   card:
@@ -280,16 +264,12 @@ views:
                       ulm_card_kepath_binary_sensor_count_nav:
                       ulm_card_kepath_binary_sensor_count_amount:
                         attribute: "carbon_monoxide_safety_problem_smoke_unresponsive"
-                        # templates:
-                        #   - "red_notification"
                         show_notification: true
                       ulm_card_kepath_binary_sensor_count_total:
                         attribute: "carbon_monoxide_safety_problem_smoke_count"
                         show_notification: false
                       ulm_card_kepath_binary_sensor_count_warning:
                         attribute: "carbon_monoxide_safety_problem_smoke_warning"
-                        # templates:
-                        #   - "red_notification"
                         show_notification: true
 
         - type: horizontal-stack
@@ -327,15 +307,6 @@ views:
                   item2: *widget_person_styling
                   item3: *widget_person_styling
                   item4: *widget_person_styling
-                # custom_fields: 
-                #   item1:
-                #     - padding: "0 6px 0 12px"
-                #   item2:
-                #     - padding: "0 6px 0 6px"
-                #   item3:
-                #     - padding: "0 6px 0 6px"
-                #   item4:
-                #     - padding: "0 12px 0 6px"
               custom_fields:
                 item1:
                   card:

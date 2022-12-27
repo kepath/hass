@@ -1,0 +1,61 @@
+---
+card_occupancy_state:
+  state:
+    - operator: "template"
+      value: >
+        [[[
+            var show_detected_home_color = false;
+            var known_home = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.attribute];
+            var person_detected = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
+
+            if (!isNaN(known_home) && known_home !== undefined && known_home != 0){
+              if (!isNaN(person_detected) && person_detected !== undefined && person_detected != 0){
+                show_detected_home_color = true;
+              }
+            }
+
+            return show_detected_home_color;
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-blue),1)"
+        label:
+          - color: "rgba(var(--color-blue-text),1)"
+        name:
+          - color: "rgba(var(--color-blue-text),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-blue), 0.2)"
+    - operator: "template"
+      value: >
+        [[[
+            var show_detected_away_color = false;
+            var known_home = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.attribute];
+            var person_detected = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
+
+            if (!isNaN(known_home) && known_home !== undefined && known_home == 0){
+              if (!isNaN(person_detected) && person_detected !== undefined && person_detected != 0){
+                show_detected_away_color = true;
+              }
+            }
+
+            return show_detected_away_color;
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-red),1)"
+        label:
+          - color: "rgba(var(--color-red-text),1)"
+        name:
+          - color: "rgba(var(--color-red-text),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-red), 0.2)"
+    - operator: "default"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        label:
+          - color: "rgba(var(--color-green-text),1)"
+        name:
+          - color: "rgba(var(--color-green-text),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"

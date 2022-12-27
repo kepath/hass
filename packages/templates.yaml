@@ -113,17 +113,21 @@ template:
     #               | map(attribute='entity_id') | list | count }}"
         occupancy_count: "{{ expand(states.binary_sensor) 
                   | rejectattr('attributes.device_class', 'undefined') 
-                  | selectattr('attributes.device_class','eq', 'occupancy') 
+                  | selectattr('attributes.device_class','in',['occupancy','motion'])
                   | map(attribute='entity_id') | list | count }}"
         occupancy_unresponsive: "{{ expand(states.binary_sensor) 
                   | rejectattr('attributes.device_class', 'undefined') 
-                  | selectattr('attributes.device_class','eq', 'occupancy') 
+                  | selectattr('attributes.device_class','in',['occupancy','motion'])
                   | selectattr('state','in', ['unavailable','unknown']) 
                   | map(attribute='entity_id') | list | count }}"
         occupancy_detected: "{{ expand(states.binary_sensor) 
                   | rejectattr('attributes.device_class', 'undefined') 
-                  | selectattr('attributes.device_class','eq', 'occupancy') 
-                  | selectattr('state','eq','on') 
+                  | selectattr('attributes.device_class','in',['occupancy','motion'])
+                  | selectattr('state','eq','on')
+                  | rejectattr('enitity_id','in',['binary_sensor.doorbell_g4_motion','binary_sensor.front_g3_flex_motion'])
+                  | map(attribute='entity_id') | list | count }}"
+        occupancy_person_home: "{{ expand(states.person) 
+                  | selectattr('state','eq','home') 
                   | map(attribute='entity_id') | list | count }}"
         plug_count: "{{ expand(states.binary_sensor) 
                   | rejectattr('attributes.device_class', 'undefined') 

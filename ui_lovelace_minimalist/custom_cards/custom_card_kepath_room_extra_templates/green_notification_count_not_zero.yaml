@@ -4,21 +4,27 @@ green_notification_count_not_zero:
     - operator: "template"
       value: >
         [[[
-            var is_zero = true;
+            var show_notification_color = true;
             if (variables.ulm_card_kepath_binary_sensor_count_amount.show_notification) {
               var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
               if (!isNaN(count) && count !== undefined && count == 0){
-                is_zero = false;
+                show_notification_color = false;
               }
             }
             if (variables.ulm_card_kepath_binary_sensor_count_total.show_notification) {
               var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.attribute];
               if (!isNaN(count) && count !== undefined && count == 0){
-                is_zero = false;
+                show_notification_color = false;
+              }
+            }
+            if (variables.ulm_card_kepath_binary_sensor_count_warning.show_notification) {
+              var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.attribute];
+              if (!isNaN(count) && count !== undefined && count != 0){
+                show_notification_color = false;
               }
             }
 
-            return is_zero;
+            return show_notification_color;
         ]]]
       styles:
         icon:
