@@ -1,5 +1,5 @@
 custom_card_kepath_binary_sensor_count:
-  template: 
+  template:
     - "ulm_translation_engine"
     - "icon_info_bg"
     - "custom_popup_domains"
@@ -8,7 +8,10 @@ custom_card_kepath_binary_sensor_count:
   show_label: false
   show_name: false
   variables:
-    ulm_card_kepath_binary_sensor_count_nav: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_nav ? variables.ulm_card_kepath_binary_sensor_count_nav : ''; ]]]"
+    ulm_card_kepath_binary_sensor_count_entity:
+    ulm_card_kepath_binary_sensor_count_popup:
+      type: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_popup?.type ? variables?.ulm_card_kepath_binary_sensor_count_popup?.type : 'navigate'; ]]]"
+      page: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_popup?.page ? variables?.ulm_card_kepath_binary_sensor_count_popup?.page : '/'; ]]]"
     ulm_card_kepath_binary_sensor_count_amount:
       attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.attribute ? variables.ulm_card_kepath_binary_sensor_count_amount.attribute : ''; ]]]"
       show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_amount.show_notification : false; ]]]"
@@ -18,11 +21,11 @@ custom_card_kepath_binary_sensor_count:
     ulm_card_kepath_binary_sensor_count_warning:
       attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_warning?.attribute ? variables.ulm_card_kepath_binary_sensor_count_warning.attribute : ''; ]]]"
       show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_warning?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_warning.show_notification : false; ]]]"
-  tap_action:
-    action: navigate
-    navigation_path: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_nav ? variables?.ulm_card_kepath_binary_sensor_count_nav : more-info; ]]]"
-  hold_action:
-    action: more-info
+  # tap_action:
+  #   action: navigate
+  #   navigation_path: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_nav ? variables?.ulm_card_kepath_binary_sensor_count_nav : more-info; ]]]"
+  # hold_action:
+  #   action: more-info
   styles:
     grid:
       - grid-template-areas: "'i' 'i' 'l'"
@@ -69,7 +72,7 @@ custom_card_kepath_binary_sensor_count:
     warning: >
       [[[
         var returnIcon = false;
-        
+
         if (variables.ulm_card_kepath_binary_sensor_count_warning.show_notification) {
           var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.attribute];
           var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.templates];
@@ -97,7 +100,7 @@ custom_card_kepath_binary_sensor_count:
         var show_count_amount = variables.ulm_card_kepath_binary_sensor_count_amount.show_notification;
         var show_count_total = variables.ulm_card_kepath_binary_sensor_count_total.show_notification;
         var returnIcon = false;
-        
+
         if (show_count_amount) {
           var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
           var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.templates];
@@ -201,7 +204,14 @@ custom_popup_domains:
                   }
         content:
           type: "vertical-stack"
-          cards:
+          cards: >
+            [[[
+
+            ]]]
+
+
+
+
             - type: "entities"
               entities:
                 - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
@@ -232,3 +242,9 @@ custom_popup_domains:
               aspect_ratio: "12x10"
               default_zoom: 16
               entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
+  hold_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.more_info
+      data:
+        entity: "[[[ return variables.ulm_card_kepath_binary_sensor_count_entity]]]"
