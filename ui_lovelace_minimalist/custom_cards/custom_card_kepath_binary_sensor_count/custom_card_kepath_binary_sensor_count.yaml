@@ -2,7 +2,8 @@ custom_card_kepath_binary_sensor_count:
   template:
     - "ulm_translation_engine"
     - "icon_info_bg"
-    - "custom_popup_domains"
+    - "custom_domains_action"
+    # - "custom_domains_action_navigate"
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
@@ -122,96 +123,136 @@ custom_card_kepath_binary_sensor_count:
         }
       ]]]
 
-custom_popup_domains:
-  tap_action: 
-    action: "fire-dom-event"
-    browser_mod:
-      service: browser_mod.navigate
-      data:
-        path: "/hacs"
-        # path: "[[[ return variable.ulm_card_kepath_binary_sensor_count_popup.page ]]]"
-    # {% else %}
-    #   service: "browser_mod.popup"
-    #   data:
-    #     title: "[[[ return variable.ulm_card_kepath_binary_sensor_count_popup.type ]]].toUpperCase()"
-    #     style:
-    #       $: >
-    #         [[[
-    #           if (hass.themes.theme.includes("desktop")){
-    #             var dialog = `
-    #               .mdc-dialog__surface{
-    #                 border-radius: var(--border-radius) !important;
-    #               }
-    #             `;
-    #           } else{
-    #             var dialog = "";
-    #           }
-    #           return `
-    #             *{
-    #               --secondary-background-color: none !important;
-    #             }
-    #             ${dialog}
-    #           `;
-    #         ]]]
-    #       hui-vertical-stack-card:
-    #         $: >
-    #           button-card {
-    #             align-self: center;
-    #             padding: 0.2em 0 2.3em 0;
-    #           }
-    #           hui-entities-card{
-    #             padding: 0.8em 1.4em;
-    #           }
-    #         $hui-entities-card$: >
-    #           ha-card{
-    #             box-shadow: none;
-    #           }
-    #         $hui-history-graph-card$: >
-    #           .content {
-    #             padding: 0 2.4em !important;
-    #           }
-    #           ha-card{
-    #             box-shadow: none;
-    #           }
-    #         $hui-glance-card$: >
-    #           ha-card{
-    #             box-shadow: none;
-    #           }
-    #         $hui-map-card:
-    #           $: >
-    #             ha-icon-button {
-    #               color: rgba(var(--color-blue),1);
-    #             }
-    #           $ha-map:
-    #             $: >
-    #               .leaflet-control-attribution {
-    #                 display: none;
-    #               }
-    #               .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
-    #                 border: 2px solid rgba(var(--color-blue),0.4) !important;
-    #               }
-    #               .leaflet-bar a {
-    #                 background-color: rgba(var(--color-blue),0.2) !important;
-    #                 color: rgba(var(--color-blue),1) !important;
-    #               }
-    #               .leaflet-bar a:first-child {
-    #                 border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
-    #               }
-    #               .leaflet-pane.leaflet-tile-pane {
-    #                 filter: contrast(95%);
-    #               }
-    #     content:
-    #       type: "vertical-stack"
-    #       cards: 
-    #         - type: "entities"
-    #           entities:
-    #             - entity: "[[[ return variables.ulm_card_kepath_binary_sensor_count_entity; ]]]"
-    #               secondary_info: "last-changed"
-    # {% endif %}
+# service: browser_mod.navigate
+# data:
+#   path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.page ]]]"
+custom_domains_action: |
+  {% set action_type = variables.ulm_card_kepath_binary_sensor_count_popup.type %}
+  
+  # card:
+  #   type: "custom:button-card"
+  template:
+    - {{ action_type }}
+  #   [[[
+  #     let templates = [];
+  #     templates.push("custom_domains_action_navigate");
+  #     return templates;
+  #   ]]]
+  # [[[
+  #   if (variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate') {
+  #     let templates = "custom_domains_action_navigate";
+  #   } else {
+  #     let templates = "custom_domains_action_popup";
+  #   }
+  #   return templates;
+  # ]]]
+  # variables:
+  #   ulm_card_kepath_binary_sensor_count_popup:
+  #     type: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.type ]]]"
+  #     page: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.page ]]]"      
+  # hold_action:
+  #   action: fire-dom-event
+  #   browser_mod:
+  #     service: browser_mod.more_info
+  #     data:
+  #       entity: "[[[ return variables.ulm_card_kepath_binary_sensor_count_entity ]]]"
 
-  hold_action:
-    action: fire-dom-event
-    browser_mod:
-      service: browser_mod.more_info
+custom_domains_action_navigate:
+  # card:
+  #   type: "custom:button-card"
+  tap_action:
+    action: "fire-dom-event"
+    browser_mod: 
+      service: "browser_mod.navigate"
       data:
-        entity: "[[[ return variables.ulm_card_kepath_binary_sensor_count_entity]]]"
+        path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.page ]]]"
+
+custom_domains_action_popup:
+  # card:
+  #   type: "custom:button-card"
+  tap_action:
+    action: "fire-dom-event"
+    browser_mod: 
+      service: "browser_mod.navigate"
+      data:
+        path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.page ]]]"
+
+
+# service: 
+# data:
+#   title: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.type ]]]"
+#   style:
+#     $: >
+#       [[[
+#         if (hass.themes.theme.includes("desktop")){
+#           var dialog = `
+#             .mdc-dialog__surface{
+#               border-radius: var(--border-radius) !important;
+#             }
+#           `;
+#         } else{
+#           var dialog = "";
+#         }
+#         return `
+#           *{
+#             --secondary-background-color: none !important;
+#           }
+#           ${dialog}
+#         `;
+#       ]]]
+#     hui-vertical-stack-card:
+#       $: >
+#         button-card {
+#           align-self: center;
+#           padding: 0.2em 0 2.3em 0;
+#         }
+#         hui-entities-card{
+#           padding: 0.8em 1.4em;
+#         }
+#       $hui-entities-card$: >
+#         ha-card{
+#           box-shadow: none;
+#         }
+#       $hui-history-graph-card$: >
+#         .content {
+#           padding: 0 2.4em !important;
+#         }
+#         ha-card{
+#           box-shadow: none;
+#         }
+#       $hui-glance-card$: >
+#         ha-card{
+#           box-shadow: none;
+#         }
+#       $hui-map-card:
+#         $: >
+#           ha-icon-button {
+#             color: rgba(var(--color-blue),1);
+#           }
+#         $ha-map:
+#           $: >
+#             .leaflet-control-attribution {
+#               display: none;
+#             }
+#             .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+#               border: 2px solid rgba(var(--color-blue),0.4) !important;
+#             }
+#             .leaflet-bar a {
+#               background-color: rgba(var(--color-blue),0.2) !important;
+#               color: rgba(var(--color-blue),1) !important;
+#             }
+#             .leaflet-bar a:first-child {
+#               border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
+#             }
+#             .leaflet-pane.leaflet-tile-pane {
+#               filter: contrast(95%);
+#             }
+#   content:
+#     type: "vertical-stack"
+#     cards: 
+#       - type: "entities"
+#         entities:
+#           - entity: "[[[ return variables.ulm_card_kepath_binary_sensor_count_entity; ]]]"
+#             secondary_info: "last-changed"
+
+
