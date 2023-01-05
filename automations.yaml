@@ -469,3 +469,17 @@
       group: all_switches
       icon: mdi:map-marker
   mode: single
+- id: '1672906062419'
+  alias: all doors group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_binary_device_class_group
+    data:
+      group: all_door_sensors
+      icon: mdi:door
+      device_class: door
+  mode: single

@@ -150,7 +150,7 @@ custom_popup_entity_list:
           return "fire-dom-event";
         }
       ]]]
-    # navigation_path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_popup.page : '/0' ]]]"
+    navigation_path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_popup.page : '/0' ]]]"
     browser_mod:
       service: "browser_mod.sequence"
       data:
@@ -159,102 +159,135 @@ custom_popup_entity_list:
             data:
               entity_name: "input_text.entity_type"
               entity_state: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type]]]"
-    #       - service: "browser_mod.popup"
-    #         data:
-    #           title: "[[[ return states[input_text.entity_type].state ]]]"
-    #           style:
-    #             $: >
-    #               [[[
-    #                 if (hass.themes.theme.includes("desktop")){
-    #                   var dialog = `
-    #                     .mdc-dialog__surface{
-    #                       border-radius: var(--border-radius) !important;
-    #                     }
-    #                   `;
-    #                 } else{
-    #                   var dialog = "";
-    #                 }
-    #                 return `
-    #                   *{
-    #                     --secondary-background-color: none !important;
-    #                   }
-    #                   ${dialog}
-    #                 `;
-    #               ]]]
-    #             hui-vertical-stack-card:
-    #               $: >
-    #                 button-card {
-    #                   align-self: center;
-    #                   padding: 0.2em 0 2.3em 0;
-    #                 }
-    #                 hui-entities-card{
-    #                   padding: 0.8em 1.4em;
-    #                 }
-    #               $hui-entities-card$: >
-    #                 ha-card{
-    #                   box-shadow: none;
-    #                 }
-    #               $hui-history-graph-card$: >
-    #                 .content {
-    #                   padding: 0 2.4em !important;
-    #                 }
-    #                 ha-card{
-    #                   box-shadow: none;
-    #                 }
-    #               $hui-glance-card$: >
-    #                 ha-card{
-    #                   box-shadow: none;
-    #                 }
-    #               $hui-map-card:
-    #                 $: >
-    #                   ha-icon-button {
-    #                     color: rgba(var(--color-blue),1);
-    #                   }
-    #                 $ha-map:
-    #                   $: >
-    #                     .leaflet-control-attribution {
-    #                       display: none;
-    #                     }
-    #                     .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
-    #                       border: 2px solid rgba(var(--color-blue),0.4) !important;
-    #                     }
-    #                     .leaflet-bar a {
-    #                       background-color: rgba(var(--color-blue),0.2) !important;
-    #                       color: rgba(var(--color-blue),1) !important;
-    #                     }
-    #                     .leaflet-bar a:first-child {
-    #                       border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
-    #                     }
-    #                     .leaflet-pane.leaflet-tile-pane {
-    #                       filter: contrast(95%);
-    #                     }
-    #           content:
-    #             type: "vertical-stack"
-    #             cards:
-    #               - type: "custom:state-switch"
-    #                 entity: "input_text.entity_type"
-    #                 default:
-    #                 states:
-    #                   doors:
-    #                     - type: "custom:auto-entities"
-    #                       card: 'custom:button-card'
-    #                       card_param:
-    #                         template: "card_binary_sensor"
-    #                         variables:
-    #                           ulm_card_binary_sensor_alert: true
-    #                           ulm_show_last_changed: true
-    #                       filter:
-    #                         # template: <template>
-    #                         include:
-    #                           - domain: "binary_sensor"
-    #                           - attributes:
-    #                             - device_class: "door"
-    #                       sort: 
-    #                         method: 'state'
+          - service: "browser_mod.popup"
+            data:
+              title: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type + ' entities']]]"
+              style:
+                $: >
+                  [[[
+                    if (hass.themes.theme.includes("desktop")){
+                      var dialog = `
+                        .mdc-dialog__surface{
+                          border-radius: var(--border-radius) !important;
+                        }
+                      `;
+                    } else{
+                      var dialog = "";
+                    }
+                    return `
+                      *{
+                        --secondary-background-color: none !important;
+                      }
+                      ${dialog}
+                    `;
+                  ]]]
+                hui-vertical-stack-card:
+                  $: >
+                    div.main-title::first-letter {
+                      text-transform:capitalize;
+                    }
+                    button-card {
+                      align-self: center;
+                      padding: 0.2em 0 2.3em 0;
+                    }
+                    hui-entities-card{
+                      padding: 0.8em 1.4em;
+                    }
+                  $hui-entities-card$: >
+                    ha-card{
+                      box-shadow: none;
+                    }
+                  $hui-history-graph-card$: >
+                    .content {
+                      padding: 0 2.4em !important;
+                    }
+                    ha-card{
+                      box-shadow: none;
+                    }
+                  $hui-glance-card$: >
+                    ha-card{
+                      box-shadow: none;
+                    }
+                  $hui-map-card:
+                    $: >
+                      ha-icon-button {
+                        color: rgba(var(--color-blue),1);
+                      }
+                    $ha-map:
+                      $: >
+                        .leaflet-control-attribution {
+                          display: none;
+                        }
+                        .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+                          border: 2px solid rgba(var(--color-blue),0.4) !important;
+                        }
+                        .leaflet-bar a {
+                          background-color: rgba(var(--color-blue),0.2) !important;
+                          color: rgba(var(--color-blue),1) !important;
+                        }
+                        .leaflet-bar a:first-child {
+                          border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
+                        }
+                        .leaflet-pane.leaflet-tile-pane {
+                          filter: contrast(95%);
+                        }
+              content:
+                type: "vertical-stack"
+                cards:
+                  - type: "custom:state-switch"
+                    entity: "input_text.entity_type"
+                    default:
+                    states:
+                      door:
+                        type: vertical-stack
+                        cards:
+                          - type: 'custom:button-card'
+                            template: "card_binary_sensor"
+                            entity: group.all_binary_sensors
+                            group_expand: true
+                            variables:
+                              ulm_card_binary_sensor_alert: true
+                              ulm_show_last_changed: true
+
+
+                          # - type: entity
+                          #   entity: light.bed_e_light_light_1
+
+                          # - type: "custom:auto-entities"
+                          #   card:
+                          #     type: entities #custom:mushroom-entity-card
+                          #     state_color: true
+
+
+                          #   include:
+                          #     - domain: "binary_sensor"
+                          #       attributes:
+                          #         device_class: "door"
+
+
+# entities:
+# type: 'custom:button-card'
+# template: "card_binary_sensor"
+# group_expand: true
+# variables:
+#   ulm_card_binary_sensor_alert: true
+#   ulm_show_last_changed: true
+#   ulm_card_binary_sensor_icon: "mdi:door"
+# template: "{{ expand(states.binary_sensor) 
+#           | rejectattr('attributes.device_class', 'undefined') 
+#           | selectattr('attributes.device_class','eq', 'door') 
+#           | map(attribute='entity_id') | list }}"
+
+                              # exclude:
+                              #   - attributes:
+                              #     - device_class: "undefined"
+                            # sort: 
+                            #   method: 'state'
+                            #   reverse: true
 
 
 
-                      # lights:
+                      # light:
                       #   - type: custom:auto-entities
                       #     card: 'custom:button-card'
                       #     card_param:
