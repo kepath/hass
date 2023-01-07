@@ -20,7 +20,7 @@ esphome:
   #   - id: last_value_from_ha
   #     type: int
   #     initial_value: '0'
-    
+
 wifi:
   ssid: ${ssid}
   password: !secret not_wifi_password
@@ -42,7 +42,7 @@ wifi:
       dns1: 8.8.8.8
       dns2: 8.8.4.4
     ap_timeout: 10min
-      
+
 captive_portal:
 
 logger:
@@ -54,9 +54,9 @@ web_server:
   # js_include: "./includes/v2/www.js"
   # js_url: ""
   # local: true
-  version: 2  
+  version: 2
 # prometheus:
-  
+
 time:
   - platform: homeassistant
     id: homeassistant_time
@@ -66,7 +66,7 @@ time:
   #   servers: !secret ha_rj45_ip
 
 #==============================================================
-    
+
 # Text sensors with general information.
 text_sensor:
   # Expose ESPHome version as sensor.
@@ -166,10 +166,10 @@ sensor:
   #         condition:
   #           - lambda: !lambda |-
   #               auto time_now = id(homeassistant_time).utcnow();
-                
+
   #               if(time_now.timestamp - id(last_value_from_ha) > 120)
   #                 return true;
-                
+
   #               return false;
   #         then:
   #           - light.turn_off: lightid1 # lost connection, turn off

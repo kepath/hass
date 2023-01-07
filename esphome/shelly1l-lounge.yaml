@@ -4,7 +4,7 @@ substitutions:
   light1_icon: "mdi:chandelier"
   device_ip: "12"
   ssid: !secret not_wifi_ssid
-  log_level: INFO  
+  log_level: INFO
   max_temp: "80.0" #Centigrade
 
 # Common Include
@@ -46,11 +46,11 @@ binary_sensor:
         - light.toggle: lightid1
     filters:
       - delayed_on_off: 50ms
-    
+
   - platform: gpio
     pin:
       number: GPIO14
     name: ${device_name}-switch-2
     id: switchid2
 
-#  <<: !include includes/shelly-binary-common.yaml   
+#  <<: !include includes/shelly-binary-common.yaml

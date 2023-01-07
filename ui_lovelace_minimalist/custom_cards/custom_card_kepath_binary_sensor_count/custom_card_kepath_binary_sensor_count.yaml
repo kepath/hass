@@ -273,15 +273,15 @@ custom_popup_entity_list:
 #   ulm_card_binary_sensor_alert: true
 #   ulm_show_last_changed: true
 #   ulm_card_binary_sensor_icon: "mdi:door"
-# template: "{{ expand(states.binary_sensor) 
-#           | rejectattr('attributes.device_class', 'undefined') 
-#           | selectattr('attributes.device_class','eq', 'door') 
+# template: "{{ expand(states.binary_sensor)
+#           | rejectattr('attributes.device_class', 'undefined')
+#           | selectattr('attributes.device_class','eq', 'door')
 #           | map(attribute='entity_id') | list }}"
 
                               # exclude:
                               #   - attributes:
                               #     - device_class: "undefined"
-                            # sort: 
+                            # sort:
                             #   method: 'state'
                             #   reverse: true
 
