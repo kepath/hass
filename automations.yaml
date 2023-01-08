@@ -302,7 +302,7 @@
           entity_id: media_player.amazon_echo_dot_bed_c_alexa_integration
           message: The Washing Machine has finished
 - id: '1666811718812'
-  alias: all fans group
+  alias: create all fans group
   description: ''
   trigger:
   - platform: homeassistant
@@ -316,7 +316,7 @@
       icon: mdi:fan
   mode: single
 - id: '1666812613473'
-  alias: all entities group
+  alias: create all entities group
   description: ''
   trigger:
   - platform: homeassistant
@@ -330,7 +330,7 @@
       icon: mdi:arrow-expand-all
   mode: single
 - id: '1666812617895'
-  alias: all lights group
+  alias: create all lights group
   description: ''
   trigger:
   - platform: homeassistant
@@ -344,7 +344,7 @@
       icon: mdi:lightbulb-alert-outline
   mode: single
 - id: '1666812616320'
-  alias: all zones group
+  alias: create all zones group
   description: ''
   trigger:
   - platform: homeassistant
@@ -358,7 +358,7 @@
       icon: mdi:map-marker
   mode: single
 - id: '1666812616938'
-  alias: all updates group
+  alias: create all updates group
   description: ''
   trigger:
   - platform: homeassistant
@@ -367,12 +367,12 @@
   action:
   - service: python_script.create_entity_groups
     data:
-      domain: updates
+      domain: update
       group: all_updates
       icon: mdi:update
   mode: single
 - id: '1666812616820'
-  alias: all climate group
+  alias: create all climate group
   description: ''
   trigger:
   - platform: homeassistant
@@ -386,7 +386,7 @@
       icon: mdi:thermometer
   mode: single
 - id: '1666812616259'
-  alias: all camera group
+  alias: create all camera group
   description: ''
   trigger:
   - platform: homeassistant
@@ -400,7 +400,7 @@
       icon: mdi:camera
   mode: single
 - id: '1629812616259'
-  alias: all media players group
+  alias: create all media players group
   description: ''
   trigger:
   - platform: homeassistant
@@ -414,7 +414,7 @@
       icon: mdi:play-network-outline
   mode: single
 - id: '1622852616259'
-  alias: all remotes group
+  alias: create all remotes group
   description: ''
   trigger:
   - platform: homeassistant
@@ -428,7 +428,7 @@
       icon: mdi:remote
   mode: single
 - id: '1666812633820'
-  alias: all binary sensors group
+  alias: create all binary sensors group
   description: ''
   trigger:
   - platform: homeassistant
@@ -439,10 +439,10 @@
     data:
       domain: binary_sensor
       group: all_binary_sensors
-      icon: mdi:map-marker
+      icon: mdi:toggle-switch
   mode: single
 - id: '1666812616320'
-  alias: all sensors group
+  alias: create all sensors group
   description: ''
   trigger:
   - platform: homeassistant
@@ -453,10 +453,10 @@
     data:
       domain: sensor
       group: all_sensors
-      icon: mdi:map-marker
+      icon: mdi:shape-plus
   mode: single
 - id: '1666817726320'
-  alias: all switches group
+  alias: create all switches group
   description: ''
   trigger:
   - platform: homeassistant
@@ -467,10 +467,10 @@
     data:
       domain: switch
       group: all_switches
-      icon: mdi:map-marker
+      icon: mdi:light-switch
   mode: single
 - id: '1672906062419'
-  alias: all doors group
+  alias: create all binary sensor doors group
   description: ''
   trigger:
   - platform: homeassistant
@@ -479,7 +479,78 @@
   action:
   - service: python_script.create_binary_device_class_group
     data:
-      group: all_door_sensors
+      group: all_door_binary_sensors
       icon: mdi:door
-      device_class: door
+      collection_name: doors
+      included_device_classes:
+      - door
+  mode: single
+- id: '1673132278260'
+  alias: create all binary sensor plug group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_binary_device_class_group
+    data:
+      group: all_plug_binary_sensors
+      icon: mdi:power-socket-uk
+      collection_name: plugs
+      included_device_classes:
+      - plug
+  mode: single
+- id: '1673133770721'
+  alias: create all binary sensor occupancy group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_binary_device_class_group
+    data:
+      group: all_occupancy_binary_sensors
+      icon: mdi:human-greeting
+      collection_name: occupancy
+      included_device_classes:
+      - occupancy
+      - motion
+  mode: single
+- id: '1673133921800'
+  alias: create all binary sensor safety group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_binary_device_class_group
+    data:
+      group: all_safety_binary_sensors
+      icon: mdi:alarm-light
+      collection_name: safety
+      included_device_classes:
+      - carbon_monoxide
+      - safety
+      - problem
+      - smoke
+  mode: single
+- id: '1673133328800'
+  alias: create all binary sensor battery group
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_binary_device_class_group
+    data:
+      group: all_battery_binary_sensors
+      icon: mdi:battery-charging-high
+      collection_name: battery
+      included_device_classes:
+      - battery
+      - battery_charging
   mode: single

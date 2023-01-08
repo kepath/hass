@@ -1,6 +1,7 @@
 group = data.get('group', '')
 icon = data.get('icon', '')
-device_class = data.get('device_class', 'door')
+collection_name = data.get('collection_name', '')
+included_device_classes = data.get('included_device_classes', ['door'])
 
 domain = 'binary_sensor'
 entity_list = []
@@ -8,26 +9,27 @@ entity_list = []
 if not isinstance(group, str) or not domain or not group:
     logger.warning("bad domain or group! Not executing.")
 
-name = "All {} sensors".format(device_class)
-for entity_id in hass.states.get(domain).attributes['entity_id']:
-    if entity_id.attributes['device_class'] == device_class:
-        entity_list.append(hass.states.get(entity_id))
+name = "All binary sensor {} group".format(collection_name)
+
+for entity_id in hass.states.entity_ids(domain):
+    if entity_id == "":
+        logger.error(logger, "**Required parameter 'entity_id' is missing.**\n\nAction '{}' NOT executed.".format(action.lower()))
+    else:
+        entity = hass.states.get(entity_id)
+        if entity is None:
+            logger.error(logger, "**Cannot find entity '{}'.**\n\nAction '{}' NOT executed.".format(entity_id, action.lower()))
+        else:
+            for attr in entity.attributes:
+                if attr is not None:
+                    if attr == "device_class":
+                        for device_class_option in included_device_classes:
+                            if entity.attributes.get(attr) == device_class_option:
+                                entity_list.append(entity_id)
+                                logger.info("A {} at {}".format(entity_id, time.time()))
 
 if not icon:
-    service_data = {"object_id": group, "entities": hass.states.entity_ids(entity_list), "name": name}
+    service_data = {"object_id": group, "entities": entity_list, "name": name}
 else:
-    service_data = {"object_id": group, "entities": hass.states.entity_ids(entity_list), "name": name, "icon": icon}
+    service_data = {"object_id": group, "entities": entity_list, "name": name, "icon": icon}
 
 hass.services.call("group", "set", service_data, False)
-
-
-# https://community.home-assistant.io/t/how-to-add-an-extra-filter-in-python-script-to-rule-out-a-subset-of-lights/182451
-# https://developers.home-assistant.io/docs/dev_101_hass/
-# https://github.com/home-assistant/core/blob/dev/homeassistant/core.py#L1004
-# https://github.com/home-assistant/core/blob/dev/homeassistant/core.py#L1124
-
-# service: python_script.create_entity_groups
-# data:
-#   domain: binary_sensor
-#   group: all_binary_sensors
-#   icon: mdi:map-marker
