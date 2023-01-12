@@ -8,6 +8,7 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_NAME,
     CONF_UNIQUE_ID,
@@ -25,6 +26,7 @@ import voluptuous as vol
 from .const import (
     CONF_ENERGY_ENTITY,
     CONF_PRICE_ENTITY,
+    DOMAIN,
     ENERGY,
     ICON,
     LAST_UPDATED,
@@ -42,9 +44,21 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Required(CONF_NAME): cv.string,
         vol.Required(CONF_ENERGY_ENTITY): cv.entity_id,
         vol.Required(CONF_PRICE_ENTITY): cv.entity_id,
-        vol.Required(CONF_UNIQUE_ID): cv.string,
+        vol.Optional(CONF_UNIQUE_ID): cv.string,
     }
 )
+
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    async_add_entities,
+):
+    """Setup sensors from a config entry created in the integrations UI"""
+
+    # Reading the config from UI
+    config = hass.data[DOMAIN][config_entry.entry_id]
+    async_add_entities([EnergyScore(hass, config)], update_before_add=False)
 
 
 async def async_setup_platform(
@@ -53,7 +67,7 @@ async def async_setup_platform(
     async_add_entities: Callable,
     discovery_info: Optional[DiscoveryInfoType] = None,
 ) -> None:
-    """Set up the sensors from YAML config"""
+    """Set up sensors from YAML config"""
     async_add_entities([EnergyScore(hass, config)], update_before_add=False)
 
 
@@ -80,16 +94,17 @@ def normalise_energy(energy_dict) -> dict:
 
 
 class EnergyScore(SensorEntity, RestoreEntity):
-    """EnergyScore Sensor class."""
+    """EnergyScore Sensor class"""
 
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = "%"
 
     def __init__(self, hass, config):
         self._attr_icon: str = ICON
-        self._attr_unique_id = config[CONF_UNIQUE_ID]
+        self._attr_unique_id = config.get(CONF_UNIQUE_ID)
         self._energy = None
         self._energy_entity = config[CONF_ENERGY_ENTITY]
+        self.hass = hass  # TODO: needed?
         self._name = config[CONF_NAME]
         self._norm_energy = np.array(None)
         self._norm_prices = np.array(None)
@@ -105,8 +120,6 @@ class EnergyScore(SensorEntity, RestoreEntity):
             PRICES: {},
             LAST_UPDATED: None,
         }
-
-        self.hass = hass
 
     @property
     def name(self) -> str:
@@ -142,7 +155,6 @@ class EnergyScore(SensorEntity, RestoreEntity):
         now = dt.now().replace(
             minute=0, second=0, microsecond=0
         )  # TZ aware datetime obj based on user settings
-        # TODO: create function for this (also used elsewhere)
 
         # Parse datetimes from strings
         for i in [ENERGY, PRICES]:
@@ -151,15 +163,6 @@ class EnergyScore(SensorEntity, RestoreEntity):
                 for key, value in self.attr[i].items()
                 if isinstance(key, str)
             }
-
-        # Clean out old data:
-        cutoff = now - datetime.timedelta(hours=self._rolling_hours)
-        self.attr[PRICES] = {
-            time: value for (time, value) in self.attr[PRICES].items() if time > cutoff
-        }
-        self.attr[ENERGY] = {
-            time: value for (time, value) in self.attr[ENERGY].items() if time > cutoff
-        }
 
         # Add new data, need to check declining energy first
         previous = now - datetime.timedelta(hours=1)
@@ -217,6 +220,15 @@ class EnergyScore(SensorEntity, RestoreEntity):
             self._name,
             [round(val, 2) for key, val in _energy_usage.items()],
         )
+
+        # Clean out old data:
+        def cutoff(data: dict, hours: int) -> dict:
+            """Cuts off old energy and price data"""
+            cut_hours = now - datetime.timedelta(hours=hours)
+            return {time: value for (time, value) in data.items() if time > cut_hours}
+
+        self.attr[PRICES] = cutoff(self.attr[PRICES], self._rolling_hours)
+        self.attr[ENERGY] = cutoff(self.attr[ENERGY], self._rolling_hours + 1)
 
         # Calculate quality and break out if applicable
         q = min(len(self.attr[PRICES]), len(_energy_usage)) / self._rolling_hours
