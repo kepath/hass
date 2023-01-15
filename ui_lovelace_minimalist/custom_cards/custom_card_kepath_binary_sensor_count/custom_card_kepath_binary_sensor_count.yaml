@@ -2,25 +2,29 @@ custom_card_kepath_binary_sensor_count:
   template:
     - "ulm_translation_engine"
     - "icon_info_bg"
-    - "custom_popup_entity_list"
+    # - "custom_popup_entity_list"
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
   show_name: false
+  group_expand: true
   variables:
     ulm_card_kepath_binary_sensor_count_entity: "[[[ return entity.entity_id]]]"
     ulm_card_kepath_binary_sensor_count_popup:
       type: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_popup?.type ? variables.ulm_card_kepath_binary_sensor_count_popup.type : 'navigate'; ]]]"
       page: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_popup?.page ? variables.ulm_card_kepath_binary_sensor_count_popup.page : '/0'; ]]]"
-    ulm_card_kepath_binary_sensor_count_amount:
-      attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.attribute ? variables.ulm_card_kepath_binary_sensor_count_amount.attribute : ''; ]]]"
-      show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_amount.show_notification : false; ]]]"
-    ulm_card_kepath_binary_sensor_count_total:
-      attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_total?.attribute ? variables.ulm_card_kepath_binary_sensor_count_total.attribute : ''; ]]]"
-      show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_total?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_total.show_notification : false; ]]]"
-    ulm_card_kepath_binary_sensor_count_warning:
-      attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_warning?.attribute ? variables.ulm_card_kepath_binary_sensor_count_warning.attribute : ''; ]]]"
-      show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_warning?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_warning.show_notification : false; ]]]"
+    ulm_card_kepath_binary_sensor_count_notifications:
+      show_amount: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.show_amount ? variables.ulm_card_kepath_binary_sensor_count_notifications.show_amount : true; ]]]"
+      show_warning: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.show_warning ? variables.ulm_card_kepath_binary_sensor_count_notifications.show_warning : false; ]]]"
+    # ulm_card_kepath_binary_sensor_count_amount:
+    #   attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.attribute ? variables.ulm_card_kepath_binary_sensor_count_amount.attribute : ''; ]]]"
+    #   show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_amount.show_notification : false; ]]]"
+    # ulm_card_kepath_binary_sensor_count_total:
+    #   attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_total?.attribute ? variables.ulm_card_kepath_binary_sensor_count_total.attribute : ''; ]]]"
+    #   show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_total?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_total.show_notification : false; ]]]"
+    # ulm_card_kepath_binary_sensor_count_warning:
+    #   attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_warning?.attribute ? variables.ulm_card_kepath_binary_sensor_count_warning.attribute : ''; ]]]"
+    #   show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_warning?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_warning.show_notification : false; ]]]"
 
   # tap_action:
   #   action: "fire-dom-event"
@@ -43,8 +47,8 @@ custom_card_kepath_binary_sensor_count:
   #                 return navPath;
   #               ]]]
 
-  hold_action:
-    action: "more-info"
+  # hold_action:
+  #   action: "more-info"
   styles:
     grid:
       - grid-template-areas: "'i' 'i' 'l'"
@@ -67,7 +71,7 @@ custom_card_kepath_binary_sensor_count:
         - font-size: "12px"
         - line-height: "14px"
         - background-color: "var(--card-background-color)"
-      total_or_amount:
+      amount:
         - border-radius: "50%"
         - position: "absolute"
         - left: "30px"
@@ -80,189 +84,203 @@ custom_card_kepath_binary_sensor_count:
         - background-color: "var(--card-background-color)"
 
   custom_fields:
-    warning: >
-      [[[
-        var returnIcon = false;
-
-        if (variables.ulm_card_kepath_binary_sensor_count_warning.show_notification) {
-          var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.attribute];
-          var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.templates];
-        } else {
-          var count = 0;
-          var templates = "";
-        }
-
-        if (!isNaN(count) && count != 0 && count !== undefined){
-          if (count > 9) {
-            var count = "9-plus"
-          }
-          var returnIcon = true;
-          var icon = "mdi:numeric-0-circle".replace("0",count)
-        }
-
-        if (returnIcon) {
-          return '<ha-icon icon="' + icon + '" style="width: 12px; height: 12px; color: rgba(var(--color-red),1);"></ha-icon>';
-        } else {
-          return
-        }
-      ]]]
-    total_or_amount: >
-      [[[
-        var show_count_amount = variables.ulm_card_kepath_binary_sensor_count_amount.show_notification;
-        var show_count_total = variables.ulm_card_kepath_binary_sensor_count_total.show_notification;
-        var returnIcon = false;
-
-        if (show_count_amount) {
-          var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
-          var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.templates];
-        } else {
-          if (show_count_total) {
-            var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.attribute];
-            var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.templates];
-          } else {
-            var count = 0;
-            var templates = "";
-          }
-        }
-
-        if (!isNaN(count) && count != 0 && count !== undefined){
-          if (count > 9) {
-            var count = "9-plus"
-          }
-          var returnIcon = true;
-          var icon = "mdi:numeric-0-circle".replace("0",count)
-        }
-
-        if (returnIcon) {
-          return '<ha-icon icon="' + icon + '" style="width: 12px; height: 12px; color: rgba(var(--color-red),1);"></ha-icon>';
-        } else {
-          return
-        }
-      ]]]
-
-custom_popup_entity_list:
-  tap_action:
-    action: >
-      [[[
-        if (variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate') {
-          return "navigate";
-        } else {
-          return "fire-dom-event";
-        }
-      ]]]
-    navigation_path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_popup.page : '/0' ]]]"
-    browser_mod:
-      service: "browser_mod.sequence"
-      data:
-        sequence:
-          - service: "python_script.set_variable"
-            data:
-              entity_name: "input_text.entity_type"
-              entity_state: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type]]]"
-          - service: "browser_mod.popup"
-            data:
-              title: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type + ' entities']]]"
-              style:
-                $: >
-                  [[[
-                    if (hass.themes.theme.includes("desktop")){
-                      var dialog = `
-                        .mdc-dialog__surface{
-                          border-radius: var(--border-radius) !important;
-                        }
-                      `;
-                    } else{
-                      var dialog = "";
-                    }
-                    return `
-                      *{
-                        --secondary-background-color: none !important;
-                      }
-                      ${dialog}
-                    `;
-                  ]]]
-                hui-vertical-stack-card:
-                  $: >
-                    div.main-title::first-letter {
-                      text-transform:capitalize;
-                    }
-                    button-card {
-                      align-self: center;
-                      padding: 0.2em 0 2.3em 0;
-                    }
-                    hui-entities-card{
-                      padding: 0.8em 1.4em;
-                    }
-                  $hui-entities-card$: >
-                    ha-card{
-                      box-shadow: none;
-                    }
-                  $hui-history-graph-card$: >
-                    .content {
-                      padding: 0 2.4em !important;
-                    }
-                    ha-card{
-                      box-shadow: none;
-                    }
-                  $hui-glance-card$: >
-                    ha-card{
-                      box-shadow: none;
-                    }
-                  $hui-map-card:
-                    $: >
-                      ha-icon-button {
-                        color: rgba(var(--color-blue),1);
-                      }
-                    $ha-map:
-                      $: >
-                        .leaflet-control-attribution {
-                          display: none;
-                        }
-                        .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
-                          border: 2px solid rgba(var(--color-blue),0.4) !important;
-                        }
-                        .leaflet-bar a {
-                          background-color: rgba(var(--color-blue),0.2) !important;
-                          color: rgba(var(--color-blue),1) !important;
-                        }
-                        .leaflet-bar a:first-child {
-                          border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
-                        }
-                        .leaflet-pane.leaflet-tile-pane {
-                          filter: contrast(95%);
-                        }
-              content:
-                type: "vertical-stack"
-                cards:
-                  - type: "custom:state-switch"
-                    entity: "input_text.entity_type"
-                    default:
-                    states:
-                      door:
-                        type: vertical-stack
-                        cards:
-                          - type: 'custom:button-card'
-                            template: "card_binary_sensor"
-                            entity: group.all_binary_sensors
-                            group_expand: true
-                            variables:
-                              ulm_card_binary_sensor_alert: true
-                              ulm_show_last_changed: true
+    warning:
+      card:
+        type: "custom:button-card"
+        state:
+          - value: "on"
+            name: >
+              [[[
+                return states[entity.entity_id].state
+              ]]]
 
 
-                          # - type: entity
-                          #   entity: light.bed_e_light_light_1
+      # [[[
+      #   var returnIcon = false;
 
-                          # - type: "custom:auto-entities"
-                          #   card:
-                          #     type: entities #custom:mushroom-entity-card
-                          #     state_color: true
+      #   if (variables.ulm_card_kepath_binary_sensor_count_notifications.show_warning) {
 
 
-                          #   include:
-                          #     - domain: "binary_sensor"
-                          #       attributes:
-                          #         device_class: "door"
+
+      #     var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.attribute];
+      #     var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_warning.templates];
+      #   } else {
+      #     var count = 0;
+      #     var templates = "";
+      #   }
+
+      #   if (!isNaN(count) && count != 0 && count !== undefined){
+      #     if (count > 9) {
+      #       var count = "9-plus"
+      #     }
+      #     var returnIcon = true;
+      #     var icon = "mdi:numeric-0-circle".replace("0",count)
+      #   }
+
+      #   if (returnIcon) {
+      #     return '<ha-icon icon="' + icon + '" style="width: 12px; height: 12px; color: rgba(var(--color-red),1);"></ha-icon>';
+      #   } else {
+      #     return
+      #   }
+      # ]]]
+    amount: "todo"
+    # >
+    #   [[[
+    #     var show_count_amount = variables.ulm_card_kepath_binary_sensor_count_amount.show_notification;
+    #     var show_count_total = variables.ulm_card_kepath_binary_sensor_count_total.show_notification;
+    #     var returnIcon = false;
+
+    #     if (show_count_amount) {
+    #       var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.attribute];
+    #       var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_amount.templates];
+    #     } else {
+    #       if (show_count_total) {
+    #         var count = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.attribute];
+    #         var templates = states[entity.entity_id].attributes[variables.ulm_card_kepath_binary_sensor_count_total.templates];
+    #       } else {
+    #         var count = 0;
+    #         var templates = "";
+    #       }
+    #     }
+
+    #     if (!isNaN(count) && count != 0 && count !== undefined){
+    #       if (count > 9) {
+    #         var count = "9-plus"
+    #       }
+    #       var returnIcon = true;
+    #       var icon = "mdi:numeric-0-circle".replace("0",count)
+    #     }
+
+    #     if (returnIcon) {
+    #       return '<ha-icon icon="' + icon + '" style="width: 12px; height: 12px; color: rgba(var(--color-red),1);"></ha-icon>';
+    #     } else {
+    #       return
+    #     }
+    #   ]]]
+
+# custom_popup_entity_list:
+#   tap_action:
+#     action: >
+#       [[[
+#         if (variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate') {
+#           return "navigate";
+#         } else {
+#           return "fire-dom-event";
+#         }
+#       ]]]
+#     navigation_path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_popup.page : '/0' ]]]"
+#     browser_mod:
+#       service: "browser_mod.sequence"
+#       data:
+#         sequence:
+#           - service: "python_script.set_variable"
+#             data:
+#               entity_name: "input_text.entity_type"
+#               entity_state: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type]]]"
+#           - service: "browser_mod.popup"
+#             data:
+#               title: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type + ' entities']]]"
+#               style:
+#                 $: >
+#                   [[[
+#                     if (hass.themes.theme.includes("desktop")){
+#                       var dialog = `
+#                         .mdc-dialog__surface{
+#                           border-radius: var(--border-radius) !important;
+#                         }
+#                       `;
+#                     } else{
+#                       var dialog = "";
+#                     }
+#                     return `
+#                       *{
+#                         --secondary-background-color: none !important;
+#                       }
+#                       ${dialog}
+#                     `;
+#                   ]]]
+#                 hui-vertical-stack-card:
+#                   $: >
+#                     div.main-title::first-letter {
+#                       text-transform:capitalize;
+#                     }
+#                     button-card {
+#                       align-self: center;
+#                       padding: 0.2em 0 2.3em 0;
+#                     }
+#                     hui-entities-card{
+#                       padding: 0.8em 1.4em;
+#                     }
+#                   $hui-entities-card$: >
+#                     ha-card{
+#                       box-shadow: none;
+#                     }
+#                   $hui-history-graph-card$: >
+#                     .content {
+#                       padding: 0 2.4em !important;
+#                     }
+#                     ha-card{
+#                       box-shadow: none;
+#                     }
+#                   $hui-glance-card$: >
+#                     ha-card{
+#                       box-shadow: none;
+#                     }
+#                   $hui-map-card:
+#                     $: >
+#                       ha-icon-button {
+#                         color: rgba(var(--color-blue),1);
+#                       }
+#                     $ha-map:
+#                       $: >
+#                         .leaflet-control-attribution {
+#                           display: none;
+#                         }
+#                         .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+#                           border: 2px solid rgba(var(--color-blue),0.4) !important;
+#                         }
+#                         .leaflet-bar a {
+#                           background-color: rgba(var(--color-blue),0.2) !important;
+#                           color: rgba(var(--color-blue),1) !important;
+#                         }
+#                         .leaflet-bar a:first-child {
+#                           border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
+#                         }
+#                         .leaflet-pane.leaflet-tile-pane {
+#                           filter: contrast(95%);
+#                         }
+#               content:
+#                 type: "vertical-stack"
+#                 cards:
+#                   - type: "custom:state-switch"
+#                     entity: "input_text.entity_type"
+#                     default:
+#                     states:
+#                       door:
+#                         type: vertical-stack
+#                         cards:
+#                           - type: 'custom:button-card'
+#                             template: "card_binary_sensor"
+#                             entity: group.all_binary_sensors
+#                             group_expand: true
+#                             variables:
+#                               ulm_card_binary_sensor_alert: true
+#                               ulm_show_last_changed: true
+
+
+#                           # - type: entity
+#                           #   entity: light.bed_e_light_light_1
+
+#                           # - type: "custom:auto-entities"
+#                           #   card:
+#                           #     type: entities #custom:mushroom-entity-card
+#                           #     state_color: true
+
+
+#                           #   include:
+#                           #     - domain: "binary_sensor"
+#                           #       attributes:
+#                           #         device_class: "door"
 
 
 # entities:
@@ -349,5 +367,5 @@ custom_popup_entity_list:
                 #     aspect_ratio: "12x10"
                 #     default_zoom: 16
                 #     entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
-  hold_action:
-    action: more-info
+  # hold_action:
+  #   action: more-info
