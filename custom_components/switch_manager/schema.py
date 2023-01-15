@@ -25,7 +25,6 @@ SHAPE_PATH_SCHEMA = vol.Schema({
 BLUEPRINT_BUTTON_SCHEMA = vol.Schema({
     vol.Required('actions'): vol.All(cv.ensure_list, [BLUEPRINT_ACTION_SCHEMA]),
     vol.Optional('conditions', default=[]): vol.Any(cv.string, [CONDITION_SCHEMA]),
-    vol.Optional('shape', default='rect'): vol.In(['rect','circle','path']),
 
     vol.Optional('x'): cv.positive_int,
     vol.Optional('y'): cv.positive_int,
@@ -38,7 +37,8 @@ BLUEPRINT_SCHEMA = vol.Schema({
     vol.Required('service'): cv.string,
     vol.Required('event_type'): cv.string,
     vol.Required('buttons'): vol.All(cv.ensure_list, [BLUEPRINT_BUTTON_SCHEMA]),
-    vol.Optional('conditions', default=[]): vol.Any(cv.string, [CONDITION_SCHEMA])
+    vol.Optional('conditions', default=[]): vol.Any(cv.string, [CONDITION_SCHEMA]),
+    vol.Optional('info'): cv.string
 })
 BLUEPRINT_EVENT_SCHEMA = BLUEPRINT_SCHEMA.extend({
     vol.Required('identifier_key'): cv.string
@@ -63,3 +63,8 @@ SWITCH_MANAGER_CONFIG_SCHEMA = vol.Schema({
     vol.Optional('variables'): vol.Any(None, dict),
     vol.Required('buttons'): vol.All(cv.ensure_list, [SWITCH_MANAGER_CONFIG_BUTTON_SCHEMA])
 }, extra=vol.ALLOW_EXTRA)
+
+SERVICE_SET_VARIABLES_SCHEMA = vol.Schema({
+    vol.Required('switch_id'): vol.Any(str, int),
+    vol.Required('variables'): dict,
+})

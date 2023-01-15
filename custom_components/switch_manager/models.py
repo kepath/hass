@@ -1,3 +1,4 @@
+import time
 from .const import DOMAIN, LOGGER
 from .helpers import format_mqtt_message, get_val_from_str
 from homeassistant.core import HomeAssistant, Context, callback
@@ -30,11 +31,11 @@ async def create_event_listeners( hass: HomeAssistant, blueprint, mqtt_topic, _c
     @callback
     def _handleMQTT( message: ReceiveMessage ):
         data = format_mqtt_message(message)
-        _callback( data, Context() )
+        _callback( data.copy(), Context() )
     
     @callback
     def _handleEvent( event ):
-        _callback( event.data, event.context )
+        _callback( event.data.copy(), event.context )
 
     listeners = []
     if blueprint.is_mqtt:
@@ -62,6 +63,7 @@ class Blueprint:
         self.mqtt_topic_format = config.get('mqtt_topic_format', None)
         self.mqtt_sub_topics = config.get('mqtt_sub_topics', False)
         self.identifier_key = config.get('identifier_key')
+        self.info = config.get('info')
         self.conditions = convert_conditions( hass, config.get('conditions', []) )
 
         self.buttons = [] # config.get('buttons')
@@ -123,7 +125,6 @@ class BlueprintButton:
         self.d = config.get('d')
         self.width = config.get('width')
         self.height = config.get('height')
-        self.shape = config.get('shape')
         self.conditions = convert_conditions( hass, config.get('conditions', []) )
         self.index = index;
 
@@ -198,9 +199,7 @@ class ManagedSwitchConfigButtonAction:
                     script_mode=self.mode
                 )
 
-    def _check_conditions( self, data, monitored ) -> bool:
-        if not self.active and not monitored:
-            return False
+    def _check_conditions( self, data ) -> bool:
         return self.blueprint.check_conditions( data )
 
     async def run( self, data, context ):
@@ -232,21 +231,31 @@ class ManagedSwitchConfigButton:
 
         self.active = False
         for i in range(len(config.get('actions'))):
+            # Way to handle blueprint mismatch
+            try:
+                blueprint_action = self.blueprint.actions[i]
+            except IndexError:
+                blueprint_action = BlueprintButtonAction(hass, { 'mode': 'single', 'sequence': [] }, i)
+
             action = ManagedSwitchConfigButtonAction( 
                         hass,
                         switch_id,
                         index,
                         i,
-                        self.blueprint.actions[i], 
+                        blueprint_action, 
                         config.get('actions')[i] 
                     )
             self.actions.append(action)
             if action.active:
                 self.active = True
 
-    def _check_conditions( self, data, monitored: bool ):
-        if not self.active and not monitored:
-            return False
+    def setInactive( self ):
+        self.active = False
+        for action in self.actions:
+            action.active = False
+            action.script = None
+
+    def _check_conditions( self, data ):
         return self.blueprint.check_conditions( data )
 
     # home assistant json
@@ -259,8 +268,7 @@ class ManagedSwitchConfigButton:
 
 class ManagedSwitchConfig:
 
-    # Allow the switch to be created so it can be deleted via gui
-    # Otherwise there will be zombie stored data
+    # Allow the switch to be created so it can be deleted or fixed via GUI
     def __init__( self, hass: HomeAssistant, blueprint: Blueprint, _id, config ):
         """Initialize ManagedSwitch."""
         self._hass = hass
@@ -271,10 +279,11 @@ class ManagedSwitchConfig:
         self.identifier = config.get('identifier')
         self.blueprint: Blueprint
         self.valid_blueprint: bool
+        self.is_mismatch: bool
         self.variables: dict = config.get('variables')
         self.buttons: list[ManagedSwitchConfigButton] = []
         self.enabled: bool = config.get('enabled', True)
-        
+        self.button_last_state: list = []
         self.setBlueprint( blueprint, config.get('buttons') )
         self.buildButtons( config.get('buttons') )
 
@@ -284,13 +293,15 @@ class ManagedSwitchConfig:
         self.name = config.get('name')
         self.identifier = config.get('identifier')
         self.variables = config.get('variables')
-        self.buttons = []
-        
+        self.button_last_state = []
         self.buildButtons( config.get('buttons') )
         
     def setBlueprint( self, blueprint: Blueprint, buttons_config = None ):
         self.blueprint = blueprint
         self.valid_blueprint = type(blueprint) is Blueprint
+        self.is_mismatch = False
+        self._error = None
+
         if not self.valid_blueprint:
             self._setError(f"Blueprint {self.blueprint} for {self.name} not loaded, check logs")
             return
@@ -298,23 +309,37 @@ class ManagedSwitchConfig:
         if buttons_config:
             if len(buttons_config) != len(self.blueprint.buttons):
                 self._setError(f"Blueprint {self.blueprint.id} mismatch for buttons on {self.name}")
-                self.valid_blueprint = False
+                self.is_mismatch = True
                 return
             for i in range(len(buttons_config)):
                 if len(buttons_config[i].get('actions')) != len(self.blueprint.buttons[i].actions):
                     self._setError(f"Blueprint {self.blueprint.id} mismatch for actions on {self.name}")
-                    self.valid_blueprint = False
+                    self.is_mismatch = True
                     return
+
+    def mergeVariables( self, data ):
+        self.variables.update(data)
 
     def buildButtons( self, buttons_config ):
         self.stop_running_scripts()
+        self.buttons = []
+        # No blueprint was loaded and is a string
         if not self.valid_blueprint:
             return
 
         for i in range(len(buttons_config)):
+            # Way to handle blueprint mismatch
+            try:
+                blueprint_button = self.blueprint.buttons[i]
+            except IndexError:
+                blueprint_button = BlueprintButton(self._hass, { 'actions': [] }, i)
+
             self.buttons.append(
-                    ManagedSwitchConfigButton( self._hass, self.id, i, self.blueprint.buttons[i], buttons_config[i] )
+                    ManagedSwitchConfigButton( self._hass, self.id, i, blueprint_button, buttons_config[i] )
                 )
+            if self.is_mismatch:
+                self.buttons[i].setInactive()
+            self.button_last_state.append(None)
     
     def add_listener(self, callback):
         self.listeners.append(callback)
@@ -334,26 +359,30 @@ class ManagedSwitchConfig:
     async def start(self): 
         # Reset state for new instances as this should also be called as a restart
         self.stop()
-        if self._event_listeners or not self.valid_blueprint or not self.enabled:
+        if self._event_listeners or self._error or not self.enabled:
             return
 
         def _processIncoming( data, context ):
-            data.update({'variables': self.variables})
 
+            data.update({'variables': self.variables, 'switch_id': self.id, 'button_last_state': self.button_last_state.copy(), 'timestamp': time.time() })
             if not self.enabled or not self._check_conditons( data ):
                 return
 
             button_index = -1
             for button in self.buttons:
                 button_index += 1
-                if not button._check_conditions( data, self.monitored() ):
+                if not button._check_conditions( data ):
                     continue
                 action_index = -1
                 for action in button.actions:
                     action_index += 1
-                    if not action._check_conditions( data, self.monitored() ):
+                    if not action._check_conditions( data ):
                         continue
                     self._hass.async_create_task( action.run( data={ "data": data }, context=context ) )
+                    self.button_last_state[button_index] = {
+                        "action": action_index,
+                        "timestamp": data['timestamp']
+                    }
                     self.notify('action_triggered', { 'button': button_index, 'action': action_index, 'data': data })
 
         self._event_listeners = await create_event_listeners( self._hass, self.blueprint, self.identifier, _processIncoming )

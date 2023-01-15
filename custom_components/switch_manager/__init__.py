@@ -10,14 +10,14 @@ from .const import (
     LOGGER    
 )
 from .store import SwitchManagerStore
-from .helpers import load_blueprints, VERSION, deploy_blueprints, check_blueprints_folder_exists, _get_blueprint, _set_switch_config
-from .view import async_setup_view
+from .helpers import load_blueprints, VERSION, deploy_blueprints, check_blueprints_folder_exists, _get_blueprint, _get_switch_config, _set_switch_config
+from .view import async_setup_view, async_bind_blueprint_images
 from . import models
-from .schema import BLUEPRINT_MQTT_SCHEMA, BLUEPRINT_EVENT_SCHEMA
+from .schema import BLUEPRINT_MQTT_SCHEMA, BLUEPRINT_EVENT_SCHEMA, SERVICE_SET_VARIABLES_SCHEMA
 from .connections import async_setup_connections
-
 from homeassistant.core import Config, HomeAssistant, callback
 from homeassistant.config import _format_config_error
+from homeassistant.helpers import issue_registry as ir
 
 async def async_setup( hass: HomeAssistant, config: Config ):
     """Set up is called when Home Assistant is loading our component."""
@@ -49,12 +49,20 @@ async def async_setup( hass: HomeAssistant, config: Config ):
         await hass.data[DOMAIN][CONF_STORE].load()
         await _init_blueprints(hass)
         await _init_switch_configs(hass)
+        await async_bind_blueprint_images(hass)
 
+    @callback
+    async def switch_merge_variables( call ):
+        switch = _get_switch_config(hass, call.data.get('switch_id'))
+        if not switch:
+            return
+        switch.mergeVariables( call.data.get('variables') )
 
     await _init_blueprints(hass)
     await _init_switch_configs(hass)
 
     hass.async_add_executor_job( hass.services.register, DOMAIN, 'reload', reload_all )
+    hass.async_add_executor_job( hass.services.register, DOMAIN, 'set_variables', switch_merge_variables, SERVICE_SET_VARIABLES_SCHEMA )
 
     # Return boolean to indicate that initialization was successful.
     return True
@@ -84,6 +92,11 @@ async def _init_blueprints( hass: HomeAssistant ):
         except vol.Invalid as ex:
             LOGGER.error(_format_config_error(ex, f"{DOMAIN} {CONF_BLUEPRINTS}({config.get('id')})", config))
             continue
+        if len(c_validated.get('buttons')) == 1:
+            button = c_validated.get('buttons')[0]
+            if button.get('x') or button.get('y') or button.get('width') or button.get('height') or button.get('d'):
+                LOGGER.error(f"{DOMAIN} {CONF_BLUEPRINTS}({config.get('id')}) Single button blueprints should not have x, y, width, height or d")
+                continue
         blueprints[config.get('id')] = models.Blueprint(hass, config.get('id'), c_validated, config.get('has_image'))
 
 
@@ -97,3 +110,18 @@ async def _init_switch_configs( hass: HomeAssistant ):
             switches[_id] 
         )
         await _set_switch_config( hass, switch )
+
+        if switch.is_mismatch:
+            ir.async_create_issue(
+                    hass,
+                    domain=DOMAIN,
+                    issue_id=f"switch_{_id}_mismatch",
+                    is_persistent=False,
+                    is_fixable=False,
+                    learn_more_url=f"/switch_manager/edit/{_id}",
+                    severity=ir.IssueSeverity.ERROR,
+                    translation_key="mismatch",
+                    translation_placeholders={
+                        'name': switch.name
+                    }
+                )
