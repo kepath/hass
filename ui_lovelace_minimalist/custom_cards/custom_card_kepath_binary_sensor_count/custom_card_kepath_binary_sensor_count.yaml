@@ -1,3 +1,5 @@
+---
+
 custom_card_kepath_binary_sensor_count:
   template:
     - "ulm_translation_engine"
@@ -123,7 +125,8 @@ custom_card_kepath_binary_sensor_count:
       #     return
       #   }
       # ]]]
-    amount: "todo"
+    amount: >
+      {{ expand('group.all_door_binary_sensors') | selectattr('state','eq', 'on') | list | count }}
     # >
     #   [[[
     #     var show_count_amount = variables.ulm_card_kepath_binary_sensor_count_amount.show_notification;

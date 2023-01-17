@@ -1,4 +1,21 @@
-# template:
+---
+
+template:
+  - sensor:
+      - name: "binary_sensor_status_counts"
+        state: "{{ 'off' if states('sensor.hacs') | float == 0 else 'on' }}"
+        attributes:
+          updates_count: "{{ expand('group.all_updates') | selectattr('state','eq', 'on') | list | count }}"
+          doors_open_count: "{{ expand('group.all_door_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
+          door_sensors_unavailable_count: "{{ expand('group.all_door_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          lights_on_count: "{{ expand('group.all_lights') | selectattr('state','eq', 'on') | list | count }}"
+          occupancy_count: "{{ expand('group.all_occupancy_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
+          occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          safety_alert_count: "{{ expand('group.all_safety_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
+          safety_sensors_unavailable_count: "{{ expand('group.all_safety_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          zero_value: "{{ 0 | int }}"
+
+
 # ###############################
 # ### domain counts
 # ###############################
@@ -144,31 +161,6 @@
 #                   | selectattr('state','eq','on')
 #                   | map(attribute='entity_id') | list | count }}"
 #         hacs_update_count: "{{ states('sensor.hacs') }}"
-
-#   # - group:
-#   #   - name: "all_doors"
-#   #     entities: "{{ expand(states.binary_sensor)
-#   #                 | rejectattr('attributes.device_class', 'undefined')
-#   #                 | selectattr('attributes.device_class','eq', 'door')
-#   #                 | map(attribute='entity_id') | list }}"
-
-#     # - name: "dynamic_media_player_domain_count"
-#     #   state_class: measurement
-#     #   icon: mdi:play-box-multiple
-#     #   state: "{{ expand(states.media_player) | map(attribute='entity_id') | list | count }}"
-#     #   attributes:
-#     #     entities_unresponsive: "{{ expand(states.media_player)
-#     #               | selectattr('state','in', ['unavailable','unknown'])
-#     #               | map(attribute='entity_id') | list | count }}"
-#     #     entities_idle: "{{ expand(states.media_player)
-#     #               | selectattr('state','in', ['standby','idle'])
-#     #               | map(attribute='entity_id') | list | count }}"
-#     #     entities_off: "{{ expand(states.media_player)
-#     #               | selectattr('state','eq','off')
-#     #               | map(attribute='entity_id') | list | count }}"
-#     #     entities_active: "{{ expand(states.media_player)
-#     #               | selectattr('state','in', ['playing','paused'])
-#     #               | map(attribute='entity_id') | list | count }}"
 
 
 # #binary_sensor
