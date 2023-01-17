@@ -191,6 +191,7 @@
 (DO NOT USE/MODIFY)=== card-mod CSS: &card-mod-css # Card modifications
   card-mod-card: &card-mod-card |
     /* Header classes and fixes for specific card types */
+    /* Border on left */
     ha-card.header {
       background: var(--lcars-card-top-color) !important;
       text-transform: uppercase;
@@ -201,7 +202,7 @@
     ha-card.header > ha-markdown {
       border-radius: 20px 0 0 0;
     }
-
+    /* Border on right */
     ha-card.header-right {
       background: var(--lcars-card-top-color) !important;
       text-transform: uppercase;
@@ -215,7 +216,7 @@
       padding-top: 0px !important;
       padding-bottom: 0 !important;
     }
-
+    /* Border on both sides */
     ha-card.header-contained {
       background: var(--lcars-card-top-color) !important;
       text-transform: uppercase;
@@ -227,6 +228,19 @@
     ha-card.header-contained > ha-markdown.no-header {
       background: black;
       border-radius: 20px 20px 0px 0px;
+      padding-top: 0px !important;
+      padding-bottom: 0 !important;
+    }
+    /* Border on neither side */
+    ha-card.header-open {
+      background: var(--lcars-card-top-color) !important;
+      text-transform: uppercase;
+      border-radius: 0px 0px 0px 0px !important;
+      border-top: 10px solid var(--lcars-card-top-color);
+    }
+    ha-card.header-open > ha-markdown.no-header {
+      background: black;
+      border-radius: 0px 0px 0px 0px;
       padding-top: 0px !important;
       padding-bottom: 0 !important;
     }
@@ -369,6 +383,43 @@
     }
     ha-card.footer-contained > ha-markdown {
       border-radius: 0px 0px 20px 20px !important;
+    }
+
+    /* Border on neither side */
+    ha-card.footer-open {
+      background: var(--lcars-card-bottom-color) !important;
+      text-transform: uppercase;
+      border-radius: 0px 0px 0px 0px !important;
+      border-bottom: 10px solid var(--lcars-card-bottom-color);
+      margin-top: unset;
+    }
+    ha-card.footer-open > span {
+      background: black;
+      width: 100%;
+      padding-right: 0px;
+      padding-left: 0px;
+      margin-top: 0px;
+    }
+    ha-card.footer-open > span.state {
+      border-radius: 0px 0px 0px 0px;
+    }
+    ha-card.footer-open > .entities {
+      background: black;
+      border-radius: 0px 0px 0px 0px;
+    }
+    ha-card.footer-open > #states {
+      background: black;
+      border-radius: 0px 0px 0px 0px;
+      padding-top: 0px !important;
+      padding-bottom: 0 !important;
+    }
+    ha-card.footer-open > ha-state-icon {
+      background: black;
+      width: 100%;
+      --mdc-icon-size: 40%
+    }
+    ha-card.footer-open > ha-markdown {
+      border-radius: 0px 0px 0px 0px !important;
     }
 
     /* Fixes across card types */
@@ -535,6 +586,47 @@
       padding-bottom: 45px;
       color: black;
     }
+    /* Markdown bar */
+    ha-card.bar {
+      text-transform: uppercase;
+      border-left: 35px solid var(--lcars-card-top-color);
+      background-color: var(--lcars-card-top-color);
+      display: flex;
+    }
+    ha-card.bar-right {
+      text-transform: uppercase;
+      border-right: 35.5px solid var(--lcars-card-top-color);
+      background-color: var(--lcars-card-top-color);
+      display: flex;
+      justify-content: right;
+    }
+    ha-card.bar > ha-markdown,
+    ha-card.bar-right > ha-markdown {
+      padding: 2px 8px 2px !important;
+      margin-top: -8px;
+      margin-bottom: -3px;
+    }
+    /* Markdown bar large */
+    ha-card.bar-large {
+      text-transform: uppercase;
+      border-left: 35px solid var(--lcars-card-top-color);
+      background-color: var(--lcars-card-top-color);
+      display: flex;
+    }
+    ha-card.bar-large-right {
+      text-transform: uppercase;
+      border-right: 35.5px solid var(--lcars-card-top-color);
+      background-color: var(--lcars-card-top-color);
+      display: flex;
+      justify-content: right;
+    }
+    ha-card.bar-large > ha-markdown,
+    ha-card.bar-large-right > ha-markdown {
+      padding: 0px 8px 0px !important;
+      margin-top: -8px;
+      margin-bottom: -3px;
+      font-size: 1.5em;
+    }
     /* Hacky workaround to add middle-type class to horizontal and vertical stack cards */
     /* More info: https://github.com/thomasloven/lovelace-card-mod#styling-cards-without-an-ha-card-element */
     .type-custom-mod-card {
@@ -551,7 +643,7 @@
       background: black;
       border-radius: unset;
       padding-top: 0px !important;
-      padding-bottom: 0 !important;
+      padding-bottom: 0px !important;
     }
     /* Various generic card fixes */
     /*.entities {
@@ -647,21 +739,28 @@
       margin-left: -1px !important;
       borer-radius: 20px !important;
     }
-    .edit-mode app-header {
-      background: transparent !important;
-    }
     .edit-mode app-toolbar {
       background: var(--lcars-ui-primary) !important;
+    }
+    paper-icon-button.not-visible {
+      display: none;
     }
     app-toolbar {
       border-right: 30px solid var(--lcars-card-top-color);
       border-radius: 0px 30px 30px 0px;
       margin-right: 1px;
     }
-    ha-tabs, paper-tabs {
+    ha-tabs {
+      width: 100%;
+      height: 100%;
+      margin-left: 30px !important;
+      border-left: solid black 4px;
+    }
+    .edit-mode > ha-tabs, 
+    .edit-mode > paper-tabs {
       --paper-tabs-selection-bar-color: transparent !important;
       border-left: solid black 4px;
-      margin-left: 22px !important;
+      margin-left: 0px !important;
     }
     /* Code for the clock */
     app-toolbar::after {
@@ -681,7 +780,7 @@
       border-right: 5px solid black;
       border-left: 5px solid black;
     }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 850px) {
       app-toolbar::after {
         content: "";
         border-left: 0px solid black;
