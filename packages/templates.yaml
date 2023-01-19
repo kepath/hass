@@ -11,6 +11,7 @@ template:
           lights_on_count: "{{ expand('group.all_lights') | selectattr('state','eq', 'on') | list | count }}"
           occupancy_count: "{{ expand('group.all_occupancy_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          occupancy_persons_home_count: "{{ expand(states.person) | selectattr('state','eq','home') | map(attribute='entity_id') | list | count }}"
           safety_alert_count: "{{ expand('group.all_safety_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           safety_sensors_unavailable_count: "{{ expand('group.all_safety_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           zero_value: "{{ 0 | int }}"

@@ -168,8 +168,14 @@ views:
                           type: "navigate"
                           page: "/hacs"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          amount_attribute: "sensor.hacs.state"
-                          unavailable_attribute: "sensor.binary_sensor_status_counts.attributes.zero_value"
+                          amount:
+                            entity: "sensor.hacs"
+                            subtype: "state"
+                            value: ""
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "zero_value"
 
                   item4:
                     card:
@@ -185,8 +191,15 @@ views:
                           type: "navigate"
                           page: "/config/updates"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          amount_attribute: "sensor.binary_sensor_status_counts.attributes.updates_count"
-                          unavailable_attribute: "sensor.binary_sensor_status_counts.attributes.zero_value"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "updates_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "zero_value"
+
                   item5:
                     card:
                       type: "custom:button-card"
@@ -202,8 +215,14 @@ views:
                           type: "door"
                           page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          amount_attribute: "sensor.binary_sensor_status_counts.attributes.doors_open_count"
-                          unavailable_attribute: "sensor.binary_sensor_status_counts.attributes.door_sensors_unavailable_count"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "doors_open_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "door_sensors_unavailable_count"
 
                   item6:
                     card:
@@ -219,15 +238,21 @@ views:
                           type: "light"
                           page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          amount_attribute: "sensor.binary_sensor_status_counts.attributes.lights_on_count"
-                          unavailable_attribute: "sensor.binary_sensor_status_counts.attributes.zero_value"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "lights_on_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "zero_value"
 
                   item7:
                     card:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_count"
-                        # - "card_occupancy_state"
+                        - "card_occupancy_state"
                       entity: "group.all_occupancy_binary_sensors"
                       icon: "mdi:human-greeting"
                       variables:
@@ -235,8 +260,18 @@ views:
                           type: "occupancy"
                           page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          amount_attribute: "sensor.binary_sensor_status_counts.attributes.occupancy_count"
-                          unavailable_attribute: "sensor.binary_sensor_status_counts.attributes.occupancy_sensors_unavailable_count"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "occupancy_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "occupancy_sensors_unavailable_count"
+                          person:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "occupancy_persons_home_count"
 
                   item8:
                     card:
@@ -253,8 +288,14 @@ views:
                           type: "safety"
                           page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          amount_attribute: "sensor.binary_sensor_status_counts.attributes.safety_alert_count"
-                          unavailable_attribute: "sensor.binary_sensor_status_counts.attributes.safety_sensors_unavailable_count"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "safety_alert_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "safety_sensors_unavailable_count"
 
           - type: "horizontal-stack"
             cards:
