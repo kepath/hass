@@ -185,6 +185,10 @@ class BleParser:
                 for service_data in service_data_list:
                     # parse data for sensors with service data
                     uuid16 = (service_data[3] << 8) | service_data[2]
+                    if uuid16 == 0x1809:
+                        # UUID16 = Health Thermometer service (used by Relsib)
+                        sensor_data = parse_relsib(self, service_data, mac, rssi)
+                        break
                     if uuid16 == 0x181A:
                         # UUID16 = Environmental Sensing (used by ATC or b-parasite)
                         if len(service_data) == 22 or len(service_data) == 20:
@@ -205,10 +209,9 @@ class BleParser:
                         sensor_data = parse_relsib(self, service_data, mac, rssi)
                         break
                     elif uuid16 == 0xF525:
-                        # UUID16 = Jaalee (also contains iBeacon manufacturer specific data)
-                        if man_spec_data_list:
-                            sensor_data = parse_jaalee(self, service_data, mac, rssi)
-                            break
+                        # UUID16 = Jaalee
+                        sensor_data = parse_jaalee(self, service_data, mac, rssi)
+                        break
                     elif uuid16 == 0xFCD2:
                         # UUID16 = Allterco Robotics ltd (BTHome V2)
                         sensor_data = parse_bthome(self, service_data, uuid16, mac, rssi)
@@ -271,7 +274,8 @@ class BleParser:
                             sensor_data, tracker_data = parse_tilt(self, man_spec_data, mac, rssi)
                             break
                         elif int.from_bytes(man_spec_data[6:22], byteorder='big') in JAALEE_TYPES:
-                            # skip Jaalee iBeacon messages, as they don't have a unique uuid
+                            # Jaalee
+                            sensor_data = parse_jaalee(self, man_spec_data, mac, rssi)
                             break
                         else:
                             # iBeacon
@@ -315,6 +319,10 @@ class BleParser:
                         break
                     elif comp_id in [0x2111, 0x2112, 0x2121, 0x2122] and data_len == 0x0B:
                         # Air Mentor
+                        sensor_data = parse_airmentor(self, man_spec_data, mac, rssi)
+                        break
+                    elif comp_id in [0x5112, 0x5122, 0x6111, 0x6121] and data_len == 0x0f:
+                        # Air Mentor 2S
                         sensor_data = parse_airmentor(self, man_spec_data, mac, rssi)
                         break
                     elif comp_id == 0x8801 and data_len in [0x0C, 0x25]:
