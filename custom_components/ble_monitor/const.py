@@ -17,11 +17,11 @@ from homeassistant.const import (
     CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
     CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER,
     CONDUCTIVITY,
-    ELECTRIC_POTENTIAL_VOLT,
     LIGHT_LUX,
     PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
     Platform,
+    UnitOfElectricPotential,
     UnitOfEnergy,
     UnitOfMass,
     UnitOfPower,
@@ -114,7 +114,7 @@ CONF_HMAX = 99.9
 
 # Sensors with deviating temperature range
 KETTLES = ('YM-K1501', 'YM-K1501EU', 'V-SK152')
-PROBES = ('iBBQ-2', 'iBBQ-4', 'iBBQ-6', 'H5182', 'H5183', 'H5185')
+PROBES = ('iBBQ-2', 'iBBQ-4', 'iBBQ-6', 'H5182', 'H5183', 'H5184', 'H5185', 'H5198')
 
 
 # Sensor entity description
@@ -463,6 +463,26 @@ SENSOR_TYPES: tuple[BLEMonitorSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
     ),
     BLEMonitorSensorEntityDescription(
+        key="temperature alarm probe 3",
+        sensor_class="TemperatureSensor",
+        update_behavior="Averaging",
+        name="ble temperature alarm probe 3",
+        unique_id="t_alarm_probe_3_",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    BLEMonitorSensorEntityDescription(
+        key="temperature alarm probe 4",
+        sensor_class="TemperatureSensor",
+        update_behavior="Averaging",
+        name="ble temperature alarm probe 4",
+        unique_id="t_alarm_probe_4_",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+    ),
+    BLEMonitorSensorEntityDescription(
         key="temperature calibrated",
         sensor_class="TemperatureSensor",
         update_behavior="Averaging",
@@ -594,7 +614,7 @@ SENSOR_TYPES: tuple[BLEMonitorSensorEntityDescription, ...] = (
         update_behavior="Averaging",
         name="ble voltage",
         unique_id="v_",
-        native_unit_of_measurement=ELECTRIC_POTENTIAL_VOLT,
+        native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -1069,7 +1089,7 @@ MEASUREMENT_DICT = {
     'K9B-1BTN'                : [["rssi"], ["one btn switch"], []],
     'K9B-2BTN'                : [["rssi"], ["two btn switch left", "two btn switch right"], []],
     'K9B-3BTN'                : [["rssi"], ["three btn switch left", "three btn switch middle", "three btn switch right"], []],
-    'K9BB-1BTN'                : [["battery", "rssi"], ["one btn switch"], []],
+    'K9BB-1BTN'               : [["battery", "rssi"], ["one btn switch"], []],
     'MS1BB(MI)'               : [["battery", "rssi"], ["button"], ["opening"]],
     'HS1BB(MI)'               : [["illuminance", "battery", "rssi"], [], ["motion"]],
     'XMWXKG01YL'              : [["rssi"], ["two btn switch left", "two btn switch right"], []],
@@ -1094,13 +1114,17 @@ MEASUREMENT_DICT = {
     'H5072/H5075'             : [["temperature", "humidity", "battery", "rssi"], [], []],
     'H5101/H5102/H5177'       : [["temperature", "humidity", "battery", "rssi"], [], []],
     'H5051/H5071'             : [["temperature", "humidity", "battery", "rssi"], [], []],
+    'H5052'                   : [["temperature", "humidity", "battery", "rssi"], [], []],
+    'H5071'                   : [["temperature", "humidity", "battery", "rssi"], [], []],
     'H5074'                   : [["temperature", "humidity", "battery", "rssi"], [], []],
     'H5178'                   : [["temperature", "humidity", "battery", "rssi"], [], []],
     'H5178-outdoor'           : [["temperature", "humidity", "battery", "rssi"], [], []],
     'H5179'                   : [["temperature", "humidity", "battery", "rssi"], [], []],
     'H5182'                   : [["temperature probe 1", "temperature alarm probe 1", "temperature probe 2", "temperature alarm probe 2", "rssi"], [], []],
     'H5183'                   : [["temperature probe 1", "temperature alarm probe 1", "rssi"], [], []],
+    'H5184'                   : [["temperature probe 1", "temperature alarm probe 1", "temperature probe 2", "temperature alarm probe 2", "temperature probe 3", "temperature alarm probe 3", "temperature probe 4", "temperature alarm probe 4", "rssi"], [], []],
     'H5185'                   : [["temperature probe 1", "temperature alarm probe 1", "temperature probe 2", "temperature alarm probe 2", "rssi"], [], []],
+    'H5198'                   : [["temperature probe 1", "temperature alarm probe 1", "temperature probe 2", "temperature alarm probe 2", "temperature probe 3", "temperature alarm probe 3", "temperature probe 4", "temperature alarm probe 4", "rssi"], [], []],
     'Ruuvitag'                : [["temperature", "humidity", "pressure", "battery", "voltage", "rssi"], ["acceleration"], ["motion"]],
     'iNode Energy Meter'      : [["battery", "voltage", "rssi"], ["energy", "power"], []],
     "iNode Care Sensor 1"     : [["temperature", "battery", "voltage", "rssi"], ["acceleration"], ["motion"]],
@@ -1222,13 +1246,17 @@ MANUFACTURER_DICT = {
     'H5072/H5075'             : 'Govee',
     'H5101/H5102/H5177'       : 'Govee',
     'H5051/H5071'             : 'Govee',
+    'H5052'                   : 'Govee',
+    'H5071'                   : 'Govee',
     'H5074'                   : 'Govee',
     'H5178'                   : 'Govee',
     'H5178-outdoor'           : 'Govee',
     'H5179'                   : 'Govee',
     'H5182'                   : 'Govee',
     'H5183'                   : 'Govee',
+    'H5184'                   : 'Govee',
     'H5185'                   : 'Govee',
+    'H5198'                   : 'Govee',
     'Ruuvitag'                : 'Ruuvitag',
     'iNode Energy Meter'      : 'iNode',
     "iNode Care Sensor 1"     : 'iNode',
@@ -1283,6 +1311,7 @@ RENAMED_MODEL_DICT = {
     'HA BLE DIY': 'BTHome',
     'LINP-M1': 'MS1BB(MI)',
     'M1SBB(MI)': 'MS1BB(MI)',
+    'H5051/H5071': 'H5051',
 }
 
 
