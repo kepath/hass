@@ -1,5 +1,4 @@
 ---
-
 custom_card_kepath_binary_sensor_count:
   template:
     - "ulm_translation_engine"
@@ -10,60 +9,6 @@ custom_card_kepath_binary_sensor_count:
   show_label: false
   show_name: false
   group_expand: true
-  # variables:
-  #   ulm_card_kepath_binary_sensor_count_entity: "[[[ return entity.entity_id]]]"
-  #   ulm_card_kepath_binary_sensor_count_popup:
-  #     type: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_popup?.type ? variables.ulm_card_kepath_binary_sensor_count_popup.type : 'navigate'; ]]]"
-  #     page: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_popup?.page ? variables.ulm_card_kepath_binary_sensor_count_popup.page : '/0'; ]]]"
-  #   ulm_card_kepath_binary_sensor_count_notifications:
-  #     # amount_attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount_attribute ? variables.ulm_card_kepath_binary_sensor_count_notifications.amount_attribute : 0; ]]]"
-  #     # unavailable_attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable_attribute ? variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable_attribute : 0; ]]]"
-  #     amount_entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity ? variables.ulm_card_kepath_binary_sensor_count_notifications.amount.entity : 0; ]]]"
-  #     amount_subtype: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.subtype ? variables.ulm_card_kepath_binary_sensor_count_notifications.amount.subtype : 0; ]]]"
-  #     amount_value: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.value ? variables.ulm_card_kepath_binary_sensor_count_notifications.amount.value : 0; ]]]"
-  #     unavailable_entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity ? variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.entity : 0; ]]]"
-  #     unavailable_subtype: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.subtype ? variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.subtype : 0; ]]]"
-  #     unavailable_value: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.value ? variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.value : 0; ]]]"
-    # ulm_card_kepath_binary_sensor_count_amount:
-    #   attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.attribute ? variables.ulm_card_kepath_binary_sensor_count_amount.attribute : ''; ]]]"
-    #   show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_amount.show_notification : false; ]]]"
-    # ulm_card_kepath_binary_sensor_count_total:
-    #   attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_total?.attribute ? variables.ulm_card_kepath_binary_sensor_count_total.attribute : ''; ]]]"
-    #   show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_total?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_total.show_notification : false; ]]]"
-    # ulm_card_kepath_binary_sensor_count_warning:
-    #   attribute: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_warning?.attribute ? variables.ulm_card_kepath_binary_sensor_count_warning.attribute : ''; ]]]"
-    #   show_notification: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_warning?.show_notification ? variables.ulm_card_kepath_binary_sensor_count_warning.show_notification : false; ]]]"
-
-  # tap_action:
-  #   action: "fire-dom-event"
-  #   browser_mod:
-  #     service: "browser_mod.sequence"
-  #     data:
-  #       sequence:
-  #         - service: "python_script.set_variable"
-  #           data:
-  #             entity_name: "input_text.entity_type"
-  #             entity_state: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type]]]"
-  #         - service: browser_mod.navigate
-  #           data:
-  #             path: >
-  #               [[[
-  #                 var navPath = '/lovelace-minimalist-entity-list';
-  #                 if (variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate') {
-  #                   var navPath = variables.ulm_card_kepath_binary_sensor_count_popup.page;
-  #                 }
-  #                 return navPath;
-  #               ]]]
-
-  # hold_action:
-  #   action: "more-info"
-
-
-
-
-
-
-
   styles:
     grid:
       - grid-template-areas: "'i' 'i' 'l'"
@@ -216,13 +161,6 @@ custom_popup_entity_list:
       ]]]
     navigation_path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_popup.page : '/0' ]]]"
     browser_mod:
-      # service: "browser_mod.sequence"
-      # data:
-      #   sequence:
-      #     - service: "python_script.set_variable"
-      #       data:
-      #         entity_name: "input_text.entity_type"
-      #         entity_state: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type]]]"
       service: "browser_mod.popup"
       data:
         title: "[[[return variables.ulm_card_kepath_binary_sensor_count_popup.type + ' entities']]]"
@@ -300,51 +238,18 @@ custom_popup_entity_list:
           cards:
             - type: 'custom:auto-entities'
               card:
-                type: entities
+                type: "entities"
               filter:
                 include:
                   - group: "[[[ return entity.entity_id ]]]"
               sort:
-                method: state
+                method: "state"
                 reverse: true
   hold_action:
-    action: more-info
+    action: "more-info"
 
 # https://github.com/custom-cards/button-card#Action
 # https://github.com/thomasloven/hass-browser_mod
 
 # https://github.com/thomasloven/lovelace-state-switch
 # https://github.com/thomasloven/lovelace-auto-entities
-
-                # type: "vertical-stack"
-                # cards:
-                #   - type: "entities"
-                #     entities:
-                #       - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
-                #         secondary_info: "last-changed"
-                #   - type: "history-graph"
-                #     entities:
-                #       - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
-                #   - type: "glance"
-                #     show_state: false
-                #     entities:
-                #       - entity: "[[[ return variables.ulm_card_kepath_person_wifi_tracker; ]]]"
-                #         name: "WiFi"
-                #         icon: "mdi:wifi"
-                #         style: &state >
-                #           state-badge{
-                #             color: {{ 'rgba(var(--color-blue),1)' if is_state(config.entity, 'home') }};
-                #             filter: {{ 'opacity(100%)' if is_state(config.entity, 'home') else 'opacity(40%)'}};
-                #           }
-                #       - entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker; ]]]"
-                #         name: "GPS"
-                #         icon: "mdi:map-marker"
-                #         style: *state
-                #   - type: "custom:button-card"
-                #     template:
-                #       - "find_my_phone_button_kepath"
-                #     entity: "[[[ return variables.ulm_card_kepath_person_findmy_script; ]]]"
-                #   - type: "map"
-                #     aspect_ratio: "12x10"
-                #     default_zoom: 16
-                #     entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"

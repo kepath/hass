@@ -7,7 +7,7 @@ domain = 'binary_sensor'
 entity_list = []
 
 if not isinstance(group, str) or not domain or not group:
-    logger.warning("bad domain or group! Not executing.")
+    logger.warning("Domain does not exist")
 
 name = f"All binary sensor {collection_name} group"
 excluded_entities = [
@@ -17,17 +17,18 @@ excluded_entities = [
     "binary_sensor.chrome_workdell",
     "binary_sensor.c105a8ea_57917284",
     "binary_sensor.front_g3_flex_motion",
-    "binary_sensor.diskstation_security_status"
+    "binary_sensor.diskstation_security_status",
+    "binary_sensor.front_door_tablet"
 ]
 
 for entity_id in hass.states.entity_ids(domain):
     if entity_id == "":
-        logger.error(logger, f"**Required parameter 'entity_id' is missing.**\n\nAction '{action.lower()}' NOT executed.")
+        logger.error(logger, f"Error - entity_id missing when looping through domain")
     else:
         if entity_id not in excluded_entities:
             entity = hass.states.get(entity_id)
             if entity is None:
-                logger.error(logger, f"**Cannot find entity '{entity_id}'.**\n\nAction '{action.lower()}' NOT executed.")
+                logger.error(logger, f"Error - entity object not found")
             else:
                 for attr in entity.attributes:
                     if attr is not None:
