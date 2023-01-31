@@ -276,3 +276,326 @@ views:
             entity: sensor.zigbee_door_sensor_patio_2_linkquality
           - type: custom:button-card
             template: edge
+
+  - title: Floorplan
+    icon: mdi:rotate-3d
+    theme: minimalist-mobile
+    cards:
+      - type: custom:floor3d-card
+        path: /local/floorplan/digitalTwin
+        objfile: 28GriffithRoad_export.obj
+        mtlfile: 28GriffithRoad_export.mtl
+
+  - title: Ground Floor
+    icon: mdi:home-floor-g
+    theme: minimalist-mobile
+    panel: true
+    cards:
+      - type: picture-elements
+        image: local/floorplan/ground/dark.png
+
+        elements:
+
+          # study
+          - type: image
+            entity: light.study_light_light_1
+            style:
+              left: 50%
+              top: 50%
+              width: 100%
+            state_image:
+              'on': local/floorplan/ground/study_on.png
+              'off': local/floorplan/transparent.png
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+
+          # bottom hallway
+          - type: image
+            entity: light.shelly1l_hallway_bottom_light_1
+            style:
+              left: 50%
+              top: 50%
+              width: 100%
+            state_image:
+              'on': local/floorplan/ground/hallway_on.png
+              'off': local/floorplan/transparent.png
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+          # - type: state-icon
+          #   entity: light.shelly1l_hallway_bottom_light_1
+          #   style:
+          #     left: 55%
+          #     top: 55%
+          #   tap_action:
+          #     action: toggle
+
+          # lounge
+          - type: image
+            entity: light.lounge_light_light_1
+            style:
+              left: 50%
+              top: 50%
+              width: 100%
+            state_image:
+              'on': local/floorplan/ground/lounge_on.png
+              'off': local/floorplan/transparent.png
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+
+          # kitchen
+          - type: image
+            entity: light.kitchen_main_light_light_1
+            style:
+              left: 50%
+              top: 50%
+              width: 100%
+            state_image:
+              'on': local/floorplan/ground/kitchen_2_on.png
+              'off': local/floorplan/transparent.png
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+          - type: image
+            entity: light.kitchen_utility_light_light_1
+            style:
+              left: 50%
+              top: 50%
+              width: 100%
+            state_image:
+              'on': local/floorplan/ground/kitchen_1_on.png
+              'off': local/floorplan/transparent.png
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+
+          # front door
+          - type: image
+            entity: binary_sensor.zigbee_door_sensor_front_contact
+            style:
+              left: 50%
+              top: 50%
+              width: 100%
+            state_image:
+              'on': local/floorplan/ground/front_door.png
+              'off': local/floorplan/transparent.png
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+
+          # back door
+          - type: image
+            entity: binary_sensor.zigbee_door_sensor_back_contact
+            style:
+              left: 50%
+              top: 50%
+              width: 100%
+            state_image:
+              'on': local/floorplan/ground/back_door.png
+              'off': local/floorplan/transparent.png
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+
+          # Light Toggles
+          - type: image
+            entity: light.study_light_light_1
+            style:
+              top: 75%
+              left: 65%
+            state_image:
+              "on": local/floorplan/starlight.png
+              "off": local/floorplan/starlight.png
+              "unavailable": /local/unavailable.png
+            tap_action:
+              action: toggle
+
+          # - type: state-badge
+          #   entity: sensor.banbury_temperature
+          #   style:
+          #     left: 30%
+          #     top: 10%
+          # - type: state-icon
+          #   entity: camera.uvc_g4_doorbell
+          #   style:
+          #     left: 58%
+          #     top: 87%
+          # - type: state-icon
+          #   entity: camera.uvc_g3_instant
+          #   style:
+          #     left: 13%
+          #     top: 74%
+          # - type: state-icon
+          #   entity: climate.nest_bottom_floor
+          #   style:
+          #     left: 55%
+          #     top: 42%
+          # - type: state-icon
+          #   entity: light.zigbee_bulb_garage
+          #   style:
+          #     left: 96%
+          #     top: 5%
+          #   tap_action:
+          #     action: toggle
+          # - type: state-icon
+          #   entity: binary_sensor.zigbee_door_sensor_garage_contact
+          #   style:
+          #     left: 94%
+          #     top: 5%
+          # - type: state-icon
+          #   entity: binary_sensor.zigbee_motion_sensor_lounge_occupancy
+          #   style:
+          #     left: 13%
+          #     top: 70%
+
+
+
+# type: picture-elements
+# image: local/floorplan/1st/dark.png
+# elements:
+#   - type: image
+#     entity: light.shelly1l_bathroom_light
+#     style:
+#       left: 50%
+#       top: 50%
+#       width: 100%
+#     state_image:
+#       'on': local/floorplan/1st/bathroom_on.png
+#       'off': local/floorplan/transparent.png
+#     tap_action:
+#       action: none
+#   - type: image
+#     entity: light.shelly1l_bed_a_light
+#     style:
+#       left: 50%
+#       top: 50%
+#       width: 100%
+#     state_image:
+#       'on': local/floorplan/1st/bed_a_on.png
+#       'off': local/floorplan/transparent.png
+#     tap_action:
+#       action: none
+#   - type: image
+#     entity: light.shelly1l_bed_c_light
+#     style:
+#       left: 50%
+#       top: 50%
+#       width: 100%
+#     state_image:
+#       'on': local/floorplan/1st/bed_c_on.png
+#       'off': local/floorplan/transparent.png
+#     tap_action:
+#       action: none
+#   - type: image
+#     entity: light.shelly1l_ensuite_light
+#     style:
+#       left: 50%
+#       top: 50%
+#       width: 100%
+#     state_image:
+#       'on': local/floorplan/1st/ensuite_on.png
+#       'off': local/floorplan/transparent.png
+#     tap_action:
+#       action: none
+#   - type: image
+#     entity: binary_sensor.zigbee_door_sensor_bed_c_contact
+#     style:
+#       left: 50%
+#       top: 50%
+#       width: 100%
+#     state_image:
+#       'on': local/floorplan/1st/bed_c_door.png
+#       'off': local/floorplan/transparent.png
+#     tap_action:
+#       action: none
+#   - type: state-icon
+#     entity: light.shelly1l_bathroom_light
+#     style:
+#       left: 50%
+#       top: 15%
+#     tap_action:
+#       action: toggle
+#   - type: state-icon
+#     entity: light.shelly1l_bed_a_light
+#     style:
+#       left: 30%
+#       top: 45%
+#     tap_action:
+#       action: toggle
+#   - type: state-icon
+#     entity: light.shelly1l_bed_c_light
+#     style:
+#       left: 77%
+#       top: 55%
+#     tap_action:
+#       action: toggle
+#   - type: state-icon
+#     entity: light.shelly1l_ensuite_light
+#     style:
+#       left: 30%
+#       top: 15%
+#     tap_action:
+#       action: toggle
+#   - type: state-icon
+#     entity: camera.uvc_g3_flex_middle_hallway
+#     style:
+#       left: 58%
+#       top: 68%
+#   - type: state-icon
+#     entity: climate.nest_middle_floor
+#     style:
+#       left: 55%
+#       top: 42%
+#   - type: state-icon
+#     entity: binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy
+#     style:
+#       left: 46%
+#       top: 27%
+#   - type: state-icon
+#     entity: remote.harmony_hub
+#     style:
+#       left: 77%
+#       top: 42%
+
+
+# type: picture-elements
+# image: local/floorplan/2nd/dark.png
+# elements:
+#   - type: image
+#     entity: light.shelly1l_bed_e_light
+#     style:
+#       left: 50%
+#       top: 50%
+#       width: 100%
+#     state_image:
+#       'on': /local/floorplan/2nd/bed_e_on.png
+#       'off': /local/floorplan/transparent.png
+#     tap_action:
+#       action: none
+#   - type: image
+#     entity: binary_sensor.zigbee_door_sensor_bed_b_contact
+#     style:
+#       left: 50%
+#       top: 50%
+#       width: 100%
+#     state_image:
+#       'on': /local/floorplan/2nd/loft_door.png
+#       'off': /local/floorplan/transparent.png
+#     tap_action:
+#       action: none
+#   - type: state-icon
+#     entity: light.shelly1l_bed_e_light
+#     style:
+#       left: 80%
+#       top: 30%
+#     tap_action:
+#       action: toggle
