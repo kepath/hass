@@ -1,0 +1,75 @@
+---
+card_kepath_service_buttons:
+  styles:
+    grid:
+      - grid-template-areas: "'floor_ground' 'floor_first' 'floor_second'"
+      - grid-template-columns: "1fr"
+      - grid-template-rows: "min-content"
+      - row-gap: "4px"
+    card:
+      - border-radius: "var(--border-radius)"
+      - box-shadow: "var(--box-shadow)"
+      - padding: "10px"
+      - cursor: "default"
+    custom_fields:
+      floor_ground: &service_button
+        - border-radius: "none"
+        - box-shadow: "none"
+        - padding: "4px"
+      floor_first: *service_button
+      floor_second: *service_button
+  custom_fields:
+    floor_ground:
+      card:
+        type: "custom:button-card"
+        template: "card_kepath_service_button"
+        entity: "input_select.floorplan_floor"
+        variables:
+          ulm_card_kepath_service_button_icon: "mdi:home-floor-g"
+          ulm_card_kepath_service_button_service: "input_select.select_option"
+          ulm_card_kepath_service_button_option: "G"
+    floor_first:
+      card:
+        type: "custom:button-card"
+        template: "card_kepath_service_button"
+        entity: "input_select.floorplan_floor"
+        variables:
+          ulm_card_kepath_service_button_icon: "mdi:home-floor-1"
+          ulm_card_kepath_service_button_service: "input_select.select_option"
+          ulm_card_kepath_service_button_option: "1"
+    floor_second:
+      card:
+        type: "custom:button-card"
+        template: "card_kepath_service_button"
+        entity: "input_select.floorplan_floor"
+        variables:
+          ulm_card_kepath_service_button_icon: "mdi:home-floor-2"
+          ulm_card_kepath_service_button_service: "input_select.select_option"
+          ulm_card_kepath_service_button_option: "2"
+
+
+card_kepath_service_button:
+  icon: "[[[ return variables.ulm_card_kepath_service_button_icon ]]]"
+  show_icon: true
+  show_label: false
+  show_name: false
+  styles:
+    icon:
+      - width: "20px"
+      - color: >
+          [[[
+            if (states[entity.entity_id].state == variables.ulm_card_kepath_service_button_option) {
+              return "rgba(var(--color-yellow),1)";
+            } else {
+              return "var(--primary-text-color)";
+            }
+          ]]]
+    card:
+      # - padding: "5px"
+      - background-color: "var(--card-background-color)"
+  tap_action:
+    action: "call-service"
+    service: "[[[ return variables.ulm_card_kepath_service_button_service ]]]"
+    service_data:
+      option: "[[[ return variables.ulm_card_kepath_service_button_option ]]]"
+      entity_id: "[[[ return entity.entity_id ]]]"

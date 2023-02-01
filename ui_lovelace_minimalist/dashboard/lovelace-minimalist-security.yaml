@@ -287,137 +287,250 @@ views:
         mtlfile: 28GriffithRoad_export.mtl
 
   - title: Ground Floor
-    icon: mdi:home-floor-g
+    icon: mdi:floor-plan
     theme: minimalist-mobile
     panel: true
     cards:
-      - type: picture-elements
-        image: local/floorplan/ground/dark.png
+      - type: vertical-stack
+        cards:
+          - type: conditional
+            conditions:
+              - entity: input_select.floorplan_floor
+                state: "G"
+            card: !include floorplan/floor-ground.yaml
+          - type: conditional
+            conditions:
+              - entity: input_select.floorplan_floor
+                state: "1"
+            card: !include floorplan/floor-first.yaml
+          - type: conditional
+            conditions:
+              - entity: input_select.floorplan_floor
+                state: "2"
+            card: !include floorplan/floor-second.yaml
 
-        elements:
 
-          # study
-          - type: image
-            entity: light.study_light_light_1
-            style:
-              left: 50%
-              top: 50%
-              width: 100%
-            state_image:
-              'on': local/floorplan/ground/study_on.png
-              'off': local/floorplan/transparent.png
-            tap_action:
-              action: none
-            hold_action:
-              action: none
 
-          # bottom hallway
-          - type: image
-            entity: light.shelly1l_hallway_bottom_light_1
-            style:
-              left: 50%
-              top: 50%
-              width: 100%
-            state_image:
-              'on': local/floorplan/ground/hallway_on.png
-              'off': local/floorplan/transparent.png
-            tap_action:
-              action: none
-            hold_action:
-              action: none
-          # - type: state-icon
-          #   entity: light.shelly1l_hallway_bottom_light_1
-          #   style:
-          #     left: 55%
-          #     top: 55%
-          #   tap_action:
-          #     action: toggle
 
-          # lounge
-          - type: image
-            entity: light.lounge_light_light_1
-            style:
-              left: 50%
-              top: 50%
-              width: 100%
-            state_image:
-              'on': local/floorplan/ground/lounge_on.png
-              'off': local/floorplan/transparent.png
-            tap_action:
-              action: none
-            hold_action:
-              action: none
 
-          # kitchen
-          - type: image
-            entity: light.kitchen_main_light_light_1
-            style:
-              left: 50%
-              top: 50%
-              width: 100%
-            state_image:
-              'on': local/floorplan/ground/kitchen_2_on.png
-              'off': local/floorplan/transparent.png
-            tap_action:
-              action: none
-            hold_action:
-              action: none
-          - type: image
-            entity: light.kitchen_utility_light_light_1
-            style:
-              left: 50%
-              top: 50%
-              width: 100%
-            state_image:
-              'on': local/floorplan/ground/kitchen_1_on.png
-              'off': local/floorplan/transparent.png
-            tap_action:
-              action: none
-            hold_action:
-              action: none
 
-          # front door
-          - type: image
-            entity: binary_sensor.zigbee_door_sensor_front_contact
-            style:
-              left: 50%
-              top: 50%
-              width: 100%
-            state_image:
-              'on': local/floorplan/ground/front_door.png
-              'off': local/floorplan/transparent.png
-            tap_action:
-              action: none
-            hold_action:
-              action: none
 
-          # back door
-          - type: image
-            entity: binary_sensor.zigbee_door_sensor_back_contact
-            style:
-              left: 50%
-              top: 50%
-              width: 100%
-            state_image:
-              'on': local/floorplan/ground/back_door.png
-              'off': local/floorplan/transparent.png
-            tap_action:
-              action: none
-            hold_action:
-              action: none
 
-          # Light Toggles
-          - type: image
-            entity: light.study_light_light_1
-            style:
-              top: 75%
-              left: 65%
-            state_image:
-              "on": local/floorplan/starlight.png
-              "off": local/floorplan/starlight.png
-              "unavailable": /local/unavailable.png
-            tap_action:
-              action: toggle
+            # style:
+            #   top: 5%
+            #   left: 8%
+            #   background: "#eaeaea"
+            #   width: 120px
+            # cards:
+            #   - type: service-button
+            #     title: "Ground Floor"
+            #     service: input_select.select_option
+            #     target:
+            #       entity_id: input_select.floorplan_floor
+            #     data:
+            #       option: Ground Floor
+            #   - type: service-button
+            #     title: "1st Floor"
+            #     service: input_select.select_option
+            #     target:
+            #       entity_id: input_select.floorplan_floor
+            #     data:
+            #       option: "1st Floor"
+            #   - type: service-button
+            #     title: "2nd Floor"
+            #     service: input_select.select_option
+            #     target:
+            #       entity_id: input_select.floorplan_floor
+            #     data:
+            #       option: "2nd Floor"
+
+      # - type: picture-elements
+      #   image: local/floorplan/ground/dark.png
+
+      #   elements:
+
+      #     # study
+      #     - type: image
+      #       entity: light.study_light_light_1
+      #       style:
+      #         left: 50%
+      #         top: 50%
+      #         width: 100%
+      #       state_image:
+      #         'on': local/floorplan/ground/study_on.png
+      #         'off': local/floorplan/transparent.png
+      #       tap_action:
+      #         action: none
+      #       hold_action:
+      #         action: none
+
+      #     # bottom hallway
+      #     - type: image
+      #       entity: light.shelly1l_hallway_bottom_light_1
+      #       style:
+      #         left: 50%
+      #         top: 50%
+      #         width: 100%
+      #       state_image:
+      #         'on': local/floorplan/ground/hallway_on.png
+      #         'off': local/floorplan/transparent.png
+      #       tap_action:
+      #         action: none
+      #       hold_action:
+      #         action: none
+
+      #     # lounge
+      #     - type: image
+      #       entity: light.lounge_light_light_1
+      #       style:
+      #         left: 50%
+      #         top: 50%
+      #         width: 100%
+      #       state_image:
+      #         'on': local/floorplan/ground/lounge_on.png
+      #         'off': local/floorplan/transparent.png
+      #       tap_action:
+      #         action: none
+      #       hold_action:
+      #         action: none
+
+      #     # kitchen
+      #     - type: image
+      #       entity: light.kitchen_main_light_light_1
+      #       style:
+      #         left: 50%
+      #         top: 50%
+      #         width: 100%
+      #       state_image:
+      #         'on': local/floorplan/ground/kitchen_2_on.png
+      #         'off': local/floorplan/transparent.png
+      #       tap_action:
+      #         action: none
+      #       hold_action:
+      #         action: none
+      #     - type: image
+      #       entity: light.kitchen_utility_light_light_1
+      #       style:
+      #         left: 50%
+      #         top: 50%
+      #         width: 100%
+      #       state_image:
+      #         'on': local/floorplan/ground/kitchen_1_on.png
+      #         'off': local/floorplan/transparent.png
+      #       tap_action:
+      #         action: none
+      #       hold_action:
+      #         action: none
+
+      #     # front door
+      #     - type: image
+      #       entity: binary_sensor.zigbee_door_sensor_front_contact
+      #       style:
+      #         left: 50%
+      #         top: 50%
+      #         width: 100%
+      #       state_image:
+      #         'on': local/floorplan/ground/front_door.png
+      #         'off': local/floorplan/transparent.png
+      #       tap_action:
+      #         action: none
+      #       hold_action:
+      #         action: none
+
+      #     # back door
+      #     - type: image
+      #       entity: binary_sensor.zigbee_door_sensor_back_contact
+      #       style:
+      #         left: 50%
+      #         top: 50%
+      #         width: 100%
+      #       state_image:
+      #         'on': local/floorplan/ground/back_door.png
+      #         'off': local/floorplan/transparent.png
+      #       tap_action:
+      #         action: none
+      #       hold_action:
+      #         action: none
+
+      #     # Light Toggles
+
+      #     # Study
+      #     - type: image
+      #       entity: light.study_light_light_1
+      #       style:
+      #         top: 66%
+      #         left: 76%
+      #       state_image:
+      #         "on": local/floorplan/starlight.png
+      #         "off": local/floorplan/starlight.png
+      #         "unavailable": /local/unavailable.png
+      #       tap_action:
+      #         action: toggle
+
+      #     # Bottom Hallway
+      #     - type: image
+      #       entity: light.shelly1l_hallway_bottom_light_1
+      #       style:
+      #         top: 73%
+      #         left: 52%
+      #       state_image:
+      #         "on": local/floorplan/starlight.png
+      #         "off": local/floorplan/starlight.png
+      #         "unavailable": /local/unavailable.png
+      #       tap_action:
+      #         action: toggle
+
+      #     # Lounge
+      #     - type: image
+      #       entity: light.lounge_light_light_1
+      #       style:
+      #         top: 50%
+      #         left: 30%
+      #       state_image:
+      #         "on": local/floorplan/starlight.png
+      #         "off": local/floorplan/starlight.png
+      #         "unavailable": /local/unavailable.png
+      #       tap_action:
+      #         action: toggle
+
+      #     # Kitchen
+      #     - type: image
+      #       entity: light.kitchen_main_light_light_1
+      #       style:
+      #         top: 38%
+      #         left: 70%
+      #       state_image:
+      #         "on": local/floorplan/starlight.png
+      #         "off": local/floorplan/starlight.png
+      #         "unavailable": /local/unavailable.png
+      #       tap_action:
+      #         action: toggle
+      #     - type: image
+      #       entity: light.kitchen_utility_light_light_1
+      #       style:
+      #         top: 27%
+      #         left: 51%
+      #       state_image:
+      #         "on": local/floorplan/starlight.png
+      #         "off": local/floorplan/starlight.png
+      #         "unavailable": /local/unavailable.png
+      #       tap_action:
+      #         action: toggle
+
+      #     # Floor Toggle
+      #     - type: service-button
+      #       title: 2nd Floor
+      #       service: input_select.select_next
+      #       service_data:
+      #         entity_id: input_select.floorplan_floor
+      #       style:
+      #         top: 15%
+      #         left: 5%
+      #         background: "#eaeaea"
+      #         border-radius: 5%
+
+
+
 
           # - type: state-badge
           #   entity: sensor.banbury_temperature
