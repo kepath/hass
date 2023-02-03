@@ -1,0 +1,162 @@
+---
+card_kepath_floorplan_binary_item:
+  show_icon: true
+  show_label: false
+  show_name: false
+  # variables:
+  #   floorplan_item_binary_device_type: "[[[ return (entity?.attributes?.device_class ? entity.attributes.device_class : 'light') ]]]"
+  icon: >
+    [[[
+      if (variables.floorplan_item_binary_device_type == "motion" || variables.floorplan_item_binary_device_type == "occupancy") {
+        return "mdi:motion-sensor-off";
+      } else if (variables.floorplan_item_binary_device_type == "plug") {
+        return "mdi:power-plug-off";
+      } else if (variables.floorplan_item_binary_device_type == "light") {
+        return "mdi:lightbulb-outline";
+      } else {
+        return "mdi:help-network";
+      }
+    ]]]
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+      - color: "rgba(221, 221, 221, 1.0)"
+    img_cell:
+      - border-radius: "50%"
+      - height: "32px"
+      - width: "32px"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+  state:
+    - value: "on"
+      icon: >
+        [[[
+          if (variables.floorplan_item_binary_device_type == "motion" || variables.floorplan_item_binary_device_type == "occupancy") {
+            return "mdi:motion-sensor";
+          } else if (variables.floorplan_item_binary_device_type == "plug") {
+            return "mdi:power-plug";
+          } else if (variables.floorplan_item_binary_device_type == "light") {
+            return "mdi:lightbulb-on";
+          } else {
+            return "mdi:help-network";
+          }
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-yellow),1)"
+    - value: "unavailable"
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+      tap_action:
+        action: "more-info"
+  tap_action:
+    action: >
+      [[[
+        if (variables.floorplan_item_binary_device_type == 'light' || variables.floorplan_item_binary_device_type == 'plug') {
+          return "toggle";
+        } else {
+          return "more-info";
+        }
+      ]]]
+  hold_action:
+    action: "more-info"
+
+
+card_kepath_floorplan_camera:
+  show_icon: true
+  show_label: true
+  show_name: false
+  icon: "[[[ return variables.ulm_card_kepath_floorplan_camera_icon ]]]"
+  label: >
+    [[[
+      var milliseconds = 0
+      if (variables?.ulm_card_kepath_floorplan_camera_last_motion) {
+        var milliseconds = Math.abs(new Date() - new Date(states[variables.ulm_card_kepath_floorplan_camera_last_motion].state))
+        var minutes = Math.floor((milliseconds % 3600000) / 60000);
+        var seconds = Math.floor(((milliseconds % 360000) % 60000) / 1000);
+        return minutes + "m " + seconds + "s ";
+      } else {
+        return "";
+      }
+    ]]]
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+      - color: "rgba(221, 221, 221, 1.0)"
+    img_cell:
+      - border-radius: "50%"
+      - height: "30px"
+      - width: "30px"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+      - border: "2px solid rgba(130, 130, 130, 0.3)"
+      - border-color: >
+          [[[
+            var borderColor = ""
+            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("top") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.1) "
+            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("right") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.1) "
+            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("bottom") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.1) "
+            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("left") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.1) "
+
+            return borderColor
+          ]]]
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+    label:
+      - justify-self: "start"
+      - align-self: "start"
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0 12px 0 12px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - color: "rgba(221, 221, 221, 0.4)"
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          return (states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'on')
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        # card:
+        #   - background-color: "rgba(33, 33, 33, 1.0)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
+          - border-color: >
+              [[[
+                var borderColor = ""
+                borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("top") ? "rgba(var(--color-green),1) " : "rgba(var(--color-green), 0.2) "
+                borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("right") ? "rgba(var(--color-green),1) " : "rgba(var(--color-green), 0.2) "
+                borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("bottom") ? "rgba(var(--color-green),1) " : "rgba(var(--color-green), 0.2) "
+                borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("left") ? "rgba(var(--color-green),1) " : "rgba(var(--color-green), 0.2)"
+
+                return borderColor
+              ]]]
+    - operator: "template"
+      value: >
+        [[[
+          return (states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'unavailable')
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+      tap_action:
+        action: "more-info"
+
+
+card_kepath_floorplan_nest_protect:
+
+card_kepath_floorplan_thermostat:

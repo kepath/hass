@@ -3,24 +3,67 @@ image: local/floorplan/2nd/dark.png
 
 elements:
 
-  # study
+  # Bed E
   - type: image
-    entity: light.study_light_light_1
+    entity: light.bed_e_light_light_1
     style:
       left: 50%
       top: 50%
       width: 100%
     state_image:
-      'on': local/floorplan/ground/study_on.png
+      'on': local/floorplan/2nd/bed_e_on.png
       'off': local/floorplan/transparent.png
+      "unavailable": /local/unavailable.png
     tap_action:
       action: none
     hold_action:
       action: none
 
+  # loft door
+  - type: image
+    entity: binary_sensor.zigbee_door_sensor_loft_contact
+    style:
+      left: 50%
+      top: 50%
+      width: 100%
+    state_image:
+      'on': local/floorplan/2nd/loft_door.png
+      'off': local/floorplan/transparent.png
+      "unavailable": /local/unavailable.png
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+
+    # Bed E
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item"
+    entity: light.bed_e_light_light_1
+    variables:
+      floorplan_item_binary_device_type: "light"
+    style:
+      top: 35%
+      left: 75%
+      color: rgba(100, 100, 100, 0.0)
+
+  # motion sensors
+
+  # middle hallway
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "binary_sensor.zigbee_motion_sensor_bed_e_occupancy"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:human-greeting"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.zigbee_motion_sensor_bed_e_occupancy"
+      ulm_card_kepath_floorplan_camera_view_borders: "right"
+    style:
+      left: "60%"
+      top: "26%"
+      color: rgba(100, 100, 100, 0.0)
+
   # Floor Toggle
   - type: "custom:button-card"
     template: "card_kepath_service_buttons"
     style:
-      top: 12%
+      top: 15%
       left: 5%

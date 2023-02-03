@@ -3,24 +3,228 @@ image: local/floorplan/1st/dark.png
 
 elements:
 
-  # study
+  # Bed A
   - type: image
-    entity: light.study_light_light_1
+    entity: light.bed_a_light_light_1
     style:
       left: 50%
       top: 50%
       width: 100%
     state_image:
-      'on': local/floorplan/ground/study_on.png
+      'on': local/floorplan/1st/bed_a_on.png
       'off': local/floorplan/transparent.png
+      "unavailable": /local/unavailable.png
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+  - type: image
+    entity: light.ensuite_light_light_1
+    style:
+      left: 50%
+      top: 50%
+      width: 100%
+    state_image:
+      'on': local/floorplan/1st/ensuite_on.png
+      'off': local/floorplan/transparent.png
+      "unavailable": /local/unavailable.png
     tap_action:
       action: none
     hold_action:
       action: none
 
+  # Bed B
+  - type: image
+    entity: light.bed_b_light_light_1
+    style:
+      left: 50%
+      top: 50%
+      width: 100%
+    state_image:
+      'on': local/floorplan/1st/bed_b_on.png
+      'off': local/floorplan/transparent.png
+      "unavailable": /local/unavailable.png
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+
+  # Bed C
+  - type: image
+    entity: light.bed_c_light_1
+    style:
+      left: 50%
+      top: 50%
+      width: 100%
+    state_image:
+      'on': local/floorplan/1st/bed_c_on.png
+      'off': local/floorplan/transparent.png
+      "unavailable": /local/unavailable.png
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+
+  # Bathroom
+  - type: image
+    entity: light.bathroom_light_light_1
+    style:
+      left: 50%
+      top: 50%
+      width: 100%
+    state_image:
+      'on': local/floorplan/1st/bathroom_on.png
+      'off': local/floorplan/transparent.png
+      "unavailable": /local/unavailable.png
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+
+  # bed c door
+  - type: image
+    entity: binary_sensor.zigbee_door_sensor_bed_c_contact
+    style:
+      left: 50%
+      top: 50%
+      width: 100%
+    state_image:
+      'on': local/floorplan/1st/bed_c_door.png
+      'off': local/floorplan/transparent.png
+      "unavailable": /local/unavailable.png
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+
+  # Light Toggles
+
+  # Bed A
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item"
+    entity: light.bed_a_light_light_1
+    variables:
+      floorplan_item_binary_device_type: "light"
+    style:
+      top: 55%
+      left: 28%
+      color: rgba(100, 100, 100, 0.0)
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item"
+    entity: light.ensuite_light_light_1
+    variables:
+      floorplan_item_binary_device_type: "light"
+    style:
+      top: 15%
+      left: 30%
+      color: rgba(100, 100, 100, 0.0)
+
+  # Bed B
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item"
+    entity: light.bed_b_light_light_1
+    variables:
+      floorplan_item_binary_device_type: "light"
+    style:
+      top: 20%
+      left: 72%
+      color: rgba(100, 100, 100, 0.0)
+
+  # Bed C
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item"
+    entity: light.bed_c_light_1
+    variables:
+      floorplan_item_binary_device_type: "light"
+    style:
+      top: 55%
+      left: 80%
+      color: rgba(100, 100, 100, 0.0)
+
+  # Bathroom
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item"
+    entity: light.bathroom_light_light_1
+    variables:
+      floorplan_item_binary_device_type: "light"
+    style:
+      top: 15%
+      left: 49%
+      color: rgba(100, 100, 100, 0.0)
+
+  # motion sensors
+
+  # middle hallway
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:human-greeting"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2"
+      ulm_card_kepath_floorplan_camera_view_borders: "bottom"
+    style:
+      left: "45%"
+      top: "25%"
+      color: rgba(100, 100, 100, 0.0)
+
+  # cameras
+
+  # middle hallway
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "camera.middle_hallway_g3_flex_medium"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:cctv"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.middle_hallway_g3_flex_motion"
+      ulm_card_kepath_floorplan_camera_last_motion: "sensor.middle_hallway_g3_flex_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_view_borders: "top,left"
+    style:
+      left: "59%"
+      top: "69%"
+      color: rgba(100, 100, 100, 0.0)
+
+  # bed c
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "camera.bed_c_g3_instant_medium"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:webcam"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.bed_c_g3_instant_motion"
+      ulm_card_kepath_floorplan_camera_last_motion: "sensor.bed_c_g3_instant_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_view_borders: "bottom,left"
+    style:
+      left: "82%"
+      top: "46%"
+      color: rgba(100, 100, 100, 0.0)
+
+  # plugs
+
+  # arcade machine
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item"
+    entity: switch.zigbee_plug_arcade_pc_bed_c
+    variables:
+      floorplan_item_binary_device_type: "plug"
+    style:
+      top: 68%
+      left: 64%
+      color: rgba(100, 100, 100, 0.0)
+
+  # fridge
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item"
+    entity: switch.zigbee_plug_fridge_bed_c
+    variables:
+      floorplan_item_binary_device_type: "plug"
+    style:
+      top: 68%
+      left: 85%
+      color: rgba(100, 100, 100, 0.0)
+
+
   # Floor Toggle
   - type: "custom:button-card"
     template: "card_kepath_service_buttons"
     style:
-      top: 12%
+      top: 15%
       left: 5%
