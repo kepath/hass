@@ -1,140 +1,136 @@
+---
 button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
 views:
-
   - title: "Rooms"
     icon: "mdi:link-variant"
     theme: "minimalist-mobile"
     cards:
-    - type: "horizontal-stack"
-      style:
-        card:
-        - width: "100%"
-      cards:
-      - type: "custom:button-card"
-        template: "edge"
-      - type: "custom:button-card"
-        template:
-          - "chip_navigate"
-        variables:
-          ulm_chip_navigate_path: "/lovelace-minimalist-home"
-          ulm_chip_navigate_icon: "mdi:cellphone-text"
-          ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
-          ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
-    - type: "vertical-stack"
-      cards:
-        - type: entities
-          title: Internal Links
-          entities:
-            - type: section
-              label: maintenance
-            - type: weblink
-              url: "/a0d7b954_ssh"
-              icon: "mdi:console"
-              name: "Terminal"
-            - type: weblink
-              url: "/a0d7b954_vscode"
-              icon: "mdi:microsoft-visual-studio-code"
-              name: "VS Studio Code"
-            - type: weblink
-              url: "/db21ed7f_portainer"
-              icon: "si:portainer"
-              name: "Portainer"
-            - type: weblink
-              url: "/a0d7b954_phpmyadmin"
-              icon: "si:phpmyadmin"
-              name: "phpMyAdmin"
-            - type: weblink
-              url: "/db21ed7f_scrutiny_fa"
-              icon: "mdi:glasses"
-              name: "Scrutiny"
-
-            - type: section
-              label: configuration
-            - type: weblink
-              url: "/hacs"
-              icon: "hacs:hacs"
-              name: "HACS"
-            - type: weblink
-              url: "/5c53de3b_esphome"
-              icon: "mdi:chip"
-              name: "ESP Home"
-            - type: weblink
-              url: "/a0d7b954_nodered"
-              icon: "si:nodered"
-              name: "Node Red"
-            - type: weblink
-              url: "/a0d7b954_emqx"
-              icon: "mdi:pipe"
-              name: "EMQX"
-            - type: weblink
-              url: "/45df7312_zigbee2mqtt"
-              icon: "mdi:zigbee"
-              name: "Zigbee2MQTT"
-            - type: weblink
-              url: "/a0d7b954_influxdb"
-              icon: "si:influxdb"
-              name: "InfluxDB"
-            - type: weblink
-              url: "/a0d7b954_grafana"
-              icon: "si:grafana"
-              name: "Grafana"
-
-            - type: section
-              label: media
-            - type: weblink
-              url: "http://192.168.1.20:32400/web"
-              icon: "mdi:plex"
-              name: "Plex"
-            - type: weblink
-              url: "https://192.168.1.20:8181/"
-              icon: "si:plex"
-              name: "Tautulli"
-            - type: weblink
-              url: "/media-browser"
-              icon: "mdi:play-box-multiple"
-              name: "Media Browser"
-            - type: weblink
-              url: "/core_vlc"
-              icon: "mdi:vlc"
-              name: "VLC"
-            - type: weblink
-              url: "/music-assistant"
-              icon: "mdi:play-circle"
-              name: "Music Assistant"
-
-    - type: "vertical-stack"
-      cards:
-        - type: entities
-          title: Network Links
-          entities:
-            - type: weblink
-              url: "https://192.168.1.1/network/default/devices"
-              icon: "phu:unifi"
-              name: "Unifi OS"
-            - type: weblink
-              url: "https://192.168.1.1/protect/liveview"
-              icon: "phu:unifi-protect"
-              name: "Unifi Protect"
-            - type: weblink
-              url: "https://192.168.1.21:5001/"
-              icon: "cil:synology-nas"
-              name: "Synology NAS"
-            - type: weblink
-              url: "https://192.168.20.201:1881/"
-              icon: "mdi:solar-power-variant"
-              name: "Solar DRU Node Red"
-
-    - type: "vertical-stack"
-      cards:
-        - type: entities
-          title: External Links
-          entities:
-            - type: section
-              label: home assistant
-            - type: weblink
-              url: "https://192.168.20.201:1881/"
-              icon: "mdi:solar-power-variant"
-              name: "Solar DRU Node Red"
+      - type: "horizontal-stack"
+        style:
+          card:
+            - width: "100%"
+        cards:
+          - type: "custom:button-card"
+            template: "edge"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
+              ulm_chip_navigate_icon: "mdi:cellphone-text"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+      - type: "vertical-stack"
+        cards:
+          - type: "entities"
+            title: "Internal Links"
+            entities:
+              - type: "section"
+                label: "maintenance"
+              - type: "weblink"
+                url: "/a0d7b954_ssh"
+                icon: "mdi:console"
+                name: "Terminal"
+              - type: "weblink"
+                url: "/a0d7b954_vscode"
+                icon: "mdi:microsoft-visual-studio-code"
+                name: "VS Studio Code"
+              - type: "weblink"
+                url: "/db21ed7f_portainer"
+                icon: "si:portainer"
+                name: "Portainer"
+              - type: "weblink"
+                url: "/a0d7b954_phpmyadmin"
+                icon: "si:phpmyadmin"
+                name: "phpMyAdmin"
+              - type: "weblink"
+                url: "/db21ed7f_scrutiny_fa"
+                icon: "mdi:glasses"
+                name: "Scrutiny"
+              - type: "section"
+                label: "configuration"
+              - type: "weblink"
+                url: "/hacs"
+                icon: "hacs:hacs"
+                name: "HACS"
+              - type: "weblink"
+                url: "/5c53de3b_esphome"
+                icon: "mdi:chip"
+                name: "ESP Home"
+              - type: "weblink"
+                url: "/a0d7b954_nodered"
+                icon: "si:nodered"
+                name: "Node Red"
+              - type: "weblink"
+                url: "/a0d7b954_emqx"
+                icon: "mdi:pipe"
+                name: "EMQX"
+              - type: "weblink"
+                url: "/45df7312_zigbee2mqtt"
+                icon: "mdi:zigbee"
+                name: "Zigbee2MQTT"
+              - type: "weblink"
+                url: "/a0d7b954_influxdb"
+                icon: "si:influxdb"
+                name: "InfluxDB"
+              - type: "weblink"
+                url: "/a0d7b954_grafana"
+                icon: "si:grafana"
+                name: "Grafana"
+              - type: "section"
+                label: "media"
+              - type: "weblink"
+                url: "http://192.168.1.20:32400/web"
+                icon: "mdi:plex"
+                name: "Plex"
+              - type: "weblink"
+                url: "https://192.168.1.20:8181/"
+                icon: "si:plex"
+                name: "Tautulli"
+              - type: "weblink"
+                url: "/media-browser"
+                icon: "mdi:play-box-multiple"
+                name: "Media Browser"
+              - type: "weblink"
+                url: "/core_vlc"
+                icon: "mdi:vlc"
+                name: "VLC"
+              - type: "weblink"
+                url: "/music-assistant"
+                icon: "mdi:play-circle"
+                name: "Music Assistant"
+      - type: "vertical-stack"
+        cards:
+          - type: "entities"
+            title: "Network Links"
+            entities:
+              - type: "weblink"
+                url: "https://192.168.1.1/network/default/devices"
+                icon: "phu:unifi"
+                name: "Unifi OS"
+              - type: "weblink"
+                url: "https://192.168.1.1/protect/liveview"
+                icon: "phu:unifi-protect"
+                name: "Unifi Protect"
+              - type: "weblink"
+                url: "https://192.168.1.21:5001/"
+                icon: "cil:synology-nas"
+                name: "Synology NAS"
+              - type: "weblink"
+                url: "https://192.168.20.201:1881/"
+                icon: "mdi:solar-power-variant"
+                name: "Solar DRU Node Red"
+      - type: "vertical-stack"
+        cards:
+          - type: "entities"
+            title: "External Links"
+            entities:
+              - type: "section"
+                label: "home assistant"
+              - type: "weblink"
+                url: "https://192.168.20.201:1881/"
+                icon: "mdi:solar-power-variant"
+                name: "Solar DRU Node Red"
 
 
             # - icon: mdi:wan

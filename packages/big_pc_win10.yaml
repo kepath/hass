@@ -1,123 +1,111 @@
-  #sensor:
-  # - platform: template
-  #   sensors:
-  #     big_pc_system_uptime_human:
-  #       friendly_name: Big PC System Uptime Human
-  #       unique_id: big_pc_uptime_human
-  #       icon_template: mdi:sort-clock-descending
-  #       value_template: >-
-  #         {% if states('sensor.big_pc_system_uptime') == 'unknown' or
-  #         states('sensor.big_pc_system_uptime') == 'unavailable' %}
-  #           {{"power off"}}
-  #         {% else %}
-  #           {% set dateString = states('sensor.big_pc_system_uptime') %}
-  #           {% set up_days = dateString[:2] %}
-  #           {% set up_hours = dateString[3:5] %}
-  #           {% set up_minutes = dateString[6:8] %}
-  #             {{ relative_time( now() - timedelta( days = up_days | int, hours = up_hours | int, minutes = up_minutes | int)) }}
-  #         {% endif %}
-
+---
+#sensor:
+# - platform: template
+#   sensors:
+#     big_pc_system_uptime_human:
+#       friendly_name: Big PC System Uptime Human
+#       unique_id: big_pc_uptime_human
+#       icon_template: mdi:sort-clock-descending
+#       value_template: >-
+#         {% if states('sensor.big_pc_system_uptime') == 'unknown' or
+#         states('sensor.big_pc_system_uptime') == 'unavailable' %}
+#           {{"power off"}}
+#         {% else %}
+#           {% set dateString = states('sensor.big_pc_system_uptime') %}
+#           {% set up_days = dateString[:2] %}
+#           {% set up_hours = dateString[3:5] %}
+#           {% set up_minutes = dateString[6:8] %}
+#             {{ relative_time( now() - timedelta( days = up_days | int, hours = up_hours | int, minutes = up_minutes | int)) }}
+#         {% endif %}
 script:
   big_pc_wake:
     alias: "Big PC:Wake"
     sequence:
-      - service: wake_on_lan.send_magic_packet
+      - service: "wake_on_lan.send_magic_packet"
         data:
-          mac: !secret big_pc_rj45_mac
-          broadcast_address: !secret big_pc_rj45_ip
-
+          mac: !secret "big_pc_rj45_mac"
+          broadcast_address: !secret "big_pc_rj45_ip"
   big_pc_shutdown:
     alias: "Big PC:Shutdown"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/shutdown"
           payload: ""
-
   big_pc_suspend:
     alias: "Big PC:Suspend"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/suspend"
           payload: ""
-
   big_pc_hibernate:
     alias: "Big PC:Hibernate"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/hibernate"
           payload: ""
-
   big_pc_reboot:
     alias: "Big PC:Reboot"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/reboot"
           payload: ""
-
   big_pc_lock:
     alias: "Big PC:Lock"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/lock"
           payload: ""
-
   big_pc_logoff:
     alias: "Big PC:Logoff"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/logoff"
           payload: ""
-
   big_pc_vol_mute:
     alias: "Big PC:Toggle Mute"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/volume/mute"
           payload: ""
-
   big_pc_vol_max:
     alias: "Big PC:Vol Max"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/volume/set"
           payload: "100"
-
   big_pc_displays_on:
     alias: "Big PC:Displays ON"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/displays/on"
           payload: ""
-
   big_pc_displays_off:
     alias: "Big PC:Displays OFF"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/displays/off"
           payload: ""
-
   big_pc_refresh:
     alias: "Big PC:Refresh"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/refresh"
           payload: ""
-
   big_pc_notify:
     alias: "Big PC:Notify"
     sequence:
-      - service: mqtt.publish
+      - service: "mqtt.publish"
         data:
           topic: "iotlink/workgroup/big-pc/commands/notify"
-          payload: '{ "title": "My Notification Title", "message": "This is an example of notification using IOT Link", "launchParams": "toast://open/https://iotlink.gitlab.io" }'
+          payload: "{ 'title': 'My Notification Title', 'message': 'This is an example of notification using IOT Link', 'launchParams': 'toast://open/https://iotlink.gitlab.io' }"

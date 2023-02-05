@@ -1,30 +1,22 @@
+---
 sensor:
-
-  # Own public IPv4 address
-  # - platform: dnsip
-  #   name: WAN IP
-
-  # - platform: launch_library
-
-  - platform: feedparser
-    name: RSS Hass Alerts
-    feed_url: 'https://alerts.home-assistant.io/feed.xml'
-    date_format: '%a, %b %d %I:%M %p'
+  - platform: "feedparser"
+    name: "RSS Hass Alerts"
+    feed_url: "https://alerts.home-assistant.io/feed.xml"
+    date_format: "%a, %b %d %I:%M %p"
     inclusions:
-      - title
-      - link
-      - description
-      - image
-      - language
-      - pubDate
+      - "title"
+      - "link"
+      - "description"
+      - "image"
+      - "language"
+      - "pubDate"
     exclusions:
-      - language
-
-  - platform: tautulli
-    name: Plex State Tautulli
-    host: !secret ha_rj45_ip
-    api_key: !secret tautulli_api_key
-
+      - "language"
+  - platform: "tautulli"
+    name: "Plex State Tautulli"
+    host: !secret "ha_rj45_ip"
+    api_key: !secret "tautulli_api_key"
   # - platform: "mqtt"
   #   state_topic: "homeassistant/sensor/tautulli/all"
   #   unique_id: "tautulli_mqtt_status"
@@ -45,17 +37,15 @@ sensor:
   #     query: !secret hass_addon_mariadb_size_query
   #     column: 'value'
   #     unit_of_measurement: MB
-
-  - platform: bitcoin
-    currency: GBP
+  - platform: "bitcoin"
+    currency: "GBP"
     display_options:
-      - exchangerate
-      - trade_volume_btc
-
-  - platform: template
+      - "exchangerate"
+      - "trade_volume_btc"
+  - platform: "template"
     sensors:
       date_long:
-        friendly_name: 'Date and Day of week'
+        friendly_name: "Date and Day of week"
         value_template: >
           {% set months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] %}
           {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}

@@ -1,90 +1,49 @@
+---
 default_config:
-
 discovery:
 api:
 stream:
 python_script:
-
 frontend:
-  themes: !include_dir_merge_named themes
-
+  themes: !include_dir_merge_named "themes"
 browser_mod:
-
 recorder:
-  db_url: !secret hass_addon_mariadb_url
-
-group: !include groups.yaml
-automation: !include automations.yaml
-script: !include scripts.yaml
-scene: !include scenes.yaml
-
+  db_url: !secret "hass_addon_mariadb_url"
+group: !include "groups.yaml"
+automation: !include "automations.yaml"
+script: !include "scripts.yaml"
+scene: !include "scenes.yaml"
 homeassistant:
-  customize: !include customize.yaml
-  customize_glob: !include customize_glob.yaml
-  packages: !include_dir_named packages
-#  auth_providers:
-#    - type: trusted_networks
-#      trusted_networks:
-#        - 172.16.0.0/12
-
+  customize: !include "customize.yaml"
+  customize_glob: !include "customize_glob.yaml"
+  packages: !include_dir_named "packages"
 http:
-
 logger:
-  default: info
+  default: "info"
   logs:
-    # custom_components.google_home: debug
-    custom_components.ui_lovelace_minimalist.base: debug
-    # frontend.js.latest.202207071: debug
-####### DISABLE WHEN FINISHED!
-# debugpy:
-#   start: true
-#   wait: true
+    custom_components.ui_lovelace_minimalist.base: "debug"
 influxdb:
-  username: !secret influx_db_user
-  password: !secret influx_db_pass
-
+  username: !secret "influx_db_user"
+  password: !secret "influx_db_pass"
 ffmpeg:
-
 history:
   exclude:
     domains:
-      - device_tracker
+      - "device_tracker"
     entity_globs:
-      - sensor.*_calc
-      - sensor.*_timeticks
-      - sensor.*_uptime
-
-#YAML integration removed
-# nest:
-#   client_id: !secret google_oauth_client_id
-#   client_secret: !secret google_oauth_client_secret
-#   project_id: !secret nest_project_id
-#   subscriber_id: !secret nest_subscription_id
-
+      - "sensor.*_calc"
+      - "sensor.*_timeticks"
+      - "sensor.*_uptime"
 wake_on_lan:
-
-# device_tracker:
-#   - platform: luci
-#     host: !secret vpn_router_rj45_ip
-#     username: !secret luci_user
-#     password: !secret luci_pass
-#   - platform: bluetooth_tracker
-
 notify:
-  - platform: alexa_media
-    name: alexa_media
-  - platform: html5
-    name: HTML5_popup
-    vapid_pub_key: !secret google_vapid_pub_key
-    vapid_prv_key: !secret google_vapid_prv_key
-    vapid_email: !secret google_vapid_email
-
-# spotify:
-#   client_id: !secret spotify_client_id
-#   client_secret: !secret spotify_client_secret
-
+  - platform: "alexa_media"
+    name: "alexa_media"
+  - platform: "html5"
+    name: "HTML5_popup"
+    vapid_pub_key: !secret "google_vapid_pub_key"
+    vapid_prv_key: !secret "google_vapid_prv_key"
+    vapid_email: !secret "google_vapid_email"
 lovelace_gen:
 lovelace:
-  mode: storage
-  # Add yaml dashboards
-  dashboards: !include ui_lovelace_minimalist/dashboard/lovelace-dashboards.yaml
+  mode: "storage"
+  dashboards: !include "ui_lovelace_minimalist/dashboard/lovelace-dashboards.yaml"

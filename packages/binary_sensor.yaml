@@ -1,10 +1,11 @@
+---
 binary_sensor:
-  - platform: template
+  - platform: "template"
     sensors:
       apple_tv_bed_c_state:
         friendly_name: "Apple TV Bed C State"
-        unique_id: binary_state_apple_tv_bed_c
-        icon_template: mdi:television-play
+        unique_id: "binary_state_apple_tv_bed_c"
+        icon_template: "mdi:television-play"
         value_template: >-
           {% if states('media_player.amazon_fire_tv_kitchen_adb') == 'unknown' or
             states('media_player.amazon_fire_tv_kitchen_adb') == 'unavailable' or
@@ -14,12 +15,12 @@ binary_sensor:
               {{ "on" }}
           {% endif %}
 
-  - platform: template
+  - platform: "template"
     sensors:
       fire_stick_tv_kitchen_state:
         friendly_name: "Fire TV Kitchen State"
-        unique_id: binary_state_fire_tv_kitchen
-        icon_template: mdi:television-play
+        unique_id: "binary_state_fire_tv_kitchen"
+        icon_template: "mdi:television-play"
         value_template: >-
           {% if states('media_player.amazon_fire_tv_kitchen_adb') == 'unknown' or
             states('media_player.amazon_fire_tv_kitchen_adb') == 'unavailable' or
@@ -29,12 +30,12 @@ binary_sensor:
               {{ "on" }}
           {% endif %}
 
-  - platform: template
+  - platform: "template"
     sensors:
       fire_stick_tv_bed_a_state:
         friendly_name: "Fire TV Bed A State"
-        unique_id: binary_state_fire_tv_bed_a
-        icon_template: mdi:television-play
+        unique_id: "binary_state_fire_tv_bed_a"
+        icon_template: "mdi:television-play"
         value_template: >-
           {% if (states('device_tracker.samsung_ue32f4500_tv_unifi') == 'unknown' or
             states('device_tracker.samsung_ue32f4500_tv_unifi') == 'unavailable' or
@@ -49,12 +50,12 @@ binary_sensor:
               {{ "on" }}
           {% endif %}
 
-  - platform: template
+  - platform: "template"
     sensors:
       nvidia_shield_lounge_state:
         friendly_name: "NVidia Shield Lounge State"
-        unique_id: binary_state_shield_lounge
-        icon_template: mdi:television-play
+        unique_id: "binary_state_shield_lounge"
+        icon_template: "mdi:television-play"
         value_template: >-
           {% if (states('device_tracker.samsung_ue48hu7500t_tv_unifi') == 'unknown' or
             states('device_tracker.samsung_ue48hu7500t_tv_unifi') == 'unavailable' or
@@ -69,12 +70,12 @@ binary_sensor:
               {{ "on" }}
           {% endif %}
 
-  - platform: template
+  - platform: "template"
     sensors:
       nvidia_shield_bed_e_state:
         friendly_name: "NVidia Shield Bed E State"
-        unique_id: binary_state_shield_bed_e
-        icon_template: mdi:television-play
+        unique_id: "binary_state_shield_bed_e"
+        icon_template: "mdi:television-play"
         value_template: >-
           {% if states('media_player.nvidia_shield_adb_bed_e') == 'unknown' or
             states('media_player.nvidia_shield_adb_bed_e') == 'unavailable' or
@@ -84,12 +85,12 @@ binary_sensor:
               {{ "on" }}
           {% endif %}
 
-  - platform: template
+  - platform: "template"
     sensors:
       harmony_hub_bed_c_state:
         friendly_name: "Harmony Hub Bed C State"
-        unique_id: binary_state_harmony_hub_bed_c
-        icon_template: mdi:television-play
+        unique_id: "binary_state_harmony_hub_bed_c"
+        icon_template: "mdi:television-play"
         value_template: >-
           {% if states('remote.harmony_hub') == 'unknown' or
             states('remote.harmony_hub') == 'unavailable' or
@@ -99,44 +100,44 @@ binary_sensor:
               {{ "on" }}
           {% endif %}
 
-  - platform: template
+  - platform: "template"
     sensors:
       yamaha_reciever_state:
         friendly_name: "Yamaha Reciever State"
-        unique_id: devicetracker_yamaha_reciever_state
+        unique_id: "devicetracker_yamaha_reciever_state"
         value_template: "{{ is_state('media_player.rx_v777_reciever_yamaha_integration_bed_c', 'on') }}"
-        icon_template: mdi:audio-video
+        icon_template: "mdi:audio-video"
 
-  - platform: template
+  - platform: "template"
     sensors:
       is_kev_driving:
         friendly_name: "Kev Driving State"
-        unique_id: binary_state_is_kev_driving
+        unique_id: "binary_state_is_kev_driving"
         value_template: "{{ is_state('sensor.iphone_activity', 'automotive') }}"
-        icon_template: mdi:train-car
-        device_class: moving
+        icon_template: "mdi:train-car"
+        device_class: "moving"
 
-  - platform: tod
-    name: nighttime
+  - platform: "tod"
+    name: "nighttime"
     after: "sunset"
     before: "sunrise"
-  - platform: tod
-    name: quiettime
+  - platform: "tod"
+    name: "quiettime"
     after: "23:00"
     before: "07:00"
-  - platform: tod
-    name: cheap heating time
+  - platform: "tod"
+    name: "cheap heating time"
     after: "00:00"
     before: "07:00"
-  - platform: tod
-    name: morning heating time
+  - platform: "tod"
+    name: "morning heating time"
     after: "06:00"
     before: "09:00"
-  - platform: tod
-    name: afternoon heating time
+  - platform: "tod"
+    name: "afternoon heating time"
     after: "14:00"
     before: "17:00"
-  - platform: tod
-    name: evening heating time
+  - platform: "tod"
+    name: "evening heating time"
     after: "19:00"
     before: "21:00"

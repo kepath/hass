@@ -1,4 +1,4 @@
-# lovelace_gen
+---
 button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
 views:
 
@@ -6,1105 +6,1105 @@ views:
     icon: "mdi:floor-plan"
     theme: "minimalist-mobile"
     cards:
-    - type: "horizontal-stack"
-      style:
-        card:
-        - width: "100%"
-      cards:
-      - type: "custom:button-card"
-        template: "edge"
-      - type: "custom:button-card"
-        template:
-          - "chip_navigate"
-        variables:
-          ulm_chip_navigate_path: "/lovelace-minimalist-home"
-          ulm_chip_navigate_icon: "mdi:cellphone-text"
-          ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
-          ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+      - type: "horizontal-stack"
+        style:
+          card:
+            - width: "100%"
+        cards:
+          - type: "custom:button-card"
+            template: "edge"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
+              ulm_chip_navigate_icon: "mdi:cellphone-text"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
 
-# Exterior
-    - type: "vertical-stack"
-      cards:
-      - type: "custom:button-card"
-        template: "edge"
-      - type: "custom:button-card"
-        template: "card_title"
-        label: "Exterior"
-      - type: "horizontal-stack"
+      # Exterior
+      - type: "vertical-stack"
         cards:
-# Front
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "green_off"
-            - "red_on"
-          name: "Front"
-          entity: "binary_sensor.zigbee_door_sensor_front_contact"
-          icon: "mdi:home-lock"
-          tap_action:
-            action: "navigate"
-            navigation_path: "/lovelace-minimalist-security/1"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.doorbell_rung"
-              templates:
-                - "green_off"
-                - "red_on"
-              tap_action:
-                action: "more-info"
-                entity: "camera.doorbell_g4_medium"
-                show_live_stream: true
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "binary_sensor.front_g3_flex_motion"
-              templates:
-                - "green_off"
-                - "red_on"
-              tap_action:
-                action: "more-info"
-                entity: "camera.front_g3_flex_medium"
-                show_live_stream: true
-              hold_action:
-                action: "more-info"
-            entity_3:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-# Back
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "green_off"
-            - "red_on"
-          name: "Back"
-          entity: "binary_sensor.zigbee_door_sensor_back_contact"
-          icon: "mdi:shovel"
-          tap_action:
-            action: "navigate"
-            navigation_path: "/lovelace-minimalist-security/1"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: "light.back_door_smartbulb"
-              templates:
-                - "yellow_on"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "binary_sensor.back_g3_flex_motion"
-              templates:
-                - "green_off"
-                - "red_on"
-              tap_action:
-                action: "more-info"
-                entity: "camera.back_g3_flex_medium"
-                show_live_stream: true
-              hold_action:
-                action: "more-info"
-            entity_3:
-              entity_id: "vacuum.moe"
-              templates:
-                - "card_room_mower_state"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "call-service"
-            entity_4:
-              entity_id: "binary_sensor.zigbee_door_sensor_patio_1_contact"
-              templates:
-                - "green_off"
-                - "red_on"
-                - "icon_door_sliding"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-security/1"
-              hold_action:
-                action: "more-info"
-# Garage
-      - type: "horizontal-stack"
-        cards:
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "green_off"
-            - "red_on"
-          name: "Garage"
-          entity: "binary_sensor.zigbee_door_sensor_garage_contact"
-          icon: "mdi:garage"
-          tap_action:
-            action: "navigate"
-            navigation_path: "/lovelace-minimalist-security/1"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: "light.zigbee_bulb_garage"
-              templates:
-                - "yellow_on"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "device_tracker.solar_battery_1_unifi"
-              device_class: "presence"
-              templates:
-                - "blue_presence_home"
-                - "red_presence_away"
-                - "icon_solar_power"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "more-info"
-                entity: "switch.zigbee_plug_garage"
-            entity_3:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "more-info"
-# Outside
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "card_met_office_weather"
-          name: "Outside"
-          entity: "weather.met_office_banbury"
-          tap_action:
-            action: "navigate"
-            navigation_path: "/lovelace-minimalist-climate/0"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: "person.kevin_thorn"
-              templates:
-                - "card_zone_icon_color"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "REPL iPhone 11"
-            entity_2:
-              entity_id: "person.julia_thorn"
-              templates:
-                - "card_zone_icon_color"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "Julia's iPhone 6"
-            entity_3:
-              entity_id: "person.daniel_thorn"
-              templates:
-                - "card_zone_icon_color"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "iPhone"
-            entity_4:
-              entity_id: "person.emily_thorn"
-              templates:
-                - "card_zone_icon_color"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "Emilys iPad Air 4th gen"
+          - type: "custom:button-card"
+            template: "edge"
+          - type: "custom:button-card"
+            template: "card_title"
+            label: "Exterior"
+          - type: "horizontal-stack"
+            cards:
+              # Front
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "green_off"
+                  - "red_on"
+                name: "Front"
+                entity: "binary_sensor.zigbee_door_sensor_front_contact"
+                icon: "mdi:home-lock"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-security/1"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: true
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.doorbell_rung"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                    tap_action:
+                      action: "more-info"
+                      entity: "camera.doorbell_g4_medium"
+                      show_live_stream: true
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "binary_sensor.front_g3_flex_motion"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                    tap_action:
+                      action: "more-info"
+                      entity: "camera.front_g3_flex_medium"
+                      show_live_stream: true
+                    hold_action:
+                      action: "more-info"
+                  entity_3:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+              # Back
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "green_off"
+                  - "red_on"
+                name: "Back"
+                entity: "binary_sensor.zigbee_door_sensor_back_contact"
+                icon: "mdi:shovel"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-security/1"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: true
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "light.back_door_smartbulb"
+                    templates:
+                      - "yellow_on"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "binary_sensor.back_g3_flex_motion"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                    tap_action:
+                      action: "more-info"
+                      entity: "camera.back_g3_flex_medium"
+                      show_live_stream: true
+                    hold_action:
+                      action: "more-info"
+                  entity_3:
+                    entity_id: "vacuum.moe"
+                    templates:
+                      - "card_room_mower_state"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "call-service"
+                  entity_4:
+                    entity_id: "binary_sensor.zigbee_door_sensor_patio_1_contact"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                      - "icon_door_sliding"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-security/1"
+                    hold_action:
+                      action: "more-info"
+          - type: "horizontal-stack"
+            cards:
+              # Garage
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "green_off"
+                  - "red_on"
+                name: "Garage"
+                entity: "binary_sensor.zigbee_door_sensor_garage_contact"
+                icon: "mdi:garage"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-security/1"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: true
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "light.zigbee_bulb_garage"
+                    templates:
+                      - "yellow_on"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "device_tracker.solar_battery_1_unifi"
+                    device_class: "presence"
+                    templates:
+                      - "blue_presence_home"
+                      - "red_presence_away"
+                      - "icon_solar_power"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "more-info"
+                      entity: "switch.zigbee_plug_garage"
+                  entity_3:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "more-info"
+              # Outside
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "card_met_office_weather"
+                name: "Outside"
+                entity: "weather.met_office_banbury"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-climate/0"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: true
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "person.kevin_thorn"
+                    templates:
+                      - "card_zone_icon_color"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "REPL iPhone 11"
+                  entity_2:
+                    entity_id: "person.julia_thorn"
+                    templates:
+                      - "card_zone_icon_color"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "Julia's iPhone 6"
+                  entity_3:
+                    entity_id: "person.daniel_thorn"
+                    templates:
+                      - "card_zone_icon_color"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "iPhone"
+                  entity_4:
+                    entity_id: "person.emily_thorn"
+                    templates:
+                      - "card_zone_icon_color"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "Emilys iPad Air 4th gen"
 
-# Hallways
-    - type: "vertical-stack"
-      cards:
-      - type: "custom:button-card"
-        template: "edge"
-      - type: "custom:button-card"
-        template: "card_title"
-        label: "Hallways"
-      - type: "horizontal-stack"
+      # Hallways
+      - type: "vertical-stack"
         cards:
-# Bottom Hallway
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "red_heating"
-          name: "Bottom Hallway"
-          entity: "climate.nest_bottom_floor"
-          icon: "mdi:home-floor-g"
-          tap_action:
-            action: "navigate"
-            navigation_path: "/lovelace-minimalist-climate/1"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: "light.shelly1l_hallway_bottom_light_1"
-              templates:
-                - "yellow_on"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "binary_sensor.nest_protect_bottom_floor_occupancy"
-              templates:
-                - "green_off"
-                - "red_on"
-                - "icon_motion_sensor"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-security/0"
-            entity_3:
-              entity_id: "binary_sensor.lounge_g3_instant_motion"
-              templates:
-                - "green_off"
-                - "red_on"
-              tap_action:
-                action: "more-info"
-                entity: "camera.lounge_g3_instant_medium"
-                show_live_stream: true
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "binary_sensor.nest_protect_bottom_floor_smoke_status"
-              templates:
-                - "purple_on"
-                - "icon_fire_alert"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-emergency/0"
-              hold_action:
-                action: "more-info"
-# Middle Hallway
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "red_heating"
-          name: "Middle Hallway"
-          entity: "climate.nest_middle_floor"
-          icon: "mdi:home-floor-1"
-          tap_action:
-            action: "navigate"
-            navigation_path: "/lovelace-minimalist-climate/1"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: "light.middle_hallway_light_light_1"
-              templates:
-                - "yellow_on"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "binary_sensor.nest_protect_middle_floor_occupancy"
-              templates:
-                - "green_off"
-                - "red_on"
-                - "icon_motion_sensor"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-security/0"
-            entity_3:
-              entity_id: "binary_sensor.middle_hallway_g3_flex_motion"
-              templates:
-                - "green_off"
-                - "red_on"
-              tap_action:
-                action: "more-info"
-                entity: "camera.middle_hallway_g3_flex_medium"
-                show_live_stream: true
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "binary_sensor.nest_protect_middle_floor_smoke_status"
-              templates:
-                - "purple_on"
-                - "icon_fire_alert"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-emergency/0"
-              hold_action:
-                action: "more-info"
-      - type: "horizontal-stack"
-        cards:
-# Top Hallway
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-          name: "Top Hallway"
-          entity: "binary_sensor.zigbee_door_sensor_loft_contact"
-          icon: "mdi:home-floor-2"
-          tap_action:
-            action: "navigate"
-            navigation_path: "/lovelace-minimalist-climate/0"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: true
-            label_use_brightness: false
-            entity_1:
-              entity_id: "device_tracker.u6_lr"
-              templates:
-                - "blue_presence_home"
-                - "icon_lan"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-network/0"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "binary_sensor.nest_protect_top_floor_occupancy"
-              templates:
-                - "green_off"
-                - "red_on"
-                - "icon_motion_sensor"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-security/0"
-              hold_action:
-                action: "more-info"
-            entity_3:
-              entity_id: "binary_sensor.zigbee_motion_sensor_bed_e_occupancy"
-              templates:
-                - "green_off"
-                - "red_on"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-security/0"
-            entity_4:
-              entity_id: "binary_sensor.nest_protect_top_floor_smoke_status"
-              templates:
-                - "purple_on"
-                - "icon_fire_alert"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-emergency/0"
-              hold_action:
-                action: "more-info"
-# Loft
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "green_off"
-            - "red_on"
-          name: "Loft"
-          entity: "binary_sensor.zigbee_door_sensor_loft_contact"
-          icon: "mdi:home-floor-l"
-          tap_action:
-            action: "navigate"
-            navigation_path: "/lovelace-minimalist-security/0"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-                - "icon_filmstrip"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-downloads/0"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "device_tracker.download_pc_unifi"
-              templates:
-                - "blue_presence_home"
-                - "icon_desktop_classic"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "REPL iPhone 11"
-            entity_3:
-              entity_id: "binary_sensor.diskstation_security_status"
-              templates:
-                - "purple_on"
-                - "icon_nas"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-devices/2"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "binary_sensor.udmpro_disk_0_health"
-              templates:
-                - "purple_on"
-                - "icon_cctv"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-network/0"
-              hold_action:
-                action: "more-info"
+          - type: "custom:button-card"
+            template: "edge"
+          - type: "custom:button-card"
+            template: "card_title"
+            label: "Hallways"
+          - type: "horizontal-stack"
+            cards:
+              # Bottom Hallway
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "red_heating"
+                name: "Bottom Hallway"
+                entity: "climate.nest_bottom_floor"
+                icon: "mdi:home-floor-g"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-climate/1"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: true
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "light.shelly1l_hallway_bottom_light_1"
+                    templates:
+                      - "yellow_on"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "binary_sensor.nest_protect_bottom_floor_occupancy"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                      - "icon_motion_sensor"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-security/0"
+                  entity_3:
+                    entity_id: "binary_sensor.lounge_g3_instant_motion"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                    tap_action:
+                      action: "more-info"
+                      entity: "camera.lounge_g3_instant_medium"
+                      show_live_stream: true
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "binary_sensor.nest_protect_bottom_floor_smoke_status"
+                    templates:
+                      - "purple_on"
+                      - "icon_fire_alert"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-emergency/0"
+                    hold_action:
+                      action: "more-info"
+              # Middle Hallway
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "red_heating"
+                name: "Middle Hallway"
+                entity: "climate.nest_middle_floor"
+                icon: "mdi:home-floor-1"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-climate/1"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: true
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "light.middle_hallway_light_light_1"
+                    templates:
+                      - "yellow_on"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "binary_sensor.nest_protect_middle_floor_occupancy"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                      - "icon_motion_sensor"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-security/0"
+                  entity_3:
+                    entity_id: "binary_sensor.middle_hallway_g3_flex_motion"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                    tap_action:
+                      action: "more-info"
+                      entity: "camera.middle_hallway_g3_flex_medium"
+                      show_live_stream: true
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "binary_sensor.nest_protect_middle_floor_smoke_status"
+                    templates:
+                      - "purple_on"
+                      - "icon_fire_alert"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-emergency/0"
+                    hold_action:
+                      action: "more-info"
+          - type: "horizontal-stack"
+            cards:
+              # Top Hallway
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                name: "Top Hallway"
+                entity: "binary_sensor.zigbee_door_sensor_loft_contact"
+                icon: "mdi:home-floor-2"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-climate/0"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: true
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "device_tracker.u6_lr"
+                    templates:
+                      - "blue_presence_home"
+                      - "icon_lan"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-network/0"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "binary_sensor.nest_protect_top_floor_occupancy"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                      - "icon_motion_sensor"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-security/0"
+                    hold_action:
+                      action: "more-info"
+                  entity_3:
+                    entity_id: "binary_sensor.zigbee_motion_sensor_bed_e_occupancy"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-security/0"
+                  entity_4:
+                    entity_id: "binary_sensor.nest_protect_top_floor_smoke_status"
+                    templates:
+                      - "purple_on"
+                      - "icon_fire_alert"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-emergency/0"
+                    hold_action:
+                      action: "more-info"
+              # Loft
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "green_off"
+                  - "red_on"
+                name: "Loft"
+                entity: "binary_sensor.zigbee_door_sensor_loft_contact"
+                icon: "mdi:home-floor-l"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-security/0"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                      - "icon_filmstrip"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-downloads/0"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "device_tracker.download_pc_unifi"
+                    templates:
+                      - "blue_presence_home"
+                      - "icon_desktop_classic"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "REPL iPhone 11"
+                  entity_3:
+                    entity_id: "binary_sensor.diskstation_security_status"
+                    templates:
+                      - "purple_on"
+                      - "icon_nas"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-devices/2"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "binary_sensor.udmpro_disk_0_health"
+                    templates:
+                      - "purple_on"
+                      - "icon_cctv"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-network/0"
+                    hold_action:
+                      action: "more-info"
 
-# Rooms
-    - type: "vertical-stack"
-      cards:
-      - type: "custom:button-card"
-        template: "edge"
-      - type: "custom:button-card"
-        template: "card_title"
-        label: "Rooms"
-      - type: "horizontal-stack"
+      # Rooms
+      - type: "vertical-stack"
         cards:
-# Lounge
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "Lounge"
-          entity: "light.lounge_light_light_1"
-          icon: "mdi:sofa"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_3:
-              entity_id: "binary_sensor.nvidia_shield_lounge_state"
-              templates:
-                - "green_on"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-media/1"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-# Kitchen
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "Kitchen"
-          entity: "light.kitchen_main_light_light_1"
-          icon: "mdi:countertop-outline"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "light.kitchen_utility_light_light_1"
-              templates:
-                - "yellow_on"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "sensor.zigbee_plug_washing_machine_power"
-              templates:
-                - "card_room_power_state"
-                - "icon_washing_machine"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-energy/1"
-            entity_3:
-              entity_id: "sensor.zigbee_plug_tumble_dryer_power"
-              templates:
-                - "card_room_power_state"
-                - "icon_tumble_dryer"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-energy/1"
-            entity_4:
-              entity_id: "binary_sensor.fire_stick_tv_kitchen_state"
-              templates:
-                - "green_on"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-media/5"
-# Study
-      - type: "horizontal-stack"
-        cards:
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "Study"
-          entity: "light.study_light_light_1"
-          icon: "mdi:bookshelf"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "device_tracker.apple_imac_2011_unifi"
-              templates:
-                - "blue_presence_home"
-                - "icon_desktop_classic"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-devices/5"
-              hold_action:
-                action: "toggle"
-            entity_3:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-# Bathroom
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "Bathroom"
-          entity: "light.bathroom_light_light_1"
-          icon: "mdi:bathtub-outline"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2"
-              templates:
-                - "green_off"
-                - "red_on"
-                - "icon_motion_sensor"
-              tap_action:
-                action: "more-info"
-              hold_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-security/0"
-            entity_3:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
+          - type: "custom:button-card"
+            template: "edge"
+          - type: "custom:button-card"
+            template: "card_title"
+            label: "Rooms"
+          - type: "horizontal-stack"
+            cards:
+              # Lounge
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "Lounge"
+                entity: "light.lounge_light_light_1"
+                icon: "mdi:sofa"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_3:
+                    entity_id: "binary_sensor.nvidia_shield_lounge_state"
+                    templates:
+                      - "green_on"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-media/1"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+              # Kitchen
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "Kitchen"
+                entity: "light.kitchen_main_light_light_1"
+                icon: "mdi:countertop-outline"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "light.kitchen_utility_light_light_1"
+                    templates:
+                      - "yellow_on"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "sensor.zigbee_plug_washing_machine_power"
+                    templates:
+                      - "card_room_power_state"
+                      - "icon_washing_machine"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-energy/1"
+                  entity_3:
+                    entity_id: "sensor.zigbee_plug_tumble_dryer_power"
+                    templates:
+                      - "card_room_power_state"
+                      - "icon_tumble_dryer"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-energy/1"
+                  entity_4:
+                    entity_id: "binary_sensor.fire_stick_tv_kitchen_state"
+                    templates:
+                      - "green_on"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-media/5"
+          - type: "horizontal-stack"
+            cards:
+              # Study
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "Study"
+                entity: "light.study_light_light_1"
+                icon: "mdi:bookshelf"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "device_tracker.apple_imac_2011_unifi"
+                    templates:
+                      - "blue_presence_home"
+                      - "icon_desktop_classic"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-devices/5"
+                    hold_action:
+                      action: "toggle"
+                  entity_3:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+              # Bathroom
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "Bathroom"
+                entity: "light.bathroom_light_light_1"
+                icon: "mdi:bathtub-outline"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                      - "icon_motion_sensor"
+                    tap_action:
+                      action: "more-info"
+                    hold_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-security/0"
+                  entity_3:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
 
-# Bedrooms
-    - type: "vertical-stack"
-      cards:
-      - type: "custom:button-card"
-        template: "edge"
-      - type: "custom:button-card"
-        template: "card_title"
-        label: "Bedrooms"
-      - type: "horizontal-stack"
+      # Bedrooms
+      - type: "vertical-stack"
         cards:
-# Bed A
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "Bed A"
-          entity: "light.bed_a_light_light_1"
-          icon: "mdi:alpha-a-circle"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "device_tracker.apple_macbook_pro_2018_kev_unifi"
-              templates:
-                - "blue_presence_home"
-                - "icon_desktop_classic"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-devices/8"
-              hold_action:
-                action: "more-info"
-            entity_3:
-              entity_id: "binary_sensor.fire_stick_tv_bed_a_state"
-              templates:
-                - "green_on"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-media/2"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-# En-Suite
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "En-suite"
-          entity: "light.ensuite_light_light_1"
-          icon: "mdi:shower-head"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "call-service"
-            service: "icloud.play_sound"
-            data:
-              account: "itunes@kevinthorn.com"
-              device_name: "REPL iPhone 11"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_3:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-# Bed B
-      - type: "horizontal-stack"
-        cards:
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "Bed B"
-          entity: "light.bed_b_light_light_1"
-          icon: "mdi:alpha-b-circle"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "group.active_devices_tracker_emily"
-              templates:
-                - "blue_presence_home"
-                - "icon_desktop_classic"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-devices/7"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "REPL iPhone 11"
-            entity_3:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-# Bed C
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "Bed C"
-          entity: "light.bed_c_light_1"
-          icon: "mdi:alpha-c-circle"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "binary_sensor.zigbee_door_sensor_bed_c_contact"
-              templates:
-                - "green_off"
-                - "red_on"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-security/1"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "device_tracker.arcade_machine_unifi"
-              templates:
-                - "blue_presence_home"
-                - "icon_desktop_classic"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-devices/3"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "REPL iPhone 11"
-            entity_3:
-              entity_id: "binary_sensor.harmony_hub_bed_c_state"
-              templates:
-                - "green_on"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-media/3"
-              hold_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-media/6"
-            entity_4:
-              entity_id: "sensor.mfc_j870dw_status"
-              templates:
-                - "card_room_printer_state"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-devices/1"
-              hold_action:
-                action: "more-info"
-# Bed D
-      - type: "horizontal-stack"
-        cards:
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-          name: "Bed D"
-          entity: "group.light"
-          icon: "mdi:alpha-d-circle"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "group.active_devices_tracker_daniel"
-              templates:
-                - "blue_presence_home"
-                - "icon_desktop_classic"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-devices/6"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "REPL iPhone 11"
-            entity_3:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-# Bed E
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-            - "yellow_on"
-          name: "Bed E"
-          entity: "light.bed_e_light_light_1"
-          icon: "mdi:alpha-e-circle"
-          tap_action:
-            action: "toggle"
-          hold_action:
-            action: "more-info"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "light.mss425e_6025_outlet_3"
-              templates:
-                - "yellow_on"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "device_tracker.big_pc_unifi"
-              templates:
-                - "blue_presence_home"
-                - "icon_desktop_classic"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-devices/4"
-              hold_action:
-                action: "call-service"
-                service: "icloud.play_sound"
-                data:
-                  account: "itunes@kevinthorn.com"
-                  device_name: "REPL iPhone 11"
-            entity_3:
-              entity_id: "binary_sensor.nvidia_shield_bed_e_state"
-              templates:
-                - "green_on"
-              tap_action:
-                action: "navigate"
-                navigation_path: "/lovelace-minimalist-media/4"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "fan.fan_or_heater"
-              templates:
-                - "yellow_on"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
+          - type: "custom:button-card"
+            template: "edge"
+          - type: "custom:button-card"
+            template: "card_title"
+            label: "Bedrooms"
+          - type: "horizontal-stack"
+            cards:
+              # Bed A
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "Bed A"
+                entity: "light.bed_a_light_light_1"
+                icon: "mdi:alpha-a-circle"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "device_tracker.apple_macbook_pro_2018_kev_unifi"
+                    templates:
+                      - "blue_presence_home"
+                      - "icon_desktop_classic"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-devices/8"
+                    hold_action:
+                      action: "more-info"
+                  entity_3:
+                    entity_id: "binary_sensor.fire_stick_tv_bed_a_state"
+                    templates:
+                      - "green_on"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-media/2"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+              # En-Suite
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "En-suite"
+                entity: "light.ensuite_light_light_1"
+                icon: "mdi:shower-head"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "call-service"
+                  service: "icloud.play_sound"
+                  data:
+                    account: "itunes@kevinthorn.com"
+                    device_name: "REPL iPhone 11"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_3:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+          - type: "horizontal-stack"
+            cards:
+              # Bed B
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "Bed B"
+                entity: "light.bed_b_light_light_1"
+                icon: "mdi:alpha-b-circle"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "group.active_devices_tracker_emily"
+                    templates:
+                      - "blue_presence_home"
+                      - "icon_desktop_classic"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-devices/7"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "REPL iPhone 11"
+                  entity_3:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+              # Bed C
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "Bed C"
+                entity: "light.bed_c_light_1"
+                icon: "mdi:alpha-c-circle"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "binary_sensor.zigbee_door_sensor_bed_c_contact"
+                    templates:
+                      - "green_off"
+                      - "red_on"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-security/1"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "device_tracker.arcade_machine_unifi"
+                    templates:
+                      - "blue_presence_home"
+                      - "icon_desktop_classic"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-devices/3"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "REPL iPhone 11"
+                  entity_3:
+                    entity_id: "binary_sensor.harmony_hub_bed_c_state"
+                    templates:
+                      - "green_on"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-media/3"
+                    hold_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-media/6"
+                  entity_4:
+                    entity_id: "sensor.mfc_j870dw_status"
+                    templates:
+                      - "card_room_printer_state"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-devices/1"
+                    hold_action:
+                      action: "more-info"
+          - type: "horizontal-stack"
+            cards:
+              # Bed D
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                name: "Bed D"
+                entity: "group.light"
+                icon: "mdi:alpha-d-circle"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "group.active_devices_tracker_daniel"
+                    templates:
+                      - "blue_presence_home"
+                      - "icon_desktop_classic"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-devices/6"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "REPL iPhone 11"
+                  entity_3:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+              # Bed E
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                  - "yellow_on"
+                name: "Bed E"
+                entity: "light.bed_e_light_light_1"
+                icon: "mdi:alpha-e-circle"
+                tap_action:
+                  action: "toggle"
+                hold_action:
+                  action: "more-info"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "light.mss425e_6025_outlet_3"
+                    templates:
+                      - "yellow_on"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "device_tracker.big_pc_unifi"
+                    templates:
+                      - "blue_presence_home"
+                      - "icon_desktop_classic"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-devices/4"
+                    hold_action:
+                      action: "call-service"
+                      service: "icloud.play_sound"
+                      data:
+                        account: "itunes@kevinthorn.com"
+                        device_name: "REPL iPhone 11"
+                  entity_3:
+                    entity_id: "binary_sensor.nvidia_shield_bed_e_state"
+                    templates:
+                      - "green_on"
+                    tap_action:
+                      action: "navigate"
+                      navigation_path: "/lovelace-minimalist-media/4"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "fan.fan_or_heater"
+                    templates:
+                      - "yellow_on"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
 
-      - type: "horizontal-stack"
-        cards:
-# Top Bathroom
-        - type: "custom:button-card"
-          template:
-            - "card_room"
-          name: "Top Bathroom"
-          entity: "input_boolean.placeholder"
-          icon: "mdi:toilet"
-          tap_action:
-            action: "more-info"
-          hold_action:
-            action: "more-info"
-          # aspect_ratio: "0.5/0.5"
-          styles:
-            card:
-              - width: "50%"
-          #   - padding-right: "80px"
-          variables:
-            label_use_temperature: false
-            label_use_brightness: false
-            entity_1:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_2:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_3:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-            entity_4:
-              entity_id: "input_boolean.placeholder"
-              templates:
-                - "grey_no_state"
-              tap_action:
-                action: "toggle"
-              hold_action:
-                action: "more-info"
-        # - type: "custom:button-card"
-        #   template:
-        #     - "card_room"
-        #   name: ""
-        #   entity: input_boolean.placeholder
-        #   variables:
-        #     label_use_temperature: false
-        #     label_use_brightness: false
+          - type: "horizontal-stack"
+            cards:
+              # Top Bathroom
+              - type: "custom:button-card"
+                template:
+                  - "card_room"
+                name: "Top Bathroom"
+                entity: "input_boolean.placeholder"
+                icon: "mdi:toilet"
+                tap_action:
+                  action: "more-info"
+                hold_action:
+                  action: "more-info"
+                # aspect_ratio: "0.5/0.5"
+                styles:
+                  card:
+                    - width: "50%"
+                #   - padding-right: "80px"
+                variables:
+                  label_use_temperature: false
+                  label_use_brightness: false
+                  entity_1:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_3:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_4:
+                    entity_id: "input_boolean.placeholder"
+                    templates:
+                      - "grey_no_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                      # - type: "custom:button-card"
+                      #   template:
+                      #     - "card_room"
+                      #   name: ""
+                      #   entity: input_boolean.placeholder
+                      #   variables:
+                      #     label_use_temperature: false
+                      #     label_use_brightness: false

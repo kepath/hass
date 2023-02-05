@@ -1,270 +1,217 @@
-# lovelace_gen
+---
 button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
-
 views:
-
-  - title: Main
-    icon: mdi:cellphone-text
-    theme: minimalist-mobile
+  - title: "Main"
+    icon: "mdi:cellphone-text"
+    theme: "minimalist-mobile"
     cards:
-      # - type: horizontal-stack
-      #   cards:
-      #   - type: 'custom:button-card'
-      #     template: chip_icon_state
-      #     variables:
-      #       ulm_chip_icon_state_icon: '🧩'
-      #       ulm_chip_icon_state_entity: sensor.hacs
-      #     tap_action:
-      #       action: navigate
-      #       navigation_path: /hacs
-      #   - type: custom:button-card
-      #     template: edge
-      #   tap_action:
-      #     action: more-info
-      #     entity: weather.met_office_banbury
-      # - type: 'custom:button-card'
-      #   template: chip_icon_state
-      #   variables:
-      #     ulm_chip_icon_state_icon: '🖨️'
-      #     ulm_chip_icon_state_entity: sensor.mfc_j870dw_status
-      # - type: 'custom:button-card'
-      #   template: chip_icon_state
-      #   variables:
-      #     ulm_chip_icon_state_icon: '🪟'
-      #     ulm_chip_icon_state_entity: sensor.zigbee_vibration_sensor_patio_action
-      # - type: 'custom:button-card'
-      #   template: chip_icon_state
-      #   variables:
-      #     ulm_chip_icon_state_icon: '🔋'
-      #     ulm_chip_icon_state_entity: sensor.ups_status
-      # - type: custom:button-card
-      #   template: edge
-      - type: vertical-stack
+      - type: "vertical-stack"
         cards:
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: custom:button-card
-            template: card_navigate
-            variables:
-              ulm_card_navigate_path: /lovelace-minimalist-automation
-              ulm_card_navigate_title: Automation
-              ulm_card_navigate_icon: mdi:refresh-auto
-          - type: custom:button-card
-            template:
-              - red_on
-              - card_navigate
-            variables:
-              ulm_card_navigate_path: /lovelace-minimalist-security
-              ulm_card_navigate_title: Security
-              ulm_card_navigate_icon: mdi:lock
-          - type: custom:button-card
-            template: edge
-
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: custom:button-card
-            template: card_navigate
-            variables:
-              ulm_card_navigate_path: /lovelace-minimalist-climate
-              ulm_card_navigate_title: Climate
-              ulm_card_navigate_icon: mdi:weather-partly-cloudy
-          - type: custom:button-card
-            template: card_navigate
-            variables:
-              ulm_card_navigate_path: /lovelace-minimalist-media
-              ulm_card_navigate_title: Media
-              ulm_card_navigate_icon: mdi:remote-tv
-          - type: custom:button-card
-            template: edge
-
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: custom:button-card
-            template: card_navigate
-            variables:
-              ulm_card_navigate_path: /lovelace-minimalist-network
-              ulm_card_navigate_title: Network
-              ulm_card_navigate_icon: mdi:lan
-          - type: custom:button-card
-            template: card_navigate
-            variables:
-              ulm_card_navigate_path: /lovelace-minimalist-devices
-              ulm_card_navigate_title: Devices
-              ulm_card_navigate_icon: mdi:devices
-          - type: custom:button-card
-            template: edge
-
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: custom:button-card
-            template: card_navigate
-            variables:
-              ulm_card_navigate_path: /lovelace-minimalist-rooms
-              ulm_card_navigate_title: Rooms
-              ulm_card_navigate_icon: mdi:floor-plan
-          - type: custom:button-card
-            template: card_navigate
-            variables:
-              ulm_card_navigate_path: /lovelace-minimalist-rooms
-              ulm_card_navigate_title: Blank
-              ulm_card_navigate_icon: mdi:calendar-blank
-          - type: custom:button-card
-            template: edge
-
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_binary_sensor_alert
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: input_boolean.doorbell_rung
-            show_last_changed: true
-            name: Doorbell
-            tap_action:
-              action: more-info
-              entity: binary_sensor.doorbell_uvc_g4_doorbell
-            double_tap_action:
-              action: navigate
-              navigation_path: /lovelace-minimalist-security/1
-            hold_action:
-              action: more-info
-              entity: camera.doorbell_g4
-          - type: 'custom:button-card'
-            template: card_binary_sensor
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: binary_sensor.updater
-            show_last_changed: true
-            name: HA Update
-            tap_action:
-              action: more-info
-              entity: binary_sensor.updater
-
-            double_tap_action:
-              action: navigate
-              navigation_path: /hassio
-          - type: custom:button-card
-            template: edge
-
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: chip_temperature
-            variables:
-              ulm_chip_temperature_inside: sensor.banbury_feels_like_temperature
-              ulm_chip_temperature_outside: sensor.banbury_temperature
-              ulm_chip_temperature_weather: weather.met_office_banbury
-            tap_action:
-              action: more-info
-              entity: weather.met_office_banbury
-          - type: 'custom:button-card'
-            template: chip_icon_state
-            variables:
-              ulm_chip_icon_state_icon: '🧩'
-              ulm_chip_icon_state_entity: sensor.hacs
-            tap_action:
-              action: navigate
-              navigation_path: /hacs
-          - type: 'custom:button-card'
-            template: chip_icon_state
-            variables:
-              ulm_chip_icon_state_icon: '🖨️'
-              ulm_chip_icon_state_entity: sensor.mfc_j870dw_status
-
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_person
-            variables:
-              ulm_card_person_entity: person.kevin_thorn
-              ulm_card_person_use_entity_picture: true
-              ulm_card_person_zone1: repl group
-              ulm_card_person_zone2: bloxham school
-            tap_action:
-              action: more-info
-              entity: person.kevin_thorn
-          - type: 'custom:button-card'
-            template: card_person
-            variables:
-              ulm_card_person_entity: person.julia_thorn
-              ulm_card_person_use_entity_picture: true
-              ulm_card_person_zone1: tudor hall school
-              ulm_card_person_zone2: gym
-            tap_action:
-              action: more-info
-              entity: person.julia_thorn
-          - type: custom:button-card
-            template: edge
-
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_person
-            variables:
-              ulm_card_person_entity: person.daniel_thorn
-              ulm_card_person_use_entity_picture: true
-              ulm_card_person_zone1: currys
-              ulm_card_person_zone2: jus parents
-            tap_action:
-              action: more-info
-              entity: person.daniel_thorn
-          - type: 'custom:button-card'
-            template: card_person
-            variables:
-              ulm_card_person_entity: person.emily_thorn
-              ulm_card_person_use_entity_picture: true
-              ulm_card_person_zone1: bloxham_school
-              ulm_card_person_zone2: kks house
-            tap_action:
-              action: more-info
-              entity: person.emily_thorn
-          - type: custom:button-card
-            template: edge
-
-        - type: horizontal-stack
-          cards:
-          - type: custom:button-card
-            template: edge
-          - type: 'custom:button-card'
-            template: card_power_outlet
-            entity: switch.emily_s_iphone_xs_family_unifi
-            name: iPhone Access
-            icon: mdi:cellphone
-          - type: 'custom:button-card'
-            template: card_power_outlet
-            entity: switch.emily_s_school_laptop_family_unifi
-            name: Laptop Access
-            icon: mdi:laptop
-          - type: 'custom:button-card'
-            template: card_power_outlet
-            entity: device_tracker.emilys_ipad_air_4th_gen
-            name: iPad Air
-            icon: mdi:tablet
-          - type: custom:button-card
-            template: edge
-
-        # - type: horizontal-stack
-        #   cards:
-        #   - type: custom:button-card
-        #     template: edge
-        #   - type: custom:button-card
-        #     template: custom_card_tpx01_aircondition_with_buttons
-        #     variables:
-        #       entity: climate.nest_bottom_floor
-        #       name: Nest:Bottom Floor
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "card_navigate"
+                variables:
+                  ulm_card_navigate_path: "/lovelace-minimalist-automation"
+                  ulm_card_navigate_title: "Automation"
+                  ulm_card_navigate_icon: "mdi:refresh-auto"
+              - type: "custom:button-card"
+                template:
+                  - "red_on"
+                  - "card_navigate"
+                variables:
+                  ulm_card_navigate_path: "/lovelace-minimalist-security"
+                  ulm_card_navigate_title: "Security"
+                  ulm_card_navigate_icon: "mdi:lock"
+              - type: "custom:button-card"
+                template: "edge"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "card_navigate"
+                variables:
+                  ulm_card_navigate_path: "/lovelace-minimalist-climate"
+                  ulm_card_navigate_title: "Climate"
+                  ulm_card_navigate_icon: "mdi:weather-partly-cloudy"
+              - type: "custom:button-card"
+                template: "card_navigate"
+                variables:
+                  ulm_card_navigate_path: "/lovelace-minimalist-media"
+                  ulm_card_navigate_title: "Media"
+                  ulm_card_navigate_icon: "mdi:remote-tv"
+              - type: "custom:button-card"
+                template: "edge"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "card_navigate"
+                variables:
+                  ulm_card_navigate_path: "/lovelace-minimalist-network"
+                  ulm_card_navigate_title: "Network"
+                  ulm_card_navigate_icon: "mdi:lan"
+              - type: "custom:button-card"
+                template: "card_navigate"
+                variables:
+                  ulm_card_navigate_path: "/lovelace-minimalist-devices"
+                  ulm_card_navigate_title: "Devices"
+                  ulm_card_navigate_icon: "mdi:devices"
+              - type: "custom:button-card"
+                template: "edge"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "card_navigate"
+                variables:
+                  ulm_card_navigate_path: "/lovelace-minimalist-rooms"
+                  ulm_card_navigate_title: "Rooms"
+                  ulm_card_navigate_icon: "mdi:floor-plan"
+              - type: "custom:button-card"
+                template: "card_navigate"
+                variables:
+                  ulm_card_navigate_path: "/lovelace-minimalist-rooms"
+                  ulm_card_navigate_title: "Blank"
+                  ulm_card_navigate_icon: "mdi:calendar-blank"
+              - type: "custom:button-card"
+                template: "edge"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "card_binary_sensor_alert"
+                variables:
+                  - ulm_card_binary_sensor_alert: true
+                entity: "input_boolean.doorbell_rung"
+                show_last_changed: true
+                name: "Doorbell"
+                tap_action:
+                  action: "more-info"
+                  entity: "binary_sensor.doorbell_uvc_g4_doorbell"
+                double_tap_action:
+                  action: "navigate"
+                  navigation_path: "/lovelace-minimalist-security/1"
+                hold_action:
+                  action: "more-info"
+                  entity: "camera.doorbell_g4"
+              - type: "custom:button-card"
+                template: "card_binary_sensor"
+                variables:
+                  - ulm_card_binary_sensor_alert: true
+                entity: "binary_sensor.updater"
+                show_last_changed: true
+                name: "HA Update"
+                tap_action:
+                  action: "more-info"
+                  entity: "binary_sensor.updater"
+                double_tap_action:
+                  action: "navigate"
+                  navigation_path: "/hassio"
+              - type: "custom:button-card"
+                template: "edge"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "chip_temperature"
+                variables:
+                  ulm_chip_temperature_inside: "sensor.banbury_feels_like_temperature"
+                  ulm_chip_temperature_outside: "sensor.banbury_temperature"
+                  ulm_chip_temperature_weather: "weather.met_office_banbury"
+                tap_action:
+                  action: "more-info"
+                  entity: "weather.met_office_banbury"
+              - type: "custom:button-card"
+                template: "chip_icon_state"
+                variables:
+                  ulm_chip_icon_state_icon: "🧩"
+                  ulm_chip_icon_state_entity: "sensor.hacs"
+                tap_action:
+                  action: "navigate"
+                  navigation_path: "/hacs"
+              - type: "custom:button-card"
+                template: "chip_icon_state"
+                variables:
+                  ulm_chip_icon_state_icon: "🖨️"
+                  ulm_chip_icon_state_entity: "sensor.mfc_j870dw_status"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "card_person"
+                variables:
+                  ulm_card_person_entity: "person.kevin_thorn"
+                  ulm_card_person_use_entity_picture: true
+                  ulm_card_person_zone1: "repl group"
+                  ulm_card_person_zone2: "bloxham school"
+                tap_action:
+                  action: "more-info"
+                  entity: "person.kevin_thorn"
+              - type: "custom:button-card"
+                template: "card_person"
+                variables:
+                  ulm_card_person_entity: "person.julia_thorn"
+                  ulm_card_person_use_entity_picture: true
+                  ulm_card_person_zone1: "tudor hall school"
+                  ulm_card_person_zone2: "gym"
+                tap_action:
+                  action: "more-info"
+                  entity: "person.julia_thorn"
+              - type: "custom:button-card"
+                template: "edge"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "card_person"
+                variables:
+                  ulm_card_person_entity: "person.daniel_thorn"
+                  ulm_card_person_use_entity_picture: true
+                  ulm_card_person_zone1: "currys"
+                  ulm_card_person_zone2: "jus parents"
+                tap_action:
+                  action: "more-info"
+                  entity: "person.daniel_thorn"
+              - type: "custom:button-card"
+                template: "card_person"
+                variables:
+                  ulm_card_person_entity: "person.emily_thorn"
+                  ulm_card_person_use_entity_picture: true
+                  ulm_card_person_zone1: "bloxham_school"
+                  ulm_card_person_zone2: "kks house"
+                tap_action:
+                  action: "more-info"
+                  entity: "person.emily_thorn"
+              - type: "custom:button-card"
+                template: "edge"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:button-card"
+                template: "card_power_outlet"
+                entity: "switch.emily_s_iphone_xs_family_unifi"
+                name: "iPhone Access"
+                icon: "mdi:cellphone"
+              - type: "custom:button-card"
+                template: "card_power_outlet"
+                entity: "switch.emily_s_school_laptop_family_unifi"
+                name: "Laptop Access"
+                icon: "mdi:laptop"
+              - type: "custom:button-card"
+                template: "card_power_outlet"
+                entity: "device_tracker.emilys_ipad_air_4th_gen"
+                name: "iPad Air"
+                icon: "mdi:tablet"
+              - type: "custom:button-card"
+                template: "edge"
