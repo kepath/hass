@@ -78,13 +78,19 @@ card_kepath_floorplan_camera:
     [[[
       var milliseconds = 0
       if (variables?.ulm_card_kepath_floorplan_camera_last_motion) {
-        var milliseconds = Math.abs(new Date() - new Date(states[variables.ulm_card_kepath_floorplan_camera_last_motion].state))
-        var minutes = Math.floor((milliseconds % 3600000) / 60000);
-        var seconds = Math.floor(((milliseconds % 360000) % 60000) / 1000);
-        return minutes + "m " + seconds + "s ";
+        var milliseconds = Math.abs(new Date() - new Date(states[variables.ulm_card_kepath_floorplan_camera_last_motion].state));
       } else {
-        return "";
+        var milliseconds = Math.abs(new Date() - new Date(states[entity.entity_id].last_changed));
       }
+      var day, hour, minute, seconds;
+      seconds = Math.floor(milliseconds / 1000);
+      minute = Math.floor(seconds / 60);
+      seconds = seconds % 60;
+      hour = Math.floor(minute / 60);
+      minute = minute % 60;
+      day = Math.floor(hour / 24);
+      hour = hour % 24;
+      return hour + "h " + minute + "m";
     ]]]
   styles:
     icon:
@@ -98,14 +104,14 @@ card_kepath_floorplan_camera:
       - width: "30px"
       - background-color: "rgba(130, 130, 130, 0.3)"
       - backdrop-filter: "blur(8px)"
-      - border: "2px solid rgba(130, 130, 130, 0.3)"
+      - border: "2px solid rgba(130, 130, 130, 0.0)"
       - border-color: >
           [[[
             var borderColor = ""
-            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("top") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.1) "
-            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("right") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.1) "
-            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("bottom") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.1) "
-            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("left") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.1) "
+            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("top") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.0) "
+            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("right") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.0) "
+            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("bottom") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.0) "
+            borderColor += variables?.ulm_card_kepath_floorplan_camera_view_borders.includes("left") ? "rgba(221, 221, 221, 1.0) " : "rgba(130, 130, 130, 0.0) "
 
             return borderColor
           ]]]
@@ -146,7 +152,7 @@ card_kepath_floorplan_camera:
     - operator: "template"
       value: >
         [[[
-          return (states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'unavailable')
+          return (states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'unavailable' || states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'unknown')
         ]]]
       styles:
         icon:
@@ -156,7 +162,241 @@ card_kepath_floorplan_camera:
       tap_action:
         action: "more-info"
 
+card_kepath_floorplan_door:
+  show_icon: true
+  show_label: true
+  show_name: false
+  icon: "mdi:door"
+  label: >
+    [[[
+      var milliseconds = 0
+      if (entity?.last_changed) {
+        var milliseconds = Math.abs(new Date() - new Date(states[entity.entity_id].last_changed));
+      }
+      var day, hour, minute, seconds;
+      seconds = Math.floor(milliseconds / 1000);
+      minute = Math.floor(seconds / 60);
+      seconds = seconds % 60;
+      hour = Math.floor(minute / 60);
+      minute = minute % 60;
+      day = Math.floor(hour / 24);
+      hour = hour % 24;
+      return hour + "h " + minute + "m";
+    ]]]
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+      - color: "rgba(221, 221, 221, 1.0)"
+    img_cell:
+      - border-radius: "50%"
+      - height: "32px"
+      - width: "32px"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+    label:
+      - justify-self: "start"
+      - align-self: "start"
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0 12px 0 12px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - color: "rgba(221, 221, 221, 0.4)"
+  tap_action:
+    action: "more-info"
+  state:
+    - value: "on"
+      icon: "mdi:door-open"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
+    - operator: "template"
+      value: >
+        [[[
+          return (states[entity.entity_id].state == 'unavailable' || states[entity.entity_id].state == 'unknown')
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
 
 card_kepath_floorplan_nest_protect:
+  show_icon: true
+  show_label: true
+  show_name: false
+  icon: "mdi:smoke-detector-variant"
+  label: >
+    [[[
+      var milliseconds = 0
+      if (entity?.last_changed) {
+        var milliseconds = Math.abs(new Date() - new Date(states[entity.entity_id].last_changed));
+      }
+      var day, hour, minute, seconds;
+      seconds = Math.floor(milliseconds / 1000);
+      minute = Math.floor(seconds / 60);
+      seconds = seconds % 60;
+      hour = Math.floor(minute / 60);
+      minute = minute % 60;
+      day = Math.floor(hour / 24);
+      hour = hour % 24;
+      return hour + "h " + minute + "m";
+    ]]]
+  styles:
+    icon:
+      - width: "22px"
+      - height: "23px"
+      - line-height: "0"
+      - color: "rgba(221, 221, 221, 1.0)"
+    img_cell:
+      - border-radius: "50%"
+      - height: "50px"
+      - width: "50px"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+    label:
+      - justify-self: "start"
+      - align-self: "start"
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0 12px 0 12px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - color: "rgba(221, 221, 221, 0.4)"
+    grid:
+      - grid-template-areas: "'i i i' 'i i i' 'i i i' 'l l l' 'CO heat smoke'"
+      - grid-template-columns: "1fr 1fr 1fr"
+      - grid-template-rows: "1fr 1fr 1fr 1fr 1fr"
+      - justify-items: "center"
+    custom_fields:
+      CO:
+        - position: "absolute"
+        - left: "6px"
+        - top: "29px"
+      heat:
+        - position: "absolute"
+        - left: "21px"
+        - top: "39px"
+      smoke:
+        - position: "absolute"
+        - left: "36px"
+        - top: "29px"
+  state:
+    - value: "on"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
+    - operator: "template"
+      value: >
+        [[[
+          return (states[entity.entity_id].state == 'unavailable' || states[entity.entity_id].state == 'unknown')
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+  custom_fields:
+    CO:
+      card:
+        type: "custom:button-card"
+        icon: "mdi:molecule-co"
+        styles:
+          icon:
+            - width: "14px"
+            - height: "14px"
+            - line-height: "0"
+            - color: "var(--card-background-color)"
+          img_cell:
+            - border-radius: "50%"
+            - background-color: "rgba(var(--color-red),1)"
+            - height: "16px"
+            - width: "16px"
+          card:
+            - height: "100%"
+            - box-shadow: "none"
+            - padding: "0px"
+            - border-radius: "50%"
+        state:
+          - operator: "template"
+            value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_co_status].state ]]]"
+            styles:
+              img_cell:
+                - background-color: "rgba(100, 100, 100, 0.0)"
+              card:
+                - background-color: "rgba(100, 100, 100, 0.0)"
+    heat:
+      card:
+        type: "custom:button-card"
+        show_icon: true
+        show_label: false
+        show_name: false
+        icon: "mdi:thermometer"
+        styles:
+          icon:
+            - width: "14px"
+            - height: "14px"
+            - line-height: "0"
+            - color: "var(--card-background-color)"
+          img_cell:
+            - border-radius: "50%"
+            - background-color: "rgba(var(--color-red),1)"
+            - height: "16px"
+            - width: "16px"
+          card:
+            - height: "100%"
+            - box-shadow: "none"
+            - padding: "0px"
+            - border-radius: "50%"
+        state:
+          - operator: "template"
+            value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state ]]]"
+            styles:
+              img_cell:
+                - background-color: "rgba(100, 100, 100, 0.0)"
+              card:
+                - background-color: "rgba(100, 100, 100, 0.0)"
+    smoke:
+      card:
+        type: "custom:button-card"
+        show_icon: true
+        show_label: false
+        show_name: false
+        icon: "mdi:fire"
+        styles:
+          icon:
+            - width: "14px"
+            - height: "14px"
+            - line-height: "0"
+            - color: "var(--card-background-color)"
+          img_cell:
+            - border-radius: "50%"
+            - background-color: "rgba(var(--color-red),1)"
+            - height: "16px"
+            - width: "16px"
+          card:
+            - height: "100%"
+            - box-shadow: "none"
+            - padding: "0px"
+            - border-radius: "50%"
+        state:
+          - operator: "template"
+            value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_smoke_status].state ]]]"
+            styles:
+              img_cell:
+                - background-color: "rgba(100, 100, 100, 0.0)"
+              card:
+                - background-color: "rgba(100, 100, 100, 0.0)"
+
 
 card_kepath_floorplan_thermostat:
