@@ -250,17 +250,36 @@ card_kepath_floorplan_nest_protect:
     ]]]
   styles:
     icon:
-      - width: "22px"
-      - height: "23px"
-      - line-height: "0"
+      # - width: "28px"
+      # - height: "28px"
+      # - line-height: "0"
       - color: "rgba(221, 221, 221, 1.0)"
     img_cell:
+      # - background-color: "rgba(var(--color-theme),0.05)"
       - border-radius: "50%"
-      - height: "50px"
-      - width: "50px"
+      - width: "75%"
+      - height: "75%"
+      - max-width: "none"
+      - max-height: "none"
+      - position: "absolute"
+      - left: "50%"
+      - top: "50%"
+      - transform: "translate(-50%,-50%)"
+      - margin-top: "25%"
+      - margin-left: "-25%"
+      # - border-radius: "10%"
+      # - height: "30px"
+      # - width: "70px"
       - background-color: "rgba(130, 130, 130, 0.3)"
-      - backdrop-filter: "blur(8px)"
+      # - backdrop-filter: "blur(8px)"
     card:
+      - border-radius: "20px"
+      - box-shadow: "var(--box-shadow)"
+      - padding: "5px"
+      # - border-radius: "10%"
+      # - height: "90px"
+      # - width: "70px"
+      - backdrop-filter: "blur(8px)"
       - background-color: "rgba(100, 100, 100, 0.0)"
     label:
       - justify-self: "start"
@@ -272,23 +291,25 @@ card_kepath_floorplan_nest_protect:
       - overflow: "hidden"
       - color: "rgba(221, 221, 221, 0.4)"
     grid:
-      - grid-template-areas: "'i i i' 'i i i' 'i i i' 'l l l' 'CO heat smoke'"
-      - grid-template-columns: "1fr 1fr 1fr"
-      - grid-template-rows: "1fr 1fr 1fr 1fr 1fr"
+      - grid-template-areas: "'l l l l' 'i i i CO' 'i i i heat' 'i i i smoke'"
+      - grid-template-columns: "1fr 1fr 1fr 1fr"
+      - grid-template-rows: "1fr 1fr 1fr 1fr"
       - justify-items: "center"
-    custom_fields:
-      CO:
-        - position: "absolute"
-        - left: "6px"
-        - top: "29px"
-      heat:
-        - position: "absolute"
-        - left: "21px"
-        - top: "39px"
-      smoke:
-        - position: "absolute"
-        - left: "36px"
-        - top: "29px"
+      # custom_fields:
+      #   CO:
+      #     - position: "absolute"
+      #     - left: "6px"
+      #     - top: "29px"
+      #   heat:
+      #     - position: "absolute"
+      #     - left: "21px"
+      #     - top: "39px"
+      #   smoke:
+      #     - position: "absolute"
+      #     - left: "36px"
+      #     - top: "29px"
+  tap_action:
+    action: "more-info"
   state:
     - value: "on"
       styles:
@@ -319,7 +340,7 @@ card_kepath_floorplan_nest_protect:
             - color: "var(--card-background-color)"
           img_cell:
             - border-radius: "50%"
-            - background-color: "rgba(var(--color-red),1)"
+            - background-color: "rgba(var(--color-blue),1)"
             - height: "16px"
             - width: "16px"
           card:
@@ -327,6 +348,7 @@ card_kepath_floorplan_nest_protect:
             - box-shadow: "none"
             - padding: "0px"
             - border-radius: "50%"
+            - margin: "1px"
         state:
           - operator: "template"
             value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_co_status].state ]]]"
@@ -335,6 +357,21 @@ card_kepath_floorplan_nest_protect:
                 - background-color: "rgba(100, 100, 100, 0.0)"
               card:
                 - background-color: "rgba(100, 100, 100, 0.0)"
+              icon:
+                - color: "rgba(130, 130, 130, 0.3)"
+          - operator: "template"
+            value: >
+              [[[
+                return (states[variables.ulm_card_kepath_floorplan_nest_protect_co_status].state == 'unavailable' ||
+                states[variables.ulm_card_kepath_floorplan_nest_protect_co_status].state == 'unknown')
+              ]]]
+            styles:
+              icon:
+                - color: "rgba(var(--color-red), 0.6)"
+              img_cell:
+                - background-color: "rgba(130, 130, 130, 0.5)"
+        tap_action:
+          action: "more-info"
     heat:
       card:
         type: "custom:button-card"
@@ -350,7 +387,7 @@ card_kepath_floorplan_nest_protect:
             - color: "var(--card-background-color)"
           img_cell:
             - border-radius: "50%"
-            - background-color: "rgba(var(--color-red),1)"
+            - background-color: "rgba(var(--color-yellow),1)"
             - height: "16px"
             - width: "16px"
           card:
@@ -358,6 +395,7 @@ card_kepath_floorplan_nest_protect:
             - box-shadow: "none"
             - padding: "0px"
             - border-radius: "50%"
+            - margin: "1px"
         state:
           - operator: "template"
             value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state ]]]"
@@ -366,6 +404,21 @@ card_kepath_floorplan_nest_protect:
                 - background-color: "rgba(100, 100, 100, 0.0)"
               card:
                 - background-color: "rgba(100, 100, 100, 0.0)"
+              icon:
+                - color: "rgba(130, 130, 130, 0.3)"
+          - operator: "template"
+            value: >
+              [[[
+                return (states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state == 'unavailable' ||
+                states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state == 'unknown')
+              ]]]
+            styles:
+              icon:
+                - color: "rgba(var(--color-red), 0.6)"
+              img_cell:
+                - background-color: "rgba(130, 130, 130, 0.5)"
+        tap_action:
+          action: "more-info"
     smoke:
       card:
         type: "custom:button-card"
@@ -389,6 +442,7 @@ card_kepath_floorplan_nest_protect:
             - box-shadow: "none"
             - padding: "0px"
             - border-radius: "50%"
+            - margin: "1px"
         state:
           - operator: "template"
             value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_smoke_status].state ]]]"
@@ -397,6 +451,21 @@ card_kepath_floorplan_nest_protect:
                 - background-color: "rgba(100, 100, 100, 0.0)"
               card:
                 - background-color: "rgba(100, 100, 100, 0.0)"
+              icon:
+                - color: "rgba(130, 130, 130, 0.3)"
+          - operator: "template"
+            value: >
+              [[[
+                return (states[variables.ulm_card_kepath_floorplan_nest_protect_smoke_status].state == 'unavailable' ||
+                states[variables.ulm_card_kepath_floorplan_nest_protect_smoke_status].state == 'unknown')
+              ]]]
+            styles:
+              icon:
+                - color: "rgba(var(--color-red), 0.6)"
+              img_cell:
+                - background-color: "rgba(130, 130, 130, 0.5)"
+        tap_action:
+          action: "more-info"
 
 
 card_kepath_floorplan_thermostat:
