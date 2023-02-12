@@ -68,7 +68,6 @@ card_kepath_floorplan_binary_item:
   hold_action:
     action: "more-info"
 
-
 card_kepath_floorplan_camera:
   show_icon: true
   show_label: true
@@ -250,12 +249,8 @@ card_kepath_floorplan_nest_protect:
     ]]]
   styles:
     icon:
-      # - width: "28px"
-      # - height: "28px"
-      # - line-height: "0"
       - color: "rgba(221, 221, 221, 1.0)"
     img_cell:
-      # - background-color: "rgba(var(--color-theme),0.05)"
       - border-radius: "50%"
       - width: "75%"
       - height: "75%"
@@ -267,18 +262,11 @@ card_kepath_floorplan_nest_protect:
       - transform: "translate(-50%,-50%)"
       - margin-top: "25%"
       - margin-left: "-25%"
-      # - border-radius: "10%"
-      # - height: "30px"
-      # - width: "70px"
       - background-color: "rgba(130, 130, 130, 0.3)"
-      # - backdrop-filter: "blur(8px)"
     card:
       - border-radius: "20px"
       - box-shadow: "var(--box-shadow)"
       - padding: "5px"
-      # - border-radius: "10%"
-      # - height: "90px"
-      # - width: "70px"
       - backdrop-filter: "blur(8px)"
       - background-color: "rgba(100, 100, 100, 0.0)"
     label:
@@ -456,8 +444,8 @@ card_kepath_floorplan_nest_protect:
           - operator: "template"
             value: >
               [[[
-                return (states[variables.ulm_card_kepath_floorplan_nest_protect_smoke_status].state == 'unavailable' ||
-                states[variables.ulm_card_kepath_floorplan_nest_protect_smoke_status].state == 'unknown')
+                return (states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state == 'unavailable' ||
+                states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state == 'unknown')
               ]]]
             styles:
               icon:
@@ -466,6 +454,173 @@ card_kepath_floorplan_nest_protect:
                 - background-color: "rgba(130, 130, 130, 0.5)"
         tap_action:
           action: "more-info"
+          # card:
+          #   type: "custom:button-card"
+          #   template: "card_kepath_floorplan_nest_protect_alert"
+          #   variables:
+          #     card_kepath_floorplan_nest_protect_alert_icon: "mdi:fire"
+          #     card_kepath_floorplan_nest_protect_alert_color: "rgba(var(--color-red),1)"
+          #     card_kepath_floorplan_nest_protect_alert_entity: "[[[ return variables.ulm_card_kepath_floorplan_nest_protect_smoke_status ]]]"
 
+card_kepath_floorplan_nest_protect_alert:
+  show_icon: true
+  show_label: false
+  show_name: false
+  icon: "[[[ return variables.card_kepath_floorplan_nest_protect_alert_icon ]]]"
+  styles:
+    icon:
+      - width: "14px"
+      - height: "14px"
+      - line-height: "0"
+      - color: "var(--card-background-color)"
+    img_cell:
+      - border-radius: "50%"
+      - background-color: "[[[ return variables.card_kepath_floorplan_nest_protect_alert_color ]]]"
+      - height: "16px"
+      - width: "16px"
+    card:
+      - height: "100%"
+      - box-shadow: "none"
+      - padding: "0px"
+      - border-radius: "50%"
+      - margin: "1px"
+  state:
+    - operator: "template"
+      value: "[[[ return states[variables.card_kepath_floorplan_nest_protect_alert_entity].state ]]]"
+      styles:
+        img_cell:
+          - background-color: "rgba(100, 100, 100, 0.0)"
+        card:
+          - background-color: "rgba(100, 100, 100, 0.0)"
+        icon:
+          - color: "rgba(130, 130, 130, 0.3)"
+    - operator: "template"
+      value: >
+        [[[
+          return (states[variables.card_kepath_floorplan_nest_protect_alert_entity].state == 'unavailable' ||
+          states[variables.card_kepath_floorplan_nest_protect_alert_entity].state == 'unknown')
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+  tap_action:
+    action: "more-info"
 
 card_kepath_floorplan_thermostat:
+  show_icon: false
+  show_label: true
+  show_name: true
+  name: >
+    [[[
+      var temp = variables?.ulm_card_kepath_floorplan_thermostat_temperature ? states[variables.ulm_card_kepath_floorplan_thermostat_temperature].state : '-';
+      temp += ' &#8451;';
+      return temp;
+    ]]]
+  label: >
+    [[[
+      var humidity = variables?.ulm_card_kepath_floorplan_thermostat_humidity ? states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state : '-';
+      humidity += ' &percnt;';
+      return humidity;
+    ]]]
+  styles:
+    card:
+      - width: "100%"
+      - height: "100%"
+      - background-color: "rgba(100, 100, 100, 0.0)"
+    label:
+      - justify-self: "start"
+      - align-self: "start"
+      - font-weight: "bold"
+      - font-size: "10px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - color: "rgba(221, 221, 221, 0.4)"
+    name:
+      - justify-self: "start"
+      - align-self: "start"
+      - font-weight: "bold"
+      - font-size: "10px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - color: "rgba(221, 221, 221, 0.4)"
+    grid:
+      - grid-template-areas: "'. climate_temperature_up .' '. climate_wanted_temperature .' 'l climate_wanted_temperature n' '. climate_temperature_down .'"
+      - grid-template-columns: "1fr 60% 1fr"
+      - grid-template-rows: "1fr 40% 40% 1fr"
+      - justify-items: "center"
+    custom_fields:
+      climate_wanted_temperature:
+        - width: "100%"
+        - height: "100%"
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          entity?.attributes?.hvac_action == "heating"
+        ]]]
+      styles:
+        card:
+          - background-color: "rgba(var(--color-yellow),1)"
+    - operator: "template"
+      value: >
+        [[[
+          entity?.state == "unavailable" || entity?.state == "unknown"
+        ]]]
+      styles:
+      card:
+        - background-color: "rgba(130, 130, 130, 0.5)"
+  custom_fields:
+    climate_wanted_temperature:
+      card:
+        type: "custom:button-card"
+        show_icon: false
+        show_label: false
+        show_name: true
+        name: "[[[ return (entity?.attributes?.temperature ? entity.attributes.temperature : '-') ]]]"
+        styles:
+          name:
+            - justify-self: "start"
+            - align-self: "start"
+            - font-weight: "bold"
+            - text-overflow: "ellipsis"
+            - overflow: "hidden"
+            - font-size: "20px"
+            - line-height: "0"
+            - color: "rgba(221, 221, 221, 1.0)"
+          card:
+            - background-color: "rgba(100, 100, 100, 0.0)"
+            - width: "100%"
+            - height: "100%"
+    climate_temperature_up:
+      card:
+        type: "custom:button-card"
+        show_icon: true
+        show_label: false
+        show_name: false
+        icon: "mdi:menu-up"
+        styles:
+          icon:
+            - width: "14px"
+            - height: "14px"
+            - line-height: "0"
+            - color: "rgba(221, 221, 221, 1.0)"
+          card:
+            - background-color: "rgba(100, 100, 100, 0.0)"
+
+    climate_temperature_down:
+      card:
+        type: "custom:button-card"
+        show_icon: true
+        show_label: false
+        show_name: false
+        icon: "mdi:menu-down"
+        styles:
+          icon:
+            - width: "14px"
+            - height: "14px"
+            - line-height: "0"
+            - color: "rgba(221, 221, 221, 1.0)"
+          card:
+            - background-color: "rgba(100, 100, 100, 0.0)"
