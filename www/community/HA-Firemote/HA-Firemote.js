@@ -25,6 +25,14 @@ const fastappchoices = {
       "androidName": "com.amcplus.amcfiretv",
       "adbLaunchCommand": "adb shell am start -n com.amcplus.amcfiretv/com.amcplus.tv.MainActivity" },
 
+  "app-opener": {
+      "button": "App Opener",
+      "friendlyName": "App Opener",
+      "appName": "devsimon.appopener",
+      "className": "appOpenerButton",
+      "androidName": "devsimon.appopener",
+      "adbLaunchCommand": "adb shell am start -n devsimon.appopener/devsimon.appopener.MainActivity" },
+
   "apple-tv": {
       "button": "Apple TV",
       "friendlyName": 'Apple TV',
@@ -109,6 +117,13 @@ const fastappchoices = {
       "className": "jellyfinButton",
       "androidName": "org.jellyfin.androidtv" },
 
+  "myCanal": {
+      "button": "my CANAL",
+      "friendlyName": 'my CANAL',
+      "appName": "com.canal.android.canal",
+      "className": "myCanalButton",
+      "androidName": "com.canal.android.canal" },
+
   "netflix": {
       "button": "NETFLIX",
       "friendlyName": "Netflix",
@@ -170,6 +185,13 @@ const fastappchoices = {
       "androidName2": "com.amazon.firebat",
       "adbLaunchCommand": "adb shell am start com.amazon.firebat/.deeplink.DeepLinkRoutingActivity" },
 
+  "raiplay": {
+      "button": "RaiPlay",
+      "friendlyName": "RaiPlay (IT)",
+      "appName": "it.rainet.androidtv",
+      "className": "raiPlayButton",
+      "androidName": "it.rainet.androidtv" },
+
   "shophq": {
       "button": "ShopHQ",
       "friendlyName": "ShopHQ",
@@ -208,6 +230,13 @@ const fastappchoices = {
       "className": "tennisChannelButton",
       "androidName": "com.tennischannel.tceverywhere.amazon" },
 
+  "threenow": {
+      "button": "Three Now",
+      "friendlyName": "Three Now (NZ)",
+      "appName": "com.mediaworks.android.tv",
+      "className": "threenowButton",
+      "androidName": "com.mediaworks.android.tv" },
+
   "tvnz-plus": {
       "button": "tvnz+",
       "friendlyName": "TVNZ+ (NZ)",
@@ -238,6 +267,22 @@ const fastappchoices = {
       "className": "youtubeButton",
       "androidName": "com.amazon.firetv.youtube",
       "adbLaunchCommand": "adb shell am start -n com.amazon.firetv.youtube/dev.cobalt.app.MainActivity" },
+
+  "youtubekids": {
+      "button": "YouTube Kids",
+      "friendlyName": "YouTube Kids",
+      "appName": "com.amazon.firetv.youtube.kids",
+      "className": "youtubekidsButton",
+      "androidName": "com.amazon.firetv.youtube.kids" ,
+      "adbLaunchCommand": "adb shell am start -n com.amazon.firetv.youtube.kids/dev.cobalt.app.MainActivity" },
+
+  "youtubekids-alt": {
+      "button": "YouTube Kids",
+      "friendlyName": "YouTube Kids (alt)",
+      "appName": "com.google.android.youtube.tvkids",
+      "className": "youtubekidsButton",
+      "androidName": "com.amazon.firetv.youtube.kids" ,
+      "adbLaunchCommand": "adb shell am start -n com.google.android.youtube.tvkids/com.google.android.apps.youtube.tvkids.activity.MainActivity" },
 
   "youtubeTV": {
       "button": "YouTubeTV",
@@ -564,12 +609,24 @@ class FiremoteCard extends LitElement {
           }
 
           .amcPlusButton {
+            font-size: calc(var(--sz) * 1.25rem);
             color: #51ceff;
             font-weight: bold;
             background: #091c3d;
             filter: grayscale(50%) brightness(80%);
           }
           .amcPlusButton:active, .amcPlusButton.appActive {
+            box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 20%);
+            filter: none;
+          }
+
+          .appOpenerButton {
+            font-size: calc(var(--sz) * .75rem);
+            color: #ffffff;
+            background: #400080;
+            filter: grayscale(50%) brightness(80%);
+          }
+          .appOpenerButton:active, .appOpenerButton.appActive {
             box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 20%);
             filter: none;
           }
@@ -696,6 +753,18 @@ class FiremoteCard extends LitElement {
             box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 20%);
           }
 
+          .myCanalButton {
+            font-weight: bold;
+            font-size: calc(var(--sz) * 0.8rem);
+            color: #adadad;
+            background: #181818;
+          }
+          .myCanalButton:active, .myCanalButton.appActive {
+            color: #ffffff;
+            background: #232227;
+            box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 15%);
+          }
+
           .netflixButton {
             font-weight: bold;
             font-size: calc(var(--sz) * 1rem);
@@ -786,6 +855,19 @@ class FiremoteCard extends LitElement {
             box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.1428rem) rgb(255 255 255 / 15%);
           }
 
+          .raiPlayButton {
+            color: #ffffff;
+            background: linear-gradient(0deg, rgba(133,207,249,1) 21%, rgba(0,159,249,1) 100%);;
+            font-weight: bold;
+            text-shadow: 0 0 calc(var(--sz) * 0.214rem) black;
+            filter: brightness(60%);
+            font-size: calc(var(--sz) * 1rem);
+          }
+          .raiPlayButton:active, .raiPlayButton.appActive {
+            filter: none;
+            box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 20%);
+          }
+
           .shopHQButton {
             color: yellow;
             background: #000;
@@ -843,6 +925,21 @@ class FiremoteCard extends LitElement {
             color: #fff;
             background: linear-gradient(180deg, rgba(40,131,85,1) 0%, rgba(16,73,43,1) 100%);
             box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 20%);
+          }
+
+          .threenowButton {
+            font-size: calc(var(--sz) * .9rem);
+            color: #fff;
+            font-weight: bold;
+            background: #ff004f;
+            filter: grayscale(30%) brightness(70%);
+          }
+          .threenowButton:active, .threenowButton.appActive {
+            color: #fff;
+            background: #ff004f;
+            box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 20%);
+            text-shadow: 0 0 calc(var(--sz) * 0.2857rem) black;
+            filter: none;
           }
 
           .tvnzPlusButton {
@@ -910,6 +1007,19 @@ class FiremoteCard extends LitElement {
             text-shadow: 0 0 calc(var(--sz) * 0.2857rem) black;
           }
 
+          .youtubekidsButton {
+            font-size: calc(var(--sz) * 0.7rem);
+            color: #919191;
+            font-weight: bold;
+            background: rgb(74 0 0);
+          }
+          .youtubekidsButton:active, .youtubekidsButton.appActive {
+            color: #ffffff;
+            background: rgb(199 0 0);
+            box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 20%);
+            text-shadow: 0 0 calc(var(--sz) * 0.2857rem) black;
+          }
+
           .youtubeTVButton {
             font-size: calc(var(--sz) * .8rem);
             color: #ffffff;
@@ -921,7 +1031,6 @@ class FiremoteCard extends LitElement {
             box-shadow: 0 0 calc(var(--sz) * 0.857rem) calc(var(--sz) * 0.142rem) rgb(255 255 255 / 20%);
             filter: none;
           }
-
 
           .vlcButton {
             font-size: calc(var(--sz) * 1.25rem);
@@ -1537,7 +1646,7 @@ class FiremoteCard extends LitElement {
 
 
 
-    if (deviceType == 'fire_stick_first_gen') {
+    if (deviceType == 'fire_stick_first_gen'  || deviceType == 'fire_tv_cube_first_gen') {
     return html`
       <ha-card>
 
@@ -1639,11 +1748,11 @@ class FiremoteCard extends LitElement {
         if(deviceType == 'fire_tv_cube_third_gen') {
             var eventListenerBinPath = '/dev/input/event3';
         }
-        if(deviceType == 'fire_stick_4k'   || deviceType == 'fire_tv_stick_lite' || 
+        if(deviceType == 'fire_stick_4k'   || deviceType == 'fire_tv_stick_lite' ||
            deviceType == 'fire_tv_3rd_gen' || deviceType == 'fire_stick_second_gen') {
             var eventListenerBinPath = '/dev/input/event4';
         }
-        if(deviceType == 'fire_tv_stick_4k_max' || deviceType == 'fire_tv_cube_second_gen') {
+        if(deviceType == 'fire_tv_stick_4k_max' || deviceType == 'fire_tv_cube_second_gen' || deviceType == 'fire_tv_cube_first_gen') {
             var eventListenerBinPath = '/dev/input/event5';
         }
     }
@@ -2053,7 +2162,7 @@ class FiremoteCardEditor extends LitElement {
           <optgroup label="Fire TV Cube">
             <option value="fire_tv_cube_third_gen">Fire TV Cube (3rd Gen - 2022)</option>
             <option value="fire_tv_cube_second_gen">Fire TV Cube (2nd Gen - 2019)</option>
-            <option value="fire_tv_cube_first_gen" disabled>Fire TV Cube (1st Gen - 2018)</option>
+            <option value="fire_tv_cube_first_gen">Fire TV Cube (1st Gen - 2018)</option>
           </optgroup>
           <optgroup label="Streaming Media Player">
             <option value="fire_tv_stick_4k_max">Fire TV Stick 4K Max (1st Gen - 2020)</option>
