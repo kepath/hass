@@ -115,10 +115,8 @@ elements:
 
   # Study
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item"
+    template: "card_kepath_floorplan_binary_item_light"
     entity: "light.study_light_light_1"
-    variables:
-      floorplan_item_binary_device_type: "light"
     style:
       top: "66%"
       left: "76%"
@@ -126,10 +124,8 @@ elements:
 
   # Bottom Hallway
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item"
+    template: "card_kepath_floorplan_binary_item_light"
     entity: "light.shelly1l_hallway_bottom_light_1"
-    variables:
-      floorplan_item_binary_device_type: "light"
     style:
       top: "73%"
       left: "52%"
@@ -137,10 +133,8 @@ elements:
 
   # Lounge
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item"
+    template: "card_kepath_floorplan_binary_item_light"
     entity: "light.lounge_light_light_1"
-    variables:
-      floorplan_item_binary_device_type: "light"
     style:
       top: "50%"
       left: "30%"
@@ -148,19 +142,15 @@ elements:
 
   # Kitchen
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item"
+    template: "card_kepath_floorplan_binary_item_light"
     entity: "light.kitchen_main_light_light_1"
-    variables:
-      floorplan_item_binary_device_type: "light"
     style:
       top: "38%"
       left: "70%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item"
+    template: "card_kepath_floorplan_binary_item_light"
     entity: "light.kitchen_utility_light_light_1"
-    variables:
-      floorplan_item_binary_device_type: "light"
     style:
       top: "27%"
       left: "51%"
@@ -276,10 +266,45 @@ elements:
       ulm_card_kepath_floorplan_thermostat_temperature: "sensor.nest_bottom_floor_temperature"
       ulm_card_kepath_floorplan_thermostat_humidity: "sensor.nest_bottom_floor_humidity"
     style:
-      left: "54%"
-      top: "40%"
-      # width: "300px"
-      height: "150px"
+      left: "57%"
+      top: "45%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_g4_doorbell_bottom_hallway"
+    variables:
+      floorplan_item_binary_device_power: false
+    style:
+      top: "81%"
+      left: "59%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_dishwasher"
+    variables:
+      floorplan_item_binary_device_power: "sensor.zigbee_plug_dishwasher_power"
+    style:
+      top: "32%"
+      left: "64%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_washing_machine"
+    variables:
+      floorplan_item_binary_device_power: "sensor.zigbee_plug_washing_machine_power"
+    style:
+      top: "31%"
+      left: "48%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.tumble_dryer"
+    variables:
+      floorplan_item_binary_device_off_is_stopped: true
+    style:
+      top: "29%"
+      left: "48%"
       color: "rgba(100, 100, 100, 0.0)"
   # Floor Toggle
   - type: "custom:button-card"

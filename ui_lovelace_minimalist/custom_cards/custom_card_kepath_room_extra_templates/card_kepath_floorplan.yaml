@@ -1,22 +1,9 @@
 ---
-card_kepath_floorplan_binary_item:
+card_kepath_floorplan_binary_item_light:
   show_icon: true
   show_label: false
   show_name: false
-  # variables:
-  #   floorplan_item_binary_device_type: "[[[ return (entity?.attributes?.device_class ? entity.attributes.device_class : 'light') ]]]"
-  icon: >
-    [[[
-      if (variables.floorplan_item_binary_device_type == "motion" || variables.floorplan_item_binary_device_type == "occupancy") {
-        return "mdi:motion-sensor-off";
-      } else if (variables.floorplan_item_binary_device_type == "plug") {
-        return "mdi:power-plug-off";
-      } else if (variables.floorplan_item_binary_device_type == "light") {
-        return "mdi:lightbulb-outline";
-      } else {
-        return "mdi:help-network";
-      }
-    ]]]
+  icon: "mdi:lightbulb-outline"
   styles:
     icon:
       - width: "18px"
@@ -33,22 +20,12 @@ card_kepath_floorplan_binary_item:
       - background-color: "rgba(100, 100, 100, 0.0)"
   state:
     - value: "on"
-      icon: >
-        [[[
-          if (variables.floorplan_item_binary_device_type == "motion" || variables.floorplan_item_binary_device_type == "occupancy") {
-            return "mdi:motion-sensor";
-          } else if (variables.floorplan_item_binary_device_type == "plug") {
-            return "mdi:power-plug";
-          } else if (variables.floorplan_item_binary_device_type == "light") {
-            return "mdi:lightbulb-on";
-          } else {
-            return "mdi:help-network";
-          }
-        ]]]
+      icon: "mdi:lightbulb-on"
       styles:
         icon:
           - color: "rgba(var(--color-yellow),1)"
-    - value: "unavailable"
+    - template:
+      value: "[[[ return (entity?.entity_id == 'unavailable' || entity?.entity_id == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
@@ -57,16 +34,108 @@ card_kepath_floorplan_binary_item:
       tap_action:
         action: "more-info"
   tap_action:
+    action: "toggle"
+  hold_action:
+    action: "more-info"
+
+
+card_kepath_floorplan_binary_item_plug:
+  show_icon: true
+  show_label: false
+  show_name: false
+  variables:
+    floorplan_item_binary_device_off_is_stopped: false
+    floorplan_item_binary_device_power_number: "[[[ return variables?.floorplan_item_binary_device_power ? parseFloat(states[variables.floorplan_item_binary_device_power].state) : parseFloat(0) ]]]"
+  icon: "mdi:power-plug"
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+      - color: "rgba(var(--color-blue),1)"
+    img_cell:
+      - border-radius: "50%"
+      - height: "32px"
+      - width: "32px"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+  state:
+    - operator: "template"
+      value: "[[[ return variables.floorplan_item_binary_device_off_is_stopped ]]]"
+      styles:
+        icon:
+          - color: >
+              [[[
+                if (entity.state == "on") {
+                  return "rgba(var(--color-blue),1)"
+                } else {
+                  return "rgba(var(--color-green),1)"
+                }
+              ]]]
+    - operator: "template"
+      value: >
+        [[[
+          var isPowered = false;
+          if (variables?.floorplan_item_binary_device_power) {
+            if (variables.floorplan_item_binary_device_power.length > 1) {
+              isPowered = true;
+            }
+          }
+          return isPowered;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                if (variables.floorplan_item_binary_device_power_number > 10) {
+                  return "rgba(var(--color-blue),1)";
+                } else {
+                  return "rgba(var(--color-green),1)";
+                }
+              ]]]
+    - operator: "template"
+      value: "[[[ return (entity?.entity_id == 'unavailable' || entity?.entity_id == 'unknown' ? true : false) ]]]"
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+      tap_action:
+        action: "more-info"
+    - operator: "template"
+      value: "[[[ return !states[entity.entity_id].state ]]]"
+      icon: >
+        [[[
+          if (variables.floorplan_item_binary_device_off_is_stopped) {
+            return "mdi:power-plug";
+          } else {
+            return "mdi:power-plug-outline";
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                if (variables.floorplan_item_binary_device_off_is_stopped) {
+                  return "rgba(var(--color-green),1)";
+                } else {
+                  return "rgba(221, 221, 221, 1.0)";
+                }
+              ]]]
+  tap_action:
     action: >
       [[[
-        if (variables.floorplan_item_binary_device_type == 'light' || variables.floorplan_item_binary_device_type == 'plug') {
-          return "toggle";
-        } else {
-          return "more-info";
+        var action = "toggle";
+        if (variables.floorplan_item_binary_device_off_is_stopped || variables.floorplan_item_binary_device_power) {
+          action = "more-info";
         }
+        return action;
       ]]]
   hold_action:
     action: "more-info"
+
 
 card_kepath_floorplan_camera:
   show_icon: true
@@ -127,15 +196,10 @@ card_kepath_floorplan_camera:
       - color: "rgba(221, 221, 221, 0.4)"
   state:
     - operator: "template"
-      value: >
-        [[[
-          return (states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'on')
-        ]]]
+      value: "[[[ return states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-green),1)"
-        # card:
-        #   - background-color: "rgba(33, 33, 33, 1.0)"
         img_cell:
           - background-color: "rgba(var(--color-green), 0.2)"
           - border-color: >
@@ -149,10 +213,7 @@ card_kepath_floorplan_camera:
                 return borderColor
               ]]]
     - operator: "template"
-      value: >
-        [[[
-          return (states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'unavailable' || states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'unknown')
-        ]]]
+      value: "[[[ return (variables?.ulm_card_kepath_floorplan_camera_motion_sensor == 'unavailable' || variables?.ulm_card_kepath_floorplan_camera_motion_sensor == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
@@ -160,6 +221,7 @@ card_kepath_floorplan_camera:
           - background-color: "rgba(130, 130, 130, 0.5)"
       tap_action:
         action: "more-info"
+
 
 card_kepath_floorplan_door:
   show_icon: true
@@ -216,15 +278,13 @@ card_kepath_floorplan_door:
         img_cell:
           - background-color: "rgba(var(--color-green), 0.2)"
     - operator: "template"
-      value: >
-        [[[
-          return (states[entity.entity_id].state == 'unavailable' || states[entity.entity_id].state == 'unknown')
-        ]]]
+      value: "[[[ return (entity?.entity_id == 'unavailable' || entity?.entity_id == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
         img_cell:
           - background-color: "rgba(130, 130, 130, 0.5)"
+
 
 card_kepath_floorplan_nest_protect:
   show_icon: true
@@ -283,19 +343,6 @@ card_kepath_floorplan_nest_protect:
       - grid-template-columns: "1fr 1fr 1fr 1fr"
       - grid-template-rows: "1fr 1fr 1fr 1fr"
       - justify-items: "center"
-      # custom_fields:
-      #   CO:
-      #     - position: "absolute"
-      #     - left: "6px"
-      #     - top: "29px"
-      #   heat:
-      #     - position: "absolute"
-      #     - left: "21px"
-      #     - top: "39px"
-      #   smoke:
-      #     - position: "absolute"
-      #     - left: "36px"
-      #     - top: "29px"
   tap_action:
     action: "more-info"
   state:
@@ -306,10 +353,7 @@ card_kepath_floorplan_nest_protect:
         img_cell:
           - background-color: "rgba(var(--color-green), 0.2)"
     - operator: "template"
-      value: >
-        [[[
-          return (states[entity.entity_id].state == 'unavailable' || states[entity.entity_id].state == 'unknown')
-        ]]]
+      value: "[[[ return (entity?.entity_id == 'unavailable' || entity?.entity_id == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
@@ -348,11 +392,7 @@ card_kepath_floorplan_nest_protect:
               icon:
                 - color: "rgba(130, 130, 130, 0.3)"
           - operator: "template"
-            value: >
-              [[[
-                return (states[variables.ulm_card_kepath_floorplan_nest_protect_co_status].state == 'unavailable' ||
-                states[variables.ulm_card_kepath_floorplan_nest_protect_co_status].state == 'unknown')
-              ]]]
+            value: "[[[ return (variables?.ulm_card_kepath_floorplan_nest_protect_co_status == 'unavailable' || variables?.ulm_card_kepath_floorplan_nest_protect_co_status == 'unknown' ? true : false) ]]]"
             styles:
               icon:
                 - color: "rgba(var(--color-red), 0.6)"
@@ -395,11 +435,7 @@ card_kepath_floorplan_nest_protect:
               icon:
                 - color: "rgba(130, 130, 130, 0.3)"
           - operator: "template"
-            value: >
-              [[[
-                return (states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state == 'unavailable' ||
-                states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state == 'unknown')
-              ]]]
+            value: "[[[ return (variables?.ulm_card_kepath_floorplan_nest_protect_heat_status == 'unavailable' || variables?.ulm_card_kepath_floorplan_nest_protect_heat_status == 'unknown' ? true : false) ]]]"
             styles:
               icon:
                 - color: "rgba(var(--color-red), 0.6)"
@@ -442,11 +478,7 @@ card_kepath_floorplan_nest_protect:
               icon:
                 - color: "rgba(130, 130, 130, 0.3)"
           - operator: "template"
-            value: >
-              [[[
-                return (states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state == 'unavailable' ||
-                states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state == 'unknown')
-              ]]]
+            value: "[[[ return (variables?.ulm_card_kepath_floorplan_nest_protect_smoke_status == 'unavailable' || variables?.ulm_card_kepath_floorplan_nest_protect_smoke_status == 'unknown' ? true : false) ]]]"
             styles:
               icon:
                 - color: "rgba(var(--color-red), 0.6)"
@@ -495,11 +527,7 @@ card_kepath_floorplan_nest_protect_alert:
         icon:
           - color: "rgba(130, 130, 130, 0.3)"
     - operator: "template"
-      value: >
-        [[[
-          return (states[variables.card_kepath_floorplan_nest_protect_alert_entity].state == 'unavailable' ||
-          states[variables.card_kepath_floorplan_nest_protect_alert_entity].state == 'unknown')
-        ]]]
+      value: "[[[ return (variables?.card_kepath_floorplan_nest_protect_alert_entity == 'unavailable' || variables?.card_kepath_floorplan_nest_protect_alert_entity == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
@@ -508,34 +536,33 @@ card_kepath_floorplan_nest_protect_alert:
   tap_action:
     action: "more-info"
 
+
 card_kepath_floorplan_thermostat:
-  show_icon: false
+  show_icon: true
   show_label: true
   show_name: true
   name: >
     [[[
-      var temp = variables?.ulm_card_kepath_floorplan_thermostat_temperature ? states[variables.ulm_card_kepath_floorplan_thermostat_temperature].state : '-';
-      temp += ' &#8451;';
-      return temp;
+      return (variables?.ulm_card_kepath_floorplan_thermostat_temperature ? (states[variables.ulm_card_kepath_floorplan_thermostat_temperature].state + ' &#8451;') : '-');
     ]]]
   label: >
     [[[
-      var humidity = variables?.ulm_card_kepath_floorplan_thermostat_humidity ? states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state : '-';
-      humidity += ' &percnt;';
-      return humidity;
+      return (variables?.ulm_card_kepath_floorplan_thermostat_humidity ? (states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state + ' &percnt;') : '-');
     ]]]
+  icon: "mdi:fire-circle"
   styles:
     card:
-      - width: "100%"
-      - height: "100%"
-      - background-color: "rgba(100, 100, 100, 0.0)"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+      - border-radius: "20px"
     label:
-      - justify-self: "start"
-      - align-self: "start"
+      - justify-self: "end"
+      - align-self: "end"
       - font-weight: "bold"
       - font-size: "10px"
       - text-overflow: "ellipsis"
       - overflow: "hidden"
+      - margin: "0 6px 0 6px"
       - color: "rgba(221, 221, 221, 0.4)"
     name:
       - justify-self: "start"
@@ -544,33 +571,37 @@ card_kepath_floorplan_thermostat:
       - font-size: "10px"
       - text-overflow: "ellipsis"
       - overflow: "hidden"
+      - margin: "0 6px 0 6px"
       - color: "rgba(221, 221, 221, 0.4)"
+    icon:
+      - display: "none"
+      - width: "14px"
+      - height: "14px"
+      - line-height: "0"
+      - color: "rgba(var(--color-yellow),0.8)"
+      - margin-right: "15px"
     grid:
-      - grid-template-areas: "'. climate_temperature_up .' '. climate_wanted_temperature .' 'l climate_wanted_temperature n' '. climate_temperature_down .'"
-      - grid-template-columns: "1fr 60% 1fr"
-      - grid-template-rows: "1fr 40% 40% 1fr"
+      - grid-template-areas: "'. climate_temperature_up climate_temperature_up .' '. climate_wanted_temperature climate_wanted_temperature i' 'l l n n' '. climate_temperature_down climate_temperature_down .'"
+      - grid-template-columns: "2fr 1fr 1fr 2fr"
+      - grid-template-rows: "16px 1fr 12px 16px"
       - justify-items: "center"
-    custom_fields:
-      climate_wanted_temperature:
-        - width: "100%"
-        - height: "100%"
   state:
     - operator: "template"
-      value: >
-        [[[
-          entity?.attributes?.hvac_action == "heating"
-        ]]]
+      value: "[[[ return (entity?.attributes?.hvac_action == 'heating' ? true : false) ]]]"
       styles:
-        card:
-          - background-color: "rgba(var(--color-yellow),1)"
+        icon:
+          - display: "inline"
     - operator: "template"
-      value: >
-        [[[
-          entity?.state == "unavailable" || entity?.state == "unknown"
-        ]]]
+      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
       styles:
-      card:
-        - background-color: "rgba(130, 130, 130, 0.5)"
+        custom_fields:
+          climate_wanted_temperature:
+            name:
+              - color: "rgba(var(--color-red), 0.6)"
+        card:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+  tap_action:
+    action: "more-info"
   custom_fields:
     climate_wanted_temperature:
       card:
@@ -578,7 +609,10 @@ card_kepath_floorplan_thermostat:
         show_icon: false
         show_label: false
         show_name: true
-        name: "[[[ return (entity?.attributes?.temperature ? entity.attributes.temperature : '-') ]]]"
+        name: >
+          [[[
+            return (entity?.attributes?.temperature ? entity.attributes.temperature : '-');
+          ]]]
         styles:
           name:
             - justify-self: "start"
@@ -586,28 +620,42 @@ card_kepath_floorplan_thermostat:
             - font-weight: "bold"
             - text-overflow: "ellipsis"
             - overflow: "hidden"
-            - font-size: "20px"
-            - line-height: "0"
+            - font-size: "16px"
             - color: "rgba(221, 221, 221, 1.0)"
           card:
             - background-color: "rgba(100, 100, 100, 0.0)"
-            - width: "100%"
-            - height: "100%"
+            - box-shadow: "none"
+        tap_action:
+          action: "more-info"
+          entity: "[[[ return entity.entity_id ]]]"
     climate_temperature_up:
       card:
         type: "custom:button-card"
         show_icon: true
         show_label: false
         show_name: false
-        icon: "mdi:menu-up"
+        icon: "mdi:chevron-up"
         styles:
           icon:
             - width: "14px"
             - height: "14px"
             - line-height: "0"
             - color: "rgba(221, 221, 221, 1.0)"
+          img_cell:
+            - padding: "2px"
           card:
             - background-color: "rgba(100, 100, 100, 0.0)"
+            - box-shadow: "none"
+        tap_action:
+          action: "call-service"
+          service: "climate.set_temperature"
+          service_data:
+            temperature: >
+              [[[
+                var currentTemp = entity?.attributes?.temperature ? entity.attributes.temperature : 0;
+                return parseInt(currentTemp) + 1;
+              ]]]
+            entity_id: "[[[ return entity.entity_id ]]]"
 
     climate_temperature_down:
       card:
@@ -615,12 +663,25 @@ card_kepath_floorplan_thermostat:
         show_icon: true
         show_label: false
         show_name: false
-        icon: "mdi:menu-down"
+        icon: "mdi:chevron-down"
         styles:
           icon:
             - width: "14px"
             - height: "14px"
             - line-height: "0"
             - color: "rgba(221, 221, 221, 1.0)"
+          img_cell:
+            - padding: "2px"
           card:
             - background-color: "rgba(100, 100, 100, 0.0)"
+            - box-shadow: "none"
+        tap_action:
+          action: "call-service"
+          service: "climate.set_temperature"
+          service_data:
+            temperature: >
+              [[[
+                var currentTemp = entity?.attributes?.temperature ? entity.attributes.temperature : 0;
+                return parseInt(currentTemp) - 1;
+              ]]]
+            entity_id: "[[[ return entity.entity_id ]]]"
