@@ -25,7 +25,7 @@ card_kepath_floorplan_binary_item_light:
         icon:
           - color: "rgba(var(--color-yellow),1)"
     - template:
-      value: "[[[ return (entity?.entity_id == 'unavailable' || entity?.entity_id == 'unknown' ? true : false) ]]]"
+      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
@@ -96,7 +96,7 @@ card_kepath_floorplan_binary_item_plug:
                 }
               ]]]
     - operator: "template"
-      value: "[[[ return (entity?.entity_id == 'unavailable' || entity?.entity_id == 'unknown' ? true : false) ]]]"
+      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
@@ -105,7 +105,7 @@ card_kepath_floorplan_binary_item_plug:
       tap_action:
         action: "more-info"
     - operator: "template"
-      value: "[[[ return !states[entity.entity_id].state ]]]"
+      value: "[[[ return (states[entity.entity_id].state == 'off') ]]]"
       icon: >
         [[[
           if (variables.floorplan_item_binary_device_off_is_stopped) {
@@ -133,6 +133,46 @@ card_kepath_floorplan_binary_item_plug:
         }
         return action;
       ]]]
+  hold_action:
+    action: "more-info"
+
+
+card_kepath_floorplan_binary_item_heater:
+  show_icon: true
+  show_label: false
+  show_name: false
+  icon: "mdi:radiator-disabled"
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+      - color: "rgba(221, 221, 221, 1.0)"
+    img_cell:
+      - border-radius: "50%"
+      - height: "32px"
+      - width: "32px"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+  state:
+    - value: "on"
+      icon: "mdi:radiator"
+      styles:
+        icon:
+          - color: "rgba(var(--color-yellow),1)"
+    - template:
+      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+      tap_action:
+        action: "more-info"
+  tap_action:
+    action: "toggle"
   hold_action:
     action: "more-info"
 
@@ -196,7 +236,7 @@ card_kepath_floorplan_camera:
       - color: "rgba(221, 221, 221, 0.4)"
   state:
     - operator: "template"
-      value: "[[[ return states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state ]]]"
+      value: "[[[ return (states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'on') ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-green),1)"
@@ -278,7 +318,7 @@ card_kepath_floorplan_door:
         img_cell:
           - background-color: "rgba(var(--color-green), 0.2)"
     - operator: "template"
-      value: "[[[ return (entity?.entity_id == 'unavailable' || entity?.entity_id == 'unknown' ? true : false) ]]]"
+      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
@@ -353,7 +393,7 @@ card_kepath_floorplan_nest_protect:
         img_cell:
           - background-color: "rgba(var(--color-green), 0.2)"
     - operator: "template"
-      value: "[[[ return (entity?.entity_id == 'unavailable' || entity?.entity_id == 'unknown' ? true : false) ]]]"
+      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
@@ -494,6 +534,7 @@ card_kepath_floorplan_nest_protect:
           #     card_kepath_floorplan_nest_protect_alert_color: "rgba(var(--color-red),1)"
           #     card_kepath_floorplan_nest_protect_alert_entity: "[[[ return variables.ulm_card_kepath_floorplan_nest_protect_smoke_status ]]]"
 
+
 card_kepath_floorplan_nest_protect_alert:
   show_icon: true
   show_label: false
@@ -541,14 +582,33 @@ card_kepath_floorplan_thermostat:
   show_icon: true
   show_label: true
   show_name: true
-  name: >
-    [[[
-      return (variables?.ulm_card_kepath_floorplan_thermostat_temperature ? (states[variables.ulm_card_kepath_floorplan_thermostat_temperature].state + ' &#8451;') : '-');
-    ]]]
-  label: >
-    [[[
-      return (variables?.ulm_card_kepath_floorplan_thermostat_humidity ? (states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state + ' &percnt;') : '-');
-    ]]]
+  variables:
+    floorplan_thermostat_humidity: >
+      [[[
+        return (variables?.ulm_card_kepath_floorplan_thermostat_humidity ? (states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state + ' &percnt;') : '-');
+      ]]]
+    floorplan_thermostat_current_temperature_attribute: >
+      [[[
+        return (variables?.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute ? (states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute] + ' &#8451;') : '-');
+      ]]]
+    floorplan_thermostat_wanted_temperature_attribute: >
+      [[[
+        return (variables?.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute ? parseFloat(states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute]) : parseFloat(0));
+      ]]]
+    floorplan_thermostat_action: >
+      [[[
+        var action = "off";
+        //if (variable?.ulm_card_kepath_floorplan_thermostat_action) {
+        //  if (variable.ulm_card_kepath_floorplan_thermostat_action_isattribute) {
+        //    action = states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_action];
+        //  } else {
+        //    action = states[variables.ulm_card_kepath_floorplan_thermostat_action].state;
+        //  }
+        //}
+        return action;
+      ]]]
+  name: "[[[ return variables.floorplan_thermostat_current_temperature_attribute ]]]"
+  label: "[[[ return variables.floorplan_thermostat_humidity ]]]"
   icon: "mdi:fire-circle"
   styles:
     card:
@@ -587,12 +647,12 @@ card_kepath_floorplan_thermostat:
       - justify-items: "center"
   state:
     - operator: "template"
-      value: "[[[ return (entity?.attributes?.hvac_action == 'heating' ? true : false) ]]]"
+      value: "[[[ return ((variables.floorplan_thermostat_action == 'heating' || variables.floorplan_thermostat_action == 'heat') ? true : false) ]]]"
       styles:
         icon:
           - display: "inline"
     - operator: "template"
-      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
+      value: "[[[ return ((entity?.state == 'unavailable' || entity?.state == 'unknown') ? true : false) ]]]"
       styles:
         custom_fields:
           climate_wanted_temperature:
@@ -609,10 +669,7 @@ card_kepath_floorplan_thermostat:
         show_icon: false
         show_label: false
         show_name: true
-        name: >
-          [[[
-            return (entity?.attributes?.temperature ? entity.attributes.temperature : '-');
-          ]]]
+        name: "[[[ return variables.floorplan_thermostat_wanted_temperature_attribute; ]]]"
         styles:
           name:
             - justify-self: "start"
@@ -628,6 +685,7 @@ card_kepath_floorplan_thermostat:
         tap_action:
           action: "more-info"
           entity: "[[[ return entity.entity_id ]]]"
+
     climate_temperature_up:
       card:
         type: "custom:button-card"
@@ -650,11 +708,7 @@ card_kepath_floorplan_thermostat:
           action: "call-service"
           service: "climate.set_temperature"
           service_data:
-            temperature: >
-              [[[
-                var currentTemp = entity?.attributes?.temperature ? entity.attributes.temperature : 0;
-                return parseInt(currentTemp) + 1;
-              ]]]
+            temperature: "[[[ return (parseInt(variables.floorplan_thermostat_wanted_temperature_attribute) + 1) ]]]"
             entity_id: "[[[ return entity.entity_id ]]]"
 
     climate_temperature_down:
@@ -679,9 +733,5 @@ card_kepath_floorplan_thermostat:
           action: "call-service"
           service: "climate.set_temperature"
           service_data:
-            temperature: >
-              [[[
-                var currentTemp = entity?.attributes?.temperature ? entity.attributes.temperature : 0;
-                return parseInt(currentTemp) - 1;
-              ]]]
+            temperature: "[[[ return (parseInt(variables.floorplan_thermostat_wanted_temperature_attribute) - 1) ]]]"
             entity_id: "[[[ return entity.entity_id ]]]"

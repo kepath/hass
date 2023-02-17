@@ -118,8 +118,8 @@ elements:
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.study_light_light_1"
     style:
-      top: "66%"
       left: "76%"
+      top: "66%"
       color: "rgba(100, 100, 100, 0.0)"
 
   # Bottom Hallway
@@ -127,8 +127,8 @@ elements:
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.shelly1l_hallway_bottom_light_1"
     style:
-      top: "73%"
       left: "52%"
+      top: "73%"
       color: "rgba(100, 100, 100, 0.0)"
 
   # Lounge
@@ -136,8 +136,8 @@ elements:
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.lounge_light_light_1"
     style:
-      top: "50%"
       left: "30%"
+      top: "50%"
       color: "rgba(100, 100, 100, 0.0)"
 
   # Kitchen
@@ -145,15 +145,16 @@ elements:
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.kitchen_main_light_light_1"
     style:
-      top: "38%"
       left: "70%"
+
+      top: "38%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.kitchen_utility_light_light_1"
     style:
-      top: "27%"
       left: "51%"
+      top: "27%"
       color: "rgba(100, 100, 100, 0.0)"
 
   # cameras
@@ -221,7 +222,7 @@ elements:
       left: "7%"
       top: "83%"
       color: "rgba(100, 100, 100, 0.0)"
-  # doorbell
+  # Doorbell
   - type: "custom:button-card"
     template: "card_kepath_floorplan_camera"
     entity: "camera.doorbell_g4_medium"
@@ -234,6 +235,8 @@ elements:
       left: "58%"
       top: "86%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Doors
   - type: "custom:button-card"
     template: "card_kepath_floorplan_door"
     entity: "binary_sensor.zigbee_door_sensor_front_contact"
@@ -248,6 +251,8 @@ elements:
       left: "54%"
       top: "16%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Motion
   - type: "custom:button-card"
     template: "card_kepath_floorplan_nest_protect"
     entity: "binary_sensor.nest_protect_bottom_floor_occupancy"
@@ -259,34 +264,40 @@ elements:
       left: "54%"
       top: "57%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Thermostats
   - type: "custom:button-card"
     template: "card_kepath_floorplan_thermostat"
     entity: "climate.nest_bottom_floor"
     variables:
-      ulm_card_kepath_floorplan_thermostat_temperature: "sensor.nest_bottom_floor_temperature"
       ulm_card_kepath_floorplan_thermostat_humidity: "sensor.nest_bottom_floor_humidity"
+      ulm_card_kepath_floorplan_thermostat_current_temperature_attribute: "current_temperature"
+      ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute: "temperature"
+      ulm_card_kepath_floorplan_thermostat_action: "hvac_action"
+      ulm_card_kepath_floorplan_thermostat_action_isattribute: true
     style:
       left: "57%"
       top: "45%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Plugs
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_plug_g4_doorbell_bottom_hallway"
     variables:
       floorplan_item_binary_device_power: false
     style:
-      top: "81%"
       left: "59%"
+      top: "81%"
       color: "rgba(100, 100, 100, 0.0)"
-
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_plug_dishwasher"
     variables:
       floorplan_item_binary_device_power: "sensor.zigbee_plug_dishwasher_power"
     style:
-      top: "32%"
       left: "64%"
+      top: "32%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
@@ -294,8 +305,8 @@ elements:
     variables:
       floorplan_item_binary_device_power: "sensor.zigbee_plug_washing_machine_power"
     style:
-      top: "31%"
       left: "48%"
+      top: "31%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
@@ -303,12 +314,15 @@ elements:
     variables:
       floorplan_item_binary_device_off_is_stopped: true
     style:
-      top: "29%"
       left: "48%"
+      top: "29%"
       color: "rgba(100, 100, 100, 0.0)"
   # Floor Toggle
   - type: "custom:button-card"
     template: "card_kepath_service_buttons"
     style:
-      top: "15%"
       left: "5%"
+      top: "15%"
+#  bulb front
+#  bulb back
+#  smart meter

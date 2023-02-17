@@ -1,0 +1,325 @@
+---
+type: "picture-elements"
+image: "local/floorplan/ground/dark.png"
+elements:
+
+  # study
+  - type: "image"
+    entity: "light.study_light_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/study_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "/local/unavailable.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  - type: "image"
+    entity: "light.shelly1l_hallway_bottom_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/hallway_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "/local/unavailable.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+
+  # lounge
+  - type: "image"
+    entity: "light.lounge_light_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/lounge_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "/local/unavailable.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+
+  # kitchen
+  - type: "image"
+    entity: "light.kitchen_main_light_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/kitchen_2_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "/local/unavailable.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  - type: "image"
+    entity: "light.kitchen_utility_light_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/kitchen_1_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "/local/unavailable.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+
+  # front door
+  - type: "image"
+    entity: "binary_sensor.zigbee_door_sensor_front_contact"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/front_door.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "/local/unavailable.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+
+  # back door
+  - type: "image"
+    entity: "binary_sensor.zigbee_door_sensor_back_contact"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/back_door.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "/local/unavailable.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+
+  # Light Toggles
+
+  # Study
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.study_light_light_1"
+    style:
+      left: "76%"
+      top: "66%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # Bottom Hallway
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.shelly1l_hallway_bottom_light_1"
+    style:
+      left: "52%"
+      top: "73%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # Lounge
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.lounge_light_light_1"
+    style:
+      left: "30%"
+      top: "50%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # Kitchen
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.kitchen_main_light_light_1"
+    style:
+      left: "70%"
+
+      top: "38%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.kitchen_utility_light_light_1"
+    style:
+      left: "51%"
+      top: "27%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # cameras
+
+  # bottom hallway
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:human-greeting"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2"
+      ulm_card_kepath_floorplan_camera_view_borders: "bottom"
+    style:
+      left: "47%"
+      top: "35%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "camera.lounge_g3_instant_medium"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:webcam"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.lounge_g3_instant_motion"
+      ulm_card_kepath_floorplan_camera_last_motion: "sensor.lounge_g3_instant_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_view_borders: "bottom"
+    style:
+      left: "53%"
+      top: "36%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # kitchen
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "camera.kitchen_g3_instant_medium"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:webcam"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.kitchen_g3_instant_motion"
+      ulm_card_kepath_floorplan_camera_last_motion: "sensor.kitchen_g3_instant_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_view_borders: "left,top"
+    style:
+      left: "81%"
+      top: "48%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # external back
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "camera.back_g3_flex_medium"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:cctv"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.back_g3_flex_motion"
+      ulm_card_kepath_floorplan_camera_last_motion: "sensor.back_g3_flex_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_view_borders: "top,right"
+    style:
+      left: "22%"
+      top: "16%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # external front
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "camera.front_g3_flex_medium"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:cctv"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.front_g3_flex_motion"
+      ulm_card_kepath_floorplan_camera_last_motion: "sensor.front_g3_flex_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_view_borders: "bottom,right"
+    style:
+      left: "7%"
+      top: "83%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # Doorbell
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_camera"
+    entity: "camera.doorbell_g4_medium"
+    variables:
+      ulm_card_kepath_floorplan_camera_icon: "mdi:doorbell-video"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.doorbell_g4_motion"
+      ulm_card_kepath_floorplan_camera_last_motion: "sensor.doorbell_g4_last_doorbell_ring"
+      ulm_card_kepath_floorplan_camera_view_borders: "bottom,left"
+    style:
+      left: "58%"
+      top: "86%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # Doors
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_door"
+    entity: "binary_sensor.zigbee_door_sensor_front_contact"
+    style:
+      left: "51%"
+      top: "95%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_door"
+    entity: "binary_sensor.zigbee_door_sensor_back_contact"
+    style:
+      left: "54%"
+      top: "16%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # Thermostats
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_nest_protect"
+    entity: "binary_sensor.nest_protect_bottom_floor_occupancy"
+    variables:
+      ulm_card_kepath_floorplan_nest_protect_co_status: "binary_sensor.nest_protect_bottom_floor_co_status"
+      ulm_card_kepath_floorplan_nest_protect_heat_status: "binary_sensor.nest_protect_bottom_floor_heat_status"
+      ulm_card_kepath_floorplan_nest_protect_smoke_status: "binary_sensor.nest_protect_bottom_floor_smoke_status"
+    style:
+      left: "54%"
+      top: "57%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_thermostat"
+    entity: "climate.nest_bottom_floor"
+    variables:
+      ulm_card_kepath_floorplan_thermostat_humidity: "sensor.nest_middle_floor_humidity"
+      ulm_card_kepath_floorplan_thermostat_current_temperature: "sensor.nest_middle_floor_temperature"
+      ulm_card_kepath_floorplan_thermostat_wanted_temperature: "entity.attributes.temperature"
+      ulm_card_kepath_floorplan_thermostat_action: "entity.attributes.hvac_action"
+    style:
+      left: "57%"
+      top: "45%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # Plugs
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_g4_doorbell_bottom_hallway"
+    variables:
+      floorplan_item_binary_device_power: false
+    style:
+      left: "59%"
+      top: "81%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_dishwasher"
+    variables:
+      floorplan_item_binary_device_power: "sensor.zigbee_plug_dishwasher_power"
+    style:
+      left: "64%"
+      top: "32%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_washing_machine"
+    variables:
+      floorplan_item_binary_device_power: "sensor.zigbee_plug_washing_machine_power"
+    style:
+      left: "48%"
+      top: "31%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.tumble_dryer"
+    variables:
+      floorplan_item_binary_device_off_is_stopped: true
+    style:
+      left: "48%"
+      top: "29%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # Floor Toggle
+  - type: "custom:button-card"
+    template: "card_kepath_service_buttons"
+    style:
+      left: "5%"
+      top: "15%"
+#  bulb front
+#  bulb back
+#  smart meter

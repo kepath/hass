@@ -59,3 +59,71 @@ views:
             name: "NAS Status"
           - type: "custom:button-card"
             template: "edge"
+  - title: "Floorplan"
+    icon: "mdi:floor-plan"
+    theme: "minimalist-mobile"
+    panel: true
+    cards:
+      - type: "vertical-stack"
+        cards:
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "G"
+            card: !include "floorplan_network/floor-ground.yaml"
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "1"
+            card: !include "floorplan_network/floor-first.yaml"
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "2"
+            card: !include "floorplan_network/floor-second.yaml"
+  - title: "Sankey Chart"
+    icon: "mdi:floor-plan"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "custom:sankey-chart"
+        show_names: true
+        unit_prefix: "k"
+        round: 1
+        wide: true
+        sections:
+          - entities:
+              - entity_id: "sensor.solar"
+                color: "var(--warning-color)"
+                children:
+                  - "sensor.total_energy"
+              - entity_id: "sensor.grid"
+                children:
+                  - "sensor.total_energy"
+              - entity_id: "sensor.battery"
+                color: "var(--success-color)"
+                children:
+                  - "sensor.total_energy"
+          - entities:
+              - entity_id: "sensor.total_energy"
+                children:
+                  - "sensor.floor1"
+                  - "sensor.floor2"
+                  - "sensor.garage"
+          - entities:
+              - entity_id: "sensor.garage"
+                color: "purple"
+                children:
+                  - "sensor.ev_charger"
+                  - "garage_other"
+              - entity_id: "sensor.floor1"
+                children:
+                  - "sensor.living_room"
+                  - "sensor.washer"
+              - entity_id: "sensor.floor2"
+          - entities:
+              - "sensor.ev_charger"
+              - entity_id: "garage_other"
+                type: "remaining_parent_state"
+                name: "Other"
+              - "sensor.living_room"
+              - "sensor.washer"

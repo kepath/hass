@@ -3,7 +3,6 @@ type: "picture-elements"
 image: "local/floorplan/1st/dark.png"
 elements:
 
-  # bed a
   - type: "image"
     entity: "light.bed_a_light_light_1"
     style:
@@ -88,41 +87,45 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+
+  # Lights
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.bed_a_light_light_1"
     style:
-      top: "55%"
       left: "28%"
+      top: "55%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.ensuite_light_light_1"
     style:
-      top: "15%"
       left: "30%"
+      top: "15%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.bed_b_light_light_1"
     style:
-      top: "20%"
       left: "72%"
+      top: "20%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.bed_c_light_1"
     style:
-      top: "55%"
       left: "80%"
+      top: "55%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.bathroom_light_light_1"
     style:
-      top: "15%"
       left: "49%"
+      top: "15%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Motion
   - type: "custom:button-card"
     template: "card_kepath_floorplan_camera"
     entity: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2"
@@ -158,27 +161,40 @@ elements:
       left: "82%"
       top: "46%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Plugs
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_plug_arcade_pc_bed_c"
     style:
-      top: "68%"
       left: "64%"
+      top: "68%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_plug_fridge_bed_c"
     style:
-      top: "68%"
       left: "85%"
+      top: "68%"
       color: "rgba(100, 100, 100, 0.0)"
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_plug_fire_stick_bed_a"
     style:
-      top: "60%"
       left: "39%"
+      top: "60%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Radiators
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_heater"
+    entity: "switch.radiator_bed_b"
+    style:
+      left: "60%"
+      top: "25%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # Nest Protect
   - type: "custom:button-card"
     template: "card_kepath_floorplan_nest_protect"
     entity: "binary_sensor.nest_protect_middle_floor_occupancy"
@@ -190,28 +206,36 @@ elements:
       left: "54%"
       top: "32%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Thermostat
   - type: "custom:button-card"
     template: "card_kepath_floorplan_thermostat"
     entity: "climate.nest_middle_floor"
     variables:
-      ulm_card_kepath_floorplan_thermostat_temperature: "sensor.nest_middle_floor_temperature"
       ulm_card_kepath_floorplan_thermostat_humidity: "sensor.nest_middle_floor_humidity"
+      ulm_card_kepath_floorplan_thermostat_current_temperature_attribute: "current_temperature"
+      ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute: "temperature"
+      ulm_card_kepath_floorplan_thermostat_action: "hvac_action"
+      ulm_card_kepath_floorplan_thermostat_action_isattribute: true
     style:
       left: "56%"
       top: "40%"
       color: "rgba(100, 100, 100, 0.0)"
-  # - type: "custom:button-card"
-  #   template: "card_kepath_floorplan_thermostat"
-  #   entity: "climate.air_to_water_heat_pump"
-  #   variables:
-  #     ulm_card_kepath_floorplan_thermostat_temperature: "sensor.nest_middle_floor_temperature"
-  #     ulm_card_kepath_floorplan_thermostat_humidity: "sensor.nest_middle_floor_humidity"
-  #   style:
-  #     left: "56%"
-  #     top: "40%"
-  #     color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_thermostat"
+    entity: "climate.air_to_water_heat_pump"
+    variables:
+      ulm_card_kepath_floorplan_thermostat_current_temperature_attribute: "current_temperature"
+      ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute: "temperature"
+      ulm_card_kepath_floorplan_thermostat_action_isattribute: false
+    style:
+      left: "63%"
+      top: "34%"
+      color: "rgba(100, 100, 100, 0.0)"
+
   - type: "custom:button-card"
     template: "card_kepath_service_buttons"
     style:
-      top: "15%"
       left: "5%"
+      top: "15%"
+#  heat pump

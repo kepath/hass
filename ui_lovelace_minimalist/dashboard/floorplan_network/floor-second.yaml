@@ -2,7 +2,7 @@
 type: "picture-elements"
 image: "local/floorplan/2nd/dark.png"
 elements:
-  # Bed E
+
   - type: "image"
     entity: "light.bed_e_light_light_1"
     style:
@@ -17,7 +17,6 @@ elements:
       action: "none"
     hold_action:
       action: "none"
-  # loft door
   - type: "image"
     entity: "binary_sensor.zigbee_door_sensor_loft_contact"
     style:
@@ -32,17 +31,24 @@ elements:
       action: "none"
     hold_action:
       action: "none"
-  # Bed E
+
+  # Lights
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.bed_e_light_light_1"
     style:
-      top: "35%"
       left: "75%"
+      top: "35%"
       color: "rgba(100, 100, 100, 0.0)"
-  # motion sensors
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.mss425e_6025_outlet_3"
+    style:
+      left: "62%"
+      top: "67%"
+      color: "rgba(100, 100, 100, 0.0)"
 
-  # middle hallway
+  # Motion
   - type: "custom:button-card"
     template: "card_kepath_floorplan_camera"
     entity: "camera.middle_hallway_g3_flex_medium"
@@ -66,6 +72,17 @@ elements:
       left: "60%"
       top: "26%"
       color: "rgba(100, 100, 100, 0.0)"
+
+  # Radiators
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_heater"
+    entity: "fan.fan_or_heater"
+    style:
+      left: "64%"
+      top: "67%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # Nest Protect
   - type: "custom:button-card"
     template: "card_kepath_floorplan_nest_protect"
     entity: "binary_sensor.nest_protect_top_floor_occupancy"
@@ -80,5 +97,6 @@ elements:
   - type: "custom:button-card"
     template: "card_kepath_service_buttons"
     style:
-      top: "15%"
       left: "5%"
+      top: "15%"
+#  meross plug
