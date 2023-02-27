@@ -127,3 +127,37 @@ views:
                 name: "Other"
               - "sensor.living_room"
               - "sensor.washer"
+  - title: "Home"
+    theme: "Backend-selected"
+    icon: "mdi:rotate-3d"
+    cards:
+      - type: "history-graph"
+        entities:
+          - entity: "sensor.nvidia_shield_bed_e_unifi_rx"
+          - entity: "sensor.nvidia_shield_bed_e_unifi_tx"
+        hours_to_show: 1
+      - type: "custom:mini-graph-card"
+        entities:
+          - "sensor.nvidia_shield_lounge_unifi_rx"
+          - "sensor.nvidia_shield_lounge_unifi_tx"
+        hours_to_show: 1
+        points_per_hour: 15
+      - type: "custom:apexcharts-card"
+        update_interval: "1m"
+        graph_span: "1h"
+        header:
+          show: true
+          title: "ApexCharts-Card"
+          show_states: true
+          colorize_states: true
+        series:
+          - entity: "sensor.nvidia_shield_lounge_unifi_rx"
+          - entity: "sensor.nvidia_shield_lounge_unifi_tx"
+      - type: "custom:history-explorer-card"
+        cardName: "historycard-82779252"
+      - type: "custom:plotly-graph"
+        entities:
+          - entity: "sensor.nvidia_shield_lounge_unifi_rx"
+          - entity: "sensor.nvidia_shield_lounge_unifi_tx"
+        hours_to_show: 1
+        refresh_interval: 10
