@@ -131,33 +131,187 @@ views:
     theme: "Backend-selected"
     icon: "mdi:rotate-3d"
     cards:
-      - type: "history-graph"
-        entities:
-          - entity: "sensor.nvidia_shield_bed_e_unifi_rx"
-          - entity: "sensor.nvidia_shield_bed_e_unifi_tx"
-        hours_to_show: 1
-      - type: "custom:mini-graph-card"
-        entities:
-          - "sensor.nvidia_shield_lounge_unifi_rx"
-          - "sensor.nvidia_shield_lounge_unifi_tx"
-        hours_to_show: 1
-        points_per_hour: 15
+      # - type: "history-graph"
+      #   entities:
+      #     - entity: "sensor.nvidia_shield_bed_e_unifi_rx"
+      #     - entity: "sensor.nvidia_shield_bed_e_unifi_tx"
+      #   hours_to_show: 1
+      # - type: "custom:mini-graph-card"
+      #   # upper_bound: 20
+      #   entities:
+      #     - "sensor.nvidia_shield_lounge_unifi_rx"
+      #     - "sensor.nvidia_shield_lounge_unifi_tx"
+      #   hours_to_show: 1
+      #   points_per_hour: 15
+
       - type: "custom:apexcharts-card"
+        experimental:
+          color_threshold: true
+        all_series_config:
+          stroke_width: 2
         update_interval: "1m"
-        graph_span: "1h"
-        header:
-          show: true
-          title: "ApexCharts-Card"
-          show_states: true
-          colorize_states: true
+        graph_span: "2h"
         series:
           - entity: "sensor.nvidia_shield_lounge_unifi_rx"
+            name: "RX"
+            color_threshold:
+              - value: 0
+                color: "#FAA"
+              - value: 0.2
+                color: "#F99"
+              - value: 0.3
+                color: "#F88"
+              - value: 0.4
+                color: "#F77"
+              - value: 0.5
+                color: "#F66"
+              - value: 1
+                color: "#F55"
+              - value: 2
+                color: "#F44"
+              - value: 5
+                color: "#F33"
+              - value: 10
+                color: "#F22"
+              - value: 15
+                color: "#F11"
+              - value: 25
+                color: "#F00"
+
+              # - value: 0
+              #   color: "#AFA"
+              # - value: 0
+              #   color: "#9F9"
+              # - value: 0
+              #   color: "#8F8"
+              # - value: 0
+              #   color: "#7F7"
+              # - value: 0
+              #   color: "#6F6"
+              # - value: 0
+              #   color: "#5F5"
+              # - value: 0
+              #   color: "#4F4"
+              # - value: 0
+              #   color: "#3F3"
+              # - value: 0
+              #   color: "#2F2"
+              # - value: 15
+              #   color: "#1F1"
+              # - value: 30
+              #   color: "#0F0"
+
+
           - entity: "sensor.nvidia_shield_lounge_unifi_tx"
-      - type: "custom:history-explorer-card"
-        cardName: "historycard-82779252"
-      - type: "custom:plotly-graph"
-        entities:
-          - entity: "sensor.nvidia_shield_lounge_unifi_rx"
-          - entity: "sensor.nvidia_shield_lounge_unifi_tx"
-        hours_to_show: 1
-        refresh_interval: 10
+            name: "TX"
+            # type: "area"
+            color_threshold:
+              - value: 0
+                color: "#AAF"
+              - value: 0.2
+                color: "#99F"
+              - value: 0.3
+                color: "#88F"
+              - value: 0.4
+                color: "#77F"
+              - value: 0.5
+                color: "#66F"
+              - value: 1
+                color: "#55F"
+              - value: 2
+                color: "#44F"
+              - value: 5
+                color: "#33F"
+              - value: 10
+                color: "#22F"
+              - value: 15
+                color: "#11F"
+              - value: 25
+                color: "#00F"
+
+      - type: "custom:apexcharts-card"
+        experimental:
+          color_threshold: true
+        all_series_config:
+          stroke_width: 2
+        update_interval: "1m"
+        graph_span: "2h"
+        series:
+          - entity: "sensor.amazon_firestick_4k_rj45_unifi_rx_2"
+            name: "RX"
+            color_threshold:
+              - value: 0
+                color: "#FAA"
+              - value: 0.2
+                color: "#F99"
+              - value: 0.3
+                color: "#F88"
+              - value: 0.4
+                color: "#F77"
+              - value: 0.5
+                color: "#F66"
+              - value: 1
+                color: "#F55"
+              - value: 2
+                color: "#F44"
+              - value: 5
+                color: "#F33"
+              - value: 10
+                color: "#F22"
+              - value: 15
+                color: "#F11"
+              - value: 25
+                color: "#F00"
+          - entity: "sensor.amazon_firestick_4k_rj45_unifi_tx_2"
+            name: "TX"
+            # type: "area"
+            color_threshold:
+              - value: 0
+                color: "#AAF"
+              - value: 0.2
+                color: "#99F"
+              - value: 0.3
+                color: "#88F"
+              - value: 0.4
+                color: "#77F"
+              - value: 0.5
+                color: "#66F"
+              - value: 1
+                color: "#55F"
+              - value: 2
+                color: "#44F"
+              - value: 5
+                color: "#33F"
+              - value: 10
+                color: "#22F"
+              - value: 15
+                color: "#11F"
+              - value: 25
+                color: "#00F"
+        # yaxis:
+        #   - min: 0
+        #     max: 20
+        #     decimals: 0
+        #     apex_config:
+        #       tickAmount: 4
+      # - type: "custom:history-explorer-card"
+      #   graphs:
+      #     - type: "line"
+      #       entities:
+      #         - entity: "sensor.nvidia_shield_lounge_unifi_rx"
+      #           color: #3e95cd
+      #           fill: "rgba(151,187,205,0.15)"
+      #         - entity: "sensor.nvidia_shield_lounge_unifi_tx"
+      #           color: "#ee3452"
+      #           fill: "rgba(0,0,0,0)"
+      #   combineSameUnits: true
+      #   defaultTimeRange: "1h"
+      #   refresh:
+      #     interval: 60
+      #   # cardName: "historycard-82779252"
+      # - type: "custom:plotly-graph"
+      #   entities:
+      #     - entity: "sensor.nvidia_shield_lounge_unifi_rx"
+      #     - entity: "sensor.nvidia_shield_lounge_unifi_tx"
+      #   hours_to_show: 1
+      #   refresh_interval: 10
