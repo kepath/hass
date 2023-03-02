@@ -598,13 +598,13 @@ card_kepath_floorplan_thermostat:
     floorplan_thermostat_action: >
       [[[
         var action = "off";
-        //if (variable?.ulm_card_kepath_floorplan_thermostat_action) {
-        //  if (variable.ulm_card_kepath_floorplan_thermostat_action_isattribute) {
-        //    action = states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_action];
-        //  } else {
-        //    action = states[variables.ulm_card_kepath_floorplan_thermostat_action].state;
-        //  }
-        //}
+        if (variable?.ulm_card_kepath_floorplan_thermostat_action_isattribute) {
+          if (variable?.ulm_card_kepath_floorplan_thermostat_action) {
+            action = states[entity.entity_id]?.attributes[variables.ulm_card_kepath_floorplan_thermostat_action];
+          }
+        } else {
+          action = states[entity.entity_id]?.state;
+        }
         return action;
       ]]]
   name: "[[[ return variables.floorplan_thermostat_current_temperature_attribute ]]]"

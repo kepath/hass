@@ -172,6 +172,46 @@ custom_card_kepath_person_info:
           - operator: "template"
             value: >
               [[[
+                if (!isNaN(states[variables.ulm_card_kepath_person_commute_entity]?.state)) {
+                  if (states[variables.ulm_card_kepath_person_commute_entity]?.state < 10) {
+                    if (states[variables.ulm_card_kepath_person_commute_entity]?.state != 0) {
+                      return true;
+                    }
+                  }
+                }
+                return false
+              ]]]
+            icon: >
+              [[[
+                var commuteTime = 0;
+                var icon = "mdi:numeric-0-circle"
+                commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                if (!isNaN(commuteTime) && commuteTime !== undefined){
+                  icon = icon.replace("0",commuteTime)
+                }
+                return icon;
+              ]]]
+            styles:
+              icon:
+                - color: >
+                    [[[
+                      var color = "rgba(var(--color-green),1)";
+                      var commute = states[variables.ulm_card_kepath_person_commute_entity]?.state;
+                      if (!isNaN(commute)) {
+                        if (commute > 30) {
+                          color = "rgba(var(--color-red),1)";
+                        }
+                        if (commute > 10) {
+                          color = "rgba(var(--color-yellow),1)";
+                        }
+                      }
+                      return color;
+                    ]]]
+              card:
+                - display: "block"
+          - operator: "template"
+            value: >
+              [[[
                 if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
                   return true
                 } else {
@@ -186,10 +226,10 @@ custom_card_kepath_person_info:
                       var color = "rgba(var(--color-green),1)";
                       var commute = states[variables.ulm_card_kepath_person_commute_entity]?.state;
                       if (!isNaN(commute)) {
-                        if (commute > 60) {
+                        if (commute > 30) {
                           color = "rgba(var(--color-red),1)";
                         }
-                        if (commute > 20) {
+                        if (commute > 10) {
                           color = "rgba(var(--color-yellow),1)";
                         }
                       }
@@ -357,10 +397,11 @@ custom_popup_kepath_person:
             - type: "custom:button-card"
               template:
                 - "find_my_phone_button_kepath"
-              entity: "[[[ return variables.ulm_card_kepath_person_findmy_script; ]]]"
+              entity: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
             - type: "map"
-              aspect_ratio: "12x10"
-              default_zoom: 16
+              auto_fit: true
+              # aspect_ratio: "12x10"
+              # default_zoom: 16
               hours_to_show: 12
               entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
 
@@ -368,7 +409,10 @@ find_my_phone_button_kepath:
   template:
     - "ulm_custom_card_kepath_person_language_variables"
   tap_action:
-    action: "toggle"
+    action: "call-service"
+    service: "device_tracker.icloud3_find_iphone_alert"
+    service_data:
+      device_name: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
   icon: "mdi:volume-high"
   name: "[[[ return variables.ulm_custom_card_kepath_person_findmy; ]]]"
   size: "1.4em"
