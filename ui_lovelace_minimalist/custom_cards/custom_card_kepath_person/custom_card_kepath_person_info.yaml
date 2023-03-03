@@ -5,24 +5,9 @@ custom_card_kepath_person_info:
     - "ulm_translation_engine"
     - "ulm_custom_card_kepath_person_language_variables"
     - "custom_popup_kepath_person"
+    - "ulm_gradient_green_to_red_5step"
+    - "ulm_zone_list"
   variables:
-    ulm_card_kepath_person_zones:
-      - "zone.bloxham_school"
-      - "zone.dan_uni_accomodation"
-      - "zone.gym"
-      - "zone.hollys_house"
-      - "zone.home"
-      - "zone.jason_beer"
-      - "zone.jus_parents"
-      - "zone.k_n_nottingham"
-      - "zone.kevs_parents"
-      - "zone.kks_house"
-      - "zone.louises_house"
-      - "zone.martin_della"
-      - "zone.repl_group"
-      - "zone.sandy_balls"
-      - "zone.tudor_hall_school"
-      - "zone.whittlebury_spa"
     ulm_address: ""
     ulm_address_locality: ""
     ulm_card_kepath_person_entity: ""
@@ -41,7 +26,7 @@ custom_card_kepath_person_info:
     [[[
       var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
       var icon = "mdi:face-man";
-      var zones = variables.ulm_card_kepath_person_zones;
+      var zones = variables.ulm_zone_list;
       for (const item of zones) {
         if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "").toLowerCase()) {
           if (states[item].attributes.icon != null) {
@@ -105,7 +90,7 @@ custom_card_kepath_person_info:
         [[[
           var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
           var location = false;
-          if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'notset')) {
+          if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'notset') || (person_location == 'stationary')) {
             location = true;
           }
           return location
@@ -140,6 +125,28 @@ custom_card_kepath_person_info:
             - width: "14px"
             - height: "14px"
             - line-height: "0"
+            - color: >
+                [[[
+                  var color = "rgba(var(--primary-text-color),1)";
+                  var commuteTime = 0;
+                  if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
+                    commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                    if (!isNaN(commuteTime) && commuteTime !== undefined){
+                      commuteTime = Math.floor(commuteTime);
+                    }
+                  }
+                  if (commuteTime > 10) {
+                    commuteTime = Math.floor(commuteTime / 5) * 5;
+                    if (commuteTime > 100) {
+                      commuteTime = 100;
+                    }
+                    var gradient = "gradient_" + commuteTime
+                    if (variables?.green_to_red_5step?.[gradient]) {
+                      color = variables?.green_to_red_5step?.[gradient];
+                    }
+                  }
+                  return color;
+                ]]]
           img_cell:
             - border-radius: "50%"
             - height: "16px"
@@ -151,7 +158,17 @@ custom_card_kepath_person_info:
             - box-shadow: "none"
             - padding: "0px"
             - border-radius: "50%"
-            - display: "none"
+            - display: "block"
+        icon: >
+          [[[
+            var icon = "mdi:map-marker-radius";
+            if (states[variables.ulm_card_kepath_person_driving_entity]?.state) {
+              if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
+                icon = "mdi:car"
+              }
+            }
+            return icon;
+          ]]]
         state:
           - operator: "template"
             value: >
@@ -167,16 +184,44 @@ custom_card_kepath_person_info:
             styles:
               icon:
                 - color: "rgba(var(--color-grey),1)"
-              card:
-                - display: "block"
           - operator: "template"
             value: >
               [[[
-                if (!isNaN(states[variables.ulm_card_kepath_person_commute_entity]?.state)) {
-                  if (states[variables.ulm_card_kepath_person_commute_entity]?.state < 10) {
-                    if (states[variables.ulm_card_kepath_person_commute_entity]?.state != 0) {
-                      return true;
-                    }
+                //var commuteTime = 0;
+                var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+                var zones = variables.ulm_zone_list;
+                for (const item of zones) {
+                  if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "").toLowerCase()) {
+                    return true
+                  }
+                }
+                //if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
+                //  commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                //  if (!isNaN(commuteTime) && commuteTime !== undefined){
+                //    commuteTime = Math.floor(commuteTime);
+                //  }
+                //}
+                //if (commuteTime == 0) {
+                //  return true;
+                //}
+                return false
+              ]]]
+            styles:
+              card:
+                - display: "none"
+          - operator: "template"
+            value: >
+              [[[
+                var commuteTime = 0;
+                if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
+                  commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                  if (!isNaN(commuteTime) && commuteTime !== undefined){
+                    commuteTime = Math.floor(commuteTime);
+                  }
+                }
+                if (commuteTime < 10) {
+                  if (commuteTime != 0) {
+                    return true;
                   }
                 }
                 return false
@@ -184,59 +229,17 @@ custom_card_kepath_person_info:
             icon: >
               [[[
                 var commuteTime = 0;
-                var icon = "mdi:numeric-0-circle"
-                commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
-                if (!isNaN(commuteTime) && commuteTime !== undefined){
-                  icon = icon.replace("0",commuteTime)
+                var icon = "mdi:numeric-0-circle";
+                if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
+                  commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                  if (!isNaN(commuteTime) && commuteTime !== undefined){
+                    commuteTime = Math.floor(commuteTime);
+                    icon = icon.replace("0",commuteTime);
+                  }
                 }
                 return icon;
               ]]]
-            styles:
-              icon:
-                - color: >
-                    [[[
-                      var color = "rgba(var(--color-green),1)";
-                      var commute = states[variables.ulm_card_kepath_person_commute_entity]?.state;
-                      if (!isNaN(commute)) {
-                        if (commute > 30) {
-                          color = "rgba(var(--color-red),1)";
-                        }
-                        if (commute > 10) {
-                          color = "rgba(var(--color-yellow),1)";
-                        }
-                      }
-                      return color;
-                    ]]]
-              card:
-                - display: "block"
-          - operator: "template"
-            value: >
-              [[[
-                if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
-                  return true
-                } else {
-                  return false
-                }
-              ]]]
-            icon: "mdi:car"
-            styles:
-              icon:
-                - color: >
-                    [[[
-                      var color = "rgba(var(--color-green),1)";
-                      var commute = states[variables.ulm_card_kepath_person_commute_entity]?.state;
-                      if (!isNaN(commute)) {
-                        if (commute > 30) {
-                          color = "rgba(var(--color-red),1)";
-                        }
-                        if (commute > 10) {
-                          color = "rgba(var(--color-yellow),1)";
-                        }
-                      }
-                      return color;
-                    ]]]
-              card:
-                - display: "block"
+
     battery:
       card:
         type: "custom:button-card"
@@ -400,7 +403,7 @@ custom_popup_kepath_person:
               entity: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
             - type: "map"
               auto_fit: true
-              # aspect_ratio: "12x10"
+              aspect_ratio: "12x10"
               # default_zoom: 16
               hours_to_show: 12
               entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
