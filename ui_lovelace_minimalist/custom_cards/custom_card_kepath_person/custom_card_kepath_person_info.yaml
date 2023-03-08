@@ -74,7 +74,7 @@ custom_card_kepath_person_info:
         [[[
           var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
           var location = false;
-          if ((person_location == 'unknown') || (person_location == 'unavailable')) {
+          if ((person_location == 'unknown') || (person_location == 'unavailable') || (person_location == 'notset')) {
             location = true;
           }
           return location
@@ -90,7 +90,7 @@ custom_card_kepath_person_info:
         [[[
           var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
           var location = false;
-          if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'notset') || (person_location == 'stationary')) {
+          if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'stationary')) {
             location = true;
           }
           return location
@@ -187,7 +187,6 @@ custom_card_kepath_person_info:
           - operator: "template"
             value: >
               [[[
-                //var commuteTime = 0;
                 var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
                 var zones = variables.ulm_zone_list;
                 for (const item of zones) {
@@ -195,15 +194,10 @@ custom_card_kepath_person_info:
                     return true
                   }
                 }
-                //if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
-                //  commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
-                //  if (!isNaN(commuteTime) && commuteTime !== undefined){
-                //    commuteTime = Math.floor(commuteTime);
-                //  }
-                //}
-                //if (commuteTime == 0) {
-                //  return true;
-                //}
+                var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+                if (person_location == 'notset') {
+                  return true
+                }
                 return false
               ]]]
             styles:
@@ -219,12 +213,11 @@ custom_card_kepath_person_info:
                     commuteTime = Math.floor(commuteTime);
                   }
                 }
-                if (commuteTime < 10) {
-                  if (commuteTime != 0) {
-                    return true;
-                  }
+                if ((commuteTime < 10) && (commuteTime != 0) && (!isNaN(commuteTime)) && (commuteTime !== undefined)) {
+                  return true;
+                } else {
+                  return false;
                 }
-                return false
               ]]]
             icon: >
               [[[
@@ -303,121 +296,144 @@ custom_popup_kepath_person:
   tap_action:
     action: "fire-dom-event"
     browser_mod:
-      service: "browser_mod.popup"
+      service: "browser_mod.sequence"
       data:
-        title: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
-        style:
-          $: >
-            [[[
-              if (hass.themes.theme.includes("desktop")){
-                var dialog = `
-                  .mdc-dialog__surface{
-                    border-radius: var(--border-radius) !important;
-                  }
-                `;
-              } else{
-                var dialog = "";
-              }
-              return `
-                *{
-                  --secondary-background-color: none !important;
-                }
-                ${dialog}
-              `;
-            ]]]
-          hui-vertical-stack-card:
-            $: >
-              button-card {
-                align-self: center;
-                padding: 0.2em 0 2.3em 0;
-              }
-              hui-entities-card{
-                padding: 0.8em 1.4em;
-              }
-            $hui-entities-card$: >
-              ha-card{
-                box-shadow: none;
-              }
-            $hui-history-graph-card$: >
-              .content {
-                padding: 0 2.4em !important;
-              }
-              ha-card{
-                box-shadow: none;
-              }
-            $hui-glance-card$: >
-              ha-card{
-                box-shadow: none;
-              }
-            $hui-map-card:
-              $: >
-                ha-icon-button {
-                  color: rgba(var(--color-blue),1);
-                }
-              $ha-map:
+        sequence:
+          - service: "browser_mod.popup"
+            data:
+              title: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
+              style:
                 $: >
-                  .leaflet-control-attribution {
-                    display: none;
-                  }
-                  .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
-                    border: 2px solid rgba(var(--color-blue),0.4) !important;
-                  }
-                  .leaflet-bar a {
-                    background-color: rgba(var(--color-blue),0.2) !important;
-                    color: rgba(var(--color-blue),1) !important;
-                  }
-                  .leaflet-bar a:first-child {
-                    border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
-                  }
-                  .leaflet-pane.leaflet-tile-pane {
-                    filter: contrast(95%);
-                  }
-        content:
-          type: "vertical-stack"
-          cards:
-            - type: "entities"
-              entities:
-                - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
-                  secondary_info: "last-changed"
-            - type: "history-graph"
-              entities:
-                - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
-            - type: "glance"
-              show_state: false
-              entities:
-                - entity: "[[[ return variables.ulm_card_kepath_person_wifi_tracker; ]]]"
-                  name: "WiFi"
-                  icon: "mdi:wifi"
-                  style: &state >
-                    state-badge{
-                      color: {{ 'rgba(var(--color-blue),1)' if is_state(config.entity, 'home') }};
-                      filter: {{ 'opacity(100%)' if is_state(config.entity, 'home') else 'opacity(40%)'}};
+                  [[[
+                    if (hass.themes.theme.includes("desktop")){
+                      var dialog = `
+                        .mdc-dialog__surface{
+                          border-radius: var(--border-radius) !important;
+                        }
+                      `;
+                    } else{
+                      var dialog = "";
                     }
-                - entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker; ]]]"
-                  name: "GPS"
-                  icon: "mdi:map-marker"
-                  style: *state
-            - type: "custom:button-card"
-              template:
-                - "find_my_phone_button_kepath"
-              entity: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
-            - type: "map"
-              auto_fit: true
-              aspect_ratio: "12x10"
-              # default_zoom: 16
-              hours_to_show: 12
-              entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
+                    return `
+                      *{
+                        --secondary-background-color: none !important;
+                      }
+                      ${dialog}
+                    `;
+                  ]]]
+                hui-vertical-stack-card:
+                  $: >
+                    button-card {
+                      align-self: center;
+                      padding: 0.2em 0 2.3em 0;
+                    }
+                    hui-entities-card{
+                      padding: 0.8em 1.4em;
+                    }
+                  $hui-entities-card$: >
+                    ha-card{
+                      box-shadow: none;
+                    }
+                  $hui-history-graph-card$: >
+                    .content {
+                      padding: 0 2.4em !important;
+                    }
+                    ha-card{
+                      box-shadow: none;
+                    }
+                  $hui-glance-card$: >
+                    ha-card{
+                      box-shadow: none;
+                    }
+                  $hui-map-card:
+                    $: >
+                      ha-icon-button {
+                        color: rgba(var(--color-blue),1);
+                      }
+                    $ha-map:
+                      $: >
+                        .leaflet-control-attribution {
+                          display: none;
+                        }
+                        .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+                          border: 2px solid rgba(var(--color-blue),0.4) !important;
+                        }
+                        .leaflet-bar a {
+                          background-color: rgba(var(--color-blue),0.2) !important;
+                          color: rgba(var(--color-blue),1) !important;
+                        }
+                        .leaflet-bar a:first-child {
+                          border-bottom: 2px solid rgba(var(--color-blue),0.4) !important;
+                        }
+                        .leaflet-pane.leaflet-tile-pane {
+                          filter: contrast(95%);
+                        }
+              content:
+                type: "vertical-stack"
+                cards:
+                  - type: "entities"
+                    entities:
+                      - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
+                        secondary_info: "last-changed"
+                  - type: "history-graph"
+                    entities:
+                      - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
+                  - type: "glance"
+                    show_state: false
+                    entities:
+                      - entity: "[[[ return variables.ulm_card_kepath_person_wifi_tracker; ]]]"
+                        name: "WiFi"
+                        icon: "mdi:wifi"
+                        style: &state >
+                          state-badge{
+                            color: {{ 'rgba(var(--color-blue),1)' if is_state(config.entity, 'home') }};
+                            filter: {{ 'opacity(100%)' if is_state(config.entity, 'home') else 'opacity(40%)'}};
+                          }
+                      - entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker; ]]]"
+                        name: "GPS"
+                        icon: "mdi:map-marker"
+                        style: *state
+                  - type: "horizontal-stack"
+                    cards:
+                      - type: "custom:button-card"
+                        template:
+                          - "find_my_phone_button_kepath"
+                        entity: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
+                      - type: "custom:button-card"
+                        template:
+                          - "about_my_phone_button_kepath"
+                  - type: "map"
+                    auto_fit: true
+                    aspect_ratio: "12x10"
+                    # default_zoom: 16
+                    hours_to_show: 12
+                    entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
+          - service: "device_tracker.icloud3_update"
+            data:
+              command: "location"
 
 find_my_phone_button_kepath:
   template:
     - "ulm_custom_card_kepath_person_language_variables"
+    - "popup_button_layout_kepath"
   tap_action:
     action: "call-service"
     service: "device_tracker.icloud3_find_iphone_alert"
     service_data:
       device_name: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
   icon: "mdi:volume-high"
-  name: "[[[ return variables.ulm_custom_card_kepath_person_findmy; ]]]"
+  name: "Find my iPhone"
+
+about_my_phone_button_kepath:
+  template:
+    - "ulm_custom_card_kepath_person_language_variables"
+    - "popup_button_layout_kepath"
+  tap_action:
+    action: "navigate"
+    navigation_path: "/lovelace-minimalist-network/icloud3"
+  icon: "mdi:cellphone-cog"
+  name: "About my iPhone"
+popup_button_layout_kepath:
   size: "1.4em"
   styles:
     icon:

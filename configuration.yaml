@@ -9,6 +9,10 @@ frontend:
 browser_mod:
 recorder:
   db_url: !secret "hass_addon_mariadb_url"
+  purge_keep_days: 3
+  exclude:
+    entities:
+      - "sensor.icloud3_event_log"
 group: !include "groups.yaml"
 automation: !include "automations.yaml"
 script: !include "scripts.yaml"

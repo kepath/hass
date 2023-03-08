@@ -12,13 +12,18 @@ if not isinstance(group, str) or not domain or not group:
 name = f"All binary sensor {collection_name} group"
 excluded_entities = [
     "binary_sensor.zigbee_door_sensor_bed_c_contact",
-    "light.chrome_workdell_screen",
-    "light.c105a8ea_57917284_screen",
     "binary_sensor.chrome_workdell",
+    "binary_sensor.kev_iphone_remote",
     "binary_sensor.c105a8ea_57917284",
     "binary_sensor.front_g3_flex_motion",
     "binary_sensor.diskstation_security_status",
-    "binary_sensor.front_door_tablet"
+    "binary_sensor.front_door_tablet",
+    "binary_sensor.macbook_pro_2018_screen_possibly",
+    "light.chrome_workdell_screen",
+    "light.c105a8ea_57917284_screen",
+    "light.middle_hallway_light_light_1",
+    "light.front_door_smartbulb",
+    "light.kitchen_tuya_camera_indicator_light"
 ]
 
 for entity_id in hass.states.entity_ids(domain):
