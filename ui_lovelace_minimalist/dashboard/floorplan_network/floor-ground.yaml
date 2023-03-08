@@ -13,7 +13,8 @@ elements:
     state_image:
       "on": "local/floorplan/ground/study_on.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
@@ -27,7 +28,8 @@ elements:
     state_image:
       "on": "local/floorplan/ground/hallway_on.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
@@ -43,7 +45,8 @@ elements:
     state_image:
       "on": "local/floorplan/ground/lounge_on.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
@@ -59,7 +62,8 @@ elements:
     state_image:
       "on": "local/floorplan/ground/kitchen_2_on.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
@@ -73,7 +77,8 @@ elements:
     state_image:
       "on": "local/floorplan/ground/kitchen_1_on.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
@@ -89,7 +94,8 @@ elements:
     state_image:
       "on": "local/floorplan/ground/front_door.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
@@ -105,21 +111,63 @@ elements:
     state_image:
       "on": "local/floorplan/ground/back_door.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
       action: "none"
 
-  - type: "history-graph"
-    title: "Temperatures in the last 48 hours"
-    hours_to_show: 3
-    entities:
-      - entity: "sensor.nvidia_shield_lounge_unifi_tx"
-        name: "Lounge NVidia TX"
-      - entity: "sensor.nvidia_shield_lounge_unifi_rx"
-        name: "Lounge NVidia RX"
+  - type: "custom:button-card"
+    template: "card_kepath_service_buttons"
     style:
-      left: "54%"
-      top: "57%"
+      left: "5%"
+      top: "15%"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.nvidia_shield_lounge_unifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "si:nvidia"
+      ulm_card_kepath_floorplan_network_device_color: "#76B900"
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "19%"
+      top: "73%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.amazon_firestick_4k_rj45_unifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "si:amazonfiretv"
+      ulm_card_kepath_floorplan_network_device_color: "#FC4C02"
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "61%"
+      top: "49%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.apple_imac_2011_unifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "mdi:monitor"
+      ulm_card_kepath_floorplan_network_device_color: ""
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "72%"
+      top: "77%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.samsung_ue48hu7500t_tv_unifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "si:samsung"
+      ulm_card_kepath_floorplan_network_device_color: "#1428A0"
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "15%"
+      top: "70%"
       color: "rgba(100, 100, 100, 0.0)"

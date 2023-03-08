@@ -13,35 +13,18 @@ sensor:
       - "pubDate"
     exclusions:
       - "language"
+
   - platform: "tautulli"
     name: "Plex State Tautulli"
     host: !secret "ha_rj45_ip"
     api_key: !secret "tautulli_api_key"
-  # - platform: "mqtt"
-  #   state_topic: "homeassistant/sensor/tautulli/all"
-  #   unique_id: "tautulli_mqtt_status"
-  #   name: "Plex State MQTT"
-  #   value_template: "'{{ value_json.body }}'"
 
-  # - platform: "mqtt"
-  #   state_topic: "zigbee2mqtt/bridge/networkmap/raw"
-  #   name: "Zigbee2mqtt Networkmap"
-  #   value_template: >-
-  #     {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
-  #   json_attributes_topic: zigbee2mqtt/bridge/networkmap/raw
-
-  # - platform: sql
-  #   db_url: !secret hass_addon_mariadb_url
-  #   queries:
-  #   - name: HASS DB size
-  #     query: !secret hass_addon_mariadb_size_query
-  #     column: 'value'
-  #     unit_of_measurement: MB
   - platform: "bitcoin"
     currency: "GBP"
     display_options:
       - "exchangerate"
       - "trade_volume_btc"
+
   - platform: "template"
     sensors:
       date_long:
@@ -51,43 +34,179 @@ sensor:
           {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
           {{ months[now().month-1] }}.{{ now().day }}th. {{ days[now().weekday()] }}
 
-# #sensors for HA updates
-#   - platform: command_line
-#     name: core_updates
-#     command: 'curl http://supervisor/core/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"latest_version":.data.version_latest,"installed_version":.data.version,"update_available":.data.update_available}'''
-#     value_template: '{{ value_json.update_available }}'
-#     scan_interval: 600
-#     json_attributes:
-#       - update_available
-#       - latest_version
-#       - installed_version
+  - platform: "statistics"
+    entity_id: "sensor.nvidia_shield_lounge_unifi_tx"
+    name: "nvidia_shield_lounge_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
 
-#   - platform: command_line
-#     name: supervisor_updates
-#     command: 'curl http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"latest_version":.data.version_latest,"installed_version":.data.version,"update_available":.data.update_available}'''
-#     value_template: '{{ value_json.update_available }}'
-#     scan_interval: 600
-#     json_attributes:
-#       - update_available
-#       - latest_version
-#       - installed_version
+  - platform: "statistics"
+    entity_id: "sensor.nvidia_shield_bed_e_unifi_tx"
+    name: "nvidia_shield_bed_e_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
 
-#   - platform: command_line
-#     name: addons_updates
-#     command: 'curl http://supervisor/addons -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"addons":[.data.addons[] | select(.update_available)]}'''
-#     value_template: '{{ value_json.addons | length }}'
-#     scan_interval: 600
-#     unit_of_measurement: pending update(s)
-#     json_attributes:
-#       - addons
+  - platform: "statistics"
+    entity_id: "sensor.amazon_firestick_4k_rj45_unifi_tx_2"
+    name: "amazon_firestick_4k_rj45_unifi_tx_2_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
 
-# binary_sensor:
-#   - platform: template
-#     sensors:
-#       updater_core:
-#         friendly_name: Core
-#         device_class: problem
-#         value_template: "{{ states('sensor.core_updates') }}"
-#         attribute_templates:
-#           installed_version: "{{ state_attr('sensor.core_updates', 'installed_version') }}"
-#           latest_version: "{{ state_attr('sensor.core_updates', 'latest_version') }}"
+  - platform: "statistics"
+    entity_id: "sensor.amazon_firestick_4k_rj45_unifi_tx"
+    name: "amazon_firestick_4k_rj45_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.apple_imac_2011_unifi_tx"
+    name: "apple_imac_2011_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.apple_macbook_pro_2018_kev_unifi_tx"
+    name: "apple_macbook_pro_2018_kev_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.apple_tv_4k_unifi_tx"
+    name: "apple_tv_4k_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.arcade_machine_unifi_tx"
+    name: "arcade_machine_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.big_pc_unifi_tx"
+    name: "big_pc_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.caldigit_thunderbolt_dock_unifi_tx"
+    name: "caldigit_thunderbolt_dock_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.dans_nintendo_switch_unifi_tx"
+    name: "dans_nintendo_switch_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.dell_work_laptop_kev_unifi_wifi_tx"
+    name: "dell_work_laptop_kev_unifi_wifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.download_pc_unifi_tx"
+    name: "download_pc_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.ipad_air_4th_gen_tx"
+    name: "ipad_air_4th_gen_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.kev_iphone_11_unifi_tx"
+    name: "kev_iphone_11_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.home_assistant_unifi_tx"
+    name: "home_assistant_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.iphone_12_dan_tx"
+    name: "iphone_12_dan_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.iphone_tx_4"
+    name: "iphone_tx_4_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.ju_iphone_8_unifi_tx"
+    name: "ju_iphone_8_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.samsung_ue32f4500_tv_unifi_tx"
+    name: "samsung_ue32f4500_tv_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.samsung_ue48hu7500t_tv_unifi_tx"
+    name: "samsung_ue48hu7500t_tv_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.sony_playstation_3_unifi_tx"
+    name: "sony_playstation_3_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.synology_diskstation_ds412_unifi_tx"
+    name: "synology_diskstation_ds412_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+  - platform: "statistics"
+    entity_id: "sensor.xbox_series_x_unifi_tx"
+    name: "xbox_series_x_unifi_tx_data_speed"
+    state_characteristic: "mean"
+    sampling_size: 5
+
+# sensor.amazon_firestick_4k_rj45_unifi_tx_2
+# sensor.amazon_firestick_4k_rj45_unifi_tx
+# sensor.apple_imac_2011_unifi_tx
+# sensor.apple_macbook_pro_2018_kev_unifi_tx
+# sensor.apple_tv_4k_unifi_tx
+# sensor.arcade_machine_unifi_tx
+# sensor.big_pc_unifi_tx
+# sensor.caldigit_thunderbolt_dock_unifi_tx
+# sensor.dans_nintendo_switch_unifi_tx
+# sensor.dell_work_laptop_kev_unifi_wifi_tx
+# sensor.download_pc_unifi_tx
+# sensor.ipad_air_4th_gen_tx
+# sensor.kev_iphone_11_unifi_tx
+# sensor.home_assistant_unifi_tx
+# sensor.iphone_12_dan_tx
+# sensor.iphone_tx_4
+# sensor.ju_iphone_8_unifi_tx
+# sensor.samsung_ue32f4500_tv_unifi_tx
+# sensor.samsung_ue48hu7500t_tv_unifi_tx
+# sensor.sony_playstation_3_unifi_tx
+# sensor.synology_diskstation_ds412_unifi_tx
+# sensor.xbox_series_x_unifi_tx
+
+# sensor.usw_flex_loft_dlpc_isolated_poe_power
+# sensor.usw_flex_loft_ap_top_poe_power
+# sensor.usw_pro_24_poe_bed_a_laptop_poe_power
+# sensor.usw_pro_24_poe_bed_a_tv_poe_power
+# sensor.usw_pro_24_poe_bed_b_poe_power
+# sensor.usw_pro_24_poe_kitchen_poe_power
+# sensor.usw_pro_24_poe_loft_poe_power
+# sensor.usw_pro_24_poe_lounge_right_poe_power
+# sensor.usw_pro_24_poe_study_poe_power

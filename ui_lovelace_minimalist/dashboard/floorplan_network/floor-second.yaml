@@ -12,7 +12,8 @@ elements:
     state_image:
       "on": "local/floorplan/2nd/bed_e_on.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
@@ -26,8 +27,87 @@ elements:
     state_image:
       "on": "local/floorplan/2nd/loft_door.png"
       "off": "local/floorplan/transparent.png"
-      "unavailable": "/local/unavailable.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
     tap_action:
       action: "none"
     hold_action:
       action: "none"
+
+  - type: "custom:button-card"
+    template: "card_kepath_service_buttons"
+    style:
+      left: "5%"
+      top: "15%"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.nvidia_shield_bed_e_unifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "si:nvidia"
+      ulm_card_kepath_floorplan_network_device_color: "#76B900"
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "61%"
+      top: "42%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.big_pc_unifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "mdi:desktop-tower"
+      ulm_card_kepath_floorplan_network_device_color: ""
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "60%"
+      top: "37%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.caldigit_thunderbolt_dock_unifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "mdi:monitor-arrow-down"
+      ulm_card_kepath_floorplan_network_device_color: ""
+      ulm_card_kepath_floorplan_network_device_poe: "sensor.usw_flex_loft_dlpc_isolated_poe_power"
+    style:
+      left: "61%"
+      top: "55%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.dell_work_laptop_kev_unifi_wifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "si:dell"
+      ulm_card_kepath_floorplan_network_device_color: "#007DB8"
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "65%"
+      top: "52%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.download_pc_unifi_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "mdi:file-arrow-up-down"
+      ulm_card_kepath_floorplan_network_device_color: ""
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "95%"
+      top: "18%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.iphone_12_dan_tx_data_speed"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "mdi:alpha-d-box-outline"
+      ulm_card_kepath_floorplan_network_device_color: ""
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "15%"
+      top: "30%"
+      color: "rgba(100, 100, 100, 0.0)"
