@@ -583,32 +583,28 @@ card_kepath_floorplan_thermostat:
   show_label: true
   show_name: true
   variables:
-    floorplan_thermostat_humidity: >
+    ulm_card_kepath_floorplan_thermostat_humidity: >
       [[[
         return (variables?.ulm_card_kepath_floorplan_thermostat_humidity ? (states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state + ' &percnt;') : '-');
       ]]]
-    floorplan_thermostat_current_temperature_attribute: >
+    ulm_card_kepath_floorplan_thermostat_current_temperature_attribute: >
       [[[
         return (variables?.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute ? (states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute] + ' &#8451;') : '-');
       ]]]
-    floorplan_thermostat_wanted_temperature_attribute: >
+    ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute: >
       [[[
         return (variables?.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute ? parseFloat(states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute]) : parseFloat(0));
       ]]]
-    floorplan_thermostat_action: >
+    ulm_card_kepath_floorplan_thermostat_action_isattribute: >
       [[[
-        var action = "off";
-        if (variable?.ulm_card_kepath_floorplan_thermostat_action_isattribute) {
-          if (variable?.ulm_card_kepath_floorplan_thermostat_action) {
-            action = states[entity.entity_id]?.attributes[variables.ulm_card_kepath_floorplan_thermostat_action];
-          }
-        } else {
-          action = states[entity.entity_id]?.state;
-        }
-        return action;
+        return (variables?.ulm_card_kepath_floorplan_thermostat_action_isattribute ? variables.ulm_card_kepath_floorplan_thermostat_action_isattribute : false);
       ]]]
-  name: "[[[ return variables.floorplan_thermostat_current_temperature_attribute ]]]"
-  label: "[[[ return variables.floorplan_thermostat_humidity ]]]"
+    ulm_card_kepath_floorplan_thermostat_action: >
+      [[[
+        return (variables?.ulm_card_kepath_floorplan_thermostat_action ? variables.ulm_card_kepath_floorplan_thermostat_action : "off");
+      ]]]
+  name: "[[[ return variables.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute ]]]"
+  label: "[[[ return variables.ulm_card_kepath_floorplan_thermostat_humidity ]]]"
   icon: "mdi:fire-circle"
   styles:
     card:
@@ -647,12 +643,31 @@ card_kepath_floorplan_thermostat:
       - justify-items: "center"
   state:
     - operator: "template"
-      value: "[[[ return ((variables.floorplan_thermostat_action == 'heating' || variables.floorplan_thermostat_action == 'heat') ? true : false) ]]]"
+      value: >
+        [[[
+          var action = "off";
+          if (variables?.ulm_card_kepath_floorplan_thermostat_action_isattribute) {
+            if (variables?.ulm_card_kepath_floorplan_thermostat_action) {
+              if (states[entity.entity_id]?.attributes[variables.ulm_card_kepath_floorplan_thermostat_action]) {
+                action = states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_action];
+              }
+            }
+          } else {
+            if (states[entity.entity_id]?.state) {
+              action = states[entity.entity_id].state;
+            }
+          }
+          if (action == 'heating' || action == 'heat') {
+            return true;
+          } else {
+            return false;
+          }
+        ]]]
       styles:
         icon:
           - display: "inline"
     - operator: "template"
-      value: "[[[ return ((entity?.state == 'unavailable' || entity?.state == 'unknown') ? true : false) ]]]"
+      value: "[[[ return ((states[entity.entity_id]?.state == 'unavailable' || states[entity.entity_id]?.state == 'unknown') ? true : false) ]]]"
       styles:
         custom_fields:
           climate_wanted_temperature:
@@ -735,3 +750,58 @@ card_kepath_floorplan_thermostat:
           service_data:
             temperature: "[[[ return (parseInt(variables.floorplan_thermostat_wanted_temperature_attribute) - 1) ]]]"
             entity_id: "[[[ return entity.entity_id ]]]"
+
+
+card_kepath_floorplan_network_item:
+  template:
+    - "ulm_gradient_green_to_red_primes"
+  show_icon: true
+  show_label: false
+  show_name: false
+  icon: >
+    [[[
+      return (variables?.ulm_card_kepath_floorplan_network_device_icon ? variables.ulm_card_kepath_floorplan_network_device_icon : "mdi:network-outline")
+    ]]]
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+      - color: >
+          [[[
+            return (variables?.ulm_card_kepath_floorplan_network_device_color ? variables.ulm_card_kepath_floorplan_network_device_color : "#121212")
+          ]]]
+    img_cell:
+      - border-radius: "50%"
+      - height: "32px"
+      - width: "32px"
+      - background-color: >
+          [[[
+            var dataSpeed = 0;
+            var result = 0;
+            var color = "rgba(130, 130, 130, 0.3)";
+            const primeArray = [0, 1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163];
+            if (!isNaN(entity?.state)) {
+              dataSpeed = Math.floor(entity.state * 10);
+              var result = primeArray.find(element => element <= dataSpeed);
+              var gradient = "gradient_" + result;
+              if (variables?.green_to_red_primes?.[gradient]) {
+                color = variables?.green_to_red_primes?.[gradient];
+                //color = color.replace("#", "#4d"); //add 30% transparency
+              }
+            }
+            return color;
+          ]]]
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+  state:
+    - template:
+      value: "[[[ return ((states[entity.entity_id]?.state == 'unavailable' || states[entity.entity_id]?.state == 'unknown') ? true : false) ]]]"
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+  tap_action:
+    action: "more-info"
