@@ -3,6 +3,9 @@ type: "picture-elements"
 image: "local/floorplan/2nd/dark.png"
 elements:
 
+  ############## COMMON ELEMENTS ###############################
+  #### IMAGES ####
+  # BED E
   - type: "image"
     entity: "light.bed_e_light_light_1"
     style:
@@ -18,6 +21,7 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+  # LOFT
   - type: "image"
     entity: "binary_sensor.zigbee_door_sensor_loft_contact"
     style:
@@ -34,11 +38,41 @@ elements:
     hold_action:
       action: "none"
 
+  #### LIGHTS ####
+  # BED E
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.bed_e_light_light_1"
+    style:
+      left: "75%"
+      top: "35%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # BED E LAMP
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.mss425e_6025_outlet_3"
+    style:
+      left: "62%"
+      top: "67%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  #### HEATERS ###
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_heater"
+    entity: "fan.fan_or_heater"
+    style:
+      left: "64%"
+      top: "67%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # FLOOR NAVIGATION
   - type: "custom:button-card"
     template: "card_kepath_service_buttons"
     style:
       left: "5%"
       top: "15%"
+
+  ############## COMMON ELEMENTS END ###########################
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"

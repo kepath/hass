@@ -3,6 +3,10 @@ type: "picture-elements"
 image: "local/floorplan/1st/dark.png"
 elements:
 
+  ############## COMMON ELEMENTS ###############################
+
+  #### IMAGES ####
+  # BED A
   - type: "image"
     entity: "light.bed_a_light_light_1"
     style:
@@ -18,6 +22,7 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+  # EN-SUITE
   - type: "image"
     entity: "light.ensuite_light_light_1"
     style:
@@ -33,6 +38,7 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+  # BED A
   - type: "image"
     entity: "light.bed_b_light_light_1"
     style:
@@ -48,6 +54,7 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+  # BED C
   - type: "image"
     entity: "light.bed_c_light_1"
     style:
@@ -63,6 +70,7 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+  # BATHROOM
   - type: "image"
     entity: "light.bathroom_light_light_1"
     style:
@@ -78,6 +86,7 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+  # BED C
   - type: "image"
     entity: "binary_sensor.zigbee_door_sensor_bed_c_contact"
     style:
@@ -94,11 +103,91 @@ elements:
     hold_action:
       action: "none"
 
+  #### LIGHTS ####
+  # BED A
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.bed_a_light_light_1"
+    style:
+      left: "28%"
+      top: "55%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # EN-SUITE
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.ensuite_light_light_1"
+    style:
+      left: "30%"
+      top: "15%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # BED B
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.bed_b_light_light_1"
+    style:
+      left: "72%"
+      top: "20%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # BED C
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.bed_c_light_1"
+    style:
+      left: "80%"
+      top: "57%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # BATHROOM
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.bathroom_light_light_1"
+    style:
+      left: "49%"
+      top: "15%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  #### PLUGS #####
+  # ARCADE PC
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_arcade_pc_bed_c"
+    style:
+      left: "64%"
+      top: "68%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # FRIDGE
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_fridge_bed_c"
+    style:
+      left: "85%"
+      top: "68%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # FIRESTICK
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_fire_stick_bed_a"
+    style:
+      left: "39%"
+      top: "61%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  ### HEATERS ###
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_heater"
+    entity: "switch.radiator_bed_b"
+    style:
+      left: "60%"
+      top: "25%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # FLOOR NAVIGATION
   - type: "custom:button-card"
     template: "card_kepath_service_buttons"
     style:
       left: "5%"
       top: "15%"
+
+  ############## COMMON ELEMENTS END ###########################
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
@@ -132,7 +221,7 @@ elements:
       ulm_card_kepath_floorplan_network_device_color: ""
       ulm_card_kepath_floorplan_network_device_poe:
     style:
-      left: "77%"
+      left: "76%"
       top: "54%"
       color: "rgba(100, 100, 100, 0.0)"
 
@@ -145,7 +234,7 @@ elements:
       ulm_card_kepath_floorplan_network_device_poe:
     style:
       left: "64%"
-      top: "69%"
+      top: "71%"
       color: "rgba(100, 100, 100, 0.0)"
 
   - type: "custom:button-card"
@@ -168,7 +257,7 @@ elements:
       ulm_card_kepath_floorplan_network_device_color: "#41BDF5"
       ulm_card_kepath_floorplan_network_device_poe:
     style:
-      left: "78%"
+      left: "77%"
       top: "50%"
       color: "rgba(100, 100, 100, 0.0)"
 
@@ -240,7 +329,7 @@ elements:
       ulm_card_kepath_floorplan_network_device_color: "#003791"
       ulm_card_kepath_floorplan_network_device_poe:
     style:
-      left: "73%"
+      left: "72%"
       top: "54%"
       color: "rgba(100, 100, 100, 0.0)"
 

@@ -3,6 +3,10 @@ type: "picture-elements"
 image: "local/floorplan/2nd/dark.png"
 elements:
 
+  ############## COMMON ELEMENTS ###############################
+
+  #### IMAGES ####
+  # BED E
   - type: "image"
     entity: "light.bed_e_light_light_1"
     style:
@@ -18,6 +22,7 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+  # LOFT
   - type: "image"
     entity: "binary_sensor.zigbee_door_sensor_loft_contact"
     style:
@@ -34,7 +39,8 @@ elements:
     hold_action:
       action: "none"
 
-  # Lights
+  #### LIGHTS ####
+  # BED E
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.bed_e_light_light_1"
@@ -42,6 +48,7 @@ elements:
       left: "75%"
       top: "35%"
       color: "rgba(100, 100, 100, 0.0)"
+  # BED E LAMP
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.mss425e_6025_outlet_3"
@@ -50,7 +57,26 @@ elements:
       top: "67%"
       color: "rgba(100, 100, 100, 0.0)"
 
-  # Motion
+  #### HEATERS ###
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_heater"
+    entity: "fan.fan_or_heater"
+    style:
+      left: "64%"
+      top: "67%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  # FLOOR NAVIGATION
+  - type: "custom:button-card"
+    template: "card_kepath_service_buttons"
+    style:
+      left: "5%"
+      top: "15%"
+
+  ############## COMMON ELEMENTS END ###########################
+
+  # MOTION
+  # MIDDLE HALLWAY G3 FLEX
   - type: "custom:button-card"
     template: "card_kepath_floorplan_camera"
     entity: "camera.middle_hallway_g3_flex_medium"
@@ -63,6 +89,7 @@ elements:
       left: "56%"
       top: "68%"
       color: "rgba(100, 100, 100, 0.0)"
+  # BED E MOTION SENSOR
   - type: "custom:button-card"
     template: "card_kepath_floorplan_camera"
     entity: "binary_sensor.zigbee_motion_sensor_bed_e_occupancy"
@@ -74,17 +101,7 @@ elements:
       left: "60%"
       top: "26%"
       color: "rgba(100, 100, 100, 0.0)"
-
-  # Radiators
-  - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item_heater"
-    entity: "fan.fan_or_heater"
-    style:
-      left: "64%"
-      top: "67%"
-      color: "rgba(100, 100, 100, 0.0)"
-
-  # Nest Protect
+  # NEST PROTECT TOP FLOOR
   - type: "custom:button-card"
     template: "card_kepath_floorplan_nest_protect"
     entity: "binary_sensor.nest_protect_top_floor_occupancy"
@@ -95,9 +112,3 @@ elements:
     style:
       left: "49%"
       top: "27%"
-  # Floor Toggle
-  - type: "custom:button-card"
-    template: "card_kepath_service_buttons"
-    style:
-      left: "5%"
-      top: "15%"
