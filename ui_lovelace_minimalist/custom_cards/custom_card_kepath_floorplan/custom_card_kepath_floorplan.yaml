@@ -44,15 +44,17 @@ card_kepath_floorplan_binary_item_plug:
   show_label: false
   show_name: false
   variables:
-    floorplan_item_binary_device_off_is_stopped: false
-    floorplan_item_binary_device_power_number: "[[[ return variables?.floorplan_item_binary_device_power ? parseFloat(states[variables.floorplan_item_binary_device_power].state) : parseFloat(0) ]]]"
+    floorplan_item_binary_device_power: >
+      [[[
+        return (variables?.ulm_card_kepath_floorplan_item_binary_device_power ? variables.ulm_card_kepath_floorplan_item_binary_device_power : 0);
+      ]]]
   icon: "mdi:power-plug"
   styles:
     icon:
       - width: "18px"
       - height: "18px"
       - line-height: "0"
-      - color: "rgba(var(--color-blue),1)"
+      - color: "rgba(var(--color-green),1)"
     img_cell:
       - border-radius: "50%"
       - height: "32px"
@@ -62,24 +64,41 @@ card_kepath_floorplan_binary_item_plug:
     card:
       - background-color: "rgba(100, 100, 100, 0.0)"
   state:
+
     - operator: "template"
-      value: "[[[ return variables.floorplan_item_binary_device_off_is_stopped ]]]"
+      value: >
+        [[[
+          var doesOffMeanStopped = false;
+          if (variables?.ulm_card_kepath_floorplan_item_binary_device_off_is_stopped) {
+            if (typeof variables.ulm_card_kepath_floorplan_item_binary_device_off_is_stopped === "boolean") {
+              doesOffMeanStopped = variables.ulm_card_kepath_floorplan_item_binary_device_off_is_stopped;
+            }
+          }
+          return doesOffMeanStopped;
+        ]]]
       styles:
         icon:
           - color: >
               [[[
-                if (entity.state == "on") {
-                  return "rgba(var(--color-blue),1)"
-                } else {
-                  return "rgba(var(--color-green),1)"
+                var color = "rgba(var(--color-blue),1)";
+                if (states[entity.entity_id]?.state) {
+                  if (states[entity.entity_id].state == "on") {
+                    color = "rgba(var(--color-green),1)";
+                  }
                 }
+                return color;
               ]]]
+      tap_action:
+        action: "more-info"
+
     - operator: "template"
       value: >
         [[[
           var isPowered = false;
-          if (variables?.floorplan_item_binary_device_power) {
-            if (variables.floorplan_item_binary_device_power.length > 1) {
+          var powerValue;
+          if (states[variables.floorplan_item_binary_device_power]?.state) {
+            powerValue = states[variables.floorplan_item_binary_device_power].state
+            if (!isNaN(powerValue) && powerValue !== undefined){
               isPowered = true;
             }
           }
@@ -89,50 +108,62 @@ card_kepath_floorplan_binary_item_plug:
         icon:
           - color: >
               [[[
-                if (variables.floorplan_item_binary_device_power_number > 10) {
-                  return "rgba(var(--color-blue),1)";
-                } else {
-                  return "rgba(var(--color-green),1)";
+                var powerValue = 0;
+                var color = "rgba(var(--color-blue),1)";
+                if (states[variables.floorplan_item_binary_device_power]?.state) {
+                  powerValue = states[variables.floorplan_item_binary_device_power].state
+                  if (!isNaN(powerValue) && powerValue !== undefined){
+                    powerValue = Math.floor(powerValue);
+                  }
                 }
+                if (powerValue > 10) {
+                  color = "rgba(var(--color-green),1)";
+                }
+                return color;
               ]]]
+      tap_action:
+        action: "more-info"
+
     - operator: "template"
-      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
+      value: >
+        [[[
+          var isOff = false;
+          if (states[entity.entity_id]?.state) {
+            if (states[entity.entity_id].state == "off") {
+              isOff = true;
+            }
+          }
+          return isOff;
+        ]]]
+      icon: "mdi:power-plug-outline"
+      styles:
+        icon:
+          - color: "rgba(221, 221, 221, 1.0)"
+
+    # - operator: "template"
+    #   value: >
+    #     [[[
+    #       var isOn = false;
+    #       if (states[entity.entity_id]?.state) {
+    #         if (states[entity.entity_id].state == "on") {
+    #           isOn = true;
+    #         }
+    #       }
+    #       return isOn;
+    #     ]]]
+    #   tap_action:
+    #     action: "toggle"
+
+    - operator: "template"
+      value: "[[[ return (states[entity.entity_id]?.state == 'unavailable' || states[entity.entity_id]?.state == 'unknown' ? true : false) ]]]"
       styles:
         icon:
           - color: "rgba(var(--color-red), 0.6)"
         img_cell:
           - background-color: "rgba(130, 130, 130, 0.5)"
-      tap_action:
-        action: "more-info"
-    - operator: "template"
-      value: "[[[ return (states[entity.entity_id].state == 'off') ]]]"
-      icon: >
-        [[[
-          if (variables.floorplan_item_binary_device_off_is_stopped) {
-            return "mdi:power-plug";
-          } else {
-            return "mdi:power-plug-outline";
-          }
-        ]]]
-      styles:
-        icon:
-          - color: >
-              [[[
-                if (variables.floorplan_item_binary_device_off_is_stopped) {
-                  return "rgba(var(--color-green),1)";
-                } else {
-                  return "rgba(221, 221, 221, 1.0)";
-                }
-              ]]]
+
   tap_action:
-    action: >
-      [[[
-        var action = "toggle";
-        if (variables.floorplan_item_binary_device_off_is_stopped || variables.floorplan_item_binary_device_power) {
-          action = "more-info";
-        }
-        return action;
-      ]]]
+    action: "toggle"
   hold_action:
     action: "more-info"
 
@@ -583,28 +614,28 @@ card_kepath_floorplan_thermostat:
   show_label: true
   show_name: true
   variables:
-    ulm_card_kepath_floorplan_thermostat_humidity: >
+    floorplan_thermostat_humidity: >
       [[[
         return (variables?.ulm_card_kepath_floorplan_thermostat_humidity ? (states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state + ' &percnt;') : '-');
       ]]]
-    ulm_card_kepath_floorplan_thermostat_current_temperature_attribute: >
+    floorplan_thermostat_current_temperature_attribute: >
       [[[
         return (variables?.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute ? (states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute] + ' &#8451;') : '-');
       ]]]
-    ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute: >
+    floorplan_thermostat_wanted_temperature_attribute: >
       [[[
         return (variables?.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute ? parseFloat(states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute]) : parseFloat(0));
       ]]]
-    ulm_card_kepath_floorplan_thermostat_action_isattribute: >
+    floorplan_thermostat_action_use_state: >
       [[[
-        return (variables?.ulm_card_kepath_floorplan_thermostat_action_isattribute ? variables.ulm_card_kepath_floorplan_thermostat_action_isattribute : false);
+        return (variables?.ulm_card_kepath_floorplan_thermostat_action_use_state ? variables.ulm_card_kepath_floorplan_thermostat_action_use_state : false);
       ]]]
-    ulm_card_kepath_floorplan_thermostat_action: >
+    floorplan_thermostat_action_attribute: >
       [[[
-        return (variables?.ulm_card_kepath_floorplan_thermostat_action ? variables.ulm_card_kepath_floorplan_thermostat_action : "off");
+        return (variables?.ulm_card_kepath_floorplan_thermostat_action_attribute ? variables.ulm_card_kepath_floorplan_thermostat_action_attribute : false);
       ]]]
-  name: "[[[ return variables.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute ]]]"
-  label: "[[[ return variables.ulm_card_kepath_floorplan_thermostat_humidity ]]]"
+  name: "[[[ return variables.floorplan_thermostat_current_temperature_attribute ]]]"
+  label: "[[[ return variables.floorplan_thermostat_humidity ]]]"
   icon: "mdi:fire-circle"
   styles:
     card:
@@ -630,12 +661,12 @@ card_kepath_floorplan_thermostat:
       - margin: "0 6px 0 6px"
       - color: "rgba(221, 221, 221, 0.4)"
     icon:
-      - display: "none"
       - width: "14px"
       - height: "14px"
       - line-height: "0"
       - color: "rgba(var(--color-yellow),0.8)"
       - margin-right: "15px"
+      - display: "none"
     grid:
       - grid-template-areas: "'. climate_temperature_up climate_temperature_up .' '. climate_wanted_temperature climate_wanted_temperature i' 'l l n n' '. climate_temperature_down climate_temperature_down .'"
       - grid-template-columns: "2fr 1fr 1fr 2fr"
@@ -645,23 +676,23 @@ card_kepath_floorplan_thermostat:
     - operator: "template"
       value: >
         [[[
-          var action = "off";
-          if (variables?.ulm_card_kepath_floorplan_thermostat_action_isattribute) {
-            if (variables?.ulm_card_kepath_floorplan_thermostat_action) {
-              if (states[entity.entity_id]?.attributes[variables.ulm_card_kepath_floorplan_thermostat_action]) {
-                action = states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_action];
+          var isHeating = false;
+          if (variables.floorplan_thermostat_action_use_state)
+            if (states[entity.entity_id]?.state) {
+              if (states[entity.entity_id].state == "heat") {
+                isHeating = true;
               }
             }
           } else {
-            if (states[entity.entity_id]?.state) {
-              action = states[entity.entity_id].state;
+            if (variables.floorplan_thermostat_action_attribute) {
+              if (states[entity.entity_id]?.attributes[variables.floorplan_thermostat_action_attribute]) {
+                if (states[entity.entity_id].attributes[variables.floorplan_thermostat_action_attribute] == "heating") {
+                  isHeating = true;
+                }
+              }
             }
           }
-          if (action == 'heating' || action == 'heat') {
-            return true;
-          } else {
-            return false;
-          }
+          return isHeating;
         ]]]
       styles:
         icon:
@@ -779,7 +810,7 @@ card_kepath_floorplan_network_item:
           [[[
             var dataSpeed = 0;
             var result = 0;
-            var color = "rgba(130, 130, 130, 0.3)";
+            var color = "rgba(130, 130, 130, 0.6)";
             const primeArray = [0, 1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163];
             if (!isNaN(entity?.state)) {
               dataSpeed = Math.floor(entity.state * 10);
@@ -787,7 +818,7 @@ card_kepath_floorplan_network_item:
               var gradient = "gradient_" + result;
               if (variables?.green_to_red_primes?.[gradient]) {
                 color = variables?.green_to_red_primes?.[gradient];
-                //color = color.replace("#", "#4d"); //add 30% transparency
+                color = color.replace("1)", "0.6)"); //add 30% transparency
               }
             }
             return color;

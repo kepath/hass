@@ -22,6 +22,7 @@ elements:
       action: "none"
     hold_action:
       action: "none"
+  # BOTTOM HALLWAY
   - type: "image"
     entity: "light.shelly1l_hallway_bottom_light_1"
     style:
@@ -154,8 +155,32 @@ elements:
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.kitchen_utility_light_light_1"
     style:
-      left: "51%"
+      left: "50%"
       top: "27%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # BACK DOOR
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.kitchen_utility_light_light_2"
+    style:
+      left: "49%"
+      top: "16%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # FRONT DOOR
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.front_door_smartbulb"
+    style:
+      left: "43%"
+      top: "86%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # GARAGE
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.zigbee_bulb_garage"
+    style:
+      left: "92%"
+      top: "10%"
       color: "rgba(100, 100, 100, 0.0)"
 
   #### PLUGS #####
@@ -163,8 +188,6 @@ elements:
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_plug_g4_doorbell_bottom_hallway"
-    variables:
-      floorplan_item_binary_device_power: false
     style:
       left: "59%"
       top: "81%"
@@ -174,7 +197,7 @@ elements:
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_plug_dishwasher"
     variables:
-      floorplan_item_binary_device_power: "sensor.zigbee_plug_dishwasher_power"
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_plug_dishwasher_power"
     style:
       left: "64%"
       top: "32%"
@@ -184,7 +207,7 @@ elements:
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_plug_washing_machine"
     variables:
-      floorplan_item_binary_device_power: "sensor.zigbee_plug_washing_machine_power"
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_plug_washing_machine_power"
     style:
       left: "48%"
       top: "31%"
@@ -192,12 +215,20 @@ elements:
   # TUMBLE DRYER
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
-    entity: "switch.tumble_dryer"
+    entity: "switch.samsung_tumble_dryer"
     variables:
-      floorplan_item_binary_device_off_is_stopped: true
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: true
     style:
       left: "48%"
-      top: "29%"
+      top: "28%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # GARAGE
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_plug_garage"
+    style:
+      left: "94%"
+      top: "10%"
       color: "rgba(100, 100, 100, 0.0)"
 
   # FLOOR NAVIGATION
