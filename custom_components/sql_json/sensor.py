@@ -53,7 +53,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
+def setup_platform(hass, config, add_entities, _discovery_info=None):
     """Set up the SQL sensor platform."""
     if not (db_url := config.get(CONF_DB_URL)):
         db_url = DEFAULT_URL.format(hass_config_path=hass.config.path(DEFAULT_DB_FILE))
@@ -65,7 +65,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
         # Run a dummy query just to test the db_url
         sess = sessmaker()
-        sess.execute("SELECT 1;")
+        sess.execute(sqlalchemy.text("SELECT 1;"))
 
     except sqlalchemy.exc.SQLAlchemyError as err:
         _LOGGER.error(
@@ -154,7 +154,7 @@ class SQLSensor(SensorEntity):
                 self._query_template.hass = self.hass
                 self._query = self._query_template.render()
                 _LOGGER.debug("query = %s", self._query)
-            result = sess.execute(self._query)
+            result = sess.execute(sqlalchemy.text(self._query))
             self._attributes = {}
 
             if not result.returns_rows or result.rowcount == 0:
