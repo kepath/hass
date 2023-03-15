@@ -43,11 +43,6 @@ card_kepath_floorplan_binary_item_plug:
   show_icon: true
   show_label: false
   show_name: false
-  variables:
-    floorplan_item_binary_device_power: >
-      [[[
-        return (variables?.ulm_card_kepath_floorplan_item_binary_device_power ? variables.ulm_card_kepath_floorplan_item_binary_device_power : 0);
-      ]]]
   icon: "mdi:power-plug"
   styles:
     icon:
@@ -64,6 +59,39 @@ card_kepath_floorplan_binary_item_plug:
     card:
       - background-color: "rgba(100, 100, 100, 0.0)"
   state:
+
+    - operator: "template"
+      value: >
+        [[[
+          var isPowered = false;
+          var powerValue;
+          if (variables?.ulm_card_keapth_floorplan_item_power_usage_denotes_on) {
+            if (variables?.ulm_card_kepath_floorplan_item_binary_device_power) {
+              powerValue = states[variables.ulm_card_kepath_floorplan_item_binary_device_power].state
+              if (!isNaN(powerValue) && powerValue !== undefined){
+                isPowered = true;
+              }
+            }
+          }
+          return isPowered;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var powerValue = 0;
+                var color = "rgba(var(--color-blue),1)";
+                if (variables?.ulm_card_kepath_floorplan_item_binary_device_power) {
+                  powerValue = states[variables.ulm_card_kepath_floorplan_item_binary_device_power].state
+                  if (!isNaN(powerValue) && powerValue !== undefined){
+                    powerValue = Math.floor(powerValue);
+                  }
+                }
+                if (powerValue > 10) {
+                  color = "rgba(var(--color-green),1)";
+                }
+                return color;
+              ]]]
 
     - operator: "template"
       value: >
@@ -88,41 +116,6 @@ card_kepath_floorplan_binary_item_plug:
                 }
                 return color;
               ]]]
-      tap_action:
-        action: "more-info"
-
-    - operator: "template"
-      value: >
-        [[[
-          var isPowered = false;
-          var powerValue;
-          if (states[variables.floorplan_item_binary_device_power]?.state) {
-            powerValue = states[variables.floorplan_item_binary_device_power].state
-            if (!isNaN(powerValue) && powerValue !== undefined){
-              isPowered = true;
-            }
-          }
-          return isPowered;
-        ]]]
-      styles:
-        icon:
-          - color: >
-              [[[
-                var powerValue = 0;
-                var color = "rgba(var(--color-blue),1)";
-                if (states[variables.floorplan_item_binary_device_power]?.state) {
-                  powerValue = states[variables.floorplan_item_binary_device_power].state
-                  if (!isNaN(powerValue) && powerValue !== undefined){
-                    powerValue = Math.floor(powerValue);
-                  }
-                }
-                if (powerValue > 10) {
-                  color = "rgba(var(--color-green),1)";
-                }
-                return color;
-              ]]]
-      tap_action:
-        action: "more-info"
 
     - operator: "template"
       value: >
@@ -140,20 +133,6 @@ card_kepath_floorplan_binary_item_plug:
         icon:
           - color: "rgba(221, 221, 221, 1.0)"
 
-    # - operator: "template"
-    #   value: >
-    #     [[[
-    #       var isOn = false;
-    #       if (states[entity.entity_id]?.state) {
-    #         if (states[entity.entity_id].state == "on") {
-    #           isOn = true;
-    #         }
-    #       }
-    #       return isOn;
-    #     ]]]
-    #   tap_action:
-    #     action: "toggle"
-
     - operator: "template"
       value: "[[[ return (states[entity.entity_id]?.state == 'unavailable' || states[entity.entity_id]?.state == 'unknown' ? true : false) ]]]"
       styles:
@@ -163,9 +142,9 @@ card_kepath_floorplan_binary_item_plug:
           - background-color: "rgba(130, 130, 130, 0.5)"
 
   tap_action:
-    action: "toggle"
-  hold_action:
     action: "more-info"
+  hold_action:
+    action: "toggle"
 
 
 card_kepath_floorplan_binary_item_heater:
@@ -785,7 +764,7 @@ card_kepath_floorplan_thermostat:
 
 card_kepath_floorplan_network_item:
   template:
-    - "ulm_gradient_green_to_red_primes"
+    - "ulm_gradient_green_to_red_18step"
   show_icon: true
   show_label: false
   show_name: false
@@ -811,13 +790,15 @@ card_kepath_floorplan_network_item:
             var dataSpeed = 0;
             var result = 0;
             var color = "rgba(130, 130, 130, 0.6)";
-            const primeArray = [0, 1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163];
+            const numberArray = [0, 18, 36, 54, 72, 90, 108, 126, 144, 162, 180, 198, 216, 234, 252, 270, 288, 306, 324, 342, 360, 378, 396, 414, 432, 450, 468, 486, 504, 522, 540, 558, 576, 594, 612, 630, 648, 666, 684, 702];
             if (!isNaN(entity?.state)) {
-              dataSpeed = Math.floor(entity.state * 10);
-              var result = primeArray.find(element => element <= dataSpeed);
+              dataSpeed = Math.floor(entity.state * 100);
+              alert("dataSpeed " + dataSpeed);
+              const result = numberArray.findLast(element => element < dataSpeed);
+              alert("result " + result);
               var gradient = "gradient_" + result;
-              if (variables?.green_to_red_primes?.[gradient]) {
-                color = variables?.green_to_red_primes?.[gradient];
+              if (variables?.green_to_red_18step?.[gradient]) {
+                color = variables?.green_to_red_18step?.[gradient];
                 color = color.replace("1)", "0.6)"); //add 30% transparency
               }
             }
