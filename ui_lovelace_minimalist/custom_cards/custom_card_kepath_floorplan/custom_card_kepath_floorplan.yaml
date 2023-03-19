@@ -65,7 +65,7 @@ card_kepath_floorplan_binary_item_plug:
         [[[
           var isPowered = false;
           var powerValue;
-          if (variables?.ulm_card_keapth_floorplan_item_power_usage_denotes_on) {
+          if (variables?.ulm_card_kepath_floorplan_item_power_usage_denotes_on) {
             if (variables?.ulm_card_kepath_floorplan_item_binary_device_power) {
               powerValue = states[variables.ulm_card_kepath_floorplan_item_binary_device_power].state
               if (!isNaN(powerValue) && powerValue !== undefined){
@@ -592,29 +592,26 @@ card_kepath_floorplan_thermostat:
   show_icon: true
   show_label: true
   show_name: true
-  variables:
-    floorplan_thermostat_humidity: >
-      [[[
-        return (variables?.ulm_card_kepath_floorplan_thermostat_humidity ? (states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state + ' &percnt;') : '-');
-      ]]]
-    floorplan_thermostat_current_temperature_attribute: >
-      [[[
-        return (variables?.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute ? (states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute] + ' &#8451;') : '-');
-      ]]]
-    floorplan_thermostat_wanted_temperature_attribute: >
-      [[[
-        return (variables?.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute ? parseFloat(states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute]) : parseFloat(0));
-      ]]]
-    floorplan_thermostat_action_use_state: >
-      [[[
-        return (variables?.ulm_card_kepath_floorplan_thermostat_action_use_state ? variables.ulm_card_kepath_floorplan_thermostat_action_use_state : false);
-      ]]]
-    floorplan_thermostat_action_attribute: >
-      [[[
-        return (variables?.ulm_card_kepath_floorplan_thermostat_action_attribute ? variables.ulm_card_kepath_floorplan_thermostat_action_attribute : false);
-      ]]]
-  name: "[[[ return variables.floorplan_thermostat_current_temperature_attribute ]]]"
-  label: "[[[ return variables.floorplan_thermostat_humidity ]]]"
+  name: >
+    [[[
+      var currentTemp = "-";
+      if (variables?.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute) {
+        if (states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute]) {
+          currentTemp = states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_current_temperature_attribute] + " &#8451;";
+        }
+      }
+      return currentTemp;
+    ]]]
+  label: >
+    [[[
+      var currentHumidity = "-";
+      if (variables?.ulm_card_kepath_floorplan_thermostat_humidity) {
+        if (states[variables.ulm_card_kepath_floorplan_thermostat_humidity]?.state) {
+          currentHumidity = states[variables.ulm_card_kepath_floorplan_thermostat_humidity].state + " &percnt;";
+        }
+      }
+      return currentHumidity;
+    ]]]
   icon: "mdi:fire-circle"
   styles:
     card:
@@ -656,16 +653,23 @@ card_kepath_floorplan_thermostat:
       value: >
         [[[
           var isHeating = false;
-          if (variables.floorplan_thermostat_action_use_state)
+          var useStateAsAction = false;
+          if (variables?.ulm_card_kepath_floorplan_thermostat_action_use_state) {
+            if (typeof variables.ulm_card_kepath_floorplan_thermostat_action_use_state === "boolean") {
+              useStateAsAction = variables.ulm_card_kepath_floorplan_thermostat_action_use_state;
+            }
+          }
+
+          if (useStateAsAction) {
             if (states[entity.entity_id]?.state) {
               if (states[entity.entity_id].state == "heat") {
                 isHeating = true;
               }
             }
           } else {
-            if (variables.floorplan_thermostat_action_attribute) {
-              if (states[entity.entity_id]?.attributes[variables.floorplan_thermostat_action_attribute]) {
-                if (states[entity.entity_id].attributes[variables.floorplan_thermostat_action_attribute] == "heating") {
+            if (variables?.ulm_card_kepath_floorplan_thermostat_action_attribute) {
+              if (states[entity.entity_id]?.attributes[variables.ulm_card_kepath_floorplan_thermostat_action_attribute]) {
+                if (states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_action_attribute] == "heating") {
                   isHeating = true;
                 }
               }
@@ -676,6 +680,7 @@ card_kepath_floorplan_thermostat:
       styles:
         icon:
           - display: "inline"
+
     - operator: "template"
       value: "[[[ return ((states[entity.entity_id]?.state == 'unavailable' || states[entity.entity_id]?.state == 'unknown') ? true : false) ]]]"
       styles:
@@ -694,7 +699,16 @@ card_kepath_floorplan_thermostat:
         show_icon: false
         show_label: false
         show_name: true
-        name: "[[[ return variables.floorplan_thermostat_wanted_temperature_attribute; ]]]"
+        name: >
+          [[[
+            var wantedTemp = "-";
+            if (variables?.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute) {
+              if(states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute]) {
+                wantedTemp = states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute];
+              }
+            }
+            return wantedTemp;
+          ]]]
         styles:
           name:
             - justify-self: "start"
@@ -733,7 +747,19 @@ card_kepath_floorplan_thermostat:
           action: "call-service"
           service: "climate.set_temperature"
           service_data:
-            temperature: "[[[ return (parseInt(variables.floorplan_thermostat_wanted_temperature_attribute) + 1) ]]]"
+            temperature: >
+              [[[
+                var wantedTemp = parseFloat(0);
+                if (variables?.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute) {
+                  if(states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute]) {
+                    wantedTemp = states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute];
+                    if (!isNaN(wantedTemp) && wantedTemp !== undefined){
+                      wantedTemp = parseFloat(wantedTemp + 1);
+                    }
+                  }
+                }
+                return wantedTemp;
+              ]]]
             entity_id: "[[[ return entity.entity_id ]]]"
 
     climate_temperature_down:
@@ -758,7 +784,19 @@ card_kepath_floorplan_thermostat:
           action: "call-service"
           service: "climate.set_temperature"
           service_data:
-            temperature: "[[[ return (parseInt(variables.floorplan_thermostat_wanted_temperature_attribute) - 1) ]]]"
+            temperature: >
+              [[[
+                var wantedTemp = parseFloat(0);
+                if (variables?.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute) {
+                  if(states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute]) {
+                    wantedTemp = states[entity.entity_id].attributes[variables.ulm_card_kepath_floorplan_thermostat_wanted_temperature_attribute];
+                    if (!isNaN(wantedTemp) && wantedTemp !== undefined){
+                      wantedTemp = parseFloat(wantedTemp - 1);
+                    }
+                  }
+                }
+                return wantedTemp;
+              ]]]
             entity_id: "[[[ return entity.entity_id ]]]"
 
 
@@ -793,13 +831,11 @@ card_kepath_floorplan_network_item:
             const numberArray = [0, 18, 36, 54, 72, 90, 108, 126, 144, 162, 180, 198, 216, 234, 252, 270, 288, 306, 324, 342, 360, 378, 396, 414, 432, 450, 468, 486, 504, 522, 540, 558, 576, 594, 612, 630, 648, 666, 684, 702];
             if (!isNaN(entity?.state)) {
               dataSpeed = Math.floor(entity.state * 100);
-              alert("dataSpeed " + dataSpeed);
               const result = numberArray.findLast(element => element < dataSpeed);
-              alert("result " + result);
               var gradient = "gradient_" + result;
               if (variables?.green_to_red_18step?.[gradient]) {
                 color = variables?.green_to_red_18step?.[gradient];
-                color = color.replace("1)", "0.6)"); //add 30% transparency
+                color = color.replace("1)", "0.6)"); //add 60% transparency
               }
             }
             return color;
