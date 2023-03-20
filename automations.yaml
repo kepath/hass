@@ -556,3 +556,54 @@
       - battery
       - battery_charging
   mode: single
+- id: '1679331701346'
+  alias: front_door_last_opened
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: bfb5f733e3cc226de9ff83eaf5571ab9
+    entity_id: binary_sensor.zigbee_door_sensor_front_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.front_door_last_opened
+  mode: single
+- id: '1679336064408'
+  alias: back_door_last_opened
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: a2469c4f16cd3a40ffb763fb0f349799
+    entity_id: binary_sensor.zigbee_door_sensor_back_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.back_door_last_opened
+  mode: single
+- id: '1679336123379'
+  alias: garage_door_last_opened
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 160cd6a105801adbbfb089390d7ad0ae
+    entity_id: binary_sensor.zigbee_door_sensor_garage_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.garage_door_last_opened
+  mode: single
