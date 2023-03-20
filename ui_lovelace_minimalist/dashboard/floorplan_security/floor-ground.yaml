@@ -271,7 +271,7 @@ elements:
     variables:
       ulm_card_kepath_floorplan_camera_icon: "mdi:webcam"
       ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.lounge_g3_instant_motion"
-      ulm_card_kepath_floorplan_camera_last_motion: "sensor.lounge_g3_instant_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_last_activity: "sensor.lounge_g3_instant_last_motion_detected"
       ulm_card_kepath_floorplan_camera_view_borders: "bottom"
     style:
       left: "53%"
@@ -284,7 +284,7 @@ elements:
     variables:
       ulm_card_kepath_floorplan_camera_icon: "mdi:webcam"
       ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.kitchen_g3_instant_motion"
-      ulm_card_kepath_floorplan_camera_last_motion: "sensor.kitchen_g3_instant_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_last_activity: "sensor.kitchen_g3_instant_last_motion_detected"
       ulm_card_kepath_floorplan_camera_view_borders: "left,top"
     style:
       left: "81%"
@@ -297,7 +297,7 @@ elements:
     variables:
       ulm_card_kepath_floorplan_camera_icon: "mdi:cctv"
       ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.back_g3_flex_motion"
-      ulm_card_kepath_floorplan_camera_last_motion: "sensor.back_g3_flex_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_last_activity: "sensor.back_g3_flex_last_motion_detected"
       ulm_card_kepath_floorplan_camera_view_borders: "top,right"
     style:
       left: "22%"
@@ -310,7 +310,7 @@ elements:
     variables:
       ulm_card_kepath_floorplan_camera_icon: "mdi:cctv"
       ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.front_g3_flex_motion"
-      ulm_card_kepath_floorplan_camera_last_motion: "sensor.front_g3_flex_last_motion_detected"
+      ulm_card_kepath_floorplan_camera_last_activity: "sensor.front_g3_flex_last_motion_detected"
       ulm_card_kepath_floorplan_camera_view_borders: "bottom,right"
     style:
       left: "7%"
@@ -322,8 +322,8 @@ elements:
     entity: "camera.doorbell_g4_medium"
     variables:
       ulm_card_kepath_floorplan_camera_icon: "mdi:doorbell-video"
-      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.doorbell_g4_motion"
-      ulm_card_kepath_floorplan_camera_last_motion: "sensor.doorbell_g4_last_doorbell_ring"
+      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.doorbell_g4_person_detected"
+      ulm_card_kepath_floorplan_camera_last_activity: "sensor.doorbell_g4_last_doorbell_ring"
       ulm_card_kepath_floorplan_camera_view_borders: "bottom,left"
     style:
       left: "58%"
@@ -348,6 +348,8 @@ elements:
   - type: "custom:button-card"
     template: "card_kepath_floorplan_door"
     entity: "binary_sensor.zigbee_door_sensor_front_contact"
+    variables:
+      ulm_card_kepath_floorplan_door_last_opened: "input_datetime.front_door_last_opened"
     style:
       left: "51%"
       top: "95%"
@@ -356,6 +358,8 @@ elements:
   - type: "custom:button-card"
     template: "card_kepath_floorplan_door"
     entity: "binary_sensor.zigbee_door_sensor_back_contact"
+    variables:
+      ulm_card_kepath_floorplan_door_last_opened: "input_datetime.back_door_last_opened"
     style:
       left: "54%"
       top: "16%"
@@ -364,6 +368,8 @@ elements:
   - type: "custom:button-card"
     template: "card_kepath_floorplan_door"
     entity: "binary_sensor.zigbee_door_sensor_garage_contact"
+    variables:
+      ulm_card_kepath_floorplan_door_last_opened: "input_datetime.garage_door_last_opened"
     style:
       left: "89%"
       top: "11%"
