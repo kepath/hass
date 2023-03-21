@@ -383,7 +383,9 @@ card_kepath_floorplan_nest_protect:
     [[[
       var milliseconds = 0
       var returnText = "";
-      if (entity?.last_changed) {
+      if (variables?.ulm_card_kepath_floorplan_nest_protect_last_activity) {
+        var milliseconds = Math.abs(new Date() - new Date(states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity].state));
+      } else {
         var milliseconds = Math.abs(new Date() - new Date(states[entity.entity_id].last_changed));
       }
       if (!isNaN(milliseconds) && milliseconds !== undefined) {
