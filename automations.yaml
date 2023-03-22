@@ -22,20 +22,8 @@
       keep_days: 28
       name: 'WeeklyBackup: {{ now().strftime(''''%A, %B %-d, %Y'''') }}'
     service: auto_backup.snapshot_full
-- id: '1594523612794'
-  alias: alert when glances disk space goes below 2 percent
-  description: ''
-  trigger:
-  - below: 2
-    entity_id: sensor.glances_used_percent
-    platform: numeric_state
-  condition: []
-  action:
-  - data:
-      message: Disk space on DPC very low
-    service: notify.mobile_app_kevins_iphone_8
 - id: '1609788406791'
-  alias: When Reciever is Off, Turn on the Fridge
+  alias: on_turn_off_reciever_turn_on_bed_c_fridge
   description: ''
   trigger:
   - platform: state
@@ -53,7 +41,7 @@
     domain: switch
   mode: single
 - id: '1609788662612'
-  alias: When Receiver is On, turn Off the Fridge and Light
+  alias: on_turn_on_reciever_turn_off_bed_c_fridge_and_light
   description: ''
   trigger:
   - platform: state
@@ -75,7 +63,7 @@
     domain: light
   mode: single
 - id: '1616842943101'
-  alias: Garage light on when the Garage Door is opened
+  alias: on_open_garage_door_turn_on_garage_light
   description: ''
   trigger:
   - type: opened
@@ -92,7 +80,7 @@
     brightness_pct: 100
   mode: single
 - id: '1617175491057'
-  alias: Garage light off 10 mins after garage door shut
+  alias: on_close_garage_door_turn_off_garage_light_after_10_minutes
   description: ''
   trigger:
   - type: not_opened
@@ -119,7 +107,7 @@
     path: seamus65/doorbell-notify-alexa-and-or-google-and-send-camera-snapshot-to-app.yaml
     input:
       notification_message: There is Somebody at the Door!
-      doorbell: binary_sensor.doorbell_uvc_g4_doorbell
+      doorbell: binary_sensor.doorbell_g4_doorbell
       camera: camera.uvc_g4_doorbell
       delay: 2
       notification_title: There is Somebody at the Door!
@@ -127,9 +115,9 @@
       echo_device: media_player.amazon_echo_dot_bed_c_alexa_integration, media_player.amazon_echo_spot_bed_a_alexa_integration,
         media_player.bed_b_echo_plus, media_player.kevin_s_echo_dot, media_player.kevin_s_echo_show
       is_ios: false
-      notify_device: f07826679ff92d5162eecd1ecf393e72
+      notify_device: 6d1911bfb63c42e5fcb8f060ea3443f0
 - id: '1624743776933'
-  alias: Bottom Hallway light on When the Front Door is opened
+  alias: on_open_front_door_turn_on_bottom_hallway_light
   description: ''
   trigger:
   - type: opened
@@ -189,29 +177,9 @@
       - automation.turn_off_garage_light_10_mins_after_garage_door_shut
     data: {}
   mode: restart
-- id: '1634659565583'
-  alias: Back Light mark on
-  description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-    id: '592258'
-  condition:
-  - condition: device
-    type: is_on
-    device_id: d4aabe0c259eb8f64a5080976888b8a4
-    entity_id: light.tybf82abce93da177c79kymc
-    domain: light
-  action:
-  - type: turn_off
-    device_id: d4aabe0c259eb8f64a5080976888b8a4
-    entity_id: light.tybf82abce93da177c79kymc
-    domain: light
-  mode: queued
-  max: 10
 - id: '1639344975319'
-  alias: Front Door Open
-  description: Raise an alert for 5 minutes when the front door is opened
+  alias: alert_when_front_door_open
+  description: Raise an alert for 5 seconds when the front door is opened
   trigger:
   - type: opened
     platform: device
@@ -231,8 +199,8 @@
       entity_id: input_boolean.front_door_open
   - delay:
       hours: 0
-      minutes: 5
-      seconds: 0
+      minutes: 0
+      seconds: 5
       milliseconds: 0
   - service: input_boolean.turn_off
     target:
@@ -240,8 +208,8 @@
     data: {}
   mode: restart
 - id: '1639347854414'
-  alias: Back Door Open
-  description: Raise an alert for 5 minutes when the back door is opened
+  alias: alert_when_back_door_open
+  description: set an input_boolean for 5 seconds when the back door is opened
   trigger:
   - type: opened
     platform: device
@@ -254,58 +222,43 @@
   - service: input_boolean.turn_on
     target:
       entity_id: input_boolean.back_door_open
+    data: {}
   - delay:
       hours: 0
-      minutes: 5
-      seconds: 0
+      minutes: 0
+      seconds: 5
       milliseconds: 0
   - service: input_boolean.turn_off
     target:
       entity_id: input_boolean.back_door_open
+    data: {}
   mode: restart
 - id: '1639348115728'
-  alias: Doorbell Rung
-  description: Raise an alert for 5 minutes when the doorbell is rung
+  alias: alert_when_doorbell_rung
+  description: Raise an alert for 5 seconds when the doorbell is rung
   trigger:
   - platform: state
-    entity_id: binary_sensor.doorbell_uvc_g4_doorbell
-    id: 3434xcgcg657456ff76
-    from: 'off'
-    to: 'on'
+    entity_id:
+    - sensor.doorbell_g4_last_doorbell_ring
   condition: []
   action:
   - service: input_boolean.turn_on
     target:
       entity_id: input_boolean.doorbell_rung
+    data: {}
   - delay:
       hours: 0
-      minutes: 5
-      seconds: 0
+      minutes: 0
+      seconds: 5
       milliseconds: 0
   - service: input_boolean.turn_off
     target:
       entity_id: input_boolean.doorbell_rung
+    data: {}
   mode: restart
-- id: '1652735403383'
-  alias: Monitor the status of the Washing Machine
-  description: ''
-  use_blueprint:
-    path: leofabri/appliance-status-monitor.yaml
-    input:
-      appliance_socket: switch.zigbee_plug_washing_machine
-      appliance_power_sensor: sensor.zigbee_plug_washing_machine_power
-      appliance_job_cycle: input_boolean.washing_machine_job_cycle
-      appliance_state_machine: input_select.washing_machine_state_machine
-      appliance_suspended_sensor: input_number.washing_machine_power_threshold
-      actions_unplugged_overload: []
-      actions_off:
-      - service: tts.cloud_say
-        data:
-          entity_id: media_player.amazon_echo_dot_bed_c_alexa_integration
-          message: The Washing Machine has finished
 - id: '1666811718812'
-  alias: create all fans group
-  description: ''
+  alias: on_start_create_group.all_fans_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -318,8 +271,8 @@
       icon: mdi:fan
   mode: single
 - id: '1666812613473'
-  alias: create all entities group
-  description: ''
+  alias: on_start_create_group.all_entities
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -332,8 +285,8 @@
       icon: mdi:arrow-expand-all
   mode: single
 - id: '1666812617895'
-  alias: create all lights group
-  description: ''
+  alias: on_start_create_group.all_lights_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -346,8 +299,8 @@
       icon: mdi:lightbulb-alert-outline
   mode: single
 - id: '1666812616338'
-  alias: create all zones group
-  description: ''
+  alias: on_start_create_group.all_zones_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -360,8 +313,8 @@
       icon: mdi:map-marker
   mode: single
 - id: '1666812616938'
-  alias: create all updates group
-  description: ''
+  alias: on_start_create_group.all_updates_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -373,23 +326,9 @@
       group: all_updates
       icon: mdi:update
   mode: single
-- id: '1666812616820'
-  alias: create all climate group
-  description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_groups
-    data:
-      domain: climate
-      group: all_climate
-      icon: mdi:thermometer
-  mode: single
 - id: '1666812616259'
-  alias: create all camera group
-  description: ''
+  alias: on_start_create_group.all_camera_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -402,8 +341,8 @@
       icon: mdi:camera
   mode: single
 - id: '1629812616259'
-  alias: create all media players group
-  description: ''
+  alias: on_start_create_group.all_media_players
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -416,8 +355,8 @@
       icon: mdi:play-network-outline
   mode: single
 - id: '1622852616259'
-  alias: create all remotes group
-  description: ''
+  alias: on_start_create_group.all_remotes_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -430,8 +369,8 @@
       icon: mdi:remote
   mode: single
 - id: '1666812633820'
-  alias: create all binary sensors group
-  description: ''
+  alias: on_start_create_group.all_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -444,8 +383,8 @@
       icon: mdi:toggle-switch
   mode: single
 - id: '1666812616320'
-  alias: create all sensors group
-  description: ''
+  alias: on_start_create_group.all_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -458,8 +397,8 @@
       icon: mdi:shape-plus
   mode: single
 - id: '1666817726320'
-  alias: create all switches group
-  description: ''
+  alias: on_start_create_group.all_switches_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
     event: start
@@ -472,8 +411,9 @@
       icon: mdi:light-switch
   mode: single
 - id: '1672906062419'
-  alias: create all binary sensor doors group
-  description: ''
+  alias: on_start_create_group.all_doors_binary_sensors
+  description: Uses python script create_binary_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -488,8 +428,9 @@
       - door
   mode: single
 - id: '1673132278260'
-  alias: create all binary sensor plug group
-  description: ''
+  alias: on_start_create_group.all_plug_binary_sensors
+  description: Uses python script create_binary_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -504,8 +445,9 @@
       - plug
   mode: single
 - id: '1673133770721'
-  alias: create all binary sensor occupancy group
-  description: ''
+  alias: on_start_create_group.all_occupancy_binary_sensors
+  description: Uses python script create_binary_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -521,8 +463,9 @@
       - motion
   mode: single
 - id: '1673133921800'
-  alias: create all binary sensor safety group
-  description: ''
+  alias: on_start_create_group.all_safety_binary_sensors
+  description: Uses python script create_binary_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -540,8 +483,9 @@
       - smoke
   mode: single
 - id: '1673133328800'
-  alias: create all binary sensor battery group
-  description: ''
+  alias: on_start_create_group.all_battery_binary_sensors
+  description: Uses python script create_binary_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -557,7 +501,7 @@
       - battery_charging
   mode: single
 - id: '1679331701346'
-  alias: front_door_last_opened
+  alias: on_open_front_door_set_input_datetime_timestamp
   description: ''
   trigger:
   - type: opened
@@ -574,8 +518,9 @@
       entity_id: input_datetime.front_door_last_opened
   mode: single
 - id: '1679336064408'
-  alias: back_door_last_opened
-  description: ''
+  alias: on_open_back_door_set_input_datetime_timestamp
+  description: Sets a timestamp on an input_datetime that persists through reboots
+    and ignores unknown and unavailable states
   trigger:
   - type: opened
     platform: device
@@ -591,7 +536,7 @@
       entity_id: input_datetime.back_door_last_opened
   mode: single
 - id: '1679336123379'
-  alias: garage_door_last_opened
+  alias: on_open_garage_door_set_input_datetime_timestamp
   description: ''
   trigger:
   - type: opened
@@ -606,4 +551,103 @@
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.garage_door_last_opened
+  mode: single
+- id: '1679477945469'
+  alias: on_open_front_door_trigger_icloud3_service
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: bfb5f733e3cc226de9ff83eaf5571ab9
+    entity_id: binary_sensor.zigbee_door_sensor_front_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: device_tracker.icloud3_update
+    data: {}
+  mode: single
+- id: '1679478945282'
+  alias: on_motion_detect_bed_e_sensor_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 645235e6ce6aa8a04cdd1ba7cbb0f7d1
+    entity_id: binary_sensor.zigbee_motion_sensor_bed_e_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.motion_sensor_bed_e_last_activity
+  mode: single
+- id: '1679479382853'
+  alias: on_motion_detect_middle_hallway_sensor_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 14c50654dba96b4da86bbd2c2cc736b8
+    entity_id: binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.motion_sensor_front_door_stairs_last_activity
+  mode: single
+- id: '1679479488956'
+  alias: on_motion_detect_nest_protect_bottom_occupancy_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - type: occupied
+    platform: device
+    device_id: 2c2e9255799652086ba3713985659325
+    entity_id: binary_sensor.nest_protect_bottom_floor_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.nest_protect_bottom_floor_last_activity
+  mode: single
+- id: '1679479529157'
+  alias: on_motion_detect_nest_protect_middle_occupancy_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - type: occupied
+    platform: device
+    device_id: aa07ac37c5f02c8077dd28b92fe21c77
+    entity_id: binary_sensor.nest_protect_middle_floor_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.nest_protect_middle_floor_last_activity
+  mode: single
+- id: '1679479567960'
+  alias: on_motion_detect_nest_protect_top_occupancy_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - type: occupied
+    platform: device
+    device_id: 3e5a08167b4868eb6a925cbf4dbb2809
+    entity_id: binary_sensor.nest_protect_top_floor_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.nest_protect_top_floor_last_activity
   mode: single
