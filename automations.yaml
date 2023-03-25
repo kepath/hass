@@ -651,3 +651,54 @@
     target:
       entity_id: input_datetime.nest_protect_top_floor_last_activity
   mode: single
+- id: '1679694071157'
+  alias: on_open_patio_door_1_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 8636b1007be195b1d9a95bd3358d4d17
+    entity_id: binary_sensor.zigbee_door_sensor_patio_1_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.patio_door1_last_opened
+  mode: single
+- id: '1679694113832'
+  alias: on_open_patio_door_2_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 979af7d179104802e6923bf8831031d9
+    entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.patio_door2_last_opened
+  mode: single
+- id: '1679694166875'
+  alias: on_open_loft_ladder_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 907dff53e57eb5a70f72977db29ec275
+    entity_id: binary_sensor.zigbee_door_sensor_loft_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.loft_ladder_last_opened
+  mode: single

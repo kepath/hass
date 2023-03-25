@@ -295,7 +295,14 @@ card_kepath_floorplan_door:
   show_icon: true
   show_label: true
   show_name: false
-  icon: "mdi:door"
+  icon: >
+    [[[
+      var doorIcon = "mdi:door";
+      if (variables?.ulm_card_kepath_floorplan_door_closed_icon) {
+        doorIcon = variables.ulm_card_kepath_floorplan_door_closed_icon;
+      }
+      return doorIcon;
+    ]]]
   label: >
     [[[
       var milliseconds = 0
@@ -359,7 +366,14 @@ card_kepath_floorplan_door:
     action: "more-info"
   state:
     - value: "on"
-      icon: "mdi:door-open"
+      icon: >
+        [[[
+          var doorIcon = "mdi:door-open";
+          if (variables?.ulm_card_kepath_floorplan_door_open_icon) {
+            doorIcon = variables.ulm_card_kepath_floorplan_door_open_icon;
+          }
+          return doorIcon;
+        ]]]
       styles:
         icon:
           - color: "rgba(var(--color-green),1)"
