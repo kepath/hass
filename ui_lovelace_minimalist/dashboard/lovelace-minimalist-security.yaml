@@ -1,154 +1,178 @@
 ---
 button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
 views:
-  - title: "Security"
-    icon: "mdi:lock"
+  - title: "Floorplan"
+    icon: "mdi:floor-plan"
     theme: "minimalist-mobile"
+    panel: true
     cards:
-      - type: "horizontal-stack"
+      - type: "vertical-stack"
         cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template:
-              - "chip_navigate"
-            variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-home"
-              ulm_chip_navigate_icon: "mdi:cellphone-text"
-              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
-              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_binary_sensor_alert"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "input_boolean.front_door_open"
-            show_last_changed: true
-            name: "Front"
-            tap_action:
-              action: "more-info"
-              entity: "binary_sensor.zigbee_door_sensor_front_contact"
-            double_tap_action:
-              action: "navigate"
-              navigation_path: "/45df7312_zigbee2mqtt_edge"
-            hold_action:
-              action: "more-info"
-              entity: "camera.lounge_g3_instant"
-          - type: "custom:button-card"
-            template: "card_binary_sensor_alert"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "input_boolean.back_door_open"
-            show_last_changed: true
-            name: "Back"
-            tap_action:
-              action: "more-info"
-              entity: "binary_sensor.zigbee_door_sensor_back_contact"
-            double_tap_action:
-              action: "navigate"
-              navigation_path: "/45df7312_zigbee2mqtt_edge"
-            hold_action:
-              action: "more-info"
-              entity: "camera.back_g3_flex"
-          - type: "custom:button-card"
-            template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_binary_sensor_alert"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.zigbee_door_sensor_patio_1_contact"
-            show_last_changed: true
-            name: "Patio"
-          - type: "custom:button-card"
-            template: "card_binary_sensor_alert"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.zigbee_door_sensor_patio_2_contact"
-            show_last_changed: true
-            name: "Patio"
-          - type: "custom:button-card"
-            template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_binary_sensor"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy"
-            show_last_changed: true
-            name: "Stairs Motion"
-          - type: "custom:button-card"
-            template: "card_binary_sensor"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.motion_uvc_g3_flex_middle_hallway"
-            show_last_changed: true
-            name: "G3 Middle"
-          - type: "custom:button-card"
-            template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_binary_sensor"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.zigbee_door_sensor_garage_contact"
-            show_last_changed: true
-            name: "Garage"
-          - type: "custom:button-card"
-            template: "card_binary_sensor"
-            variables:
-              - ulm_card_binary_sensor_alert: false
-            entity: "binary_sensor.zigbee_door_sensor_bed_b_contact"
-            show_last_changed: true
-            name: "Loft"
-          - type: "custom:button-card"
-            template: "card_binary_sensor"
-            variables:
-              - ulm_card_binary_sensor_alert: false
-            entity: "binary_sensor.zigbee_door_sensor_bed_c_contact"
-            show_last_changed: true
-            name: "Bed C"
-          - type: "custom:button-card"
-            template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_binary_sensor"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.nest_protect_bottom_floor_occupancy"
-            show_last_changed: true
-            name: "Nest Bottom"
-          - type: "custom:button-card"
-            template: "card_binary_sensor"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.nest_protect_middle_floor_occupancy"
-            show_last_changed: true
-            name: "Nest Middle"
-          - type: "custom:button-card"
-            template: "card_binary_sensor"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.nest_protect_top_floor_occupancy"
-            show_last_changed: true
-            name: "Nest Top"
-          - type: "custom:button-card"
-            template: "edge"
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "G"
+            card: !include "floorplan_security/floor-ground.yaml"
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "1"
+            card: !include "floorplan_security/floor-first.yaml"
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "2"
+            card: !include "floorplan_security/floor-second.yaml"
+
+
+  # - title: "Security"
+  #   icon: "mdi:shield-home"
+  #   theme: "minimalist-mobile"
+  #   cards:
+  #     - type: "horizontal-stack"
+  #       cards:
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #         - type: "custom:button-card"
+  #           template:
+  #             - "chip_navigate"
+  #           variables:
+  #             ulm_chip_navigate_path: "/lovelace-minimalist-home"
+  #             ulm_chip_navigate_icon: "mdi:cellphone-text"
+  #             ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+  #             ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+  #     - type: "horizontal-stack"
+  #       cards:
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor_alert"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "input_boolean.front_door_open"
+  #           show_last_changed: true
+  #           name: "Front"
+  #           tap_action:
+  #             action: "more-info"
+  #             entity: "binary_sensor.zigbee_door_sensor_front_contact"
+  #           double_tap_action:
+  #             action: "navigate"
+  #             navigation_path: "/45df7312_zigbee2mqtt_edge"
+  #           hold_action:
+  #             action: "more-info"
+  #             entity: "camera.lounge_g3_instant"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor_alert"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "input_boolean.back_door_open"
+  #           show_last_changed: true
+  #           name: "Back"
+  #           tap_action:
+  #             action: "more-info"
+  #             entity: "binary_sensor.zigbee_door_sensor_back_contact"
+  #           double_tap_action:
+  #             action: "navigate"
+  #             navigation_path: "/45df7312_zigbee2mqtt_edge"
+  #           hold_action:
+  #             action: "more-info"
+  #             entity: "camera.back_g3_flex"
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #     - type: "horizontal-stack"
+  #       cards:
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor_alert"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "binary_sensor.zigbee_door_sensor_patio_1_contact"
+  #           show_last_changed: true
+  #           name: "Patio"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor_alert"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "binary_sensor.zigbee_door_sensor_patio_2_contact"
+  #           show_last_changed: true
+  #           name: "Patio"
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #     - type: "horizontal-stack"
+  #       cards:
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy"
+  #           show_last_changed: true
+  #           name: "Stairs Motion"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "binary_sensor.motion_uvc_g3_flex_middle_hallway"
+  #           show_last_changed: true
+  #           name: "G3 Middle"
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #     - type: "horizontal-stack"
+  #       cards:
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "binary_sensor.zigbee_door_sensor_garage_contact"
+  #           show_last_changed: true
+  #           name: "Garage"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: false
+  #           entity: "binary_sensor.zigbee_door_sensor_bed_b_contact"
+  #           show_last_changed: true
+  #           name: "Loft"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: false
+  #           entity: "binary_sensor.zigbee_door_sensor_bed_c_contact"
+  #           show_last_changed: true
+  #           name: "Bed C"
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #     - type: "horizontal-stack"
+  #       cards:
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "binary_sensor.nest_protect_bottom_floor_occupancy"
+  #           show_last_changed: true
+  #           name: "Nest Bottom"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "binary_sensor.nest_protect_middle_floor_occupancy"
+  #           show_last_changed: true
+  #           name: "Nest Middle"
+  #         - type: "custom:button-card"
+  #           template: "card_binary_sensor"
+  #           variables:
+  #             - ulm_card_binary_sensor_alert: true
+  #           entity: "binary_sensor.nest_protect_top_floor_occupancy"
+  #           show_last_changed: true
+  #           name: "Nest Top"
+  #         - type: "custom:button-card"
+  #           template: "edge"
   - title: "Camera's"
     icon: "mdi:cctv"
     theme: "minimalist-mobile"
@@ -189,7 +213,7 @@ views:
       - type: "horizontal-stack"
         cards:
           - type: "custom:flex-table-card"
-            title: "Battery Levels"
+            title: "Zigbee Sensor Diagnostics"
             entities:
               include: "binary_sensor.zigbee*"
             sort_by: "battery"
@@ -213,6 +237,33 @@ views:
                 modify: "Math.round((x/255)*100)"
                 suffix: "%"
                 align: "right"
+      - type: "horizontal-stack"
+        cards:
+          - type: "custom:flex-table-card"
+            title: "Battery Levels"
+            entities:
+              include: "*shelly*"
+            # sort_by: "battery"
+            # strict: true
+            clickable: true
+            columns:
+              - data: "friendly_name"
+                name: "Friendly Name"
+              - data: "ip"
+                name: "IP"
+                # suffix: "%"
+                # align: "right"
+              - data: "state"
+                name: "Various"
+                # suffix: " mV"
+              # - data: "power_outage_count"
+              #   name: "Power Outage Count"
+              #   align: "right"
+              # - data: "linkquality"
+              #   name: "LQI"
+              #   modify: "Math.round((x/255)*100)"
+              #   suffix: "%"
+              #   align: "right"
 
   - title: "3D Floorplan"
     icon: "mdi:rotate-3d"
@@ -222,26 +273,3 @@ views:
         path: "/local/floorplan/digitalTwin"
         objfile: "28GriffithRoad_export.obj"
         mtlfile: "28GriffithRoad_export.mtl"
-
-  - title: "Floorplan"
-    icon: "mdi:floor-plan"
-    theme: "minimalist-mobile"
-    panel: true
-    cards:
-      - type: "vertical-stack"
-        cards:
-          - type: "conditional"
-            conditions:
-              - entity: "input_select.floorplan_floor"
-                state: "G"
-            card: !include "floorplan_security/floor-ground.yaml"
-          - type: "conditional"
-            conditions:
-              - entity: "input_select.floorplan_floor"
-                state: "1"
-            card: !include "floorplan_security/floor-first.yaml"
-          - type: "conditional"
-            conditions:
-              - entity: "input_select.floorplan_floor"
-                state: "2"
-            card: !include "floorplan_security/floor-second.yaml"
