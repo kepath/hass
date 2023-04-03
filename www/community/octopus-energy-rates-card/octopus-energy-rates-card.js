@@ -1,5 +1,6 @@
 class OctopusEnergyRatesCard extends HTMLElement {
     set hass(hass) {
+        const config = this._config;
         if (!this.content) {
             const card = document.createElement('ha-card');
             card.header = this.title;
@@ -80,16 +81,22 @@ class OctopusEnergyRatesCard extends HTMLElement {
             this.appendChild(card);
         }
 
-        const entityId = this.config.entity;
+        const colours_import = [ 'green', 'red', 'orange', 'blue' ];
+        const colours_export = [ 'red', 'green', 'orange' ];
+
+        const entityId = config.entity;
         const state = hass.states[entityId];
         const attributes = this.reverseObject(state.attributes);
         const stateStr = state ? state.state : 'unavailable';
-        const mediumlimit = this.mediumlimit;
-        const highlimit = this.highlimit;
-        const unitstr = this.unitstr;
-        const roundUnits = this.roundUnits;
-        const showpast = this.showpast;
-        const showday = this.showday;
+        const mediumlimit = config.mediumlimit;
+        const highlimit = config.highlimit;
+        const unitstr = config.unitstr;
+        const roundUnits = config.roundUnits;
+        const showpast = config.showpast;
+        const showday = config.showday;
+        const hour12 = config.hour12;
+
+        var colours = (config.exportrates ? colours_export : colours_import);
 
         // Grab the rates which are stored as an attribute of the sensor
         var rates = attributes.rates
@@ -108,11 +115,11 @@ class OctopusEnergyRatesCard extends HTMLElement {
         rates.forEach(function (key) {
             const date_milli = Date.parse(key.from);
             var date = new Date(date_milli);
-            if(showpast || (date - Date.parse(new Date())>0)) {
+            if(showpast || (date - Date.parse(new Date())>-1800000)) {
                 rates_list_length++;
             }
         });
-        const rows_per_col = Math.ceil(rates_list_length / this.cols);
+        const rows_per_col = Math.ceil(rates_list_length / config.cols);
 
         var tables = "";
         tables = tables.concat("<td><table class='sub_table'><tbody>");
@@ -123,18 +130,18 @@ class OctopusEnergyRatesCard extends HTMLElement {
             const date_milli = Date.parse(key.from);
             var date = new Date(date_milli);
             const lang = navigator.language || navigator.languages[0];
-            var options = { hour12: false, hour: '2-digit', minute:'2-digit'};
+            var options = {hourCycle: 'h23', hour12: hour12, hour: '2-digit', minute:'2-digit'};
             // The time formatted in the user's Locale
             var time_locale = date.toLocaleTimeString(lang, options);
             // If the showday config option is set, include the shortened weekday name in the user's Locale
             var date_locale = (showday ? date.toLocaleDateString(lang, { weekday: 'short' }) + ' ' : '');
 
-            var colour = "green";
-            if(key.rate > highlimit) colour = "red";
-            else if(key.rate > mediumlimit) colour = "orange";
-            else if(key.rate <= 0 ) colour = "blue";
+            var colour = colours[0];
+            if(key.rate > config.highlimit) colour = colours[1];
+            else if(key.rate > config.mediumlimit) colour = colours[2];
+            else if(key.rate <= 0 ) colour = colours[3];
 
-            if(showpast || (date - Date.parse(new Date())>0)) {
+            if(showpast || (date - Date.parse(new Date())>-1800000)) {
                 table = table.concat("<tr class='rate_row'><td class='time time_"+colour+"'>" + date_locale + time_locale + 
                         "</td><td class='rate "+colour+"'>" + key.rate.toFixed(roundUnits) + unitstr + "</td></tr>");
                 if (x % rows_per_col == 0) {
@@ -161,7 +168,6 @@ class OctopusEnergyRatesCard extends HTMLElement {
         `;
     }
 
-
     reverseObject(object) {
         var newObject = {};
         var keys = [];
@@ -183,40 +189,39 @@ class OctopusEnergyRatesCard extends HTMLElement {
             throw new Error('You need to define an entity');
         }
 
+        const defaultConfig = {
+            // Controls how many columns the rates split in to
+            cols: 1,
+            // Show rates that already happened in the card
+            showpast: false,
+            // Show the day of the week with the time
+            showday: false,
+            // Use 12 or 24 hour time
+            hour12: true,
+            // Controls the title of the card
+            title: 'Agile Rates',
+            // Colour controls:
+            // If the price is above highlimit, the row is marked red.
+            // If the price is above mediumlimit, the row is marked yellow.
+            // If the price is below mediumlimit, the row is marked green.
+            // If the price is below 0, the row is marked blue.
+            mediumlimit: 20,
+            highlimit: 30,
+            // Controls the rounding of the units of the rate
+            roundUnits: 2,
+            // The unit string to show if units are shown after each rate
+            unitstr: 'p/kWh',
+            // Make the colouring happen in reverse, for export rates
+            exportrates: false,
+        };
 
-        this.config = config;
+        const cardConfig = {
+            ...defaultConfig,
+            ...config,
+        };
 
-        // Controls how many columns the rates split in to
-        this.cols = (!config.cols ? 1 : config.cols);
+        this._config = cardConfig;
 
-        // Show rates that already happened in the card
-        this.showpast = (!config.showpast ? false : config.showpast);
-
-        // Show the day of the week with the time
-        this.showday = (!config.showday ? false : config.showday);
-
-        // Controls the title of the card
-        this.title = (!config.title ? 'Agile Rates' : config.title);
-
-        // Colour controls:
-        // If the price is above highlimit, the row is marked red.
-        // If the price is above mediumlimit, the row is marked yellow.
-        // If the price is below mediumlimit, the row is marked green.
-        // If the price is below 0, the row is marked blue.
-        this.mediumlimit = (!config.mediumlimit ? 20 : config.mediumlimit);
-        this.highlimit = (!config.highlimit ? 30 : config.highlimit);
-
-        // Controls the rounding of the units of the rate
-        this.roundUnits = (!config.roundUnits ? 2 : config.roundUnits);
-
-        // Controls whether the units are shown with the rate in each row
-        if(!config.showunits) {
-            this.unitstr = "p/kWh";
-        }
-        else {
-            if(config.showunits == "true") this.unitstr = "p/kWh";
-            else this.unitstr = "";
-        }
     }
 
     // The height of your card. Home Assistant uses this to automatically
