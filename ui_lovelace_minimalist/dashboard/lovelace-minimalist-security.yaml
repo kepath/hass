@@ -198,20 +198,20 @@ views:
             motion_entity: "binary_sensor.kitchen_g3_instant_motion"
           - entity: "camera.bed_c_g3_instant_medium"
             motion_entity: "binary_sensor.bed_c_g3_instant_motion"
-  - title: "Media"
+  - title: "Diagnostics"
     icon: "mdi:signal"
     theme: "minimalist-mobile"
     cards:
-      - type: "horizontal-stack"
+      - type: "vertical-stack"
         cards:
-          - type: "custom:button-card"
-            template: "edge"
+          # - type: "custom:button-card"
+          #   template: "edge"
           - type: "custom:button-card"
             template: "chip_back"
             variables:
               ulm_chip_back_path: "/lovelace-minimalist"
-      - type: "horizontal-stack"
-        cards:
+          # - type: "horizontal-stack"
+          #   cards:
           - type: "custom:flex-table-card"
             title: "Zigbee Sensor Diagnostics"
             entities:
@@ -237,24 +237,25 @@ views:
                 modify: "Math.round((x/255)*100)"
                 suffix: "%"
                 align: "right"
-      - type: "horizontal-stack"
-        cards:
+          # - type: "horizontal-stack"
+          #   cards:
           - type: "custom:flex-table-card"
-            title: "Battery Levels"
+            title: "Shelly Diagnostics"
             entities:
-              include: "*shelly*"
-            # sort_by: "battery"
+              include: "sensor.light_*_diagnostics"
+            sort_by: "ip"
             # strict: true
             clickable: true
             columns:
               - data: "friendly_name"
                 name: "Friendly Name"
+              - data: "icon"
               - data: "ip"
                 name: "IP"
                 # suffix: "%"
                 # align: "right"
               - data: "state"
-                name: "Various"
+                name: "Light"
                 # suffix: " mV"
               # - data: "power_outage_count"
               #   name: "Power Outage Count"
@@ -264,6 +265,29 @@ views:
               #   modify: "Math.round((x/255)*100)"
               #   suffix: "%"
               #   align: "right"
+              - data: "connected"
+                name: "Connected"
+              - data: "switch_1"
+                name: "Switch 1"
+              - data: "switch_2"
+                name: "Switch 2"
+              - data: "bssid"
+                name: "BSSID"
+              # - data: "esphome_version"
+              #   name: "Version"
+              - data: "mac"
+                name: "MAC"
+              - data: "rssi"
+                name: "RSSI"
+              # - data: "ssid"
+              #   name: "SSID"
+              - data: "temperature"
+                name: "Temp"
+              - data: "uptime"
+                name: "Uptime"
+              - data: "firmware_installed"
+                name: "Version"
+
 
   - title: "3D Floorplan"
     icon: "mdi:rotate-3d"

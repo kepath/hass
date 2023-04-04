@@ -143,6 +143,14 @@ card_kepath_floorplan_binary_item_plug:
 
   tap_action:
     action: "more-info"
+    entity: >
+      [[[
+        var moreInfoEntity = entity.entity_id;
+        if (variables?.ulm_card_kepath_floorplan_item_binary_device_more_info) {
+          moreInfoEntity = variables?.ulm_card_kepath_floorplan_item_binary_device_more_info;
+        }
+        return moreInfoEntity;
+      ]]]
   hold_action:
     action: "toggle"
 

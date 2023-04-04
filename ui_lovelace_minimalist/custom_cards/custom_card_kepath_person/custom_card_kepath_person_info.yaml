@@ -128,19 +128,19 @@ custom_card_kepath_person_info:
             - color: >
                 [[[
                   var color = "rgba(var(--primary-text-color),1)";
-                  var commuteTime = 0;
+                  var fromHomeDistance = 0;
                   if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
-                    commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
-                    if (!isNaN(commuteTime) && commuteTime !== undefined){
-                      commuteTime = Math.floor(commuteTime);
+                    fromHomeDistance = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                    if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
+                      fromHomeDistance = Math.floor(fromHomeDistance);
                     }
                   }
-                  if (commuteTime > 10) {
-                    commuteTime = Math.floor(commuteTime / 5) * 5;
-                    if (commuteTime > 100) {
-                      commuteTime = 100;
+                  if (fromHomeDistance > 10) {
+                    fromHomeDistance = Math.floor(fromHomeDistance / 5) * 5;
+                    if (fromHomeDistance > 100) {
+                      fromHomeDistance = 100;
                     }
-                    var gradient = "gradient_" + commuteTime
+                    var gradient = "gradient_" + fromHomeDistance
                     if (variables?.green_to_red_5step?.[gradient]) {
                       color = variables?.green_to_red_5step?.[gradient];
                     }
@@ -206,14 +206,14 @@ custom_card_kepath_person_info:
           - operator: "template"
             value: >
               [[[
-                var commuteTime = 0;
+                var fromHomeDistance = 0;
                 if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
-                  commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
-                  if (!isNaN(commuteTime) && commuteTime !== undefined){
-                    commuteTime = Math.floor(commuteTime);
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                  if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
+                    fromHomeDistance = Math.floor(fromHomeDistance);
                   }
                 }
-                if ((commuteTime < 10) && (commuteTime != 0) && (!isNaN(commuteTime)) && (commuteTime !== undefined)) {
+                if ((fromHomeDistance < 10) && (fromHomeDistance != 0) && (!isNaN(fromHomeDistance)) && (fromHomeDistance !== undefined)) {
                   return true;
                 } else {
                   return false;
@@ -221,13 +221,13 @@ custom_card_kepath_person_info:
               ]]]
             icon: >
               [[[
-                var commuteTime = 0;
+                var fromHomeDistance = 0;
                 var icon = "mdi:numeric-0-circle";
                 if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
-                  commuteTime = states[variables.ulm_card_kepath_person_commute_entity]?.state
-                  if (!isNaN(commuteTime) && commuteTime !== undefined){
-                    commuteTime = Math.floor(commuteTime);
-                    icon = icon.replace("0",commuteTime);
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                  if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
+                    fromHomeDistance = Math.floor(fromHomeDistance);
+                    icon = icon.replace("0",fromHomeDistance);
                   }
                 }
                 return icon;
