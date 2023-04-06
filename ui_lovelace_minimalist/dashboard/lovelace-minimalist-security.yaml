@@ -1,6 +1,24 @@
 ---
 button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
 views:
+
+  - title: "Security"
+    icon: "mdi:shield-home"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "horizontal-stack"
+        cards:
+          - type: "custom:button-card"
+            template: "edge"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
+              ulm_chip_navigate_icon: "mdi:cellphone-text"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+
   - title: "Floorplan"
     icon: "mdi:floor-plan"
     theme: "minimalist-mobile"
@@ -24,23 +42,6 @@ views:
                 state: "2"
             card: !include "floorplan_security/floor-second.yaml"
 
-
-  # - title: "Security"
-  #   icon: "mdi:shield-home"
-  #   theme: "minimalist-mobile"
-  #   cards:
-  #     - type: "horizontal-stack"
-  #       cards:
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #         - type: "custom:button-card"
-  #           template:
-  #             - "chip_navigate"
-  #           variables:
-  #             ulm_chip_navigate_path: "/lovelace-minimalist-home"
-  #             ulm_chip_navigate_icon: "mdi:cellphone-text"
-  #             ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
-  #             ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
   #     - type: "horizontal-stack"
   #       cards:
   #         - type: "custom:button-card"
@@ -173,6 +174,7 @@ views:
   #           name: "Nest Top"
   #         - type: "custom:button-card"
   #           template: "edge"
+
   - title: "Camera's"
     icon: "mdi:cctv"
     theme: "minimalist-mobile"
@@ -202,91 +204,71 @@ views:
     icon: "mdi:signal"
     theme: "minimalist-mobile"
     cards:
-      - type: "vertical-stack"
-        cards:
-          # - type: "custom:button-card"
-          #   template: "edge"
-          - type: "custom:button-card"
-            template: "chip_back"
-            variables:
-              ulm_chip_back_path: "/lovelace-minimalist"
-          # - type: "horizontal-stack"
-          #   cards:
-          - type: "custom:flex-table-card"
-            title: "Zigbee Sensor Diagnostics"
-            entities:
-              include: "binary_sensor.zigbee*"
-            sort_by: "battery"
-            strict: true
-            clickable: true
-            columns:
-              - data: "friendly_name"
-                name: "Friendly Name"
-              - data: "battery"
-                name: "Battery Level"
-                suffix: "%"
-                align: "right"
-              - data: "voltage"
-                name: "Voltage"
-                suffix: " mV"
-              - data: "power_outage_count"
-                name: "Power Outage Count"
-                align: "right"
-              - data: "linkquality"
-                name: "LQI"
-                modify: "Math.round((x/255)*100)"
-                suffix: "%"
-                align: "right"
-          # - type: "horizontal-stack"
-          #   cards:
-          - type: "custom:flex-table-card"
-            title: "Shelly Diagnostics"
-            entities:
-              include: "sensor.light_*_diagnostics"
-            sort_by: "ip"
-            # strict: true
-            clickable: true
-            columns:
-              - data: "friendly_name"
-                name: "Friendly Name"
-              - data: "icon"
-              - data: "ip"
-                name: "IP"
-                # suffix: "%"
-                # align: "right"
-              - data: "state"
-                name: "Light"
-                # suffix: " mV"
-              # - data: "power_outage_count"
-              #   name: "Power Outage Count"
-              #   align: "right"
-              # - data: "linkquality"
-              #   name: "LQI"
-              #   modify: "Math.round((x/255)*100)"
-              #   suffix: "%"
-              #   align: "right"
-              - data: "connected"
-                name: "Connected"
-              - data: "switch_1"
-                name: "Switch 1"
-              - data: "switch_2"
-                name: "Switch 2"
-              - data: "bssid"
-                name: "BSSID"
-              # - data: "esphome_version"
-              #   name: "Version"
-              - data: "mac"
-                name: "MAC"
-              - data: "rssi"
-                name: "RSSI"
-              # - data: "ssid"
-              #   name: "SSID"
-              - data: "temperature"
-                name: "Temp"
-              - data: "uptime"
-                name: "Uptime"
-              - data: "firmware_installed"
-                name: "Version"
+      # - type: "horizontal-stack"
+      #   cards:
+      - type: "custom:button-card"
+        template: "chip_back"
+        variables:
+          ulm_chip_back_path: "/lovelace-minimalist"
+      # - type: "horizontal-stack"
+      #   cards:
+      - type: "custom:flex-table-card"
+        title: "Zigbee Sensor Diagnostics"
+        entities:
+          include: "binary_sensor.zigbee*"
+        sort_by: "battery"
+        strict: true
+        clickable: true
+        columns:
+          - data: "friendly_name"
+            name: "Friendly Name"
+          - data: "battery"
+            name: "Battery Level"
+            suffix: "%"
+            align: "right"
+          - data: "voltage"
+            name: "Voltage"
+            suffix: " mV"
+          - data: "power_outage_count"
+            name: "Power Outage Count"
+            align: "right"
+          - data: "linkquality"
+            name: "LQI"
+            modify: "Math.round((x/255)*100)"
+            suffix: "%"
+            align: "right"
+      # - type: "horizontal-stack"
+      #   cards:
+      - type: "custom:flex-table-card"
+        title: "Shelly Diagnostics"
+        entities:
+          include: "sensor.*_light_diagnostics"
+          exclude: "*middle_hallway*"
+        sort_by: "ip"
+        strict: true
+        clickable: true
+        columns:
+          - data: "friendly_name"
+            name: "Friendly Name"
+          - data: "connected"
+            name: "Connected"
+            align: "right"
+          - data: "switch_1"
+            name: "Switch 1"
+            align: "right"
+          - data: "switch_2"
+            name: "Switch 2"
+            align: "right"
+          - data: "rssi"
+            name: "RSSI"
+            align: "right"
+          - data: "temperature"
+            name: "Temp"
+            modify: "parseFloat(x).toFixed(0)"
+            suffix: " &#8451;"
+            align: "right"
+          - data: "firmware_installed"
+            name: "Version"
 
 
   - title: "3D Floorplan"

@@ -16,7 +16,8 @@ template:
           zero_value: "{{ 0 | int }}"
 
       # Shelly Light Diagnotics
-      - name: "light_bathroom_diagnostics"
+      - unique_id: "light_bathroom_shelly_diagnostics"
+        name: "Bathroom Light Diagnostics"
         state: "{{ states('light.bathroom_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.bathroom_light_light_1', 'icon') }}"
@@ -34,9 +35,9 @@ template:
           temperature: "{{ states('sensor.bathroom_light_temperature') }}"
           uptime: "{{ states('sensor.bathroom_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.bathroom_light_firmware', 'installed_version') }}"
-          friendly_name: "Bathroom Light Diagnostics"
 
-      - name: "light_bed-a_diagnostics"
+      - unique_id: "light_bed-a_shelly_diagnostics"
+        name: "Bed A Light Diagnostics"
         state: "{{ states('light.bed_a_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.bed_a_light_light_1', 'icon') }}"
@@ -54,9 +55,9 @@ template:
           temperature: "{{ states('sensor.bed_a_light_temperature') }}"
           uptime: "{{ states('sensor.bed_a_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.bed_a_light_firmware', 'installed_version') }}"
-          friendly_name: "Bed A Light Diagnostics"
 
-      - name: "light_bed-b_diagnostics"
+      - unique_id: "light_bed-b_shelly_diagnostics"
+        name: "Bed B Light Diagnostics"
         state: "{{ states('light.bed_b_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.bed_b_light_light_1', 'icon') }}"
@@ -74,9 +75,9 @@ template:
           temperature: "{{ states('sensor.bed_b_light_temperature') }}"
           uptime: "{{ states('sensor.bed_b_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.bed_b_light_firmware', 'installed_version') }}"
-          friendly_name: "Bed B Light Diagnostics"
 
-      - name: "light_bed-c_diagnostics"
+      - unique_id: "light_bed-c_shelly_diagnostics"
+        name: "Bed C Light Diagnostics"
         state: "{{ states('light.bed_c_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.bed_c_light_1', 'icon') }}"
@@ -94,9 +95,9 @@ template:
           temperature: "{{ states('sensor.bed_c_light_temperature') }}"
           uptime: "{{ states('sensor.bed_c_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.bed_c_light_firmware', 'installed_version') }}"
-          friendly_name: "Bed C Light Diagnostics"
 
-      - name: "light_bed-e_diagnostics"
+      - unique_id: "light_bed-e_shelly_diagnostics"
+        name: "Bed E Light Diagnostics"
         state: "{{ states('light.bed_e_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.bed_e_light_light_1', 'icon') }}"
@@ -114,9 +115,9 @@ template:
           temperature: "{{ states('sensor.bed_e_light_temperature') }}"
           uptime: "{{ states('sensor.bed_e_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.bed_e_light_firmware', 'installed_version') }}"
-          friendly_name: "Bed E Light Diagnostics"
 
-      - name: "light_ensuite_diagnostics"
+      - unique_id: "light_ensuite_shelly_diagnostics"
+        name: "En-suite Light Diagnostics"
         state: "{{ states('light.ensuite_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.ensuite_light_light_1', 'icon') }}"
@@ -134,9 +135,9 @@ template:
           temperature: "{{ states('sensor.ensuite_light_temperature') }}"
           uptime: "{{ states('sensor.ensuite_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.ensuite_light_firmware', 'installed_version') }}"
-          friendly_name: "En-suite Light Diagnostics"
 
-      - name: "light_hallway-bottom_diagnostics"
+      - unique_id: "light_hallway-bottom_shelly_diagnostics"
+        name: "Bottom Hallway Light Diagnostics"
         state: "{{ states('light.hallway_bottom_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.hallway_bottom_light_1', 'icon') }}"
@@ -154,9 +155,9 @@ template:
           temperature: "{{ states('sensor.hallway_bottom_light_temperature') }}"
           uptime: "{{ states('sensor.hallway_bottom_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.hallway_bottom_light_firmware', 'installed_version') }}"
-          friendly_name: "Bottom Hallway Light Diagnostics"
 
-      - name: "light_hallway-middle_diagnostics"
+      - unique_id: "light_hallway-middle_shelly_diagnostics"
+        name: "Middle Hallway Light Diagnostics"
         state: "{{ states('light.middle_hallway_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.middle_hallway_light_light_1', 'icon') }}"
@@ -174,9 +175,9 @@ template:
           temperature: "{{ states('sensor.hallway_middle_light_temperature') }}"
           uptime: "{{ states('sensor.hallway_middle_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.hallway_middle_light_firmware', 'installed_version') }}"
-          friendly_name: "Middle Hallway Light Diagnostics"
 
-      - name: "light_kitchen-main_diagnostics"
+      - unique_id: "light_kitchen-main_shelly_diagnostics"
+        name: "Kitchen Main Light Diagnostics"
         state: "{{ states('light.kitchen_main_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.kitchen_main_light_light_1', 'icon') }}"
@@ -194,9 +195,9 @@ template:
           temperature: "{{ states('sensor.kitchen_main_light_temperature') }}"
           uptime: "{{ states('sensor.kitchen_main_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.kitchen_main_light_firmware', 'installed_version') }}"
-          friendly_name: "Kitchen Main Light Diagnostics"
 
-      - name: "light_kitchen-utility_diagnostics"
+      - unique_id: "light_kitchen-utility_shelly_diagnostics"
+        name: "Kitchen Utility Light Diagnostics"
         state: "{{ states('light.kitchen_utility_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.kitchen_utility_light_light_1', 'icon') }}"
@@ -214,15 +215,15 @@ template:
           temperature: "{{ states('sensor.kitchen_utility_light_temperature') }}"
           uptime: "{{ states('sensor.kitchen_utility_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.kitchen_utility_light_firmware', 'installed_version') }}"
-          friendly_name: "Kitchen Utility Light Diagnostics"
 
-      # - name: "light_kitchen-utility_2_diagnostics"
+      # - unique_id: "light_kitchen-utility_2_shelly_diagnostics"
       #   state: "{{ states('light.kitchen_utility_light_light_2') }}"
       #   attributes:
       #     icon: "{{ state_attr('light.kitchen_utility_light_light_2', 'icon') }}"
-      #     friendly_name: "Back Door Light Diagnostics"
+      #     name: "Back Door Light Diagnostics"
 
-      - name: "light_lounge_diagnostics"
+      - unique_id: "light_lounge_shelly_diagnostics"
+        name: "Lounge Light Diagnostics"
         state: "{{ states('light.lounge_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.lounge_light_light_1', 'icon') }}"
@@ -240,9 +241,9 @@ template:
           temperature: "{{ states('sensor.lounge_light_temperature') }}"
           uptime: "{{ states('sensor.lounge_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.lounge_light_firmware', 'installed_version') }}"
-          friendly_name: "Lounge Light Diagnostics"
 
-      - name: "light_study_diagnostics"
+      - unique_id: "light_study_shelly_diagnostics"
+        name: "Study Light Diagnostics"
         state: "{{ states('light.study_light_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.study_light_light_1', 'icon') }}"
@@ -260,7 +261,6 @@ template:
           temperature: "{{ states('sensor.study_light_temperature') }}"
           uptime: "{{ states('sensor.study_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.study_light_firmware', 'installed_version') }}"
-          friendly_name: "Study Light Diagnostics"
 
   - binary_sensor:
       - name: "kev_driving_status"
