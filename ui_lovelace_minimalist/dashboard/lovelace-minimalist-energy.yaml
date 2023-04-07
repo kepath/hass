@@ -1,21 +1,137 @@
 ---
 button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
 views:
-  - title: "Security"
-    icon: "mdi:shield-home"
+  - title: "Energy"
+    icon: "mdi:lightning-bolt"
     theme: "minimalist-mobile"
     cards:
       - type: "horizontal-stack"
         cards:
           - type: "custom:button-card"
-            template: "edge"
+            template: "chip_back"
+            variables:
+              ulm_chip_back_path: "/lovelace-minimalist-home"
           - type: "custom:button-card"
             template:
               - "chip_navigate"
             variables:
               ulm_chip_navigate_path: "/lovelace-minimalist-home"
-              ulm_chip_navigate_icon: "mdi:cellphone-text"
+              ulm_chip_navigate_icon: "mdi:home"
               ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
-      - type: "horizontal-stack"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+              ulm_chip_navigate_icon: "mdi:floor-plan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-network"
+              ulm_chip_navigate_icon: "mdi:lan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-media"
+              ulm_chip_navigate_icon: "mdi:remote-tv"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+              ulm_chip_navigate_icon: "mdi:alpha-k-box"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
+      - type: "vertical-stack"
         cards:
+          - type: energy-date-selection # you can put this anywhere you want but it is required for energy dashboard integration 
+          - type: "custom:sankey-chart"
+            # ...any other options
+            # autoconfig:
+            #   print_yaml: true # optional
+            #   # any additional autoconfig options (listed below)
+            title: "Energy Chart"
+            height: 200
+            unit_prefix: k
+            round: 1
+            min_box_height: 3
+            min_box_distance: 5
+            show_states: true
+            show_units: true
+            energy_date_selection: true
+            min_state: 0
+            sections:
+              - entities:
+                  - entity_id: sensor.sdm220_modbus_import_active_energy
+                    type: entity
+                    color: var(--warning-color)
+                    children:
+                      - sensor.sdm220_modbus_current_system_positive_energy_demand
+                      - sensor.smart_meter_electricity_export
+                      - total
+                  - entity_id: sensor.sdm220_modbus_current_system_reverse_energy_demand
+                    subtract_entities:
+                      - sensor.sdm220_modbus_current_system_positive_energy_demand
+                    type: entity
+                    color: var(--success-color)
+                    children:
+                      - sensor.sdm220_modbus_current_system_positive_energy_demand
+                      - sensor.smart_meter_electricity_export
+                      - total
+                  - entity_id: sensor.smart_meter_electricity_import
+                    subtract_entities:
+                      - sensor.smart_meter_electricity_export
+                    type: entity
+                    children:
+                      - sensor.sdm220_modbus_current_system_positive_energy_demand
+                      - sensor.smart_meter_electricity_export
+                      - total
+              - entities:
+                  - entity_id: sensor.sdm220_modbus_current_system_positive_energy_demand
+                    subtract_entities:
+                      - sensor.sdm220_modbus_current_system_reverse_energy_demand
+                    type: entity
+                    color: var(--success-color)
+                    children: []
+                  - entity_id: sensor.smart_meter_electricity_export
+                    subtract_entities:
+                      - sensor.smart_meter_electricity_import
+                    type: entity
+                    children: []
+                  - entity_id: total
+                    type: remaining_parent_state
+                    name: Total Consumption
+                    children:
+                      - no_area
+                      - unknown
+              - entities:
+                  - entity_id: no_area
+                    type: remaining_child_state
+                    name: No area
+                    children:
+                      - sensor.zigbee_plug_washing_machine_energy
+                      - sensor.samsung_tumble_dryer_energy
+                      - sensor.zigbee_plug_dishwasher_energy
+                  - entity_id: unknown
+                    type: remaining_parent_state
+                    name: Unknown
+                    children: []
+              - entities:
+                  - entity_id: sensor.zigbee_plug_washing_machine_energy
+                    type: entity
+                    children: []
+                  - entity_id: sensor.samsung_tumble_dryer_energy
+                    type: entity
+                    children: []
+                  - entity_id: sensor.zigbee_plug_dishwasher_energy
+                    type: entity
+                    children: []

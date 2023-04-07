@@ -1,25 +1,77 @@
 ---
 button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
 views:
-  - title: "Rooms"
+  - title: "Links"
     icon: "mdi:link-variant"
     theme: "minimalist-mobile"
     cards:
       - type: "horizontal-stack"
-        style:
-          card:
-            - width: "100%"
         cards:
           - type: "custom:button-card"
-            template: "edge"
+            template: "chip_back"
+            variables:
+              ulm_chip_back_path: "/lovelace-minimalist-home"
           - type: "custom:button-card"
             template:
               - "chip_navigate"
             variables:
               ulm_chip_navigate_path: "/lovelace-minimalist-home"
-              ulm_chip_navigate_icon: "mdi:cellphone-text"
+              ulm_chip_navigate_icon: "mdi:home"
               ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+              ulm_chip_navigate_icon: "mdi:floor-plan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-network"
+              ulm_chip_navigate_icon: "mdi:lan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-media"
+              ulm_chip_navigate_icon: "mdi:remote-tv"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+              ulm_chip_navigate_icon: "mdi:alpha-k-box"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
+
+
+  # - title: "Rooms"
+  #   icon: "mdi:link-variant"
+  #   theme: "minimalist-mobile"
+  #   cards:
+  #     - type: "horizontal-stack"
+  #       style:
+  #         card:
+  #           - width: "100%"
+  #       cards:
+  #         - type: "custom:button-card"
+  #           template: "edge"
+  #         - type: "custom:button-card"
+  #           template:
+  #             - "chip_navigate"
+  #           variables:
+  #             ulm_chip_navigate_path: "/lovelace-minimalist-home"
+  #             ulm_chip_navigate_icon: "mdi:cellphone-text"
+  #             ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+  #             ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
       - type: "vertical-stack"
         cards:
           - type: "entities"
