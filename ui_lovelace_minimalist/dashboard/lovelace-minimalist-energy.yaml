@@ -3,6 +3,9 @@ button_card_templates: !include_dir_merge_named "../../custom_components/ui_love
 views:
   - title: "Energy"
     icon: "mdi:lightning-bolt"
+    type: "custom:masonry-layout"
+    layout:
+      max_width: 1200
     theme: "minimalist-mobile"
     cards:
       - type: "horizontal-stack"
@@ -51,87 +54,253 @@ views:
               ulm_chip_navigate_icon: "mdi:alpha-k-box"
               ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
-      - type: "vertical-stack"
-        cards:
-          - type: energy-date-selection # you can put this anywhere you want but it is required for energy dashboard integration 
-          - type: "custom:sankey-chart"
-            # ...any other options
-            # autoconfig:
-            #   print_yaml: true # optional
-            #   # any additional autoconfig options (listed below)
-            title: "Energy Chart"
-            height: 200
-            unit_prefix: k
-            round: 1
-            min_box_height: 3
-            min_box_distance: 5
-            show_states: true
-            show_units: true
-            energy_date_selection: true
-            min_state: 0
-            sections:
-              - entities:
-                  - entity_id: sensor.sdm220_modbus_import_active_energy
-                    type: entity
-                    color: var(--warning-color)
-                    children:
-                      - sensor.sdm220_modbus_current_system_positive_energy_demand
-                      - sensor.smart_meter_electricity_export
-                      - total
-                  - entity_id: sensor.sdm220_modbus_current_system_reverse_energy_demand
-                    subtract_entities:
-                      - sensor.sdm220_modbus_current_system_positive_energy_demand
-                    type: entity
-                    color: var(--success-color)
-                    children:
-                      - sensor.sdm220_modbus_current_system_positive_energy_demand
-                      - sensor.smart_meter_electricity_export
-                      - total
-                  - entity_id: sensor.smart_meter_electricity_import
-                    subtract_entities:
-                      - sensor.smart_meter_electricity_export
-                    type: entity
-                    children:
-                      - sensor.sdm220_modbus_current_system_positive_energy_demand
-                      - sensor.smart_meter_electricity_export
-                      - total
-              - entities:
-                  - entity_id: sensor.sdm220_modbus_current_system_positive_energy_demand
-                    subtract_entities:
-                      - sensor.sdm220_modbus_current_system_reverse_energy_demand
-                    type: entity
-                    color: var(--success-color)
-                    children: []
-                  - entity_id: sensor.smart_meter_electricity_export
-                    subtract_entities:
-                      - sensor.smart_meter_electricity_import
-                    type: entity
-                    children: []
-                  - entity_id: total
-                    type: remaining_parent_state
-                    name: Total Consumption
-                    children:
-                      - no_area
-                      - unknown
-              - entities:
-                  - entity_id: no_area
-                    type: remaining_child_state
-                    name: No area
-                    children:
-                      - sensor.zigbee_plug_washing_machine_energy
-                      - sensor.samsung_tumble_dryer_energy
-                      - sensor.zigbee_plug_dishwasher_energy
-                  - entity_id: unknown
-                    type: remaining_parent_state
-                    name: Unknown
-                    children: []
-              - entities:
-                  - entity_id: sensor.zigbee_plug_washing_machine_energy
-                    type: entity
-                    children: []
-                  - entity_id: sensor.samsung_tumble_dryer_energy
-                    type: entity
-                    children: []
-                  - entity_id: sensor.zigbee_plug_dishwasher_energy
-                    type: entity
-                    children: []
+  # - type: "horizontal-stack"
+  #   cards:
+      # - type: "energy-date-selection"  # you can put this anywhere you want but it is required for energy dashboard integration
+      # - type: "custom:sankey-chart"
+      #   # ...any other options
+      #   # autoconfig:
+      #   #   print_yaml: true # optional
+      #   #   # any additional autoconfig options (listed below)
+      #   title: "Energy Chart"
+      #   height: 200
+      #   unit_prefix: "k"
+      #   round: 1
+      #   min_box_height: 3
+      #   min_box_distance: 5
+      #   show_states: true
+      #   show_units: true
+      #   show_names: true
+      #   wide: true
+      #   energy_date_selection: true
+      #   min_state: 0
+      #   sections:
+      #     - entities:
+      #         - entity_id: "sensor.sdm220_modbus_import_active_energy"
+      #           type: "entity"
+      #           color: "var(--warning-color)"
+      #           children:
+      #             - "sensor.sdm220_modbus_current_system_positive_energy_demand"
+      #             - "sensor.smart_meter_electricity_export"
+      #             - "total"
+      #         - entity_id: "sensor.sdm220_modbus_current_system_reverse_energy_demand"
+      #           subtract_entities:
+      #             - "sensor.sdm220_modbus_current_system_positive_energy_demand"
+      #           type: "entity"
+      #           color: "var(--success-color)"
+      #           children:
+      #             - "sensor.sdm220_modbus_current_system_positive_energy_demand"
+      #             - "sensor.smart_meter_electricity_export"
+      #             - "total"
+      #         - entity_id: "sensor.smart_meter_electricity_import"
+      #           subtract_entities:
+      #             - "sensor.smart_meter_electricity_export"
+      #           type: "entity"
+      #           children:
+      #             - "sensor.sdm220_modbus_current_system_positive_energy_demand"
+      #             - "sensor.smart_meter_electricity_export"
+      #             - "total"
+      #     - entities:
+      #         - entity_id: "sensor.sdm220_modbus_current_system_positive_energy_demand"
+      #           subtract_entities:
+      #             - "sensor.sdm220_modbus_current_system_reverse_energy_demand"
+      #           type: "entity"
+      #           color: "var(--success-color)"
+      #           children: []
+      #         - entity_id: "sensor.smart_meter_electricity_export"
+      #           subtract_entities:
+      #             - "sensor.smart_meter_electricity_import"
+      #           type: "entity"
+      #           children: []
+      #         - entity_id: "total"
+      #           type: "remaining_parent_state"
+      #           name: "Total Consumption"
+      #           children:
+      #             - "no_area"
+      #             - "unknown"
+      #     - entities:
+      #         - entity_id: "no_area"
+      #           type: "remaining_child_state"
+      #           name: "Kitchen"
+      #           children:
+      #             - "sensor.zigbee_plug_washing_machine_energy"
+      #             - "sensor.samsung_tumble_dryer_energy"
+      #             - "sensor.zigbee_plug_dishwasher_energy"
+      #         - entity_id: "unknown"
+      #           color: "purple"
+      #           type: "remaining_parent_state"
+      #           name: "Unknown"
+      #           children: []
+      #     - entities:
+      #         - entity_id: "sensor.zigbee_plug_washing_machine_energy"
+      #           type: "entity"
+      #           name: "Washing Machine"
+      #           children: []
+      #         - entity_id: "sensor.samsung_tumble_dryer_energy"
+      #           type: "entity"
+      #           name: "Tumble Dryer"
+      #           children: []
+      #         - entity_id: "sensor.zigbee_plug_dishwasher_energy"
+      #           type: "entity"
+      #           name: "Dishwasher"
+      #           children: []
+  # - type: "horizontal-stack"
+  #   cards:
+      - type: "energy-date-selection"  # you can put this anywhere you want but it is required for energy dashboard integration
+      - type: "custom:sankey-chart"
+        # ...any other options
+        # autoconfig:
+        #   print_yaml: true # optional
+        #   # any additional autoconfig options (listed below)
+        title: "Energy Chart"
+        # height: 200
+        unit_prefix: "k"
+        round: 1
+        min_box_height: 3
+        min_box_distance: 5
+        show_states: true
+        show_units: true
+        show_names: true
+        wide: true
+        energy_date_selection: true
+        min_state: 0
+        sections:
+          - entities:
+              - entity_id: "sensor.sdm220_modbus_import_active_energy"
+                type: "entity"
+                color: "yellow"
+                name: "Solar"
+                children:
+                  - "sensor.consumption"
+                  - "sensor.smart_meter_electricity_export"
+              - entity_id: "sensor.sdm220_modbus_export_active_energy_2"
+                type: "entity"
+                color: "green"
+                name: "Battery"
+                children:
+                  - "sensor.consumption"
+                  - "sensor.smart_meter_electricity_export"
+              - entity_id: "sensor.smart_meter_electricity_import"
+                type: "entity"
+                color: "red"
+                name: "Grid"
+                children:
+                  - "sensor.consumption"
+                  - "sensor.smart_meter_electricity_export"
+          - entities:
+              - entity_id: "sensor.consumption"
+                type: "remaining_parent_state"
+                name: "Consumption"
+                children:
+                  - "kitchen"
+                  - "poe"
+                  - "unknown"
+              - entity_id: "sensor.smart_meter_electricity_export"
+                type: "entity"
+                color: "green"
+                name: "Export"
+          - entities:
+              - entity_id: "poe"
+                type: "remaining_child_state"
+                name: "PoE"
+                children:
+                  - "sensor.usw_pro_24_poe_bed_a_laptop_poe_energy"
+                  - "sensor.usw_pro_24_poe_bed_b_poe_energy"
+                  - "sensor.usw_pro_24_poe_kitchen_poe_energy"
+                  - "sensor.usw_pro_24_poe_lounge_right_poe_energy"
+                  - "sensor.usw_pro_24_poe_study_poe_energy"
+                  - "sensor.usw_lite_8port_bed_e_g3_flex_hall_poe_energy"
+                  - "sensor.usw_pro_24_poe_loft_poe_energy"
+              - entity_id: "kitchen"
+                type: "remaining_child_state"
+                name: "Kitchen"
+                color: "white"
+                children:
+                  - "sensor.zigbee_plug_washing_machine_energy"
+                  - "sensor.samsung_tumble_dryer_energy"
+                  - "sensor.zigbee_plug_dishwasher_energy"
+              - entity_id: "unknown"
+                color: "purple"
+                type: "remaining_parent_state"
+                name: "Unknown"
+                children: []
+          - entities:
+              - entity_id: "sensor.usw_pro_24_poe_loft_poe_energy"
+                type: "entity"
+                name: "Loft Router"
+                color: "blue"
+                children:
+                  - "sensor.usw_flex_loft_ap_top_poe_energy"
+                  - "sensor.usw_flex_loft_cam_back_poe_energy"
+                  - "sensor.usw_flex_loft_cam_front_poe_energy"
+                  - "sensor.usw_flex_loft_dlpc_isolated_poe_energy"
+          - entities:
+              - entity_id: "sensor.usw_flex_loft_ap_top_poe_energy"
+                type: "entity"
+                color: "blue"
+                name: "U6-LR"
+                children: []
+              - entity_id: "sensor.usw_flex_loft_cam_back_poe_energy"
+                type: "entity"
+                color: "blue"
+                name: "G3 Flex Back"
+                children: []
+              - entity_id: "sensor.usw_flex_loft_cam_front_poe_energy"
+                type: "entity"
+                color: "blue"
+                name: "G3 Flex Front"
+                children: []
+              - entity_id: "sensor.usw_flex_loft_dlpc_isolated_poe_energy"
+                type: "entity"
+                color: "blue"
+                name: "Download PC"
+                children: []
+              - entity_id: "remaining_loft_router"
+                type: "remaining_child_state"
+                color: "blue"
+                name: "Loft Router Remaining"
+              - entity_id: "sensor.usw_pro_24_poe_bed_a_laptop_poe_energy"
+                type: "entity"
+                color: "orange"
+                name: "Bed A Laptop Router"
+                children: []
+              - entity_id: "sensor.usw_pro_24_poe_bed_b_poe_energy"
+                type: "entity"
+                color: "orange"
+                name: "Bed B Flex Router"
+                children: []
+              - entity_id: "sensor.usw_pro_24_poe_kitchen_poe_energy"
+                type: "entity"
+                color: "orange"
+                name: "Kitchen Router"
+                children: []
+              - entity_id: "sensor.usw_pro_24_poe_lounge_right_poe_energy"
+                type: "entity"
+                color: "orange"
+                name: "Lounge Router"
+                children: []
+              - entity_id: "sensor.usw_pro_24_poe_study_poe_energy"
+                type: "entity"
+                color: "orange"
+                name: "Study Router"
+                children: []
+              - entity_id: "sensor.usw_lite_8port_bed_e_g3_flex_hall_poe_energy"
+                type: "entity"
+                color: "orange"
+                name: "G3 Flex Middle Hallway"
+                children: []
+              - entity_id: "sensor.zigbee_plug_washing_machine_energy"
+                type: "entity"
+                name: "Washing Machine"
+                color: "white"
+                children: []
+              - entity_id: "sensor.samsung_tumble_dryer_energy"
+                type: "entity"
+                name: "Tumble Dryer"
+                color: "white"
+                children: []
+              - entity_id: "sensor.zigbee_plug_dishwasher_energy"
+                type: "entity"
+                name: "Dishwasher"
+                color: "white"
+                children: []
