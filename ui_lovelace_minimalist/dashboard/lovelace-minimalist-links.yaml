@@ -2,7 +2,7 @@
 button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
 views:
   - title: "Links"
-    icon: "mdi:link-variant"
+    icon: "si:homeassistant"
     theme: "minimalist-mobile"
     cards:
       - type: "horizontal-stack"
@@ -19,406 +19,383 @@ views:
               ulm_chip_navigate_icon: "mdi:home"
               ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
-          - type: "custom:button-card"
-            template:
-              - "chip_navigate"
-            variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
-              ulm_chip_navigate_icon: "mdi:floor-plan"
-              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
-              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
-          - type: "custom:button-card"
-            template:
-              - "chip_navigate"
-            variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-network"
-              ulm_chip_navigate_icon: "mdi:lan"
-              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
-              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
-          - type: "custom:button-card"
-            template:
-              - "chip_navigate"
-            variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-media"
-              ulm_chip_navigate_icon: "mdi:remote-tv"
-              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
-              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
-          - type: "custom:button-card"
-            template:
-              - "chip_navigate"
-            variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
-              ulm_chip_navigate_icon: "mdi:alpha-k-box"
-              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
-              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
 
+      - type: "entities"
+        title: "maintenance"
+        entities:
+          - type: "weblink"
+            url: "/hassio/dashboard"
+            icon: "mdi:puzzle"
+            name: "addons"
+          - type: "weblink"
+            url: "/a0d7b954_ssh"
+            icon: "mdi:console"
+            name: "Terminal"
+          - type: "weblink"
+            url: "/a0d7b954_vscode"
+            icon: "mdi:microsoft-visual-studio-code"
+            name: "VS Studio Code"
+          - type: "weblink"
+            url: "/db21ed7f_portainer"
+            icon: "si:portainer"
+            name: "Portainer"
+          - type: "weblink"
+            url: "/a0d7b954_phpmyadmin"
+            icon: "si:phpmyadmin"
+            name: "phpMyAdmin"
+          - type: "weblink"
+            url: "/db21ed7f_scrutiny_fa"
+            icon: "mdi:glasses"
+            name: "Scrutiny"
+      - type: "entities"
+        title: "configuration"
+        entities:
+          - type: "weblink"
+            url: "/hacs"
+            icon: "hacs:hacs"
+            name: "HACS"
+          - type: "weblink"
+            url: "/5c53de3b_esphome"
+            icon: "mdi:chip"
+            name: "ESP Home"
+          - type: "weblink"
+            url: "/a0d7b954_nodered"
+            icon: "si:nodered"
+            name: "Node Red"
+          - type: "weblink"
+            url: "/a0d7b954_emqx"
+            icon: "mdi:pipe"
+            name: "EMQX"
+          - type: "weblink"
+            url: "/45df7312_zigbee2mqtt"
+            icon: "mdi:zigbee"
+            name: "Zigbee2MQTT"
+          - type: "weblink"
+            url: "/a0d7b954_influxdb"
+            icon: "si:influxdb"
+            name: "InfluxDB"
+          - type: "weblink"
+            url: "/a0d7b954_grafana"
+            icon: "si:grafana"
+            name: "Grafana"
+      - type: "entities"
+        title: "media"
+        entities:
+          - type: "weblink"
+            url: "http://192.168.1.20:32400/web"
+            icon: "mdi:plex"
+            name: "Plex"
+          - type: "weblink"
+            url: "https://192.168.1.20:8181/"
+            icon: "si:plex"
+            name: "Tautulli"
+          - type: "weblink"
+            url: "/media-browser"
+            icon: "mdi:play-box-multiple"
+            name: "Media Browser"
+          - type: "weblink"
+            url: "/core_vlc"
+            icon: "mdi:vlc"
+            name: "VLC"
+          - type: "weblink"
+            url: "/music-assistant"
+            icon: "mdi:play-circle"
+            name: "Music Assistant"
 
-  # - title: "Rooms"
-  #   icon: "mdi:link-variant"
-  #   theme: "minimalist-mobile"
-  #   cards:
-  #     - type: "horizontal-stack"
-  #       style:
-  #         card:
-  #           - width: "100%"
-  #       cards:
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #         - type: "custom:button-card"
-  #           template:
-  #             - "chip_navigate"
-  #           variables:
-  #             ulm_chip_navigate_path: "/lovelace-minimalist-home"
-  #             ulm_chip_navigate_icon: "mdi:cellphone-text"
-  #             ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
-  #             ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
-      - type: "vertical-stack"
+  - title: "Links"
+    icon: "mdi:lan"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "horizontal-stack"
         cards:
-          - type: "entities"
-            title: "HASS Links"
-            entities:
-              - type: "section"
-                label: "maintenance"
-              - type: "weblink"
-                url: "/hassio/dashboard"
-                icon: "mdi:puzzle"
-                name: "addons"
-              - type: "weblink"
-                url: "/a0d7b954_ssh"
-                icon: "mdi:console"
-                name: "Terminal"
-              - type: "weblink"
-                url: "/a0d7b954_vscode"
-                icon: "mdi:microsoft-visual-studio-code"
-                name: "VS Studio Code"
-              - type: "weblink"
-                url: "/db21ed7f_portainer"
-                icon: "si:portainer"
-                name: "Portainer"
-              - type: "weblink"
-                url: "/a0d7b954_phpmyadmin"
-                icon: "si:phpmyadmin"
-                name: "phpMyAdmin"
-              - type: "weblink"
-                url: "/db21ed7f_scrutiny_fa"
-                icon: "mdi:glasses"
-                name: "Scrutiny"
-              - type: "section"
-                label: "configuration"
-              - type: "weblink"
-                url: "/hacs"
-                icon: "hacs:hacs"
-                name: "HACS"
-              - type: "weblink"
-                url: "/5c53de3b_esphome"
-                icon: "mdi:chip"
-                name: "ESP Home"
-              - type: "weblink"
-                url: "/a0d7b954_nodered"
-                icon: "si:nodered"
-                name: "Node Red"
-              - type: "weblink"
-                url: "/a0d7b954_emqx"
-                icon: "mdi:pipe"
-                name: "EMQX"
-              - type: "weblink"
-                url: "/45df7312_zigbee2mqtt"
-                icon: "mdi:zigbee"
-                name: "Zigbee2MQTT"
-              - type: "weblink"
-                url: "/a0d7b954_influxdb"
-                icon: "si:influxdb"
-                name: "InfluxDB"
-              - type: "weblink"
-                url: "/a0d7b954_grafana"
-                icon: "si:grafana"
-                name: "Grafana"
-              - type: "section"
-                label: "media"
-              - type: "weblink"
-                url: "http://192.168.1.20:32400/web"
-                icon: "mdi:plex"
-                name: "Plex"
-              - type: "weblink"
-                url: "https://192.168.1.20:8181/"
-                icon: "si:plex"
-                name: "Tautulli"
-              - type: "weblink"
-                url: "/media-browser"
-                icon: "mdi:play-box-multiple"
-                name: "Media Browser"
-              - type: "weblink"
-                url: "/core_vlc"
-                icon: "mdi:vlc"
-                name: "VLC"
-              - type: "weblink"
-                url: "/music-assistant"
-                icon: "mdi:play-circle"
-                name: "Music Assistant"
-      - type: "vertical-stack"
+          - type: "custom:button-card"
+            template: "chip_back"
+            variables:
+              ulm_chip_back_path: "/lovelace-minimalist-links/0"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
+              ulm_chip_navigate_icon: "mdi:home"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+      - type: "entities"
+        title: "admin"
+        entities:
+          - type: "weblink"
+            url: "https://192.168.1.1/network/default/devices"
+            icon: "phu:unifi"
+            name: "Unifi Network"
+          - type: "weblink"
+            url: "https://192.168.1.1/protect/liveview"
+            icon: "phu:unifi-protect"
+            name: "Unifi Protect"
+          - type: "weblink"
+            url: "https://192.168.1.21:5001/"
+            icon: "cil:synology-nas"
+            name: "Synology NAS"
+          - type: "weblink"
+            url: "https://192.168.20.201:1881/"
+            icon: "mdi:solar-power-variant"
+            name: "Solar DRU Node Red"
+          - type: "weblink"
+            url: "http://192.168.20.5"
+            icon: "mdi:printer"
+            name: "Brother MFC Printer/Scanner"
+          - type: "weblink"
+            url: "http://192.168.20.41"
+            icon: "mdi:audio-video"
+            name: "Yamaha RX-V777 Reciever"
+
+      - type: "entities"
+        title: "lights"
+        entities:
+          - type: "weblink"
+            url: "http://192.168.30.10"
+            icon: "mdi:vanity-light"
+            name: "Shelly Hallway Bottom"
+          - type: "weblink"
+            url: "http://192.168.30.11"
+            icon: "mdi:chandelier"
+            name: "Shelly Study"
+          - type: "weblink"
+            url: "http://192.168.30.12"
+            icon: "mdi:chandelier"
+            name: "Shelly Lounge"
+          - type: "weblink"
+            url: "http://192.168.30.13"
+            icon: "mdi:vanity-light"
+            name: "Shelly Kitchen Utility"
+          - type: "weblink"
+            url: "http://192.168.30.14"
+            icon: "mdi:light-recessed"
+            name: "Shelly Kitchen Main"
+          - type: "weblink"
+            url: "http://192.168.30.20"
+            icon: "mdi:string-lights"
+            name: "Shelly Bed C"
+          - type: "weblink"
+            url: "http://192.168.30.21"
+            icon: "mdi:light-recessed"
+            name: "Shelly Bathroom"
+          - type: "weblink"
+            url: "http://192.168.30.22"
+            icon: "mdi:light-recessed"
+            name: "Shelly En-Suite"
+          - type: "weblink"
+            url: "http://192.168.30.23"
+            icon: "mdi:chandelier"
+            name: "Shelly Bed A"
+          - type: "weblink"
+            url: "http://192.168.30.24"
+            icon: "mdi:ceiling-light"
+            name: "Shelly Bed B"
+          - type: "weblink"
+            url: "http://192.168.30.30"
+            icon: "mdi:ceiling-light"
+            name: "Shelly Bed E"
+
+      - type: "entities"
+        title: "cameras"
+        entities:
+          - type: "weblink"
+            url: "http://192.168.20.91"
+            icon: "mdi:doorbell-video"
+            name: "Doorbell G4"
+          - type: "weblink"
+            url: "http://192.168.20.93"
+            icon: "mdi:cctv"
+            name: "Back G3 Flex"
+          - type: "weblink"
+            url: "http://192.168.20.94"
+            icon: "mdi:cctv"
+            name: "Front G3 Flex"
+          - type: "weblink"
+            url: "http://192.168.20.95"
+            icon: "mdi:cctv"
+            name: "Middle Hallway G3 Flex"
+          - type: "weblink"
+            url: "http://192.168.20.97"
+            icon: "mdi:webcam"
+            name: "Bed C G3 Instant"
+          - type: "weblink"
+            url: "http://192.168.20.98"
+            icon: "mdi:webcam"
+            name: "Kitchen G3 Instant"
+          - type: "weblink"
+            url: "http://192.168.20.99"
+            icon: "mdi:webcam"
+            name: "Bottom Hallway G3 Instant"
+
+  - title: "Links"
+    icon: "mdi:cloud-search"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "horizontal-stack"
         cards:
-          - type: "entities"
-            title: "LAN Links"
-            entities:
-              - type: "section"
-                label: "admin"
-              - type: "weblink"
-                url: "https://192.168.1.1/network/default/devices"
-                icon: "phu:unifi"
-                name: "Unifi Network"
-              - type: "weblink"
-                url: "https://192.168.1.1/protect/liveview"
-                icon: "phu:unifi-protect"
-                name: "Unifi Protect"
-              - type: "weblink"
-                url: "https://192.168.1.21:5001/"
-                icon: "cil:synology-nas"
-                name: "Synology NAS"
-              - type: "weblink"
-                url: "https://192.168.20.201:1881/"
-                icon: "mdi:solar-power-variant"
-                name: "Solar DRU Node Red"
-              - type: "weblink"
-                url: "http://192.168.20.5"
-                icon: "mdi:printer"
-                name: "Brother MFC Printer/Scanner"
-              - type: "weblink"
-                url: "http://192.168.20.41"
-                icon: "mdi:audio-video"
-                name: "Yamaha RX-V777 Reciever"
+          - type: "custom:button-card"
+            template: "chip_back"
+            variables:
+              ulm_chip_back_path: "/lovelace-minimalist-links/0"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
+              ulm_chip_navigate_icon: "mdi:home"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+      - type: "entities"
+        title: "home assistant"
+        entities:
+          - type: "weblink"
+            url: "https://www.home-assistant.io/"
+            icon: "si:homeassistant"
+            name: "Home Assistant"
+          - type: "weblink"
+            url: "https://developers.home-assistant.io/docs/core/entity"
+            icon: "si:visualstudiocode"
+            name: "Home Assistant Developer Docs"
+            # https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.ServiceRegistry
+          - type: "weblink"
+            url: "https://ui-lovelace-minimalist.github.io/UI/"
+            icon: "mdi:flower"
+            name: "UI Lovelace Minimalist"
+          - type: "weblink"
+            url: "https://github.com/custom-cards/button-card"
+            icon: "si:github"
+            name: "Custon Button-card"
+          - type: "weblink"
+            url: "https://github.com/thomasloven/hass-browser_mod"
+            icon: "si:github"
+            name: "HASS Browser-mod"
+          - type: "weblink"
+            url: "https://esphome.io/"
+            icon: "si:esphome"
+            name: "ESPHome"
+          - type: "weblink"
+            url: "https://pictogrammers.com/library/mdi/"
+            icon: "si:materialdesignicons"
+            name: "Material Design Icons"
+          - type: "weblink"
+            url: "https://simpleicons.org/"
+            icon: "si:simpleicons"
+            name: "Simple Icons"
+          - type: "weblink"
+            url: "https://jinja.palletsprojects.com/en/3.1.x/"
+            icon: "si:jinja"
+            name: "Jinja Reference"
 
-              - type: "section"
-                label: "lights"
-              - type: "weblink"
-                url: "http://192.168.30.10"
-                icon: "mdi:vanity-light"
-                name: "Shelly Hallway Bottom"
-              - type: "weblink"
-                url: "http://192.168.30.11"
-                icon: "mdi:chandelier"
-                name: "Shelly Study"
-              - type: "weblink"
-                url: "http://192.168.30.12"
-                icon: "mdi:chandelier"
-                name: "Shelly Lounge"
-              - type: "weblink"
-                url: "http://192.168.30.13"
-                icon: "mdi:vanity-light"
-                name: "Shelly Kitchen Utility"
-              - type: "weblink"
-                url: "http://192.168.30.14"
-                icon: "mdi:light-recessed"
-                name: "Shelly Kitchen Main"
-              - type: "weblink"
-                url: "http://192.168.30.20"
-                icon: "mdi:string-lights"
-                name: "Shelly Bed C"
-              - type: "weblink"
-                url: "http://192.168.30.21"
-                icon: "mdi:light-recessed"
-                name: "Shelly Bathroom"
-              - type: "weblink"
-                url: "http://192.168.30.22"
-                icon: "mdi:light-recessed"
-                name: "Shelly En-Suite"
-              - type: "weblink"
-                url: "http://192.168.30.23"
-                icon: "mdi:chandelier"
-                name: "Shelly Bed A"
-              - type: "weblink"
-                url: "http://192.168.30.24"
-                icon: "mdi:ceiling-light"
-                name: "Shelly Bed B"
-              - type: "weblink"
-                url: "http://192.168.30.30"
-                icon: "mdi:ceiling-light"
-                name: "Shelly Bed E"
+      - type: "entities"
+        title: "favourites"
+        entities:
+          - type: "weblink"
+            url: "https://www.theguardian.com/"
+            icon: "mdi:alpha-g-circle"
+            name: "The Guardian"
+          - type: "weblink"
+            url: "https://boingboing.net/"
+            icon: "mdi:basketball"
+            name: "Boing Boing"
+          - type: "weblink"
+            url: "https://www.theverge.com/"
+            icon: "mdi:triangle-outline"
+            name: "The Verge"
+          - type: "weblink"
+            url: "https://www.pluralsight.com/"
+            icon: "si:pluralsight"
+            name: "Pluralsight"
+          - type: "weblink"
+            url: "https://www.imdb.com/"
+            icon: "si:imdb"
+            name: "IMDB"
+          - type: "weblink"
+            url: "https://www.dndbeyond.com/"
+            icon: "mdi:alpha-b-box"
+            name: "D&D Beyond"
+          - type: "weblink"
+            url: "https://www.google.co.uk/maps/"
+            icon: "si:googlemaps"
+            name: "Google Maps"
 
-              - type: "section"
-                label: "cameras"
-              - type: "weblink"
-                url: "http://192.168.20.91"
-                icon: "mdi:doorbell-video"
-                name: "Doorbell G4"
-              - type: "weblink"
-                url: "http://192.168.20.93"
-                icon: "mdi:cctv"
-                name: "Back G3 Flex"
-              - type: "weblink"
-                url: "http://192.168.20.94"
-                icon: "mdi:cctv"
-                name: "Front G3 Flex"
-              - type: "weblink"
-                url: "http://192.168.20.95"
-                icon: "mdi:cctv"
-                name: "Middle Hallway G3 Flex"
-              - type: "weblink"
-                url: "http://192.168.20.97"
-                icon: "mdi:webcam"
-                name: "Bed C G3 Instant"
-              - type: "weblink"
-                url: "http://192.168.20.98"
-                icon: "mdi:webcam"
-                name: "Kitchen G3 Instant"
-              - type: "weblink"
-                url: "http://192.168.20.99"
-                icon: "mdi:webcam"
-                name: "Bottom Hallway G3 Instant"
-
-
-      - type: "vertical-stack"
-        cards:
-          - type: "entities"
-            title: "External Links"
-            entities:
-              - type: "section"
-                label: "home assistant"
-              - type: "weblink"
-                url: "https://www.home-assistant.io/"
-                icon: "si:homeassistant"
-                name: "Home Assistant"
-              - type: "weblink"
-                url: "https://developers.home-assistant.io/docs/core/entity"
-                icon: "si:visualstudiocode"
-                name: "Home Assistant Developer Docs"
-                # https://dev-docs.home-assistant.io/en/dev/api/core.html#homeassistant.core.ServiceRegistry
-              - type: "weblink"
-                url: "https://ui-lovelace-minimalist.github.io/UI/"
-                icon: "mdi:flower"
-                name: "UI Lovelace Minimalist"
-              - type: "weblink"
-                url: "https://github.com/custom-cards/button-card"
-                icon: "si:github"
-                name: "Custon Button-card"
-              - type: "weblink"
-                url: "https://github.com/thomasloven/hass-browser_mod"
-                icon: "si:github"
-                name: "HASS Browser-mod"
-              - type: "weblink"
-                url: "https://esphome.io/"
-                icon: "si:esphome"
-                name: "ESPHome"
-              - type: "weblink"
-                url: "https://pictogrammers.com/library/mdi/"
-                icon: "si:materialdesignicons"
-                name: "Material Design Icons"
-              - type: "weblink"
-                url: "https://simpleicons.org/"
-                icon: "si:simpleicons"
-                name: "Simple Icons"
-              - type: "weblink"
-                url: "https://jinja.palletsprojects.com/en/3.1.x/"
-                icon: "si:jinja"
-                name: "Jinja Reference"
-
-              - type: "section"
-                label: "favourites"
-              - type: "weblink"
-                url: "https://www.theguardian.com/"
-                icon: "mdi:alpha-g-circle"
-                name: "The Guardian"
-              - type: "weblink"
-                url: "https://boingboing.net/"
-                icon: "mdi:basketball"
-                name: "Boing Boing"
-              - type: "weblink"
-                url: "https://www.theverge.com/"
-                icon: "mdi:triangle-outline"
-                name: "The Verge"
-              - type: "weblink"
-                url: "https://www.pluralsight.com/"
-                icon: "si:pluralsight"
-                name: "Pluralsight"
-              - type: "weblink"
-                url: "https://www.imdb.com/"
-                icon: "si:imdb"
-                name: "IMDB"
-              - type: "weblink"
-                url: "https://www.dndbeyond.com/"
-                icon: "mdi:alpha-b-box"
-                name: "D&D Beyond"
-              - type: "weblink"
-                url: "https://www.google.co.uk/maps/"
-                icon: "si:googlemaps"
-                name: "Google Maps"
-
-                # - icon: mdi:wan
-                #   name: UniFi Gateway
-                #   type: weblink
-                #   url: https://192.168.1.1
-                # - icon: mdi:router-wireless
-                #   name: ASUS GT-AX110000
-                #   type: weblink
-                #   url: https://192.168.1.30
-                # - icon: mdi:security-network
-                #   name: VPN Router
-                #   type: weblink
-                #   url: http://192.168.1.10
-                # - icon: mdi:nas
-                #   name: Diskstation
-                #   type: weblink
-                #   url: https://192.168.5.15:5001
-                # - name: Media
-                #   type: section
-                # - icon: mdi:docker
-                #   name: Portainer for DLM
-                #   type: weblink
-                #   url: http://192.168.1.2:9000/#/home
-                # - icon: mdi:download-network-outline
-                #   name: Transmission
-                #   type: weblink
-                #   url: http://192.168.1.2:9091
-                # - icon: mdi:download-network-outline
-                #   name: SabNzbd
-                #   type: weblink
-                #   url: http://192.168.1.2:8080
-                # - icon: mdi:tshirt-crew
-                #   name: Jackett
-                #   type: weblink
-                #   url: http://192.168.1.2:9117
-                # - icon: mdi:google-downasaur
-                #   name: NZB Hydra
-                #   type: weblink
-                #   url: http://192.168.1.2:5076
-                # - icon: mdi:folder-music
-                #   name: Beets
-                #   type: weblink
-                #   url: http://192.168.1.2:8337
-                # - icon: mdi:movie-search
-                #   name: Radarr
-                #   type: weblink
-                #   url: http://192.168.1.2:7878
-                # - icon: mdi:image-search
-                #   name: Sonarr
-                #   type: weblink
-                #   url: http://192.168.1.2:8989
-                # - icon: mdi:subtitles
-                #   name: Bazarr
-                #   type: weblink
-                #   url: http://192.168.1.2:6767
-                # - name: Players
-                #   type: section
-                # - icon: mdi:plex
-                #   name: Plex
-                #   type: weblink
-                #   url: https://app.plex.tv/desktop
-                # - icon: mdi:filmstrip
-                #   name: IMDB
-                #   type: weblink
-                #   url: http://www.imdb.com
-                # - icon: mdi:movie-open
-                #   name: The Movie DB
-                #   type: weblink
-                #   url: http://www.themoviedb.org
-                # - icon: mdi:television-classic
-                #   name: The TV DB
-                #   type: weblink
-                #   url: http://thetvdb.com/
-                # - icon: mdi:material-design
-                #   name: Material Design
-                #   type: weblink
-                #   url: https://materialdesignicons.com
-                # - icon: mdi:home-assistant
-                #   name: Home Assistant
-                #   type: weblink
-                #   url: https://www.home-assistant.io
+            # - icon: mdi:wan
+            #   name: UniFi Gateway
+            #   type: weblink
+            #   url: https://192.168.1.1
+            # - icon: mdi:router-wireless
+            #   name: ASUS GT-AX110000
+            #   type: weblink
+            #   url: https://192.168.1.30
+            # - icon: mdi:security-network
+            #   name: VPN Router
+            #   type: weblink
+            #   url: http://192.168.1.10
+            # - icon: mdi:nas
+            #   name: Diskstation
+            #   type: weblink
+            #   url: https://192.168.5.15:5001
+            # - name: Media
+            #   type: section
+            # - icon: mdi:docker
+            #   name: Portainer for DLM
+            #   type: weblink
+            #   url: http://192.168.1.2:9000/#/home
+            # - icon: mdi:download-network-outline
+            #   name: Transmission
+            #   type: weblink
+            #   url: http://192.168.1.2:9091
+            # - icon: mdi:download-network-outline
+            #   name: SabNzbd
+            #   type: weblink
+            #   url: http://192.168.1.2:8080
+            # - icon: mdi:tshirt-crew
+            #   name: Jackett
+            #   type: weblink
+            #   url: http://192.168.1.2:9117
+            # - icon: mdi:google-downasaur
+            #   name: NZB Hydra
+            #   type: weblink
+            #   url: http://192.168.1.2:5076
+            # - icon: mdi:folder-music
+            #   name: Beets
+            #   type: weblink
+            #   url: http://192.168.1.2:8337
+            # - icon: mdi:movie-search
+            #   name: Radarr
+            #   type: weblink
+            #   url: http://192.168.1.2:7878
+            # - icon: mdi:image-search
+            #   name: Sonarr
+            #   type: weblink
+            #   url: http://192.168.1.2:8989
+            # - icon: mdi:subtitles
+            #   name: Bazarr
+            #   type: weblink
+            #   url: http://192.168.1.2:6767
+            # - name: Players
+            #   type: section
+            # - icon: mdi:plex
+            #   name: Plex
+            #   type: weblink
+            #   url: https://app.plex.tv/desktop
+            # - icon: mdi:filmstrip
+            #   name: IMDB
+            #   type: weblink
+            #   url: http://www.imdb.com
+            # - icon: mdi:movie-open
+            #   name: The Movie DB
+            #   type: weblink
+            #   url: http://www.themoviedb.org
+            # - icon: mdi:television-classic
+            #   name: The TV DB
+            #   type: weblink
+            #   url: http://thetvdb.com/
+            # - icon: mdi:material-design
+            #   name: Material Design
+            #   type: weblink
+            #   url: https://materialdesignicons.com
+            # - icon: mdi:home-assistant
+            #   name: Home Assistant
+            #   type: weblink
+            #   url: https://www.home-assistant.io
