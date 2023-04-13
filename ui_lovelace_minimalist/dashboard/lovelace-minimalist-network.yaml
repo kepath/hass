@@ -662,3 +662,189 @@ views:
             icon: "mdi:information-outline"
 
       - type: "custom:icloud3-event-log-card"
+  - title: "Sankey"
+    badges: []
+    cards:
+      # - type: "energy-date-selection"  # you can put this anywhere you want but it is required for energy dashboard integration
+      - type: "custom:sankey-chart"
+        # ...any other options
+        # autoconfig:
+        #   print_yaml: true # optional
+        #   # any additional autoconfig options (listed below)
+        title: "Network Tx Chart"
+        height: 500
+        # unit_prefix: "Mb"
+        round: 1
+        min_box_height: 3
+        min_box_distance: 5
+        show_states: true
+        show_units: true
+        show_names: true
+        wide: true
+        energy_date_selection: false
+        min_state: 0
+        sections:
+          - entities:
+              - entity_id: "sensor.sankey_usw_pro_total_tx_mb"
+                type: "remaining_child_state"
+                name: "USW Pro 24 PoE"
+                children:
+                  - "sensor.sankey_wifi_tx_mb"
+                  - "sensor.sankey_usw_flex_mini_bed_a_tv_tx_mb"
+                  - "sensor.sankey_uap_iw_hd_tx_mb"
+                  - "sensor.sankey_usw_flex_mini_kitchen_tx_mb"
+                  - "sensor.sankey_usw_flex_mini_study_tx_mb"
+                  - "sensor.sankey_usw_lite_8port_bed_e_tx_mb"
+                  - "sensor.sankey_usw_flex_loft_tx_mb"
+                  - "sensor.apple_tv_4k_unifi_tx"
+                  - "sensor.arcade_machine_unifi_tx"
+                  - "sensor.brother_mfc_j870dw_printer_unifi_tx"
+                  # - "Sankey_USW_Pro_Remaining_Tx_Mb"
+              # - entity_id: "sensor.sankey_usw_pro_remaining_tx_mb"
+              #   type: "remaining_child_state"
+              #   name: "Other Traffic"
+              #   children: []
+          - entities:
+              - entity_id: "sensor.sankey_wifi_tx_mb"
+                type: "remaining_child_state"
+                name: "Wi-Fi"
+                children:
+                  - "sensor.tx_8"  # Kindle Oasis
+                  - "sensor.amazon_echo_dot_with_clock_unifi_tx"
+                  - "sensor.amazon_echo_dot_bed_c_unifi_tx"
+                  - "sensor.amazon_echo_dot_bed_d_unifi_tx"
+                  - "sensor.amazon_flex_garage_unifi_tx"
+                  - "sensor.amazon_echo_plus_unifi_tx"
+                  - "sensor.amazon_echo_show_8_unifi_tx"
+                  - "sensor.amazon_echo_spot_unifi_tx"
+                  - "sensor.amazon_fire_hd_8_tablet_bottomhallway_tx"
+                  - "sensor.amazon_kindle_voyage_kev_tx"
+                  - "sensor.apple_macbook_pro_2018_kev_unifi_tx"
+                  - "sensor.backdoor_light_unifi_tx"
+                  - "sensor.bathroom_light_unifi_tx"
+                  - "sensor.bed_a_light_unifi_tx"
+                  - "sensor.shelly_bed_b_light_unifi_tx"
+                  - "sensor.g3_instant_tx"
+                  - "sensor.shelly_bed_c_light_unifi_tx"
+                  - "sensor.shelly_bed_e_light_unifi_tx"
+                  - "sensor.bloxham_spare_laptop_emily_tx"
+                  - "sensor.lounge_g3_instant_transferred_data"
+                  - "sensor.hallway_bottom_light_unifi_tx"
+                  - "sensor.calex_smart_siren_unifi_tx"
+                  - "sensor.dans_nintendo_switch_unifi_tx"
+                  - "sensor.dell_work_laptop_kev_unifi_wifi_tx"
+                  - "sensor.unifi_g4_doorbell_unifi_tx"
+                  - "sensor.emily_s_school_laptop_family_unifi_tx"
+                  - "sensor.shelly_ensuite_light_unifi_tx"
+                  - "sensor.wlan0_tx"
+                  - "sensor.tx_14"
+                  - "sensor.google_nest_thermostat_bottom_hallway_unifi_tx"
+                  - "sensor.google_nest_thermostat_middle_hallway_unifi_tx"
+                  - "sensor.home_assistant_unifi_tx"
+                  - "sensor."
+              - entity_id: "sensor.sankey_usw_flex_mini_bed_a_tv_tx_mb"
+                type: "remaining_child_state"
+                name: "USW Flex Mini Bed A TV"
+                children:
+                  - "sensor.amazon_firestick_4k_rj45_unifi_tx_2"
+              - entity_id: "sensor.sankey_uap_iw_hd_tx_mb"
+                type: "remaining_child_state"
+                name: "UAP-IW-HD"
+                children:
+                  - "sensor.samsung_ue48hu7500t_tv_unifi_tx"
+                  - "sensor.nvidia_shield_lounge_unifi_tx"
+              - entity_id: "sensor.sankey_usw_flex_mini_kitchen_tx_mb"
+                type: "remaining_child_state"
+                name: "USW-Flex-Mini-Kitchen"
+                children:
+                  - "sensor.amazon_firestick_4k_rj45_unifi_tx"
+                  - "sensor.tx_10"  # solar battery 1
+                  - "sensor.solar_battery_2_unifi_tx"
+              - entity_id: "sensor.sankey_usw_flex_mini_study_tx_mb"
+                type: "remaining_child_state"
+                name: "USW-Flex-Mini-Study"
+                children:
+                  - "sensor.apple_imac_2011_unifi_tx"
+              - entity_id: "sensor.sankey_usw_lite_8port_bed_e_tx_mb"
+                type: "remaining_child_state"
+                name: "USW-Lite-8Port-Bed-E"
+                children:
+                  - "sensor.caldigit_thunderbolt_dock_unifi_tx"
+                  - "sensor.sony_bravia_kdl_32ex403_tv_unifi_tx"
+                  - "sensor.nvidia_shield_bed_e_unifi_tx"
+                  - "sensor.g3_middle_hallway_tx"
+                  - "sensor.big_pc_unifi_tx"
+              - entity_id: "sensor.sankey_usw_flex_loft_tx_mb"
+                type: "remaining_child_state"
+                name: "USW-Flex-Loft"
+                children:
+                  - "sensor.download_pc_unifi_tx"
+                  - "sensor.g3_front_tx"
+                  - "sensor.g3_back_tx"
+              # - entity_id: ""
+              #   type: ""
+              #   color: ""
+              #   name: "UAP-FlexHD-B"
+              #   children:
+              #     - ""
+          - entities:
+              - entity_id: "sensor.amazon_firestick_4k_rj45_unifi_tx_2"
+                type: "entity"
+                name: "Amazon FireStick Bed A"
+                children: []
+              - entity_id: "sensor.samsung_ue48hu7500t_tv_unifi_tx"
+                type: "entity"
+                name: "Samsung TV Lounge"
+                children: []
+              - entity_id: "sensor.nvidia_shield_lounge_unifi_tx"
+                type: "entity"
+                name: "NVidia Shield Lounge"
+                children: []
+              - entity_id: "sensor.amazon_firestick_4k_rj45_unifi_tx"
+                type: "entity"
+                name: "Amazon FireStick Kitchen"
+                children: []
+              - entity_id: "sensor.tx_10"
+                type: "entity"
+                name: "Solar Battery 1"
+                children: []
+              - entity_id: "sensor.solar_battery_2_unifi_tx"
+                type: "entity"
+                name: "Solar Battery 2"
+                children: []
+              - entity_id: "sensor.apple_imac_2011_unifi_tx"
+                type: "entity"
+                name: "Apple iMac 2011"
+                children: []
+              - entity_id: "sensor.caldigit_thunderbolt_dock_unifi_tx"
+                type: "entity"
+                name: "Caldigit Dock"
+                children: []
+              - entity_id: "sensor.sony_bravia_kdl_32ex403_tv_unifi_tx"
+                type: "entity"
+                name: "Sony Bravia TV"
+                children: []
+              - entity_id: "sensor.nvidia_shield_bed_e_unifi_tx"
+                type: "entity"
+                name: "NVidia Shield Bed E"
+                children: []
+              - entity_id: "sensor.g3_middle_hallway_tx"
+                type: "entity"
+                name: "G3 Flex Middle Hallway"
+                children: []
+              - entity_id: "sensor.big_pc_unifi_tx"
+                type: "entity"
+                name: "Big PC"
+                children: []
+              - entity_id: "sensor.download_pc_unifi_tx"
+                type: "entity"
+                name: "Download PC"
+                children: []
+              - entity_id: "sensor.g3_front_tx"
+                type: "entity"
+                name: "G3 Flex Front"
+                children: []
+              - entity_id: "sensor.g3_back_tx"
+                type: "entity"
+                name: "G3 Flex Back"
+                children: []

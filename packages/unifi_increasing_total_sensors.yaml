@@ -1,0 +1,417 @@
+---
+sensor:
+
+  # total increasing unifi rx rates wireless
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_with_clock_lounge"
+    name: "amazon_echo_dot_with_clock_lounge_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_echo_dot_with_clock_lounge_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_bed_b"
+    name: "amazon_echo_dot_bed_b_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_echo_dot_bed_b_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_bed_c"
+    name: "amazon_echo_dot_bed_c_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_echo_dot_bed_c_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_bed_d"
+    name: "amazon_echo_dot_bed_d_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_echo_dot_bed_d_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_echo_flex_garage"
+    name: "amazon_echo_flex_garage_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_echo_flex_garage_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_echo_plus_unifi_rx"
+    name: "amazon_echo_plus_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_echo_plus_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_echo_show_8_bed_e"
+    name: "amazon_echo_show_8_bed_e_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_echo_show_8_bed_e_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_fire_hd_8_tablet_bottomhallway"
+    name: "amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_kindle_oasis_unifi_rx"
+    name: "amazon_kindle_oasis_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_kindle_oasis_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.amazon_kindle_voyage_unifi_rx"
+    name: "amazon_kindle_voyage_unifi_total_increasing_rx"
+    unique_id: "sensor.amazon_kindle_voyage_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.apple_macbook_pro_2018_kev_unifi"
+    name: "apple_macbook_pro_2018_unifi_total_increasing_rx"
+    unique_id: "sensor.apple_macbook_pro_2018_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.backdoor_light_unifi_rx"
+    name: "backdoor_light_unifi_total_increasing_rx"
+    unique_id: "sensor.backdoor_light_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.bathroom_light_unifi_rx"
+    name: "bathroom_light_unifi_total_increasing_rx"
+    unique_id: "sensor.bathroom_light_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.bed_a_light_unifi_rx"
+    name: "bed_a_light_unifi_total_increasing_rx"
+    unique_id: "sensor.bed_a_light_unifi_total_increasing_rx"
+    round: 2
+  - platform: "integration"
+    source: "sensor.shelly_bed_b_light_unifi_rx"
+    name: "bed_b_light_unifi_total_increasing_rx"
+    unique_id: "sensor.bed_b_light_unifi_total_increasing_rx"
+    round: 2
+  # total increasing unifi tx rates wireless
+  # total increasing unifi rx rates wired
+  - platform: "integration"
+    source: "sensor.apple_tv_4k_unifi_rx"
+    name: "apple_tv_4k_unifi_total_increasing_rx"
+    unique_id: "sensor.apple_tv_4k_unifi_total_increasing_rx"
+    round: 2
+  # total increasing unifi tx rates wired
+  - platform: "integration"
+    source: "sensor.apple_tv_4k_unifi_tx"
+    name: "apple_tv_4k_unifi_total_increasing_tx"
+    unique_id: "sensor.apple_tv_4k_unifi_total_increasing_tx"
+    round: 2
+
+template:
+  - sensor:
+      - unique_id: "back_g3_flex_rx_total_increasing_mb"
+        name: "Back G3 Flex Tx"
+        state: "{{ states('sensor.back_g3_flex_received_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "back_g3_flex_tx_total_increasing_mb"
+        name: "Back G3 Flex Rx"
+        state: "{{ states('sensor.back_g3_flex_transferred_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "doorbell_g4_flex_rx_total_increasing_mb"
+        name: "G4 Doorbell Tx"
+        state: "{{ states('sensor.doorbell_g4_received_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "doorbell_g4_flex_tx_total_increasing_mb"
+        name: "G4 Doorbell Rx"
+        state: "{{ states('sensor.doorbell_g4_transferred_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "front_g3_flex_rx_total_increasing_mb"
+        name: "Front G3 Flex Tx"
+        state: "{{ states('sensor.front_g3_flex_received_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "front_g3_flex_tx_total_increasing_mb"
+        name: "Front G3 Flex Rx"
+        state: "{{ states('sensor.front_g3_flex_transferred_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "middle_hallway_g3_flex_rx_total_increasing_mb"
+        name: "Middle Hallway G3 Flex Tx"
+        state: "{{ states('sensor.middle_hallway_g3_flex_received_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "middle_hallway_g3_flex_tx_total_increasing_mb"
+        name: "Middle Hallway G3 Flex Rx"
+        state: "{{ states('sensor.middle_hallway_g3_flex_transferred_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "lounge_g3_instant_rx_total_increasing_mb"
+        name: "Botton Hallway G3 Instant Tx"
+        state: "{{ states('sensor.lounge_g3_instant_received_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "lounge_g3_instant_tx_total_increasing_mb"
+        name: "Botton Hallway G3 Instant Rx"
+        state: "{{ states('sensor.lounge_g3_instant_transferred_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "kitchen_g3_instant_rx_total_increasing_mb"
+        name: "Kitchen G3 Instant Tx"
+        state: "{{ states('sensor.kitchen_g3_instant_received_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "kitchen_g3_instant_tx_total_increasing_mb"
+        name: "Kitchen G3 Instant Rx"
+        state: "{{ states('sensor.kitchen_g3_instant_transferred_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "bed_c_g3_instant_rx_total_increasing_mb"
+        name: "Bed C G3 Instant Tx"
+        state: "{{ states('sensor.bed_c_g3_instant_received_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "bed_c_g3_instant_tx_total_increasing_mb"
+        name: "Bed C G3 Instant Rx"
+        state: "{{ states('sensor.bed_c_g3_instant_transferred_data') | float / 1073741824 | round(2) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+# # Wi-Fi
+#   # Amazon Echo Dot with Clock:Lounge
+#     sensor.amazon_echo_dot_with_clock_lounge
+#     sensor.amazon_echo_dot_with_clock_unifi_tx
+#   # Amazon Echo Dot:Bed B
+#     sensor.amazon_echo_dot_bed_b
+#     sensor.amazon_echo_dot_bed_b_unifi_tx
+#   # Amazon Echo Dot:Bed C
+#     sensor.amazon_echo_dot_bed_c
+#     sensor.amazon_echo_dot_bed_c_unifi_tx
+#   # Amazon Echo Dot:Bed D
+#     sensor.amazon_echo_dot_bed_d
+#     sensor.amazon_echo_dot_bed_d_unifi_tx
+#   # Amazon Echo Flex:Garage
+#     sensor.amazon_echo_flex_garage
+#     sensor.amazon_flex_garage_unifi_tx
+#   # Amazon Echo Plus: Unifi RX
+#     sensor.amazon_echo_plus_unifi_rx
+#     sensor.amazon_echo_plus_unifi_tx
+#   # Amazon Echo Show 8:Bed E
+#     sensor.amazon_echo_show_8_bed_e
+#     sensor.amazon_echo_show_8_unifi_tx
+#   # Amazon Echo Spot:Bed A
+#     sensor.amazon_echo_spot_bed_a
+#     sensor.amazon_echo_spot_unifi_tx
+#   # Amazon Fire HD 8 Tablet:BottomHallway
+#     sensor.amazon_fire_hd_8_tablet_bottomhallway
+#     sensor.amazon_fire_hd_8_tablet_bottomhallway_tx
+#   # Amazon Kindle Oasis:Mobile
+#     sensor.amazon_kindle_oasis_unifi_rx
+#     sensor.amazon_kindle_oasis_unifi_tx
+#   # Amazon Kindle Voyage:Kev
+#     sensor.amazon_kindle_voyage_unifi_rx
+#     sensor.amazon_kindle_voyage_dan_tx
+#   # Apple MacBook Pro 2018:Kev:Unifi
+#     sensor.apple_macbook_pro_2018_kev_unifi
+#     sensor.apple_macbook_pro_2018_kev_unifi_tx
+#   # Backdoor Light: Unifi RX
+#     sensor.backdoor_light_unifi_rx
+#     sensor.backdoor_light_unifi_tx
+#   # Bathroom Light
+#     sensor.bathroom_light_unifi_rx
+#     sensor.bathroom_light_unifi_tx
+#   # Bed A Light
+#     sensor.bed_a_light_unifi_rx
+#     sensor.bed_a_light_unifi_tx
+#   # Bed B Light
+#     sensor.shelly_bed_b_light_unifi_rx
+#     sensor.shelly_bed_b_light_unifi_tx
+#   # Bed C G3 Instant
+
+#   # Bed C Light
+#     sensor.shelly_bed_c_light_unifi_rx
+#     sensor.shelly_bed_c_light_unifi_tx
+#   # Bed E Light
+#     sensor.shelly_bed_e_light_unifi_rx
+#     sensor.shelly_bed_e_light_unifi_tx
+#   # Bloxham Spare Laptop:Emily:Mobile
+#     sensor.bloxham_spare_laptop_emily_rx
+#     sensor.bloxham_spare_laptop_emily_tx
+#   # Bottom Hallway G3 Instant
+
+#   # Bottom Hallway Light
+#     sensor.hallway_bottom_light_unifi_rx
+#     sensor.hallway_bottom_light_unifi_tx
+#   # Calex IP Camera: Unifi RX
+#     sensor.calex_ip_camera_unifi_rx
+#     sensor.calex_ip_camera_unifi_tx
+#   # Calex Smart Siren: Unifi RX
+#     sensor.calex_smart_siren_unifi_rx
+#     sensor.calex_smart_siren_unifi_tx
+#   # Dans Nintendo Switch:Unifi RX
+#     sensor.dans_nintendo_switch_unifi_rx
+#     sensor.dans_nintendo_switch_unifi_tx
+  # # Dell G5 Gaming Laptop: Dan: Unifi RX
+  #   sensor.dell_g5_gaming_laptop_dan_unifi_rx
+  #   sensor.dell_g5_gaming_laptop_dan_unifi_tx
+  # # Dell Work Laptop:Kev:Unifi:WiFi RX
+  #   sensor.dell_work_laptop_kev_unifi_wifi_rx
+  #   sensor.dell_work_laptop_kev_unifi_wifi_tx
+  # # Doorbell G4
+
+  # # Emily's School Laptop:Family:Unifi RX
+  #   sensor.emily_s_school_laptop_family_unifi_rx
+  #   sensor.emily_s_school_laptop_family_unifi_tx
+  # # Ensuite Light
+  #   sensor.shelly_ensuite_light_unifi_rx
+  #   sensor.shelly_ensuite_light_unifi_tx
+  # # Front Door Light:Unifi
+  #   sensor.front_door_light_unifi
+  #   sensor.front_door_light_unifi_tx
+  # # Glow Smart Meter 4417935250FC
+  #   sensor.glow_smartmeter_unifi_rx
+  #   sensor.glow_smartmeter_unifi_tx
+  # # Google Nest Thermostat Bottom Hallway: Unifi RX
+  #   sensor.google_nest_thermostat_bottom_hallway_unifi_rx
+  #   sensor.google_nest_thermostat_bottom_hallway_unifi_tx
+  # # Google Nest Thermostat Middle Hallway: Unifi RX
+  #   sensor.google_nest_thermostat_middle_hallway_unifi_rx
+  #   sensor.google_nest_thermostat_middle_hallway_unifi_tx
+  # # iPad Air 4th Gen
+  #   sensor.ipad_air_4th_gen_rx
+  #   sensor.ipad_air_4th_gen_tx
+  # # iPad Air:Emily:Unifi
+  #   sensor.ipad_air_emily_unifi
+  #   sensor.emilys_ipad_4th_gen_unifi_tx
+  # # iPhone 11:Kev
+  #   sensor.iphone_11_kev
+  #   sensor.kev_iphone_11_unifi_tx
+  # # iPhone 12:Dan
+  #   sensor.iphone_12_dan
+  #   sensor.iphone_12_dan_tx
+  # # iPhone 13:Emily
+  #   sensor.iphone_13_emily_4
+  #   sensor.iphone_tx_4
+  # # iPhone 8:Ju
+  #   sensor.iphone_8_ju
+  #   sensor.ju_iphone_8_unifi_tx
+  # # Kitchen G3 Instant
+
+  # # Kitchen Main Light
+  #   sensor.kitchen_main_lights_unifi_rx
+  #   sensor.kitchen_main_lights_unifi_tx
+  # # Kitchen Utility Light
+  #   sensor.kitchen_utility_lights_unifi_rx
+  #   sensor.kitchen_utility_lights_unifi_tx
+  # # LG Therma V Heat Pump
+  #   sensor.lg_therma_v_heat_pump
+  #   sensor.qca_ioeboard_tx
+  # # Logitech Harmony Hub: Unifi RX
+  #   sensor.logitech_harmony_hub_unifi_rx
+  #   sensor.logitech_harmony_hub_unifi_tx
+  # # Lounge Light
+  #   sensor.shelly_lounge_unifi_rx
+  #   sensor.shelly_lounge_unifi_tx
+  # # Meross Smart Switch: Unifi RX
+  #   sensor.meross_smart_switch_unifi_rx
+  #   sensor.meross_smart_switch_unifi_tx
+  # # Middle Hallway Light
+  #   sensor.shelly_hallway_middle_unifi_rx
+  #   sensor.hallway_middle_unifi_tx
+  # # Moe
+  #   sensor.worx_robot_mower_unifi_rx
+  #   sensor.worx_robot_mower_unifi_tx
+  # # MSI GF66:Dan:Unifi
+  #   sensor.msi_gf66_dan_unifi
+  #   sensor.msi_gf66_dan_unifi_tx
+  # # Nespresso Vertuo Next:Unifi RX
+  #   sensor.nespresso_vertuo_next_unifi_rx
+  #   sensor.nespresso_vertuo_next_unifi_tx
+  # # Nest Protect (Bottom Floor)
+  #   sensor.nest_protect_bottom_hallway_unifi_rx
+  #   sensor.nest_protect_bottom_hallway_unifi_tx
+  # # Nest Protect (Middle Floor)
+  #   sensor.nest_protect_middle_hallway_unifi_rx
+  #   sensor.nest_protect_middle_hallway_unifi_tx
+  # # Nest Protect (Top Floor)
+  #   sensor.nest_protect_top_hallway_unifi_rx
+  #   sensor.nest_protect_top_hallway_unifi_tx
+  # # Radiator:Bed B
+  #   sensor.radiator_bed_b_rx
+  #   sensor.radiator_bed_b_tx
+  # # Samsung Tumble Dryer
+  #   sensor.samsung_tumble_dryer
+  #   sensor.samsung_tumble_dryer_tx
+  # # Study Light
+  #   sensor.study_light_unifi_rx
+  #   sensor.study_light_unifi_tx
+  # # Tuya Camera
+  #   sensor.tuya_camera_rx
+  #   sensor.tuya_camera_tx
+
+# Wired
+  # Amazon Firestick:Bed A
+  # Amazon Firestick:Kitchen
+  # Apple iMac 2011: Unifi RX
+  # Apple TV 4K: Bed C: Unifi
+  # Arcade Machine: Unifi RX
+  # Back G3 Flex
+
+  # Big-PC: Unifi RX
+  # Brother MFC-J870DW Printer: Unifi RX
+  # Caldigit Thunderbolt Dock:Unifi RX
+  # Download PC:Unifi
+  # Front G3 Flex
+
+  # Home Assistant: Unifi RX
+  # MacBook 2018 USB-C RJ45:Unifi RX
+  # MacBook Pro USB-C RJ45:Unifi RX
+  # Middle Hallway G3 Flex
+
+  # NVidia Shield:Bed E
+  # NVidia Shield:Lounge
+  # Samsung UE32F4500 TV:Bed A
+  # Samsung UE48HU7500T TV: Unifi RX
+  # Solar Battery 1: Unifi
+  # Solar Battery 2: Unifi RX
+  # Sony Bravia KDL-32EX403 TV: Unifi RX
+  # Sony PlayStation 3: Unifi RX
+  # Synology Diskstation DS412+: Unifi RX
+  # Synology Diskstation DS412+:VPN: Unifi RX
+  # Synology Incorporated
+  # U6-LR
+  # UAP-FlexHD-A
+  # UAP-FlexHD-B
+  # UAP-IW-HD
+  # UDMPRO
+  # USW-Flex-Loft
+  # USW-Flex-Mini-Bed-A-Laptop
+  # USW-Flex-Mini-Bed-A-TV
+  # USW-Flex-Mini-Garage
+  # USW-Flex-Mini-Kitchen
+  # USW-Flex-Mini-Study
+  # USW-Lite-8Port-Bed-E
+  # USW-Pro-24-PoE
+  # Xbox Series X: Unifi RX
+  # Yamaha RX-V777 Receiver:Bed C
