@@ -1,18 +1,26 @@
 domain = data.get('domain', '')
-group = data.get('group', '')
-icon = data.get('icon', '')
+group_name = data.get('group_name', '')
+friendly_name = data.get('friendly_name', group_name)
+icon = data.get('icon')
+excluded_entities = data.get('excluded_entities', [])
 
-if not isinstance(domain, str) or not isinstance(group, str) or not domain or not group:
-    logger.warning("bad domain or group! Not executing.")
+entity_list = []
+
+if not isinstance(domain, str) or not domain:
+    logger.error(logger, f"Error - The domain supplied does not exist. Group creation aborted.")
 else:
-    if domain == "switch":
-        name = "All switches"
-    elif domain == "binary_sensor":
-        name = "All binary sensors"
-    else:
-        name = "All "+domain+"s"
-    if not icon:
-        service_data = {"object_id": group, "entities": hass.states.entity_ids(domain), "name": name}
-    else:
-        service_data = {"object_id": group, "entities": hass.states.entity_ids(domain), "name": name, "icon": icon}
-    hass.services.call("group", "set", service_data, False)
+    for entity_id in hass.states.entity_ids(domain):
+        if entity_id == "":
+            logger.error(logger, f"Error - entity_id missing when looping through domain. Group creation aborted.")
+        else:
+            if entity_id not in excluded_entities:
+                entity_list.append(entity_id)
+                logger.debug(f"{entity_id} added to group {friendly_name} at {time.time()}")
+
+if not icon:
+    service_data = {"object_id": group_name, "name": friendly_name, "entities": entity_list}
+else:
+    service_data = {"object_id": group_name, "name": friendly_name, "icon": icon, "entities": entity_list}
+
+logger.info(f"Calling the service 'set group' with the data '{service_data}' at {time.time()}")
+hass.services.call("group", "set", service_data, False)

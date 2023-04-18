@@ -35,9 +35,9 @@
     id: dfsdfsdewwer21
   condition: []
   action:
-  - type: turn_on
-    device_id: 6f37a034cb0c0dcefa7c4a92426c9912
-    entity_id: switch.zigbee_plug_fridge_bed_c
+  - type: turn_off
+    device_id: fc2e8158e443b2238884592a9e069ff3
+    entity_id: switch.drinks_fridge
     domain: switch
   mode: single
 - id: '1609788662612'
@@ -54,8 +54,8 @@
   condition: []
   action:
   - type: turn_off
-    device_id: 6f37a034cb0c0dcefa7c4a92426c9912
-    entity_id: switch.zigbee_plug_fridge_bed_c
+    device_id: fc2e8158e443b2238884592a9e069ff3
+    entity_id: switch.drinks_fridge
     domain: switch
   - type: turn_off
     device_id: ecdc93708d2afbf8f645e3eb84d0e39c
@@ -257,7 +257,7 @@
     data: {}
   mode: restart
 - id: '1666811718812'
-  alias: on_start_create_group.all_fans_binary_sensors
+  alias: on_start_create_group.all_fans_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -267,7 +267,8 @@
   - service: python_script.create_entity_groups
     data:
       domain: fan
-      group: all_fans
+      group_name: all_fans
+      friendly_name: All fan domain entities
       icon: mdi:fan
   mode: single
 - id: '1666812613473'
@@ -281,11 +282,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: all
-      group: all_entities
+      group_name: all_entities
+      friendly_name: Every domain entity
       icon: mdi:arrow-expand-all
   mode: single
 - id: '1666812617895'
-  alias: on_start_create_group.all_lights_binary_sensors
+  alias: on_start_create_group.all_lights_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -295,11 +297,18 @@
   - service: python_script.create_entity_groups
     data:
       domain: light
-      group: all_lights
+      group_name: all_lights
+      friendly_name: All light domain entities
       icon: mdi:lightbulb-alert-outline
+      excluded_entities:
+      - light.chrome_workdell_screen
+      - light.c105a8ea_57917284_screen
+      - light.middle_hallway_light_light_1
+      - light.front_door_smartbulb
+      - light.kitchen_tuya_camera_indicator_light
   mode: single
 - id: '1666812616338'
-  alias: on_start_create_group.all_zones_binary_sensors
+  alias: on_start_create_group.all_zones_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -309,11 +318,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: zone
-      group: all_zones
+      group_name: all_zones
+      friendly_name: All zone domain entities
       icon: mdi:map-marker
   mode: single
 - id: '1666812616938'
-  alias: on_start_create_group.all_updates_binary_sensors
+  alias: on_start_create_group.all_updates_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -323,11 +333,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: update
-      group: all_updates
+      group_name: all_updates
+      friendly_name: All update domain entities
       icon: mdi:update
   mode: single
 - id: '1666812616259'
-  alias: on_start_create_group.all_camera_binary_sensors
+  alias: on_start_create_group.all_camera_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -337,11 +348,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: camera
-      group: all_cameras
+      group_name: all_cameras
+      friendly_name: All camera domain entities
       icon: mdi:camera
   mode: single
 - id: '1629812616259'
-  alias: on_start_create_group.all_media_players
+  alias: on_start_create_group.all_media_player_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -351,11 +363,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: media_player
-      group: all_media_players
+      group_name: all_media_players
+      friendly_name: All media_player domain entities
       icon: mdi:play-network-outline
   mode: single
 - id: '1622852616259'
-  alias: on_start_create_group.all_remotes_binary_sensors
+  alias: on_start_create_group.all_remote_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -365,11 +378,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: remote
-      group: all_remotes
+      group_name: all_remotes
+      friendly_name: All remote domain entities
       icon: mdi:remote
   mode: single
 - id: '1666812633820'
-  alias: on_start_create_group.all_binary_sensors
+  alias: on_start_create_group.all_binary_sensor_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -379,11 +393,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: binary_sensor
-      group: all_binary_sensors
+      group_name: all_binary_sensors
+      friendly_name: All binary_sensor domain entities
       icon: mdi:toggle-switch
   mode: single
 - id: '1666812616320'
-  alias: on_start_create_group.all_sensors
+  alias: on_start_create_group.all_sensor_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -393,11 +408,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: sensor
-      group: all_sensors
+      group_name: all_sensors
+      friendly_name: All sensor domain entities
       icon: mdi:shape-plus
   mode: single
 - id: '1666817726320'
-  alias: on_start_create_group.all_switches_binary_sensors
+  alias: on_start_create_group.all_switch_domain_entities
   description: Uses python script create_entity_groups to create an entity group
   trigger:
   - platform: homeassistant
@@ -407,11 +423,12 @@
   - service: python_script.create_entity_groups
     data:
       domain: switch
-      group: all_switches
+      group_name: all_switches
+      friendly_name: All switch domain entities
       icon: mdi:light-switch
   mode: single
 - id: '1672906062419'
-  alias: on_start_create_group.all_doors_binary_sensors
+  alias: on_start_create_group.all_door_class_binary_sensors
   description: Uses python script create_binary_device_class_group to create an entity
     group
   trigger:
@@ -421,14 +438,16 @@
   action:
   - service: python_script.create_binary_device_class_group
     data:
-      group: all_door_binary_sensors
+      group_name: all_door_class_binary_sensors
       icon: mdi:door
-      collection_name: doors
+      friendly_name: All binary_sensor door device class group
       included_device_classes:
       - door
+      excluded_entities:
+      - binary_sensor.zigbee_door_sensor_bed_c_contact
   mode: single
 - id: '1673132278260'
-  alias: on_start_create_group.all_plug_binary_sensors
+  alias: on_start_create_group.all_plug_class_binary_sensors
   description: Uses python script create_binary_device_class_group to create an entity
     group
   trigger:
@@ -438,14 +457,14 @@
   action:
   - service: python_script.create_binary_device_class_group
     data:
-      group: all_plug_binary_sensors
+      group_name: all_plug_class_binary_sensors
       icon: mdi:power-socket-uk
-      collection_name: plugs
+      friendly_name: All binary_sensor plug device class group
       included_device_classes:
       - plug
   mode: single
 - id: '1673133770721'
-  alias: on_start_create_group.all_occupancy_binary_sensors
+  alias: on_start_create_group.all_occupancy_class_binary_sensors
   description: Uses python script create_binary_device_class_group to create an entity
     group
   trigger:
@@ -455,15 +474,17 @@
   action:
   - service: python_script.create_binary_device_class_group
     data:
-      group: all_occupancy_binary_sensors
+      group_name: all_occupancy_class_binary_sensors
       icon: mdi:human-greeting
-      collection_name: occupancy
+      friendly_name: All binary_sensor occupancy motion device class group
       included_device_classes:
       - occupancy
       - motion
+      excluded_entities:
+      - binary_sensor.front_g3_flex_motion
   mode: single
 - id: '1673133921800'
-  alias: on_start_create_group.all_safety_binary_sensors
+  alias: on_start_create_group.all_safety_class_binary_sensors
   description: Uses python script create_binary_device_class_group to create an entity
     group
   trigger:
@@ -473,17 +494,20 @@
   action:
   - service: python_script.create_binary_device_class_group
     data:
-      group: all_safety_binary_sensors
+      group_name: all_safety_class_binary_sensors
       icon: mdi:alarm-light
-      collection_name: safety
+      friendly_name: All binary_sensor carbon_monoxide safety problem smoke device
+        class group
       included_device_classes:
       - carbon_monoxide
       - safety
       - problem
       - smoke
+      excluded_entities:
+      - binary_sensor.diskstation_security_status
   mode: single
 - id: '1673133328800'
-  alias: on_start_create_group.all_battery_binary_sensors
+  alias: on_start_create_group.all_battery_class_binary_sensors
   description: Uses python script create_binary_device_class_group to create an entity
     group
   trigger:
@@ -493,9 +517,9 @@
   action:
   - service: python_script.create_binary_device_class_group
     data:
-      group: all_battery_binary_sensors
+      group_name: all_battery_class_binary_sensors
       icon: mdi:battery-charging-high
-      collection_name: battery
+      friendly_name: All binary_sensor battery device class group
       included_device_classes:
       - battery
       - battery_charging
