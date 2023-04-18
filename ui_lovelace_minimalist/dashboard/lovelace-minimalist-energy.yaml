@@ -54,8 +54,8 @@ views:
               ulm_chip_navigate_icon: "mdi:alpha-k-box"
               ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
-  # - type: "horizontal-stack"
-  #   cards:
+      # - type: "horizontal-stack"
+      #   cards:
       # - type: "energy-date-selection"  # you can put this anywhere you want but it is required for energy dashboard integration
       # - type: "custom:sankey-chart"
       #   # ...any other options
@@ -144,8 +144,8 @@ views:
       #           type: "entity"
       #           name: "Dishwasher"
       #           children: []
-  # - type: "horizontal-stack"
-  #   cards:
+      # - type: "horizontal-stack"
+      #   cards:
       - type: "energy-date-selection"  # you can put this anywhere you want but it is required for energy dashboard integration
       - type: "custom:sankey-chart"
         # ...any other options
@@ -191,18 +191,22 @@ views:
               - entity_id: "sensor.consumption"
                 type: "remaining_parent_state"
                 name: "Consumption"
+                color: "blue"
                 children:
+                  - "bed_c"
                   - "kitchen"
+                  - "garage"
                   - "poe"
                   - "unknown"
               - entity_id: "sensor.smart_meter_electricity_export"
                 type: "entity"
-                color: "green"
+                color: "red"
                 name: "Export"
           - entities:
               - entity_id: "poe"
                 type: "remaining_child_state"
                 name: "PoE"
+                color: "orange"
                 children:
                   - "sensor.usw_pro_24_poe_bed_a_laptop_poe_energy"
                   - "sensor.usw_pro_24_poe_bed_b_poe_energy"
@@ -211,14 +215,28 @@ views:
                   - "sensor.usw_pro_24_poe_study_poe_energy"
                   - "sensor.usw_lite_8port_bed_e_g3_flex_hall_poe_energy"
                   - "sensor.usw_pro_24_poe_loft_poe_energy"
+              - entity_id: "bed_c"
+                type: "remaining_child_state"
+                name: "Bed C"
+                children:
+                  - "sensor.drinks_fridge_plug_energy_bed_c"
               - entity_id: "kitchen"
                 type: "remaining_child_state"
                 name: "Kitchen"
-                # color: "white"
+                color: "green"
                 children:
-                  - "sensor.zigbee_plug_washing_machine_energy"
+                  - "sensor.zigbee_plug_washing_machine_total_increasing_energy"
                   - "sensor.samsung_tumble_dryer_energy"
-                  - "sensor.zigbee_plug_dishwasher_energy"
+                  - "sensor.zigbee_plug_dishwasher_total_increasing_energy"
+                  - "sensor.fridge_plug_energy_kitchen"
+                  - "sensor.kettle_plug_energy_kitchen"
+                  - "sensor.microwave_plug_energy_kitchen"
+              - entity_id: "garage"
+                type: "remaining_child_state"
+                name: "Garage"
+                children:
+                  - "sensor.chest_freezer_plug_energy_garage"
+                  - "sensor.fridge_freezer_plug_energy_garage"
               - entity_id: "unknown"
                 color: "purple"
                 type: "remaining_parent_state"
@@ -228,7 +246,7 @@ views:
               - entity_id: "sensor.usw_pro_24_poe_loft_poe_energy"
                 type: "entity"
                 name: "Loft Router"
-                color: "blue"
+                color: "orange"
                 children:
                   - "sensor.usw_flex_loft_ap_top_poe_energy"
                   - "sensor.usw_flex_loft_cam_back_poe_energy"
@@ -237,28 +255,29 @@ views:
           - entities:
               - entity_id: "sensor.usw_flex_loft_ap_top_poe_energy"
                 type: "entity"
-                color: "blue"
+                color: "orange"
                 name: "U6-LR"
                 children: []
               - entity_id: "sensor.usw_flex_loft_cam_back_poe_energy"
                 type: "entity"
-                color: "blue"
+                color: "orange"
                 name: "G3 Flex Back"
                 children: []
               - entity_id: "sensor.usw_flex_loft_cam_front_poe_energy"
                 type: "entity"
-                color: "blue"
+                color: "orange"
                 name: "G3 Flex Front"
                 children: []
               - entity_id: "sensor.usw_flex_loft_dlpc_isolated_poe_energy"
                 type: "entity"
-                color: "blue"
+                color: "orange"
                 name: "Download PC"
                 children: []
               - entity_id: "remaining_loft_router"
                 type: "remaining_child_state"
-                color: "blue"
+                color: "orange"
                 name: "Loft Router Remaining"
+
               - entity_id: "sensor.usw_pro_24_poe_bed_a_laptop_poe_energy"
                 type: "entity"
                 color: "orange"
@@ -289,7 +308,13 @@ views:
                 color: "orange"
                 name: "G3 Flex Middle Hallway"
                 children: []
-              - entity_id: "sensor.zigbee_plug_washing_machine_energy"
+
+              - entity_id: "sensor.drinks_fridge_plug_energy_bed_c"
+                type: "entity"
+                name: "Bed C Drinks Fridge"
+                children: []
+
+              - entity_id: "sensor.zigbee_plug_washing_machine_total_increasing_energy"
                 type: "entity"
                 name: "Washing Machine"
                 color: "green"
@@ -299,8 +324,31 @@ views:
                 name: "Tumble Dryer"
                 color: "green"
                 children: []
-              - entity_id: "sensor.zigbee_plug_dishwasher_energy"
+              - entity_id: "sensor.zigbee_plug_dishwasher_total_increasing_energy"
                 type: "entity"
                 name: "Dishwasher"
                 color: "green"
+                children: []
+              - entity_id: "sensor.fridge_plug_energy_kitchen"
+                type: "entity"
+                name: "Fridge"
+                color: "green"
+                children: []
+              - entity_id: "sensor.kettle_plug_energy_kitchen"
+                type: "entity"
+                name: "Kettle"
+                color: "green"
+                children: []
+              - entity_id: "sensor.microwave_plug_energy_kitchen"
+                type: "entity"
+                name: "Microwave"
+                color: "green"
+
+              - entity_id: "sensor.chest_freezer_plug_energy_garage"
+                type: "entity"
+                name: "Chest Freezer Garage"
+                children: []
+              - entity_id: "sensor.fridge_freezer_plug_energy_garage"
+                type: "entity"
+                name: "Fridge/Freezer Garage"
                 children: []

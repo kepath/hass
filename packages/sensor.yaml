@@ -210,12 +210,17 @@ sensor:
   #   unique_id: "sensor.zigbee_plug_washing_machine_current_energy"
   #   unit_prefix: "k"
   #   round: 2
-  # smart meter
+
+  # kitchen
   - platform: "integration"
-    source: "sensor.smart_meter_electricity_power"
-    name: "smart_meter_electricity_energy"
-    unique_id: "sensor.smart_meter_electricity_energy"
-    # unit_prefix: "k"
+    source: "sensor.zigbee_plug_washing_machine_power"
+    name: "zigbee_plug_washing_machine_total_increasing_energy"
+    unique_id: "sensor.zigbee_plug_washing_machine_total_increasing_energy"
+    round: 2
+  - platform: "integration"
+    source: "sensor.zigbee_plug_dishwasher_power"
+    name: "zigbee_plug_dishwasher_total_increasing_energy"
+    unique_id: "sensor.zigbee_plug_dishwasher_total_increasing_energy"
     round: 2
   # Unifi
   - platform: "integration"
@@ -234,56 +239,47 @@ sensor:
     source: "sensor.usw_pro_24_poe_bed_b_poe_power"
     name: "usw_pro_24_poe_bed_b_poe_energy"
     unique_id: "sensor.usw_pro_24_poe_bed_b_poe_energy"
-    # unit_prefix: "k"
     round: 2
   - platform: "integration"
     source: "sensor.usw_pro_24_poe_kitchen_poe_power"
     name: "usw_pro_24_poe_kitchen_poe_energy"
     unique_id: "sensor.usw_pro_24_poe_kitchen_poe_energy"
-    # unit_prefix: "k"
     round: 2
   - platform: "integration"
     source: "sensor.usw_pro_24_poe_loft_poe_power"
     name: "usw_pro_24_poe_loft_poe_energy"
     unique_id: "sensor.usw_pro_24_poe_loft_poe_energy"
-    # unit_prefix: "k"
     round: 2
   - platform: "integration"
     source: "sensor.usw_pro_24_poe_lounge_right_poe_power"
     name: "usw_pro_24_poe_lounge_right_poe_energy"
     unique_id: "sensor.usw_pro_24_poe_lounge_right_poe_energy"
-    # unit_prefix: "k"
     round: 2
   - platform: "integration"
     source: "sensor.usw_pro_24_poe_study_poe_power"
     name: "usw_pro_24_poe_study_poe_energy"
     unique_id: "sensor.usw_pro_24_poe_study_poe_energy"
-    # unit_prefix: "k"
     round: 2
 
   - platform: "integration"
     source: "sensor.usw_flex_loft_ap_top_poe_power"
     name: "usw_flex_loft_ap_top_poe_energy"
     unique_id: "sensor.usw_flex_loft_ap_top_poe_energy"
-    # unit_prefix: "k"
     round: 2
   - platform: "integration"
     source: "sensor.usw_flex_loft_cam_back_poe_power"
     name: "usw_flex_loft_cam_back_poe_energy"
     unique_id: "sensor.usw_flex_loft_cam_back_poe_energy"
-    # unit_prefix: "k"
     round: 2
   - platform: "integration"
     source: "sensor.usw_flex_loft_cam_front_poe_power"
     name: "usw_flex_loft_cam_front_poe_energy"
     unique_id: "sensor.usw_flex_loft_cam_front_poe_energy"
-    # unit_prefix: "k"
     round: 2
   - platform: "integration"
     source: "sensor.usw_flex_loft_dlpc_isolated_poe_power"
     name: "usw_flex_loft_dlpc_isolated_poe_energy"
     unique_id: "sensor.usw_flex_loft_dlpc_isolated_poe_energy"
-    # unit_prefix: "k"
     round: 2
 
   - platform: "integration"
@@ -293,6 +289,43 @@ sensor:
     # unit_prefix: "k"
     round: 2
 
+  # TP 110 plugs
+  - platform: "integration"
+    source: "sensor.fridge_plug_kitchen_current_power"
+    name: "Fridge Plug Energy:Kitchen"
+    unique_id: "sensor.kitchen_fridge_total_increasing_energy"
+    unit_prefix: "k"
+    round: 2
+  - platform: "integration"
+    source: "sensor.kettle_plug_kitchen_current_power"
+    name: "Kettle Plug Energy:Kitchen"
+    unique_id: "sensor.kitchen_kettle_total_increasing_energy"
+    unit_prefix: "k"
+    round: 2
+  - platform: "integration"
+    source: "sensor.microwave_plug_kitchen_current_power"
+    name: "Microwave Plug Energy:Kitchen"
+    unique_id: "sensor.kitchen_microwave_total_increasing_energy"
+    unit_prefix: "k"
+    round: 2
+  - platform: "integration"
+    source: "sensor.chest_freezer_plug_garage_current_power"
+    name: "Chest Freezer Plug Energy:Garage"
+    unique_id: "sensor.garage_chest_freezer_total_increasing_energy"
+    unit_prefix: "k"
+    round: 2
+  - platform: "integration"
+    source: "sensor.fridge_freezer_plug_garage_current_power"
+    name: "Fridge/Freezer Plug Energy:Garage"
+    unique_id: "sensor.garage_fridgefreezer_total_increasing_energy"
+    unit_prefix: "k"
+    round: 2
+  - platform: "integration"
+    source: "sensor.drinks_fridge_plug_bed_c_current_power"
+    name: "Drinks Fridge Plug Energy:Bed C"
+    unique_id: "sensor.bed_c_drinks_fridge_total_increasing_energy"
+    unit_prefix: "k"
+    round: 2
 
 # # SNMP IFTable Sensors
 #   - platform: "snmp"
