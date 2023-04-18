@@ -14,7 +14,7 @@ custom_card_kepath_person_info:
     ulm_card_kepath_person_wifi_tracker: ""
     ulm_card_kepath_person_gps_tracker: ""
     ulm_card_kepath_person_driving_entity: ""
-    ulm_card_kepath_person_commute_entity: ""
+    ulm_card_kepath_person_distance_entity: ""
   triggers_update: "all"
   show_label: false
   show_name: true
@@ -129,8 +129,8 @@ custom_card_kepath_person_info:
                 [[[
                   var color = "rgba(var(--primary-text-color),1)";
                   var fromHomeDistance = 0;
-                  if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
-                    fromHomeDistance = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                  if (states[variables.ulm_card_kepath_person_distance_entity]?.state) {
+                    fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity]?.state
                     if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
                       fromHomeDistance = Math.floor(fromHomeDistance);
                     }
@@ -194,7 +194,7 @@ custom_card_kepath_person_info:
                     return true
                   }
                 }
-                var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+                //var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
                 if (person_location == 'notset') {
                   return true
                 }
@@ -207,8 +207,8 @@ custom_card_kepath_person_info:
             value: >
               [[[
                 var fromHomeDistance = 0;
-                if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                if (states[variables.ulm_card_kepath_person_distance_entity]?.state) {
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity]?.state
                   if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
                     fromHomeDistance = Math.floor(fromHomeDistance);
                   }
@@ -223,8 +223,8 @@ custom_card_kepath_person_info:
               [[[
                 var fromHomeDistance = 0;
                 var icon = "mdi:numeric-0-circle";
-                if (states[variables.ulm_card_kepath_person_commute_entity]?.state) {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_commute_entity]?.state
+                if (states[variables.ulm_card_kepath_person_distance_entity]?.state) {
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity]?.state
                   if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
                     fromHomeDistance = Math.floor(fromHomeDistance);
                     icon = icon.replace("0",fromHomeDistance);
