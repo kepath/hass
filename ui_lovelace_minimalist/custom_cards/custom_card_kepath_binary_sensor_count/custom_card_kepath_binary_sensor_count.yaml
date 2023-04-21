@@ -1,25 +1,46 @@
 ---
 custom_card_kepath_binary_sensor_count:
   template:
-    - "ulm_translation_engine"
     - "icon_info_bg"
+    - "ulm_translation_engine"
     - "custom_popup_auto_entities_list"
+  variables:
+    off_state_top: >
+      [[[
+        var notificationShowsOff = false;
+        if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.off_state_at_top) {
+          if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.off_state_at_top === "boolean") {
+            notificationShowsOff = variables.ulm_card_kepath_binary_sensor_count_notifications.off_state_at_top;
+          }
+        }
+        return notificationShowsOff;
+      ]]]
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
-  show_name: false
+  show_name: true
   group_expand: true
   styles:
     grid:
-      - grid-template-areas: "'i' 'i' 'l'"
-      - grid-template-rows: "min-content min-content"
-      - grid-template-columns: "auto"
+      - grid-template-areas: "'i' 'n'"
+      - grid-template-rows: "1fr min-content"
+      - grid-template-columns: "1fr"
       - justify-items: "center"
     icon:
       - width: "20px"
     card:
+      - box-shadow: "none"
+      - border-radius: "none"
       - padding: "5px"
-      - background-color: "var(--card-background-color)"
+    name:
+      - place-self: "center"
+      - font-weight: "bold"
+      - font-size: "10px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - padding-top: "10px"
+      - margin: "0"
+      - min-width: "20px"
     custom_fields:
       warning:
         - position: "absolute"
@@ -205,6 +226,13 @@ custom_popup_auto_entities_list:
                   - group: "[[[ return entity.entity_id ]]]"
               sort:
                 method: "state"
-                reverse: true
+                reverse: >
+                  [[[
+                    var onAtTop = true;
+                    if (variables.off_state_top == true) {
+                      onAtTop = false;
+                    }
+                    return onAtTop;
+                  ]]]
   hold_action:
     action: "more-info"

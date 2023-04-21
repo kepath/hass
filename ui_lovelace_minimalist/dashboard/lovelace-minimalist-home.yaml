@@ -75,34 +75,40 @@ views:
               - type: "custom:button-card"
                 styles:
                   grid:
-                    - grid-template-areas: "'item1 item1 item1 item2 item2 item2' 'item3 item4 item5 item6 item7 item8'"
-                    - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr"
-                    - grid-template-rows: "min-content min-content"
-                    - row-gap: "0px"
+                    - grid-template-areas: "'item1 item1 item1 item1 item1 item2 item2 item2 item2 item2' 'item3 item3 item4 item4 item5 item5 item6 item6 item7 item7' 'item8 item8 item9 item9 item10 item10 item11 item11 item12 item12'"
+                    - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
+                    - grid-template-rows: "min-content"
+                    - justify-items: "center"
                   card:
-                    - border-radius: "var(--border-radius)"
-                    - box-shadow: "var(--box-shadow)"
                     - padding: "10px"
-                    - cursor: "default"
+                    - overflow: "visible"
                   custom_fields:
                     item1: &widget_update_styling
                       - border-radius: "none"
                       - box-shadow: "none"
                       - padding: "4px"
-                      - margin-left: "relative"
+                      - margin-bottom: "10px"
                       - cursor: "default"
+                      - width: "86%"
+                      - justify-items: "center"
                     item2: *widget_update_styling
                     item3: &widget_icon_binary_sensor_styling
                       - border-radius: "none"
                       - box-shadow: "none"
                       - padding: "4px"
-                      - margin-left: "relative"
+                      # - margin-left: "relative"
                       - cursor: "default"
                     item4: *widget_icon_binary_sensor_styling
                     item5: *widget_icon_binary_sensor_styling
                     item6: *widget_icon_binary_sensor_styling
                     item7: *widget_icon_binary_sensor_styling
                     item8: *widget_icon_binary_sensor_styling
+                    item9: *widget_icon_binary_sensor_styling
+                    item10: *widget_icon_binary_sensor_styling
+                    item11: *widget_icon_binary_sensor_styling
+                    item12: *widget_icon_binary_sensor_styling
+                    item13: *widget_icon_binary_sensor_styling
+                    item14: *widget_icon_binary_sensor_styling
                 custom_fields:
                   item1:
                     card:
@@ -124,9 +130,6 @@ views:
                         ulm_card_neekster_update_collapsible: false
                         ulm_card_neekster_update_horizontal: false
                         ulm_card_neekster_update_narrow_buttons: true
-                      style:
-                        card:
-                          - padding-left: "6px"
                   item3:
                     card:
                       type: "custom:button-card"
@@ -136,6 +139,7 @@ views:
                         - "yellow_on_no_bg"
                       entity: "sensor.binary_sensor_status_counts"
                       icon: "hacs:hacs"
+                      name: "hacs"
                       variables:
                         ulm_card_kepath_binary_sensor_count_popup:
                           type: "navigate"
@@ -159,6 +163,7 @@ views:
                         - "yellow_on_no_bg"
                       entity: "group.all_updates"
                       icon: "mdi:update"
+                      name: "updates"
                       variables:
                         ulm_card_kepath_binary_sensor_count_popup:
                           type: "navigate"
@@ -178,33 +183,11 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_count"
-                        - "green_off"
-                        - "red_on"
-                      entity: "group.all_door_class_binary_sensors"
-                      icon: "mdi:door"
-                      variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "door"
-                          page: "/0"
-                        ulm_card_kepath_binary_sensor_count_notifications:
-                          amount:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "doors_open_count"
-                          unavailable:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "door_sensors_unavailable_count"
-
-                  item6:
-                    card:
-                      type: "custom:button-card"
-                      template:
-                        - "custom_card_kepath_binary_sensor_count"
                         - "grey_off"
                         - "yellow_on_no_bg"
                       entity: "group.all_lights"
                       icon: "mdi:lightbulb-multiple"
+                      name: "lights"
                       variables:
                         ulm_card_kepath_binary_sensor_count_popup:
                           type: "light"
@@ -219,6 +202,31 @@ views:
                             subtype: "attributes"
                             value: "zero_value"
 
+                  item6:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_count"
+                        - "green_off"
+                        - "blue_on_no_bg"
+                      entity: "group.all_outlet_class_switch"
+                      icon: "mdi:power-plug"
+                      name: "plugs"
+                      variables:
+                        ulm_card_kepath_binary_sensor_count_popup:
+                          type: "light"
+                          page: "/0"
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          off_state_at_top: true
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "plugs_off_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "zero_value"
+
                   item7:
                     card:
                       type: "custom:button-card"
@@ -227,6 +235,7 @@ views:
                         - "card_occupancy_state"
                       entity: "group.all_occupancy_class_binary_sensors"
                       icon: "mdi:human-greeting"
+                      name: "motion"
                       variables:
                         ulm_card_kepath_binary_sensor_count_popup:
                           type: "occupancy"
@@ -252,8 +261,33 @@ views:
                         - "custom_card_kepath_binary_sensor_count"
                         - "green_off"
                         - "red_on"
+                      entity: "group.all_door_class_binary_sensors"
+                      icon: "mdi:door"
+                      name: "doors"
+                      variables:
+                        ulm_card_kepath_binary_sensor_count_popup:
+                          type: "door"
+                          page: "/0"
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "doors_open_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "door_sensors_unavailable_count"
+
+                  item9:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_count"
+                        - "green_off"
+                        - "red_on"
                       entity: "group.all_safety_class_binary_sensors"
                       icon: "mdi:alarm-light"
+                      name: "alerts"
                       variables:
                         ulm_card_kepath_binary_sensor_count_popup:
                           type: "safety"
@@ -268,6 +302,82 @@ views:
                             subtype: "attributes"
                             value: "safety_sensors_unavailable_count"
 
+                  item10:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_count"
+                        - "card_occupancy_state"
+                      entity: "group.all_occupancy_class_binary_sensors"
+                      icon: "mdi:human-greeting"
+                      name: "motion"
+                      variables:
+                        ulm_card_kepath_binary_sensor_count_popup:
+                          type: "occupancy"
+                          page: "/0"
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "occupancy_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "occupancy_sensors_unavailable_count"
+                          person:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "occupancy_persons_home_count"
+
+                  item11:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_count"
+                        - "green_off"
+                        - "red_on"
+                      entity: "group.all_safety_class_binary_sensors"
+                      icon: "mdi:alarm-light"
+                      name: "alerts"
+                      variables:
+                        ulm_card_kepath_binary_sensor_count_popup:
+                          type: "safety"
+                          page: "/0"
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "safety_alert_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "safety_sensors_unavailable_count"
+
+                  item12:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_count"
+                        - "green_off"
+                        - "red_on"
+                      entity: "group.all_safety_class_binary_sensors"
+                      icon: "mdi:alarm-light"
+                      name: "alerts"
+                      variables:
+                        ulm_card_kepath_binary_sensor_count_popup:
+                          type: "safety"
+                          page: "/0"
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "safety_alert_count"
+                          unavailable:
+                            entity: "sensor.binary_sensor_status_counts"
+                            subtype: "attributes"
+                            value: "safety_sensors_unavailable_count"
+
+
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
@@ -277,8 +387,8 @@ views:
                     - grid-template-columns: "1fr 1fr 1fr 1fr"
                     - row-gap: "0px"
                   card:
-                    - border-radius: "var(--border-radius)"
-                    - box-shadow: "var(--box-shadow)"
+                    # - border-radius: "var(--border-radius)"
+                    # - box-shadow: "var(--box-shadow)"
                     - padding: "10px"
                     - cursor: "default"
                   custom_fields:
