@@ -429,15 +429,16 @@
   mode: single
 - id: '1672906062419'
   alias: on_start_create_group.all_door_class_binary_sensors
-  description: Uses python script create_binary_device_class_group to create an entity
+  description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_binary_device_class_group
+  - service: python_script.create_entity_device_class_group
     data:
+      domain: binary_sensor
       group_name: all_door_class_binary_sensors
       icon: mdi:door
       friendly_name: All binary_sensor door device class group
@@ -448,14 +449,14 @@
   mode: single
 - id: '1673132278260'
   alias: on_start_create_group.all_plug_class_binary_sensors
-  description: Uses python script create_binary_device_class_group to create an entity
+  description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_binary_device_class_group
+  - service: python_script.create_entity_device_class_group
     data:
       group_name: all_plug_class_binary_sensors
       icon: mdi:power-socket-uk
@@ -465,15 +466,16 @@
   mode: single
 - id: '1673133770721'
   alias: on_start_create_group.all_occupancy_class_binary_sensors
-  description: Uses python script create_binary_device_class_group to create an entity
+  description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_binary_device_class_group
+  - service: python_script.create_entity_device_class_group
     data:
+      domain: binary_sensor
       group_name: all_occupancy_class_binary_sensors
       icon: mdi:human-greeting
       friendly_name: All binary_sensor occupancy motion device class group
@@ -485,15 +487,16 @@
   mode: single
 - id: '1673133921800'
   alias: on_start_create_group.all_safety_class_binary_sensors
-  description: Uses python script create_binary_device_class_group to create an entity
+  description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_binary_device_class_group
+  - service: python_script.create_entity_device_class_group
     data:
+      domain: binary_sensor
       group_name: all_safety_class_binary_sensors
       icon: mdi:alarm-light
       friendly_name: All binary_sensor carbon_monoxide safety problem smoke device
@@ -508,15 +511,16 @@
   mode: single
 - id: '1673133328800'
   alias: on_start_create_group.all_battery_class_binary_sensors
-  description: Uses python script create_binary_device_class_group to create an entity
+  description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_binary_device_class_group
+  - service: python_script.create_entity_device_class_group
     data:
+      domain: binary_sensor
       group_name: all_battery_class_binary_sensors
       icon: mdi:battery-charging-high
       friendly_name: All binary_sensor battery device class group
@@ -725,4 +729,23 @@
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.loft_ladder_last_opened
+  mode: single
+- id: '1681920827927'
+  alias: on_start_create_group.all_outlet_class_switch
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: switch
+      group_name: all_outlet_class_switch
+      icon: mdi:power-plug
+      friendly_name: All switch outlet device class group
+      included_device_classes:
+      - outlet
+      excluded_entities:
+      - switch.zigbee_plug_fridge_bed_c
   mode: single

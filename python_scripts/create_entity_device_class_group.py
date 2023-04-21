@@ -1,17 +1,16 @@
-# import re
-
+domain = data.get('domain', '')
 group_name = data.get('group_name', '')
 icon = data.get('icon', '')
 friendly_name = data.get('friendly_name', group_name)
 included_device_classes = data.get('included_device_classes', ['door'])
 excluded_entities = data.get('excluded_entities', [])
 
-domain = 'binary_sensor'
+# domain = 'binary_sensor'
 entity_list = []
 filtered_list = []
 
-if not isinstance(group_name, str) or not domain or not group_name:
-    logger.warning("Domain does not exist")
+if not isinstance(domain, str) or not domain or not group_name:
+    logger.error("Domain does not exist")
 
 # friendly_name = f"All binary sensor {friendly_name} group"
 globally_excluded_regex = [
