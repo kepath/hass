@@ -1,0 +1,93 @@
+---
+card_notification_script_trigger:
+  template:
+    - "icon_info_bg"
+    - "ulm_translation_engine"
+  variables:
+    color: >
+      [[[
+        var color = "red";
+        const colors = ['yellow', 'blue', 'red', 'purple', 'green', 'pink'];
+        if (variables?.script_activate?.icon?.color) {
+          for (let i = 0; i < colors.length; i++) {
+            if (colors[i] == variables.script_activate.icon.color) {
+              color = colors[i];
+            }
+          }
+        }
+        return color;
+      ]]]
+    # activate_text: "[[[ return variables?.script_activate?.script?.confirmation_text ? variables.script_activate.script.confirmation_text : 'deactivate' ]]]"
+    # deactivate_text: "[[[ return variables?.script_deactivate?.script?.confirmation_text ? variables.script_deactivate.script.confirmation_text : 'activate' ]]]"
+    # activate_script: "[[[ return variables?.script_activate?.script?.name ? variables.script_activate.script.name : '' ]]]"
+    # deactivate_script: "[[[ return variables?.script_deactivate?.script?.name ? variables.script_deactivate.script.name : '' ]]]"
+  show_icon: true
+  show_label: false
+  show_name: true
+  styles:
+    grid:
+      - grid-template-areas: "'i' 'n'"
+      - grid-template-rows: "1fr min-content"
+      - grid-template-columns: "1fr"
+      - justify-items: "center"
+    icon:
+      - width: "20px"
+    card:
+      - box-shadow: "none"
+      - border-radius: "none"
+      - padding: "5px"
+    name:
+      - place-self: "center"
+      - font-weight: "bold"
+      - font-size: "10px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - padding-top: "10px"
+      - margin: "0"
+      - min-width: "20px"
+      - color: "var(--primary-text-color)"
+  state:
+    - value: "on"
+      icon: "[[[ return !variables?.script_activate?.icon?.mdi ? (entity?.attributes?.icon ? entity.attributes.icon : 'mdi:toggle-switch' ) : variables.script_activate.icon.mdi ]]]"
+      name: "[[[ return !variables?.script_activate?.name ? (entity?.attributes?.friendly_name ? entity.attributes.friendly_name : '') : variables.script_activate.name ]]]"
+      styles:
+        icon:
+          - color: >
+              [[[ return "rgba(var(--color-" + variables.color + "),1)"]]]
+        label:
+          - color: >
+              [[[ return "rgba(var(--color-" + variables.color + "-text),1)"]]]
+        name:
+          - color: >
+              [[[ return "rgba(var(--color-" + variables.color + "-text),1)"]]]
+        img_cell:
+          - background-color: >
+              [[[ return "rgba(var(--color-" + variables.color + "), 0.2)"]]]
+  tap_action:
+    # action: "toggle"
+    action: "call-service"
+    service: >
+      [[[
+        var activateScript = variables?.script_activate?.script?.name ? variables.script_activate.script.name : 'missing.script';
+        var deactivateScript = variables?.script_deactivate?.script?.name ? variables.script_deactivate.script.name : 'missing.script';
+
+        var scriptName = activateScript;
+        if(entity.state == "on") {
+          scriptName = deactivateScript;
+        }
+        return scriptName;
+      ]]]
+    service_data: []
+    haptic: "warning"
+    confirmation:
+      text: >
+        [[[
+          var activateText = variables?.script_activate?.script?.confirmation_text ? variables.script_activate.script.confirmation_text : 'activate';
+          var deactivateText = variables?.script_deactivate?.script?.confirmation_text ? variables.script_deactivate.script.confirmation_text : 'deactivate';
+
+          var confirmationText = activateText;
+          if(entity.state == "on") {
+            confirmationText = deactivateText;
+          }
+          return confirmationText;
+        ]]]
