@@ -5,15 +5,28 @@ custom_card_kepath_binary_sensor_count:
     - "ulm_translation_engine"
     - "custom_popup_auto_entities_list"
   variables:
-    off_state_top: >
+    auto_entities_sort_method: >
       [[[
-        var notificationShowsOff = false;
-        if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.off_state_at_top) {
-          if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.off_state_at_top === "boolean") {
-            notificationShowsOff = variables.ulm_card_kepath_binary_sensor_count_notifications.off_state_at_top;
+        var autoEntitiesSortMethod = "state";
+        const sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
+        if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.auto_entities_sort_method) {
+          for (let i = 0; i < sort_methods.length; i++) {
+            if (sort_methods[i] == variables.ulm_card_kepath_binary_sensor_count_notifications.auto_entities_sort_method) {
+              autoEntitiesSortMethod = sort_methods[i];
+            }
           }
         }
-        return notificationShowsOff;
+        return autoEntitiesSortMethod;
+      ]]]
+    auto_entities_sort_reversed: >
+      [[[
+        var autoEntitiesSortReversed = false;
+        if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.auto_entities_sort_reversed) {
+          if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.auto_entities_sort_reversed === "boolean") {
+            autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_notifications.auto_entities_sort_reversed;
+          }
+        }
+        return autoEntitiesSortReversed;
       ]]]
   icon: "mdi:lightbulb"
   show_icon: true
@@ -41,6 +54,7 @@ custom_card_kepath_binary_sensor_count:
       - padding-top: "10px"
       - margin: "0"
       - min-width: "20px"
+      - color: "var(--primary-text-color)"
     custom_fields:
       warning:
         - position: "absolute"
@@ -135,11 +149,15 @@ custom_popup_auto_entities_list:
   tap_action:
     action: >
       [[[
-        if (variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate') {
-          return "navigate";
-        } else {
-          return "fire-dom-event";
+        var action = "fire-dom-event";
+        switch(variables.ulm_card_kepath_binary_sensor_count_popup.type) {
+          case "navigate":
+            action = "navigate";
+            break;
+          default:
+            return action;
         }
+        return action;
       ]]]
     navigation_path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_popup.type == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_popup.page : '/0' ]]]"
     browser_mod:
@@ -225,14 +243,14 @@ custom_popup_auto_entities_list:
                 include:
                   - group: "[[[ return entity.entity_id ]]]"
               sort:
-                method: "state"
+                method: "[[[ return variables.auto_entities_sort_method ]]]"
                 reverse: >
                   [[[
-                    var onAtTop = true;
-                    if (variables.off_state_top == true) {
-                      onAtTop = false;
+                    var sortReversed = true;
+                    if (variables.auto_entities_sort_reversed == true) {
+                      sortReversed = false;
                     }
-                    return onAtTop;
+                    return sortReversed;
                   ]]]
   hold_action:
     action: "more-info"
