@@ -10,11 +10,12 @@ entity_list = []
 filtered_list = []
 
 if not isinstance(domain, str) or not domain or not group_name:
-    logger.error("Domain does not exist")
+    logger.error(f"Domain or group_name {domain}{group_name} does not exist")
 
 # friendly_name = f"All binary sensor {friendly_name} group"
 globally_excluded_regex = [
     "chrome_workdell",
+    "a4974337_d703c461",
     "c105a8ea_57917284",
     "1999f1b8_8c50d6ce",
     "front_door_tablet",
