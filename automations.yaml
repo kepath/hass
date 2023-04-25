@@ -484,6 +484,8 @@
       - motion
       excluded_entities:
       - binary_sensor.front_g3_flex_motion
+      - binary_sensor.nest_protect_top_floor_occupancy
+      - binary_sensor.bed_c_g3_instant_motion
   mode: single
 - id: '1673133921800'
   alias: on_start_create_group.all_safety_class_binary_sensors
@@ -748,4 +750,125 @@
       - outlet
       excluded_entities:
       - switch.zigbee_plug_fridge_bed_c
+  mode: single
+- id: '1682192675338'
+  alias: on_sunset_turn_on_bathroom_bottom_hallway_lights
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 00:18:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 707639a037c05f21cb7ba1e119538bf0
+    entity_id: light.hallway_bottom_light_1
+    domain: light
+  - type: turn_on
+    device_id: 2028999f2f7da1303c521c80b4711c16
+    entity_id: light.bathroom_light_light_1
+    domain: light
+  mode: single
+- id: '1682192916045'
+  alias: on_sunset_turn_on_bed_a_ensuite_lights
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 02:35:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 902d91d28754d1922b19d056054a6de2
+    entity_id: light.bed_a_light_light_1
+    domain: light
+  - type: turn_on
+    device_id: 357203618a4ede0384cbc3979a6806b7
+    entity_id: light.ensuite_light_light_1
+    domain: light
+  - type: turn_off
+    device_id: 2028999f2f7da1303c521c80b4711c16
+    entity_id: light.bathroom_light_light_1
+    domain: light
+  - type: turn_off
+    device_id: 707639a037c05f21cb7ba1e119538bf0
+    entity_id: light.hallway_bottom_light_1
+    domain: light
+  mode: single
+- id: '1682193123450'
+  alias: on_sunset_turn_off_all_lights
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 04:04:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 902d91d28754d1922b19d056054a6de2
+    entity_id: light.bed_a_light_light_1
+    domain: light
+  - type: turn_off
+    device_id: 357203618a4ede0384cbc3979a6806b7
+    entity_id: light.ensuite_light_light_1
+    domain: light
+  - type: turn_off
+    device_id: 2028999f2f7da1303c521c80b4711c16
+    entity_id: light.bathroom_light_light_1
+    domain: light
+  - type: turn_off
+    device_id: 707639a037c05f21cb7ba1e119538bf0
+    entity_id: light.hallway_bottom_light_1
+    domain: light
+  mode: single
+- id: '1682263797941'
+  alias: on_start_create_group.all_tv_class_media_player
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: media_player
+      group_name: all_tv_class_media_player
+      icon: mdi:video
+      friendly_name: All media_player tv device class group
+      included_device_classes:
+      - tv
+      - receiver
+      excluded_entities:
+      - media_player.yamaha_rx_v777_reciever_integration_zone_2
+      - media_player.yamaha_rx_v777_zone2
+      - media_player.nvidia_shield_bed_e_google_cast
+      - media_player.nvidia_shield_lounge_google_cast
+      - media_player.amazon_firestick_bed_a_alexa
+      - media_player.amazon_firestick_kitchen_alexa
+      - media_player.yamaha_rx_v777_reciever_integration_bed_c
+  mode: single
+- id: '1682264073944'
+  alias: on_start_create_group.all_audio_class_media_player
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: media_player
+      group_name: all_audio_class_media_player
+      icon: mdi:volume-medium
+      friendly_name: All media_player audio device class group
+      included_device_classes:
+      - speaker
+      - receiver
+      excluded_entities:
+      - media_player.yamaha_rx_v777_reciever_integration_zone_2
+      - media_player.kitchen_g3_instant_speaker
+      - media_player.lounge_g3_instant_speaker
+      - media_player.doorbell_g4_speaker
+      - media_player.bed_c_g3_instant_speaker
+      - media_player.yamaha_rx_v777_zone2
   mode: single
