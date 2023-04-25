@@ -12,6 +12,153 @@ remote_control_up_arrow:
   sequence:
   - service: androidtv.adb_command
     data:
-      command: "UP"
+      command: UP
   mode: queued
   max: 10
+lockdown_mode_on:
+  alias: Lockdown Mode On
+  sequence:
+  - service: notify.pushover
+    data:
+      title: Lockdown
+      message: Lockdown mode is being activated
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - type: turn_off
+    device_id: a4509b87292d2cba054b4c1da8cab1e6
+    entity_id: switch.doorbell_g4_detections_motion
+    domain: switch
+  - type: turn_off
+    device_id: 11062255f077266d4098f535713a004b
+    entity_id: switch.middle_hallway_g3_flex_detections_motion
+    domain: switch
+  - type: turn_on
+    device_id: d4a495cd869d1d3bbdda640523c97628
+    entity_id: switch.bed_c_g3_instant_detections_motion
+    domain: switch
+  - service: automation.turn_on
+    data: {}
+    target:
+      entity_id:
+      - automation.on_sunset_turn_on_bathroom_bottom_hallway_lights
+      - automation.on_sunset_turn_on_bed_a_ensuite_lights
+      - automation.on_sunset_turn_off_all_lights
+  - device_id: d4a495cd869d1d3bbdda640523c97628
+    domain: select
+    entity_id: select.bed_c_g3_instant_recording_mode
+    type: select_option
+    option: Always
+  - device_id: 11062255f077266d4098f535713a004b
+    domain: select
+    entity_id: select.middle_hallway_g3_flex_recording_mode
+    type: select_option
+    option: Always
+  - device_id: 9ef41eac3dc4c1f0e380eb5d3f75db93
+    domain: climate
+    entity_id: climate.nest_bottom_floor
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - device_id: b8c5bb35e12e0b7fcf939b14baa800ea
+    domain: climate
+    entity_id: climate.nest_middle_floor
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - type: turn_off
+    device_id: fc2e8158e443b2238884592a9e069ff3
+    entity_id: switch.drinks_fridge_plug_bed_c
+    domain: switch
+  - type: turn_off
+    device_id: c7d3a72d40436d1265d0e62e2deb9960
+    entity_id: switch.kettle_plug_kitchen
+    domain: switch
+  - type: turn_off
+    device_id: 1b0e616a939f2bd8c84fb334c0c9d1b5
+    entity_id: switch.microwave_plug_kitchen
+    domain: switch
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.away_script_active
+  - service: notify.pushover
+    data:
+      title: Lockdown On
+      message: Lockdown mode has been activated
+  mode: single
+  icon: mdi:lock
+lockdown_mode_off:
+  alias: Lockdown Mode Off
+  sequence:
+  - service: notify.pushover
+    data:
+      title: Lockdown
+      message: Lockdown mode is being deactivated
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - type: turn_on
+    device_id: a4509b87292d2cba054b4c1da8cab1e6
+    entity_id: switch.doorbell_g4_detections_motion
+    domain: switch
+  - type: turn_on
+    device_id: 11062255f077266d4098f535713a004b
+    entity_id: switch.middle_hallway_g3_flex_detections_motion
+    domain: switch
+  - type: turn_off
+    device_id: d4a495cd869d1d3bbdda640523c97628
+    entity_id: switch.bed_c_g3_instant_detections_motion
+    domain: switch
+  - service: automation.turn_off
+    data:
+      stop_actions: true
+    target:
+      entity_id:
+      - automation.on_sunset_turn_off_all_lights
+      - automation.on_sunset_turn_on_bathroom_bottom_hallway_lights
+      - automation.on_sunset_turn_on_bed_a_ensuite_lights
+  - device_id: d4a495cd869d1d3bbdda640523c97628
+    domain: select
+    entity_id: select.bed_c_g3_instant_recording_mode
+    type: select_option
+    option: Detections
+  - device_id: 11062255f077266d4098f535713a004b
+    domain: select
+    entity_id: select.middle_hallway_g3_flex_recording_mode
+    type: select_option
+    option: Detections
+  - device_id: 9ef41eac3dc4c1f0e380eb5d3f75db93
+    domain: climate
+    entity_id: climate.nest_bottom_floor
+    type: set_hvac_mode
+    hvac_mode: heat
+  - device_id: b8c5bb35e12e0b7fcf939b14baa800ea
+    domain: climate
+    entity_id: climate.nest_middle_floor
+    type: set_hvac_mode
+    hvac_mode: heat
+  - type: turn_on
+    device_id: fc2e8158e443b2238884592a9e069ff3
+    entity_id: switch.drinks_fridge_plug_bed_c
+    domain: switch
+  - type: turn_on
+    device_id: c7d3a72d40436d1265d0e62e2deb9960
+    entity_id: switch.kettle_plug_kitchen
+    domain: switch
+  - type: turn_on
+    device_id: 1b0e616a939f2bd8c84fb334c0c9d1b5
+    entity_id: switch.microwave_plug_kitchen
+    domain: switch
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.away_script_active
+  - service: notify.pushover
+    data:
+      title: Lockdown Off
+      message: Lockdown mode has been deactivated
+  mode: single
+  icon: mdi:lock-open-variant
