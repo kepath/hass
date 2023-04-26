@@ -28,12 +28,12 @@ views:
                     nav: "/lovelace-minimalist-devices"
                     icon: "mdi:devices"
                     name: "Device"
-                    color: "yellow"
+                    color: "green"
                   entity_3:
                     nav: "/lovelace-minimalist-network"
                     icon: "mdi:lan"
                     name: "Net"
-                    color: "green"
+                    color: "yellow"
                   entity_4:
                     nav: "/lovelace-minimalist-downloads"
                     icon: "mdi:download"
@@ -48,7 +48,7 @@ views:
                     nav: "/lovelace-minimalist-media"
                     icon: "mdi:remote-tv"
                     name: "Media"
-                    color: "purple"
+                    color: "green"
                   entity_7:
                     nav: "/lovelace-minimalist-climate"
                     icon: "mdi:home-thermometer"
@@ -58,12 +58,12 @@ views:
                     nav: "/lovelace-minimalist-energy"
                     icon: "mdi:lightning-bolt"
                     name: "Energy"
-                    color: "green"
+                    color: "yellow"
                   entity_9:
                     nav: "/a0d7b954_grafana"
                     icon: "si:grafana"
                     name: "Data"
-                    color: "yellow"
+                    color: "purple"
                   entity_10:
                     nav: "/lovelace-minimalist-links"
                     icon: "mdi:link-variant"
@@ -237,20 +237,20 @@ views:
                         - "green_off_no_name"
                       entity: "input_boolean.away_script_active"
                       icon: "mdi:lock-open"
-                      name: "Away Off"
+                      name: "Home"
                       variables:
                         script_activate:
                           icon:
                             mdi: "mdi:lock"
                             color: "red"
-                          name: "Away On"
+                          name: "Lockdown"
                           script:
                             name: "script.lockdown_mode_on"
                             confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
                         script_deactivate:
                           script:
                             name: "script.lockdown_mode_off"
-                            confirmation_text: "This will DE-ACTIVATE lockdown mode. Are you sure you want to proceed?"
+                            confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
 
                   item8:
                     card:
@@ -335,7 +335,7 @@ views:
                         - "green_off_no_name"
                         - "blue_on_no_bg_or_name"
                       entity: "group.all_tv_class_media_player"
-                      icon: "mdi:video"
+                      icon: "mdi:television-play"
                       name: "Video"
                       variables:
                         ulm_card_kepath_binary_sensor_count_popup:
@@ -351,7 +351,7 @@ views:
                           unavailable:
                             entity: "sensor.binary_sensor_status_counts"
                             subtype: "attributes"
-                            value: "media_player_tv_unavailable_count"
+                            value: "zero_value"
 
                   item12:
                     card:
