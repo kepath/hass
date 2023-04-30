@@ -1,3 +1,33 @@
+class CardColors {
+    constructor() {
+        const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-text-color');
+        this.roseLines = 'rgb(160, 160, 160)';
+        this.roseDirectionLetters = primaryColor;
+        this.rosePercentages = primaryColor;
+        this.barBorder = 'rgb(160, 160, 160)';
+        this.barUnitName = primaryColor;
+        this.barName = primaryColor;
+        this.barUnitValues = primaryColor;
+        this.barPercentages = 'black';
+    }
+}
+
+class GlobalConfig {
+}
+GlobalConfig.defaultCardinalDirectionLetters = "NESW";
+GlobalConfig.defaultWindspeedBarLocation = 'bottom';
+GlobalConfig.defaultHoursToShow = 4;
+GlobalConfig.defaultRefreshInterval = 300;
+GlobalConfig.defaultWindDirectionCount = 16;
+GlobalConfig.defaultWindDirectionUnit = 'degrees';
+GlobalConfig.defaultInputSpeedUnit = 'mps';
+GlobalConfig.defaultOutputSpeedUnit = 'bft';
+GlobalConfig.defaultWindspeedBarFull = true;
+GlobalConfig.defaultMatchingStategy = 'direction-first';
+GlobalConfig.defaultDirectionSpeedTimeDiff = 1;
+GlobalConfig.verticalBarHeight = 30;
+GlobalConfig.horizontalBarHeight = 15;
+
 class ColorUtil {
     getColorArray(count) {
         const startHue = 240;
@@ -12,31 +42,6 @@ class ColorUtil {
         return colors;
     }
 }
-
-var _a;
-class GlobalConfig {
-    static getTextColor() {
-        return getComputedStyle(document.documentElement).getPropertyValue('--primary-text-color');
-    }
-}
-_a = GlobalConfig;
-GlobalConfig.leaveBorderColor = 'rgb(160, 160, 160)';
-GlobalConfig.circlesColor = 'rgb(160, 160, 160)';
-GlobalConfig.crossColor = _a.circlesColor;
-GlobalConfig.barBorderColor = _a.circlesColor;
-GlobalConfig.defaultCardinalDirectionLetters = "NESW";
-GlobalConfig.defaultWindspeedBarLocation = 'bottom';
-GlobalConfig.defaultHoursToShow = 4;
-GlobalConfig.defaultRefreshInterval = 300;
-GlobalConfig.defaultWindDirectionCount = 16;
-GlobalConfig.defaultWindDirectionUnit = 'degrees';
-GlobalConfig.defaultInputSpeedUnit = 'mps';
-GlobalConfig.defaultOutputSpeedUnit = 'bft';
-GlobalConfig.defaultWindspeedBarFull = true;
-GlobalConfig.defaultMatchingStategy = 'direction-first';
-GlobalConfig.defaultDirectionSpeedTimeDiff = 1;
-GlobalConfig.verticalBarHeight = 30;
-GlobalConfig.horizontalBarHeight = 15;
 
 class SpeedUnit {
     constructor(name, toMpsFunc, fromMpsFunc, speedRangeStep, speedRangeMax) {
@@ -87,7 +92,7 @@ class WindSpeedConverter {
         else {
             this.outputSpeedUnit.speedRanges = this.generateSpeedRanges(this.outputSpeedUnit.speedRangeStep, this.outputSpeedUnit.speedRangeMax);
         }
-        console.log('Speed ranges: ', this.outputSpeedUnit.speedRanges);
+        //console.log('Speed ranges: ', this.outputSpeedUnit.speedRanges);
     }
     getOutputSpeedUnit() {
         return this.outputSpeedUnit;
@@ -256,7 +261,7 @@ class CardConfigWrapper {
             windrose_draw_north_offset: 0,
             cardinal_direction_letters: GlobalConfig.defaultCardinalDirectionLetters,
             matching_strategy: GlobalConfig.defaultMatchingStategy,
-            direction_speed_time_diff: GlobalConfig.defaultDirectionSpeedTimeDiff
+            direction_speed_time_diff: GlobalConfig.defaultDirectionSpeedTimeDiff,
         };
     }
     constructor(cardConfig) {
@@ -285,6 +290,7 @@ class CardConfigWrapper {
         this.directionSpeedTimeDiff = this.checkDirectionSpeedTimeDiff();
         this.filterEntitiesQueryParameter = this.createEntitiesQueryParameter();
         this.entities = this.createEntitiesArray();
+        this.cardColor = this.checkCardColors();
     }
     windBarCount() {
         return this.windspeedEntities.length;
@@ -497,6 +503,42 @@ class CardConfigWrapper {
         entities.push(this.windDirectionEntity);
         return entities.concat(this.windspeedEntities.map(config => config.entity));
     }
+    checkCardColors() {
+        const cardColors = new CardColors();
+        if (this.cardConfig.colors) {
+            if (this.cardConfig.colors.rose_direction_letters) {
+                cardColors.roseDirectionLetters = this.cardConfig.colors.rose_direction_letters;
+            }
+            if (this.cardConfig.colors.rose_lines) {
+                cardColors.roseLines = this.cardConfig.colors.rose_lines;
+            }
+            if (this.cardConfig.colors.rose_percentages) {
+                cardColors.rosePercentages = this.cardConfig.colors.rose_percentages;
+            }
+            if (this.cardConfig.colors.bar_border) {
+                cardColors.barBorder = this.cardConfig.colors.bar_border;
+            }
+            if (this.cardConfig.colors.bar_name) {
+                cardColors.barName = this.cardConfig.colors.bar_name;
+            }
+            if (this.cardConfig.colors.bar_percentages) {
+                cardColors.barPercentages = this.cardConfig.colors.bar_percentages;
+            }
+            if (this.cardConfig.colors.bar_unit_name) {
+                cardColors.barUnitName = this.cardConfig.colors.bar_unit_name;
+            }
+            if (this.cardConfig.colors.bar_unit_values) {
+                cardColors.barUnitValues = this.cardConfig.colors.bar_unit_values;
+            }
+        }
+        return cardColors;
+    }
+}
+
+class DrawUtil {
+    static toRadians(degrees) {
+        return degrees * (Math.PI / 180);
+    }
 }
 
 class WindBarData {
@@ -543,12 +585,6 @@ class WindBarCalculator {
         for (const speedRangeCount of speedRangeCounts) {
             this.speedRangePercentages.push(speedRangeCount / (this.speeds.length / 100));
         }
-    }
-}
-
-class DrawUtil {
-    static toRadians(degrees) {
-        return degrees * (Math.PI / 180);
     }
 }
 
@@ -625,6 +661,25 @@ class DirectionSpeed {
     }
 }
 
+class WindBarConfig {
+    constructor(label, posX, posY, height, length, orientation, full, inputUnit, outputUnit, barBorderColor, barUnitNameColor, barNameColor, barUnitValuesColor, barPercentagesColor) {
+        this.label = label;
+        this.posX = posX;
+        this.posY = posY;
+        this.height = height;
+        this.length = length;
+        this.orientation = orientation;
+        this.full = full;
+        this.inputUnit = inputUnit;
+        this.outputUnit = outputUnit;
+        this.barBorderColor = barBorderColor;
+        this.barUnitNameColor = barUnitNameColor;
+        this.barNameColor = barNameColor;
+        this.barUnitValuesColor = barUnitValuesColor;
+        this.barPercentagesColor = barPercentagesColor;
+    }
+}
+
 class WindBarCanvas {
     constructor(config, windSpeedConverter) {
         this.config = config;
@@ -641,29 +696,6 @@ class WindBarCanvas {
             this.drawBarLegendVertical(windBarData.speedRangePercentages, canvasContext);
         }
     }
-    drawBarLegendHorizontal2(speedRangePercentages, canvasContext) {
-        canvasContext.font = '13px Arial';
-        canvasContext.textAlign = 'left';
-        canvasContext.textBaseline = 'middle';
-        canvasContext.lineWidth = 1;
-        canvasContext.fillStyle = GlobalConfig.getTextColor();
-        canvasContext.fillText(this.config.label, this.config.posX, this.config.posY);
-        let posX = this.config.posX;
-        for (let i = 0; i <= speedRangePercentages.length; i++) {
-            if (speedRangePercentages[i] > 0) {
-                length = speedRangePercentages[i] * (this.config.length / 100);
-                canvasContext.beginPath();
-                canvasContext.strokeStyle = GlobalConfig.barBorderColor;
-                canvasContext.fillStyle = this.speedRanges[i].color;
-                canvasContext.rect(posX, this.config.posY + 6, length, this.config.height);
-                canvasContext.fill();
-                canvasContext.fillStyle = 'black';
-                canvasContext.fillText(`${i}`, posX + (length / 2) - 3, this.config.posY + (this.config.height / 2) + 7);
-                canvasContext.stroke();
-                posX += length;
-            }
-        }
-    }
     drawBarLegendVertical(speedRangePercentages, canvasContext) {
         let highestRangeMeasured = speedRangePercentages.length;
         if (!this.config.full) {
@@ -674,7 +706,7 @@ class WindBarCanvas {
         canvasContext.font = '13px Arial';
         canvasContext.textAlign = 'left';
         canvasContext.textBaseline = 'bottom';
-        canvasContext.fillStyle = GlobalConfig.getTextColor();
+        canvasContext.fillStyle = this.config.barNameColor;
         canvasContext.save();
         canvasContext.translate(this.config.posX, this.config.posY);
         canvasContext.rotate(DrawUtil.toRadians(-90));
@@ -695,7 +727,7 @@ class WindBarCanvas {
             canvasContext.fillRect(this.config.posX, posY, this.config.height, length);
             canvasContext.fill();
             canvasContext.textAlign = 'left';
-            canvasContext.fillStyle = GlobalConfig.getTextColor();
+            canvasContext.fillStyle = this.config.barUnitValuesColor;
             if (this.config.outputUnit === 'bft') {
                 if (i == 12) {
                     canvasContext.fillText(i + '', this.config.posX + this.config.height + 5, posY - 6);
@@ -708,7 +740,7 @@ class WindBarCanvas {
                 canvasContext.fillText(this.speedRanges[i].minSpeed + '', this.config.posX + this.config.height + 5, posY);
             }
             canvasContext.textAlign = 'center';
-            canvasContext.fillStyle = 'black';
+            canvasContext.fillStyle = this.config.barPercentagesColor;
             if (speedRangePercentages[i] > 0) {
                 canvasContext.fillText(`${Math.round(speedRangePercentages[i])}%`, this.config.posX + (this.config.height / 2), posY + (length / 2));
             }
@@ -716,13 +748,13 @@ class WindBarCanvas {
             posY += length;
         }
         canvasContext.lineWidth = 1;
-        canvasContext.strokeStyle = GlobalConfig.barBorderColor;
+        canvasContext.strokeStyle = this.config.barBorderColor;
         canvasContext.rect(this.config.posX, this.config.posY, this.config.height, this.config.length * -1);
         canvasContext.stroke();
         canvasContext.beginPath();
         canvasContext.textAlign = 'center';
         canvasContext.textBaseline = 'bottom';
-        canvasContext.fillStyle = GlobalConfig.getTextColor();
+        canvasContext.fillStyle = this.config.barUnitNameColor;
         canvasContext.fillText(this.outputUnitName, this.config.posX + (this.config.height / 2), this.config.posY - this.config.length - 2);
         canvasContext.fill();
     }
@@ -737,7 +769,7 @@ class WindBarCanvas {
         canvasContext.textAlign = 'left';
         canvasContext.textBaseline = 'bottom';
         canvasContext.lineWidth = 1;
-        canvasContext.fillStyle = GlobalConfig.getTextColor();
+        canvasContext.fillStyle = this.config.barNameColor;
         canvasContext.fillText(this.config.label, this.config.posX, this.config.posY);
         canvasContext.textAlign = 'center';
         canvasContext.textBaseline = 'top';
@@ -754,7 +786,7 @@ class WindBarCanvas {
             canvasContext.fillRect(posX, this.config.posY, length, this.config.height);
             canvasContext.fill();
             canvasContext.textAlign = 'center';
-            canvasContext.fillStyle = GlobalConfig.getTextColor();
+            canvasContext.fillStyle = this.config.barUnitValuesColor;
             if (this.config.outputUnit === 'bft') {
                 canvasContext.fillText(i + '', posX + (length / 2), this.config.posY + this.config.height + 2);
             }
@@ -762,7 +794,7 @@ class WindBarCanvas {
                 canvasContext.fillText(this.speedRanges[i].minSpeed + '', posX, this.config.posY + this.config.height + 2);
             }
             canvasContext.textAlign = 'center';
-            canvasContext.fillStyle = 'black';
+            canvasContext.fillStyle = this.config.barPercentagesColor;
             if (speedRangePercentages[i] > 0) {
                 canvasContext.fillText(`${Math.round(speedRangePercentages[i])}%`, posX + (length / 2), this.config.posY + 2);
             }
@@ -770,13 +802,13 @@ class WindBarCanvas {
             posX += length;
         }
         canvasContext.lineWidth = 1;
-        canvasContext.strokeStyle = GlobalConfig.barBorderColor;
+        canvasContext.strokeStyle = this.config.barBorderColor;
         canvasContext.rect(this.config.posX, this.config.posY, this.config.length, this.config.height);
         canvasContext.stroke();
         canvasContext.beginPath();
         canvasContext.textAlign = 'right';
         canvasContext.textBaseline = 'bottom';
-        canvasContext.fillStyle = GlobalConfig.getTextColor();
+        canvasContext.fillStyle = this.config.barUnitNameColor;
         canvasContext.fillText(this.outputUnitName, this.config.posX + this.config.length, this.config.posY);
         canvasContext.fill();
     }
@@ -790,46 +822,130 @@ class WindBarCanvas {
     }
 }
 
-class WindDirectionConverter {
-    constructor() {
-        this.directions = {
-            N: 0,
-            NXE: 11.25,
-            NNE: 22.5,
-            NEXN: 33.75,
-            NE: 45,
-            NEXE: 56.25,
-            ENE: 67.5,
-            EXN: 78.75,
-            E: 90,
-            EXS: 101.25,
-            ESE: 112.50,
-            SEXE: 123.75,
-            SE: 135,
-            SEXS: 146.25,
-            SSE: 157.50,
-            SXE: 168.75,
-            S: 180,
-            SXW: 191.25,
-            SSW: 202.5,
-            SWXS: 213.75,
-            SW: 225,
-            SWxW: 236.25,
-            WSW: 247.5,
-            WXS: 258.75,
-            W: 270,
-            WXN: 281.25,
-            WNW: 292.50,
-            NWXW: 303.75,
-            NW: 315,
-            NWXN: 326.25,
-            NNW: 337.5,
-            NXW: 348.5,
-            CALM: 0
-        };
+class WindRoseCanvas {
+    constructor(config, windSpeedConverter) {
+        this.config = config;
+        this.windSpeedConverter = windSpeedConverter;
+        this.speedRanges = this.windSpeedConverter.getSpeedRanges();
+        this.rangeCount = this.speedRanges.length;
     }
-    getDirection(designation) {
-        return this.directions[designation.toUpperCase()];
+    drawWindRose(windRoseData, canvasContext) {
+        // console.log('Drawing windrose', this.config.outerRadius);
+        this.windRoseData = windRoseData;
+        canvasContext.clearRect(0, 0, 700, 500);
+        canvasContext.save();
+        canvasContext.translate(this.config.centerX, this.config.centerY);
+        canvasContext.rotate(DrawUtil.toRadians(this.config.windRoseDrawNorthOffset));
+        this.drawBackground(canvasContext);
+        this.drawWindDirections(canvasContext);
+        this.drawCircleLegend(canvasContext);
+        this.drawCenterZeroSpeed(canvasContext);
+        canvasContext.restore();
+    }
+    drawWindDirections(canvasContext) {
+        for (const windDirection of this.windRoseData.windDirections) {
+            this.drawWindDirection(windDirection, canvasContext);
+        }
+    }
+    drawWindDirection(windDirection, canvasContext) {
+        if (windDirection.speedRangePercentages.length === 0)
+            return;
+        const percentages = Array(windDirection.speedRangePercentages.length).fill(0);
+        for (let i = windDirection.speedRangePercentages.length - 1; i >= 0; i--) {
+            percentages[i] = windDirection.speedRangePercentages[i];
+            if (windDirection.speedRangePercentages[i] > 0) {
+                for (let x = i - 1; x >= 1; x--) {
+                    percentages[i] += windDirection.speedRangePercentages[x];
+                }
+            }
+        }
+        const maxRadius = (this.config.outerRadius - this.config.centerRadius) * (windDirection.directionPercentage / 100);
+        for (let i = this.speedRanges.length - 1; i >= 1; i--) {
+            this.drawSpeedPart(canvasContext, windDirection.centerDegrees - 90, (maxRadius * (percentages[i] / 100)) + this.config.centerRadius, this.speedRanges[i].color);
+        }
+    }
+    drawSpeedPart(canvasContext, degrees, radius, color) {
+        //var x = Math.cos(DrawUtil.toRadians(degreesCompensated - (this.config.leaveArc / 2)));
+        //var y = Math.sin(DrawUtil.toRadians(degreesCompensated - (this.config.leaveArc / 2)));
+        canvasContext.strokeStyle = this.config.roseLinesColor;
+        canvasContext.lineWidth = 2;
+        canvasContext.beginPath();
+        canvasContext.moveTo(0, 0);
+        //canvasContext.lineTo(this.config.centerX + x, this.config.centerY + y);
+        canvasContext.arc(0, 0, radius, DrawUtil.toRadians(degrees - (this.config.leaveArc / 2)), DrawUtil.toRadians(degrees + (this.config.leaveArc / 2)));
+        canvasContext.lineTo(0, 0);
+        canvasContext.stroke();
+        canvasContext.fillStyle = color;
+        canvasContext.fill();
+    }
+    drawBackground(canvasContext) {
+        // Clear
+        canvasContext.clearRect(0, 0, 5000, 5000);
+        // Cross
+        canvasContext.lineWidth = 1;
+        canvasContext.strokeStyle = this.config.roseLinesColor;
+        canvasContext.moveTo(0 - this.config.outerRadius, 0);
+        canvasContext.lineTo(this.config.outerRadius, 0);
+        canvasContext.stroke();
+        canvasContext.moveTo(0, 0 - this.config.outerRadius);
+        canvasContext.lineTo(0, this.config.outerRadius);
+        canvasContext.stroke();
+        // console.log('Cirlce center:', this.config.centerX, this.config.centerY);
+        // Cirlces
+        canvasContext.strokeStyle = this.config.roseLinesColor;
+        const radiusStep = (this.config.outerRadius - this.config.centerRadius) / this.windRoseData.numberOfCircles;
+        for (let i = 1; i <= this.windRoseData.numberOfCircles; i++) {
+            canvasContext.beginPath();
+            canvasContext.arc(0, 0, this.config.centerRadius + (radiusStep * i), 0, 2 * Math.PI);
+            canvasContext.stroke();
+        }
+        // Wind direction text
+        const textCirlceSpace = 15;
+        canvasContext.fillStyle = this.config.roseDirectionLettersColor;
+        canvasContext.font = '22px Arial';
+        canvasContext.textAlign = 'center';
+        canvasContext.textBaseline = 'middle';
+        this.drawText(canvasContext, this.config.cardinalDirectionLetters[0], 0, 0 - this.config.outerRadius - textCirlceSpace + 2);
+        this.drawText(canvasContext, this.config.cardinalDirectionLetters[2], 0, this.config.outerRadius + textCirlceSpace);
+        this.drawText(canvasContext, this.config.cardinalDirectionLetters[1], this.config.outerRadius + textCirlceSpace, 0);
+        this.drawText(canvasContext, this.config.cardinalDirectionLetters[3], 0 - this.config.outerRadius - textCirlceSpace, 0);
+    }
+    drawCircleLegend(canvasContext) {
+        canvasContext.font = "10px Arial";
+        canvasContext.fillStyle = this.config.rosePercentagesColor;
+        canvasContext.textAlign = 'center';
+        canvasContext.textBaseline = 'bottom';
+        const radiusStep = (this.config.outerRadius - this.config.centerRadius) / this.windRoseData.numberOfCircles;
+        const centerXY = Math.cos(DrawUtil.toRadians(45)) * this.config.centerRadius;
+        const xy = Math.cos(DrawUtil.toRadians(45)) * radiusStep;
+        for (let i = 1; i <= this.windRoseData.numberOfCircles; i++) {
+            const xPos = centerXY + (xy * i);
+            const yPos = centerXY + (xy * i);
+            //canvasContext.fillText((this.windRoseData.percentagePerCircle * i) + "%", xPos, yPos);
+            this.drawText(canvasContext, (this.windRoseData.percentagePerCircle * i) + "%", xPos, yPos);
+        }
+    }
+    drawCenterZeroSpeed(canvasContext) {
+        canvasContext.strokeStyle = this.config.roseLinesColor;
+        canvasContext.lineWidth = 1;
+        canvasContext.beginPath();
+        canvasContext.arc(0, 0, this.config.centerRadius, 0, 2 * Math.PI);
+        canvasContext.stroke();
+        canvasContext.fillStyle = this.speedRanges[0].color;
+        canvasContext.fill();
+        canvasContext.font = '12px Arial';
+        canvasContext.textAlign = 'center';
+        canvasContext.textBaseline = 'middle';
+        canvasContext.strokeStyle = this.config.rosePercentagesColor;
+        canvasContext.fillStyle = this.config.rosePercentagesColor;
+        this.drawText(canvasContext, Math.round(this.windRoseData.calmSpeedPercentage) + '%', 0, 0);
+    }
+    drawText(canvasContext, text, x, y) {
+        canvasContext.save();
+        canvasContext.translate(x, y);
+        canvasContext.rotate(DrawUtil.toRadians(-this.config.windRoseDrawNorthOffset));
+        canvasContext.fillText(text, 0, 0);
+        canvasContext.restore();
     }
 }
 
@@ -840,20 +956,6 @@ class WindDirectionData {
         this.maxDegrees = 0;
         this.speedRangePercentages = [];
         this.directionPercentage = 0;
-    }
-}
-
-class WindBarConfig {
-    constructor(label, posX, posY, height, length, orientation, full, inputUnit, outputUnit) {
-        this.label = label;
-        this.posX = posX;
-        this.posY = posY;
-        this.height = height;
-        this.length = length;
-        this.orientation = orientation;
-        this.full = full;
-        this.inputUnit = inputUnit;
-        this.outputUnit = outputUnit;
     }
 }
 
@@ -912,236 +1014,6 @@ class WindDirectionCalculator {
             this.data.speedRangePercentages.push(speedRangeCount / (speedAboveZeroCount / 100));
         }
         return this.data.speedRangePercentages;
-    }
-}
-
-class WindRoseData {
-    constructor() {
-        this.windDirections = [];
-        this.numberOfCircles = 0;
-        this.percentagePerCircle = 0;
-        this.calmSpeedPercentage = 10;
-    }
-}
-
-class WindRoseCalculator {
-    constructor(config, windSpeedConverter) {
-        this.windDirectionConverter = new WindDirectionConverter();
-        this.data = new WindRoseData();
-        this.windDirections = [];
-        this.modified = false;
-        this.totalMeasurements = 0;
-        this.maxMeasurementsDirection = 0;
-        this.calmSpeedMeasurements = 0;
-        this.config = config;
-        this.windSpeedConverter = windSpeedConverter;
-        this.speedRangeFunction = this.windSpeedConverter.getRangeFunction();
-        this.speedConverterFunction = this.windSpeedConverter.getSpeedConverter();
-        const leaveDegrees = 360 / config.windDirectionCount;
-        for (let i = 0; i < config.windDirectionCount; i++) {
-            const degrees = (i * leaveDegrees);
-            const minDegrees = degrees - (leaveDegrees / 2);
-            const maxDegrees = degrees + (leaveDegrees / 2);
-            this.windDirections.push(new WindDirectionCalculator(minDegrees, degrees, maxDegrees, this.config, windSpeedConverter));
-        }
-    }
-    clear() {
-        this.totalMeasurements = 0;
-        this.maxMeasurementsDirection = 0;
-        this.calmSpeedMeasurements = 0;
-        this.data.percentagePerCircle = 0;
-        this.data.numberOfCircles = 0;
-        this.data.calmSpeedPercentage = 0;
-        for (const windDirection of this.windDirections) {
-            windDirection.clear();
-        }
-    }
-    addDataPoint(direction, speed) {
-        const convertedSpeed = this.speedConverterFunction(speed);
-        let degrees = 0;
-        if (this.config.windDirectionUnit === 'letters') {
-            degrees = this.windDirectionConverter.getDirection(direction);
-            if (isNaN(degrees)) {
-                throw new Error("Could not convert direction " + direction + " to degrees.");
-            }
-        }
-        else {
-            degrees = direction;
-        }
-        if (this.config.directionCompensation !== 0) {
-            degrees = +degrees + this.config.directionCompensation;
-            if (degrees < 0) {
-                degrees = 360 + degrees;
-            }
-            else if (degrees >= 360) {
-                degrees = degrees - 360;
-            }
-        }
-        for (const windDirection of this.windDirections) {
-            if (windDirection.checkDirection(degrees)) {
-                windDirection.addSpeed(convertedSpeed);
-                this.totalMeasurements++;
-            }
-        }
-        if (this.speedRangeFunction(convertedSpeed) == 0) {
-            this.calmSpeedMeasurements++;
-        }
-        this.modified = true;
-    }
-    calculate() {
-        this.maxMeasurementsDirection = Math.max(...this.windDirections.map(windDirection => windDirection.speeds.length));
-        for (const windDirection of this.windDirections) {
-            windDirection.calculateDirectionPercentage(this.maxMeasurementsDirection);
-        }
-        this.calculateSpeedPercentages();
-        this.calculateWindRosePercentages();
-        this.data.windDirections = this.windDirections.map(windDirection => windDirection.data);
-        //console.log(this.calmSpeedMeasurements, this.totalMeasurements);
-        this.data.calmSpeedPercentage = this.calmSpeedMeasurements / (this.totalMeasurements / 100);
-        return this.data;
-    }
-    calculateWindRosePercentages() {
-        const maxRosePercentage = this.maxMeasurementsDirection / (this.totalMeasurements / 100);
-        if (maxRosePercentage <= 30) {
-            this.data.percentagePerCircle = Math.ceil(maxRosePercentage / 6);
-            this.data.numberOfCircles = Math.ceil(maxRosePercentage / this.data.percentagePerCircle);
-        }
-        else {
-            this.data.percentagePerCircle = Math.ceil(maxRosePercentage / 5);
-            this.data.numberOfCircles = 5;
-        }
-    }
-    calculateSpeedPercentages() {
-        for (const windDirection of this.windDirections) {
-            windDirection.calculateSpeedPercentages();
-        }
-    }
-}
-
-class WindRoseCanvas {
-    constructor(config, windSpeedConverter) {
-        this.config = config;
-        this.windSpeedConverter = windSpeedConverter;
-        this.speedRanges = this.windSpeedConverter.getSpeedRanges();
-        this.rangeCount = this.speedRanges.length;
-    }
-    drawWindRose(windRoseData, canvasContext) {
-        // console.log('Drawing windrose', this.config.outerRadius);
-        this.windRoseData = windRoseData;
-        canvasContext.clearRect(0, 0, 700, 500);
-        canvasContext.save();
-        canvasContext.translate(this.config.centerX, this.config.centerY);
-        canvasContext.rotate(DrawUtil.toRadians(this.config.windRoseDrawNorthOffset));
-        this.drawBackground(canvasContext);
-        this.drawWindDirections(canvasContext);
-        this.drawCircleLegend(canvasContext);
-        this.drawCenterZeroSpeed(canvasContext);
-        canvasContext.restore();
-    }
-    drawWindDirections(canvasContext) {
-        for (const windDirection of this.windRoseData.windDirections) {
-            this.drawWindDirection(windDirection, canvasContext);
-        }
-    }
-    drawWindDirection(windDirection, canvasContext) {
-        if (windDirection.speedRangePercentages.length === 0)
-            return;
-        const percentages = Array(windDirection.speedRangePercentages.length).fill(0);
-        for (let i = windDirection.speedRangePercentages.length - 1; i >= 0; i--) {
-            percentages[i] = windDirection.speedRangePercentages[i];
-            if (windDirection.speedRangePercentages[i] > 0) {
-                for (let x = i - 1; x >= 1; x--) {
-                    percentages[i] += windDirection.speedRangePercentages[x];
-                }
-            }
-        }
-        const maxRadius = (this.config.outerRadius - this.config.centerRadius) * (windDirection.directionPercentage / 100);
-        for (let i = this.speedRanges.length - 1; i >= 1; i--) {
-            this.drawSpeedPart(canvasContext, windDirection.centerDegrees - 90, (maxRadius * (percentages[i] / 100)) + this.config.centerRadius, this.speedRanges[i].color);
-        }
-    }
-    drawSpeedPart(canvasContext, degrees, radius, color) {
-        //var x = Math.cos(DrawUtil.toRadians(degreesCompensated - (this.config.leaveArc / 2)));
-        //var y = Math.sin(DrawUtil.toRadians(degreesCompensated - (this.config.leaveArc / 2)));
-        canvasContext.strokeStyle = GlobalConfig.leaveBorderColor;
-        canvasContext.lineWidth = 2;
-        canvasContext.beginPath();
-        canvasContext.moveTo(0, 0);
-        //canvasContext.lineTo(this.config.centerX + x, this.config.centerY + y);
-        canvasContext.arc(0, 0, radius, DrawUtil.toRadians(degrees - (this.config.leaveArc / 2)), DrawUtil.toRadians(degrees + (this.config.leaveArc / 2)));
-        canvasContext.lineTo(0, 0);
-        canvasContext.stroke();
-        canvasContext.fillStyle = color;
-        canvasContext.fill();
-    }
-    drawBackground(canvasContext) {
-        // Clear
-        canvasContext.clearRect(0, 0, 5000, 5000);
-        // Cross
-        canvasContext.lineWidth = 1;
-        canvasContext.strokeStyle = GlobalConfig.crossColor;
-        canvasContext.moveTo(0 - this.config.outerRadius, 0);
-        canvasContext.lineTo(this.config.outerRadius, 0);
-        canvasContext.stroke();
-        canvasContext.moveTo(0, 0 - this.config.outerRadius);
-        canvasContext.lineTo(0, this.config.outerRadius);
-        canvasContext.stroke();
-        // console.log('Cirlce center:', this.config.centerX, this.config.centerY);
-        // Cirlces
-        canvasContext.strokeStyle = GlobalConfig.circlesColor;
-        const radiusStep = (this.config.outerRadius - this.config.centerRadius) / this.windRoseData.numberOfCircles;
-        for (let i = 1; i <= this.windRoseData.numberOfCircles; i++) {
-            canvasContext.beginPath();
-            canvasContext.arc(0, 0, this.config.centerRadius + (radiusStep * i), 0, 2 * Math.PI);
-            canvasContext.stroke();
-        }
-        // Wind direction text
-        const textCirlceSpace = 15;
-        canvasContext.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-text-color');
-        canvasContext.font = '22px Arial';
-        canvasContext.textAlign = 'center';
-        canvasContext.textBaseline = 'middle';
-        this.drawText(canvasContext, this.config.cardinalDirectionLetters[0], 0, 0 - this.config.outerRadius - textCirlceSpace + 2);
-        this.drawText(canvasContext, this.config.cardinalDirectionLetters[2], 0, this.config.outerRadius + textCirlceSpace);
-        this.drawText(canvasContext, this.config.cardinalDirectionLetters[1], this.config.outerRadius + textCirlceSpace, 0);
-        this.drawText(canvasContext, this.config.cardinalDirectionLetters[3], 0 - this.config.outerRadius - textCirlceSpace, 0);
-    }
-    drawCircleLegend(canvasContext) {
-        canvasContext.font = "10px Arial";
-        canvasContext.fillStyle = GlobalConfig.getTextColor();
-        canvasContext.textAlign = 'center';
-        canvasContext.textBaseline = 'bottom';
-        const radiusStep = (this.config.outerRadius - this.config.centerRadius) / this.windRoseData.numberOfCircles;
-        const centerXY = Math.cos(DrawUtil.toRadians(45)) * this.config.centerRadius;
-        const xy = Math.cos(DrawUtil.toRadians(45)) * radiusStep;
-        for (let i = 1; i <= this.windRoseData.numberOfCircles; i++) {
-            const xPos = centerXY + (xy * i);
-            const yPos = centerXY + (xy * i);
-            //canvasContext.fillText((this.windRoseData.percentagePerCircle * i) + "%", xPos, yPos);
-            this.drawText(canvasContext, (this.windRoseData.percentagePerCircle * i) + "%", xPos, yPos);
-        }
-    }
-    drawCenterZeroSpeed(canvasContext) {
-        canvasContext.strokeStyle = GlobalConfig.circlesColor;
-        canvasContext.lineWidth = 1;
-        canvasContext.beginPath();
-        canvasContext.arc(0, 0, this.config.centerRadius, 0, 2 * Math.PI);
-        canvasContext.stroke();
-        canvasContext.fillStyle = this.speedRanges[0].color;
-        canvasContext.fill();
-        canvasContext.font = '12px Arial';
-        canvasContext.textAlign = 'center';
-        canvasContext.textBaseline = 'middle';
-        canvasContext.strokeStyle = 'white';
-        canvasContext.fillStyle = 'white';
-        this.drawText(canvasContext, Math.round(this.windRoseData.calmSpeedPercentage) + '%', 0, 0);
-    }
-    drawText(canvasContext, text, x, y) {
-        canvasContext.save();
-        canvasContext.translate(x, y);
-        canvasContext.rotate(DrawUtil.toRadians(-this.config.windRoseDrawNorthOffset));
-        canvasContext.fillText(text, 0, 0);
-        canvasContext.restore();
     }
 }
 
@@ -1244,7 +1116,7 @@ let WindRoseCardEditor = class WindRoseCardEditor extends e$2(s) {
     constructor() {
         super();
         this._initialized = false;
-        console.log('WindRoseCardEditor()');
+        //console.log('WindRoseCardEditor()');
     }
     setConfig(config) {
         this._config = config;
@@ -1261,7 +1133,7 @@ let WindRoseCardEditor = class WindRoseCardEditor extends e$2(s) {
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.title) || '';
     }
     render() {
-        console.log('Render');
+        //console.log('Render');
         if (!this.hass || !this._helpers) {
             return y ``;
         }
@@ -1344,8 +1216,154 @@ WindRoseCardEditor = __decorate([
     e$1('windrose-card-editor')
 ], WindRoseCardEditor);
 
+class WindRoseData {
+    constructor() {
+        this.windDirections = [];
+        this.numberOfCircles = 0;
+        this.percentagePerCircle = 0;
+        this.calmSpeedPercentage = 10;
+    }
+}
+
+class WindDirectionConverter {
+    constructor() {
+        this.directions = {
+            N: 0,
+            NXE: 11.25,
+            NNE: 22.5,
+            NEXN: 33.75,
+            NE: 45,
+            NEXE: 56.25,
+            ENE: 67.5,
+            EXN: 78.75,
+            E: 90,
+            EXS: 101.25,
+            ESE: 112.50,
+            SEXE: 123.75,
+            SE: 135,
+            SEXS: 146.25,
+            SSE: 157.50,
+            SXE: 168.75,
+            S: 180,
+            SXW: 191.25,
+            SSW: 202.5,
+            SWXS: 213.75,
+            SW: 225,
+            SWxW: 236.25,
+            WSW: 247.5,
+            WXS: 258.75,
+            W: 270,
+            WXN: 281.25,
+            WNW: 292.50,
+            NWXW: 303.75,
+            NW: 315,
+            NWXN: 326.25,
+            NNW: 337.5,
+            NXW: 348.5,
+            CALM: 0
+        };
+    }
+    getDirection(designation) {
+        return this.directions[designation.toUpperCase()];
+    }
+}
+
+class WindRoseCalculator {
+    constructor(config, windSpeedConverter) {
+        this.windDirectionConverter = new WindDirectionConverter();
+        this.data = new WindRoseData();
+        this.windDirections = [];
+        this.modified = false;
+        this.totalMeasurements = 0;
+        this.maxMeasurementsDirection = 0;
+        this.calmSpeedMeasurements = 0;
+        this.config = config;
+        this.windSpeedConverter = windSpeedConverter;
+        this.speedRangeFunction = this.windSpeedConverter.getRangeFunction();
+        this.speedConverterFunction = this.windSpeedConverter.getSpeedConverter();
+        const leaveDegrees = 360 / config.windDirectionCount;
+        for (let i = 0; i < config.windDirectionCount; i++) {
+            const degrees = (i * leaveDegrees);
+            const minDegrees = degrees - (leaveDegrees / 2);
+            const maxDegrees = degrees + (leaveDegrees / 2);
+            this.windDirections.push(new WindDirectionCalculator(minDegrees, degrees, maxDegrees, this.config, windSpeedConverter));
+        }
+    }
+    clear() {
+        this.totalMeasurements = 0;
+        this.maxMeasurementsDirection = 0;
+        this.calmSpeedMeasurements = 0;
+        this.data.percentagePerCircle = 0;
+        this.data.numberOfCircles = 0;
+        this.data.calmSpeedPercentage = 0;
+        for (const windDirection of this.windDirections) {
+            windDirection.clear();
+        }
+    }
+    addDataPoint(direction, speed) {
+        const convertedSpeed = this.speedConverterFunction(speed);
+        let degrees = 0;
+        if (this.config.windDirectionUnit === 'letters') {
+            degrees = this.windDirectionConverter.getDirection(direction);
+            if (isNaN(degrees)) {
+                throw new Error("Could not convert direction " + direction + " to degrees.");
+            }
+        }
+        else {
+            degrees = direction;
+        }
+        if (this.config.directionCompensation !== 0) {
+            degrees = +degrees + this.config.directionCompensation;
+            if (degrees < 0) {
+                degrees = 360 + degrees;
+            }
+            else if (degrees >= 360) {
+                degrees = degrees - 360;
+            }
+        }
+        for (const windDirection of this.windDirections) {
+            if (windDirection.checkDirection(degrees)) {
+                windDirection.addSpeed(convertedSpeed);
+                this.totalMeasurements++;
+            }
+        }
+        if (this.speedRangeFunction(convertedSpeed) == 0) {
+            this.calmSpeedMeasurements++;
+        }
+        this.modified = true;
+    }
+    calculate() {
+        this.maxMeasurementsDirection = Math.max(...this.windDirections.map(windDirection => windDirection.speeds.length));
+        for (const windDirection of this.windDirections) {
+            windDirection.calculateDirectionPercentage(this.maxMeasurementsDirection);
+        }
+        this.calculateSpeedPercentages();
+        this.calculateWindRosePercentages();
+        this.data.windDirections = this.windDirections.map(windDirection => windDirection.data);
+        //console.log(this.calmSpeedMeasurements, this.totalMeasurements);
+        this.data.calmSpeedPercentage = this.calmSpeedMeasurements / (this.totalMeasurements / 100);
+        return this.data;
+    }
+    calculateWindRosePercentages() {
+        const maxRosePercentage = this.maxMeasurementsDirection / (this.totalMeasurements / 100);
+        if (maxRosePercentage <= 30) {
+            this.data.percentagePerCircle = Math.ceil(maxRosePercentage / 6);
+            this.data.numberOfCircles = Math.ceil(maxRosePercentage / this.data.percentagePerCircle);
+        }
+        else {
+            this.data.percentagePerCircle = Math.ceil(maxRosePercentage / 5);
+            this.data.numberOfCircles = 5;
+        }
+    }
+    calculateSpeedPercentages() {
+        for (const windDirection of this.windDirections) {
+            windDirection.calculateSpeedPercentages();
+        }
+    }
+}
+
 class WindRoseConfig {
-    constructor(outerRadius, centerRadius, centerX, centerY, windDirectionCount, windDirectionUnit, leaveArc, cardinalDirectionLetters, directionCompensation, inputUnit, outputUnit, windRoseDrawNorthOffset) {
+    constructor(outerRadius, centerRadius, centerX, centerY, windDirectionCount, windDirectionUnit, leaveArc, cardinalDirectionLetters, directionCompensation, inputUnit, outputUnit, windRoseDrawNorthOffset, roseLinesColor, roseDirectionLettersColor, rosePercentagesColor) {
         this.outerRadius = outerRadius;
         this.centerRadius = centerRadius;
         this.centerX = centerX;
@@ -1358,6 +1376,9 @@ class WindRoseConfig {
         this.inputUnit = inputUnit;
         this.outputUnit = outputUnit;
         this.windRoseDrawNorthOffset = windRoseDrawNorthOffset;
+        this.roseLinesColor = roseLinesColor;
+        this.roseDirectionLettersColor = roseDirectionLettersColor;
+        this.rosePercentagesColor = rosePercentagesColor;
     }
 }
 
@@ -1372,7 +1393,7 @@ class WindRoseConfigFactory {
     }
     createWindRoseConfig(canvasWidth) {
         this.calculateDimensions(canvasWidth);
-        return new WindRoseConfig(this.outerRadius, 25, this.roseCenterX, this.roseCenterY, this.cardConfig.windDirectionCount, this.cardConfig.windDirectionUnit, (360 / this.cardConfig.windDirectionCount) - 5, this.cardConfig.cardinalDirectionLetters, this.cardConfig.directionCompensation, this.cardConfig.inputSpeedUnit, this.cardConfig.outputSpeedUnit, this.cardConfig.windRoseDrawNorthOffset);
+        return new WindRoseConfig(this.outerRadius, 25, this.roseCenterX, this.roseCenterY, this.cardConfig.windDirectionCount, this.cardConfig.windDirectionUnit, (360 / this.cardConfig.windDirectionCount) - 5, this.cardConfig.cardinalDirectionLetters, this.cardConfig.directionCompensation, this.cardConfig.inputSpeedUnit, this.cardConfig.outputSpeedUnit, this.cardConfig.windRoseDrawNorthOffset, this.cardConfig.cardColor.roseLines, this.cardConfig.cardColor.roseDirectionLetters, this.cardConfig.cardColor.rosePercentages);
     }
     createWindBarConfigs(canvasWidth) {
         this.calculateDimensions(canvasWidth);
@@ -1381,10 +1402,10 @@ class WindRoseConfigFactory {
             const entity = this.cardConfig.windspeedEntities[i];
             let windBarConfig;
             if (this.cardConfig.windspeedBarLocation === 'bottom') {
-                windBarConfig = new WindBarConfig(entity.name, this.offsetWidth + 5, this.roseCenterY + this.outerRadius + 30 + ((GlobalConfig.horizontalBarHeight + 40) * i), GlobalConfig.horizontalBarHeight, ((this.outerRadius + 30) * 2), 'horizontal', this.cardConfig.windspeedBarFull, this.cardConfig.inputSpeedUnit, this.cardConfig.outputSpeedUnit);
+                windBarConfig = new WindBarConfig(entity.name, this.offsetWidth + 5, this.roseCenterY + this.outerRadius + 30 + ((GlobalConfig.horizontalBarHeight + 40) * i), GlobalConfig.horizontalBarHeight, ((this.outerRadius + 30) * 2), 'horizontal', this.cardConfig.windspeedBarFull, this.cardConfig.inputSpeedUnit, this.cardConfig.outputSpeedUnit, this.cardConfig.cardColor.barBorder, this.cardConfig.cardColor.barUnitName, this.cardConfig.cardColor.barName, this.cardConfig.cardColor.barUnitValues, this.cardConfig.cardColor.barPercentages);
             }
             else if (this.cardConfig.windspeedBarLocation === 'right') {
-                windBarConfig = new WindBarConfig(entity.name, this.roseCenterX + this.outerRadius + 35 + ((GlobalConfig.verticalBarHeight + 60) * i), this.roseCenterY + this.outerRadius + 20, GlobalConfig.verticalBarHeight, this.outerRadius * 2 + 24, 'vertical', this.cardConfig.windspeedBarFull, this.cardConfig.inputSpeedUnit, this.cardConfig.outputSpeedUnit);
+                windBarConfig = new WindBarConfig(entity.name, this.roseCenterX + this.outerRadius + 35 + ((GlobalConfig.verticalBarHeight + 60) * i), this.roseCenterY + this.outerRadius + 20, GlobalConfig.verticalBarHeight, this.outerRadius * 2 + 24, 'vertical', this.cardConfig.windspeedBarFull, this.cardConfig.inputSpeedUnit, this.cardConfig.outputSpeedUnit, this.cardConfig.cardColor.barBorder, this.cardConfig.cardColor.barUnitName, this.cardConfig.cardColor.barName, this.cardConfig.cardColor.barUnitValues, this.cardConfig.cardColor.barPercentages);
             }
             else {
                 throw Error('Unknown windspeed bar location: ' + this.cardConfig.windspeedBarLocation);
@@ -1412,9 +1433,7 @@ class WindRoseConfigFactory {
         else if (this.cardConfig.windspeedBarLocation === 'bottom') {
             this.canvasHeight = this.roseCenterY + this.outerRadius + (40 * this.cardConfig.windBarCount()) + 35;
         }
-        else {
-            console.log('Unknown windspeed bar location', this.cardConfig.windspeedBarLocation);
-        }
+        else ;
     }
 }
 
@@ -1425,7 +1444,7 @@ window.customCards.push({
     description: 'A card to show wind speed and direction in a windrose.',
 });
 /* eslint no-console: 0 */
-console.info(`%c  WINROSE-CARD  %c Version 0.9.1 `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
+console.info(`%c  WINROSE-CARD  %c Version 0.10.0 `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
 let WindRoseCard = class WindRoseCard extends s {
     //
     // public static async getConfigElement(): Promise<HTMLElement> {
@@ -1460,7 +1479,7 @@ let WindRoseCard = class WindRoseCard extends s {
     render() {
         var _a;
         super.render();
-        console.log('render()');
+        //console.log('render()');
         return y `
             <ha-card header="${(_a = this.cardConfig) === null || _a === void 0 ? void 0 : _a.title}">
                 <div class="card-content">
@@ -1473,7 +1492,7 @@ let WindRoseCard = class WindRoseCard extends s {
         `;
     }
     firstUpdated() {
-        console.log('firstUpdated()');
+        //console.log('firstUpdated()');
         this.initWindRoseObjects(this.cardConfig, this.canvas.width);
         this.updateWindData();
         this.canvasContext = this.canvas.getContext('2d');
@@ -1483,7 +1502,7 @@ let WindRoseCard = class WindRoseCard extends s {
         this.drawWindRoseAndBar();
     }
     initInterval() {
-        console.log('Loop start');
+        //console.log('Loop start');
         this.updateInterval = setInterval(() => this.updateWindData(), this.cardConfig.refreshInterval * 1000);
     }
     static get styles() {
@@ -1500,16 +1519,16 @@ let WindRoseCard = class WindRoseCard extends s {
         super.connectedCallback();
         this.ro.observe(this);
         this.initInterval();
-        console.log('connectedCallBack()');
+        //console.log('connectedCallBack()');
     }
     disconnectedCallback() {
         super.disconnectedCallback();
         this.ro.unobserve(this);
         clearInterval(this.updateInterval);
-        console.log('disconnectedCallback()');
+        //console.log('disconnectedCallback()');
     }
     setConfig(config) {
-        console.log('setConfig(): ', config);
+        //console.log('setConfig(): ', config);
         this.config = config;
         this.cardConfig = new CardConfigWrapper(config);
         if (this.canvas) {
@@ -1519,11 +1538,11 @@ let WindRoseCard = class WindRoseCard extends s {
         }
     }
     getCardSize() {
-        console.log('getCardSize()');
+        //console.log('getCardSize()');
         return 4;
     }
     initWindRoseObjects(cardConfig, canvasWidth) {
-        console.log('initWindRoseObjects(cardConfig, canvasWidth)', cardConfig, canvasWidth);
+        //console.log('initWindRoseObjects(cardConfig, canvasWidth)', cardConfig, canvasWidth);
         this.windRoseConfigFactory = new WindRoseConfigFactory(cardConfig);
         const windRoseConfig = this.windRoseConfigFactory.createWindRoseConfig(canvasWidth);
         this.windSpeedConverter = new WindSpeedConverter(this.cardConfig.inputSpeedUnit, this.cardConfig.outputSpeedUnit, this.cardConfig.speedRangeStep, this.cardConfig.speedRangeMax, this.cardConfig.speedRanges);
@@ -1538,7 +1557,7 @@ let WindRoseCard = class WindRoseCard extends s {
         }
     }
     updateWindData() {
-        console.log('updateWindData()');
+        //console.log('updateWindData()');
         this.getHistory().then((history) => {
             const directionData = history[this.cardConfig.windDirectionEntity];
             const firstSpeedData = history[this.cardConfig.windspeedEntities[0].entity];
@@ -1605,4 +1624,4 @@ WindRoseCard = __decorate([
     e$1('windrose-card')
 ], WindRoseCard);
 
-export { CardConfigWrapper, ColorUtil, DirectionSpeed, DrawUtil, GlobalConfig, MeasurementMatcher, SpeedRange, SpeedUnit, WindBarCalculator, WindBarCanvas, WindBarConfig, WindBarData, WindDirectionCalculator, WindDirectionConverter, WindDirectionData, WindRoseCalculator, WindRoseCanvas, WindRoseCard, WindRoseCardEditor, WindRoseConfig, WindRoseConfigFactory, WindRoseData, WindSpeedConverter };
+export { CardColors, CardConfigWrapper, ColorUtil, DirectionSpeed, DrawUtil, GlobalConfig, MeasurementMatcher, SpeedRange, SpeedUnit, WindBarCalculator, WindBarCanvas, WindBarConfig, WindBarData, WindDirectionCalculator, WindDirectionConverter, WindDirectionData, WindRoseCalculator, WindRoseCanvas, WindRoseCard, WindRoseCardEditor, WindRoseConfig, WindRoseConfigFactory, WindRoseData, WindSpeedConverter };
