@@ -109,18 +109,18 @@ widget_count_indicator:
   icon: >
     [[[
       var amountValue = 0;
-      var icon = "mdi:numeric-0-circle"
+      var icon = "mdi:numeric-0-circle";
       if (variables.notification_counts.subtype == "state") {
-        amountValue = states[variables.notification_counts.entity].state
+        amountValue = states[variables.notification_counts.entity].state;
       }
       else {
-        amountValue = states[variables.notification_counts.entity].attributes[variables.notification_counts.value]
+        amountValue = states[variables.notification_counts.entity].attributes[variables.notification_counts.value];
       }
       if (!isNaN(amountValue) && amountValue !== undefined){
         if (amountValue > 9) {
-          var amountValue = "9-plus"
+          var amountValue = "9-plus";
         }
-        icon = icon.replace("0",amountValue)
+        icon = icon.replace("0",amountValue);
       }
       return icon;
     ]]]
@@ -239,9 +239,13 @@ custom_popup_auto_entities_list:
             - type: "custom:auto-entities"
               card:
                 type: "entities"
+                show_header_toggle: false
+                state_color: true
               filter:
                 include:
                   - group: "[[[ return entity.entity_id ]]]"
+                    options:
+                      secondary_info: "last-changed"
               sort:
                 method: "[[[ return variables.auto_entities_sort_method ]]]"
                 reverse: >
