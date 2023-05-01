@@ -143,18 +143,15 @@ views:
                       icon: "hacs:hacs"
                       name: "HACS"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "navigate"
-                          page: "/hacs"
                         ulm_card_kepath_binary_sensor_count_notifications:
+                          unavailable:
                           amount:
                             entity: "sensor.hacs"
-                            subtype: "state"
-                            value: ""
-                          unavailable:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "zero_value"
+                            is_attribute: false
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "navigate"
+                          navigate:
+                            page: "/hacs"
 
                   item4:
                     card:
@@ -167,18 +164,16 @@ views:
                       icon: "mdi:update"
                       name: "Updates"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "navigate"
-                          page: "/config/updates"
                         ulm_card_kepath_binary_sensor_count_notifications:
+                          unavailable:
                           amount:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "updates_count"
-                          unavailable:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "zero_value"
+                            is_attribute: true
+                            attribute_name: "updates_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "navigate"
+                          navigate:
+                            page: "/config/updates"
 
                   item5:
                     card:
@@ -191,18 +186,16 @@ views:
                       icon: "mdi:lightbulb-multiple"
                       name: "Lights"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "light"
-                          page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
+                          unavailable:
                           amount:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "lights_on_count"
-                          unavailable:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "zero_value"
+                            is_attribute: true
+                            attribute_name: "lights_on_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "light entities"
 
                   item6:
                     card:
@@ -215,19 +208,17 @@ views:
                       icon: "mdi:power-plug"
                       name: "Plugs"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "plug"
-                          page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          auto_entities_sort_reversed: true
+                          unavailable:
                           amount:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "plugs_off_count"
-                          unavailable:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "zero_value"
+                            is_attribute: true
+                            attribute_name: "plugs_off_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "plug entities"
+                            auto_entities_sort_reversed: true
 
                   item7:
                     card:
@@ -263,19 +254,20 @@ views:
                       icon: "mdi:alarm-light"
                       name: "Alerts"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "safety"
-                          page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          auto_entities_sort_method: "last_changed"
-                          amount:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "safety_alert_count"
                           unavailable:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "safety_sensors_unavailable_count"
+                            is_attribute: true
+                            attribute_name: "safety_sensors_unavailable_count"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            is_attribute: true
+                            attribute_name: "safety_alert_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "safety entities"
+                            auto_entities_sort_method: "last_changed"
 
                   item9:
                     card:
@@ -288,19 +280,20 @@ views:
                       icon: "mdi:door"
                       name: "Doors"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "door"
-                          page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          auto_entities_sort_method: "last_changed"
-                          amount:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "doors_open_count"
                           unavailable:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "door_sensors_unavailable_count"
+                            is_attribute: true
+                            attribute_name: "door_sensors_unavailable_count"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            is_attribute: true
+                            attribute_name: "doors_open_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "door entities"
+                            auto_entities_sort_method: "last_changed"
 
                   item10:
                     card:
@@ -312,23 +305,24 @@ views:
                       icon: "mdi:human-greeting"
                       name: "Motion"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "occupancy"
-                          page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          auto_entities_sort_method: "last_changed"
-                          amount:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "occupancy_count"
                           unavailable:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "occupancy_sensors_unavailable_count"
+                            is_attribute: true
+                            attribute_name: "occupancy_sensors_unavailable_count"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            is_attribute: true
+                            attribute_name: "occupancy_count"
                           person:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "occupancy_persons_home_count"
+                            is_attribute: true
+                            attribute_name: "occupancy_persons_home_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "occupancy entities"
+                            auto_entities_sort_method: "last_changed"
 
                   item11:
                     card:
@@ -341,21 +335,18 @@ views:
                       icon: "mdi:television-play"
                       name: "Video"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "tv"
-                          page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          auto_entities_sort_method: "name"
-                          auto_entities_sort_reversed: true
+                          unavailable:
                           amount:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "media_player_tv_on_count"
-                          unavailable:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "zero_value"
-
+                            is_attribute: true
+                            attribute_name: "media_player_tv_on_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "tv entities"
+                            auto_entities_sort_method: "name"
+                            auto_entities_sort_reversed: true
                   item12:
                     card:
                       type: "custom:button-card"
@@ -367,20 +358,21 @@ views:
                       icon: "mdi:volume-medium"
                       name: "Audio"
                       variables:
-                        ulm_card_kepath_binary_sensor_count_popup:
-                          type: "speaker"
-                          page: "/0"
                         ulm_card_kepath_binary_sensor_count_notifications:
-                          auto_entities_sort_method: "name"
-                          auto_entities_sort_reversed: true
-                          amount:
-                            entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "media_player_audio_on_count"
                           unavailable:
                             entity: "sensor.binary_sensor_status_counts"
-                            subtype: "attributes"
-                            value: "media_player_audio_unavailable_count"
+                            is_attribute: true
+                            attribute_name: "media_player_audio_unavailable_count"
+                          amount:
+                            entity: "sensor.binary_sensor_status_counts"
+                            is_attribute: true
+                            attribute_name: "media_player_audio_on_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "speaker entities"
+                            auto_entities_sort_method: "name"
+                            auto_entities_sort_reversed: true
 
           - type: "horizontal-stack"
             cards:
