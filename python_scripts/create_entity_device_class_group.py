@@ -1,3 +1,41 @@
+#########################################################################################
+# Python script to create domain groups of specific device types
+#
+# domain - the domain type to search through to generate the group
+# group_name - the name of the group to create or recreate
+# icon - the mdi icon to assign to this group after creation
+# friendly_name - the friendly name of the group
+# included_device_classes - a list of device classes to include in the group
+#   examples of device classes can be found here
+#   binary_sensor - https://developers.home-assistant.io/docs/core/entity/binary-sensor
+#   switch - https://developers.home-assistant.io/docs/core/entity/switch
+# excluded_entities - a list of entity_id's to exclude from the group
+#
+# An example of an automation being used to create this group is
+#
+# - id: '0000000000000'
+#   alias: on_start_create_group.all_door_class_binary_sensors
+#   description: Uses python script create_entity_device_class_group to create an entity
+#     group
+#   trigger:
+#   - platform: homeassistant
+#     event: start
+#   condition: []
+#   action:
+#   - service: python_script.create_entity_device_class_group
+#     data:
+#       domain: binary_sensor
+#       group_name: all_door_class_binary_sensors
+#       icon: mdi:door
+#       friendly_name: All binary_sensor door device class group
+#       included_device_classes:
+#       - door
+#       - window
+#       - vibration
+#       excluded_entities:
+#       - binary_sensor.zigbee_door_sensor_bed_c_contact
+#########################################################################################
+
 domain = data.get('domain', '')
 group_name = data.get('group_name', '')
 icon = data.get('icon', '')
@@ -5,15 +43,15 @@ friendly_name = data.get('friendly_name', group_name)
 included_device_classes = data.get('included_device_classes', ['door'])
 excluded_entities = data.get('excluded_entities', [])
 
-# domain = 'binary_sensor'
 entity_list = []
-filtered_list = []
 
 if not isinstance(domain, str) or not domain or not group_name:
     logger.error(f"Domain or group_name {domain}{group_name} does not exist")
 
-# friendly_name = f"All binary sensor {friendly_name} group"
-globally_excluded_regex = [
+# List of entity_id's to globally exclude from the groups.
+# Any entity_id that contains any text in the list will be excluded.
+# This is useful for integrations such as browser_mod that create lots of commonly named entities.
+globally_excluded_matches = [
     "chrome_workdell",
     "a4974337_d703c461",
     "c105a8ea_57917284",
@@ -46,33 +84,17 @@ except:
     logger.error(logger, f"Error - a problem occured creating the entity list")
 
 try:
-    for excluded_regex in globally_excluded_regex:
+    for excluded_matches in globally_excluded_matches:
         for match_entity in entity_list:
-            if match_entity.find(excluded_regex) != -1:
+            if match_entity.find(excluded_matches) != -1:
                 entity_list.remove(match_entity)
                 logger.debug(f"'{match_entity}' removed from group '{friendly_name}' as it matched '{match_entity}' at {time.time()}")
 
 except:
     logger.error(logger, f"Error - a problem occured when removing a matched item from the entity list")
 
-# r = re.compile(excluded_regex)
-# if hass.helpers.template.regex_match(entity_list, excluded_regex):
-# filtered_list.extend(filter(r.match, entity_list))
-#     logger.info(f"pattern {excluded_regex} tested and match found at {time.time()}")
-#     logger.info(f"pattern {r.pattern} tested and list {filtered_list} produced at {time.time()}")
-# try:
-#     if len(filtered_list) != 0:
-#         logger.warning(logger, f"Removing {len(filtered_list)} items that match the global regex from the entity list at {time.time()}")
-#         entity_list = list(set(entity_list)-set(filtered_list))
-# except:
-#     logger.error(logger, f"Error - a problem occured subtracting the entities matching the RegEx from the entity_list")
-
 try:
-    if not icon:
-        service_data = {"object_id": group_name, "name": friendly_name, "entities": entity_list}
-    else:
-        service_data = {"object_id": group_name, "name": friendly_name, "icon": icon, "entities": entity_list}
-
+    service_data = {"object_id": group_name, "name": friendly_name, "icon": icon, "entities": entity_list}
     logger.info(f"Calling the service 'set group' with the data '{service_data}' at {time.time()}")
     hass.services.call("group", "set", service_data, False)
 except:
