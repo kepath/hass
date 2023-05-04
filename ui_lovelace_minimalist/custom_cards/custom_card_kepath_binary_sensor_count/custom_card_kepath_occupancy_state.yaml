@@ -1,17 +1,29 @@
 ---
-card_occupancy_state:
+custom_card_kepath_occupancy_state:
+  variables:
+    ulm_card_kepath_binary_sensor_count_notifications:
+      person:
+        entity: "sensor.binary_sensor_status_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.person?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.person.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.person.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
   state:
     - operator: "template"
       value: >
         [[[
             var show_detected_home_color = false;
             var known_home = states[variables.ulm_card_kepath_binary_sensor_count_notifications.person.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.person.attribute_name];
-            //var person_detected = states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name];
 
             if (!isNaN(known_home) && known_home !== undefined && known_home != 0){
-              //if (!isNaN(person_detected) && person_detected !== undefined && person_detected != 0){
-                show_detected_home_color = true;
-              //}
+              show_detected_home_color = true;
             }
 
             return show_detected_home_color;

@@ -5,15 +5,32 @@ custom_card_kepath_binary_sensor_count:
     - "ulm_translation_engine"
     - "custom_popup_auto_entities_list"
   variables:
-    # browser_popup:
     ulm_card_kepath_binary_sensor_count_notifications:
       unavailable:
         entity: "sensor.binary_sensor_status_counts"
-        is_attribute: true
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
         attribute_name: "zero_value"
       amount:
         entity: "sensor.binary_sensor_status_counts"
-        is_attribute: true
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
         attribute_name: "zero_value"
     ulm_card_kepath_binary_sensor_count_tap_action:
       action: >
@@ -46,7 +63,16 @@ custom_card_kepath_binary_sensor_count:
             }
             return autoEntitiesSortMethod;
           ]]]
-        auto_entities_sort_reversed: false
+        auto_entities_sort_reversed: >
+          [[[
+            var autoEntitiesSortReversed = false;
+            if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities_sort_reversed) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed === "boolean") {
+                autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed;
+              }
+            }
+            return autoEntitiesSortReversed;
+          ]]]
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
@@ -93,6 +119,8 @@ custom_card_kepath_binary_sensor_count:
           - "widget_count_indicator"
         variables:
           notification_counts: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable; ]]]"
+        entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity; ]]]"
+
     amount:
       card:
         type: "custom:button-card"
@@ -100,6 +128,7 @@ custom_card_kepath_binary_sensor_count:
           - "widget_count_indicator"
         variables:
           notification_counts: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount; ]]]"
+        entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity; ]]]"
 
 widget_count_indicator:
   show_icon: true
