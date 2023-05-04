@@ -5,33 +5,16 @@ custom_card_kepath_binary_sensor_count:
     - "ulm_translation_engine"
     - "custom_popup_auto_entities_list"
   variables:
+    # browser_popup:
     ulm_card_kepath_binary_sensor_count_notifications:
       unavailable:
-        entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity ? variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.entity : 'sensor.binary_sensor_status_counts' ]]]"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.isattribute) {
-              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.isattribute === "boolean") {
-                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.isattribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.attribute_name ? ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name : 'zero_value' ]]]"
+        entity: "sensor.binary_sensor_status_counts"
+        is_attribute: true
+        attribute_name: "zero_value"
       amount:
-        entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity ? variables.ulm_card_kepath_binary_sensor_count_notifications.amount.entity : 'sensor.binary_sensor_status_counts' ]]]"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.isattribute) {
-              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.isattribute === "boolean") {
-                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.isattribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.attribute_name ? variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name : 'zero_value' ]]]"
+        entity: "sensor.binary_sensor_status_counts"
+        is_attribute: true
+        attribute_name: "zero_value"
     ulm_card_kepath_binary_sensor_count_tap_action:
       action: >
         [[[
@@ -47,9 +30,9 @@ custom_card_kepath_binary_sensor_count:
           return tapAction;
         ]]]
       navigate:
-        page: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_tap_action?.navigate?.page ? variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate.page : '/0' ]]]"
+        page: "/0"
       popup:
-        title: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.title ? variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.title : 'entity group' ]]]"
+        title: "entity group"
         auto_entities_sort_method: >
           [[[
             var autoEntitiesSortMethod = "state";
@@ -63,22 +46,13 @@ custom_card_kepath_binary_sensor_count:
             }
             return autoEntitiesSortMethod;
           ]]]
-        auto_entities_sort_reversed: >
-          [[[
-            var autoEntitiesSortReversed = false;
-            if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities_sort_reversed) {
-              if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed === "boolean") {
-                autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed;
-              }
-            }
-            return autoEntitiesSortReversed;
-          ]]]
+        auto_entities_sort_reversed: false
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
   show_name: true
   group_expand: true
-  # triggers_update: "all"
+  triggers_update: "all"
   styles:
     grid:
       - grid-template-areas: "'i' 'n'"
