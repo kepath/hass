@@ -872,3 +872,40 @@
       - media_player.bed_c_g3_instant_speaker
       - media_player.yamaha_rx_v777_zone2
   mode: single
+- id: '1683217570006'
+  alias: on_shutdown_remove_group_remotes_tv_class_media_player
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: shutdown
+  condition: []
+  action:
+  - service: group.remove
+    data:
+      object_id: all_remotes
+  - service: group.remove
+    data:
+      object_id: all_tv_class_media_player
+  mode: single
+- id: '1683222828123'
+  alias: on_start_merge_groups_remote_tv_class_media_player
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 40
+      milliseconds: 0
+  - service: python_script.merge_groups
+    data:
+      groups:
+      - group.all_remotes
+      - group.all_tv_class_media_player
+      new_group_name: all_remotes_and_tv_class_media_player
+      icon: mdi:television-play
+      friendly_name: All media_player tv device class and remotes group
+  mode: single
