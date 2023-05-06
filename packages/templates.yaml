@@ -1,7 +1,7 @@
 ---
 template:
   - sensor:
-      - name: "binary_sensor_status_counts"
+      - name: "binary_sensor_state_counts"
         state: "{{ 'off' if states('sensor.hacs') | float == 0 else 'on' }}"
         attributes:
           updates_available_count: "{{ expand('group.all_updates') | selectattr('state','eq', 'on') | list | count }}"
