@@ -1,156 +1,142 @@
 """Platform for historical rain factor Sensor integration."""
-from .weatherhistory import WeatherHist
-from .data import RestData
+from __future__ import annotations
 
+from .weatherhistory import Weather
 import logging
-import voluptuous as vol
-from datetime import datetime, timedelta, timezone
-from homeassistant.util.unit_system import METRIC_SYSTEM
-
+from datetime import  timedelta
+import jinja2
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.components.sensor import (
-    PLATFORM_SCHEMA,
     SensorEntity,
+    SensorStateClass,
+    SensorDeviceClass
 )
-
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
 from homeassistant.const import (
-    CONF_API_KEY,
-    CONF_LATITUDE,
-    CONF_LONGITUDE,
     CONF_NAME,
-    )
+    CONF_RESOURCES,
 
+    )
 from .const import (
-    CONST_API_CALL,
-    ATTR_0_SIG,
-    ATTR_1_SIG,
-    ATTR_2_SIG,
-    ATTR_3_SIG,
-    ATTR_4_SIG,
-    ATTR_WATERTARGET,
-    ATTR_ICON_FINE,
-    ATTR_ICON_LIGHTRAIN,
-    ATTR_ICON_RAIN,
-    DFLT_ICON_FINE,
-    DFLT_ICON_LIGHTRAIN,
-    DFLT_ICON_RAIN,
+    CONF_FORMULA,
+    CONF_ATTRIBUTES,
+    CONF_INTIAL_DAYS,
+    CONF_STATECLASS,
+    CONF_SENSORCLASS,
+    CONF_UID,
+    ATTRIBUTION,
+    DOMAIN
     )
-import homeassistant.helpers.config_validation as cv
 
-DEFAULT_NAME = "rainfactor"
-
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
-    {
-        vol.Required(CONF_NAME, default=DEFAULT_NAME): cv.string,
-        vol.Required(CONF_API_KEY): cv.string,
-        vol.Optional(CONF_LATITUDE): cv.latitude,
-        vol.Optional(CONF_LONGITUDE): cv.longitude,
-
-        vol.Optional(ATTR_0_SIG, default=1): cv.positive_float,
-        vol.Optional(ATTR_1_SIG, default=0.5): cv.positive_float,
-        vol.Optional(ATTR_2_SIG, default=0.25): cv.positive_float,
-        vol.Optional(ATTR_3_SIG, default=0.12): cv.positive_float,
-        vol.Optional(ATTR_4_SIG, default=0.06): cv.positive_float,
-        vol.Optional(ATTR_WATERTARGET, default=10): cv.positive_float,
-
-        vol.Optional(ATTR_ICON_FINE, default=DFLT_ICON_FINE): cv.icon,
-        vol.Optional(ATTR_ICON_LIGHTRAIN, default=DFLT_ICON_LIGHTRAIN): cv.icon,
-        vol.Optional(ATTR_ICON_RAIN, default=DFLT_ICON_RAIN): cv.icon,
-    }
-)
-
-SCAN_INTERVAL = timedelta(seconds=1800) #default to 30 minute intervals
+SCAN_INTERVAL = timedelta(minutes=10)
 
 _LOGGER = logging.getLogger(__name__)
 
-async def _async_create_entities(hass, config, weather):
+async def _async_create_entities(hass:HomeAssistant, config, weather):
     """Create the Template switches."""
     sensors = []
-
-    name      = config[CONF_NAME]
-
-    daysig = [config[ATTR_0_SIG],config[ATTR_1_SIG],config[ATTR_2_SIG],config[ATTR_3_SIG],config[ATTR_4_SIG]]
-    watertarget = config[ATTR_WATERTARGET]
-
-    if hass.config.units is METRIC_SYSTEM:
-        units = 'metric'
-    else:
-        units = 'imperial'
-
-    sensors.append(
-        RainFactor(
-            hass,
-            config,
-            weather,
-            name,
-            daysig,
-            watertarget,
-            units
+    coordinator = WeatherCoordinator(hass, weather)
+    #append multiple sensors using the single weather class
+    for resource in config[CONF_RESOURCES]:
+        sensors.append(
+            WeatherHistory(
+                hass,
+                config,
+                resource,
+                weather,
+                coordinator
+            )
         )
-    )
-
     return sensors
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the sensors."""
-    weather = []
-    key     = config[CONF_API_KEY]
-    if hass.config.units is METRIC_SYSTEM:
-        units = 'metric'
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Initialize config entry. form config flow"""
+    if config_entry.options != {}:
+        config = config_entry.options
     else:
-        units = 'imperial'
-
-    lat = config.get(CONF_LATITUDE,hass.config.latitude)
-    lon = config.get(CONF_LONGITUDE,hass.config.longitude)
-    _LOGGER.debug('setup_platform %s, %s', lat, lon)
-    today = datetime.now(tz=timezone.utc).replace(hour=0, minute=0,second=0,microsecond=0)
-    for day in range(6):
-        rest = RestData()
-        date = int((today- timedelta(days=day)).timestamp())
-        url = CONST_API_CALL % (lat, lon, date, key, units)
-        _LOGGER.debug( url )
-        await rest.set_resource(hass, url)
-        await rest.async_update(log_errors=False)
-        weather.append (rest)
+        config = config_entry.data
+    weather = Weather(hass,config)
+    #initailise the weather data
+    weather.set_processing_type ('initial')
+    await weather.async_update()
     async_add_entities(await _async_create_entities(hass, config, weather))
-    _LOGGER.debug('setup_platform has run successfully')
 
-class RainFactor(SensorEntity):
+class WeatherCoordinator(DataUpdateCoordinator):
+    """Weather API data coordinator
+       refresh the data independantly of the sensor"""
+
+    def __init__(self, hass: HomeAssistant, weather) -> None:
+        """Initialize my coordinator."""
+        super().__init__(
+            hass,
+            _LOGGER,
+            name=DOMAIN,
+            update_interval=SCAN_INTERVAL,
+        )
+
+        self._weather = weather
+
+    async def _async_update_data(self):
+        """Fetch data from API endpoint"""
+        #process n records every cycle
+        await self._weather.async_update()
+        if self._weather.remaining_backlog() > 0:
+            self._weather.set_processing_type ('backload')
+            await self._weather.async_update()
+
+class WeatherHistory(CoordinatorEntity,SensorEntity):
     ''' Rain factor class defn'''
     _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_attribution = ATTRIBUTION
 
     def __init__(
         self,
-        hass,
+        hass: HomeAssistant,
         config,
-        weather,
-        name: str,
-        daysig: list,
-        watertarget,
-        units
-    ):
-        """Initialize the sensor."""
-        self._name               = name
+        resource,
+        weather: Weather,
+        coordinator: CoordinatorEntity
+    ) -> None:
+        #subscribe to the API data coordinator
+        super().__init__(coordinator)
+
         self._hass               = hass
-        self._weather            = weather
         self._state              = 1
-        self._daysig             = daysig
-        self._watertarget        = watertarget
-
+        self._weather            = weather
         self._extra_attributes   = None
-        self._icon               = config[ATTR_ICON_FINE]
-        self._icon_fine          = config[ATTR_ICON_FINE]
-        self._icon_lightrain     = config[ATTR_ICON_LIGHTRAIN]
-        self._icon_rain          = config[ATTR_ICON_RAIN]
-        self._ran_today          = datetime.utcnow().date().strftime('%Y-%m-%d')
-        self._key                = config[CONF_API_KEY]
-        self._units              = units
-        self._weatherhist        = None
-        self._call_count         = 6
+        self._name               = resource[CONF_NAME]
+        self._formula            = resource[CONF_FORMULA]
+        self._attributes         = resource.get(CONF_ATTRIBUTES)
+        self._initdays           = config.get(CONF_INTIAL_DAYS)
+        self._sensor_class       = resource.get(CONF_SENSORCLASS,None)
+        self._state_class        = resource.get(CONF_STATECLASS,None)
+        self._uuid               = resource.get(CONF_UID)
 
-        self._lat = config.get(CONF_LATITUDE,hass.config.latitude)
-        self._lon = config.get(CONF_LONGITUDE,hass.config.longitude)
-        self._timezone = config.get(CONF_LONGITUDE,hass.config.time_zone)
-        self._today = None
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._weather.set_processing_type ('general')
+        self.determine_state()
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        self._hass.async_create_task(self.async_update())
+        await super().async_added_to_hass()
+
+    async def async_update(self):
+        ''' update the sensor'''
+        self.determine_state()
+        self.async_write_ha_state()
 
     @property
     def name(self):
@@ -160,7 +146,43 @@ class RainFactor(SensorEntity):
     @property
     def unique_id(self):
         """Return a unique_id for this entity."""
-        return f"{self._name}-{self._lat}-{self._lon}"
+        return self._uuid
+
+    @property
+    def state_class(self) -> SensorStateClass:
+        """handle string instances"""
+        match self._state_class:
+            case 'measurement':
+                return SensorStateClass.MEASUREMENT
+
+    @property
+    def native_unit_of_measurement(self):
+        match self._sensor_class:
+            case 'humidity':
+                return '%'
+            case 'precipitation':
+                return 'mm'
+            case 'precipitaton_intensity':
+                return 'mm/h'
+            case 'temperature':
+                return  '°C'
+            case 'pressure':
+                return  'hPa'
+
+    @property
+    def device_class(self) -> SensorDeviceClass:
+        """handle string instances"""
+        match self._sensor_class:
+            case 'humidity':
+                return SensorDeviceClass.HUMIDITY
+            case 'precipitation':
+                return SensorDeviceClass.PRECIPITATION
+            case 'precipitaton_intensity':
+                return SensorDeviceClass.PRECIPITATION_INTENSITY
+            case 'temperature':
+                return SensorDeviceClass.TEMPERATURE
+            case 'pressure':
+                return SensorDeviceClass.PRESSURE
 
     @property
     def native_value(self):
@@ -168,70 +190,68 @@ class RainFactor(SensorEntity):
         return self._state
 
     @property
-    def icon(self):
-        """Return the unit of measurement."""
-        return self._icon
-
-    @property
     def extra_state_attributes(self):
         """Return the state attributes."""
         return self._extra_attributes
 
-    async def async_added_to_hass(self):
+    def determine_state(self):
+        """Determine the sensor state"""
+        try:
+            self._state = float(self._evaluate_custom_formula(self._formula ,  self._update_vars(self._weather)))
+        except ValueError:
+            self._state = self._evaluate_custom_formula(self._formula ,  self._update_vars(self._weather))
+        #return the attributes if requested
+        if self._attributes is not None:
+            self._extra_attributes = self._evaluate_custom_attr(self._attributes, self._update_vars(self._weather))
 
-        self._weatherhist = WeatherHist()
-        await self._weatherhist.set_weather(self._weather,self._daysig,self._watertarget, self._units, self._timezone)
-        await self._weatherhist.async_update()
-        self._today = datetime.now(tz=timezone.utc).replace(hour=0, minute=0,second=0,microsecond=0)
-        self._state = self._weatherhist.factor
-        self._extra_attributes = self._weatherhist.attrs
-        self._extra_attributes["call_count"] = self._call_count
+    def _evaluate_custom_formula(self, formula: str, wvars: dict):
+        """evaluate the formula/template"""
+        environment = jinja2.Environment()
+        template = environment.from_string(formula)
 
-        if self._weatherhist.factor == 0:
-            self._icon = self._icon_rain
-        elif self._weatherhist.factor == 1:
-            self._icon = self._icon_fine
-        else:
-            self._icon = self._icon_lightrain
+        #process the template and handle errors
+        try:
+            return template.render(wvars)
+        except jinja2.UndefinedError as err:
+            _LOGGER.warning("Variable not defined in custom formula: %s \n %s", formula, err)
+            return 0
+        except jinja2.TemplateSyntaxError as err:
+            _LOGGER.warning("Syntax error could not evaluate custom formula: %s \n %s", formula, err)
+            return 0
 
-        self.async_write_ha_state()
-        await super().async_added_to_hass()
-        _LOGGER.debug('added to hass has run successfully')
+    def _evaluate_custom_attr(self, attributes: list, wvars: dict):
+        """take the list of vars and build the attrs dictionaty"""
+        attrs = {}
+        attrs_list = attributes.replace(" ","").replace("'","").strip("[]'").split(",")
+        for item in attrs_list:
+            if item in wvars:
+                attrs.update({item:wvars[item]})
+        return attrs
 
-    async def async_update(self):
-        ''' update the sensor'''
-        if self._today == datetime.now(tz=timezone.utc).replace(hour=0, minute=0,second=0,microsecond=0):
-            #update only today's weather
-            date = int((datetime.now(tz=timezone.utc)- timedelta(days=0)).timestamp())
-            url = CONST_API_CALL % (self._lat,self._lon,date,self._key,self._units)
-            await self._weather[0].set_resource(self._hass,url)
-            await self._weather[0].async_update(log_errors=False)
-            self._call_count += 1
-        else:
-            #first time today reload the weather for all days
-            self._call_count = 0
-            self._today = datetime.now(tz=timezone.utc).replace(hour=0, minute=0,second=0,microsecond=0)
-            for day, weather in enumerate(self._weather):
-                #reset the url for each day
-                date = int((self._today- timedelta(days=day)).timestamp())
-                url = CONST_API_CALL % (self._lat,self._lon,date,self._key,self._units)
-                await weather.set_resource(self._hass,url)
-                await weather.async_update(log_errors=False)
-                self._call_count += 1
+    def _update_vars(self, weather:Weather):
+        wvars = {}
+        #default to initial days variable
+        for i in range(int(max(weather.num_days(),self._initdays))):
+            wvars[f"day{i}rain"]        = weather.processed_value(i,'rain')
+            wvars[f"day{i}snow"]        = weather.processed_value(i,'snow')
+            wvars[f"day{i}max"]         = weather.processed_value(i,'max_temp')
+            wvars[f"day{i}min"]         = weather.processed_value(i,'min_temp')
+        #forecast provides 7 days of data
+        for i in range(0,6):
+            wvars[f"forecast{i}pop"]      = weather.processed_value(f'f{i}','pop')
+            wvars[f"forecast{i}rain"]     = weather.processed_value(f'f{i}','rain')
+            wvars[f"forecast{i}snow"]     = weather.processed_value(f'f{i}','snow')
+            wvars[f"forecast{i}humidity"] = weather.processed_value(f'f{i}','humidity')
+            wvars[f"forecast{i}max"]      = weather.processed_value(f'f{i}','max_temp')
+            wvars[f"forecast{i}min"]      = weather.processed_value(f'f{i}','min_temp')
+        #current observations
+        wvars["current_rain"]        = weather.processed_value('current', 'rain')
+        wvars["current_snow"]        = weather.processed_value('current', 'snow')
+        wvars["current_humidity"]    = weather.processed_value('current', 'humidity')
+        wvars["current_temp"]        = weather.processed_value('current', 'temp')
+        wvars["current_pressure"]    = weather.processed_value('current', 'pressure')
+        #special values
+        wvars["remaining_backlog"]   = weather.remaining_backlog()
+        wvars["daily_count"]         = weather.daily_count()
 
-        await self._weatherhist.set_weather(self._weather, self._daysig, self._watertarget, self._units, self._timezone)
-        await self._weatherhist.async_update()
-
-        self._extra_attributes = self._weatherhist.attrs
-#        self._extra_attributes["call_count"] = self._call_count
-        self._state = self._weatherhist.factor
-
-        if self._weatherhist.factor == 0:
-            self._icon = self._icon_rain
-        elif self._weatherhist.factor == 1:
-            self._icon = self._icon_fine
-        else:
-            self._icon = self._icon_lightrain
-
-        self.async_write_ha_state()
-        _LOGGER.debug('sensor update successful')
+        return wvars
