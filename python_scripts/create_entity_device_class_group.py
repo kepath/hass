@@ -60,7 +60,8 @@ globally_excluded_matches = [
     "macbook_pro_2018_screen_possibly",
     "macbook_pro_2018_chrome",
     "a996ec86_cdbe8ea4",
-    "kev_iphone_remote"
+    "kev_iphone_remote",
+    "41edef0a-ffdd99dd"
 ]
 
 try:
