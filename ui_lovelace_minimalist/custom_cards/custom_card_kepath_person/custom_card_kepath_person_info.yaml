@@ -15,6 +15,7 @@ custom_card_kepath_person_info:
     ulm_card_kepath_person_gps_tracker: ""
     ulm_card_kepath_person_driving_entity: ""
     ulm_card_kepath_person_distance_entity: ""
+    ulm_card_kepath_person_gps_tracker_device_id: ""
   triggers_update: "all"
   show_label: false
   show_name: true
@@ -245,7 +246,7 @@ custom_card_kepath_person_info:
                 [[[
                   var color = "rgba(var(--color-theme),0.5)";
                   if (states[variables.ulm_card_kepath_person_gps_tracker]?.state) {
-                    var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery;
+                    var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_level;
                     if (!isNaN(battery)) {
                       var roundedBattery = Math.ceil(battery / 10) * 10;
                       if (battery > 50) {
@@ -276,7 +277,7 @@ custom_card_kepath_person_info:
           [[[
             var icon = "mdi:battery-unknown";
             if (states[variables.ulm_card_kepath_person_gps_tracker]?.state) {
-              var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery;
+              var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_level;
               if (!isNaN(battery)) {
                 var charging = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_status?.toLowerCase() == "charging";
                 var iconBase = charging ? "mdi:battery-charging" : "mdi:battery";
@@ -402,13 +403,15 @@ custom_popup_kepath_person:
                       - type: "custom:button-card"
                         template:
                           - "about_my_phone_button_kepath"
+                        variables:
+                          device_id: "[[[ return variables?.ulm_card_kepath_person_gps_tracker_device_id; ]]]"
                   - type: "map"
                     auto_fit: true
                     aspect_ratio: "12x10"
                     # default_zoom: 16
                     hours_to_show: 12
                     entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
-          - service: "device_tracker.icloud3_update"
+          - service: "icloud3.update"
             data:
               command: "location"
 
@@ -418,7 +421,7 @@ find_my_phone_button_kepath:
     - "popup_button_layout_kepath"
   tap_action:
     action: "call-service"
-    service: "device_tracker.icloud3_find_iphone_alert"
+    service: "icloud3.find_iphone_alert"
     service_data:
       device_name: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
   icon: "mdi:volume-high"
@@ -429,8 +432,18 @@ about_my_phone_button_kepath:
     - "ulm_custom_card_kepath_person_language_variables"
     - "popup_button_layout_kepath"
   tap_action:
-    action: "navigate"
-    navigation_path: "/lovelace-minimalist-network/icloud3"
+    action: "fire-dom-event"
+    browser_mod:
+      service: "browser_mod.sequence"
+      data:
+        sequence:
+          - service: "browser_mod.close_popup"
+          - service: "browser_mod.navigate"
+            data:
+              path: >
+                [[[
+                  return "/config/devices/device/" + variables.device_id;
+                ]]]
   icon: "mdi:cellphone-cog"
   name: "About my iPhone"
 popup_button_layout_kepath:
