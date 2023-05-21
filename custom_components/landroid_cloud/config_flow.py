@@ -4,6 +4,7 @@ from __future__ import annotations
 from homeassistant import config_entries, core, exceptions
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, CONF_TYPE
 from pyworxcloud import WorxCloud
+from pyworxcloud.exceptions import AuthorizationError
 
 from .const import DOMAIN, LOGLEVEL
 from .scheme import DATA_SCHEMA
@@ -17,11 +18,16 @@ async def validate_input(hass: core.HomeAssistant, data):
     Data has the keys from DATA_SCHEMA with values provided by the user.
     """
 
-    if CONF_TYPE not in data:
-        data[CONF_TYPE] = "worx"
+    LOGGER.log(LoggerType.CONFIG, "data: %s", data)
 
-    worx = WorxCloud(data[CONF_EMAIL], data[CONF_PASSWORD], data[CONF_TYPE].lower())
-    auth = await hass.async_add_executor_job(worx.authenticate)
+    worx = WorxCloud(
+        data.get(CONF_EMAIL), data.get(CONF_PASSWORD), data.get(CONF_TYPE).lower()
+    )
+    try:
+        auth = await hass.async_add_executor_job(worx.authenticate)
+    except AuthorizationError:
+        raise InvalidAuth from None
+
     if not auth:
         raise InvalidAuth
 
@@ -40,7 +46,7 @@ class LandroidCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Landroid Cloud."""
 
     VERSION = 1
-    CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
+    CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_PUSH
 
     def check_for_existing(self, data):
         """Check whether an existing entry is using the same URLs."""
