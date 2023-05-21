@@ -399,7 +399,8 @@ custom_popup_kepath_person:
                       - type: "custom:button-card"
                         template:
                           - "find_my_phone_button_kepath"
-                        entity: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
+                        variables:
+                          findmy_device: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
                       - type: "custom:button-card"
                         template:
                           - "about_my_phone_button_kepath"
@@ -411,7 +412,7 @@ custom_popup_kepath_person:
                     # default_zoom: 16
                     hours_to_show: 12
                     entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
-          - service: "icloud3.update"
+          - service: "icloud3.action"
             data:
               command: "location"
 
@@ -420,10 +421,11 @@ find_my_phone_button_kepath:
     - "ulm_custom_card_kepath_person_language_variables"
     - "popup_button_layout_kepath"
   tap_action:
-    action: "call-service"
-    service: "icloud3.find_iphone_alert"
-    service_data:
-      device_name: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
+    action: "fire-dom-event"
+    browser_mod:
+      service: "icloud3.find_iphone_alert"
+      data:
+        device_name: "[[[ return variables.findmy_device; ]]]"
   icon: "mdi:volume-high"
   name: "Find my iPhone"
 
