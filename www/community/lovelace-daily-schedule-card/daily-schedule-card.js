@@ -48,6 +48,7 @@ class DailyScheduleCard extends HTMLElement {
       const entity = entry.entity || entry;
       const row = document.createElement("DIV");
       row._entity = entity;
+      row._template_value = entry.template || this._config.template;
       row.classList.add("card-content");
       if (this._hass.states[entity]) {
         const content = this._createCardRow(
@@ -57,6 +58,7 @@ class DailyScheduleCard extends HTMLElement {
           entity
         );
         row._content = content;
+        this._setCardRowValue(row);
         row.appendChild(content);
       } else {
         row.innerText = "Entity not found: " + entry.entity;
@@ -70,7 +72,7 @@ class DailyScheduleCard extends HTMLElement {
   _updateContent() {
     for (const row of this._content._rows) {
       row._content._icon.stateObj = this._hass.states[row._entity];
-      this._setCardRowValue(row._content, this._getStateSchedule(row._entity));
+      this._setCardRowValue(row);
     }
   }
 
@@ -93,9 +95,8 @@ class DailyScheduleCard extends HTMLElement {
     value_element.style.marginLeft = "auto";
     value_element.style.textAlign = "right";
     content._value_element = value_element;
-    this._setCardRowValue(content, this._getStateSchedule(entity));
     content.appendChild(value_element);
-    content.onclick = function () {
+    content.onclick = () => {
       this._dialog._entity = entity;
       this._dialog._title.innerText = name;
       this._dialog._message.innerText = "";
@@ -103,7 +104,7 @@ class DailyScheduleCard extends HTMLElement {
       this._dialog._schedule = [...this._getStateSchedule(entity)];
       this._createDialogRows();
       this._dialog.show();
-    }.bind(this);
+    };
     return content;
   }
 
@@ -112,15 +113,45 @@ class DailyScheduleCard extends HTMLElement {
     return !state ? [] : state.attributes.schedule || [];
   }
 
-  _setCardRowValue(content, state) {
-    let value = state
-      .map((range) => range.from.slice(0, -3) + "-" + range.to.slice(0, -3))
-      .join(", ");
-    if (!value.length) {
-      value = "&empty;";
+  _rowEntityChanged(row) {
+    const entity_data = this._hass.states[row._entity] ? JSON.stringify(
+      (({ state, attributes }) => ({ state, attributes }))(this._hass.states[row._entity])
+    ) : null;
+    const changed = (row._entity_data !== entity_data);
+    row._entity_data = entity_data;
+    return changed;
+  }
+
+  _rowTemplateValue(row) {
+    const subscribed = this._hass.connection.subscribeMessage(
+      (message) => {
+        row._content._value_element.innerHTML = 
+          message.result.length ? message.result : "&empty;";
+        subscribed.then((unsub) => unsub());
+      },
+      {
+        type: "render_template",
+        template: row._template_value,
+        variables: { entity_id: row._entity },
+      }
+    );
+  }
+
+  _setCardRowValue(row) {
+    if (!this._rowEntityChanged(row)) {
+      return;
     }
-    if (content._value_element.innerHTML !== value) {
-      content._value_element.innerHTML = value;
+    if (!row._template_value) {
+      let value = this._getStateSchedule(row._entity)
+        .filter((range) => !range.disabled)
+        .map((range) => range.from.slice(0, -3) + "-" + range.to.slice(0, -3))
+        .join(", ");
+      if (!value.length) {
+        value = "&empty;";
+      }
+      row._content._value_element.innerHTML = value;
+    } else {
+      this._rowTemplateValue(row);
     }
   }
 
@@ -144,14 +175,14 @@ class DailyScheduleCard extends HTMLElement {
     const text = document.createElement("P");
     text.innerText = "Add Range";
     plus.appendChild(text);
-    plus.onclick = function () {
+    plus.onclick = () => {
       if (button.disabled === true) {
         return;
       }
       this._dialog._schedule.push({ from: null, to: null });
       this._createDialogRows();
       this._saveBackendEntity();
-    }.bind(this);
+    };
     this._dialog._plus = plus;
     const message = document.createElement("P");
     message.style.display = "flex";
@@ -181,9 +212,9 @@ class DailyScheduleCard extends HTMLElement {
     close.icon = "mdi:close";
     close.style.marginLeft = "-4px";
     close.style.cursor = "pointer";
-    close.onclick = function () {
+    close.onclick = () => {
       this._dialog.close();
-    }.bind(this);
+    };
     header.appendChild(close);
     const title = document.createElement("P");
     title.style.margin = "1px 0 0 0";
@@ -193,16 +224,16 @@ class DailyScheduleCard extends HTMLElement {
     more_info.icon = "mdi:information-outline";
     more_info.style.marginLeft = "auto";
     more_info.style.cursor = "pointer";
-    more_info.onclick = function () {
+    more_info.onclick = () => {
       this._dialog.close();
       const event = new Event("hass-more-info", {
         bubbles: true,
         cancelable: false,
         composed: true,
       });
-      event.detail = {entityId: this._dialog._entity};
+      event.detail = { entityId: this._dialog._entity };
       this.dispatchEvent(event);
-    }.bind(this);
+    };
     header.appendChild(more_info);
     return header;
   }
@@ -225,16 +256,25 @@ class DailyScheduleCard extends HTMLElement {
       const time = range.from.split(":");
       from_input.value = time[0] + ":" + time[1];
     }
-    from_input.onchange = function () {
+    from_input.onchange = () => {
       if (from_input.value === "") {
         return;
       }
-      const time = from_input.value + ":00";
-      if (range.from !== time) {
-        range.from = time;
-        this._saveBackendEntity();
-      }
-    }.bind(this);
+      setTimeout(
+        (counter) => {
+          if (counter < this._dialog._save_counter) {
+            return;
+          }
+          const time = from_input.value + ":00";
+          if (range.from !== time) {
+            range.from = time;
+            this._saveBackendEntity();
+          }
+        },
+        1000,
+        ++(this._dialog._save_counter),
+      );
+    };
     row.appendChild(from_input);
 
     const arrow = document.createElement("ha-icon");
@@ -249,27 +289,45 @@ class DailyScheduleCard extends HTMLElement {
       const time = range.to.split(":");
       to_input.value = time[0] + ":" + time[1];
     }
-    to_input.onchange = function () {
+    to_input.onchange = () => {
       if (to_input.value === "") {
         return;
       }
-      const time = to_input.value + ":00";
-      if (range.to !== time) {
-        range.to = time;
-        this._saveBackendEntity();
-      }
-    }.bind(this);
+      setTimeout(
+        (counter) => {
+          if (counter < this._dialog._save_counter) {
+            return;
+          }
+          const time = to_input.value + ":00";
+          if (range.to !== time) {
+            range.to = time;
+            this._saveBackendEntity();
+          }
+        },
+        1000,
+        ++(this._dialog._save_counter),
+      );
+    };
     row.appendChild(to_input);
+
+    const toggle = document.createElement("ha-switch");
+    toggle.style.marginLeft = "auto";
+    toggle.style.paddingLeft = "16px";
+    toggle.checked = !range.disabled;
+    toggle.addEventListener("change", () => {
+      range.disabled = !range.disabled;
+      this._saveBackendEntity();
+    });
+    row.appendChild(toggle);
 
     const remove = document.createElement("ha-icon");
     remove.icon = "mdi:delete-outline";
-    remove.style.marginLeft = "auto";
     remove.style.cursor = "pointer";
-    remove.onclick = function () {
+    remove.onclick = () => {
       this._dialog._schedule = this._dialog._schedule.filter((_, i) => i !== index);
       this._createDialogRows();
       this._saveBackendEntity();
-    }.bind(this);
+    };
     row.appendChild(remove);
 
     return row;
@@ -287,32 +345,23 @@ class DailyScheduleCard extends HTMLElement {
       }
     }
 
-    setTimeout(
-      function (counter) {
-        if (counter < this._dialog._save_counter) {
-          return;
+    this._hass
+      .callService("daily_schedule", "set", {
+        entity_id: this._dialog._entity,
+        schedule: this._dialog._schedule,
+      })
+      .then(() => {
+        if (this._dialog._message.innerText.length > 0) {
+          this._dialog._message.innerText = "";
         }
-        this._hass
-          .callService("daily_schedule", "set", {
-            entity_id: this._dialog._entity,
-            schedule: this._dialog._schedule,
-          })
-          .then(() => {
-            if (this._dialog._message.innerText.length > 0) {
-              this._dialog._message.innerText = "";
-            }
-            this._dialog._plus._button.disabled = false;
-          })
-          .catch((error) => {
-            if (this._dialog._message.innerText !== error.message) {
-              this._dialog._message.innerText = error.message;
-            }
-            return Promise.reject(error);
-          });
-      }.bind(this),
-      500,
-      ++(this._dialog._save_counter),
-    );
+        this._dialog._plus._button.disabled = false;
+      })
+      .catch((error) => {
+        if (this._dialog._message.innerText !== error.message) {
+          this._dialog._message.innerText = error.message;
+        }
+        return Promise.reject(error);
+      });
   }
 }
 
