@@ -50,29 +50,52 @@ custom_card_kepath_binary_sensor_count:
         page: "/0"
       popup:
         title: "entity group"
-        auto_entities_sort_method: >
-          [[[
-            var autoEntitiesSortMethod = "state";
-            const sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
-            if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities_sort_method) {
-              for (let i = 0; i < sort_methods.length; i++) {
-                if (sort_methods[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_method) {
-                  autoEntitiesSortMethod = sort_methods[i];
+        auto_entities:
+          sort_method: >
+            [[[
+              var autoEntitiesSortMethod = "state";
+              const sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_method) {
+                for (let i = 0; i < sort_methods.length; i++) {
+                  if (sort_methods[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method) {
+                    autoEntitiesSortMethod = sort_methods[i];
+                  }
                 }
               }
-            }
-            return autoEntitiesSortMethod;
-          ]]]
-        auto_entities_sort_reversed: >
-          [[[
-            var autoEntitiesSortReversed = false;
-            if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities_sort_reversed) {
-              if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed === "boolean") {
-                autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed;
+              return autoEntitiesSortMethod;
+            ]]]
+          sort_reversed: >
+            [[[
+              var autoEntitiesSortReversed = false;
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_reversed) {
+                if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed === "boolean") {
+                  autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed;
+                }
               }
-            }
-            return autoEntitiesSortReversed;
-          ]]]
+              return autoEntitiesSortReversed;
+            ]]]
+          tap_action:
+            action: >
+              [[[
+                var tapAction = "toggle";
+                const tap_actions = ['more-info', 'toggle', 'call-service', 'none', 'navigate', 'url'];
+                if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.tap_action?.action) {
+                  for (let i = 0; i < tap_actions.length; i++) {
+                    if (tap_actions[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.tap_action.action) {
+                      tapAction = tap_actions[i];
+                    }
+                  }
+                }
+                return tapAction;
+              ]]]
+            target: >
+              [[[
+                var tapActionTarget = "none";
+                if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.tap_action?.target) {
+                  tapActionTarget = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.tap_action.target;
+                }
+                return tapActionTarget;
+              ]]]
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
@@ -284,20 +307,114 @@ custom_popup_auto_entities_list:
           cards:
             - type: "custom:auto-entities"
               card:
-                type: "entities"
-                show_header_toggle: false
-                state_color: true
+                type: "vertical-stack"
+              card_param: "cards"
+                # type: "entities"
+                # show_header_toggle: false
+                # state_color: true
               filter:
                 include:
                   - group: "[[[ return entity.entity_id ]]]"
                     options:
-                      secondary_info: "last-changed"
+                      type: "custom:button-card"
+                      entity: "this.entity_id"
+                      template: >
+                        [[[
+                          var entityTemplate = ["card_binary_sensor", "icon_info_bg", "ulm_translation_engine"];
+                          if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.entity_templates) {
+                            entityTemplate = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.entity_templates;
+                          }
+                          return entityTemplate;
+                        ]]]
+                      # secondary_info: "last-changed"
+                      # # entity_id: "this.entity_id"
+                      # tap_action:
+                      #   action: "fire-dom-event"
+                      #   browser_mod:
+                      #     service: "browser_mod.sequence"
+                      #     data:
+                      #       sequence:
+                      #         - service: "browser_mod.close_popup"
+                      #         # - service: "browser_mod.javascript"
+                      #         #   data:
+                      #         #     code: |
+                      #         #       let entityId = "this.entity_id";
+                      #         #       //alert(entityId);
+                      #         #       //alert(hass.states[entityId].state);
+                      #         #       //alert(variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.target);
+                      #         # - service: "browser_mod.more-info"
+                      #         #   data:
+                      #         #     entity: "this.entity_id"
+                      #         - service: "browser_mod.navigate"
+                      #           data:
+                      #             # entity: "this.entity_id"
+                      #             path: >
+                      #               [[[
+                      #                 let entityId = "this.entity_id";
+                      #                 //var entityId = "this.entity_id";
+
+                      #                 //var newentityId = states["binary_sensor.udmpro_disk_0_health"].entity_id;
+                      #                 //var newentityId = states[entityId].entity_id;
+                      #                 //var newentityId = states[entityId]?.entity_id ? states[entityId].entity_id : "missing10";
+                      #                 //var navigationPath = "/0";
+                      #                 //var deviceId = hass.entities[entityId].device_id;
+                      #                 //if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.target == "device_id") {
+                      #                 //  if (hass?.entities[entityId]?.device_id;) {
+                      #                 //    navigationPath = "config/devices/device/" + hass.entities[entityId].device_id;
+                      #                 //  } else {
+                      #                 //    navigationPath = "config/devices/dashboard";
+                      #                 //  }
+                      #                 //}
+                      #                 //return "config/devices/device/" + deviceId;
+                      #                 //return typeof(entityId)
+                      #                 //return entityId;
+                      #                 //return newentityId;
+                      #                 return "entity_id: " + entityId;
+                      #                 //return hass.entities[].device_id
+                      #                 //return "this";
+                      #                 //return "this.entity_id";
+                      #               ]]]
+                      # # tap_action:
+                      # #   action: >
+                      # #     [[[
+                      # #       var action = "more-info";
+                      # #       switch(variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.action) {
+                      # #         case "navigate":
+                      # #           action = "navigate";
+                      # #           break;
+                      # #         case "call-service":
+                      # #           action = "call-service";
+                      # #           break;
+                      # #         case "fire-dom-event":
+                      # #           action = "fire-dom-event";
+                      # #           break;
+                      # #         default:
+                      # #           break;
+                      # #       }
+                      # #       return action;
+                      # #     ]]]
+                      # #   navigation_path: >
+                      # #     [[[
+                      # #       var navigationPath = "/0";
+                      # #       if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.target == "device_id") {
+                      # #         if (hass?.entities[this.entity_id]?.device_id;) {
+                      # #           navigationPath = "config/devices/device/" + hass.entities[this.entity_id].device_id;
+                      # #         } else {
+                      # #           navigationPath = "config/devices/dashboard";
+                      # #         }
+                      # #       }
+                      # #       return navigationPath;
+                      # #     ]]]
+                      # # hold_action:
+                      # #   action: "more-info"
+                      # # double_tap_action:
+                      # #   action: "more-info"
               sort:
-                method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_method ]]]"
+                method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method ]]]"
                 reverse: >
                   [[[
                     var sortReversed = true;
-                    if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed == true) {
+                    if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed == true) {
                       sortReversed = false;
                     }
                     return sortReversed;

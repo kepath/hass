@@ -405,7 +405,16 @@ custom_popup_kepath_person:
                         template:
                           - "about_my_phone_button_kepath"
                         variables:
-                          device_id: "[[[ return variables?.ulm_card_kepath_person_gps_tracker_device_id; ]]]"
+                          device_id: >
+                            [[[
+                              var deviceId = "";
+                              if (variables?.ulm_card_kepath_person_gps_tracker) {
+                                if (hass?.entities[variables.ulm_card_kepath_person_gps_tracker]?.device_id) {
+                                  deviceId = hass.entities[variables.ulm_card_kepath_person_gps_tracker].device_id;
+                                }
+                              }
+                              return deviceId;
+                            ]]]
                   - type: "map"
                     auto_fit: true
                     aspect_ratio: "12x10"
