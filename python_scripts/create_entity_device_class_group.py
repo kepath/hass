@@ -47,6 +47,7 @@ filter_by_device_class = data.get('filter_by_device_class', False)
 included_device_classes = data.get('included_device_classes', ['door'])
 excluded_entities = data.get('excluded_entities', [])
 
+platform_exclusion_template_sensor = "sensor.integration_entity_attributes"
 entity_list = []
 
 if not isinstance(domain, str) or not domain or not group_name:
@@ -55,31 +56,26 @@ if not isinstance(domain, str) or not domain or not group_name:
 # List of entity_id's to globally exclude from the groups.
 # Any entity_id that contains any text in the list will be excluded.
 # This is useful for integrations such as browser_mod that create lots of commonly named entities.
-globally_excluded_matches = [
-    "chrome_workdell",
-    "a4974337_d703c461",
-    "c105a8ea_57917284",
-    "1999f1b8_8c50d6ce",
-    "front_door_tablet",
-    "macbook_pro_2018_screen_possibly",
-    "macbook_pro_2018_chrome",
-    "a996ec86_cdbe8ea4",
-    "kev_iphone_remote",
-    "41edef0a_ffdd99dd"
+globally_excluded_matches = []
+globally_excluded_platforms = [
+    "browser_mod"
 ]
 
-# try:
-logger.info(f"Entering integration_entities")
-# for entity_id in hass.integration_entities('browser_mod'):
-#     logger.error(logger, f"a: Adding '{entity_id}' to the globally excluded matches list")
-# for entity_id in hass.helpers.template.integration_entities('browser_mod'):
-#     logger.error(logger, f"b: Adding '{entity_id}' to the globally excluded matches list")
-# for entity_id in hass.entity_registry.integration_entities('browser_mod'):
-#     logger.error(logger, f"c: Adding '{entity_id}' to the globally excluded matches list")
-# for entity_id in hass.entry.integration_entities('browser_mod'):
-#     logger.error(logger, f"d: Adding '{entity_id}' to the globally excluded matches list")
-# except:
-#     logger.error(logger, f"Error - a problem occured adding browser_mod entities to the globally excluded matches list")
+try:
+    integration_entity_attributes = hass.states.get(platform_exclusion_template_sensor)
+    if integration_entity_attributes is None:
+        logger.error(logger, f"Error - entity object not found")
+    else:
+        for attr in integration_entity_attributes.attributes:
+            if attr is not None:
+                for platform in globally_excluded_platforms:
+                    if attr.find(platform) != -1:
+                        logger.info(f"The entities for the platform '{platform}' will be excluded from the group")
+                        for entity_id in integration_entity_attributes.attributes[attr]:
+                            globally_excluded_matches.append(entity_id)
+                            logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
+except:
+    logger.error(logger, f"Error - a problem occured adding browser_mod entities to the globally excluded matches list")
 
 try:
     for entity_id in hass.states.entity_ids(domain):

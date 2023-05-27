@@ -258,176 +258,183 @@
   mode: restart
 - id: '1666811718812'
   alias: on_start_create_group.all_fans_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: fan
       group_name: all_fans
-      friendly_name: All fan domain entities
       icon: mdi:fan
+      friendly_name: All fan domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1666812613473'
   alias: on_start_create_group.all_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: all
       group_name: all_entities
-      friendly_name: Every domain entity
       icon: mdi:arrow-expand-all
+      friendly_name: Every domain entity
+      filter_by_device_class: false
   mode: single
 - id: '1666812617895'
   alias: on_start_create_group.all_lights_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: light
       group_name: all_lights
-      friendly_name: All light domain entities
       icon: mdi:lightbulb-alert-outline
+      friendly_name: All light domain entities
+      filter_by_device_class: false
       excluded_entities:
-      - light.chrome_workdell_screen
-      - light.c105a8ea_57917284_screen
       - light.middle_hallway_light_light_1
       - light.front_door_smartbulb
       - light.kitchen_tuya_camera_indicator_light
-      - light.a4974337_d703c461_screen
-      - light.41edef0a_ffdd99dd_screen
   mode: single
 - id: '1666812616338'
   alias: on_start_create_group.all_zones_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: zone
       group_name: all_zones
-      friendly_name: All zone domain entities
       icon: mdi:map-marker
+      friendly_name: All zone domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1666812616938'
   alias: on_start_create_group.all_updates_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: update
       group_name: all_updates
-      friendly_name: All update domain entities
       icon: mdi:update
+      friendly_name: All update domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1666812616259'
   alias: on_start_create_group.all_camera_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: camera
       group_name: all_cameras
-      friendly_name: All camera domain entities
       icon: mdi:camera
+      friendly_name: All camera domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1629812616259'
   alias: on_start_create_group.all_media_player_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: media_player
       group_name: all_media_players
-      friendly_name: All media_player domain entities
       icon: mdi:play-network-outline
+      friendly_name: All media_player domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1622852616259'
   alias: on_start_create_group.all_remote_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: remote
       group_name: all_remotes
-      friendly_name: All remote domain entities
       icon: mdi:remote
+      friendly_name: All remote domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1666812633820'
   alias: on_start_create_group.all_binary_sensor_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: binary_sensor
       group_name: all_binary_sensors
-      friendly_name: All binary_sensor domain entities
       icon: mdi:toggle-switch
+      friendly_name: All binary_sensor domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1666812616320'
   alias: on_start_create_group.all_sensor_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: sensor
       group_name: all_sensors
-      friendly_name: All sensor domain entities
       icon: mdi:shape-plus
+      friendly_name: All sensor domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1666817726320'
   alias: on_start_create_group.all_switch_domain_entities
-  description: Uses python script create_entity_groups to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity group
   trigger:
   - platform: homeassistant
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_groups
+  - service: python_script.create_entity_device_class_group
     data:
       domain: switch
       group_name: all_switches
-      friendly_name: All switch domain entities
       icon: mdi:light-switch
+      friendly_name: All switch domain entities
+      filter_by_device_class: false
   mode: single
 - id: '1672906062419'
   alias: on_start_create_group.all_door_class_binary_sensors
@@ -463,9 +470,11 @@
   action:
   - service: python_script.create_entity_device_class_group
     data:
+      domain: switch
       group_name: all_plug_class_binary_sensors
       icon: mdi:power-socket-uk
       friendly_name: All binary_sensor plug device class group
+      filter_by_device_class: true
       included_device_classes:
       - plug
   mode: single
