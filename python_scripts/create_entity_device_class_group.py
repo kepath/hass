@@ -11,6 +11,7 @@
 #   examples of device classes can be found here
 #   binary_sensor - https://developers.home-assistant.io/docs/core/entity/binary-sensor
 #   switch - https://developers.home-assistant.io/docs/core/entity/switch
+# excluded_integrations - a list of integrations to exclude from the group
 # excluded_entities - a list of entity_id's to exclude from the group.
 #   Be aware that hyphens are replaced by underscores in the entity_id's
 #
@@ -31,12 +32,16 @@
 #       group_name: all_door_class_binary_sensors
 #       icon: mdi:door
 #       friendly_name: All binary_sensor door device class group
+#       filter_by_device_class: true
 #       included_device_classes:
 #       - door
 #       - window
 #       - vibration
+#       excluded_integrations:
+#       - browser_mod
 #       excluded_entities:
 #       - binary_sensor.zigbee_door_sensor_bed_c_contact
+#   mode: single
 #########################################################################################
 
 domain = data.get('domain', '')
@@ -45,9 +50,10 @@ icon = data.get('icon', '')
 friendly_name = data.get('friendly_name', group_name)
 filter_by_device_class = data.get('filter_by_device_class', False)
 included_device_classes = data.get('included_device_classes', ['door'])
+excluded_integrations = data.get('excluded_integrations', [])
 excluded_entities = data.get('excluded_entities', [])
 
-platform_exclusion_template_sensor = "sensor.integration_entity_attributes"
+integration_exclusion_template_sensor = "sensor.integration_entity_attributes"
 entity_list = []
 
 if not isinstance(domain, str) or not domain or not group_name:
@@ -55,22 +61,18 @@ if not isinstance(domain, str) or not domain or not group_name:
 
 # List of entity_id's to globally exclude from the groups.
 # Any entity_id that contains any text in the list will be excluded.
-# This is useful for integrations such as browser_mod that create lots of commonly named entities.
 globally_excluded_matches = []
-globally_excluded_platforms = [
-    "browser_mod"
-]
 
 try:
-    integration_entity_attributes = hass.states.get(platform_exclusion_template_sensor)
+    integration_entity_attributes = hass.states.get(integration_exclusion_template_sensor)
     if integration_entity_attributes is None:
         logger.error(logger, f"Error - entity object not found")
     else:
         for attr in integration_entity_attributes.attributes:
             if attr is not None:
-                for platform in globally_excluded_platforms:
-                    if attr.find(platform) != -1:
-                        logger.info(f"The entities for the platform '{platform}' will be excluded from the group")
+                for integration in excluded_integrations:
+                    if attr.find(integration) != -1:
+                        logger.info(f"The entities for the integration '{integration}' will be excluded from the group")
                         for entity_id in integration_entity_attributes.attributes[attr]:
                             globally_excluded_matches.append(entity_id)
                             logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
