@@ -1,7 +1,8 @@
 ---
 template:
   - sensor:
-      - name: "binary_sensor_state_counts"
+      - unique_id: "binary_sensor_state_counts_template_generated"
+        name: "binary_sensor_state_counts"
         state: "{{ 'off' if states('sensor.hacs') | float == 0 else 'on' }}"
         attributes:
           updates_available_count: "{{ expand('group.all_updates') | selectattr('state','eq', 'on') | list | count }}"
@@ -21,6 +22,41 @@ template:
           safety_sensors_triggered_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           safety_sensors_unavailable_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           zero_value: "{{ 0 | int }}"
+
+      - unique_id: "integration_entity_attributes_template_generated"
+        name: "Integration Entity Attributes"
+        state: "0"
+        attributes:
+          domain_list: "{{ states | map(attribute='domain') | unique | list }}"
+          device_class_list: "{{ states | rejectattr('attributes.device_class', 'undefined') | map(attribute='attributes.device_class') | unique | list }}"
+          unit_of_measurement_list: "{{ states | rejectattr('attributes.unit_of_measurement', 'undefined') | map(attribute='attributes.unit_of_measurement') | unique | list }}"
+          integrations_installed_list: "{{ states | map(attribute='entity_id') | map('device_attr', 'identifiers') | reject('none') | map('first') | select('defined') | map(attribute='0') | unique | list }}"
+          integration_entities_browser_mod: >
+            {%- set find_integration = 'browser_mod' -%}
+            {% set entities = states | map(attribute='entity_id') | list -%}
+            {%- set ns = namespace(entities = []) -%}
+            {%- for entity_id in entities -%}
+              {%- set ids = device_attr(entity_id, 'identifiers') -%}
+              {%- if ids -%}
+                {%- set ids = ids | list | first -%}
+                {%- if ids and ids | length == 2 and ids[0] == find_integration -%}
+                  {%- set ns.entities = ns.entities + [ entity_id ] -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {{ ns.entities }}
+
+      # {% set entities = integration_entities('browser_mod') %}
+      # {{ entities }}
+      # - unique_id: "integration_entities_list_template_generated"
+      #   name: "Integration Entities List"
+      #   state: >
+      #       {% set ns = namespace(items = []) %}
+      #       {% for item in  states | map(attribute='entity_id') | map('device_attr', 'identifiers') | reject('none') | map('first') | select('defined') | map(attribute='0') | unique %}
+      #         {% set entities = integration_entities(item) %}
+      #         {% set ns.items = ns.items + [ { 'integration': item, 'count': entities | count, 'entities': entities } ] %}
+      #       {% endfor %}
+      #       {{ ns.items | sort(attribute='count', reverse=true) }}
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"

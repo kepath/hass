@@ -50,29 +50,30 @@ custom_card_kepath_binary_sensor_count:
         page: "/0"
       popup:
         title: "entity group"
-        auto_entities_sort_method: >
-          [[[
-            var autoEntitiesSortMethod = "state";
-            const sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
-            if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities_sort_method) {
-              for (let i = 0; i < sort_methods.length; i++) {
-                if (sort_methods[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_method) {
-                  autoEntitiesSortMethod = sort_methods[i];
+        auto_entities:
+          sort_method: >
+            [[[
+              var autoEntitiesSortMethod = "state";
+              const sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_method) {
+                for (let i = 0; i < sort_methods.length; i++) {
+                  if (sort_methods[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method) {
+                    autoEntitiesSortMethod = sort_methods[i];
+                  }
                 }
               }
-            }
-            return autoEntitiesSortMethod;
-          ]]]
-        auto_entities_sort_reversed: >
-          [[[
-            var autoEntitiesSortReversed = false;
-            if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities_sort_reversed) {
-              if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed === "boolean") {
-                autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed;
+              return autoEntitiesSortMethod;
+            ]]]
+          sort_reversed: >
+            [[[
+              var autoEntitiesSortReversed = false;
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_reversed) {
+                if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed === "boolean") {
+                  autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed;
+                }
               }
-            }
-            return autoEntitiesSortReversed;
-          ]]]
+              return autoEntitiesSortReversed;
+            ]]]
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
@@ -293,11 +294,11 @@ custom_popup_auto_entities_list:
                     options:
                       secondary_info: "last-changed"
               sort:
-                method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_method ]]]"
+                method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method ]]]"
                 reverse: >
                   [[[
                     var sortReversed = true;
-                    if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities_sort_reversed == true) {
+                    if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed == true) {
                       sortReversed = false;
                     }
                     return sortReversed;
