@@ -258,7 +258,8 @@
   mode: restart
 - id: '1666811718812'
   alias: on_start_create_group.all_fans_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -271,10 +272,13 @@
       icon: mdi:fan
       friendly_name: All fan domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1666812613473'
   alias: on_start_create_group.all_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -290,7 +294,8 @@
   mode: single
 - id: '1666812617895'
   alias: on_start_create_group.all_lights_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -303,6 +308,8 @@
       icon: mdi:lightbulb-alert-outline
       friendly_name: All light domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
       excluded_entities:
       - light.middle_hallway_light_light_1
       - light.front_door_smartbulb
@@ -310,7 +317,8 @@
   mode: single
 - id: '1666812616338'
   alias: on_start_create_group.all_zones_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -326,7 +334,8 @@
   mode: single
 - id: '1666812616938'
   alias: on_start_create_group.all_updates_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -342,7 +351,8 @@
   mode: single
 - id: '1666812616259'
   alias: on_start_create_group.all_camera_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -355,10 +365,13 @@
       icon: mdi:camera
       friendly_name: All camera domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1629812616259'
   alias: on_start_create_group.all_media_player_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -371,10 +384,13 @@
       icon: mdi:play-network-outline
       friendly_name: All media_player domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1622852616259'
   alias: on_start_create_group.all_remote_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -387,10 +403,13 @@
       icon: mdi:remote
       friendly_name: All remote domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1666812633820'
   alias: on_start_create_group.all_binary_sensor_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -406,7 +425,8 @@
   mode: single
 - id: '1666812616320'
   alias: on_start_create_group.all_sensor_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -422,7 +442,8 @@
   mode: single
 - id: '1666817726320'
   alias: on_start_create_group.all_switch_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity group
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
   trigger:
   - platform: homeassistant
     event: start
@@ -435,6 +456,8 @@
       icon: mdi:light-switch
       friendly_name: All switch domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1672906062419'
   alias: on_start_create_group.all_door_class_binary_sensors
@@ -456,6 +479,8 @@
       - door
       - window
       - vibration
+      excluded_integrations:
+      - browser_mod
       excluded_entities:
       - binary_sensor.zigbee_door_sensor_bed_c_contact
   mode: single
@@ -497,6 +522,8 @@
       included_device_classes:
       - occupancy
       - motion
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1673133921800'
   alias: on_start_create_group.all_safety_class_binary_sensors
@@ -520,6 +547,8 @@
       - safety
       - problem
       - smoke
+      excluded_integrations:
+      - browser_mod
       excluded_entities:
       - binary_sensor.diskstation_security_status
   mode: single
@@ -542,6 +571,8 @@
       included_device_classes:
       - battery
       - battery_charging
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1679331701346'
   alias: on_open_front_door_set_input_datetime_timestamp
@@ -762,6 +793,8 @@
       filter_by_device_class: true
       included_device_classes:
       - outlet
+      excluded_integrations:
+      - browser_mod
       excluded_entities:
       - switch.zigbee_plug_fridge_bed_c
       - switch.lamp_plug_lounge
@@ -854,6 +887,8 @@
       included_device_classes:
       - tv
       - receiver
+      excluded_integrations:
+      - browser_mod
       excluded_entities:
       - media_player.yamaha_rx_v777_reciever_integration_zone_2
       - media_player.yamaha_rx_v777_zone2
@@ -882,6 +917,8 @@
       included_device_classes:
       - speaker
       - receiver
+      excluded_integrations:
+      - browser_mod
       excluded_entities:
       - media_player.yamaha_rx_v777_reciever_integration_zone_2
       - media_player.kitchen_g3_instant_speaker
