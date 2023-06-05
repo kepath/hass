@@ -367,6 +367,7 @@
       filter_by_device_class: false
       excluded_integrations:
       - browser_mod
+      - mqtt
   mode: single
 - id: '1629812616259'
   alias: on_start_create_group.all_media_player_domain_entities
@@ -422,6 +423,8 @@
       icon: mdi:toggle-switch
       friendly_name: All binary_sensor domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1666812616320'
   alias: on_start_create_group.all_sensor_domain_entities
@@ -439,6 +442,8 @@
       icon: mdi:shape-plus
       friendly_name: All sensor domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1666817726320'
   alias: on_start_create_group.all_switch_domain_entities
@@ -502,6 +507,8 @@
       filter_by_device_class: true
       included_device_classes:
       - plug
+      excluded_integrations:
+      - browser_mod
   mode: single
 - id: '1673133770721'
   alias: on_start_create_group.all_occupancy_class_binary_sensors
@@ -964,4 +971,61 @@
       new_group_name: all_remotes_and_tv_class_media_player
       icon: mdi:television-play
       friendly_name: All media_player tv device class and remotes group
+  mode: single
+- id: '1685624731561'
+  alias: on_start_create_group.all_climate_domain_entities
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: climate
+      group_name: all_climate
+      icon: mdi:home-thermometer
+      friendly_name: All climate domain entities
+      filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
+  mode: single
+- id: '1685624861506'
+  alias: on_start_create_group.all_people_domain_entities
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: people
+      group_name: all_people
+      icon: mdi:account
+      friendly_name: All people domain entities
+      filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
+  mode: single
+- id: '1685624899638'
+  alias: on_start_create_group.all_vacuum_domain_entities
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: vacuum
+      group_name: all_vacuum
+      icon: mdi:account
+      friendly_name: All vacuum domain entities
+      filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
   mode: single
