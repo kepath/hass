@@ -35,9 +35,9 @@
     id: dfsdfsdewwer21
   condition: []
   action:
-  - type: turn_off
+  - type: turn_on
     device_id: fc2e8158e443b2238884592a9e069ff3
-    entity_id: switch.drinks_fridge
+    entity_id: switch.drinks_fridge_plug_bed_c
     domain: switch
   mode: single
 - id: '1609788662612'
@@ -55,7 +55,7 @@
   action:
   - type: turn_off
     device_id: fc2e8158e443b2238884592a9e069ff3
-    entity_id: switch.drinks_fridge
+    entity_id: switch.drinks_fridge_plug_bed_c
     domain: switch
   - type: turn_off
     device_id: ecdc93708d2afbf8f645e3eb84d0e39c
@@ -68,16 +68,15 @@
   trigger:
   - type: opened
     platform: device
-    device_id: 160cd6a105801adbbfb089390d7ad0ae
-    entity_id: binary_sensor.zigbee_door_sensor_garage_contact
+    device_id: e455b2eeea8937c7ad7cad0320940913
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_6
     domain: binary_sensor
   condition: []
   action:
   - type: turn_on
-    device_id: 376a2d183b5132bd8417b81b10aa763f
-    entity_id: light.zigbee_bulb_garage
+    device_id: fdfca529947f2de73d16ee2ecf6d2d7d
+    entity_id: light.zigbee_bulb_garage_light
     domain: light
-    brightness_pct: 100
   mode: single
 - id: '1617175491057'
   alias: on_close_garage_door_turn_off_garage_light_after_10_minutes
@@ -85,18 +84,17 @@
   trigger:
   - type: not_opened
     platform: device
-    device_id: 160cd6a105801adbbfb089390d7ad0ae
+    device_id: e455b2eeea8937c7ad7cad0320940913
     entity_id: binary_sensor.zigbee_door_sensor_garage_contact
     domain: binary_sensor
     for:
       hours: 0
       minutes: 10
       seconds: 0
-      milliseconds: 0
   condition: []
   action:
   - type: turn_off
-    device_id: 376a2d183b5132bd8417b81b10aa763f
+    device_id: fdfca529947f2de73d16ee2ecf6d2d7d
     entity_id: light.zigbee_bulb_garage
     domain: light
   mode: single
@@ -122,15 +120,10 @@
   trigger:
   - type: opened
     platform: device
-    device_id: bfb5f733e3cc226de9ff83eaf5571ab9
-    entity_id: binary_sensor.zigbee_door_sensor_front_contact
+    device_id: 881230f1ec449fb6ac950426aaa8bf87
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
     domain: binary_sensor
     id: '263813'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
   condition:
   - condition: state
     entity_id: binary_sensor.nighttime
@@ -138,7 +131,7 @@
   action:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: light.shelly1l_hallway_bottom_light_1
+    entity_id: light.hallway_bottom_light_1
     domain: light
   mode: single
 - id: '1631736153340'
@@ -183,13 +176,9 @@
   trigger:
   - type: opened
     platform: device
-    device_id: bfb5f733e3cc226de9ff83eaf5571ab9
-    entity_id: binary_sensor.zigbee_door_sensor_front_contact
+    device_id: 881230f1ec449fb6ac950426aaa8bf87
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
     domain: binary_sensor
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 0
     id: 3434xcgcg657456f5d90
   condition: []
   action:
@@ -213,8 +202,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: a2469c4f16cd3a40ffb763fb0f349799
-    entity_id: binary_sensor.zigbee_door_sensor_back_contact
+    device_id: 2a98740d417848e05eff1765f30ebaf0
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_5
     domain: binary_sensor
     id: 3434xcgcg657456ff56
   condition: []
@@ -312,8 +301,9 @@
       - browser_mod
       excluded_entities:
       - light.middle_hallway_light_light_1
-      - light.front_door_smartbulb
+      - light.shelly1l_hallway_bottom_light_2
       - light.kitchen_tuya_camera_indicator_light
+      - light.kitchen_utility_light_light_2
   mode: single
 - id: '1666812616338'
   alias: on_start_create_group.all_zones_domain_entities
@@ -483,6 +473,7 @@
       included_device_classes:
       - door
       - window
+      - opening
       - vibration
       excluded_integrations:
       - browser_mod
@@ -528,7 +519,6 @@
       filter_by_device_class: true
       included_device_classes:
       - occupancy
-      - motion
       excluded_integrations:
       - browser_mod
   mode: single
@@ -587,8 +577,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: bfb5f733e3cc226de9ff83eaf5571ab9
-    entity_id: binary_sensor.zigbee_door_sensor_front_contact
+    device_id: 881230f1ec449fb6ac950426aaa8bf87
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
     domain: binary_sensor
   condition: []
   action:
@@ -605,8 +595,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: a2469c4f16cd3a40ffb763fb0f349799
-    entity_id: binary_sensor.zigbee_door_sensor_back_contact
+    device_id: 2a98740d417848e05eff1765f30ebaf0
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_5
     domain: binary_sensor
   condition: []
   action:
@@ -622,8 +612,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: 160cd6a105801adbbfb089390d7ad0ae
-    entity_id: binary_sensor.zigbee_door_sensor_garage_contact
+    device_id: e455b2eeea8937c7ad7cad0320940913
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_6
     domain: binary_sensor
   condition: []
   action:
@@ -639,8 +629,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: bfb5f733e3cc226de9ff83eaf5571ab9
-    entity_id: binary_sensor.zigbee_door_sensor_front_contact
+    device_id: 881230f1ec449fb6ac950426aaa8bf87
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
     domain: binary_sensor
   condition: []
   action:
@@ -653,8 +643,8 @@
   trigger:
   - type: motion
     platform: device
-    device_id: 645235e6ce6aa8a04cdd1ba7cbb0f7d1
-    entity_id: binary_sensor.zigbee_motion_sensor_bed_e_occupancy
+    device_id: 1339055faacbf377e7a94560ac8f8e14
+    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_motion
     domain: binary_sensor
   condition: []
   action:
@@ -670,8 +660,8 @@
   trigger:
   - type: motion
     platform: device
-    device_id: 14c50654dba96b4da86bbd2c2cc736b8
-    entity_id: binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy_2
+    device_id: 39891a458f21573058c114ca5677be2f
+    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_motion_2
     domain: binary_sensor
   condition: []
   action:
@@ -738,8 +728,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: 8636b1007be195b1d9a95bd3358d4d17
-    entity_id: binary_sensor.zigbee_door_sensor_patio_1_contact
+    device_id: 27f9fc9f148ec8f120e88e554dba0a91
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_3
     domain: binary_sensor
   condition: []
   action:
@@ -755,8 +745,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: 979af7d179104802e6923bf8831031d9
-    entity_id: binary_sensor.zigbee_door_sensor_patio_2_contact
+    device_id: 211dba1149287be886337cf500f2edd9
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_4
     domain: binary_sensor
   condition: []
   action:
@@ -772,8 +762,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: 907dff53e57eb5a70f72977db29ec275
-    entity_id: binary_sensor.zigbee_door_sensor_loft_contact
+    device_id: b314e734c229fbad47815eead82dd9b8
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_7
     domain: binary_sensor
   condition: []
   action:
@@ -932,7 +922,6 @@
       - media_player.lounge_g3_instant_speaker
       - media_player.doorbell_g4_speaker
       - media_player.bed_c_g3_instant_speaker
-      - media_player.yamaha_rx_v777_zone2
       - media_player.rx_v777_zone2
   mode: single
 - id: '1683217570006'
@@ -1026,6 +1015,244 @@
       icon: mdi:account
       friendly_name: All vacuum domain entities
       filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
+  mode: single
+- id: '1686506343680'
+  alias: on_motion_detect_g3_flex_back_set_occupancy_timer
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: a41beba7d038fb84cb5f9b81cfe4d189
+    entity_id: binary_sensor.back_g3_flex_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.back_g3_flex_occupancy
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.back_g3_flex_occupancy
+  mode: restart
+- id: '1686506617894'
+  alias: on_motion_detect_g3_instant_bed_c_set_occupancy_timer
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: d4a495cd869d1d3bbdda640523c97628
+    entity_id: binary_sensor.bed_c_g3_instant_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.bed_c_g3_instant_occupancy
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.bed_c_g3_instant_occupancy
+  mode: restart
+- id: '1686506830460'
+  alias: on_motion_detect_g3_instant_bottom_hallway_set_occupancy_timer
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: de88afb9e5425c51c8dbd258947b8bd9
+    entity_id: binary_sensor.lounge_g3_instant_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.bottom_hallway_g3_instant_occupancy
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.bottom_hallway_g3_instant_occupancy
+  mode: restart
+- id: '1686506902274'
+  alias: on_motion_detect_g3_flex_front_set_occupancy_timer
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 1c1982a690555192a4b992264b3efd69
+    entity_id: binary_sensor.front_g3_flex_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.front_g3_flex_occupancy
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.front_g3_flex_occupancy
+  mode: restart
+- id: '1686507044078'
+  alias: on_motion_detect_g3_instant_kitchen_set_occupancy_timer
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 9f49f341a11477f1e29e330e697c0f34
+    entity_id: binary_sensor.kitchen_g3_instant_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.kitchen_g3_instant_occupancy
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.kitchen_g3_instant_occupancy
+  mode: restart
+- id: '1686507147748'
+  alias: on_motion_detect_g3_flex_middle_hallway_set_occupancy_timer
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 11062255f077266d4098f535713a004b
+    entity_id: binary_sensor.middle_hallway_g3_flex_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.middle_hallway_g3_flex_occupancy
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.middle_hallway_g3_flex_occupancy
+  mode: restart
+- id: '1686507230861'
+  alias: on_motion_detect_g4_doorbell_set_occupancy_timer
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: a4509b87292d2cba054b4c1da8cab1e6
+    entity_id: binary_sensor.doorbell_g4_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.doorbell_g4_occupancy
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.doorbell_g4_occupancy
+  mode: restart
+- id: '1686515609802'
+  alias: on_start_create_group.all_input_booleans_domain_entities
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: input_boolean
+      group_name: all_input_booleans
+      icon: mdi:toggle-switch-off-outline
+      friendly_name: All input_boolean domain entities
+      filter_by_device_class: false
+      excluded_integrations:
+      - browser_mod
+  mode: single
+- id: '1686515933994'
+  alias: on_start_merge_groups_occupancy_class_input_boolean_binary_sensor
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 40
+      milliseconds: 0
+  - service: python_script.merge_groups
+    data:
+      groups:
+      - group.all_occupancy_class_binary_sensors
+      - group.all_occupancy_class_input_booleans
+      new_group_name: all_occupancy_class_input_boolean_binary_sensor
+      icon: mdi:human-greeting
+      friendly_name: All occupancy device class input_booleans and binary_sensors
+        group
+  mode: single
+- id: '1686516045187'
+  alias: on_start_create_group.all_occupancy_class_input_booleans
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: input_boolean
+      group_name: all_occupancy_class_input_booleans
+      icon: mdi:toggle-switch
+      friendly_name: All input_boolean occupancy motion device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - occupancy
       excluded_integrations:
       - browser_mod
   mode: single
