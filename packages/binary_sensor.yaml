@@ -101,22 +101,50 @@ binary_sensor:
               {{ "on" }}
           {% endif %}
 
-  - platform: "template"
-    sensors:
-      yamaha_reciever_state:
-        friendly_name: "Yamaha Reciever State"
-        unique_id: "devicetracker_yamaha_reciever_state"
-        value_template: "{{ is_state('media_player.rx_v777_reciever_yamaha_integration_bed_c', 'on') }}"
-        icon_template: "mdi:audio-video"
+  # - platform: "template"
+  #   sensors:
+  #     yamaha_reciever_state:
+  #       friendly_name: "Yamaha Reciever State"
+  #       unique_id: "devicetracker_yamaha_reciever_state"
+  #       value_template: "{{ is_state('media_player.rx_v777_reciever_yamaha_integration_bed_c', 'on') }}"
+  #       icon_template: "mdi:audio-video"
 
-  - platform: "template"
-    sensors:
-      is_kev_driving:
-        friendly_name: "Kev Driving State"
-        unique_id: "binary_state_is_kev_driving"
-        value_template: "{{ is_state('sensor.iphone_activity', 'automotive') }}"
-        icon_template: "mdi:train-car"
-        device_class: "moving"
+  # - platform: "template"
+  #   sensors:
+  #     is_kev_driving:
+  #       friendly_name: "Kev Driving State"
+  #       unique_id: "binary_state_is_kev_driving"
+  #       value_template: "{{ is_state('sensor.iphone_activity', 'automotive') }}"
+  #       icon_template: "mdi:train-car"
+  #       device_class: "moving"
+
+  # - platform: "template"
+  #   sensors:
+  #     back_g3_flex_occupancy:
+  #       friendly_name: "Back G3 Flex Occupancy"
+  #       unique_id: "binary_state_back_g3_flex_occupancy"
+  #       value_template: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.back_g3_flex_last_motion_detected')) | round) / 60)) | round > 20 }}"
+  #       icon_template: "mdi:cctv"
+  #       device_class: "occupancy"
+
+  # bed_c_g3_instant_occupancy:
+  #   name: "Bed C G3 Instant Occupancy"
+  #   icon: "phu:mini-camera"
+  # bottom_hallway_g3_instant_occupancy:
+  #   name: "Bottom Hallway G3 Instant Occupancy"
+  #   icon: "phu:mini-camera"
+  # doorbell_g4_occupancy:
+  #   name: "Doorbell G4 Occupancy"
+  #   icon: "mdi:doorbell-video"
+  # front_g3_flex_occupancy:
+  #   name: "Front G3 Flex Occupancy"
+  #   icon: "mdi:cctv"
+  # kitchen_g3_instant_occupancy:
+  #   name: "Kitchen G3 Instant Occupancy"
+  #   icon: "phu:mini-camera"
+  # middle_hallway_g3_flex_occupancy:
+  #   name: "Middle Hallway G3 Flex Occupancy"
+  #   icon: "mdi:cctv"
 
   - platform: "tod"
     name: "nighttime"

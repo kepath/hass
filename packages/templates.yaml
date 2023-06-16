@@ -10,7 +10,7 @@ template:
           door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           lights_on_count: "{{ expand('group.all_lights') | selectattr('state','eq', 'on') | list | count }}"
           plugs_off_count: "{{ expand('group.all_outlet_class_switch') | selectattr('state','eq', 'off') | list | count }}"
-          occupancy_sensors_triggered_count: "{{ expand('group.all_occupancy_class_input_boolean_binary_sensor') | selectattr('state','eq', 'on') | list | count }}"
+          occupancy_sensors_triggered_count: "{{ expand('group.all_occupancy_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           occupancy_persons_home_count: "{{ expand(states.person) | selectattr('state','eq','home') | map(attribute='entity_id') | list | count }}"
           media_player_tv_and_remote_on_count: "{{ expand('group.all_remotes_and_tv_class_media_player') | rejectattr('state','in', ['unavailable','unknown','standby','idle','off']) | list | count }}"
@@ -443,5 +443,72 @@ template:
           latest_version: "{{ state_attr('update.vscode_remote_update', 'latest_version') }}"
 
   - binary_sensor:
-      - name: "kev_driving_status"
-        state: "{{ 'on' if states('sensor.iphone_activity') == 'Automotive' else 'off' }}"
+      - unique_id: "devicetracker_yamaha_reciever_state"
+        name: "Yamaha Reciever State"
+        state: "{{ is_state('media_player.rx_v777_reciever_yamaha_integration_bed_c', 'on') }}"
+        attributes:
+          icon: "mdi:audio-video"
+          device_class: "connectivity"
+
+      - unique_id: "binary_state_is_kev_driving"
+        name: "Kev Driving State"
+        state: "{{ is_state('sensor.iphone_activity', 'automotive') }}"
+        attributes:
+          icon: "mdi:train-car"
+          device_class: "moving"
+
+      - unique_id: "binary_state_back_g3_flex_occupancy"
+        name: "Back G3 Flex Occupancy"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.back_g3_flex_last_motion_detected')) | round) / 60)) | round < 20 }}"
+        attributes:
+          icon: "mdi:cctv"
+          device_class: "occupancy"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.back_g3_flex_last_motion_detected')) | round) / 60)) | round }}"
+
+      - unique_id: "binary_state_front_g3_flex_occupancy"
+        name: "Front G3 Flex Occupancy"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.front_g3_flex_last_motion_detected')) | round) / 60)) | round < 20 }}"
+        attributes:
+          icon: "mdi:cctv"
+          device_class: "occupancy"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.front_g3_flex_last_motion_detected')) | round) / 60)) | round }}"
+
+      - unique_id: "binary_state_middle_hallway_g3_flex_occupancy"
+        name: "Middle Hallway G3 Flex Occupancy"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.middle_hallway_g3_flex_last_motion_detected')) | round) / 60)) | round < 20 }}"
+        attributes:
+          icon: "mdi:cctv"
+          device_class: "occupancy"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.middle_hallway_g3_flex_last_motion_detected')) | round) / 60)) | round }}"
+
+      - unique_id: "binary_state_bed_c_g3_instant_occupancy"
+        name: "Bed C G3 Instant Occupancy"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bed_c_g3_instant_last_motion_detected')) | round) / 60)) | round < 20 }}"
+        attributes:
+          icon: "phu:mini-camera"
+          device_class: "occupancy"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bed_c_g3_instant_last_motion_detected')) | round) / 60)) | round }}"
+
+      - unique_id: "binary_state_bottom_hallway_g3_instant_occupancy"
+        name: "Bottom Hallway G3 Instant Occupancy"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bottom_hallway_g3_instant_last_motion_detected')) | round) / 60)) | round < 20 }}"
+        attributes:
+          icon: "phu:mini-camera"
+          device_class: "occupancy"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bottom_hallway_g3_instant_last_motion_detected')) | round) / 60)) | round }}"
+
+      - unique_id: "binary_state_kitchen_g3_instant_occupancy"
+        name: "Kitchen G3 Instant Occupancy"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.kitchen_g3_instant_last_motion_detected')) | round) / 60)) | round < 20 }}"
+        attributes:
+          icon: "phu:mini-camera"
+          device_class: "occupancy"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.kitchen_g3_instant_last_motion_detected')) | round) / 60)) | round }}"
+
+      - unique_id: "binary_state_doorbell_g4_occupancy"
+        name: "Doorbell G4 Occupancy"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.doorbell_g4_last_motion_detected')) | round) / 60)) | round < 20 }}"
+        attributes:
+          icon: "mdi:doorbell-video"
+          device_class: "occupancy"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.doorbell_g4_last_motion_detected')) | round) / 60)) | round }}"
