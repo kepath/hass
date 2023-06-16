@@ -1,4 +1,8 @@
 ---
+sun:
+  latitude: "52.0786°"
+  longitude: "-1.3418°"
+
 esphome:
   name: "${device_name}"
   comment: "${friendly_name}"
@@ -7,15 +11,15 @@ esphome:
   on_boot:
     - priority: -100
       then:
-      #   - if:
-      #       condition:
-      #         binary_sensor.is_on: isnight
-      #       then:
-      #         - light.turn_on: lightid1
-      #         - logger.log: 'startup - light should be on'
-      #       else:
-        - light.turn_off: "lightid1"
-        - logger.log: "startup - light should be off"
+        - if:
+            condition:
+              - sun.is_below_horizon:
+            then:
+              - light.turn_on: "lightid1"
+              - logger.log: "startup - light should be on"
+            else:
+              - light.turn_off: "lightid1"
+              - logger.log: "startup - light should be off"
 
   # globals:
   #   - id: last_value_from_ha
@@ -102,6 +106,12 @@ text_sensor:
       name: "${device_name}-MAC"
     # scan_results:
     #   name: ${device_name}-wifi-scan
+  - platform: "sun"
+    name: "Sun Next Sunrise"
+    type: "sunrise"
+  - platform: "sun"
+    name: "Sun Next Sunset"
+    type: "sunset"
 
 sensor:
   - platform: "ntc"

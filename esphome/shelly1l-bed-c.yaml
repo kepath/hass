@@ -26,15 +26,17 @@ output:
 
 binary_sensor:
   # =====================common binary_sensor
-  - platform: "homeassistant"
-    name: "${device_name}-isnight"
-    entity_id: "binary_sensor.nighttime"
-    id: "isnight"
-    internal: true
+  # - platform: "homeassistant"
+  #   name: "${device_name}-isnight"
+  #   entity_id: "binary_sensor.nighttime"
+  #   id: "isnight"
+  #   internal: true
 
   - platform: "status"
     name: "${device_name}-status"
     device_class: "connectivity"
+    filters:
+      - delayed_off: "5min"
   # =====================common binary_sensor
 
   - platform: "gpio"
@@ -52,3 +54,4 @@ binary_sensor:
     pin:
       number: "GPIO14"
     id: "switchid2"
+    disabled_by_default: true
