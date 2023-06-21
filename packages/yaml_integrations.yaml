@@ -1,4 +1,4 @@
-# ---
+---
 # proximity:
 #   home:
 #     devices:
@@ -53,3 +53,46 @@
 #       - "device_tracker.patrice"
 #     tolerance: 50
 #     unit_of_measurement: "mi"
+sensor:
+  - platform: "tautulli"
+    name: "Plex State Tautulli"
+    host: !secret "ha_rj45_ip"
+    api_key: !secret "tautulli_api_key"
+
+  - platform: "bitcoin"
+    currency: "GBP"
+    display_options:
+      - "exchangerate"
+      - "trade_volume_btc"
+
+binary_sensor:
+  - platform: "tod"
+    name: "nighttime"
+    after: "sunset"
+    before: "sunrise"
+    unique_id: "tod_nighttime"
+  - platform: "tod"
+    name: "quiettime"
+    after: "23:00"
+    before: "07:00"
+    unique_id: "tod_quiettime"
+  - platform: "tod"
+    name: "cheap heating time"
+    after: "00:00"
+    before: "07:00"
+    unique_id: "tod_cheap_heating_time"
+  - platform: "tod"
+    name: "morning heating time"
+    after: "06:00"
+    before: "09:00"
+    unique_id: "tod_morning_heating_time"
+  - platform: "tod"
+    name: "afternoon heating time"
+    after: "14:00"
+    before: "17:00"
+    unique_id: "tod_afternoon_heating_time"
+  - platform: "tod"
+    name: "evening heating time"
+    after: "19:00"
+    before: "21:00"
+    unique_id: "tod_evening_heating_time"

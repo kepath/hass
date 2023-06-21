@@ -1,215 +1,149 @@
 ---
 sensor:
-  # - platform: "feedparser"
-  #   name: "RSS Hass Alerts"
-  #   feed_url: "https://alerts.home-assistant.io/feed.xml"
-  #   date_format: "%a, %b %d %I:%M %p"
-  #   inclusions:
-  #     - "title"
-  #     - "link"
-  #     - "description"
-  #     - "image"
-  #     - "language"
-  #     - "pubDate"
-  #   exclusions:
-  #     - "language"
-
-  - platform: "tautulli"
-    name: "Plex State Tautulli"
-    host: !secret "ha_rj45_ip"
-    api_key: !secret "tautulli_api_key"
-
-  - platform: "bitcoin"
-    currency: "GBP"
-    display_options:
-      - "exchangerate"
-      - "trade_volume_btc"
-
-  - platform: "template"
-    sensors:
-      date_long:
-        friendly_name: "Date and Day of week"
-        value_template: >
-          {% set months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] %}
-          {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
-          {{ months[now().month-1] }}.{{ now().day }}th. {{ days[now().weekday()] }}
 
   - platform: "statistics"
     entity_id: "sensor.nvidia_shield_lounge_unifi_tx"
-    name: "nvidia_shield_lounge_unifi_tx_data_speed"
+    unique_id: "nvidia_shield_lounge_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.nvidia_shield_bed_e_unifi_tx"
-    name: "nvidia_shield_bed_e_unifi_tx_data_speed"
+    unique_id: "nvidia_shield_bed_e_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.amazon_firestick_4k_rj45_unifi_tx_2"
-    name: "amazon_firestick_4k_rj45_unifi_tx_2_data_speed"
+    unique_id: "amazon_firestick_4k_rj45_unifi_tx_2_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.amazon_firestick_4k_rj45_unifi_tx"
-    name: "amazon_firestick_4k_rj45_unifi_tx_data_speed"
+    unique_id: "amazon_firestick_4k_rj45_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.apple_imac_2011_unifi_tx"
-    name: "apple_imac_2011_unifi_tx_data_speed"
+    unique_id: "apple_imac_2011_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.apple_macbook_pro_2018_kev_unifi_tx"
-    name: "apple_macbook_pro_2018_kev_unifi_tx_data_speed"
+    unique_id: "apple_macbook_pro_2018_kev_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.apple_tv_4k_unifi_tx"
-    name: "apple_tv_4k_unifi_tx_data_speed"
+    unique_id: "apple_tv_4k_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.arcade_machine_unifi_tx"
-    name: "arcade_machine_unifi_tx_data_speed"
+    unique_id: "arcade_machine_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.big_pc_unifi_tx"
-    name: "big_pc_unifi_tx_data_speed"
+    unique_id: "big_pc_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.caldigit_thunderbolt_dock_unifi_tx"
-    name: "caldigit_thunderbolt_dock_unifi_tx_data_speed"
+    unique_id: "caldigit_thunderbolt_dock_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.dans_nintendo_switch_unifi_tx"
-    name: "dans_nintendo_switch_unifi_tx_data_speed"
+    unique_id: "dans_nintendo_switch_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.dell_work_laptop_kev_unifi_wifi_tx"
-    name: "dell_work_laptop_kev_unifi_wifi_tx_data_speed"
+    unique_id: "dell_work_laptop_kev_unifi_wifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.download_pc_unifi_tx"
-    name: "download_pc_unifi_tx_data_speed"
+    unique_id: "download_pc_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.ipad_air_4th_gen_tx"
-    name: "ipad_air_4th_gen_tx_data_speed"
+    unique_id: "ipad_air_4th_gen_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.kev_iphone_11_unifi_tx"
-    name: "kev_iphone_11_unifi_tx_data_speed"
+    unique_id: "kev_iphone_11_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.home_assistant_unifi_tx"
-    name: "home_assistant_unifi_tx_data_speed"
+    unique_id: "home_assistant_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.iphone_12_dan_tx"
-    name: "iphone_12_dan_tx_data_speed"
+    unique_id: "iphone_12_dan_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.iphone_tx_4"
-    name: "iphone_tx_4_data_speed"
+    unique_id: "iphone_tx_4_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.ju_iphone_8_unifi_tx"
-    name: "ju_iphone_8_unifi_tx_data_speed"
+    unique_id: "ju_iphone_8_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.samsung_ue32f4500_tv_unifi_tx"
-    name: "samsung_ue32f4500_tv_unifi_tx_data_speed"
+    unique_id: "samsung_ue32f4500_tv_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.samsung_ue48hu7500t_tv_unifi_tx"
-    name: "samsung_ue48hu7500t_tv_unifi_tx_data_speed"
+    unique_id: "samsung_ue48hu7500t_tv_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.sony_playstation_3_unifi_tx"
-    name: "sony_playstation_3_unifi_tx_data_speed"
+    unique_id: "sony_playstation_3_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.synology_diskstation_ds412_unifi_tx"
-    name: "synology_diskstation_ds412_unifi_tx_data_speed"
+    unique_id: "synology_diskstation_ds412_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
 
   - platform: "statistics"
     entity_id: "sensor.xbox_series_x_unifi_tx"
-    name: "xbox_series_x_unifi_tx_data_speed"
+    unique_id: "xbox_series_x_unifi_tx_data_speed"
     state_characteristic: "mean"
     sampling_size: 5
-
-  # modbus energy conversions
-  # - platform: "integration"
-  #   source: "sensor.sdm220_modbus_current_system_positive_power_demand"
-  #   name: "sdm220_modbus_current_system_positive_energy_demand"
-  #   unique_id: "sensor.sdm220_modbus_current_system_positive_energy_demand"
-  #   unit_prefix: "k"
-  #   round: 2
-  # - platform: "integration"
-  #   source: "sensor.sdm220_modbus_current_system_reverse_power_demand"
-  #   name: "sdm220_modbus_current_system_reverse_energy_demand"
-  #   unique_id: "sensor.sdm220_modbus_current_system_reverse_energy_demand"
-  #   unit_prefix: "k"
-  #   round: 2
-  # - platform: "integration"
-  #   source: "sensor.sdm220_modbus_active_power"
-  #   name: "sdm220_modbus_active_energy"
-  #   unique_id: "sensor.sdm220_modbus_active_energy"
-  #   unit_prefix: "k"
-  #   round: 2
-  # plugs
-  # - platform: "integration"
-  #   source: "sensor.zigbee_plug_dishwasher_power"
-  #   name: "zigbee_plug_dishwasher_current_energy"
-  #   unique_id: "sensor.zigbee_plug_dishwasher_current_energy"
-  #   unit_prefix: "k"
-  #   round: 2
-  # - platform: "integration"
-  #   source: "sensor.zigbee_plug_washing_machine_power"
-  #   name: "zigbee_plug_washing_machine_current_energy"
-  #   unique_id: "sensor.zigbee_plug_washing_machine_current_energy"
-  #   unit_prefix: "k"
-  #   round: 2
 
   # kitchen
   - platform: "integration"
