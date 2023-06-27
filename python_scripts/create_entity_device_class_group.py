@@ -37,8 +37,8 @@
 #       - door
 #       - window
 #       - vibration
-#       excluded_integrations:
-#       - browser_mod
+#       excluded_entity_groups:
+#       - binary_sensor.excluded_binary_sensors_group
 #       excluded_entities:
 #       - binary_sensor.zigbee_door_sensor_bed_c_contact
 #   mode: single
@@ -51,10 +51,10 @@ icon = data.get('icon', '')
 friendly_name = data.get('friendly_name', group_name)
 filter_by_device_class = data.get('filter_by_device_class', False)
 included_device_classes = data.get('included_device_classes', ['door'])
-excluded_integrations = data.get('excluded_integrations', [])
+excluded_entity_groups = data.get('excluded_entity_groups', [])
 excluded_entities = data.get('excluded_entities', [])
 
-integration_exclusion_template_sensor = "sensor.integration_entity_attributes"
+# integration_exclusion_template_sensor = "sensor.integration_entity_attributes"
 entity_list = []
 
 if not isinstance(domain, str) or not domain or not group_name:
@@ -65,20 +65,39 @@ if not isinstance(domain, str) or not domain or not group_name:
 globally_excluded_matches = []
 
 try:
-    integration_entity_attributes = hass.states.get(integration_exclusion_template_sensor)
-    if integration_entity_attributes is None:
-        logger.error(logger, f"Error - entity object not found")
-    else:
-        for attr in integration_entity_attributes.attributes:
-            if attr is not None:
-                for integration in excluded_integrations:
-                    if attr.find(integration) != -1:
-                        logger.info(f"The entities for the integration '{integration}' will be excluded from the group")
-                        for entity_id in integration_entity_attributes.attributes[attr]:
-                            globally_excluded_matches.append(entity_id)
-                            logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
+    for group in excluded_entity_groups:
+        if not group:
+            logger.error(logger, f"Error - group {group} not found")
+        else:
+            group_entity = hass.states.get(group)
+            if group_entity is None:
+                logger.error(logger, f"Error - group {group} not found")
+            else:
+                for entity_id in group:
+                    entity = hass.states.get(entity_id)
+                    if entity is None:
+                        logger.warning(logger, f"Warning - entity {entity_id} not found")
+                    else:
+                        globally_excluded_matches.append(entity_id)
+                        logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
 except:
-    logger.error(logger, f"Error - a problem occured adding browser_mod entities to the globally excluded matches list")
+    logger.error(logger, f"Error - a problem occured adding the memebers of {excluded_entity_groups} entities to the globally excluded matches list")
+
+# try:
+#     integration_entity_attributes = hass.states.get(integration_exclusion_template_sensor)
+#     if integration_entity_attributes is None:
+#         logger.error(logger, f"Error - entity object not found")
+#     else:
+#         for attr in integration_entity_attributes.attributes:
+#             if attr is not None:
+#                 for integration in excluded_integrations:
+#                     if attr.find(integration) != -1:
+#                         logger.info(f"The entities for the integration '{integration}' will be excluded from the group")
+#                         for entity_id in integration_entity_attributes.attributes[attr]:
+#                             globally_excluded_matches.append(entity_id)
+#                             logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
+# except:
+#     logger.error(logger, f"Error - a problem occured adding browser_mod entities to the globally excluded matches list")
 
 try:
     for entity_id in hass.states.entity_ids(domain):
