@@ -5,7 +5,10 @@ from __future__ import annotations
 import logging
 import jinja2
 import uuid
-from pyowm import OWM
+import json
+#from pyowm import OWM
+from datetime import datetime, date
+from .data import RestData
 from pyowm.commons.exceptions import APIRequestError, UnauthorizedError
 import voluptuous as vol
 from homeassistant import config_entries
@@ -31,7 +34,8 @@ from .const import (
     CONF_SENSORCLASS,
     DOMAIN,
     CONST_PROXIMITY,
-    CONF_UID
+    CONF_UID,
+    CONST_API_CALL
     )
 DEFAULT_NAME = 'Home'
 _LOGGER = logging.getLogger(__name__)
@@ -113,7 +117,7 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
         )
 
     async def async_step_add(self, user_input=None):
-        '''add zone'''
+        '''add sensor'''
         errors = {}
         newdata = {}
         measurement = False
@@ -153,8 +157,6 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
                 newdata[CONF_RESOURCES].append(data)
                 self._data = newdata
                 return await self.async_step_menu()
-
-        errors = {}
         if user_input is None:
             default_input = {}
         else:
@@ -570,7 +572,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 self._data = newdata
                 return await self.async_step_init()
 
-        errors = {}
         if user_input is None:
             default_input = {}
         else:
@@ -655,5 +656,21 @@ def evaluate_custom_formula(formula, max_days):
         return 'string'
 
 async def _is_owm_api_online(hass:HomeAssistant, api_key, lat, lon):
-    owm = OWM(api_key).weather_manager()
-    return await hass.async_add_executor_job(owm.weather_at_coords, lat, lon)
+
+    """call the api and show the result"""
+    hour = datetime(date.today().year, date.today().month, date.today().day,datetime.now().hour)
+    thishour = int(datetime.timestamp(hour))
+    url =  CONST_API_CALL % (lat,lon, thishour, api_key)
+    rest = RestData()
+    await rest.set_resource(hass, url)
+    await rest.async_update(log_errors=True)
+    data = json.loads(rest.data)
+    try:
+        code    = data["cod"]
+        message = data["message"]
+        _LOGGER.error('OpenWeatherMap call failed code: %s message: %s', code, message)
+        return False
+    except TypeError:
+        return True
+    except KeyError:
+        return True
