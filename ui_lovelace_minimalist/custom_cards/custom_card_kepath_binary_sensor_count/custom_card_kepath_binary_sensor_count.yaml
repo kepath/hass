@@ -194,22 +194,23 @@ widget_count_indicator:
 
 custom_popup_auto_entities_list:
   tap_action:
-    action: >
-      [[[
-        var action = "fire-dom-event";
-        switch(variables.ulm_card_kepath_binary_sensor_count_tap_action.action) {
-          case "navigate":
-            action = "navigate";
-            break;
-          default:
-            break;
-        }
-        return action;
-      ]]]
-    navigation_path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.action == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate.page : '/0' ]]]"
+    action: "fire-dom-event"
     browser_mod:
-      service: "browser_mod.popup"
+      service: >
+        [[[
+          var service = "";
+          switch(variables.ulm_card_kepath_binary_sensor_count_tap_action.action) {
+            case "navigate":
+              service = "browser_mod.navigate";
+              break;
+            default:
+              service = "browser_mod.popup";
+              break;
+          }
+          return service;
+        ]]]
       data:
+        path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.action == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate.page : '/0' ]]]"
         title: "[[[return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.title]]]"
         # dismissable: false
         style:
