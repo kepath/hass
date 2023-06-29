@@ -91,18 +91,11 @@ media_player:
 homekit:
   filter:
     include_domains:
-      # - "binary_sensor"
-      - "camera"
       - "climate"
       - "fan"
       - "input_select"
       - "light"
-      # - "media_player"
       - "person"
-      # - "remote"
-      # - "select"
-      # - "sensor"
-      # - "switch"
       - "sun"
       - "vacuum"
       - "water_heater"
@@ -111,62 +104,26 @@ homekit:
       - "binary_sensor.nest*"
       - "binary_sensor.*plug*"
       - "binary_sensor.diskstation*"
-      # - "binary_sensor.*state"
       - "binary_sensor.zigbee_door*"
       - "binary_sensor.zigbee_vibration*"
-
       - "binary_sensor.*_occupancy"
-      # - "binary_sensor.*_motion"
       - "binary_sensor.*_doorbell"
-
-      # - "switch.nest*"
       - "sensor.zigbee_door*"
       - "sensor.zigbee_motion*"
       - "sensor.zigbee_vibration*"
       - "sensor.*humidity"
-
       - "switch.zigbee*"
       - "switch.*plug*"
-      # - "switch.*poe*"
       - "switch.mss425e*"
     include_entities:
-      # - "binary_sensor.diskstation_security_status"
-      - "remote.harmony_hub"
       - "sensor.mfc_j870dw_status"
       - "sensor.ups_status"
-      - "sensor.diskstation_volume_1_status"
+      # - "sensor.diskstation_volume_1_status"
       - "sensor.banbury_temperature"
       - "sensor.banbury_humidity"
-      - "switch.lounge_lamp"
-      - "switch.samsung_tumble_dryer"
-      - "media_player.amazon_firestick_bed_a"
-      - "media_player.amazon_firestick_kitchen"
-      - "media_player.bed_c_xbox"
-      # - "media_player.yamaha_rx_v777_reciever_integration_bed_c"
-
-      - "media_player.shield_bed_c"
-      - "media_player.nvidia_shield_bed_c"
-      - "media_player.nvidia_shield_bed_c_google_cast"
-
-      - "media_player.shield_bed_e"
-      - "media_player.nvidia_shield_bed_e"
-      - "media_player.nvidia_shield_bed_e_google_cast"
-
-      - "media_player.samsung_smarttv_bed_a"
-      - "media_player.samsung_smarttv_lounge"
-
-
-      # - "switch.mss425e_6025_outlet_2"
-    # exclude_entity_globs:
-    #   - "sensor.*_speed"
-    #   - "sensor.*_energy"
-    #   - "sensor.*_rx"
-    #   - "sensor.*_tx"
     exclude_entities:
-      # - "binary_sensor.nest_protect_bottom_floor_battery_health"
       - "binary_sensor.nest_protect_bottom_floor_buzzer_test"
       - "binary_sensor.nest_protect_bottom_floor_co_test"
-      # - "binary_sensor.nest_protect_bottom_floor_heat_status"
       - "binary_sensor.nest_protect_bottom_floor_heat_test"
       - "binary_sensor.nest_protect_bottom_floor_humidity_test"
       - "binary_sensor.nest_protect_bottom_floor_led_test"
@@ -176,10 +133,8 @@ homekit:
       - "binary_sensor.nest_protect_bottom_floor_speaker_test"
       - "binary_sensor.nest_protect_bottom_floor_online"
       - "sensor.nest_protect_bottom_floor_battery_level"
-      # - "binary_sensor.nest_protect_middle_floor_battery_health"
       - "binary_sensor.nest_protect_middle_floor_buzzer_test"
       - "binary_sensor.nest_protect_middle_floor_co_test"
-      # - "binary_sensor.nest_protect_middle_floor_heat_status"
       - "binary_sensor.nest_protect_middle_floor_heat_test"
       - "binary_sensor.nest_protect_middle_floor_humidity_test"
       - "binary_sensor.nest_protect_middle_floor_led_test"
@@ -189,10 +144,8 @@ homekit:
       - "binary_sensor.nest_protect_middle_floor_speaker_test"
       - "binary_sensor.nest_protect_middle_floor_online"
       - "sensor.nest_protect_middle_floor_battery_level"
-      # - "binary_sensor.nest_protect_top_floor_battery_health"
       - "binary_sensor.nest_protect_top_floor_buzzer_test"
       - "binary_sensor.nest_protect_top_floor_co_test"
-      # - "binary_sensor.nest_protect_top_floor_heat_status"
       - "binary_sensor.nest_protect_top_floor_heat_test"
       - "binary_sensor.nest_protect_top_floor_humidity_test"
       - "binary_sensor.nest_protect_top_floor_led_test"
@@ -201,82 +154,59 @@ homekit:
       - "binary_sensor.nest_protect_top_floor_smoke_test"
       - "binary_sensor.nest_protect_top_floor_speaker_test"
       - "binary_sensor.nest_protect_top_floor_online"
-      - "camera.kitchen_tuya_camera"
       - "input_select.floorplan_floor"
       - "light.shelly1l_hallway_bottom_light_2"
-      # - "media_player.nvidia_shield_bed_e_google_cast"
-      # - "media_player.nvidia_shield_lounge_google_cast"
-      # - "media_player.kitchen_g3_instant_speaker"
-      # - "media_player.bottom_hallway_g3_instant_speaker"
-      # - "media_player.bed_c_g3_instant_speaker"
-      # - "media_player.doorbell_g4_instant_speaker"
-      # - "media_player.bottom_floor"
-      # - "media_player.rx_v777_zone2"
-      # - "media_player.yamaha_rx_v777_reciever_integration_bed_c"
-      # - "media_player.yamaha_rx_v777_reciever_integration_zone_2"
-      # - "media_player.compyroom"
-      # - "media_player.amazon_echo_flex_garage"
-      # - "media_player.kitchen"
-      # - "media_player.yamaha_reciever_google_cast"
-      # - "light.kitchen_utility_light_light_2"
-      # - "light.lamp"
-      # - "group.all_lights"
       - "person.tablet"
       - "sensor.nest_protect_top_floor_battery_level"
       - "switch.lounge_lamp"
       - "switch.mss425e_6025_outlet_1"
       - "switch.mss425e_6025_outlet_3"
+      - "switch.mss425e_6025_usb"
       - "switch.lamp_plug_lounge"
-      # - "switch.zigbee_energy_outlet_switch_dishwasher_switch"
       - "switch.udm_pro_plug_bed_c"
-  entity_config:
-  # cameras
-    camera.doorbell_g4_medium:
-      name: "External Front Doorbell"
-      linked_doorbell_sensor: "binary_sensor.doorbell_g4_doorbell"
-      linked_motion_sensor: "binary_sensor.doorbell_g4_motion"
-      stream_source: "rtsps://192.168.1.1:7441/s70wLoynhHxZLACv?enableSrtp"
-    camera.front_g3_flex_medium:
-      name: "External Front G3 Flex"
-      linked_motion_sensor: "binary_sensor.front_g3_flex_motion"
-      stream_source: "rtsps://192.168.1.1:7441/Tx2XnarI0rBraXAf?enableSrtp"
-    camera.bottom_hallway_g3_instant_medium:
-      name: "Hallway Bottom G3 Instant"
-      linked_motion_sensor: "binary_sensor.lounge_g3_instant_motion"
-      stream_source: "rtsps://192.168.1.1:7441/e2dWarCcN9Jb5PvV?enableSrtp"
-    camera.back_g3_flex_medium:
-      name: "External Back G3 Flex"
-      linked_motion_sensor: "binary_sensor.back_g3_flex_motion"
-      stream_source: "rtsps://192.168.1.1:7441/geXakoSgk7CIah1S?enableSrtp"
-    camera.middle_hallway_g3_flex_medium:
-      name: "Hallway Middle G3 Flex"
-      linked_motion_sensor: "binary_sensor.middle_hallway_g3_flex_motion"
-      stream_source: "rtsps://192.168.1.1:7441/GIw8PXo0enFSg9FS?enableSrtp"
-    camera.kitchen_g3_instant_medium:
-      name: "Kitchen G3 Instant"
-      linked_motion_sensor: "binary_sensor.kitchen_g3_instant_motion"
-      stream_source: "rtsps://192.168.1.1:7441/BgmLbI1gkNLnZE2K?enableSrtp"
-    camera.bed_c_g3_instant_medium:
-      name: "Bed C G3 Instant"
-      linked_motion_sensor: "binary_sensor.bed_c_g3_instant_motion"
-      stream_source: "rtsps://192.168.1.1:7441/uAJkrLRFiewoaHnR?enableSrtp"
+      - "binary_sensor.fridge_plug_kitchen_overheat"
+      - "binary_sensor.kettle_plug_kitchen_overheat"
+      - "binary_sensor.microwave_plug_kitchen_overheat"
+      - "binary_sensor.chest_freezer_plug_garage_overheat"
+      - "binary_sensor.fridge_freezer_plug_garage_overheat"
+      - "binary_sensor.drinks_fridge_plug_bed_c_overheat"
+      - "binary_sensor.lamp_plug_lounge_overheat"
+      - "binary_sensor.udm_pro_plug_bed_c_overheat"
+      - "light.0a81717e_abdf7e49_screen"
+      - "light.a4974337_d703c461_screen"
+      - "light.41edef0a_ffdd99dd_screen"
+      - "light.b92f9ddd_227a000d_screen"
+      - "light.lumi_lumi_router_light"
+      - "binary_sensor.diskstation_security_status"
+      - "binary_sensor.diskstation_drive_1_below_min_remaining_life"
+      - "binary_sensor.diskstation_drive_2_below_min_remaining_life"
+      - "binary_sensor.diskstation_drive_3_below_min_remaining_life"
+      - "binary_sensor.diskstation_drive_4_below_min_remaining_life"
+      - "binary_sensor.diskstation_drive_1_exceeded_max_bad_sectors"
+      - "binary_sensor.diskstation_drive_2_exceeded_max_bad_sectors"
+      - "binary_sensor.diskstation_drive_3_exceeded_max_bad_sectors"
+      - "binary_sensor.diskstation_drive_4_exceeded_max_bad_sectors"
+      - "switch.lounge_lamp"
+      - "switch.fridge_plug_kitchen"
+      - "switch.kettle_plug_kitchen"
+      - "switch.microwave_plug_kitchen"
+      - "switch.chest_freezer_plug_garage"
+      - "switch.fridge_freezer_plug_garage"
+      - "switch.samsung_tumble_dryer"
+      - "switch.zigbee_energy_monitor_outlet_switch_dishwasher_switch"
+      - "switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch"
+      - "switch.mss425e_6025_outlet_2"
+      - "binary_sensor.nest_protect_bottom_floor_battery_health"
+      - "binary_sensor.nest_protect_bottom_floor_heat_status"
+      - "binary_sensor.nest_protect_middle_floor_battery_health"
+      - "binary_sensor.nest_protect_middle_floor_heat_status"
+      - "binary_sensor.nest_protect_top_floor_battery_health"
+      - "binary_sensor.nest_protect_top_floor_heat_status"
+      - "sensor.openweathermap_humidity"
+      - "binary_sensor.doorbell_g4_doorbell"
 
+  entity_config:
   # outlets
-    switch.fridge_plug_kitchen:
-      name: "Kitchen Fridge Power"
-      type: "outlet"
-    switch.kettle_plug_kitchen:
-      name: "Kitchen Kettle Power"
-      type: "outlet"
-    switch.microwave_plug_kitchen:
-      name: "Kitchen Microwave Power"
-      type: "outlet"
-    switch.chest_freezer_plug_garage:
-      name: "Garage Chest Freezer Power"
-      type: "outlet"
-    switch.fridge_freezer_plug_garage:
-      name: "Garage Fridge Freezer Power"
-      type: "outlet"
     switch.zigbee_outlet_switch_arcade_pc_switch:
       name: "Bed C Arcade Power"
       type: "outlet"
@@ -289,23 +219,11 @@ homekit:
     switch.drinks_fridge_plug_bed_c:
       name: "Bed C Fridge Power"
       type: "outlet"
-    switch.samsung_tumble_dryer:
-      name: "Kitchen Tumble Dryer Power"
-      type: "outlet"
-    switch.zigbee_energy_monitor_outlet_switch_dishwasher_switch:
-      name: "Kitchen Dishwasher Power"
-      type: "outlet"
-    switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch:
-      name: "Kitchen Washing Machine Power"
-      type: "outlet"
     switch.zigbee_outlet_switch_unifi_g4_doorbell_switch:
       name: "Hallway - Bottom Doorbell Power"
       type: "outlet"
     switch.zigbee_outlet_switch_powerline_switch:
-      name: "Garage Network Power"
-      type: "outlet"
-    switch.mss425e_6025_outlet_2:
-      name: "Bed E Laptop Dock"
+      name: "Garage Powerline Power"
       type: "outlet"
 
   # lights
@@ -328,7 +246,7 @@ homekit:
     light.front_door_smartbulb:
       name: "External Front Light"
     light.hallway_bottom_light_1:
-      name: "Hallway Bottom Light"
+      name: "Hallway - Bottom Light"
     light.kitchen_main_light_light_1:
       name: "Kitchen Main Light"
     light.kitchen_utility_light_light_1:
@@ -344,117 +262,196 @@ homekit:
     light.zigbee_bulb_garage:
       name: "Garage Light"
 
+  # smoke and CO sensors
+    binary_sensor.nest_protect_bottom_floor_co_status:
+      name: "Hallway - Bottom CO Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+    binary_sensor.nest_protect_bottom_floor_smoke_status:
+      name: "Hallway - Bottom Smoke Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+    binary_sensor.nest_protect_middle_floor_co_status:
+      name: "Hallway - Middle CO Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+    binary_sensor.nest_protect_middle_floor_smoke_status:
+      name: "Hallway - Middle Smoke Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+    binary_sensor.nest_protect_top_floor_co_status:
+      name: "Hallway - Top CO Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+    binary_sensor.nest_protect_top_floor_smoke_status:
+      name: "Hallway - Top Smoke Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+
+    sensor.nest_bottom_floor_humidity:
+      name: "Hallway - Bottom Humidity Nest"
+    sensor.nest_middle_floor_humidity:
+      name: "Hallway - Middle Humidity Nest"
+    sensor.banbury_humidity:
+      name: "House Banbury Humidity"
+    sensor.banbury_temperature:
+      name: "House Banbury Temperature"
+
+    climate.air_to_water_heat_pump:
+      name: "Air to Water Heat Pump"
+    climate.nest_bottom_floor:
+      name: "Hallway - Bottom Nest"
+    climate.nest_middle_floor:
+      name: "Hallway - Middle Nest"
+    water_heater.air_to_water_heat_pump_water_heater:
+      name: "Air to Water Heat Pump Water Heater"
+
+  # occupancy sensors
+    binary_sensor.back_g3_flex_occupancy:
+      name: "External Back G3 Flex Occupancy"
+    binary_sensor.bed_c_g3_instant_occupancy:
+      name: "Bed C G3 Instant Occupancy"
+    binary_sensor.bottom_hallway_g3_instant_occupancy:
+      name: "Hallway - Bottom G3 Instant Occupancy"
+    binary_sensor.doorbell_g4_occupancy:
+      name: "External Front G4 Doorbell Occupancy"
+    binary_sensor.front_g3_flex_occupancy:
+      name: "External Front G3 Flex Occupancy"
+    binary_sensor.kitchen_g3_instant_occupancy:
+      name: "Kitchen G3 Instant Occupancy"
+    binary_sensor.middle_hallway_g3_flex_occupancy:
+      name: "Hallway - Middle G3 Flex Occupancy"
+    binary_sensor.nest_protect_bottom_floor_occupancy:
+      name: "Hallway - Bottom Nest Protect Occupancy"
+      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+    binary_sensor.nest_protect_middle_floor_occupancy:
+      name: "Hallway - Middle Nest Protect Occupancy"
+      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+    binary_sensor.nest_protect_top_floor_occupancy:
+      name: "Hallway - Top Nest Protect Occupancy"
+      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+    binary_sensor.zigbee_motion_sensor_bed_e_occupancy:
+      name: "Bed E Aqara Occupancy"
+      linked_battery_sensor: "sensor.zigbee_motion_sensor_bed_e_battery"
+    binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy:
+      name: "Hallway - Middle Aqara Occupancy"
+      linked_battery_sensor: "sensor.zigbee_motion_sensor_middle_hallway_battery"
+
+    vacuum.moe:
+      name: "External Back Worx Landroid Moe"
+
   # media player
   # LOUNGE
-    media_player.lounge_apple_tv:
-      name: "Lounge Apple TV"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
-    media_player.samsung_smarttv_lounge:
-      name: "Lounge Smart TV"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
+    # media_player.lounge_apple_tv:
+    #   name: "Lounge Apple TV"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
+    # media_player.samsung_smarttv_lounge:
+    #   name: "Lounge Smart TV"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
 
   # KITCHEN
-    media_player.amazon_firestick_kitchen:
-      name: "Kitchen Fire TV"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
+    # media_player.amazon_firestick_kitchen:
+    #   name: "Kitchen Fire TV"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
 
   # BED A
-    media_player.amazon_firestick_bed_a:
-      name: "Bed A Fire TV"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
-    media_player.samsung_smarttv_bed_a:
-      name: "Bed A Smart TV"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
+    # media_player.amazon_firestick_bed_a:
+    #   name: "Bed A Fire TV"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
+    # media_player.samsung_smarttv_bed_a:
+    #   name: "Bed A Smart TV"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
 
   # BED C
-    media_player.bed_c_xbox:
-      name: "Bed C XBox"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
-    media_player.shield_bed_c:
-      name: "Bed E Nvidia Shield"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
-    media_player.nvidia_shield_bed_c:
-      name: "Bed E Nvidia Shield"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
+    # media_player.bed_c_xbox:
+    #   name: "Bed C XBox"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
+    # media_player.shield_bed_c:
+    #   name: "Bed E Nvidia Shield"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
+    # media_player.nvidia_shield_bed_c:
+    #   name: "Bed E Nvidia Shield"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
 
   # BED E
-    media_player.shield_bed_e:
-      name: "Bed E Nvidia Shield"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
-    media_player.nvidia_shield_bed_e:
-      name: "Bed E Nvidia Shield"
-      feature_list:
-        - feature: "on_off"
-        - feature: "play_pause"
-        - feature: "play_stop"
-        - feature: "toggle_mute"
+    # media_player.shield_bed_e:
+    #   name: "Bed E Nvidia Shield"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
+    # media_player.nvidia_shield_bed_e:
+    #   name: "Bed E Nvidia Shield"
+    #   feature_list:
+    #     - feature: "on_off"
+    #     - feature: "play_pause"
+    #     - feature: "play_stop"
+    #     - feature: "toggle_mute"
 
 # contact
     binary_sensor.zigbee_door_sensor_back_contact:
       name: "External Back Door"
-      # type: "door"
     binary_sensor.zigbee_door_sensor_bed_c_contact:
       name: "Bed C Door"
-      # type: "door"
     binary_sensor.zigbee_door_sensor_front_contact:
       name: "External Front Door"
-      # type: "door"
     binary_sensor.zigbee_door_sensor_garage_contact:
       name: "Garage Door"
-      # type: "garage_door"
     binary_sensor.zigbee_door_sensor_loft_contact:
       name: "Loft Contact"
-      # type: "opening"
     binary_sensor.zigbee_door_sensor_patio_1_contact:
       name: "External Back Patio 1"
-      # type: "window"
     binary_sensor.zigbee_door_sensor_patio_2_contact:
       name: "External Back Patio 2"
-      # type: "window"
-    binary_sensor.zigbee_motion_sensor_bed_e_occupancy:
-      name: "Bed E Occupancy"
-      # type: "occupancy"
-    binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy:
-      name: "Hallway Middle Occupancy"
-      # type: "motion"
     binary_sensor.zigbee_vibration_sensor_patio_door_vibration:
       name: "External Back Patio Vibration"
+
+# 2023-06-28 15:58:42.593 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.shield_bed_e. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.596 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.shield_bed_c. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.606 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity camera.bed_c_g3_instant_medium. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.609 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity camera.middle_hallway_g3_flex_medium. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.615 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity camera.front_g3_flex_medium. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.620 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity camera.doorbell_g4_medium. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.622 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity camera.back_g3_flex_medium. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.625 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity camera.kitchen_g3_instant_medium. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.627 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity camera.bottom_hallway_g3_instant_medium. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.639 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.nvidia_shield_bed_e. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.648 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.amazon_firestick_bed_a. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.651 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.nvidia_shield_bed_c_google_cast. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.655 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.nvidia_shield_bed_e_google_cast. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.657 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.amazon_firestick_kitchen. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.659 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity remote.harmony_hub. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.685 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.bed_c_xbox. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# 2023-06-28 15:58:42.696 WARNING (MainThread) [homeassistant.components.homekit] The bridge Home Assistant Bridge has entity media_player.samsung_smarttv_lounge. For best performance, and to prevent unexpected unavailability, create and pair a separate HomeKit instance in accessory mode for this entity
+# media_player.samsung_smarttv_bed_a
+# media_player.nvidia_shield_bed_c
 
 # firetv:
 #   keycode:
