@@ -66,14 +66,16 @@ globally_excluded_matches = []
 
 try:
     for group in excluded_entity_groups:
+        logger.debug(f"iterating '{group}' at {time.time()}")
         if not group:
             logger.error(logger, f"Error - group {group} not found")
         else:
-            group_entity = hass.states.get(group)
-            if group_entity is None:
+            group_entities = hass.states.get(group)
+            if group_entities is None:
                 logger.error(logger, f"Error - group {group} not found")
             else:
-                for entity_id in group:
+                for entity_id in group_entities.attributes.get("entity_id"):
+                    logger.debug(f"iterating '{entity_id}' in group '{group}' when creating '{friendly_name}' at {time.time()}")
                     entity = hass.states.get(entity_id)
                     if entity is None:
                         logger.warning(logger, f"Warning - entity {entity_id} not found")
@@ -83,24 +85,9 @@ try:
 except:
     logger.error(logger, f"Error - a problem occured adding the memebers of {excluded_entity_groups} entities to the globally excluded matches list")
 
-# try:
-#     integration_entity_attributes = hass.states.get(integration_exclusion_template_sensor)
-#     if integration_entity_attributes is None:
-#         logger.error(logger, f"Error - entity object not found")
-#     else:
-#         for attr in integration_entity_attributes.attributes:
-#             if attr is not None:
-#                 for integration in excluded_integrations:
-#                     if attr.find(integration) != -1:
-#                         logger.info(f"The entities for the integration '{integration}' will be excluded from the group")
-#                         for entity_id in integration_entity_attributes.attributes[attr]:
-#                             globally_excluded_matches.append(entity_id)
-#                             logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
-# except:
-#     logger.error(logger, f"Error - a problem occured adding browser_mod entities to the globally excluded matches list")
-
 try:
     for entity_id in hass.states.entity_ids(domain):
+        logger.debug(f"iterating '{entity_id}' in domain '{domain}' at {time.time()}")
         if entity_id == "":
             logger.error(logger, f"Error - entity_id missing when looping through domain")
         else:
@@ -111,9 +98,11 @@ try:
                 else:
                     if filter_by_device_class:
                         for attr in entity.attributes:
+                            logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
                             if attr is not None:
                                 if attr == "device_class":
                                     for device_class_option in included_device_classes:
+                                        logger.debug(f"iterating '{device_class_option}' in device_class '{included_device_classes}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
                                         if entity.attributes.get(attr) == device_class_option:
                                             entity_list.append(entity_id)
                                             logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
@@ -126,7 +115,9 @@ except:
 
 try:
     for excluded_matches in globally_excluded_matches:
+        logger.debug(f"iterating '{excluded_matches}' in 'globally_excluded_matches' at {time.time()}")
         for match_entity in entity_list:
+            logger.debug(f"iterating '{match_entity}' in 'entity_list' at {time.time()}")
             if match_entity.find(excluded_matches) != -1:
                 entity_list.remove(match_entity)
                 logger.debug(f"'{match_entity}' removed from group '{friendly_name}' as it matched '{excluded_matches}' at {time.time()}")

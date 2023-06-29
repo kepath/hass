@@ -9,19 +9,6 @@
   - data_template:
       message: '{{ trigger.json.text }}'
     service: persistent_notification.create
-- id: '1594322479253'
-  alias: Perform Full Backup
-  description: ''
-  trigger:
-  - at: 02:30:00
-    platform: time
-  condition: []
-  action:
-  - data_template:
-      backup_path: /share/srv
-      keep_days: 28
-      name: 'WeeklyBackup: {{ now().strftime(''''%A, %B %-d, %Y'''') }}'
-    service: auto_backup.snapshot_full
 - id: '1609788406791'
   alias: on_turn_off_reciever_turn_on_bed_c_fridge
   description: ''
@@ -193,8 +180,8 @@
       icon: mdi:fan
       friendly_name: All fan domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1666812617895'
   alias: on_start_create_group.all_lights_domain_entities
@@ -212,8 +199,8 @@
       icon: mdi:lightbulb-alert-outline
       friendly_name: All light domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_entities:
       - light.middle_hallway_light_light_1
       - light.shelly1l_hallway_bottom_light_2
@@ -270,9 +257,8 @@
       icon: mdi:camera
       friendly_name: All camera domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
-      - mqtt
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1629812616259'
   alias: on_start_create_group.all_media_player_domain_entities
@@ -290,8 +276,8 @@
       icon: mdi:play-network-outline
       friendly_name: All media_player domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1622852616259'
   alias: on_start_create_group.all_remote_domain_entities
@@ -309,8 +295,8 @@
       icon: mdi:remote
       friendly_name: All remote domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_entities:
       - remote.bed_c_xbox_remote
       - remote.shield_bed_e
@@ -335,8 +321,8 @@
       icon: mdi:toggle-switch
       friendly_name: All binary_sensor domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1666812616320'
   alias: on_start_create_group.all_sensor_domain_entities
@@ -354,8 +340,8 @@
       icon: mdi:shape-plus
       friendly_name: All sensor domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1666817726320'
   alias: on_start_create_group.all_switch_domain_entities
@@ -373,8 +359,8 @@
       icon: mdi:light-switch
       friendly_name: All switch domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1672906062419'
   alias: on_start_create_group.all_door_class_binary_sensors
@@ -398,8 +384,8 @@
       - opening
       - vibration
       - garage_door
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.zigbee_door_sensor_bed_c_contact
   mode: single
@@ -421,8 +407,8 @@
       filter_by_device_class: true
       included_device_classes:
       - plug
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1673133770721'
   alias: on_start_create_group.all_occupancy_class_binary_sensors
@@ -442,8 +428,8 @@
       filter_by_device_class: true
       included_device_classes:
       - occupancy
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.doorbell_g4_occupancy
       - binary_sensor.front_g3_flex_occupancy
@@ -471,8 +457,8 @@
       - safety
       - problem
       - smoke
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.diskstation_security_status
   mode: single
@@ -495,8 +481,8 @@
       included_device_classes:
       - battery
       - battery_charging
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1679331701346'
   alias: on_open_front_door_set_input_datetime_timestamp
@@ -717,8 +703,8 @@
       filter_by_device_class: true
       included_device_classes:
       - outlet
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_entities:
       - switch.lamp_plug_lounge
       - switch.mss425e_6025_outlet_3
@@ -812,8 +798,8 @@
       included_device_classes:
       - tv
       - receiver
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_entities:
       - media_player.rx_v777_zone2
       - media_player.amazon_firestick_kitchen_alexa
@@ -837,8 +823,8 @@
       included_device_classes:
       - speaker
       - receiver
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_entities:
       - media_player.yamaha_rx_v777_reciever_integration_zone_2
       - media_player.kitchen_g3_instant_speaker
@@ -900,8 +886,8 @@
       icon: mdi:home-thermometer
       friendly_name: All climate domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1685624861506'
   alias: on_start_create_group.all_people_domain_entities
@@ -919,8 +905,8 @@
       icon: mdi:account
       friendly_name: All people domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single
 - id: '1685624899638'
   alias: on_start_create_group.all_vacuum_domain_entities
@@ -938,6 +924,6 @@
       icon: mdi:account
       friendly_name: All vacuum domain entities
       filter_by_device_class: false
-      excluded_integrations:
-      - browser_mod
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single

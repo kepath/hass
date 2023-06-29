@@ -3,7 +3,7 @@ template:
   - sensor:
       - unique_id: "binary_sensor_state_counts_template_generated"
         name: "binary_sensor_state_counts"
-        state: "{{ 'off' if states('sensor.hacs') | float == 0 else 'on' }}"
+        state: "{{ 'off' if is_state('sensor.hacs', '0') else 'on' }}"
         attributes:
           updates_available_count: "{{ expand('group.all_updates') | selectattr('state','eq', 'on') | list | count }}"
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
@@ -29,20 +29,20 @@ template:
           device_class_list: "{{ states | rejectattr('attributes.device_class', 'undefined') | map(attribute='attributes.device_class') | unique | list }}"
           unit_of_measurement_list: "{{ states | rejectattr('attributes.unit_of_measurement', 'undefined') | map(attribute='attributes.unit_of_measurement') | unique | list }}"
           integrations_installed_list: "{{ states | map(attribute='entity_id') | map('device_attr', 'identifiers') | reject('none') | map('first') | select('defined') | map(attribute='0') | unique | list }}"
-          integration_entities_browser_mod: >
-            {%- set find_integration = 'browser_mod' -%}
-            {% set entities = states | map(attribute='entity_id') | list -%}
-            {%- set ns = namespace(entities = []) -%}
-            {%- for entity_id in entities -%}
-              {%- set ids = device_attr(entity_id, 'identifiers') -%}
-              {%- if ids -%}
-                {%- set ids = ids | list | first -%}
-                {%- if ids and ids | length == 2 and ids[0] == find_integration -%}
-                  {%- set ns.entities = ns.entities + [ entity_id ] -%}
-                {%- endif -%}
-              {%- endif -%}
-            {%- endfor -%}
-            {{ ns.entities }}
+      #     integration_entities_browser_mod: >
+      #       {%- set find_integration = 'browser_mod' -%}
+      #       {% set entities = states | map(attribute='entity_id') | list -%}
+      #       {%- set ns = namespace(entities = []) -%}
+      #       {%- for entity_id in entities -%}
+      #         {%- set ids = device_attr(entity_id, 'identifiers') -%}
+      #         {%- if ids -%}
+      #           {%- set ids = ids | list | first -%}
+      #           {%- if ids and ids | length == 2 and ids[0] == find_integration -%}
+      #             {%- set ns.entities = ns.entities + [ entity_id ] -%}
+      #           {%- endif -%}
+      #         {%- endif -%}
+      #       {%- endfor -%}
+      #       {{ ns.entities }}
 
       # {% set entities = integration_entities('browser_mod') %}
       # {{ entities }}
