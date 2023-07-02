@@ -52,11 +52,6 @@ views:
               ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
 
-
-  - title: "Climate"
-    icon: "mdi:weather-partly-cloudy"
-    theme: "minimalist-mobile"
-    cards:
       - type: "vertical-stack"
         cards:
           - type: "custom:weather-card"
@@ -65,170 +60,323 @@ views:
             current: true
             details: true
             forecast: true
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_graph"
-            variables:
-              ulm_card_graph_color: "var(--google-green)"
-              ulm_card_graph_name: "Garage"
-              ulm_card_graph_entity: "sensor.zigbee_door_sensor_garage_temperature"
-          - type: "custom:button-card"
-            template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_graph"
-            variables:
-              ulm_card_graph_color: "var(--google-yellow)"
-              ulm_card_graph_name: "Front"
-              ulm_card_graph_entity: "sensor.zigbee_door_sensor_front_temperature"
-          - type: "custom:button-card"
-            template: "card_graph"
-            variables:
-              ulm_card_graph_color: "var(--google-yellow)"
-              ulm_card_graph_name: "Back"
-              ulm_card_graph_entity: "sensor.zigbee_door_sensor_back_temperature"
-          - type: "custom:button-card"
-            template: "edge"
+      # - type: "horizontal-stack"
+      #   cards:
+      #     - type: "custom:button-card"
+      #       template: "edge"
+      #     - type: "custom:button-card"
+      #       template: "card_graph"
+      #       variables:
+      #         ulm_card_graph_color: "var(--google-green)"
+      #         ulm_card_graph_name: "Garage"
+      #         ulm_card_graph_entity: "sensor.zigbee_door_sensor_garage_temperature"
+      #     - type: "custom:button-card"
+      #       template: "edge"
+      # - type: "horizontal-stack"
+      #   cards:
+      #     - type: "custom:button-card"
+      #       template: "edge"
+      #     - type: "custom:button-card"
+      #       template: "card_graph"
+      #       variables:
+      #         ulm_card_graph_color: "var(--google-yellow)"
+      #         ulm_card_graph_name: "Front"
+      #         ulm_card_graph_entity: "sensor.zigbee_door_sensor_front_temperature"
+      #     - type: "custom:button-card"
+      #       template: "card_graph"
+      #       variables:
+      #         ulm_card_graph_color: "var(--google-yellow)"
+      #         ulm_card_graph_name: "Back"
+      #         ulm_card_graph_entity: "sensor.zigbee_door_sensor_back_temperature"
+      #     - type: "custom:button-card"
+      #       template: "edge"
   - title: "House"
-    icon: "mdi:thermometer"
+    icon: "mdi:home-thermometer"
     theme: "minimalist-mobile"
     cards:
       - type: "horizontal-stack"
         cards:
           - type: "custom:button-card"
-            template: "edge"
+            template: "chip_back"
+            variables:
+              ulm_chip_back_path: "/lovelace-minimalist-home"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
+              ulm_chip_navigate_icon: "mdi:home"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+              ulm_chip_navigate_icon: "mdi:floor-plan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-network"
+              ulm_chip_navigate_icon: "mdi:lan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-media"
+              ulm_chip_navigate_icon: "mdi:remote-tv"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+              ulm_chip_navigate_icon: "mdi:alpha-k-box"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
+      - type: "horizontal-stack"
+        cards:
+          - type: "vertical-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:thermostat-card"
+                entity: "climate.nest_bottom_floor"
+                title: "Nest Ground Floor"
+              - type: "custom:apexcharts-card"
+                all_series_config:
+                  stroke_width: 2
+                  type: "area"
+                series:
+                  - entity: "sensor.nest_bottom_floor_temperature"
+                    color: "red"
+                  - entity: "climate.nest_bottom_floor"
+                    attribute: "temperature"
+                    type: "line"
+                    color: "yellow"
+                    unit: "°C"
+                apex_config:
+                  legend:
+                    show: false
+                graph_span: "24h"
+                header:
+                  show: true
+                  title: "Nest Ground Floor 24h"
+          - type: "vertical-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "edge"
+              - type: "custom:thermostat-card"
+                entity: "climate.nest_middle_floor"
+                title: "Nest First Floor"
+              - type: "custom:apexcharts-card"
+                all_series_config:
+                  stroke_width: 2
+                  type: "area"
+                series:
+                  - entity: "sensor.nest_middle_floor_temperature"
+                    color: "red"
+                  - entity: "climate.nest_middle_floor"
+                    attribute: "temperature"
+                    type: "line"
+                    color: "yellow"
+                    unit: "°C"
+                apex_config:
+                  legend:
+                    show: false
+                graph_span: "24h"
+                header:
+                  show: true
+                  title: "Nest First Floor 24h"
+
+      - type: "custom:apexcharts-card"
+        yaxis:
+          - id: "temperature" # identification name of the first y-axis
+            decimals: 0
+            apex_config:
+              tickAmount: 4
+          - id: "humidity" # identification name of the second y-axis
+            opposite: true # make it show on the right side
+            decimals: 0
+            apex_config:
+              tickAmount: 4
+        all_series_config:
+          stroke_width: 2
+          type: "area"
+        series:
+          - entity: "sensor.nest_middle_floor_temperature"
+            name: "Temperature"
+            color: "red"
+            yaxis_id: "temperature"
+            statistics:
+              type: "mean"
+          - entity: "sensor.nest_middle_floor_humidity"
+            name: "Humidity"
+            color: "blue"
+            yaxis_id: "humidity"
+            type: "column"
+            statistics:
+              type: "mean"
+            group_by:
+              duration: "1d"
+              func: "avg"
+          - entity: "climate.nest_middle_floor"
+            attribute: "temperature"
+            name: "Target Temperature"
+            color: "yellow"
+            yaxis_id: "temperature"
+            type: "line"
+            unit: "°C"
+        graph_span: "1month"
+        header:
+          show: true
+          title: "Nest First Floor Month"
+      - type: "custom:apexcharts-card"
+        yaxis:
+          - id: "temperature" # identification name of the first y-axis
+            decimals: 0
+            apex_config:
+              tickAmount: 4
+          - id: "humidity" # identification name of the second y-axis
+            opposite: true # make it show on the right side
+            decimals: 0
+            apex_config:
+              tickAmount: 4
+        all_series_config:
+          stroke_width: 2
+          type: "area"
+        series:
+          - entity: "sensor.nest_bottom_floor_temperature"
+            name: "Temperature"
+            color: "red"
+            yaxis_id: "temperature"
+            statistics:
+              type: "mean"
+          - entity: "sensor.nest_bottom_floor_humidity"
+            name: "Humidity"
+            color: "blue"
+            yaxis_id: "humidity"
+            type: "column"
+            statistics:
+              type: "mean"
+            group_by:
+              duration: "1d"
+              func: "avg"
+          - entity: "climate.nest_bottom_floor"
+            attribute: "temperature"
+            name: "Target Temperature"
+            color: "yellow"
+            yaxis_id: "temperature"
+            unit: "°C"
+        graph_span: "1month"
+        header:
+          show: true
+          title: "Nest Ground Floor Month"
+
+      - type: "vertical-stack"
+        cards:
+          - type: "custom:apexcharts-card"
+            all_series_config:
+              stroke_width: 2
+              type: "line"
+            series:
+              - entity: "sensor.zigbee_vibration_sensor_patio_door_temperature"
+                name: "Patio Vibration"
+              - entity: "sensor.zigbee_motion_sensor_middle_hallway_temperature"
+                name: "Middle Motion"
+              - entity: "sensor.zigbee_motion_sensor_bed_e_temperature"
+                name: "Bed E Motion"
+              - entity: "sensor.zigbee_door_sensor_patio_2_temperature"
+                name: "Patio 2 Contact"
+              - entity: "sensor.zigbee_door_sensor_patio_1_temperature"
+                name: "Patio 1 Contact"
+              - entity: "sensor.zigbee_door_sensor_loft_temperature"
+                name: "Loft Contact"
+              - entity: "sensor.zigbee_door_sensor_garage_temperature"
+                name: "Garage Contact"
+              - entity: "sensor.zigbee_door_sensor_front_temperature"
+                name: "Front Door Contact"
+              - entity: "sensor.zigbee_door_sensor_bed_c_temperature"
+                name: "Bed C Contact"
+              - entity: "sensor.zigbee_door_sensor_back_temperature"
+                name: "Back Door Contact"
+              - entity: "sensor.banbury_feels_like_temperature"
+                name: "Banbury Feels Like"
+            apex_config:
+              chart:
+                height: 400
+            graph_span: "24h"
+            header:
+              show: false
+  - title: "House"
+    icon: "mdi:water-thermometer"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "horizontal-stack"
+        cards:
           - type: "custom:button-card"
             template: "chip_back"
             variables:
-              ulm_chip_back_path: "/lovelace-minimalist"
+              ulm_chip_back_path: "/lovelace-minimalist-home"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
+              ulm_chip_navigate_icon: "mdi:home"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+              ulm_chip_navigate_icon: "mdi:floor-plan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-network"
+              ulm_chip_navigate_icon: "mdi:lan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-media"
+              ulm_chip_navigate_icon: "mdi:remote-tv"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+              ulm_chip_navigate_icon: "mdi:alpha-k-box"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
       - type: "vertical-stack"
         cards:
           - type: "custom:button-card"
-            template: "edge"
+            template: "custom_card_httpedo13_thermostat_with_buttons"
+            variables:
+              entity: "climate.air_to_water_heat_pump"
+              name: "Heat Pump"
           - type: "custom:button-card"
             template: "custom_card_httpedo13_thermostat_with_buttons"
             variables:
-              entity: "climate.nest_bottom_floor"
-              name: "Nest Ground Floor"
-          - type: "custom:mini-climate"
-            entity: "climate.nest_bottom_floor"
-            icon: "mdi:home-floor-g"
-            toggle:
-              hide: true
-            temperature:
-              unit: "°C"
-              round: 1
-              source:
-                entity: "sensor.nest_bottom_floor_temperature"
-            secondary_info:
-              icon: "mdi:tune-vertical"
-            indicators:
-              humidity:
-                icon: "mdi:water-percent"
-                unit: "%"
-                round: 1
-                source:
-                  entity: "sensor.nest_bottom_floor_humidity"
-          - type: "custom:mini-climate"
-            entity: "climate.nest_middle_floor"
-            icon: "mdi:home-floor-1"
-            temperature:
-              unit: "°C"
-              round: 1
-              source:
-                entity: "sensor.nest_middle_floor_temperature"
-            secondary_info:
-              icon: "mdi:tune-vertical"
-            indicators:
-              humidity:
-                icon: "mdi:water-percent"
-                unit: "%"
-                round: 1
-                source:
-                  entity: "sensor.nest_middle_floor_humidity"
-          - type: "custom:button-card"
-            template: "custom_card_apexcharts"
-            variables:
-              chart_type: "line"
-              graph_span: "24h"
-              entity_1:
-                entity_id: "sensor.nest_bottom_floor_temperature"
-                icon: "mdi:home-thermometer"
-                name: "Nest Bottom Temperature"
-                color: "red"
-                max_value: 40
-              entity_2:
-                entity_id: "sensor.nest_bottom_floor_humidity"
-                icon: "mdi:water-percent"
-                name: "Nest Bottom Humidity"
-                color: "blue"
-                max_value: 100
-          - type: "custom:button-card"
-            template: "custom_card_httpedo13_thermostat_with_buttons"
-            variables:
-              entity: "climate.nest_middle_floor"
-              name: "Nest Middle Floor"
-          - type: "custom:button-card"
-            template: "custom_card_apexcharts"
-            variables:
-              chart_type: "line"
-              graph_span: "24h"
-              entity_1:
-                entity_id: "sensor.nest_middle_floor_temperature"
-                icon: "mdi:home-thermometer"
-                name: "Nest Middle Temperature"
-                color: "red"
-                max_value: 40
-              entity_2:
-                entity_id: "sensor.nest_middle_floor_humidity"
-                icon: "mdi:water-percent"
-                name: "Nest Middle Humidity"
-                color: "blue"
-                max_value: 100
-          - type: "custom:button-card"
-            template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_graph"
-            variables:
-              ulm_card_graph_color: "var(--google-yellow)"
-              ulm_card_graph_name: "Patio 1"
-              ulm_card_graph_entity: "sensor.zigbee_door_sensor_patio_1_temperature"
-          - type: "custom:button-card"
-            template: "card_graph"
-            variables:
-              ulm_card_graph_color: "var(--google-yellow)"
-              ulm_card_graph_name: "Patio 2"
-              ulm_card_graph_entity: "sensor.zigbee_door_sensor_patio_2_temperature"
-          - type: "custom:button-card"
-            template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_graph"
-            variables:
-              ulm_card_graph_color: "var(--google-yellow)"
-              ulm_card_graph_name: "Bed C"
-              ulm_card_graph_entity: "sensor.zigbee_door_sensor_bed_c_temperature"
-          - type: "custom:button-card"
-            template: "card_graph"
-            variables:
-              ulm_card_graph_color: "var(--google-yellow)"
-              ulm_card_graph_name: "Loft"
-              ulm_card_graph_entity: "sensor.zigbee_door_sensor_bed_b_temperature"
-          - type: "custom:button-card"
-            template: "edge"
+              entity: "water_heater.air_to_water_heat_pump_water_heater"
+              name: "Water Heater"
+
   - title: "Weather Maps"
     icon: "mdi:weather-windy"
     theme: "minimalist-mobile"

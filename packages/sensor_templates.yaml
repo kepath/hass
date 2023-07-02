@@ -29,32 +29,6 @@ template:
           device_class_list: "{{ states | rejectattr('attributes.device_class', 'undefined') | map(attribute='attributes.device_class') | unique | list }}"
           unit_of_measurement_list: "{{ states | rejectattr('attributes.unit_of_measurement', 'undefined') | map(attribute='attributes.unit_of_measurement') | unique | list }}"
           integrations_installed_list: "{{ states | map(attribute='entity_id') | map('device_attr', 'identifiers') | reject('none') | map('first') | select('defined') | map(attribute='0') | unique | list }}"
-      #     integration_entities_browser_mod: >
-      #       {%- set find_integration = 'browser_mod' -%}
-      #       {% set entities = states | map(attribute='entity_id') | list -%}
-      #       {%- set ns = namespace(entities = []) -%}
-      #       {%- for entity_id in entities -%}
-      #         {%- set ids = device_attr(entity_id, 'identifiers') -%}
-      #         {%- if ids -%}
-      #           {%- set ids = ids | list | first -%}
-      #           {%- if ids and ids | length == 2 and ids[0] == find_integration -%}
-      #             {%- set ns.entities = ns.entities + [ entity_id ] -%}
-      #           {%- endif -%}
-      #         {%- endif -%}
-      #       {%- endfor -%}
-      #       {{ ns.entities }}
-
-      # {% set entities = integration_entities('browser_mod') %}
-      # {{ entities }}
-      # - unique_id: "integration_entities_list_template_generated"
-      #   name: "Integration Entities List"
-      #   state: >
-      #       {% set ns = namespace(items = []) %}
-      #       {% for item in  states | map(attribute='entity_id') | map('device_attr', 'identifiers') | reject('none') | map('first') | select('defined') | map(attribute='0') | unique %}
-      #         {% set entities = integration_entities(item) %}
-      #         {% set ns.items = ns.items + [ { 'integration': item, 'count': entities | count, 'entities': entities } ] %}
-      #       {% endfor %}
-      #       {{ ns.items | sort(attribute='count', reverse=true) }}
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"
@@ -297,14 +271,14 @@ template:
           uptime: "{{ states('sensor.study_light_uptime') }}"
           firmware_installed: "{{ state_attr('update.study_light_firmware', 'installed_version') }}"
 
-      - unique_id: "addon_45df7312_zigbee2mqtt_diagnostics"
-        name: "Addon Zigbee2MQTT Diagnostics"
-        state: "{{ states('binary_sensor.zigbee2mqtt_running') }}"
-        attributes:
-          cpu_percent: "{{ states('sensor.zigbee2mqtt_cpu_percent') }}"
-          memory_percent: "{{ states('sensor.zigbee2mqtt_memory_percent') }}"
-          installed_version: "{{ state_attr('update.zigbee2mqtt_update', 'installed_version') }}"
-          latest_version: "{{ state_attr('update.zigbee2mqtt_update', 'latest_version') }}"
+      # - unique_id: "addon_45df7312_zigbee2mqtt_diagnostics"
+      #   name: "Addon Zigbee2MQTT Diagnostics"
+      #   state: "{{ states('binary_sensor.zigbee2mqtt_running') }}"
+      #   attributes:
+      #     cpu_percent: "{{ states('sensor.zigbee2mqtt_cpu_percent') }}"
+      #     memory_percent: "{{ states('sensor.zigbee2mqtt_memory_percent') }}"
+      #     installed_version: "{{ state_attr('update.zigbee2mqtt_update', 'installed_version') }}"
+      #     latest_version: "{{ state_attr('update.zigbee2mqtt_update', 'latest_version') }}"
       - unique_id: "addon_a0d7b954_adguard_diagnostics"
         name: "Addon AdGuard Home Diagnostics"
         state: "{{ states('binary_sensor.adguard_home_running') }}"
