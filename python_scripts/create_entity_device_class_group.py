@@ -126,7 +126,7 @@ except:
     logger.error(logger, f"Error - a problem occured when removing a matched item from the entity list")
 
 try:
-    service_data = {"object_id": group_name, "name": friendly_name, "icon": icon, "entities": entity_list}
+    service_data = {"object_id": group_name, "name": friendly_name, "icon": icon, "entities": entity_list, "all": False}
     logger.info(f"Calling the service 'set group' with the data '{service_data}' at {time.time()}")
     hass.services.call("group", "set", service_data, False)
 except:
