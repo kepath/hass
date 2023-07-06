@@ -19,38 +19,38 @@ views:
               ulm_chip_navigate_icon: "mdi:home"
               ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
-          # - type: "custom:button-card"
-          #   template:
-          #     - "chip_navigate"
-          #   variables:
-          #     ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
-          #     ulm_chip_navigate_icon: "mdi:floor-plan"
-          #     ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
-          #     ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
-          # - type: "custom:button-card"
-          #   template:
-          #     - "chip_navigate"
-          #   variables:
-          #     ulm_chip_navigate_path: "/lovelace-minimalist-network"
-          #     ulm_chip_navigate_icon: "mdi:lan"
-          #     ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
-          #     ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
-          # - type: "custom:button-card"
-          #   template:
-          #     - "chip_navigate"
-          #   variables:
-          #     ulm_chip_navigate_path: "/lovelace-minimalist-media"
-          #     ulm_chip_navigate_icon: "mdi:remote-tv"
-          #     ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
-          #     ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
-          # - type: "custom:button-card"
-          #   template:
-          #     - "chip_navigate"
-          #   variables:
-          #     ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
-          #     ulm_chip_navigate_icon: "mdi:alpha-k-box"
-          #     ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
-          #     ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+              ulm_chip_navigate_icon: "mdi:floor-plan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-climate"
+              ulm_chip_navigate_icon: "mdi:home-thermometer"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices"
+              ulm_chip_navigate_icon: "mdi:devices"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+              ulm_chip_navigate_icon: "mdi:alpha-k-box"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
 
   - title: "Floorplan"
     icon: "mdi:floor-plan"
@@ -210,13 +210,10 @@ views:
 
   - title: "Camera's"
     icon: "mdi:cctv"
-    type: "custom:masonry-layout"
+    type: "custom:grid-layout"
     layout:
-      # width: 900
       max_width: 1200
-      # max_cols: 1
     theme: "minimalist-mobile"
-    # panel: true
     cards:
       - type: "horizontal-stack"
         cards:
@@ -228,10 +225,42 @@ views:
             template:
               - "chip_navigate"
             variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-security/0"
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
               ulm_chip_navigate_icon: "mdi:home"
               ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+              ulm_chip_navigate_icon: "mdi:floor-plan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-climate"
+              ulm_chip_navigate_icon: "mdi:home-thermometer"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices"
+              ulm_chip_navigate_icon: "mdi:devices"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+              ulm_chip_navigate_icon: "mdi:alpha-k-box"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
       - type: "custom:surveillance-card"
         thumb_interval: 10
         update_interval: 1
@@ -246,8 +275,8 @@ views:
             motion_entity: "binary_sensor.front_g3_flex_motion"
           - entity: "camera.back_g3_flex_medium"
             motion_entity: "binary_sensor.back_g3_flex_motion"
-          - entity: "camera.lounge_g3_instant_medium"
-            motion_entity: "binary_sensor.lounge_g3_instant_motion"
+          - entity: "camera.bottom_hallway_g3_instant_medium"
+            motion_entity: "binary_sensor.bottom_hallway_g3_instant_motion"
           - entity: "camera.middle_hallway_g3_flex_medium"
             motion_entity: "binary_sensor.middle_hallway_g3_flex_motion"
           - entity: "camera.kitchen_g3_instant_medium"
@@ -270,10 +299,42 @@ views:
             template:
               - "chip_navigate"
             variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-security/0"
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
               ulm_chip_navigate_icon: "mdi:home"
               ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+              ulm_chip_navigate_icon: "mdi:floor-plan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-climate"
+              ulm_chip_navigate_icon: "mdi:home-thermometer"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices"
+              ulm_chip_navigate_icon: "mdi:devices"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+              ulm_chip_navigate_icon: "mdi:alpha-k-box"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
       - type: "custom:flex-table-card"
         title: "Zigbee Sensor Diagnostics"
         entities:
@@ -284,21 +345,21 @@ views:
         columns:
           - data: "friendly_name"
             name: "Friendly Name"
-          - data: "battery"
-            name: "Battery Level"
-            suffix: "%"
-            align: "right"
-          - data: "voltage"
-            name: "Voltage"
-            suffix: " mV"
-          - data: "power_outage_count"
-            name: "Power Outage Count"
-            align: "right"
-          - data: "linkquality"
-            name: "LQI"
-            modify: "Math.round((x/255)*100)"
-            suffix: "%"
-            align: "right"
+          # - data: "battery"
+          #   name: "Battery Level"
+          #   suffix: "%"
+          #   align: "right"
+          # - data: "voltage"
+          #   name: "Voltage"
+          #   suffix: " mV"
+          # - data: "power_outage_count"
+          #   name: "Power Outage Count"
+          #   align: "right"
+          # - data: "linkquality"
+          #   name: "LQI"
+          #   modify: "Math.round((x/255)*100)"
+          #   suffix: "%"
+          #   align: "right"
       - type: "custom:flex-table-card"
         title: "Shelly Diagnostics"
         entities:
@@ -370,11 +431,50 @@ views:
             template:
               - "chip_navigate"
             variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-security/0"
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
               ulm_chip_navigate_icon: "mdi:home"
               ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+              ulm_chip_navigate_icon: "mdi:floor-plan"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-climate"
+              ulm_chip_navigate_icon: "mdi:home-thermometer"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices"
+              ulm_chip_navigate_icon: "mdi:devices"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+              ulm_chip_navigate_icon: "mdi:alpha-k-box"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
       - type: "custom:floor3d-card"
         path: "/local/floorplan/digitalTwin"
         objfile: "28GriffithRoad_export.obj"
         mtlfile: "28GriffithRoad_export.mtl"
+  - title: "Diagnostics"
+    icon: "mdi:signal"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "custom:more-info-card"
+        entity: "light.bathroom_light_light_1"
+        title: "Bathroom Light"
