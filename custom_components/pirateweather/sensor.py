@@ -31,7 +31,6 @@ from homeassistant.util import dt as dt_util
 from homeassistant.util.unit_system import METRIC_SYSTEM
 
 from homeassistant.components.sensor import (
-    DEVICE_CLASS_TEMPERATURE,
     PLATFORM_SCHEMA,
     SensorEntity,
 )
@@ -49,6 +48,7 @@ from homeassistant.const import (
     LENGTH_INCHES,
     LENGTH_KILOMETERS,
     LENGTH_MILES,
+    LENGTH_MILLIMETERS,
     PERCENTAGE,
     PRECIPITATION_INCHES,
     PRECIPITATION_MILLIMETERS_PER_HOUR,
@@ -214,6 +214,7 @@ SENSOR_TYPES: dict[str, PirateWeatherSensorEntityDescription] = {
     "precip_accumulation": PirateWeatherSensorEntityDescription(
         key="precip_accumulation",
         name="Precip Accumulation",
+        device_class=SensorDeviceClass.PRECIPITATION,
         si_unit=LENGTH_CENTIMETERS,
         us_unit=LENGTH_INCHES,
         ca_unit=LENGTH_CENTIMETERS,
@@ -261,6 +262,7 @@ SENSOR_TYPES: dict[str, PirateWeatherSensorEntityDescription] = {
     "wind_speed": PirateWeatherSensorEntityDescription(
         key="wind_speed",
         name="Wind Speed",
+        device_class=SensorDeviceClass.WIND_SPEED,
         si_unit=SPEED_METERS_PER_SECOND,
         us_unit=SPEED_MILES_PER_HOUR,
         ca_unit=SPEED_KILOMETERS_PER_HOUR,
@@ -283,6 +285,7 @@ SENSOR_TYPES: dict[str, PirateWeatherSensorEntityDescription] = {
     "wind_gust": PirateWeatherSensorEntityDescription(
         key="wind_gust",
         name="Wind Gust",
+        device_class=SensorDeviceClass.WIND_SPEED,
         si_unit=SPEED_METERS_PER_SECOND,
         us_unit=SPEED_MILES_PER_HOUR,
         ca_unit=SPEED_KILOMETERS_PER_HOUR,
@@ -318,6 +321,7 @@ SENSOR_TYPES: dict[str, PirateWeatherSensorEntityDescription] = {
         key="pressure",
         name="Pressure",
         device_class=SensorDeviceClass.PRESSURE,
+        state_class=SensorStateClass.MEASUREMENT,
         si_unit=PRESSURE_MBAR,
         us_unit=PRESSURE_MBAR,
         ca_unit=PRESSURE_MBAR,
@@ -339,7 +343,7 @@ SENSOR_TYPES: dict[str, PirateWeatherSensorEntityDescription] = {
     "ozone": PirateWeatherSensorEntityDescription(
         key="ozone",
         name="Ozone",
-        device_class=SensorDeviceClass.OZONE,
+        state_class=SensorStateClass.MEASUREMENT,
         si_unit="DU",
         us_unit="DU",
         ca_unit="DU",
@@ -593,7 +597,7 @@ ALLOWED_UNITS = ["auto", "si", "us", "ca", "uk", "uk2"]
 
 ALERTS_ATTRS = ["time", "description", "expires", "severity", "uri", "regions", "title"]
    
-HOURS = [i for i in range(49)]
+HOURS = [i for i in range(168)]
 DAYS = [i for i in range(7)]     
  
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
@@ -785,14 +789,14 @@ class PirateWeatherSensor(SensorEntity):
         """Return the attribution."""
         return ATTRIBUTION
 
-#    @property
-#    def native_unit_of_measurement(self):
-#        """Return the unit of measurement of this entity, if any."""
-#        unit_key = MAP_UNIT_SYSTEM.get(self.unit_system, "si_unit")
-#        self._attr_native_unit_of_measurement = getattr(
-#            self.entity_description, unit_key
-#        )
-#        return self._attr_native_unit_of_measurement
+    @property
+    def native_unit_of_measurement(self):
+        """Return the unit of measurement of this entity, if any."""
+        unit_key = MAP_UNIT_SYSTEM.get(self.unit_system, "si_unit")
+        self._attr_native_unit_of_measurement = getattr(
+            self.entity_description, unit_key
+        )
+        return self._attr_native_unit_of_measurement
 
     @property
     def unit_system(self):
@@ -836,15 +840,6 @@ class PirateWeatherSensor(SensorEntity):
             return CONDITION_PICTURES[self._icon].icon
 
         return self.entity_description.icon
-        
-        
-#    @property
-#    def device_class(self):
-#        """Device class of the entity."""
-#        if SENSOR_TYPES[self.type][1] == TEMP_CELSIUS:
-#            return DEVICE_CLASS_TEMPERATURE
-#        
-#        return None
 
     @property
     def extra_state_attributes(self):
@@ -969,6 +964,21 @@ class PirateWeatherSensor(SensorEntity):
               "apparent_temperature_low",     
           ]:
               state = ((state * 9 / 5) + 32)
+
+        # Precipitation Accumilation (cm in SI) to inches 
+        if self.requestUnits in ["us"]:
+          if self.type in [
+              "precip_accumulation", 
+          ]:
+              state = (state * 0.393701)
+              
+        # Precipitation Intensity (mm/h in SI) to inches 
+        if self.requestUnits in ["us"]:
+          if self.type in [
+              "precip_intensity", 
+          ]:
+              state = (state * 0.0393701)              
+              
               
         # Km to Miles      
         if self.requestUnits in ["us", "uk", "uk2"]:

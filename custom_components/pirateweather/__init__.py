@@ -74,9 +74,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     
     
     # Extract list of int from forecast days/ hours string if present
+    #_LOGGER.warning('forecast_days_type: ' + str(type(forecast_days)))
+    
+    #_LOGGER.warning(forecast_days)
     if type(forecast_days) == str:
       # If empty, set to none
-      if forecast_days == "":
+      if forecast_days  == "" or forecast_days  == "None":
         forecast_days = None
       else:
         if forecast_days[0] == '[':
@@ -87,7 +90,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
     if type(forecast_hours) == str:
     # If empty, set to none
-      if forecast_hours == "":
+      if forecast_hours == "" or forecast_hours  == "None":
         forecast_hours = None
       else:
         if forecast_hours[0] == '[':
@@ -109,7 +112,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
       hass.data[DOMAIN][unique_location] = weather_coordinator    
       #_LOGGER.warning('New Coordinator') 
 
-    await weather_coordinator.async_refresh()
+    #await weather_coordinator.async_refresh()
+    await weather_coordinator.async_config_entry_first_refresh()
+    
     
     hass.data[DOMAIN][entry.entry_id] = {
         ENTRY_NAME: name,

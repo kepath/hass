@@ -3,7 +3,6 @@ from datetime import timedelta
 import logging
 
 import async_timeout
-from pyowm.commons.exceptions import APIRequestError, UnauthorizedError
 import forecastio
 from forecastio.models import Forecast
 import json
@@ -56,16 +55,16 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         async with async_timeout.timeout(30):
             try:
                 data = await self._get_pw_weather()
-            except (APIRequestError, UnauthorizedError) as error:
+            except Exception as error:
                 raise UpdateFailed(error) from error
         return data
+
 
     async def _get_pw_weather(self):
         """Poll weather data from PW."""   
         
-        #_LOGGER.info('PW_Update')
              
-        forecastString = "https://api.pirateweather.net/forecast/" +  self._api_key + "/" + str(self.latitude) + "," + str(self.longitude) + "?units=" + self.requested_units
+        forecastString = "https://api.pirateweather.net/forecast/" +  self._api_key + "/" + str(self.latitude) + "," + str(self.longitude) + "?units=" + self.requested_units + "&extend=hourly"
         
         async with aiohttp.ClientSession(raise_for_status=True) as session:
           async with session.get(forecastString) as resp:
