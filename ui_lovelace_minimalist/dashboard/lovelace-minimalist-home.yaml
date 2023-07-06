@@ -139,39 +139,19 @@ views:
                         - "custom_card_kepath_binary_sensor_count"
                         - "green_icon_off"
                         - "yellow_icon_on"
-                      entity: "sensor.binary_sensor_state_counts"
-                      icon: "hacs:hacs"
-                      name: "HACS"
-                      variables:
-                        ulm_card_kepath_binary_sensor_count_notifications:
-                          amount:
-                            entity: "sensor.hacs"
-                            is_attribute: false
-                        ulm_card_kepath_binary_sensor_count_tap_action:
-                          action: "navigate"
-                          navigate:
-                            page: "/hacs"
-
-                  item4:
-                    card:
-                      type: "custom:button-card"
-                      template:
-                        - "custom_card_kepath_binary_sensor_count"
-                        - "green_icon_off"
-                        - "yellow_icon_on"
                       entity: "group.all_updates"
                       icon: "mdi:update"
                       name: "Updates"
                       variables:
                         ulm_card_kepath_binary_sensor_count_notifications:
                           amount:
-                            attribute_name: "updates_available_count"
+                            is_attribute: false
                         ulm_card_kepath_binary_sensor_count_tap_action:
                           action: "navigate"
                           navigate:
                             page: "/config/updates"
 
-                  item5:
+                  item4:
                     card:
                       type: "custom:button-card"
                       template:
@@ -190,7 +170,7 @@ views:
                           popup:
                             title: "light entities"
 
-                  item6:
+                  item5:
                     card:
                       type: "custom:button-card"
                       template:
@@ -208,6 +188,26 @@ views:
                           action: "popup"
                           popup:
                             title: "plug entities"
+                            auto_entities:
+                              sort_reversed: true
+
+                  item6:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_count"
+                        - "red_heating_icon"
+                      entity: "group.all_climate"
+                      icon: "mdi:thermometer"
+                      name: "Heating"
+                      variables:
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          amount:
+                            attribute_name: "climate_devices_on_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "climate entities"
                             auto_entities:
                               sort_reversed: true
 
