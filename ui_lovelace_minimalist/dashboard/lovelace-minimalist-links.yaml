@@ -334,83 +334,157 @@ views:
             icon: "si:googlemaps"
             name: "Google Maps"
 
-            # - icon: mdi:wan
-            #   name: UniFi Gateway
-            #   type: weblink
-            #   url: https://192.168.1.1
-            # - icon: mdi:router-wireless
-            #   name: ASUS GT-AX110000
-            #   type: weblink
-            #   url: https://192.168.1.30
-            # - icon: mdi:security-network
-            #   name: VPN Router
-            #   type: weblink
-            #   url: http://192.168.1.10
-            # - icon: mdi:nas
-            #   name: Diskstation
-            #   type: weblink
-            #   url: https://192.168.5.15:5001
-            # - name: Media
-            #   type: section
-            # - icon: mdi:docker
-            #   name: Portainer for DLM
-            #   type: weblink
-            #   url: http://192.168.1.2:9000/#/home
-            # - icon: mdi:download-network-outline
-            #   name: Transmission
-            #   type: weblink
-            #   url: http://192.168.1.2:9091
-            # - icon: mdi:download-network-outline
-            #   name: SabNzbd
-            #   type: weblink
-            #   url: http://192.168.1.2:8080
-            # - icon: mdi:tshirt-crew
-            #   name: Jackett
-            #   type: weblink
-            #   url: http://192.168.1.2:9117
-            # - icon: mdi:google-downasaur
-            #   name: NZB Hydra
-            #   type: weblink
-            #   url: http://192.168.1.2:5076
-            # - icon: mdi:folder-music
-            #   name: Beets
-            #   type: weblink
-            #   url: http://192.168.1.2:8337
-            # - icon: mdi:movie-search
-            #   name: Radarr
-            #   type: weblink
-            #   url: http://192.168.1.2:7878
-            # - icon: mdi:image-search
-            #   name: Sonarr
-            #   type: weblink
-            #   url: http://192.168.1.2:8989
-            # - icon: mdi:subtitles
-            #   name: Bazarr
-            #   type: weblink
-            #   url: http://192.168.1.2:6767
-            # - name: Players
-            #   type: section
-            # - icon: mdi:plex
-            #   name: Plex
-            #   type: weblink
-            #   url: https://app.plex.tv/desktop
-            # - icon: mdi:filmstrip
-            #   name: IMDB
-            #   type: weblink
-            #   url: http://www.imdb.com
-            # - icon: mdi:movie-open
-            #   name: The Movie DB
-            #   type: weblink
-            #   url: http://www.themoviedb.org
-            # - icon: mdi:television-classic
-            #   name: The TV DB
-            #   type: weblink
-            #   url: http://thetvdb.com/
-            # - icon: mdi:material-design
-            #   name: Material Design
-            #   type: weblink
-            #   url: https://materialdesignicons.com
-            # - icon: mdi:home-assistant
-            #   name: Home Assistant
-            #   type: weblink
-            #   url: https://www.home-assistant.io
+  - title: "Links"
+    icon: "hacs:hacs"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "horizontal-stack"
+        cards:
+          - type: "custom:button-card"
+            template: "chip_back"
+            variables:
+              ulm_chip_back_path: "/lovelace-minimalist-links/0"
+          - type: "custom:button-card"
+            template:
+              - "chip_navigate"
+            variables:
+              ulm_chip_navigate_path: "/lovelace-minimalist-home"
+              ulm_chip_navigate_icon: "mdi:home"
+              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "entities"
+          title: "HACS Plugins"
+        filter:
+          template: >-
+            {%- for update_list in states.update | sort(attribute="name") -%}
+              {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+                {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
+                  {{{
+                    'type': 'weblink',
+                    'name': device_attr(update_list.entity_id, 'name') | title,
+                    'url': state_attr(update_list.entity_id, 'release_url'),
+                    'secondary_info': state_attr(update_list.entity_id, 'last_updated')
+                  }}},
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "entities"
+          title: "HACS Integrations"
+        filter:
+          template: >-
+            {%- for update_list in states.update | sort(attribute="name") -%}
+              {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+                {%- if device_attr(update_list.entity_id, 'model') == 'integration' -%}
+                  {{{
+                    'type': 'weblink',
+                    'name': device_attr(update_list.entity_id, 'name') | title,
+                    'url': state_attr(update_list.entity_id, 'release_url')
+                  }}},
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "entities"
+          title: "HACS Themes"
+        filter:
+          template: >-
+            {%- for update_list in states.update | sort(attribute="name") -%}
+              {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+                {%- if device_attr(update_list.entity_id, 'model') == 'theme' -%}
+                  {{{
+                    'type': 'weblink',
+                    'name': device_attr(update_list.entity_id, 'name') | title,
+                    'url': state_attr(update_list.entity_id, 'release_url')
+                  }}},
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+        # - icon: mdi:wan
+        #   name: UniFi Gateway
+        #   type: weblink
+        #   url: https://192.168.1.1
+        # - icon: mdi:router-wireless
+        #   name: ASUS GT-AX110000
+        #   type: weblink
+        #   url: https://192.168.1.30
+        # - icon: mdi:security-network
+        #   name: VPN Router
+        #   type: weblink
+        #   url: http://192.168.1.10
+        # - icon: mdi:nas
+        #   name: Diskstation
+        #   type: weblink
+        #   url: https://192.168.5.15:5001
+        # - name: Media
+        #   type: section
+        # - icon: mdi:docker
+        #   name: Portainer for DLM
+        #   type: weblink
+        #   url: http://192.168.1.2:9000/#/home
+        # - icon: mdi:download-network-outline
+        #   name: Transmission
+        #   type: weblink
+        #   url: http://192.168.1.2:9091
+        # - icon: mdi:download-network-outline
+        #   name: SabNzbd
+        #   type: weblink
+        #   url: http://192.168.1.2:8080
+        # - icon: mdi:tshirt-crew
+        #   name: Jackett
+        #   type: weblink
+        #   url: http://192.168.1.2:9117
+        # - icon: mdi:google-downasaur
+        #   name: NZB Hydra
+        #   type: weblink
+        #   url: http://192.168.1.2:5076
+        # - icon: mdi:folder-music
+        #   name: Beets
+        #   type: weblink
+        #   url: http://192.168.1.2:8337
+        # - icon: mdi:movie-search
+        #   name: Radarr
+        #   type: weblink
+        #   url: http://192.168.1.2:7878
+        # - icon: mdi:image-search
+        #   name: Sonarr
+        #   type: weblink
+        #   url: http://192.168.1.2:8989
+        # - icon: mdi:subtitles
+        #   name: Bazarr
+        #   type: weblink
+        #   url: http://192.168.1.2:6767
+        # - name: Players
+        #   type: section
+        # - icon: mdi:plex
+        #   name: Plex
+        #   type: weblink
+        #   url: https://app.plex.tv/desktop
+        # - icon: mdi:filmstrip
+        #   name: IMDB
+        #   type: weblink
+        #   url: http://www.imdb.com
+        # - icon: mdi:movie-open
+        #   name: The Movie DB
+        #   type: weblink
+        #   url: http://www.themoviedb.org
+        # - icon: mdi:television-classic
+        #   name: The TV DB
+        #   type: weblink
+        #   url: http://thetvdb.com/
+        # - icon: mdi:material-design
+        #   name: Material Design
+        #   type: weblink
+        #   url: https://materialdesignicons.com
+        # - icon: mdi:home-assistant
+        #   name: Home Assistant
+        #   type: weblink
+        #   url: https://www.home-assistant.io
