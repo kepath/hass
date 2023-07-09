@@ -21,7 +21,8 @@ template:
           climate_devices_on_count: >
             {{
               [(expand('group.all_climate') | map(attribute='entity_id') | select('is_state_attr', 'hvac_action', 'heat') | list | count),
-              (expand('group.all_climate') | rejectattr('attributes.hvac_action', 'defined') | selectattr('state','eq', 'heat') | list | count)] | sum
+              (expand('group.all_climate') | rejectattr('attributes.hvac_action', 'defined') | selectattr('state', 'eq', 'heat') | list | count),
+              ( 0 if (states('sensor.air_to_water_heat_pump_room_temperature')|round < 40) else 1)] | sum
             }}
           zero_value: "{{ 0 | int }}"
 
