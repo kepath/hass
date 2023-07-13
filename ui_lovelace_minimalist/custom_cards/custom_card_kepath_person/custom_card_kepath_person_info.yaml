@@ -26,7 +26,7 @@ custom_card_kepath_person_info:
   icon: >
     [[[
       var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
-      var icon = "mdi:face-man";
+      var icon = "mdi:map-marker-alert";
       var zones = variables.ulm_zone_list;
       for (const item of zones) {
         if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "").toLowerCase()) {
@@ -91,7 +91,7 @@ custom_card_kepath_person_info:
         [[[
           var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
           var location = false;
-          if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'stationary') || (person_location == 'StatZon1')) {
+          if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'stationary') || (person_location == 'statzon1')) {
             location = true;
           }
           return location
