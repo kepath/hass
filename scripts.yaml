@@ -51,11 +51,6 @@ lockdown_mode_on:
     entity_id: select.bed_c_g3_instant_recording_mode
     type: select_option
     option: Always
-  - device_id: 11062255f077266d4098f535713a004b
-    domain: select
-    entity_id: select.middle_hallway_g3_flex_recording_mode
-    type: select_option
-    option: Always
   - device_id: 9ef41eac3dc4c1f0e380eb5d3f75db93
     domain: climate
     entity_id: climate.nest_bottom_floor
@@ -162,3 +157,23 @@ lockdown_mode_off:
       message: Lockdown mode has been deactivated
   mode: single
   icon: mdi:lock-open-variant
+night_mode_on:
+  alias: Night-mode On
+  sequence:
+  - service: light.turn_off
+    data: {}
+    target:
+      device_id:
+      - 2028999f2f7da1303c521c80b4711c16
+      - 2cdc2d6151cce99ac31e17c0938b6fc1
+      - f1343df71614a926d35d705e2bd1e11d
+      - e67edca306ddf71319964314c53da0a2
+      - 85c1d0d0335b8c7183ad0bafd40cd054
+      - e9f3d018caf4ca143e43c326574df704
+      - fdfca529947f2de73d16ee2ecf6d2d7d
+      - e669b0433c107f284100dea0aeb682fe
+      - 4af87793104d14b408c6c458e29fe6bf
+      - 707639a037c05f21cb7ba1e119538bf0
+      - ecdc93708d2afbf8f645e3eb84d0e39c
+  mode: single
+  icon: mdi:home-lock
