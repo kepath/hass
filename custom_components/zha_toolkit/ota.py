@@ -4,8 +4,6 @@ import os
 from glob import glob
 
 import aiohttp
-from pkg_resources import parse_version
-from zigpy import __version__ as zigpy_version
 
 from . import DEFAULT_OTAU
 from . import utils as u
@@ -184,6 +182,9 @@ async def ota_notify(
         await download_koenkk_ota(listener, ota_dir)
         await download_sonoff_ota(listener, ota_dir)
 
+    # Get tries
+    tries = params[p.TRIES]
+
     # Update internal image database
     await ota_update_images(
         app, listener, ieee, cmd, data, service, params, event_data
@@ -208,12 +209,14 @@ async def ota_notify(
         LOGGER.debug("No OTA cluster found")
         return
     basic = device.endpoints[cluster.endpoint.endpoint_id].basic
-    await basic.bind()
-    ret = await basic.configure_reporting("sw_build_id", 0, 1800, 1)
+    await u.retry_wrapper(basic.bind, tries=tries)
+    ret = await u.retry_wrapper(
+        basic.configure_reporting, "sw_build_id", 0, 1800, 1, tries=tries
+    )
     LOGGER.debug("Configured reporting: %s", ret)
 
     ret = None
-    if parse_version(zigpy_version) < parse_version("0.45.0"):
+    if not u.is_zigpy_ge("0.45.0"):
         ret = await cluster.image_notify(0, 100)
     else:
         cmd_args = [0, 100]
@@ -222,7 +225,7 @@ async def ota_notify(
             0,  # cmd_id
             *cmd_args,
             # expect_reply = True,
-            tries=params[p.TRIES],
+            tries=tries,
         )
 
     LOGGER.debug("Sent image notify command to 0x%04x: %s", device.nwk, ret)
