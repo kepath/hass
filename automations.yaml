@@ -943,3 +943,72 @@
       entity_id: scene.night_shutdown
     metadata: {}
   mode: single
+- id: '1689408422077'
+  alias: on_arrive_home_ju_unlock_front_door
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 3d081886a443a9db8dee6645f66a5ba2
+    domain: device_tracker
+    entity_id: cf61fa55112c4f3871fd7274ae71e6ed
+    type: enters
+    zone: zone.home
+  condition: []
+  action:
+  - device_id: c433a6de7503fff598e3b00eebd934b8
+    domain: lock
+    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
+    type: unlock
+  mode: single
+- id: '1689408865299'
+  alias: on_leave_home_ju_lock_front_door
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 3d081886a443a9db8dee6645f66a5ba2
+    domain: device_tracker
+    entity_id: cf61fa55112c4f3871fd7274ae71e6ed
+    type: leaves
+    zone: zone.home
+  condition: []
+  action:
+  - device_id: c433a6de7503fff598e3b00eebd934b8
+    domain: lock
+    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
+    type: lock
+  mode: single
+- id: '1689409704381'
+  alias: on_button_double_press_mini_switch_bed_a
+  description: ''
+  trigger:
+  - device_id: 3ec7d3713bb2e67b7b459b5f570921a2
+    domain: zha
+    platform: device
+    type: remote_button_double_press
+    subtype: remote_button_double_press
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.unlock_front_door
+    metadata: {}
+  mode: single
+- id: '1689426384566'
+  alias: on_start_create_group.all_locks_domain_entities
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: lock
+      group_name: all_locks
+      icon: mdi:lock
+      friendly_name: All lock domain entities
+      filter_by_device_class: false
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
