@@ -16,6 +16,8 @@ template:
           media_player_tv_and_remote_unavailable_count: "{{ expand('group.all_remotes_and_tv_class_media_player') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           media_player_audio_on_count: "{{ expand('group.all_audio_class_media_player') | rejectattr('state','in', ['unavailable','unknown','standby','idle','off']) | list | count }}"
           media_player_audio_unavailable_count: "{{ expand('group.all_audio_class_media_player') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          locks_locked_count: "{{ expand('group.all_locks') | selectattr('state','eq', 'locked') | list | count }}"
+          locks_unavailable_count: "{{ expand('group.all_locks') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           safety_sensors_triggered_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           safety_sensors_unavailable_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           climate_devices_on_count: >

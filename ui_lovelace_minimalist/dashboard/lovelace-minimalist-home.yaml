@@ -263,10 +263,11 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_count"
-                        - "green_icon_off"
-                        - "red_icon_on"
+                        - "custom_card_kepath_door_state"
+                        # - "green_icon_off"
+                        # - "red_icon_on"
                       entity: "group.all_door_class_binary_sensors"
-                      icon: "mdi:door"
+                      icon: "mdi:door-closed"
                       name: "Doors"
                       variables:
                         ulm_card_kepath_binary_sensor_count_notifications:
@@ -274,6 +275,8 @@ views:
                             attribute_name: "door_sensors_unavailable_count"
                           amount:
                             attribute_name: "door_sensors_triggered_count"
+                          locked:
+                            attribute_name: "locks_locked_count"
                         ulm_card_kepath_binary_sensor_count_tap_action:
                           action: "popup"
                           popup:
