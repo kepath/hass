@@ -51,22 +51,93 @@ views:
               ulm_chip_navigate_icon: "mdi:alpha-k-box"
               ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
+      # - type: "custom:auto-entities"
+      #   card_param: "entity"
+      #   show_empty: false
+      #   card:
+      #     type: "custom:button-card"
+      #     template: "card_media_player"
+      #     # entity: "this.entity_id"
+      #     variables:
+      #       ulm_card_media_player_name: "Livingroom Nvidia Shield"
+      #   filter:
+      #     include:
+      #       - group: "group.all_audio_class_media_player"
+
+        # filter:
+        #   include:
+        #     - group: "group.all_audio_class_media_player"
+        #       options:
+        #         type: "custom:button-card"
+        #         template: "card_media_player"
+        #         entity: "this.entity_id"
+          # template: >-
+          #   {% for media_player in expand('group.all_audio_class_media_player') %}
+          #     {{{
+          #       'type': 'custom:button-card',
+          #       'template': 'card_media_player'
+          #     }}}
+          #   {% endfor %}
+
       - type: "custom:auto-entities"
+        card_param: "cards"
         card:
           type: "vertical-stack"
-          title: "Playing Media"
         filter:
-          template: >-
-            {% for media_picture in states.media_player|selectattr('attributes.entity_picture','defined') %}
-              {{{
-                'type': 'picture',
-                'image': state_attr(media_picture.entity_id, 'entity_picture'),
-                'alt_text': state_attr(media_picture.entity_id, 'friendly_name'),
-                'tap_action': {
-                  'action': 'more-info'
-                }
-              }}}
-            {% endfor %}
+          include:
+            - group: "group.all_audio_class_media_player"
+              options:
+                type: "custom:button-card"
+                template: "card_media_player"
+                entity: "this.entity_id"
+                variables:
+                  ulm_card_media_player_enable_art: true
+                  ulm_card_media_player_enable_controls: true
+                  ulm_card_media_player_enable_volume_slider: true
+                  ulm_card_media_player_enable_volume_buttons: true
+                  ulm_card_media_player_collapsible: true
+                  ulm_card_media_player_more_info: true
+                  ulm_card_media_player_power_button: true
+                  # ulm_card_media_player_color: "rgba(var(--color-red),1)"
+                  # ulm_card_media_player_force_background_color: true
+
+      - type: "custom:auto-entities"
+        card_param: "cards"
+        card:
+          type: "vertical-stack"
+        filter:
+          include:
+            - group: "group.all_video_class_media_player"
+              options:
+                type: "custom:button-card"
+                template: "card_media_player"
+                entity: "this.entity_id"
+                variables:
+                  ulm_card_media_player_enable_art: true
+                  ulm_card_media_player_enable_controls: true
+                  ulm_card_media_player_enable_volume_slider: true
+                  ulm_card_media_player_enable_volume_buttons: true
+                  ulm_card_media_player_collapsible: true
+                  ulm_card_media_player_more_info: true
+                  ulm_card_media_player_power_button: true
+                  ulm_card_media_player_color: "rgba(var(--color-red),1)"
+                  ulm_card_media_player_force_background_color: true
+      # - type: "custom:auto-entities"
+      #   card:
+      #     type: "picture-elements"
+      #     title: "Playing Media"
+      #   filter:
+      #     template: >-
+      #       {% for media_picture in states.media_player|selectattr('attributes.entity_picture','defined') %}
+      #         {{{
+      #           'type': 'picture',
+      #           'image': state_attr(media_picture.entity_id, 'entity_picture'),
+      #           'alt_text': state_attr(media_picture.entity_id, 'friendly_name'),
+      #           'tap_action': {
+      #             'action': 'more-info'
+      #           }
+      #         }}}
+      #       {% endfor %}
 
 
         # filter:
