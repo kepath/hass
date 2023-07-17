@@ -159,10 +159,12 @@ views:
                         - "custom_card_kepath_binary_sensor_count"
                         - "grey_icon_off"
                         - "yellow_icon_on"
+                        - "icon_alternative_off"
                       entity: "group.all_lights"
                       icon: "mdi:lightbulb-multiple"
                       name: "Lights"
                       variables:
+                        ulm_card_kepath_binary_sensor_count_alt_icon: "mdi:lightbulb-multiple-off"
                         ulm_card_kepath_binary_sensor_count_notifications:
                           amount:
                             attribute_name: "lights_on_count"
@@ -178,10 +180,12 @@ views:
                         - "custom_card_kepath_binary_sensor_count"
                         - "green_icon_off"
                         - "blue_icon_on"
+                        - "icon_alternative_off"
                       entity: "group.all_outlet_class_switch"
                       icon: "mdi:power-plug"
                       name: "Plugs"
                       variables:
+                        ulm_card_kepath_binary_sensor_count_alt_icon: "mdi:power-plug-off"
                         ulm_card_kepath_binary_sensor_count_notifications:
                           amount:
                             attribute_name: "plugs_off_count"
@@ -192,25 +196,50 @@ views:
                             auto_entities:
                               sort_reversed: true
 
+                  # item6:
+                  #   card:
+                  #     type: "custom:button-card"
+                  #     template:
+                  #       - "custom_card_kepath_binary_sensor_count"
+                  #       - "red_heating_icon"
+                  #     entity: "group.all_climate"
+                  #     icon: "mdi:thermometer"
+                  #     name: "Heating"
+                  #     variables:
+                  #       ulm_card_kepath_binary_sensor_count_notifications:
+                  #         amount:
+                  #           attribute_name: "climate_devices_on_count"
+                  #       ulm_card_kepath_binary_sensor_count_tap_action:
+                  #         action: "popup"
+                  #         popup:
+                  #           title: "climate entities"
+                  #           auto_entities:
+                  #             sort_reversed: true
+
                   item6:
                     card:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_count"
-                        - "red_heating_icon"
-                      entity: "group.all_climate"
-                      icon: "mdi:thermometer"
-                      name: "Heating"
+                        - "green_icon_off"
+                        - "red_icon_on"
+                        - "icon_alternative_off"
+                      entity: "group.all_safety_class_binary_sensors"
+                      icon: "mdi:alarm-light"
+                      name: "Alerts"
                       variables:
+                        ulm_card_kepath_binary_sensor_count_alt_icon: "mdi:alarm-light-off"
                         ulm_card_kepath_binary_sensor_count_notifications:
+                          unavailable:
+                            attribute_name: "safety_sensors_unavailable_count"
                           amount:
-                            attribute_name: "climate_devices_on_count"
+                            attribute_name: "safety_sensors_triggered_count"
                         ulm_card_kepath_binary_sensor_count_tap_action:
                           action: "popup"
                           popup:
-                            title: "climate entities"
+                            title: "safety entities"
                             auto_entities:
-                              sort_reversed: true
+                              sort_method: "last_changed"
 
                   item7:
                     card:
@@ -219,14 +248,14 @@ views:
                         - "card_notification_script_trigger"
                         - "green_icon_off"
                       entity: "input_boolean.away_script_active"
-                      icon: "mdi:lock-open"
-                      name: "Home"
+                      icon: "mdi:home-lock-open"
+                      name: "Passive"
                       variables:
                         script_activate:
                           icon:
-                            mdi: "mdi:lock"
+                            mdi: "mdi:home-lock"
                             color: "red"
-                          name: "Lockdown"
+                          name: "Active"
                           script:
                             name: "script.lockdown_mode_on"
                             confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
@@ -240,21 +269,26 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_count"
+                        # - "custom_card_kepath_door_state"
                         - "green_icon_off"
                         - "red_icon_on"
-                      entity: "group.all_safety_class_binary_sensors"
-                      icon: "mdi:alarm-light"
-                      name: "Alerts"
+                        - "icon_alternative_on"
+                      entity: "group.all_door_class_binary_sensors"
+                      icon: "mdi:door"
+                      name: "Doors"
                       variables:
+                        ulm_card_kepath_binary_sensor_count_alt_icon: "mdi:door-open"
                         ulm_card_kepath_binary_sensor_count_notifications:
                           unavailable:
-                            attribute_name: "safety_sensors_unavailable_count"
+                            attribute_name: "door_sensors_unavailable_count"
                           amount:
-                            attribute_name: "safety_sensors_triggered_count"
+                            attribute_name: "door_sensors_triggered_count"
+                          # locked:
+                          #   attribute_name: "locks_unlocked_count"
                         ulm_card_kepath_binary_sensor_count_tap_action:
                           action: "popup"
                           popup:
-                            title: "safety entities"
+                            title: "door entities"
                             auto_entities:
                               sort_method: "last_changed"
 
@@ -263,26 +297,23 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_count"
-                        - "custom_card_kepath_door_state"
-                        # - "green_icon_off"
-                        # - "red_icon_on"
-                      entity: "group.all_door_class_binary_sensors"
-                      icon: "mdi:door-closed"
-                      name: "Doors"
+                        - "custom_card_kepath_lock_state"
+                      entity: "group.all_locks"
+                      icon: "mdi:lock"
+                      name: "Locks"
                       variables:
+                        ulm_card_kepath_binary_sensor_count_alt_icon: "mdi:lock-open"
                         ulm_card_kepath_binary_sensor_count_notifications:
                           unavailable:
-                            attribute_name: "door_sensors_unavailable_count"
+                            attribute_name: "locks_unavailable_count"
                           amount:
-                            attribute_name: "door_sensors_triggered_count"
-                          locked:
-                            attribute_name: "locks_locked_count"
+                            attribute_name: "locks_unlocked_count"
                         ulm_card_kepath_binary_sensor_count_tap_action:
                           action: "popup"
                           popup:
-                            title: "door entities"
-                            auto_entities:
-                              sort_method: "last_changed"
+                            title: "Lock entities"
+                            # auto_entities:
+                            #   sort_method: "last_changed"
 
                   item10:
                     card:
@@ -291,7 +322,7 @@ views:
                         - "custom_card_kepath_binary_sensor_count"
                         - "custom_card_kepath_occupancy_state"
                       entity: "group.all_occupancy_class_binary_sensors"
-                      icon: "mdi:human-greeting"
+                      icon: "mdi:cctv"
                       name: "Motion"
                       variables:
                         ulm_card_kepath_binary_sensor_count_notifications:
@@ -313,12 +344,14 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_count"
-                        - "green_icon_off"
-                        - "blue_icon_on"
+                        - "green_icon_on"
+                        - "blue_icon_off"
+                        - "icon_alternative_off"
                       entity: "group.all_remotes_and_tv_class_media_player"
                       icon: "mdi:television-play"
                       name: "Video"
                       variables:
+                        ulm_card_kepath_binary_sensor_count_alt_icon: "mdi:television"
                         ulm_card_kepath_binary_sensor_count_notifications:
                           amount:
                             attribute_name: "media_player_tv_and_remote_on_count"
@@ -335,12 +368,14 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_count"
-                        - "green_icon_off"
-                        - "blue_icon_on"
+                        - "green_icon_on"
+                        - "blue_icon_off"
+                        - "icon_alternative_off"
                       entity: "group.all_audio_class_media_player"
                       icon: "mdi:volume-medium"
                       name: "Audio"
                       variables:
+                        ulm_card_kepath_binary_sensor_count_alt_icon: "mdi:volume-off"
                         ulm_card_kepath_binary_sensor_count_notifications:
                           unavailable:
                             attribute_name: "media_player_audio_unavailable_count"
