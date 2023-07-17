@@ -5,27 +5,27 @@ template:
         name: "binary_sensor_state_counts"
         state: "{{ expand('group.all_updates') | selectattr('state','eq', 'on') | list | count }}"   #"{{ 'off' if is_state('sensor.hacs', '0') else 'on' }}"
         attributes:
-          door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
-          door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
-          lights_on_count: "{{ expand('group.all_lights') | selectattr('state','eq', 'on') | list | count }}"
-          plugs_off_count: "{{ expand('group.all_outlet_class_switch') | selectattr('state','eq', 'off') | list | count }}"
-          occupancy_sensors_triggered_count: "{{ expand('group.all_occupancy_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
-          occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
-          occupancy_persons_home_count: "{{ expand(states.person) | selectattr('state','eq','home') | map(attribute='entity_id') | list | count }}"
-          media_player_tv_and_remote_on_count: "{{ expand('group.all_remotes_and_tv_class_media_player') | rejectattr('state','in', ['unavailable','unknown','standby','idle','off']) | list | count }}"
-          media_player_tv_and_remote_unavailable_count: "{{ expand('group.all_remotes_and_tv_class_media_player') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
-          media_player_audio_on_count: "{{ expand('group.all_audio_class_media_player') | rejectattr('state','in', ['unavailable','unknown','standby','idle','off']) | list | count }}"
-          media_player_audio_unavailable_count: "{{ expand('group.all_audio_class_media_player') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
-          locks_locked_count: "{{ expand('group.all_locks') | selectattr('state','eq', 'locked') | list | count }}"
-          locks_unavailable_count: "{{ expand('group.all_locks') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
-          safety_sensors_triggered_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
-          safety_sensors_unavailable_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           climate_devices_on_count: >
             {{
               [(expand('group.all_climate') | map(attribute='entity_id') | select('is_state_attr', 'hvac_action', 'heat') | list | count),
               (expand('group.all_climate') | rejectattr('attributes.hvac_action', 'defined') | selectattr('state', 'eq', 'heat') | list | count),
               ( 0 if (states('sensor.air_to_water_heat_pump_out_water_temperature')|round < 45) else 1)] | sum
             }}
+          door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
+          door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          lights_on_count: "{{ expand('group.all_lights') | selectattr('state','eq', 'on') | list | count }}"
+          locks_unavailable_count: "{{ expand('group.all_locks') | selectattr('state','in', ['unavailable','unknown','jammed']) | list | count }}"
+          locks_unlocked_count: "{{ expand('group.all_locks') | selectattr('state','eq', 'unlocked') | list | count }}"
+          media_player_audio_on_count: "{{ expand('group.all_audio_class_media_player') | rejectattr('state','in', ['unavailable','unknown','standby','idle','off']) | list | count }}"
+          media_player_audio_unavailable_count: "{{ expand('group.all_audio_class_media_player') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          media_player_tv_and_remote_on_count: "{{ expand('group.all_remotes_and_tv_class_media_player') | rejectattr('state','in', ['unavailable','unknown','standby','idle','off']) | list | count }}"
+          media_player_tv_and_remote_unavailable_count: "{{ expand('group.all_remotes_and_tv_class_media_player') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          occupancy_persons_home_count: "{{ expand(states.person) | selectattr('state','eq','home') | map(attribute='entity_id') | list | count }}"
+          occupancy_sensors_triggered_count: "{{ expand('group.all_occupancy_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
+          occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          plugs_off_count: "{{ expand('group.all_outlet_class_switch') | selectattr('state','eq', 'off') | list | count }}"
+          safety_sensors_triggered_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
+          safety_sensors_unavailable_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           zero_value: "{{ 0 | int }}"
 
       - unique_id: "integration_entity_attributes_template_generated"
@@ -36,24 +36,32 @@ template:
           device_class_list: "{{ states | rejectattr('attributes.device_class', 'undefined') | map(attribute='attributes.device_class') | unique | list }}"
           unit_of_measurement_list: "{{ states | rejectattr('attributes.unit_of_measurement', 'undefined') | map(attribute='attributes.unit_of_measurement') | unique | list }}"
           integrations_installed_list: "{{ states | map(attribute='entity_id') | map('device_attr', 'identifiers') | reject('none') | map('first') | select('defined') | map(attribute='0') | unique | list }}"
+          area_id_list: >
+            {%- for area in areas() | sort %}
+              {{[
+                area,
+                area_name(area),
+                area_name(area) | map('lower') | map('replace', ':', '') | map('replace', ',', '') | map('replace', ' ', '_') | join
+              ]}}
+            {%- endfor %}
           # hacs_update_entity_list: "{{states.update | selectattr('attributes.supported_features', 'eq', 21) | map(attribute='entity_id') | list}}"
-          area_id_list: "{{states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_id') | unique | reject('none') | list}}"
-          area_name_list: "{{states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_name') | unique | reject('none') | list}}"
-          area_name_escaped_list: >
-            {{
-              states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_name') | unique | reject('none') | map('lower') | map('replace', ':', '') | map('replace', ',', '') | map('replace', ' ', '_') | list
-            }}
+          # area_id_list: "{{states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_id') | unique | reject('none') | list}}"
+          # area_name_list: "{{states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_name') | unique | reject('none') | list}}"
+          # area_name_escaped_list: >
+          #   {{
+          #     states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_name') | unique | reject('none') | map('lower') | map('replace', ':', '') | map('replace', ',', '') | map('replace', ' ', '_') | list
+          #   }}
           # indexes for the areas should match
 
-      - unique_id: "update_attributes_template_generated"
-        name: "Update Entity Attributes"
-        state: "{{states.update | count}}"
-        attributes:
-          entity_id_list: "{{states.update | map(attribute='entity_id') | sort | list}}"
-          release_url_list: "{{states.update | map(attribute='entity_id') | sort | map('state_attr', 'release_url') | list}}"
-          name_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'name') | list}}"
-          model_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'model') | list}}"
-          manufacturer_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'manufacturer') | list}}"
+      # - unique_id: "update_attributes_template_generated"
+      #   name: "Update Entity Attributes"
+      #   state: "{{states.update | count}}"
+      #   attributes:
+      #     entity_id_list: "{{states.update | map(attribute='entity_id') | sort | list}}"
+      #     release_url_list: "{{states.update | map(attribute='entity_id') | sort | map('state_attr', 'release_url') | list}}"
+      #     name_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'name') | list}}"
+      #     model_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'model') | list}}"
+      #     manufacturer_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'manufacturer') | list}}"
 
 
       # Shelly Light Diagnotics
