@@ -203,21 +203,48 @@ card_media_player:
                 [[[
                   var icon = entity.attributes.icon || "mdi:speaker";
                   if(entity.attributes.app_name){
-                    var app = entity.attributes.app_name.toLowerCase();
+                    var app = entity.attributes.app_name.toLowerCase().replace(/ /g, '').replace(/./g, '');
                     var icon = {
-                      "spotify": "mdi:spotify",
-                      "google podcasts": "mdi:google-podcast",
-                      "plex": "mdi:plex",
-                      "soundcloud": "mdi:soundcloud",
-                      "youtube music": "mdi:youtube",
-                      "oto music": "mdi:music-circle",
-                      "pandora": "mdi:pandora",
-                      "netflix": "mdi:netflix",
-                      "hulu": "mdi:hulu",
-                      "bluetooth audio": "mdi:bluetooth"
+                      "spotify": "[[['si:spotify' ? 'si:spotify' : 'mdi:spotify']]]",
+                      "googlepodcasts": "[[['si:googlepodcasts' ? 'si:googlepodcasts' : 'mdi:google-podcast']]]",
+                      "googleplay": "[[['si:googleplay' ? 'si:googleplay' : 'mdi:television-play']]]",
+                      "google": "[[['si:google' ? 'si:google' : 'mdi:television-play']]]",
+                      "youtubemusic": "[[['si:youtubemusic' ? 'si:youtubemusic' : 'mdi:youtube']]]",
+                      "youtube": "[[['si:youtube' ? 'si:youtube' : 'mdi:youtube']]]",
+                      "applepodcasts": "[[['si:applepodcasts' ? 'si:applepodcasts' : 'mdi:television-play']]]",
+                      "applemusic": "[[['si:applemusic' ? 'si:applemusic' : 'mdi:television-play']]]",
+                      "appletv": "[[['si:appletv' ? 'si:appletv' : 'mdi:television-play']]]",
+                      "apple": "[[['si:apple' ? 'si:apple' : 'mdi:television-play']]]",
+                      "amazon": "[[['si:prime' ? 'si:prime' : 'mdi:music-circle']]]",
+                      "prime": "[[['si:prime' ? 'si:prime' : 'mdi:music-circle']]]",
+                      "plex": "[[['si:plex' ? 'si:plex' : 'mdi:plex']]]",
+                      "soundcloud": "[[['si:soundcloud' ? 'si:soundcloud' : 'mdi:soundcloud']]]",
+                      "otomusic": "mdi:music-circle",
+                      "pandora": "[[['si:pandora' ? 'si:pandora' : 'mdi:pandora']]]",
+                      "netflix": "[[['si:netflix' ? 'si:netflix' : 'mdi:netflix']]]",
+                      "hulu": "[[['si:hulu' ? 'si:hulu" :"mdi:hulu']]]",
+                      "bluetoothaudio": "mdi:bluetooth",
+                      "iplayer": "[[['si:bbciplayer' ? 'si:bbciplayer' : 'mdi:television-play']]]",
+                      "crunchyroll": "[[['si:crunchyroll' ? 'si:crunchyroll' : 'mdi:television-play']]]",
+                      "deezer": "[[['si:deezer' ? 'si:deezer' : 'mdi:television-play']]]",
+                      "ubiquiti": "[[['si:ubiquiti' ? 'si:ubiquiti' : 'mdi:television-play']]]",
+                      "pluralsight": "[[['si:pluralsight' ? 'si:pluralsight' : 'mdi:television-play']]]",
+                      "itv": "[[['si:itvx' ? 'si:itvx' : 'mdi:television-play']]]",
+                      "ted": "[[['si:ted' ? 'si:ted' : 'mdi:television-play']]]",
+                      "vlcmediaplayer": "[[['si:vlcmediaplayer' ? 'si:vlcmediaplayer' : 'mdi:television-play']]]",
+                      "now": "[[['si:now' ? 'si:now' : 'mdi:television-play']]]",
+                      "disney": "[[["phu:disney-plus" ? "phu:disney-plus' : 'mdi:television-play']]]",
+                      "twitch": "[[['si:twitch' ? 'si:twitch' : 'mdi:television-play']]]",
+                    }
+                    var obj = JSON.parse(JSON.stringify(icon));
+                    for (var key in obj) {
+                      if (app.includes(key)) {
+                        return obj[key];
+                      } else {
+                        return variables.ulm_card_media_player_icon;
                     }
                   }
-                  return variables.ulm_card_media_player_icon || icon[app];
+                  //return variables.ulm_card_media_player_icon || icon[app];
                 ]]]
               styles:
                 icon:

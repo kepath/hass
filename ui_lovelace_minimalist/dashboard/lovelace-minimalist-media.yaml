@@ -51,42 +51,43 @@ views:
               ulm_chip_navigate_icon: "mdi:alpha-k-box"
               ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
               ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
-      # - type: "custom:auto-entities"
-      #   card_param: "entity"
-      #   show_empty: false
-      #   card:
-      #     type: "custom:button-card"
-      #     template: "card_media_player"
-      #     # entity: "this.entity_id"
-      #     variables:
-      #       ulm_card_media_player_name: "Livingroom Nvidia Shield"
-      #   filter:
-      #     include:
-      #       - group: "group.all_audio_class_media_player"
-
-        # filter:
-        #   include:
-        #     - group: "group.all_audio_class_media_player"
-        #       options:
-        #         type: "custom:button-card"
-        #         template: "card_media_player"
-        #         entity: "this.entity_id"
-          # template: >-
-          #   {% for media_player in expand('group.all_audio_class_media_player') %}
-          #     {{{
-          #       'type': 'custom:button-card',
-          #       'template': 'card_media_player'
-          #     }}}
-          #   {% endfor %}
 
       - type: "custom:auto-entities"
         card_param: "cards"
         card:
           type: "vertical-stack"
+          title: "Playing Video Media"
+        filter:
+          include:
+            - group: "group.all_tv_class_media_player"
+              attributes:
+                entity_picture: "*"
+              options:
+                card: []
+                type: "custom:button-card"
+                template: "card_media_player"
+                entity: "this.entity_id"
+                variables:
+                  ulm_card_media_player_enable_art: true
+                  ulm_card_media_player_enable_controls: true
+                  ulm_card_media_player_enable_volume_slider: true
+                  ulm_card_media_player_enable_volume_buttons: true
+                  ulm_card_media_player_collapsible: true
+                  ulm_card_media_player_more_info: true
+                  ulm_card_media_player_power_button: true
+          exclude:
+            - entity_id: "*cast*"
+
+      - type: "custom:auto-entities"
+        card_param: "cards"
+        card:
+          type: "vertical-stack"
+          title: "Playing Audio Media"
         filter:
           include:
             - group: "group.all_audio_class_media_player"
               options:
+                card: []
                 type: "custom:button-card"
                 template: "card_media_player"
                 entity: "this.entity_id"
@@ -98,86 +99,9 @@ views:
                   ulm_card_media_player_collapsible: true
                   ulm_card_media_player_more_info: true
                   ulm_card_media_player_power_button: true
-                  # ulm_card_media_player_color: "rgba(var(--color-red),1)"
-                  # ulm_card_media_player_force_background_color: true
+        sort:
+          method: "state"
 
-      - type: "custom:auto-entities"
-        card_param: "cards"
-        card:
-          type: "vertical-stack"
-        filter:
-          include:
-            - group: "group.all_video_class_media_player"
-              options:
-                type: "custom:button-card"
-                template: "card_media_player"
-                entity: "this.entity_id"
-                variables:
-                  ulm_card_media_player_enable_art: true
-                  ulm_card_media_player_enable_controls: true
-                  ulm_card_media_player_enable_volume_slider: true
-                  ulm_card_media_player_enable_volume_buttons: true
-                  ulm_card_media_player_collapsible: true
-                  ulm_card_media_player_more_info: true
-                  ulm_card_media_player_power_button: true
-                  ulm_card_media_player_color: "rgba(var(--color-red),1)"
-                  ulm_card_media_player_force_background_color: true
-      # - type: "custom:auto-entities"
-      #   card:
-      #     type: "picture-elements"
-      #     title: "Playing Media"
-      #   filter:
-      #     template: >-
-      #       {% for media_picture in states.media_player|selectattr('attributes.entity_picture','defined') %}
-      #         {{{
-      #           'type': 'picture',
-      #           'image': state_attr(media_picture.entity_id, 'entity_picture'),
-      #           'alt_text': state_attr(media_picture.entity_id, 'friendly_name'),
-      #           'tap_action': {
-      #             'action': 'more-info'
-      #           }
-      #         }}}
-      #       {% endfor %}
-
-
-        # filter:
-        #   template: >-
-        #     {{states.media_player|selectattr('attributes.entity_picture','defined')|map(attribute='entity_id')|list}}
-        #   options:
-        #     image: >-
-        #       {{this.entity_id.attributes.entity_picture}}
-        #     alt_text: >-
-        #       {{this.entity_id.attributes.friendly_name}}
-        #     tap_action:
-        #       action: "more-info"
-
-      # - type: "picture"
-      #   image: "/api/media_player_proxy/media_player.android_tv_192_168_20_47?token=350852aa5ab0056f2703eb398b3745f43a7d2377e839da659e46df2d52099b48"   # c1ec3e10eb09915f4cf8b2ac0e37336e9c1a43dc3070d76afd0a16161749b58c"
-      #   tap_action:
-      #     action: "navigate"
-      #     navigation_path: "/lovelace/home"
-      # - type: "picture"
-      #   image: "/api/media_player_proxy/media_player.amazon_firestick_kitchen?token=10ff3e573d69f7703248761d4abab2f79edcfede6f00320d7beffc00c46b08d3"
-      #   tap_action:
-      #     action: "navigate"
-      #     navigation_path: "/lovelace/home"
-      # - type: "picture"
-      #   image: "/api/media_player_proxy/media_player.amazon_firestick_bed_a?token=64e85c6087cb7d1fae64e3e043a37978a124910ae57ad52cfc447ef9324ea5d6"
-      #   tap_action:
-      #     action: "navigate"
-      #     navigation_path: "/lovelace/home"
-
-      # - type: "picture"
-      #   image: "/api/media_player_proxy/media_player.kitchen_echo_plus?token=22b935a9a568c5cde59a81e0271861aeb27271af4935dc7e588562cdd3409f8f"
-      #   tap_action:
-      #     action: "navigate"
-      #     navigation_path: "/lovelace/home"
-
-# {{states.media_player
-#   | selectattr('attributes.entity_picture', 'defined')
-#   | map(attribute='attributes.entity_picture')
-#   | list
-# }}
 
   # - title: "Overview"
   #   icon: "mdi:devices"
