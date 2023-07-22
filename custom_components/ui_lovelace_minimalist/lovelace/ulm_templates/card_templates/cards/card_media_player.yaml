@@ -203,48 +203,54 @@ card_media_player:
                 [[[
                   var icon = entity.attributes.icon || "mdi:speaker";
                   if(entity.attributes.app_name){
-                    var app = entity.attributes.app_name.toLowerCase().replace(/ /g, '').replace(/./g, '');
+                    var app = entity.attributes.app_name.toLowerCase().replace(/ |-|_|\./gi, "");
                     var icon = {
-                      "spotify": "[[['si:spotify' ? 'si:spotify' : 'mdi:spotify']]]",
-                      "googlepodcasts": "[[['si:googlepodcasts' ? 'si:googlepodcasts' : 'mdi:google-podcast']]]",
-                      "googleplay": "[[['si:googleplay' ? 'si:googleplay' : 'mdi:television-play']]]",
-                      "google": "[[['si:google' ? 'si:google' : 'mdi:television-play']]]",
-                      "youtubemusic": "[[['si:youtubemusic' ? 'si:youtubemusic' : 'mdi:youtube']]]",
-                      "youtube": "[[['si:youtube' ? 'si:youtube' : 'mdi:youtube']]]",
-                      "applepodcasts": "[[['si:applepodcasts' ? 'si:applepodcasts' : 'mdi:television-play']]]",
-                      "applemusic": "[[['si:applemusic' ? 'si:applemusic' : 'mdi:television-play']]]",
-                      "appletv": "[[['si:appletv' ? 'si:appletv' : 'mdi:television-play']]]",
-                      "apple": "[[['si:apple' ? 'si:apple' : 'mdi:television-play']]]",
-                      "amazon": "[[['si:prime' ? 'si:prime' : 'mdi:music-circle']]]",
-                      "prime": "[[['si:prime' ? 'si:prime' : 'mdi:music-circle']]]",
-                      "plex": "[[['si:plex' ? 'si:plex' : 'mdi:plex']]]",
-                      "soundcloud": "[[['si:soundcloud' ? 'si:soundcloud' : 'mdi:soundcloud']]]",
+                      "spotify": "si:spotify",
+                      "googlepodcasts": "si:googlepodcasts",
+                      "googleplay": "si:googleplay",
+                      "google": "si:google",
+                      "youtubemusic": "si:youtubemusic",
+                      "youtube": "si:youtube",
+                      "applepodcasts": "si:applepodcasts",
+                      "applemusic": "si:applemusic",
+                      "appletv": "si:appletv",
+                      "apple": "si:apple",
+                      "amazon": "si:prime",
+                      "prime": "si:prime",
+                      "plex": "si:plex",
+                      "soundcloud": "si:soundcloud",
                       "otomusic": "mdi:music-circle",
-                      "pandora": "[[['si:pandora' ? 'si:pandora' : 'mdi:pandora']]]",
-                      "netflix": "[[['si:netflix' ? 'si:netflix' : 'mdi:netflix']]]",
-                      "hulu": "[[['si:hulu' ? 'si:hulu" :"mdi:hulu']]]",
+                      "pandora": "si:pandora",
+                      "netflix": "si:netflix",
+                      "hulu": "si:hulu",
                       "bluetoothaudio": "mdi:bluetooth",
-                      "iplayer": "[[['si:bbciplayer' ? 'si:bbciplayer' : 'mdi:television-play']]]",
-                      "crunchyroll": "[[['si:crunchyroll' ? 'si:crunchyroll' : 'mdi:television-play']]]",
-                      "deezer": "[[['si:deezer' ? 'si:deezer' : 'mdi:television-play']]]",
-                      "ubiquiti": "[[['si:ubiquiti' ? 'si:ubiquiti' : 'mdi:television-play']]]",
-                      "pluralsight": "[[['si:pluralsight' ? 'si:pluralsight' : 'mdi:television-play']]]",
-                      "itv": "[[['si:itvx' ? 'si:itvx' : 'mdi:television-play']]]",
-                      "ted": "[[['si:ted' ? 'si:ted' : 'mdi:television-play']]]",
-                      "vlcmediaplayer": "[[['si:vlcmediaplayer' ? 'si:vlcmediaplayer' : 'mdi:television-play']]]",
-                      "now": "[[['si:now' ? 'si:now' : 'mdi:television-play']]]",
-                      "disney": "[[["phu:disney-plus" ? "phu:disney-plus' : 'mdi:television-play']]]",
-                      "twitch": "[[['si:twitch' ? 'si:twitch' : 'mdi:television-play']]]",
+                      "bbciplayer": "si:bbciplayer",
+                      "crunchyroll": "si:crunchyroll",
+                      "deezer": "si:deezer",
+                      "ubiquiti": "si:ubiquiti",
+                      "unifi": "si:ubiquiti",
+                      "jellyfin": "si:jellyfin",
+                      "tunein": "si:tunein",
+                      "pluralsight": "si:pluralsight",
+                      "udemy": "si:udemy",
+                      "vimeo": "si:vimeo",
+                      "steam": "si:steam",
+                      "itv": "si:itvx",
+                      "ted": "si:ted",
+                      "videolan": "si:vlcmediaplayer",
+                      "vlc": "si:vlcmediaplayer",
+                      "now": "si:now",
+                      "disney": "phu:disney-plus",
+                      "twitch": "si:twitch"
                     }
                     var obj = JSON.parse(JSON.stringify(icon));
                     for (var key in obj) {
                       if (app.includes(key)) {
                         return obj[key];
-                      } else {
-                        return variables.ulm_card_media_player_icon;
+                      }
                     }
                   }
-                  //return variables.ulm_card_media_player_icon || icon[app];
+                  return variables.ulm_card_media_player_icon;
                 ]]]
               styles:
                 icon:
