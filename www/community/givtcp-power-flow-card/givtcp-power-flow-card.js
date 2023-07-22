@@ -1251,7 +1251,9 @@ const zi = (e) => e.includes("."), C = () => Mi(p(), "entity ID (domain.entity)"
       selector: {
         entity: {
           multiple: !0,
-          include_entities: t.filter((s) => e.detail_entities.indexOf(s) === -1)
+          include_entities: t.filter(
+            (s) => e.detail_entities ? e.detail_entities.indexOf(s) === -1 : !0
+          )
         }
       }
     }
@@ -1667,14 +1669,15 @@ let Ft = class extends T {
     return this;
   }
   render() {
+    var e;
     return _`<div class="gtpc-details">
-			${this.entities.map(
-      (e) => {
-        var t, i;
-        return _`<div class="gtpc-detail" data-entity-id="${e == null ? void 0 : e.entity_id}">
-					<div class="gtpc-detail-title">${this.formatEntityName((t = e == null ? void 0 : e.attributes) == null ? void 0 : t.friendly_name)}</div>
-					<state-badge .stateObj=${e} .stateColor=${!0}></state-badge>
-					<div class="gtpc-detail-state">${e == null ? void 0 : e.state} ${(i = e == null ? void 0 : e.attributes) == null ? void 0 : i.unit_of_measurement}</div>
+			${(e = this.entities) == null ? void 0 : e.map(
+      (t) => {
+        var i, s;
+        return _`<div class="gtpc-detail" data-entity-id="${t == null ? void 0 : t.entity_id}">
+					<div class="gtpc-detail-title">${this.formatEntityName((i = t == null ? void 0 : t.attributes) == null ? void 0 : i.friendly_name)}</div>
+					<state-badge .stateObj=${t} .stateColor=${!0}></state-badge>
+					<div class="gtpc-detail-state">${t == null ? void 0 : t.state} ${(s = t == null ? void 0 : t.attributes) == null ? void 0 : s.unit_of_measurement}</div>
 				</div>`;
       }
     )}
@@ -2312,7 +2315,8 @@ let rt = class extends T {
     return ((e = this._config) == null ? void 0 : e.details_enabled) === void 0 ? Ce : (t = this._config) == null ? void 0 : t.details_enabled;
   }
   get _detailEntities() {
-    return this._detailsEnabled ? this._config.detail_entities.map((e) => this.hass.states[e]) : [];
+    var e, t;
+    return this._detailsEnabled ? (t = (e = this._config) == null ? void 0 : e.detail_entities) == null ? void 0 : t.map((i) => this.hass.states[i]) : [];
   }
   get _epsTotal() {
     return this._inverterName && this._epsEnabled ? this._inverterName.reduce(

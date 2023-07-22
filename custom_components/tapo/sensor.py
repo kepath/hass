@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Union, cast
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
@@ -79,6 +80,8 @@ def _setup_from_coordinator(
 
 
 class TapoSensor(BaseTapoEntity[Any], SensorEntity):
+    _attr_has_entity_name = True
+
     def __init__(
         self,
         coordinator: TapoCoordinator[Any],
@@ -87,6 +90,9 @@ class TapoSensor(BaseTapoEntity[Any], SensorEntity):
         super().__init__(coordinator)
         self._sensor_source = sensor_source
         self._sensor_config = self._sensor_source.get_config()
+        self._attr_entity_category = (
+            EntityCategory.DIAGNOSTIC if self._sensor_config.is_diagnostic else None
+        )
 
     @property
     def unique_id(self):
@@ -94,7 +100,7 @@ class TapoSensor(BaseTapoEntity[Any], SensorEntity):
 
     @property
     def name(self):
-        return super().name + " " + self._sensor_config.name
+        return self._sensor_config.name.strip().title()
 
     @property
     def device_class(self) -> Optional[str]:
