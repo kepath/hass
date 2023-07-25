@@ -1,0 +1,67 @@
+---
+chip_weather_with_long_date_with_dayand_time:
+  template:
+    - "chips"
+    - "ulm_actions_card"
+  variables:
+    ulm_card_weather_enable_popup: false
+    ulm_language: >
+      [[[
+        return hass["language"];
+      ]]]
+    ulm_chip_temperature_weather: >
+      [[[
+        return variables.ulm_chip_temperature_weather;
+      ]]]
+  triggers_update: "all"
+  entity: "[[[ return variables.ulm_chip_temperature_weather ]]]"
+  tap_action:
+    action: "more-info"
+  label: |
+    [[[
+      var locale = variables.ulm_language;
+      let dt = new Intl.DateTimeFormat(locale , {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        weekday: "short",
+        hour12: false
+      });
+      let formatted_date = dt.format(Date.now())
+      //return formatted_date;
+      var state = states[variables.ulm_chip_temperature_weather].state;
+      var icon = {
+        "clear-night": "🌙",
+        "cloudy": "☁️",
+        "exceptional": "🌞",
+        "fog": "🌫️",
+        "hail": "⛈️",
+        "lightning": "⚡",
+        "lightning-rainy": "⛈️",
+        "partlycloudy": "⛅",
+        "pouring": "🌧️",
+        "rainy": "💧",
+        "snowy": "❄️",
+        "snowy-rainy": "🌨️",
+        "sunny": "☀️",
+        "windy": "🌪️",
+        "default": "🌡️"
+        }
+      function convertTemperature(temp) {
+        if (parseFloat(temp) == temp && Math.floor(temp) != temp) {
+            return parseFloat(temp).toFixed(1);
+        }
+        return temp;
+      }
+      var outside_temp = states[variables.ulm_chip_temperature_outside].state;
+      //var inside_temp = null;
+      //if (variables.ulm_chip_temperature_inside) {
+      //  inside_temp = states[variables.ulm_chip_temperature_inside].state;
+      //}
+      var label = formatted_date + "&nbsp;&nbsp;" + (icon[state] || icon["default"]) + "&nbsp;" + convertTemperature(outside_temp) + "&#8451;";
+      //if (inside_temp) {
+      //  label = label + " / " + convertTemperature(inside_temp) + "°";
+      //}
+      return label;
+    ]]]

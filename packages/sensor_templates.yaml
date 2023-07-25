@@ -44,25 +44,6 @@ template:
                 area_name(area) | map('lower') | map('replace', ':', '') | map('replace', ',', '') | map('replace', ' ', '_') | join
               ]}}
             {%- endfor %}
-          # hacs_update_entity_list: "{{states.update | selectattr('attributes.supported_features', 'eq', 21) | map(attribute='entity_id') | list}}"
-          # area_id_list: "{{states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_id') | unique | reject('none') | list}}"
-          # area_name_list: "{{states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_name') | unique | reject('none') | list}}"
-          # area_name_escaped_list: >
-          #   {{
-          #     states | selectattr('attributes.device_class', 'defined') | map(attribute='entity_id') | sort | map('area_name') | unique | reject('none') | map('lower') | map('replace', ':', '') | map('replace', ',', '') | map('replace', ' ', '_') | list
-          #   }}
-          # indexes for the areas should match
-
-      # - unique_id: "update_attributes_template_generated"
-      #   name: "Update Entity Attributes"
-      #   state: "{{states.update | count}}"
-      #   attributes:
-      #     entity_id_list: "{{states.update | map(attribute='entity_id') | sort | list}}"
-      #     release_url_list: "{{states.update | map(attribute='entity_id') | sort | map('state_attr', 'release_url') | list}}"
-      #     name_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'name') | list}}"
-      #     model_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'model') | list}}"
-      #     manufacturer_list: "{{states.update | map(attribute='entity_id') | sort | map('device_attr', 'manufacturer') | list}}"
-
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"

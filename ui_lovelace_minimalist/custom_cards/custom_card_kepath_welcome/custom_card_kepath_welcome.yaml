@@ -109,27 +109,10 @@ card_kepath_welcome:
             - box-shadow: "none"
             - padding: "4px"
             - margin-left: "relative"
+            - margin-bottom: "4px"
             - cursor: "default"
             - "--mdc-ripple-press-opacity": 0   # prevent click animation
     item2:
-      card:
-        type: "custom:button-card"
-        show_icon: false
-        show_label: false
-        show_name: false
-        show_entity_picture: false
-        styles:
-          grid:
-            - grid-template-areas: "'i n' 'i l'"
-            - grid-template-columns: "min-content auto"
-            - grid-template-rows: "min-content min-content"
-            - text-align: "start"
-          card:
-            - box-shadow: "none"
-            - padding-bottom: "8px"
-            - cursor: "default"
-            - "--mdc-ripple-press-opacity": 0   # prevent click animation
-    item3:
       card:
         type: "custom:button-card"
         template: "card_kepath_welcome_nav"
@@ -146,7 +129,7 @@ card_kepath_welcome:
           entity_3: "[[[ return variables.entity_3 ]]]"
           entity_4: "[[[ return variables.entity_4 ]]]"
           entity_5: "[[[ return variables.entity_5 ]]]"
-    item4:
+    item3:
       card:
         type: "custom:button-card"
         template: "card_kepath_welcome_nav"
@@ -401,7 +384,7 @@ card_kepath_welcome_topbar:
   styles:
     grid:
       - grid-template-areas: "'item1 item2 item3 item4'"
-      - grid-template-columns: "4fr 4fr 1fr 1fr"
+      - grid-template-columns: "7fr 1fr 1fr 1fr"
       - grid-template-rows: "min-content"
     card:
       - border-radius: "var(--border-radius)"
@@ -413,22 +396,7 @@ card_kepath_welcome_topbar:
     item1:
       card:
         type: "custom:button-card"
-        template: "chip_short_date_with_day"
-        styles:
-          card:
-            - box-shadow: >
-                [[[
-                  if (hass.themes.darkMode){
-                    return "0px 2px 4px 0px rgba(0,0,0,0.80)";
-                  } else {
-                    return "var(--box-shadow)";
-                  }
-                ]]]
-            - "--mdc-ripple-press-opacity": 0.12    # allow click animation
-    item2:
-      card:
-        type: "custom:button-card"
-        template: "chip_temperature"
+        template: "chip_weather_with_long_date_with_dayand_time"
         variables:
           ulm_chip_temperature_outside: "[[[ return variables.ulm_chip_temperature_outside]]]"
           ulm_chip_temperature_inside: "[[[ return variables.ulm_chip_temperature_inside]]]"
@@ -436,9 +404,6 @@ card_kepath_welcome_topbar:
         tap_action:
           action: "more-info"
           entity: "[[[ return variables.ulm_chip_temperature_weather]]]"
-        hold_action:
-          action: "navigate"
-          navigation_path: "/lovelace-minimalist-climate/1"
         styles:
           card:
             - box-shadow: >
@@ -450,29 +415,30 @@ card_kepath_welcome_topbar:
                   }
                 ]]]
             - "--mdc-ripple-press-opacity": 0.12    # allow click animation
-    # item3:
-    #   card:
-    #     type: "custom:button-card"
-    #     template: "chip_mdi_icon_only"
-    #     variables:
-    #       ulm_chip_mdi_icon_only_icon: "mdi:chip"
-    #     tap_action:
-    #       action: "navigate"
-    #       navigation_path: "/5c53de3b_esphome"
-    #     styles:
-    #       card:
-    #         - align-self: "end"
-    #         - margin-right: "12px"
-    #         - padding-right: "5px"
-    #         - box-shadow: >
-    #             [[[
-    #               if (hass.themes.darkMode){
-    #                 return "0px 2px 4px 0px rgba(0,0,0,0.80)";
-    #               } else {
-    #                 return "var(--box-shadow)";
-    #               }
-    #             ]]]
-    #         - "--mdc-ripple-press-opacity": 0.12    # allow click animation
+
+    item2:
+      card:
+        type: "custom:button-card"
+        template: "chip_mdi_icon_only"
+        variables:
+          ulm_chip_mdi_icon_only_icon: "mdi:puzzle"
+        tap_action:
+          action: "navigate"
+          navigation_path: "/hassio/dashboard"
+        styles:
+          card:
+            - align-self: "end"
+            - margin-right: "12px"
+            - padding-right: "5px"
+            - box-shadow: >
+                [[[
+                  if (hass.themes.darkMode){
+                    return "0px 2px 4px 0px rgba(0,0,0,0.80)";
+                  } else {
+                    return "var(--box-shadow)";
+                  }
+                ]]]
+            - "--mdc-ripple-press-opacity": 0.12    # allow click animation
     item3:
       card:
         type: "custom:button-card"
