@@ -202,39 +202,15 @@ card_kepath_floorplan_camera:
   icon: "[[[ return variables.ulm_card_kepath_floorplan_camera_icon ]]]"
   label: >
     [[[
-      var milliseconds = 0
-      var returnText = "";
-      if (variables?.ulm_card_kepath_floorplan_camera_last_activity) {
-        var milliseconds = Math.abs(new Date() - new Date(states[variables.ulm_card_kepath_floorplan_camera_last_activity].state));
-      } else {
-        var milliseconds = Math.abs(new Date() - new Date(states[entity.entity_id].last_changed));
+      var relativeDate = "unknown";
+      if(variables?.ulm_card_kepath_floorplan_camera_last_activity_entity) {
+        if(variables?.ulm_card_kepath_floorplan_camera_last_activity_attribute) {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_camera_last_activity_entity].attributes[variables?.ulm_card_kepath_floorplan_camera_last_activity_attribute] ? states[variables.ulm_card_kepath_floorplan_camera_last_activity_entity].attributes[variables.ulm_card_kepath_floorplan_camera_last_activity_attribute] : "unknown"
+        } else {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_camera_last_activity_entity].state ? states[variables.ulm_card_kepath_floorplan_camera_last_activity_entity].state : "unknown"
+        }
       }
-      if (!isNaN(milliseconds) && milliseconds !== undefined) {
-        var day, hour, minute, seconds;
-        seconds = Math.floor(milliseconds / 1000);
-        minute = Math.floor(seconds / 60);
-        seconds = seconds % 60;
-        hour = Math.floor(minute / 60);
-        minute = minute % 60;
-        day = Math.floor(hour / 24);
-        hour = hour % 24;
-        if (!isNaN(day) && day !== undefined) {
-          if (day > 0) {
-            returnText += day + "d "
-          }
-        }
-        if (!isNaN(hour) && hour !== undefined) {
-          if (hour > 0) {
-            returnText += hour + "h "
-          }
-        }
-        if (!isNaN(minute) && minute !== undefined) {
-          returnText += minute + "m"
-        }
-      } else {
-        returnText = "unknown";
-      }
-      return returnText;
+      return relativeDate
     ]]]
   styles:
     icon:
@@ -313,39 +289,15 @@ card_kepath_floorplan_door:
     ]]]
   label: >
     [[[
-      var milliseconds = 0
-      var returnText = "";
-      if (variables?.ulm_card_kepath_floorplan_door_last_opened) {
-        var milliseconds = Math.abs(new Date() - new Date(states[variables.ulm_card_kepath_floorplan_door_last_opened].state));
-      } else {
-        var milliseconds = Math.abs(new Date() - new Date(states[entity.entity_id].last_changed));
+      var relativeDate = "unknown";
+      if(variables?.ulm_card_kepath_floorplan_door_last_opened_entity) {
+        if(variables?.ulm_card_kepath_floorplan_door_last_opened_attribute) {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_door_last_opened_entity].attributes[variables?.ulm_card_kepath_floorplan_door_last_opened_attribute] ? states[variables.ulm_card_kepath_floorplan_door_last_opened_entity].attributes[variables.ulm_card_kepath_floorplan_door_last_opened_attribute] : "unknown"
+        } else {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_door_last_opened_entity].state ? states[variables.ulm_card_kepath_floorplan_door_last_opened_entity].state : "unknown"
+        }
       }
-      if (!isNaN(milliseconds) && milliseconds !== undefined) {
-        var day, hour, minute, seconds;
-        seconds = Math.floor(milliseconds / 1000);
-        minute = Math.floor(seconds / 60);
-        seconds = seconds % 60;
-        hour = Math.floor(minute / 60);
-        minute = minute % 60;
-        day = Math.floor(hour / 24);
-        hour = hour % 24;
-        if (!isNaN(day) && day !== undefined) {
-          if (day > 0) {
-            returnText += day + "d "
-          }
-        }
-        if (!isNaN(hour) && hour !== undefined) {
-          if (hour > 0) {
-            returnText += hour + "h "
-          }
-        }
-        if (!isNaN(minute) && minute !== undefined) {
-          returnText += minute + "m"
-        }
-      } else {
-        returnText = "unknown";
-      }
-      return returnText;
+      return relativeDate
     ]]]
   styles:
     icon:
@@ -403,39 +355,15 @@ card_kepath_floorplan_nest_protect:
   icon: "mdi:smoke-detector-variant"
   label: >
     [[[
-      var milliseconds = 0
-      var returnText = "";
-      if (variables?.ulm_card_kepath_floorplan_nest_protect_last_activity) {
-        var milliseconds = Math.abs(new Date() - new Date(states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity].state));
-      } else {
-        var milliseconds = Math.abs(new Date() - new Date(states[entity.entity_id].last_changed));
+      var relativeDate = "unknown";
+      if(variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity) {
+        if(variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute) {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].attributes[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute] ? states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].attributes[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute] : "unknown"
+        } else {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state ? states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state : "unknown"
+        }
       }
-      if (!isNaN(milliseconds) && milliseconds !== undefined) {
-        var day, hour, minute, seconds;
-        seconds = Math.floor(milliseconds / 1000);
-        minute = Math.floor(seconds / 60);
-        seconds = seconds % 60;
-        hour = Math.floor(minute / 60);
-        minute = minute % 60;
-        day = Math.floor(hour / 24);
-        hour = hour % 24;
-        if (!isNaN(day) && day !== undefined) {
-          if (day > 0) {
-            returnText += day + "d "
-          }
-        }
-        if (!isNaN(hour) && hour !== undefined) {
-          if (hour > 0) {
-            returnText += hour + "h "
-          }
-        }
-        if (!isNaN(minute) && minute !== undefined) {
-          returnText += minute + "m"
-        }
-      } else {
-        returnText = "unknown";
-      }
-      return returnText;
+      return relativeDate
     ]]]
   styles:
     icon:
@@ -933,3 +861,76 @@ card_kepath_floorplan_network_item:
           - background-color: "rgba(130, 130, 130, 0.5)"
   tap_action:
     action: "more-info"
+
+
+card_kepath_floorplan_lock:
+  show_icon: true
+  show_label: true
+  show_name: false
+  icon: >
+    [[[
+      var doorIcon = "mdi:door";
+      if (variables?.ulm_card_kepath_floorplan_door_closed_icon) {
+        doorIcon = variables.ulm_card_kepath_floorplan_door_closed_icon;
+      }
+      return doorIcon;
+    ]]]
+  label: >
+    [[[
+      var relativeDate = "unknown";
+      if(variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity) {
+        if(variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute) {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].attributes[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute] ? states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].attributes[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute] : "unknown"
+        } else {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state ? states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state : "unknown"
+        }
+      }
+      return relativeDate
+    ]]]
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+      - color: "rgba(221, 221, 221, 1.0)"
+    img_cell:
+      - border-radius: "50%"
+      - height: "32px"
+      - width: "32px"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+    label:
+      - justify-self: "start"
+      - align-self: "start"
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0 12px 0 12px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - color: "rgba(221, 221, 221, 0.4)"
+  tap_action:
+    action: "more-info"
+  state:
+    - value: "on"
+      icon: >
+        [[[
+          var doorIcon = "mdi:door-open";
+          if (variables?.ulm_card_kepath_floorplan_door_open_icon) {
+            doorIcon = variables.ulm_card_kepath_floorplan_door_open_icon;
+          }
+          return doorIcon;
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
+    - operator: "template"
+      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
+      styles:
+        icon:
+          - color: "rgba(var(--color-red), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"

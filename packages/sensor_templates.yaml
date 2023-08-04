@@ -431,9 +431,66 @@ template:
           installed_version: "{{ state_attr('update.vscode_remote_update', 'installed_version') }}"
           latest_version: "{{ state_attr('update.vscode_remote_update', 'latest_version') }}"
 
-      - unique_id: "template_date_long"
-        name: "Date and Day of week"
+      - unique_id: "floorplan_dates_template_generated"
+        name: "Floorplan dates template generated"
+        icon: >
+          {% from 'easy_time.jinja' import clock_icon %}
+          {{ clock_icon() }}
         state: >
-          {% set months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] %}
-          {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
-          {{ months[now().month-1] }}.{{ now().day }}th. {{ days[now().weekday()] }}
+          {% from 'easy_time.jinja' import clock %}
+          {{ clock() }}
+        attributes:
+          front_door_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.front_door_last_opened') }}
+          front_door_last_locked: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.front_door_last_locked') }}
+          back_door_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.back_door_last_opened') }}
+          patio_door1_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.patio_door1_last_opened') }}
+          patio_door2_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.patio_door2_last_opened') }}
+          garage_door_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.garage_door_last_opened') }}
+          loft_ladder_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.loft_ladder_last_opened') }}
+          nest_protect_bottom_floor_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.nest_protect_bottom_floor_last_activity') }}
+          nest_protect_middle_floor_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.nest_protect_middle_floor_last_activity') }}
+          nest_protect_top_floor_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.nest_protect_top_floor_last_activity') }}
+          motion_sensor_front_door_stairs_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.motion_sensor_front_door_stairs_last_activity') }}
+          motion_sensor_bed_e_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('input_datetime.motion_sensor_bed_e_last_activity') }}
+          back_g3_flex_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('sensor.back_g3_flex_last_motion_detected') }}
+          bed_c_g3_instant_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('sensor.bed_c_g3_instant_last_motion_detected') }}
+          bottom_hallway_g3_instant_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('sensor.bottom_hallway_g3_instant_last_motion_detected') }}
+          front_g3_flex_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('sensor.front_g3_flex_last_motion_detected') }}
+          kitchen_g3_instant_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('sensor.kitchen_g3_instant_last_motion_detected') }}
+          middle_hallway_g3_flex_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected') }}
