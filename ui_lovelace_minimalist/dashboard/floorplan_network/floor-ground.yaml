@@ -2,7 +2,6 @@
 type: "picture-elements"
 image: "local/floorplan/ground/dark.png"
 elements:
-
   ############## COMMON ELEMENTS ###############################
 
   #### IMAGES ####
@@ -143,6 +142,13 @@ elements:
       left: "30%"
       top: "50%"
       color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.lounge_lamp"
+    style:
+      left: "30%"
+      top: "60%"
+      color: "rgba(100, 100, 100, 0.0)"
   # KITCHEN
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
@@ -161,7 +167,7 @@ elements:
   # BACK DOOR
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
-    entity: "light.kitchen_utility_light_light_2"
+    entity: "light.back_door_smartbulb"
     style:
       left: "49%"
       top: "16%"
@@ -177,7 +183,7 @@ elements:
   # GARAGE
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_light"
-    entity: "light.zigbee_bulb_garage"
+    entity: "light.zigbee_bulb_garage_light"
     style:
       left: "92%"
       top: "10%"
@@ -195,6 +201,17 @@ elements:
       left: "59%"
       top: "81%"
       color: "rgba(100, 100, 100, 0.0)"
+  # KITCHEN FIRESTICK
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_outlet_switch_amazon_firestick_kitchen_switch"
+    variables:
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+    style:
+      left: "39%"
+      top: "61%"
+      color: "rgba(100, 100, 100, 0.0)"
   # FRIDGE
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
@@ -211,12 +228,12 @@ elements:
   # DISHWASHER
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
-    entity: "switch.zigbee_energy_outlet_switch_dishwasher_switch"
+    entity: "switch.zigbee_energy_monitor_outlet_switch_dishwasher_switch"
     variables:
       ulm_card_kepath_floorplan_item_power_usage_denotes_on: true
-      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_energy_outlet_switch_dishwasher_switch_power"
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_summation_delivered"
       ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
-      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.zigbee_energy_outlet_switch_dishwasher_switch_power"
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_summation_delivered"
     style:
       left: "64%"
       top: "32%"
@@ -227,7 +244,7 @@ elements:
     entity: "switch.microwave_plug_kitchen"
     variables:
       ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
-      # ulm_card_kepath_floorplan_item_binary_device_power: "sensor.microwave_plug_kitchen_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.microwave_plug_kitchen_current_power"
       ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
       ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.microwave_plug_kitchen_current_power"
     style:
@@ -240,7 +257,7 @@ elements:
     entity: "switch.kettle_plug_kitchen"
     variables:
       ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
-      # ulm_card_kepath_floorplan_item_binary_device_power: "sensor.kettle_plug_kitchen_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.kettle_plug_kitchen_current_power"
       ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
       ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.kettle_plug_kitchen_current_power"
     style:
@@ -250,12 +267,12 @@ elements:
   # WASHING MACHINE
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
-    entity: "switch.zigbee_energy_outlet_switch_washing_machine_switch"
+    entity: "switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch"
     variables:
       ulm_card_kepath_floorplan_item_power_usage_denotes_on: true
-      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_energy_outlet_switch_washing_machine_switch_power"
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
       ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
-      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.zigbee_energy_outlet_switch_washing_machine_switch_power"
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
     style:
       left: "48%"
       top: "31%"
@@ -272,13 +289,39 @@ elements:
       left: "48%"
       top: "28%"
       color: "rgba(100, 100, 100, 0.0)"
-  # GARAGE
+  # GARAGE POWERLINE
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item_plug"
     entity: "switch.zigbee_outlet_switch_powerline_switch"
     variables:
       ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
       ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+    style:
+      left: "91%"
+      top: "10%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # GARAGE FRIDGE/FREEZER
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.fridge_freezer_plug_garage"
+    variables:
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.fridge_freezer_plug_garage_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.fridge_freezer_plug_garage_current_power"
+    style:
+      left: "93%"
+      top: "10%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # GARAGE CHEST FREEZER
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.chest_freezer_plug_garage"
+    variables:
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.chest_freezer_plug_garage_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.chest_freezer_plug_garage_current_power"
     style:
       left: "95%"
       top: "10%"

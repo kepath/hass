@@ -1,14 +1,3 @@
-- id: '1587503984484'
-  alias: tautulli_webhook
-  description: ''
-  trigger:
-  - platform: webhook
-    webhook_id: call_tautulli_webhook
-  condition: []
-  action:
-  - data_template:
-      message: '{{ trigger.json.text }}'
-    service: persistent_notification.create
 - id: '1609788406791'
   alias: on_turn_off_reciever_turn_on_bed_c_fridge
   description: ''
@@ -82,7 +71,7 @@
   action:
   - type: turn_off
     device_id: fdfca529947f2de73d16ee2ecf6d2d7d
-    entity_id: light.zigbee_bulb_garage
+    entity_id: 90131e8c488eb2eb6c8af71888a51e2b
     domain: light
   mode: single
 - id: '1624743776933'
@@ -91,79 +80,21 @@
   trigger:
   - type: opened
     platform: device
-    device_id: 881230f1ec449fb6ac950426aaa8bf87
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
+    device_id: c433a6de7503fff598e3b00eebd934b8
+    entity_id: 728aecc504877295ccda5a9c04e5f2fa
     domain: binary_sensor
-    id: '263813'
   condition:
   - condition: state
     entity_id: binary_sensor.nighttime
     state: 'on'
+  - condition: time
+    before: '22:00:00'
   action:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
     entity_id: light.hallway_bottom_light_1
     domain: light
   mode: single
-- id: '1631736153340'
-  alias: Back Lights on when Motion Detected
-  description: ''
-  trigger:
-  - type: motion
-    platform: device
-    device_id: a41beba7d038fb84cb5f9b81cfe4d189
-    entity_id: binary_sensor.back_g3_flex_motion
-    domain: binary_sensor
-    id: '351179'
-  condition:
-  - condition: state
-    entity_id: binary_sensor.nighttime
-    state: 'on'
-  action:
-  - type: turn_on
-    device_id: d4aabe0c259eb8f64a5080976888b8a4
-    entity_id: light.tybf82abce93da177c79kymc
-    domain: light
-    brightness_pct: 100
-  - service: automation.trigger
-    target:
-      entity_id: automation.turn_on_garage_light_when_the_garage_door_is_opened
-    data: {}
-  - delay:
-      minutes: 12
-  - service: automation.trigger
-    target:
-      entity_id: automation.turn_back_light_off_if_not_activated_by_script
-    data: {}
-  - service: automation.trigger
-    target:
-      entity_id:
-      - automation.turn_off_garage_light_10_mins_after_garage_door_shut
-    data: {}
-  mode: restart
-- id: '1639348115728'
-  alias: alert_when_doorbell_rung
-  description: Raise an alert for 5 seconds when the doorbell is rung
-  trigger:
-  - platform: state
-    entity_id:
-    - sensor.doorbell_g4_last_doorbell_ring
-  condition: []
-  action:
-  - service: input_boolean.turn_on
-    target:
-      entity_id: input_boolean.doorbell_rung
-    data: {}
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-  - service: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.doorbell_rung
-    data: {}
-  mode: restart
 - id: '1666811718812'
   alias: on_start_create_group.all_fans_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
@@ -324,25 +255,6 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
   mode: single
-- id: '1666812616320'
-  alias: on_start_create_group.all_sensor_domain_entities
-  description: Uses python script create_entity_device_class_group to create an entity
-    group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
-      domain: sensor
-      group_name: all_sensors
-      icon: mdi:shape-plus
-      friendly_name: All sensor domain entities
-      filter_by_device_class: false
-      excluded_entity_groups:
-      - group.globally_excluded_entities
-  mode: single
 - id: '1666817726320'
   alias: on_start_create_group.all_switch_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
@@ -388,27 +300,6 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.zigbee_door_sensor_bed_c_contact
-  mode: single
-- id: '1673132278260'
-  alias: on_start_create_group.all_plug_class_binary_sensors
-  description: Uses python script create_entity_device_class_group to create an entity
-    group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
-      domain: switch
-      group_name: all_plug_class_binary_sensors
-      icon: mdi:power-socket-uk
-      friendly_name: All binary_sensor plug device class group
-      filter_by_device_class: true
-      included_device_classes:
-      - plug
-      excluded_entity_groups:
-      - group.globally_excluded_entities
   mode: single
 - id: '1673133770721'
   alias: on_start_create_group.all_occupancy_class_binary_sensors
@@ -490,8 +381,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: 881230f1ec449fb6ac950426aaa8bf87
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
+    device_id: c433a6de7503fff598e3b00eebd934b8
+    entity_id: 728aecc504877295ccda5a9c04e5f2fa
     domain: binary_sensor
   condition: []
   action:
@@ -509,7 +400,7 @@
   - type: opened
     platform: device
     device_id: 2a98740d417848e05eff1765f30ebaf0
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_5
+    entity_id: 56a14440427f37c45a0e46678b8917e4
     domain: binary_sensor
   condition: []
   action:
@@ -526,7 +417,7 @@
   - type: opened
     platform: device
     device_id: e455b2eeea8937c7ad7cad0320940913
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_6
+    entity_id: 7f001b9228a16c5e6a363d939dbfe37a
     domain: binary_sensor
   condition: []
   action:
@@ -542,8 +433,8 @@
   trigger:
   - type: opened
     platform: device
-    device_id: 881230f1ec449fb6ac950426aaa8bf87
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
+    device_id: c433a6de7503fff598e3b00eebd934b8
+    entity_id: 728aecc504877295ccda5a9c04e5f2fa
     domain: binary_sensor
   condition: []
   action:
@@ -554,10 +445,10 @@
   alias: on_motion_detect_bed_e_sensor_set_input_datetime_timestamp
   description: ''
   trigger:
-  - type: motion
+  - type: occupied
     platform: device
     device_id: 1339055faacbf377e7a94560ac8f8e14
-    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_motion
+    entity_id: f6ecd0133210678842e8cdc6994af6d6
     domain: binary_sensor
   condition: []
   action:
@@ -571,10 +462,10 @@
   alias: on_motion_detect_middle_hallway_sensor_set_input_datetime_timestamp
   description: ''
   trigger:
-  - type: motion
+  - type: occupied
     platform: device
     device_id: 39891a458f21573058c114ca5677be2f
-    entity_id: binary_sensor.lumi_lumi_sensor_motion_aq2_motion_2
+    entity_id: b5e79a8b515c4b4c6aef1adfafefe101
     domain: binary_sensor
   condition: []
   action:
@@ -642,7 +533,7 @@
   - type: opened
     platform: device
     device_id: 27f9fc9f148ec8f120e88e554dba0a91
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_3
+    entity_id: 845b20ea5e2e023865c5a57881b0a35f
     domain: binary_sensor
   condition: []
   action:
@@ -659,7 +550,7 @@
   - type: opened
     platform: device
     device_id: 211dba1149287be886337cf500f2edd9
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_4
+    entity_id: 954826e3d959cb95e1cc0dc512a41443
     domain: binary_sensor
   condition: []
   action:
@@ -676,7 +567,7 @@
   - type: opened
     platform: device
     device_id: b314e734c229fbad47815eead82dd9b8
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_7
+    entity_id: efd5dfdaca447162cd600f01d40afbac
     domain: binary_sensor
   condition: []
   action:
@@ -747,7 +638,7 @@
     domain: light
   mode: single
 - id: '1682193123450'
-  alias: on_sunset_turn_off_all_lights
+  alias: on_sunset_turn_off_bed_a_ensuite_lights
   description: ''
   trigger:
   - platform: sun
@@ -762,14 +653,6 @@
   - type: turn_off
     device_id: 357203618a4ede0384cbc3979a6806b7
     entity_id: light.ensuite_light_light_1
-    domain: light
-  - type: turn_off
-    device_id: 2028999f2f7da1303c521c80b4711c16
-    entity_id: light.bathroom_light_light_1
-    domain: light
-  - type: turn_off
-    device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: light.hallway_bottom_light_1
     domain: light
   mode: single
 - id: '1682263797941'
@@ -1002,4 +885,39 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+  mode: single
+- id: '1690825562134'
+  alias: on_sunset_turn_off_bathroom_bottom_hallway_lights
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 03:16:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 707639a037c05f21cb7ba1e119538bf0
+    entity_id: f9f1b3ba841266cfb507e42035bd3f4c
+    domain: light
+  - type: turn_off
+    device_id: 2028999f2f7da1303c521c80b4711c16
+    entity_id: 13d0278bb9bb4e33ef9c9c9cf8025af6
+    domain: light
+  mode: single
+- id: '1690839144197'
+  alias: on_lock_front_door_set_input_datetime_timestamp
+  description: ''
+  trigger:
+  - platform: device
+    device_id: c433a6de7503fff598e3b00eebd934b8
+    domain: lock
+    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
+    type: locked
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.front_door_last_locked
   mode: single
