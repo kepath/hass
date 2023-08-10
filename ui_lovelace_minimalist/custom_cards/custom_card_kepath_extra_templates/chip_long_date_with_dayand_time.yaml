@@ -1,0 +1,29 @@
+---
+chip_long_date_with_dayand_time:
+  template:
+    - "chips"
+    - "ulm_actions_card"
+  variables:
+    ulm_language: >
+      [[[
+        return hass["language"];
+      ]]]
+  triggers_update: "all"
+  tap_action:
+    action: "none"
+  label: |
+    [[[
+      var locale = variables.ulm_language;
+      let dt = new Intl.DateTimeFormat(locale , {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        weekday: "short",
+        hour12: false
+      });
+      let formatted_date = dt.format(Date.now())
+      //return formatted_date;
+      var label = formatted_date;
+      return label;
+    ]]]

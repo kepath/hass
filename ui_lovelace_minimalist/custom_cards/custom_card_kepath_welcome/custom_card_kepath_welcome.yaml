@@ -383,8 +383,8 @@ card_kepath_welcome_topbar:
   show_name: true
   styles:
     grid:
-      - grid-template-areas: "'item1 item2 item3 item4'"
-      - grid-template-columns: "7fr 1fr 1fr 1fr"
+      - grid-template-areas: "'item1 item2 item3 item4 item5'"
+      - grid-template-columns: "4fr 2fr 1fr 1fr 1fr"
       - grid-template-rows: "min-content"
     card:
       - border-radius: "var(--border-radius)"
@@ -396,7 +396,25 @@ card_kepath_welcome_topbar:
     item1:
       card:
         type: "custom:button-card"
-        template: "chip_weather_with_long_date_with_dayand_time"
+        template: "chip_long_date_with_dayand_time"
+        tap_action:
+          action: "navigate"
+          navigation_path: "/history"
+        styles:
+          card:
+            - box-shadow: >
+                [[[
+                  if (hass.themes.darkMode){
+                    return "0px 2px 4px 0px rgba(0,0,0,0.80)";
+                  } else {
+                    return "var(--box-shadow)";
+                  }
+                ]]]
+            - "--mdc-ripple-press-opacity": 0.12    # allow click animation
+    item2:
+      card:
+        type: "custom:button-card"
+        template: "chip_temperature"
         variables:
           ulm_chip_temperature_outside: "[[[ return variables.ulm_chip_temperature_outside]]]"
           ulm_chip_temperature_inside: "[[[ return variables.ulm_chip_temperature_inside]]]"
@@ -415,8 +433,7 @@ card_kepath_welcome_topbar:
                   }
                 ]]]
             - "--mdc-ripple-press-opacity": 0.12    # allow click animation
-
-    item2:
+    item3:
       card:
         type: "custom:button-card"
         template: "chip_mdi_icon_only"
@@ -439,7 +456,7 @@ card_kepath_welcome_topbar:
                   }
                 ]]]
             - "--mdc-ripple-press-opacity": 0.12    # allow click animation
-    item3:
+    item4:
       card:
         type: "custom:button-card"
         template: "chip_mdi_icon_only"
@@ -462,7 +479,7 @@ card_kepath_welcome_topbar:
                   }
                 ]]]
             - "--mdc-ripple-press-opacity": 0.12    # allow click animation
-    item4:
+    item5:
       card:
         type: "custom:button-card"
         template: "chip_mdi_icon_only"
