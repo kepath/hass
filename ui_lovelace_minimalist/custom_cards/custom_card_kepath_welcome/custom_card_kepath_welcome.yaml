@@ -422,6 +422,12 @@ card_kepath_welcome_topbar:
         tap_action:
           action: "more-info"
           entity: "[[[ return variables.ulm_chip_temperature_weather]]]"
+        hold_action:
+          action: "call-service"
+          service: "homeassistant.reload_config_entry"
+          data: {}
+          target:
+            entity_id: "weather.met_office_banbury"
         styles:
           card:
             - box-shadow: >
