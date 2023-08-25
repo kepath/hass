@@ -222,6 +222,31 @@ views:
                       template:
                         - "custom_card_kepath_binary_sensor_count"
                         - "green_icon_off"
+                        - "blue_icon_on"
+                        - "icon_alternative_off"
+                      entity: "group.all_fans"
+                      icon: "mdi:fan"
+                      name: "Fans"
+                      variables:
+                        ulm_card_kepath_binary_sensor_count_alt_icon: "mdi:fan-off"
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          unavailable:
+                            attribute_name: "fans_unavailable_count"
+                          amount:
+                            attribute_name: "fans_on_count"
+                        ulm_card_kepath_binary_sensor_count_tap_action:
+                          action: "popup"
+                          popup:
+                            title: "fan entities"
+                            # auto_entities:
+                            #   sort_method: "last_changed"
+
+                  item7:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_count"
+                        - "green_icon_off"
                         - "red_icon_on"
                         - "icon_alternative_off"
                       entity: "group.all_safety_class_binary_sensors"
@@ -240,29 +265,28 @@ views:
                             title: "safety entities"
                             auto_entities:
                               sort_method: "last_changed"
-
-                  item7:
-                    card:
-                      type: "custom:button-card"
-                      template:
-                        - "card_notification_script_trigger"
-                        - "green_icon_off"
-                      entity: "input_boolean.away_script_active"
-                      icon: "mdi:home-lock-open"
-                      name: "Passive"
-                      variables:
-                        script_activate:
-                          icon:
-                            mdi: "mdi:home-lock"
-                            color: "red"
-                          name: "Active"
-                          script:
-                            name: "script.lockdown_mode_on"
-                            confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
-                        script_deactivate:
-                          script:
-                            name: "script.lockdown_mode_off"
-                            confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
+                  # item7:
+                  #   card:
+                  #     type: "custom:button-card"
+                  #     template:
+                  #       - "card_notification_script_trigger"
+                  #       - "green_icon_off"
+                  #     entity: "input_boolean.away_script_active"
+                  #     icon: "mdi:home-lock-open"
+                  #     name: "Passive"
+                  #     variables:
+                  #       script_activate:
+                  #         icon:
+                  #           mdi: "mdi:home-lock"
+                  #           color: "red"
+                  #         name: "Active"
+                  #         script:
+                  #           name: "script.lockdown_mode_on"
+                  #           confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
+                  #       script_deactivate:
+                  #         script:
+                  #           name: "script.lockdown_mode_off"
+                  #           confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
 
                   item8:
                     card:

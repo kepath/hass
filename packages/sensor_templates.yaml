@@ -13,6 +13,8 @@ template:
             }}
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          fans_on_count: "{{ expand('group.all_fans') | selectattr('state','eq', 'on') | list | count }}"
+          fans_unavailable_count: "{{ expand('group.all_fans') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           lights_on_count: "{{ expand('group.all_lights') | selectattr('state','eq', 'on') | list | count }}"
           locks_unavailable_count: "{{ expand('group.all_locks') | selectattr('state','in', ['unavailable','unknown','jammed']) | list | count }}"
           locks_unlocked_count: "{{ expand('group.all_locks') | selectattr('state','eq', 'unlocked') | list | count }}"
