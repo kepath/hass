@@ -66,10 +66,13 @@ sensor:
       - "trade_volume_btc"
   - platform: "otp"
     name: "Unifi Auth"
-    token: "AYX2N4SZCPZZVSKXL6JLDEGL7AT3VCM5"
+    token: !secret "unifi_auth_otp"
   - platform: "otp"
     name: "Amazon Auth"
-    token: "5ZFVSQTWOCUJC5S3QPXYZP43K5IB4BVCU5YMLODDCTLFL7TZW3HQ"
+    token: !secret "amazon_auth_otp"
+  - platform: "otp"
+    name: "Github Auth"
+    token: !secret "github_auth_otp"
 
 binary_sensor:
   - platform: "tod"
