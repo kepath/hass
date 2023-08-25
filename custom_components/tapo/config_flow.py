@@ -1,34 +1,33 @@
 """Config flow for tapo integration."""
 import dataclasses
 import logging
-from typing import Any, Optional
+from typing import Any
+from typing import Optional
 
 import aiohttp
-from homeassistant import config_entries, data_entry_flow
+import voluptuous as vol
+from custom_components.tapo.const import CONF_ADVANCED_SETTINGS
+from custom_components.tapo.const import CONF_HOST
+from custom_components.tapo.const import CONF_PASSWORD
+from custom_components.tapo.const import CONF_USERNAME
+from custom_components.tapo.const import DEFAULT_POLLING_RATE_S
+from custom_components.tapo.const import DOMAIN
+from custom_components.tapo.const import STEP_ADVANCED_SETTINGS
+from custom_components.tapo.const import STEP_INIT
+from custom_components.tapo.const import SUPPORTED_HUB_DEVICE_MODEL
+from custom_components.tapo.errors import CannotConnect
+from custom_components.tapo.errors import InvalidAuth
+from custom_components.tapo.errors import InvalidHost
+from custom_components.tapo.helpers import get_short_model
+from homeassistant import config_entries
+from homeassistant import data_entry_flow
 from homeassistant.const import CONF_SCAN_INTERVAL
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from plugp100.api.tapo_client import TapoClient
 from plugp100.responses.device_state import DeviceInfo
-from plugp100.responses.tapo_exception import TapoError, TapoException
-import voluptuous as vol
-
-from custom_components.tapo.const import (
-    CONF_ADVANCED_SETTINGS,
-    CONF_HOST,
-    CONF_PASSWORD,
-    CONF_USERNAME,
-    DEFAULT_POLLING_RATE_S,
-    DOMAIN,
-    STEP_ADVANCED_SETTINGS,
-    STEP_INIT,
-    SUPPORTED_HUB_DEVICE_MODEL,
-)
-from custom_components.tapo.errors import CannotConnect, InvalidAuth, InvalidHost
-from custom_components.tapo.helpers import (
-    get_short_model,
-    value_or_raise,
-)
+from plugp100.responses.tapo_exception import TapoError
+from plugp100.responses.tapo_exception import TapoException
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -94,7 +93,7 @@ class TapoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 if get_short_model(device_data.model) == SUPPORTED_HUB_DEVICE_MODEL:
                     return self.async_create_entry(
-                        title=f"Tapo Hub {device_data.nickname}",
+                        title=f"Tapo Hub {device_data.friendly_name}",
                         data={"is_hub": True, **user_input},
                         options={CONF_SCAN_INTERVAL: DEFAULT_POLLING_RATE_S},
                     )
@@ -103,7 +102,7 @@ class TapoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     return await self.async_step_advanced_config()
                 else:
                     return self.async_create_entry(
-                        title=device_data.nickname,
+                        title=device_data.friendly_name,
                         data=user_input,
                         options={CONF_SCAN_INTERVAL: DEFAULT_POLLING_RATE_S},
                     )
@@ -141,7 +140,7 @@ class TapoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             polling_rate = user_input.get(CONF_SCAN_INTERVAL, DEFAULT_POLLING_RATE_S)
             return self.async_create_entry(
-                title=self.first_step_data.state.nickname,
+                title=self.first_step_data.state.friendly_name,
                 data=self.first_step_data.user_input,
                 options={CONF_SCAN_INTERVAL: polling_rate},
             )
@@ -154,8 +153,10 @@ class TapoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _get_first_data_from_api(self, api: TapoClient) -> DeviceInfo:
         try:
-            return value_or_raise(
-                (await api.get_device_info()).map(lambda x: DeviceInfo(**x))
+            return (
+                (await api.get_device_info())
+                .map(lambda x: DeviceInfo(**x))
+                .get_or_raise()
             )
         except TapoException as error:
             self._raise_from_tapo_exception(error)
@@ -170,10 +171,15 @@ class TapoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             session = async_create_clientsession(self.hass)
             client = TapoClient(
-                user_input[CONF_USERNAME], user_input[CONF_PASSWORD], session
+                user_input[CONF_USERNAME],
+                user_input[CONF_PASSWORD],
+                session,
+                auto_recover_expired_session=True,
             )
-            return value_or_raise(
-                (await client.login(user_input[CONF_HOST])).map(lambda _: client)
+            return (
+                (await client.login(user_input[CONF_HOST]))
+                .map(lambda _: client)
+                .get_or_raise()
             )
         except TapoException as error:
             self._raise_from_tapo_exception(error)
