@@ -154,7 +154,7 @@
       filter_by_device_class: false
   mode: single
 - id: '1666812616938'
-  alias: on_start_create_group.all_updates_domain_entities
+  alias: on_start_create_group.all_update_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
@@ -183,7 +183,7 @@
     data:
       domain: camera
       group_name: all_cameras
-      icon: mdi:camera
+      icon: mdi:camera-off
       friendly_name: All camera domain entities
       filter_by_device_class: false
       excluded_entity_groups:
@@ -312,7 +312,7 @@
     data:
       domain: binary_sensor
       group_name: all_occupancy_class_binary_sensors
-      icon: mdi:human-greeting
+      icon: mdi:cctv
       friendly_name: All binary_sensor occupancy motion device class group
       filter_by_device_class: true
       included_device_classes:
@@ -343,8 +343,9 @@
       filter_by_device_class: true
       included_device_classes:
       - carbon_monoxide
-      - safety
+      - heat
       - problem
+      - safety
       - smoke
       excluded_entity_groups:
       - group.globally_excluded_entities
@@ -761,7 +762,7 @@
       - group.globally_excluded_entities
   mode: single
 - id: '1685624861506'
-  alias: on_start_create_group.all_people_domain_entities
+  alias: on_start_create_group.all_person_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
@@ -771,10 +772,10 @@
   action:
   - service: python_script.create_entity_device_class_group
     data:
-      domain: people
-      group_name: all_people
+      domain: person
+      group_name: all_person
       icon: mdi:account
-      friendly_name: All people domain entities
+      friendly_name: All person domain entities
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
@@ -917,4 +918,171 @@
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.front_door_last_locked
+  mode: single
+- id: '1693773355910'
+  alias: on_start_connectivity
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: binary_sensor
+      group_name: all_connectivity_class_binary_sensors
+      icon: mdi:door
+      friendly_name: All binary_sensor connectivity device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - connectivity
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1693773833620'
+  alias: on_start_create_group.all_plug_class_binary_sensors
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: binary_sensor
+      group_name: all_plug_class_binary_sensors
+      icon: mdi:door
+      friendly_name: All binary_sensor plug device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - plug
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1693773913162'
+  alias: on_start_create_group.all_power_class_binary_sensors
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: binary_sensor
+      group_name: all_power_class_binary_sensors
+      icon: mdi:door
+      friendly_name: All binary_sensor power device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - power
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1693774053685'
+  alias: on_start_create_group.all_running_class_binary_sensors
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: binary_sensor
+      group_name: all_running_class_binary_sensors
+      icon: mdi:server-network-off
+      friendly_name: All binary_sensor running device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - running
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1693774320732'
+  alias: on_start_create_group.all_battery_class_sensors
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_battery_class_sensors
+      icon: mdi:battery-20
+      friendly_name: All sensor battery device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - battery
+      - battery_charging
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1693774604091'
+  alias: on_start_create_group.all_data_class_sensors
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_data_class_sensors
+      icon: mdi:speedometer
+      friendly_name: All sensor data device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - data_rate
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1693775484055'
+  alias: on_start_create_group.all_signal_strength_class_sensors
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_signal_strength_class_sensors
+      icon: mdi:wifi
+      friendly_name: All sensor signal_strength device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - signal_strength
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1693775926514'
+  alias: on_start_create_group.all_device_tracker_domain_entities
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: device_tracker
+      group_name: all_device_trackers
+      icon: mdi:devices
+      friendly_name: All device_tracker domain entities
+      filter_by_device_class: false
+      excluded_entity_groups:
+      - group.globally_excluded_entities
   mode: single

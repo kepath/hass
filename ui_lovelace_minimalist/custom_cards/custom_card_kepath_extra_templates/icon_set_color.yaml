@@ -1,0 +1,89 @@
+---
+icon_set_color:
+  variables:
+    ulm_card_kepath_extra_templates_alternative_state_appearance:
+      default_icon: >
+        [[[
+          var setIcon = "mdi:close-circle";
+          if (entity?.attributes?.icon) {
+            setIcon = entity.attributes.icon;
+          }
+          if (variables?.ulm_card_kepath_extra_templates_alternative_state_appearance?.default_icon) {
+            setIcon = variables.ulm_card_kepath_extra_templates_alternative_state_appearance.default_icon;
+          }
+          return setIcon;
+        ]]]
+      default_color: >
+        [[[
+          var setColor = "grey";
+          const color_options = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink'];
+          if (variables?.ulm_card_kepath_extra_templates_alternative_state_appearance?.default_color) {
+            for (let i = 0; i < color_options.length; i++) {
+              if (color_options[i] == variables.ulm_card_kepath_extra_templates_alternative_state_appearance.default_color) {
+                setColor = color_options[i];
+              }
+            }
+          }
+          return setColor;
+        ]]]
+      triggered_icon: >
+        [[[
+          var setIcon = "mdi:close-circle";
+          if (entity?.attributes?.icon) {
+            setIcon = entity.attributes.icon;
+          }
+          if (variables?.ulm_card_kepath_extra_templates_alternative_state_appearance?.triggered_icon) {
+            setIcon = variables.ulm_card_kepath_extra_templates_alternative_state_appearance.triggered_icon;
+          }
+          return setIcon;
+        ]]]
+      triggered_color: >
+        [[[
+          var defaultColor = "grey";
+          const color_options = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink'];
+          if (variables?.ulm_card_kepath_extra_templates_alternative_state_appearance?.triggered_color) {
+            for (let i = 0; i < color_options.length; i++) {
+              if (color_options[i] == variables.ulm_card_kepath_extra_templates_alternative_state_appearance.triggered_color) {
+                defaultColor = color_options[i];
+              }
+            }
+          }
+          return defaultColor;
+        ]]]
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          return (entity.state == 'on' || entity.state == 'recording' || entity.state == 'idle' || entity.state == 'away' || entity.state == 'idle')
+        ]]]
+      icon: >
+        [[[
+          return variables.ulm_card_kepath_extra_templates_alternative_state_appearance.triggered_icon;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                return `rgba(var(--color-${variables.ulm_card_kepath_extra_templates_alternative_state_appearance.triggered_color}),1)`;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                return `rgba(var(--color-${variables.ulm_card_kepath_extra_templates_alternative_state_appearance.triggered_color}), 0.2)`;
+              ]]]
+    - operator: "default"
+      icon: >
+        [[[
+          return variables.ulm_card_kepath_extra_templates_alternative_state_appearance.default_icon;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                return `rgba(var(--color-${variables.ulm_card_kepath_extra_templates_alternative_state_appearance.default_color}),1)`;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                return `rgba(var(--color-${variables.ulm_card_kepath_extra_templates_alternative_state_appearance.default_color}), 0.2)`;
+              ]]]

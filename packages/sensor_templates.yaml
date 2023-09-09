@@ -5,12 +5,31 @@ template:
         name: "binary_sensor_state_counts"
         state: "{{ expand('group.all_updates') | selectattr('state','eq', 'on') | list | count }}"
         attributes:
+          batteries_below20_count: >
+            {% set ns = namespace(c = 0) %}
+            {% for battery in expand('group.all_battery_class_sensors')-%}
+              {%-if is_number(battery.state)-%}
+                {%-if battery.state|int < 20%}
+                  {% set ns.c = ns.c + 1 %}
+                {%-endif-%}
+              {%-endif-%}
+            {%endfor%}
+            {{ ns.c }}
+          batteries_unavailable_count: "{{ expand('group.all_battery_class_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          cameras_off_count: "{{ expand('group.all_cameras') | rejectattr('state','in', ['recording','idle']) | list | count }}"
+          # cameras_unavailable_count: "{{ expand('group.all_cameras') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           climate_devices_on_count: >
             {{
               [(expand('group.all_climate') | map(attribute='entity_id') | select('is_state_attr', 'hvac_action', 'heat') | list | count),
               (expand('group.all_climate') | rejectattr('attributes.hvac_action', 'defined') | selectattr('state', 'eq', 'heat') | list | count),
               ( 0 if (states('sensor.air_to_water_heat_pump_out_water_temperature')|round < 45) else 1)] | sum
             }}
+          connectivity_disconnected_count: "{{ expand('group.all_connectivity_class_binary_sensors') | selectattr('state','eq', 'off') | list | count }}"
+          connectivity_unavailable_count: "{{ expand('group.all_connectivity_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          data_large_count: "{{ expand('group.all_data_class_sensors') | selectattr('state','eq', 'on') | list | count }}"
+          data_unavailable_count: "{{ expand('group.all_data_class_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          device_trackers_away_count: "{{ expand('group.all_device_trackers') | selectattr('state','in', ['away','not_home']) | list | count }}"
+          device_trackers_unavailable_count: "{{ expand('group.all_device_trackers') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           fans_on_count: "{{ expand('group.all_fans') | selectattr('state','eq', 'on') | list | count }}"
@@ -26,8 +45,23 @@ template:
           occupancy_sensors_triggered_count: "{{ expand('group.all_occupancy_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           plugs_off_count: "{{ expand('group.all_outlet_class_switch') | selectattr('state','eq', 'off') | list | count }}"
+          running_stopped_count: "{{ expand('group.all_running_class_binary_sensors') | selectattr('state','eq', 'off') | list | count }}"
+          running_unavailable_count: "{{ expand('group.all_running_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
           safety_sensors_triggered_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','eq', 'on') | list | count }}"
           safety_sensors_unavailable_count: "{{ expand('group.all_safety_class_binary_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          signal_sensors_low_count: >
+            {% set ns = namespace(c = 0) %}
+            {% for battery in expand('group.all_signal_strength_class_sensors')-%}
+              {%-if is_number(battery.state)-%}
+                {%-if battery.state|int < -70%}
+                  {% set ns.c = ns.c + 1 %}
+                {%-endif-%}
+              {%-endif-%}
+            {%endfor%}
+            {{ ns.c }}
+          signal_sensors_unavailable_count: "{{ expand('group.all_signal_strength_class_sensors') | selectattr('state','in', ['unavailable','unknown']) | list | count }}"
+          vacuums_busy_count: "{{ expand('group.all_vacuum') | selectattr('state','in', ['on','mowing','edgecut']) | list | count }}"
+          vacuums_error_count: "{{ expand('group.all_vacuum') | rejectattr('state','in', ['on','mowing','edgecut','docked','returning','starting','rain_delay']) | list | count }}"
           zero_value: "{{ 0 | int }}"
 
       - unique_id: "integration_entity_attributes_template_generated"
