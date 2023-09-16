@@ -235,7 +235,7 @@ views:
                       variables:
                         ulm_card_kepath_extra_templates_alternative_state_appearance:
                           default_color: "green"
-                          triggered_icon: "mdi:alarm-light-off"
+                          triggered_icon: "mdi:alarm-light"
                           triggered_color: "red"
                         ulm_card_kepath_binary_sensor_count_notifications:
                           unavailable:
@@ -492,7 +492,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_count"
                           - "card_room_mower_state"
-                        entity: "group.all_vacuum"
+                        entity: "vacuum.moe"
                         icon: "mdi:robot-mower"
                         name: "Mower"
                         variables:
@@ -502,9 +502,7 @@ views:
                             amount:
                               attribute_name: "vacuums_busy_count"
                           ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "mower entities"
+                            action: "more_info"
 
                     item6:
                       card:
@@ -555,7 +553,7 @@ views:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_count"
-                          - "icon_set_color"
+                          - "custom_card_kepath_battery_state"
                         entity: "group.all_battery_class_sensors"
                         name: "Battery"
                         variables:
@@ -579,7 +577,7 @@ views:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_count"
-                          - "icon_set_color"
+                          - "custom_card_kepath_signal_strength_state"
                         entity: "group.all_signal_strength_class_sensors"
                         name: "Signal"
                         variables:
@@ -598,19 +596,21 @@ views:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_count"
-                          - "icon_set_color"
-                        entity: "group.all_data_class_sensors"
+                          - "custom_card_kepath_data_rate_state"
+                        entity: "sensor.binary_sensor_state_counts.attributes.data_non_zero_entities"
                         name: "Data"
                         variables:
                           ulm_card_kepath_binary_sensor_count_notifications:
                             unavailable:
                               attribute_name: "data_unavailable_count"
                             amount:
-                              attribute_name: "data_large_count"
+                              attribute_name: "data_non_zero_count"
                           ulm_card_kepath_binary_sensor_count_tap_action:
                             action: "popup"
                             popup:
                               title: "data entities"
+                              auto_entities:
+                                sort_method: "name"
 
               - type: "conditional"
                 conditions:
