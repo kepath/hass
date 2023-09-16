@@ -36,7 +36,7 @@ custom_card_kepath_binary_sensor_count:
       action: >
         [[[
           var tapAction = "navigate";
-          const tap_actions = ['navigate', 'popup'];
+          const tap_actions = ['navigate', 'popup', 'more_info'];
           if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.action) {
             for (let i = 0; i < tap_actions.length; i++) {
               if (tap_actions[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.action) {
@@ -246,6 +246,9 @@ custom_popup_auto_entities_list:
             case "navigate":
               service = "browser_mod.navigate";
               break;
+            case "more_info":
+              service = "browser_mod.more_info";
+              break;
             default:
               service = "browser_mod.popup";
               break;
@@ -304,6 +307,8 @@ custom_popup_auto_entities_list:
                   - group: "[[[ return entity.entity_id ]]]"
                     options:
                       secondary_info: "last-changed"
+                # exclude:
+                #   - state: "> 0"
               sort:
                 method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method ]]]"
                 reverse: >
