@@ -108,7 +108,7 @@
     data:
       domain: fan
       group_name: all_fans
-      icon: mdi:fan
+      icon: mdi:fan-off
       friendly_name: All fan domain entities
       filter_by_device_class: false
       excluded_entity_groups:
@@ -127,7 +127,7 @@
     data:
       domain: light
       group_name: all_lights
-      icon: mdi:lightbulb-alert-outline
+      icon: mdi:lightbulb-multiple-off
       friendly_name: All light domain entities
       filter_by_device_class: false
       excluded_entity_groups:
@@ -337,7 +337,7 @@
     data:
       domain: binary_sensor
       group_name: all_safety_class_binary_sensors
-      icon: mdi:alarm-light
+      icon: mdi:alarm-light-off
       friendly_name: All binary_sensor carbon_monoxide safety problem smoke device
         class group
       filter_by_device_class: true
@@ -666,7 +666,7 @@
     data:
       domain: media_player
       group_name: all_tv_class_media_player
-      icon: mdi:video
+      icon: mdi:television
       friendly_name: All media_player tv device class group
       filter_by_device_class: true
       included_device_classes:
@@ -691,7 +691,7 @@
     data:
       domain: media_player
       group_name: all_audio_class_media_player
-      icon: mdi:volume-medium
+      icon: mdi:volume-off
       friendly_name: All media_player audio device class group
       filter_by_device_class: true
       included_device_classes:
@@ -1045,6 +1045,17 @@
       - data_rate
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_entities:
+      - sensor.influxdb_unifi_rx
+      - sensor.kitchen_g3_instant_disk_write_rate
+      - sensor.bed_c_g3_instant_disk_write_rate
+      - sensor.bottom_hallway_g3_instant_disk_write_rate
+      - sensor.middle_hallway_g3_flex_disk_write_rate
+      - sensor.doorbell_g4_disk_write_rate
+      - sensor.front_g3_flex_disk_write_rate
+      - sensor.back_g3_flex_disk_write_rate
+      - sensor.diskstation_upload_throughput
+      - sensor.diskstation_download_throughput
   mode: single
 - id: '1693775484055'
   alias: on_start_create_group.all_signal_strength_class_sensors
