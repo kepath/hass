@@ -19,6 +19,7 @@ custom_card_kepath_binary_sensor_count:
             return isValueAttribute;
           ]]]
         attribute_name: "zero_value"
+        count_tooltip: ""
       amount:
         entity: "sensor.binary_sensor_state_counts"
         is_attribute: >
@@ -32,6 +33,7 @@ custom_card_kepath_binary_sensor_count:
             return isValueAttribute;
           ]]]
         attribute_name: "zero_value"
+        count_tooltip: ""
     ulm_card_kepath_binary_sensor_count_tap_action:
       action: >
         [[[
@@ -73,6 +75,23 @@ custom_card_kepath_binary_sensor_count:
                 }
               }
               return autoEntitiesSortReversed;
+            ]]]
+          sort_numeric: >
+            [[[
+              var autoEntitiesSortNumeric = false;
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_method) {
+                if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_changed" ||
+                    variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_updated" ||
+                    variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_triggered") {
+                  autoEntitiesSortNumeric = true;
+                }
+              }
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_numeric) {
+                if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric === "boolean") {
+                  autoEntitiesSortNumeric = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric;
+                }
+              }
+              return autoEntitiesSortNumeric;
             ]]]
   icon: "mdi:lightbulb"
   show_icon: true
@@ -196,6 +215,12 @@ widget_count_indicator:
       - box-shadow: "none"
       - padding: "0"
       - border-radius: "50%"
+  style:
+    $: >
+      .tooltip .tooltiptext {
+        display:none;
+      }
+
   icon: >
     [[[
       var amountValue = 0;
@@ -234,6 +259,14 @@ widget_count_indicator:
           - display: "none"
   tap_action:
     action: "none"
+  tooltip: >
+    [[[
+      var tooltipValue = null;
+      if(variables?.notification_counts?.count_tooltip) {
+        tooltipValue = variables.notification_counts.count_tooltip;
+      }
+      return tooltipValue;
+    ]]]
 
 custom_popup_auto_entities_list:
   tap_action:
@@ -307,10 +340,9 @@ custom_popup_auto_entities_list:
                   - group: "[[[ return entity.entity_id ]]]"
                     options:
                       secondary_info: "last-changed"
-                # exclude:
-                #   - state: "> 0"
               sort:
                 method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method ]]]"
+                numeric: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric ]]]"
                 reverse: >
                   [[[
                     var sortReversed = true;
