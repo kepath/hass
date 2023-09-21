@@ -2,37 +2,90 @@
 custom_card_kepath_signal_strength_state:
   variables:
     ulm_card_kepath_binary_sensor_count_notifications:
-      # amount:
-      #   entity: "sensor.binary_sensor_state_counts"
-      #   is_attribute: >
-      #     [[[
-      #       var isValueAttribute = true;
-      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
-      #         if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
-      #           isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
-      #         }
-      #       }
-      #       return isValueAttribute;
-      #     ]]]
-      #   attribute_name: "zero_value"
-      locked:
+      signal_value:
         entity: "sensor.binary_sensor_state_counts"
         is_attribute: >
           [[[
             var isValueAttribute = true;
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.locked?.is_attribute) {
-              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.locked.is_attribute === "boolean") {
-                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.locked.is_attribute;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.signal_value?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.is_attribute;
               }
             }
             return isValueAttribute;
           ]]]
-        attribute_name: "zero_value"
+        attribute_name: "unknown_value"
   state:
-    - operator: "=="
-      value: "on"
-      id: "on"
-      icon: "mdi:door-open"
+    - operator: "template"
+      value: >
+        [[[
+            var attributeValue = "unknown";
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.signal_value?.attribute_name) {
+              attributeValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.attribute_name];
+            }
+            if(attributeValue == "unknown") {
+              return true;
+            }
+            return false;
+        ]]]
+      icon: "mdi:signal-off"
+      styles:
+        icon:
+          - color: "rgba(var(--color-grey),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-grey), 0.2)"
+
+    - operator: "template"
+      value: >
+        [[[
+            var attributeValue = 0;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.signal_value?.attribute_name) {
+              attributeValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.attribute_name];
+            }
+            if(attributeValue > -60) {
+              return true;
+            }
+            return false;
+        ]]]
+      icon: "mdi:signal-cellular-3"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
+
+    - operator: "template"
+      value: >
+        [[[
+            var attributeValue = 0;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.signal_value?.attribute_name) {
+              attributeValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.attribute_name];
+            }
+            if(attributeValue > -67) {
+              return true;
+            }
+            return false;
+        ]]]
+      icon: "mdi:signal-cellular-2"
+      styles:
+        icon:
+          - color: "rgba(var(--color-yellow),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-yellow), 0.2)"
+
+    - operator: "template"
+      value: >
+        [[[
+            var attributeValue = 0;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.signal_value?.attribute_name) {
+              attributeValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.signal_value.attribute_name];
+            }
+            if(attributeValue > -80) {
+              return true;
+            }
+            return false;
+        ]]]
+      icon: "mdi:signal-cellular-1"
       styles:
         icon:
           - color: "rgba(var(--color-red),1)"
@@ -40,16 +93,9 @@ custom_card_kepath_signal_strength_state:
           - background-color: "rgba(var(--color-red), 0.2)"
 
     - operator: "default"
-      icon: >
-        [[[
-          var icon = "mdi:door-closed";
-          if (states[variables.ulm_card_kepath_binary_sensor_count_notifications.locked.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.locked.attribute_name] != "0") {
-            icon = "mdi:door-closed-lock";
-          }
-          return icon;
-        ]]]
+      icon: "mdi:signal-cellular-outline"
       styles:
         icon:
-          - color: "rgba(var(--color-green),1)"
+          - color: "rgba(var(--color-purple),1)"
         img_cell:
-          - background-color: "rgba(var(--color-green), 0.2)"
+          - background-color: "rgba(var(--color-purple), 0.2)"
