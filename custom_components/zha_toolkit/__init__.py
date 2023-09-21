@@ -23,12 +23,12 @@ DATA_ZHATK = "zha_toolkit"
 LOGGER = logging.getLogger(__name__)
 
 try:
-    LOADED_VERSION
+    LOADED_VERSION  # type:ignore[used-before-def]
 except NameError:
     LOADED_VERSION = ""
 
 try:
-    DEFAULT_OTAU
+    DEFAULT_OTAU   # type:ignore[used-before-def]
 except NameError:
     DEFAULT_OTAU = "/config/zigpy_ota"
 
@@ -209,6 +209,9 @@ SERVICE_SCHEMAS = {
             ),
             vol.Optional(ATTR_COMMAND_DATA): vol.Any(
                 cv.entity_id_or_uuid, t.EUI64.convert
+            ),
+            vol.Optional(P.ENDPOINT): vol.Any(
+                vol.Range(0, 255), [vol.Range(0, 255)]
             ),
             vol.Optional(P.CLUSTER): vol.Any(
                 vol.Range(0, 0xFFFF), [vol.Range(0, 0xFFFF)]
@@ -474,6 +477,9 @@ SERVICE_SCHEMAS = {
         {
             vol.Required(ATTR_IEEE): vol.Any(
                 cv.entity_id_or_uuid, t.EUI64.convert
+            ),
+            vol.Optional(P.ENDPOINT): vol.Any(
+                vol.Range(0, 255), [vol.Range(0, 255)]
             ),
             vol.Optional(P.CLUSTER): vol.Any(
                 vol.Range(0, 0xFFFF), [vol.Range(0, 0xFFFF)]
