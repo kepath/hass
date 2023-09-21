@@ -1026,7 +1026,7 @@
       - group.globally_excluded_entities
   mode: single
 - id: '1693774604091'
-  alias: on_start_create_group.all_data_class_sensors
+  alias: on_start_create_group.all_data_rate_class_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
@@ -1037,9 +1037,9 @@
   - service: python_script.create_entity_device_class_group
     data:
       domain: sensor
-      group_name: all_data_class_sensors
+      group_name: all_data_rate_class_sensors
       icon: mdi:speedometer
-      friendly_name: All sensor data device class group
+      friendly_name: All sensor data rate device class group
       filter_by_device_class: true
       included_device_classes:
       - data_rate
@@ -1096,4 +1096,19 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+  mode: single
+- id: '1695218259279'
+  alias: on_enter_home_zone_ju_unlock_front_door
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.julia_thorn
+    zone: zone.home
+    event: enter
+  condition: []
+  action:
+  - device_id: c433a6de7503fff598e3b00eebd934b8
+    domain: lock
+    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
+    type: unlock
   mode: single
