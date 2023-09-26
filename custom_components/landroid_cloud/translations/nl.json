@@ -11,11 +11,11 @@
         "step": {
             "user": {
                 "data": {
-                    "email": "Email",
+                    "email": "E-mail",
                     "password": "Wachtwoord",
-                    "type": "Maken"
+                    "type": "Merknaam"
                 },
-                "title": "Maak verbinding met uw Landroid Cloud-account"
+                "title": "Maak verbinding met uw Landroid Cloud account"
             }
         }
     },
@@ -23,15 +23,200 @@
         "vacuum": {
             "landroid_cloud": {
                 "state": {
+                    "edgecut": "Randroutine",
+                    "escaped_digital_fence": "Buiten werkgebied",
                     "initializing": "Initialiseren",
+                    "mowing": "Maaien",
                     "offline": "Offline",
                     "rain_delay": "Regenvertraging",
-                    "mowing": "Maaien",
                     "starting": "Starten",
-                    "zoning": "Zone instellen",
-                    "edgecut": "Randroutine"
+                    "zoning": "Zone instellen"
                 }
             }
+        }
+    },
+    "services": {
+        "config": {
+            "description": "Stel configuratieparameters voor het apparaat in",
+            "fields": {
+                "multizone_distances": {
+                    "description": "Set multizone distance array in meters. 0 = Disabled. Format: 15, 80, 120, 155",
+                    "name": "Multi zone distances"
+                },
+                "multizone_probabilities": {
+                    "description": "Set multizone probabilities array. Format: 50, 10, 20, 20",
+                    "name": "Multi zone probabilities"
+                },
+                "raindelay": {
+                    "description": "Regenvertraging instellen. Tijd in minuten, variërend van 0 tot 300. 0 = Uitgeschakeld",
+                    "name": "Regenvertraging"
+                },
+                "timeextension": {
+                    "description": "Werktijd instellen. Uitbreiding in % variërend van -100 tot 100",
+                    "name": "Werktijd"
+                }
+            },
+            "name": "Zone instellen"
+        },
+        "edgecut": {
+            "description": "Start randroutine (indien ondersteund)",
+            "name": "Randroutine"
+        },
+        "lock": {
+            "description": "Apparaatvergrendeling in-/uitschakelen",
+            "name": "Apparaat vergrendelen/ontgrendelen"
+        },
+        "ots": {
+            "description": "Eenmalig schema starten (indien ondersteund)",
+            "fields": {
+                "boundary": {
+                    "description": "Start randroutine",
+                    "name": "Rand"
+                },
+                "runtime": {
+                    "description": "Maaitijd in minuten voordat de maaier terugkeert naar het laadstation",
+                    "name": "Maaitijd"
+                }
+            },
+            "name": "Eenmalig schema"
+        },
+        "partymode": {
+            "description": "Feestmodus in- of uitschakelen (indien ondersteund)",
+            "fields": {
+                "party_mode_enabled": {
+                    "description": "Feestmodus ingeschakeld",
+                    "name": "Feestmodus inschakelen"
+                }
+            },
+            "name": "Feestmodus"
+        },
+        "restart": {
+            "description": "Apparaat herstarten of opnieuw opstarten",
+            "name": "Herstart apparaat"
+        },
+        "schedule": {
+            "description": "Het schema van de maaier instellen of wijzigen",
+            "fields": {
+                "friday_boundary": {
+                    "description": "Moeten we dit schema beginnen met de randroutine?",
+                    "name": "Vrijdag, Randroutine"
+                },
+                "friday_end": {
+                    "description": "Wanneer moet het schema stoppen op vrijdag?",
+                    "name": "Vrijdag, Einde"
+                },
+                "friday_start": {
+                    "description": "Starttijd voor vrijdag",
+                    "name": "Vrijdag, Begin"
+                },
+                "monday_boundary": {
+                    "description": "Moeten we dit schema beginnen met de randroutine?",
+                    "name": "Maandag, Randroutine"
+                },
+                "monday_end": {
+                    "description": "Wanneer moet het schema op maandag stoppen?",
+                    "name": "Maandag, Einde"
+                },
+                "monday_start": {
+                    "description": "Starttijd voor maandag",
+                    "name": "Maandag, Begin"
+                },
+                "saturday_boundary": {
+                    "description": "Moeten we dit schema beginnen met de randroutine?",
+                    "name": "Zaterdag, Randroutine"
+                },
+                "saturday_end": {
+                    "description": "Wanneer moet het schema stoppen op zaterdag?",
+                    "name": "Zaterdag, Einde"
+                },
+                "saturday_start": {
+                    "description": "Starttijd voor zaterdag",
+                    "name": "Zaterdag, Begin"
+                },
+                "sunday_boundary": {
+                    "description": "Moeten we dit schema beginnen met de randroutine?",
+                    "name": "Zondag, Grens"
+                },
+                "sunday_end": {
+                    "description": "Wanneer moet het schema stoppen op zondag?",
+                    "name": "Zondag, Einde"
+                },
+                "sunday_start": {
+                    "description": "Starttijd voor zondag",
+                    "name": "Zondag, Begin"
+                },
+                "thursday_boundary": {
+                    "description": "Moeten we dit schema beginnen met de randroutine?",
+                    "name": "Donderdag, Randroutine"
+                },
+                "thursday_end": {
+                    "description": "Wanneer moet het schema stoppen op donderdag?",
+                    "name": "Donderdag, Einde"
+                },
+                "thursday_start": {
+                    "description": "Starttijd voor donderdag",
+                    "name": "Woensdag, Begin"
+                },
+                "tuesday_boundary": {
+                    "description": "Moeten we dit schema beginnen met de randroutine?",
+                    "name": "Dinsdag, Randroutine"
+                },
+                "tuesday_end": {
+                    "description": "Wanneer moet het schema stoppen op dinsdag?",
+                    "name": "Dinsdag, Einde"
+                },
+                "tuesday_start": {
+                    "description": "Starttijd voor dinsdag",
+                    "name": "Dinsdag, Begin"
+                },
+                "type": {
+                    "description": "Primair of secundair schema wijzigen?",
+                    "name": "Schematype"
+                },
+                "wednesday_boundary": {
+                    "description": "Moeten we dit schema beginnen met de randroutine?",
+                    "name": "Woensdag, Randroutine"
+                },
+                "wednesday_end": {
+                    "description": "Wanneer moet het schema stoppen op woensdag?",
+                    "name": "Woensdag, Einde"
+                },
+                "wednesday_start": {
+                    "description": "Starttijd voor woensdag",
+                    "name": "Woensdag, Begin"
+                }
+            },
+            "name": "Schema instellen of bijwerken"
+        },
+        "send_raw": {
+            "description": "Stuur een onbewerkte JSON command naar het apparaat",
+            "fields": {
+                "json": {
+                    "description": "Te verzenden gegevens, geformatteerd als geldige JSON",
+                    "name": "JSON data"
+                }
+            },
+            "name": "Verzend RAW command"
+        },
+        "setzone": {
+            "description": "Stel in welke zone vervolgens moet worden gemaaid",
+            "fields": {
+                "zone": {
+                    "description": "Stelt het zonenummer in, variërend van 0 tot 3, dat als volgende moet worden gemaaid",
+                    "name": "Zone"
+                }
+            },
+            "name": "Zone instellen"
+        },
+        "torque": {
+            "description": "Wielkoppel instellen (indien ondersteund)",
+            "fields": {
+                "torque": {
+                    "description": "Wielkoppel instellen. Variërend van -50% tot 50%",
+                    "name": "Wielkoppel"
+                }
+            },
+            "name": "Koppel"
         }
     }
 }
