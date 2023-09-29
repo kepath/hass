@@ -48,7 +48,7 @@ template:
           #     {%-endif-%}
           #   {%-endif-%}
           # {%endfor%}]
-          data_rate_max_value: "{{expand('group.all_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float')|max|round()}}"
+          data_rate_total_value: "{{expand('group.all_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float')|sum|round()}}"
           device_trackers_away_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['away','not_home'])|list|count }}"
           device_trackers_unavailable_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
