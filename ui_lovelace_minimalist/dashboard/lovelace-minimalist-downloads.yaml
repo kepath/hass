@@ -57,14 +57,14 @@ views:
     cards:
       - type: "markdown"
         content: >-
-          <h2> <ha-icon icon='mdi:shield-half-full'></ha-icon> Watchman report</h2>
+          <h2> <ha-icon icon="mdi:shield-half-full"></ha-icon> Watchman report</h2>
           <h3>Missing Entities: {{ states.sensor.watchman_missing_entities.state }} </h3>
           {%- for item in state_attr("sensor.watchman_missing_entities", "entities") %}
             <hr> <table><tr> <td>
-            <ha-icon icon='mdi:
-            {%- if item.state=="missing"-%}cloud-alert'
-            {%- elif item.state=="unavail" -%}cloud-off-outline'
-            {%- else-%}cloud-question'
+            <ha-icon icon="mdi:
+            {%- if item.state=="missing"-%}cloud-alert"
+            {%- elif item.state=="unavail" -%}cloud-off-outline"
+            {%- else-%}cloud-question"
             {%- endif -%} ></ha-icon>
             {{ item.id }} [{{item.state}}] <a title="{{item.occurrences}}">
             {{item.occurrences.split('/')[-1].split(':')[0]}}</a>
@@ -84,56 +84,40 @@ views:
     cards:
       - type: "markdown"
         content: >-
-          <h1><ha-icon icon='mdi:shield-link-variant'></ha-icon> Watchman report</h1>
-          <h3>Missing Entities: {{ states('sensor.watchman_missing_entities') }}</h3>
+          <h1><ha-icon icon="mdi:shield-link-variant"></ha-icon>&nbsp;Watchman report</h1>
+          <h3>Missing Entities: {{ states("sensor.watchman_missing_entities") }}</h3>
           <table>
           {%- for item in state_attr("sensor.watchman_missing_entities", "entities") -%}
             {%- if loop.changed(item.occurrences.split(':')[0]) -%}
-              <tr><th colspan='3'>
-              {{ item.occurrences.split(':')[0] }}</th></tr>
+              <tr>
+                <th colspan="3">{{ item.occurrences.split(':')[0] }}</th>
+              </tr>
             {%- endif -%}
-              <tr><td><ha-icon icon='mdi:
+              <tr>
+                <td><ha-icon icon="mdi:
             {%- if item.state=="missing" -%}
-                cloud-alert'
+                cloud-alert"
             {%- elif item.state=="unavail" -%}
-                cloud-off-outline'
+                cloud-off-outline"
             {%- elif item.state=="unknown" -%}
-                cloud-question'
+                cloud-question"
             {%- else -%}
-                radiobox-blank'
+                radiobox-blank"
             {%- endif -%}></ha-icon></td>
-            <td>{{ item.id }}</td>
-            <td>{{ item.occurrences.split(':')[1] }}</td></tr>
+              <td>{{ item.id }}</td>
+              <td>{{ item.occurrences.split(':')[1] }}</td>
+            </tr>
           {%- endfor -%}
           </table>
         card_mod:
           style:
             ha-markdown $: &ref_style |
-                th {
-                  padding-top: 0.5em;
-                  border-top: 1px solid var(--primary-text-color);
+                tr {
                   text-align: left;
                   overflow-wrap: break-word;
                   word-break: break-all;
                 }
-                td {
-                  overflow-wrap: break-word;
-                  word-break: break-all;
+                th {
+                  padding-top: 0.5em;
+                  border-top: 1px solid var(--primary-text-color);
                 }
-
-# {%- for item in state_attr("sensor.watchman_missing_entities", "entities") -%}
-#   {%- if loop.changed(item.occurrences.split(':')[0]) -%}
-#     {{ item.occurrences.split(':')[0] }}
-#   {%- endif -%}
-#   {% if item.state=="missing" %}
-#     {{ "<ha-icon icon='mdi:cloud-alert'></ha-icon>" }}
-#   {% elif item.state=="unavail" %}
-#     {{ "<ha-icon icon='mdi:cloud-off-outline'></ha-icon>" }}
-#   {% elif item.state=="unknown" %}
-#     {{ "<ha-icon icon='mdi:cloud-question'></ha-icon>" }}
-#   {% else %}
-#     {{ 'placeholder' }}
-#   {% endif %}
-#   {{ item.id }}
-#   {{ item.occurrences.split(':')[1] }}
-# {%- endfor -%}
