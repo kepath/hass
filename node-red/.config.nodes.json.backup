@@ -427,7 +427,7 @@
     },
     "node-red-contrib-bigtimer": {
         "name": "node-red-contrib-bigtimer",
-        "version": "2.8.2",
+        "version": "2.8.5",
         "local": true,
         "user": true,
         "nodes": {
@@ -484,7 +484,7 @@
     },
     "node-red-contrib-home-assistant-websocket": {
         "name": "node-red-contrib-home-assistant-websocket",
-        "version": "0.44.0",
+        "version": "0.56.1",
         "local": true,
         "user": true,
         "nodes": {
@@ -493,11 +493,13 @@
                 "types": [
                     "ha_entity_filter",
                     "ha-api",
+                    "ha-binary-sensor",
                     "ha-button",
                     "api-call-service",
                     "server",
                     "api-current-state",
                     "ha-device",
+                    "ha-device-config",
                     "ha-entity",
                     "ha-entity-config",
                     "server-events",
@@ -505,11 +507,19 @@
                     "ha-fire-event",
                     "ha-get-entities",
                     "api-get-history",
+                    "ha-number",
                     "poll-state",
                     "api-render-template",
+                    "ha-select",
+                    "ha-sensor",
+                    "ha-sentence",
+                    "ha-switch",
                     "ha-tag",
+                    "ha-text",
                     "ha-time",
+                    "ha-time-entity",
                     "trigger-state",
+                    "ha-update-config",
                     "ha-wait-until",
                     "ha-webhook",
                     "ha-zone"
@@ -806,7 +816,7 @@
     },
     "node-red-dashboard": {
         "name": "node-red-dashboard",
-        "version": "3.2.0",
+        "version": "3.6.0",
         "local": true,
         "user": true,
         "nodes": {
@@ -1064,7 +1074,7 @@
     },
     "node-red-node-email": {
         "name": "node-red-node-email",
-        "version": "1.17.0",
+        "version": "2.0.1",
         "local": true,
         "user": true,
         "nodes": {
@@ -1142,7 +1152,7 @@
     },
     "node-red-node-random": {
         "name": "node-red-node-random",
-        "version": "0.4.0",
+        "version": "0.4.1",
         "local": true,
         "user": true,
         "nodes": {
@@ -1242,7 +1252,7 @@
     },
     "node-red-node-snmp": {
         "name": "node-red-node-snmp",
-        "version": "1.0.3",
+        "version": "2.0.0",
         "local": true,
         "user": true,
         "nodes": {
@@ -1364,7 +1374,7 @@
     },
     "node-red-contrib-deconz": {
         "name": "node-red-contrib-deconz",
-        "version": "2.3.4",
+        "version": "2.3.9",
         "local": true,
         "user": true,
         "nodes": {
@@ -1541,7 +1551,7 @@
     },
     "node-red-contrib-samsung-automation-studio-nodes": {
         "name": "node-red-contrib-samsung-automation-studio-nodes",
-        "version": "1.1.12",
+        "version": "1.1.17",
         "local": true,
         "user": true,
         "nodes": {
@@ -1582,7 +1592,7 @@
                 "local": true,
                 "user": false,
                 "module": "node-red-contrib-samsung-automation-studio-nodes",
-                "file": "/config/node-red/node_modules/node-red-contrib-samsung-automation-studio-nodes/201-basicauth.js"
+                "file": "/config/node-red/node_modules/node-red-contrib-samsung-automation-studio-nodes/201-Basicauth.js"
             },
             "AWS": {
                 "name": "AWS",
@@ -1618,12 +1628,24 @@
                 "user": false,
                 "module": "node-red-contrib-samsung-automation-studio-nodes",
                 "file": "/config/node-red/node_modules/node-red-contrib-samsung-automation-studio-nodes/303-SlackNotification.js"
+            },
+            "DataExtractor": {
+                "name": "DataExtractor",
+                "types": [
+                    "data-extractor",
+                    "data-filter"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-samsung-automation-studio-nodes",
+                "file": "/config/node-red/node_modules/node-red-contrib-samsung-automation-studio-nodes/401-DataExtractor.js"
             }
         }
     },
     "node-red-contrib-samsung-tv-control": {
         "name": "node-red-contrib-samsung-tv-control",
-        "version": "1.3.15",
+        "version": "1.4.0",
         "local": true,
         "user": true,
         "nodes": {
@@ -1684,6 +1706,295 @@
                 "user": false,
                 "module": "node-red-contrib-persistent-fsm",
                 "file": "/opt/node_modules/node-red-contrib-persistent-fsm/state-machine.js"
+            }
+        }
+    },
+    "@racksync/node-red-contrib-hass-flow": {
+        "name": "@racksync/node-red-contrib-hass-flow",
+        "version": "1.0.6",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "Flow Toggle": {
+                "name": "Flow Toggle",
+                "types": [],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "@racksync/node-red-contrib-hass-flow",
+                "file": "/config/node-red/node_modules/@racksync/node-red-contrib-hass-flow/flows/flow-toggle.js"
+            }
+        }
+    },
+    "node-red-contrib-nest": {
+        "name": "node-red-contrib-nest",
+        "version": "0.1.9",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "nest": {
+                "name": "nest",
+                "types": [
+                    "nest-config",
+                    "nest request",
+                    "nest status",
+                    "temp"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-nest",
+                "file": "/config/node-red/node_modules/node-red-contrib-nest/nest/nest.js"
+            }
+        }
+    },
+    "node-red-contrib-unifi": {
+        "name": "node-red-contrib-unifi",
+        "version": "0.3.9",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "unifi": {
+                "name": "unifi",
+                "types": [
+                    "unificonfig",
+                    "Unifi",
+                    "UnifiWS"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-unifi",
+                "file": "/config/node-red/node_modules/node-red-contrib-unifi/unifi.js"
+            }
+        }
+    },
+    "node-red-contrib-unifi-os": {
+        "name": "node-red-contrib-unifi-os",
+        "version": "0.9.1",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "unifi": {
+                "name": "unifi",
+                "types": [],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-unifi-os",
+                "file": "/config/node-red/node_modules/node-red-contrib-unifi-os/build/nodes/unifi.js"
+            },
+            "AccessController": {
+                "name": "AccessController",
+                "types": [
+                    "unifi-access-controller"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-unifi-os",
+                "file": "/config/node-red/node_modules/node-red-contrib-unifi-os/build/nodes/AccessController.js"
+            },
+            "Request": {
+                "name": "Request",
+                "types": [
+                    "unifi-request"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-unifi-os",
+                "file": "/config/node-red/node_modules/node-red-contrib-unifi-os/build/nodes/Request.js"
+            },
+            "WebSocket": {
+                "name": "WebSocket",
+                "types": [
+                    "unifi-web-socket"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-unifi-os",
+                "file": "/config/node-red/node_modules/node-red-contrib-unifi-os/build/nodes/WebSocket.js"
+            },
+            "Protect": {
+                "name": "Protect",
+                "types": [
+                    "unifi-protect"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-unifi-os",
+                "file": "/config/node-red/node_modules/node-red-contrib-unifi-os/build/nodes/Protect.js"
+            }
+        }
+    },
+    "node-red-contrib-syno": {
+        "name": "node-red-contrib-syno",
+        "version": "0.1.1",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "ds-config": {
+                "name": "ds-config",
+                "types": [
+                    "DS Config"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-syno",
+                "file": "/config/node-red/node_modules/node-red-contrib-syno/ds/ds-config.js"
+            },
+            "ds-audiostation": {
+                "name": "ds-audiostation",
+                "types": [
+                    "DS Audio"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-syno",
+                "file": "/config/node-red/node_modules/node-red-contrib-syno/ds/audiostation/ds-audio.js"
+            },
+            "ds-cam": {
+                "name": "ds-cam",
+                "types": [
+                    "DS Cam"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-syno",
+                "file": "/config/node-red/node_modules/node-red-contrib-syno/ds/cam/ds-cam.js"
+            },
+            "ds-downloadstation": {
+                "name": "ds-downloadstation",
+                "types": [
+                    "DS Download"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-syno",
+                "file": "/config/node-red/node_modules/node-red-contrib-syno/ds/downloadstation/ds-download.js"
+            },
+            "ds-dsm": {
+                "name": "ds-dsm",
+                "types": [
+                    "DS DSM"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-syno",
+                "file": "/config/node-red/node_modules/node-red-contrib-syno/ds/dsm/ds-dsm.js"
+            },
+            "ds-filestation": {
+                "name": "ds-filestation",
+                "types": [
+                    "DS File"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-syno",
+                "file": "/config/node-red/node_modules/node-red-contrib-syno/ds/filestation/ds-file.js"
+            },
+            "ds-videostation": {
+                "name": "ds-videostation",
+                "types": [
+                    "DS Video"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-syno",
+                "file": "/config/node-red/node_modules/node-red-contrib-syno/ds/videostation/ds-video.js"
+            }
+        }
+    },
+    "node-red-contrib-apple-tv-x": {
+        "name": "node-red-contrib-apple-tv-x",
+        "version": "1.0.3",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "atvx-config": {
+                "name": "atvx-config",
+                "types": [
+                    "atvx-config"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-apple-tv-x",
+                "file": "/config/node-red/node_modules/node-red-contrib-apple-tv-x/nodes/config.js"
+            },
+            "atvx-in": {
+                "name": "atvx-in",
+                "types": [
+                    "atvx-in"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-apple-tv-x",
+                "file": "/config/node-red/node_modules/node-red-contrib-apple-tv-x/nodes/in.js"
+            },
+            "atvx-out": {
+                "name": "atvx-out",
+                "types": [
+                    "atvx-out"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-apple-tv-x",
+                "file": "/config/node-red/node_modules/node-red-contrib-apple-tv-x/nodes/out.js"
+            }
+        }
+    },
+    "node-red-contrib-apple-find-me": {
+        "name": "node-red-contrib-apple-find-me",
+        "version": "1.1.8",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "apple-find-me": {
+                "name": "apple-find-me",
+                "types": [
+                    "apple-find-me-account",
+                    "apple-find-me-sendmessage",
+                    "apple-find-me-playsound",
+                    "apple-find-me",
+                    "apple-find-me-with-payload"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-apple-find-me",
+                "file": "/config/node-red/node_modules/node-red-contrib-apple-find-me/nodes/apple-find-me.js"
+            }
+        }
+    },
+    "node-red-contrib-traffic": {
+        "name": "node-red-contrib-traffic",
+        "version": "0.2.1",
+        "local": true,
+        "user": false,
+        "nodes": {
+            "traffic": {
+                "name": "traffic",
+                "types": [
+                    "traffic"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-traffic",
+                "file": "/config/node-red/node_modules/node-red-contrib-traffic/traffic/traffic.js"
             }
         }
     }
