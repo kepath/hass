@@ -99,6 +99,10 @@ class AstroWeatherCard extends LitElement {
       deepskydetails: true,
       forecast: true,
       graph: true,
+      graph_condition: true,
+      graph_cloudless: true,
+      graph_seeing: true,
+      graph_transparency: true,
       number_of_forecasts: "7",
       line_color_condition: "#f07178",
       line_color_condition_night: "#eeffff",
@@ -117,6 +121,10 @@ class AstroWeatherCard extends LitElement {
       throw new Error("Entity is not an AstroWeather entity");
     }
     this._config = config;
+  }
+
+  getCardSize() {
+    return 3;
   }
 
   shouldUpdate(changedProps) {
@@ -229,6 +237,7 @@ class AstroWeatherCard extends LitElement {
     let sun_next_setting_astro;
     let moon_next_rising;
     let moon_next_setting;
+    let moon_next_new_moon;
 
     sun_next_rising = new Date(
       stateObj.attributes.sun_next_rising
@@ -302,6 +311,15 @@ class AstroWeatherCard extends LitElement {
       minute: "2-digit",
       hour12: false,
     });
+    moon_next_new_moon = new Date(
+      stateObj.attributes.moon_next_new_moon
+    ).toLocaleTimeString(lang, {
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
 
     this.numberElements++;
 
@@ -363,18 +381,15 @@ class AstroWeatherCard extends LitElement {
           ${this.getUnit("wind_speed")}
         </li>
         <li>
-          ${stateObj.attributes.prec_type == "Snow"
-        ? html` <ha-icon icon="mdi:weather-snowy"></ha-icon> `
-        : stateObj.attributes.prec_type == "Rain"
+          ${stateObj.attributes.precipitation_amount >= 0
+        ? html` <ha-icon icon="mdi:weather-cloudy"></ha-icon> `
+        : stateObj.attributes.precipitation_amount >= 0.5
           ? html` <ha-icon icon="mdi:weather-rainy"></ha-icon> `
-          : stateObj.attributes.prec_type == "Frzr"
-            ? html` <ha-icon icon="mdi:weather-snowy-rainy"></ha-icon> `
-            : stateObj.attributes.prec_type == "Icep"
-              ? html` <ha-icon icon="mdi:weather-hail"></ha-icon> `
-              : stateObj.attributes.prec_type == "None"
-                ? html` <ha-icon icon="mdi:weather-rainy"></ha-icon> `
-                : ""}
-          Precipitation: ${stateObj.attributes.prec_type}
+          : stateObj.attributes.precipitation_amount >= 4
+            ? html` <ha-icon icon="mdi:weather-pouring"></ha-icon> `
+            : ""}
+          Precipitation: ${stateObj.attributes.precipitation_amount}
+          ${this.getUnit("precipitation")}
         </li>
         <li>
           <ha-icon icon="mdi:weather-sunset-down"></ha-icon>
@@ -412,6 +427,10 @@ class AstroWeatherCard extends LitElement {
           <ha-icon icon="mdi:moon-waning-gibbous"></ha-icon>
           Moon Phase: ${stateObj.attributes.moon_phase} %
         </li>
+        <li>
+          <ha-icon icon="mdi:moon-new"></ha-icon>
+          New Moon: ${moon_next_new_moon}
+        </li>
       </ul>
     `;
   }
@@ -423,7 +442,7 @@ class AstroWeatherCard extends LitElement {
       <ul
         class="deepskyforecast clear ${this.numberElements > 1 ? "spacer" : ""}"
       >
-        ${stateObj.attributes.deepsky_forecast_today_plain
+      ${stateObj.attributes.deepsky_forecast_today_plain
         ? html`
               <li>
                 <ha-icon icon="mdi:weather-night"></ha-icon>
@@ -433,8 +452,7 @@ class AstroWeatherCard extends LitElement {
               <li>
                 <ha-icon icon="mdi:image-text"></ha-icon>
                 ${stateObj.attributes.deepsky_forecast_today_desc}
-              </li>
-            `
+              </li>            `
         : ""}
         ${stateObj.attributes.deepsky_forecast_tomorrow_plain
         ? html`
@@ -535,15 +553,29 @@ class AstroWeatherCard extends LitElement {
     var dateTime = [];
     var condition = [];
     var clouds = [];
+    var clouds_high = [];
+    var clouds_medium = [];
+    var clouds_low = [];
     var seeing = [];
     var transparency = [];
     for (i = 0; i < forecast.length; i++) {
       var d = forecast[i];
       dateTime.push(d.datetime);
-      condition.push(d.condition);
-      clouds.push(d.cloudless_percentage);
-      seeing.push(d.seeing_percentage);
-      transparency.push(d.transparency_percentage);
+      if (this._config.graph_condition) {
+        condition.push(d.condition);
+      }
+      if (this._config.graph_cloudless) {
+        clouds.push(d.cloudless_percentage);
+        clouds_high.push(100 - d.cloud_area_fraction_high);
+        clouds_medium.push(100 - d.cloud_area_fraction_medium);
+        clouds_low.push(100 - d.cloud_area_fraction_low);
+      }
+      if (this._config.graph_seeing) {
+        seeing.push(d.seeing_percentage);
+      }
+      if (this._config.graph_transparency) {
+        transparency.push(d.transparency_percentage);
+      }
     }
     var style = getComputedStyle(document.body);
     var backgroundColor = style.getPropertyValue("--card-background-color");
@@ -551,9 +583,11 @@ class AstroWeatherCard extends LitElement {
     var colorCondition = this._config.line_color_condition;
     var colorConditionNight = this._config.line_color_condition_night;
     var colorCloudless = this._config.line_color_cloudless;
+    var colorCloudlessLevels = this._config.line_color_cloudless + "80";
     var colorSeeing = this._config.line_color_seeing;
     var colorTransparency = this._config.line_color_transparency;
     var dividerColor = style.getPropertyValue("--divider-color");
+    var fillLine = false;
 
     const ctx = this.renderRoot
       .querySelector("#forecastChart")
@@ -562,7 +596,7 @@ class AstroWeatherCard extends LitElement {
     Chart.defaults.color = textColor;
     Chart.defaults.scale.grid.color = dividerColor;
     Chart.defaults.elements.line.fill = false;
-    Chart.defaults.elements.line.tension = 0.3;
+    Chart.defaults.elements.line.tension = 0.4;
     Chart.defaults.elements.line.borderWidth = 1.5;
     Chart.defaults.elements.point.radius = 2;
     Chart.defaults.elements.point.hitRadius = 10;
@@ -581,6 +615,9 @@ class AstroWeatherCard extends LitElement {
     colorTransparencyGradient.addColorStop(0, colorTransparency);
     colorTransparencyGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
 
+    var sun_next_setting_astro = new Date(weather.attributes.sun_next_setting_astro).getHours()
+    var sun_next_rising_astro = new Date(weather.attributes.sun_next_rising_astro).getHours()
+
     this.forecastChart = new Chart(ctx, {
       type: "bar",
       data: {
@@ -592,53 +629,98 @@ class AstroWeatherCard extends LitElement {
             data: condition,
             yAxisID: "PercentageAxis",
             backgroundColor: colorConditionGradient,
-            fill: true,
-            borderWidth: 2,
+            fill: fillLine,
+            borderWidth: 4,
             borderColor: colorCondition,
             pointBorderColor: function (context) {
               var index = context.dataIndex;
               var hour = new Date(dateTime[index]).getHours();
-              return hour >= 19 || hour <= 3
+              return hour >= sun_next_setting_astro || hour <= sun_next_rising_astro
                 ? colorConditionNight
                 : colorCondition;
             },
-            pointRadius: 5,
+            pointRadius: function (context) {
+              var index = context.dataIndex;
+              var hour = new Date(dateTime[index]).getHours();
+              return hour >= sun_next_setting_astro || hour <= sun_next_rising_astro
+                ? 5
+                : 0;
+            },
             pointStyle: "star",
           },
+
           {
             label: "Cloudless",
             type: "line",
             data: clouds,
             yAxisID: "PercentageAxis",
             backgroundColor: colorCloudlessGradient,
-            fill: true,
+            fill: fillLine,
             borderColor: colorCloudless,
             pointBorderColor: colorCloudless,
-            pointRadius: 4,
+            pointRadius: 0,
             pointStyle: "rect",
           },
+          {
+            label: "High",
+            type: "line",
+            data: clouds_high,
+            yAxisID: "PercentageAxis",
+            backgroundColor: colorCloudlessGradient,
+            fill: fillLine,
+            borderColor: colorCloudlessLevels,
+            pointBorderColor: colorCloudless,
+            pointRadius: 0,
+            pointStyle: "rect",
+          },
+          {
+            label: "Medium",
+            type: "line",
+            data: clouds_medium,
+            yAxisID: "PercentageAxis",
+            backgroundColor: colorCloudlessGradient,
+            fill: fillLine,
+            borderColor: colorCloudlessLevels,
+            pointBorderColor: colorCloudless,
+            pointRadius: 0,
+            pointStyle: "rect",
+          },
+          {
+            label: "Low",
+            type: "line",
+            data: clouds_low,
+            yAxisID: "PercentageAxis",
+            backgroundColor: colorCloudlessGradient,
+            fill: fillLine,
+            borderColor: colorCloudlessLevels,
+            pointBorderColor: colorCloudless,
+            pointRadius: 0,
+            pointStyle: "rect",
+          },
+
           {
             label: "Seeing",
             type: "line",
             data: seeing,
             yAxisID: "PercentageAxis",
             backgroundColor: colorSeeingGradient,
-            fill: true,
+            fill: fillLine,
             borderColor: colorSeeing,
             pointBorderColor: colorSeeing,
-            pointRadius: 4,
+            pointRadius: 0,
             pointStyle: "triangle",
           },
+
           {
             label: "Transparency",
             type: "line",
             data: transparency,
             yAxisID: "PercentageAxis",
             backgroundColor: colorTransparencyGradient,
-            fill: true,
+            fill: fillLine,
             borderColor: colorTransparency,
             pointBorderColor: colorTransparency,
-            pointRadius: 4,
+            pointRadius: 0,
             pointStyle: "circle",
           },
         ],
@@ -697,7 +779,7 @@ class AstroWeatherCard extends LitElement {
         },
         plugins: {
           legend: {
-            display: true,
+            display: false,
             position: "bottom",
             labels: {
               boxWitdth: 10,
@@ -705,6 +787,8 @@ class AstroWeatherCard extends LitElement {
                 size: 8,
               },
               padding: 5,
+              pointStyle: "circle",
+              pointStyleWidth: 1,
               usePointStyle: true,
             },
           },
@@ -774,7 +858,17 @@ class AstroWeatherCard extends LitElement {
   }
 
   getUnit(measure) {
-    return this.hass.config.unit_system[measure] || "";
+    const lengthUnit = this.hass.config.unit_system.length;
+    switch (measure) {
+      case "air_pressure":
+        return lengthUnit === "km" ? "hPa" : "inHg";
+      case "length":
+        return lengthUnit;
+      case "precipitation":
+        return lengthUnit === "km" ? "mm" : "in";
+      default:
+        return this.hass.config.unit_system.length || "";
+    }
   }
 
   _handleClick() {
