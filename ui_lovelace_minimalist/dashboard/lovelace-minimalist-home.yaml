@@ -329,9 +329,9 @@ views:
                       name: "Camera"
                       variables:
                         ulm_card_kepath_extra_templates_alternative_state_appearance:
-                          default_color: "blue"
+                          default_color: "green"
                           # triggered_icon: "mdi:camera"
-                          # triggered_color: "green"
+                          triggered_color: "red"
                         ulm_card_kepath_binary_sensor_count_notifications:
                           amount:
                             attribute_name: "cameras_off_count"
@@ -339,6 +339,8 @@ views:
                           action: "popup"
                           popup:
                             title: "camera entities"
+                            auto_entities:
+                              sort_method: "name"
 
                   item12:
                     card:
@@ -459,8 +461,10 @@ views:
                               attribute_name: "vacuums_error_count"
                             amount:
                               attribute_name: "vacuums_busy_count"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "more_info"
+                          # ulm_card_kepath_binary_sensor_count_tap_action:
+                          #   action: "more_info"
+                        tap_action:
+                          action: "more-info"
 
                     item4:
                       card:
@@ -530,6 +534,8 @@ views:
                             action: "popup"
                             popup:
                               title: "device_tracker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
 
                     item7:
                       card:
@@ -602,6 +608,9 @@ views:
                             action: "popup"
                             popup:
                               title: "battery entities"
+                              auto_entities:
+                                sort_method: "state"
+                                sort_numeric: true
 
                     item10:
                       card:
