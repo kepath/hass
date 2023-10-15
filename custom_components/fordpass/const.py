@@ -35,23 +35,29 @@ SENSORS = {
     "battery": {"icon": "mdi:car-battery"},
     "oil": {"icon": "mdi:oil"},
     "tirePressure": {"icon": "mdi:car-tire-alert"},
-    "gps": {"icon": "mdi:radar"},
+    # "gps": {"icon": "mdi:radar"},
     "alarm": {"icon": "mdi:bell"},
     "ignitionStatus": {"icon": "hass:power"},
     "doorStatus": {"icon": "mdi:car-door"},
     "windowPosition": {"icon": "mdi:car-door"},
     "lastRefresh": {"icon": "mdi:clock", "device_class": "timestamp"},
     "elVeh": {"icon": "mdi:ev-station"},
-    "deepSleepInProgress": {
-        "icon": "mdi:power-sleep",
-        "name": "Deep Sleep Mode Active",
-    },
-    "firmwareUpgInProgress": {
-        "icon": "mdi:one-up",
-        "name": "Firmware Update In Progress",
-    },
+    "elVehCharging": {"icon": "mdi:ev-station"},
+    "speed": {"icon": "mdi:speedometer"},
+    "indicators": {"icon": "mdi:engine-outline"},
+    "coolantTemp" : {"icon": "mdi:coolant-temperature", "state_class": "measurement", "device_class": "temperature"},
+    "outsideTemp" : {"icon": "mdi:thermometer", "state_class": "measurement", "device_class": "temperature"},
+    "engineOilTemp" : {"icon": "mdi:oil-temperature", "state_class": "measurement", "device_class": "temperature"},
+    # "deepSleepInProgress": {
+    #     "icon": "mdi:power-sleep",
+    #    "name": "Deep Sleep Mode Active",
+    # },
+    # "firmwareUpgInProgress": {
+    #    "icon": "mdi:one-up",
+    #   "name": "Firmware Update In Progress",
+    # },
     "remoteStartStatus": {"icon": "mdi:remote"},
-    "zoneLighting": {"icon": "mdi:spotlight-beam"},
+    # "zoneLighting": {"icon": "mdi:spotlight-beam"},
     "messages": {"icon": "mdi:message-text"},
     "dieselSystemStatus": {"icon": "mdi:smoking-pipe"},
     "exhaustFluidLevel": {"icon": "mdi:barrel"}
@@ -72,4 +78,7 @@ WINDOW_POSITIONS = {
     },
 }
 
-SWITCHES = {"ignition": {"icon": "hass:power"}, "guardmode": {"icon": "mdi:shield-key"}}
+SWITCHES = {
+    "ignition": {"icon": "hass:power"},
+    # "guardmode": {"icon": "mdi:shield-key"}
+}
