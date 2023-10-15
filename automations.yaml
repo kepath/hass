@@ -5,7 +5,7 @@
   - platform: state
     entity_id:
     - binary_sensor.yamaha_reciever_state
-    - media_player.yamaha_rx_v777_reciever_integration_bed_c
+    - media_player.rx_v777_reciever_yamaha_integration_bed_c
     from: 'on'
     to: 'off'
     id: dfsdfsdewwer21
@@ -23,7 +23,7 @@
   - platform: state
     entity_id:
     - binary_sensor.yamaha_reciever_state
-    - media_player.yamaha_rx_v777_reciever_integration_bed_c
+    - media_player.rx_v777_reciever_yamaha_integration_bed_c
     from: 'off'
     to: 'on'
     id: 345343gges4
@@ -1112,4 +1112,32 @@
     domain: lock
     entity_id: 2aa351b0b7bdb31860450ecf842ca28b
     type: unlock
+  mode: single
+- id: '1696689232940'
+  alias: on_sunset_offset_turn_on_fly_killer_lamp
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: -02:00:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 67879196ae31044a030a2b7e5d835867
+    entity_id: 425c765fe3225a803699446e1c87912b
+    domain: switch
+  mode: single
+- id: '1696832281170'
+  alias: On_sunset_offset_turn_off_fly_killer_lamp
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 04:00:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 67879196ae31044a030a2b7e5d835867
+    entity_id: 425c765fe3225a803699446e1c87912b
+    domain: switch
   mode: single
