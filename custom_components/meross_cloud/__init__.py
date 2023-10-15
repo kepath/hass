@@ -47,7 +47,8 @@ from .common import (
     LIMITER,
     CONF_HTTP_ENDPOINT, CONF_MQTT_SKIP_CERT_VALIDATION, HTTP_API_RE,
     HTTP_UPDATE_INTERVAL, DEVICE_LIST_COORDINATOR, calculate_id, DEFAULT_USER_AGENT, CONF_OPT_CUSTOM_USER_AGENT,
-    CONF_OVERRIDE_MQTT_ENDPOINT, CONF_OPT_LAN, CONF_OPT_LAN_MQTT_ONLY, TRANSPORT_MODES_TO_ENUM
+    CONF_OVERRIDE_MQTT_ENDPOINT, CONF_OPT_LAN, CONF_OPT_LAN_MQTT_ONLY, TRANSPORT_MODES_TO_ENUM,
+    MEROSS_DEFAULT_CLOUD_API_URL
 )
 from .version import MEROSS_IOT_VERSION
 
@@ -165,6 +166,7 @@ class MerossCoordinator(DataUpdateCoordinator):
             self.hass.config_entries.async_update_entry(
                 entry=self._entry,
                 data={
+                    CONF_HTTP_ENDPOINT: self._cached_creds.domain,
                     CONF_USERNAME: self._email,
                     CONF_PASSWORD: self._password,
                     CONF_STORED_CREDS: {
@@ -173,6 +175,8 @@ class MerossCoordinator(DataUpdateCoordinator):
                         "user_id": self._cached_creds.user_id,
                         "user_email": self._cached_creds.user_email,
                         "issued_on": self._cached_creds.issued_on.isoformat(),
+                        "domain": self._cached_creds.domain,
+                        "mqtt_domain": self._cached_creds.mqtt_domain
                     },
                 },
             )
@@ -218,6 +222,7 @@ class MerossDevice(Entity):
         self._device = device
         self._channel_id = channel
         self._last_http_state = None
+        self._cb_async_remove_listener = None
 
         base_name = f"{device.name} ({device.type})"
         if supplementary_classifiers is not None:
@@ -311,12 +316,13 @@ class MerossDevice(Entity):
 
     async def async_added_to_hass(self) -> None:
         self._device.register_push_notification_handler_coroutine(self._async_push_notification_received)
-        self._coordinator.async_add_listener(self._http_data_changed)
+        self._cb_async_remove_listener = self._coordinator.async_add_listener(self._http_data_changed)
         self.hass.data[DOMAIN]["ADDED_ENTITIES_IDS"].add(self.unique_id)
 
     async def async_will_remove_from_hass(self) -> None:
         self._device.unregister_push_notification_handler_coroutine(self._async_push_notification_received)
-        self._coordinator.async_remove_listener(self._http_data_changed)
+        if self._cb_async_remove_listener is not None:
+            self._cb_async_remove_listener()
         self.hass.data[DOMAIN]["ADDED_ENTITIES_IDS"].remove(self.unique_id)
 
 
@@ -324,22 +330,32 @@ async def get_or_renew_creds(
         email: str,
         password: str,
         stored_creds: MerossCloudCreds = None,
-        http_api_url: str = "https://iot.meross.com",
+        http_api_url: str = MEROSS_DEFAULT_CLOUD_API_URL,
         ua_header: str = DEFAULT_USER_AGENT
 ) -> Tuple[MerossHttpClient, List[HttpDeviceInfo], bool]:
     try:
-        if stored_creds is None:
+        renewed = False
+        if stored_creds is None or stored_creds.domain.lower().strip() == MEROSS_DEFAULT_CLOUD_API_URL:
+            # In case the client is using the old API endpoint, force a re-auth against the new endpoint
             http_client = await MerossHttpClient.async_from_user_password(
                 email=email, password=password, api_base_url=http_api_url, ua_header=ua_header
             )
+            renewed = True
         else:
             http_client = MerossHttpClient(
-                cloud_credentials=stored_creds, api_base_url=http_api_url, ua_header=ua_header
+                cloud_credentials=stored_creds, ua_header=ua_header
             )
+
+        # The local addon api might not be able to provide the correct domain and mqtt values. In this case,
+        # we patch them here.
+        if http_api_url is not None and (http_client.cloud_credentials.domain is None or stored_creds.domain.lower().strip() == MEROSS_DEFAULT_CLOUD_API_URL):
+            _LOGGER.warning("Returned/Stored DOMAIN within existing credentials is <%s>. Patching the stored credentials with the correct value right away.", http_client.cloud_credentials.domain)
+            http_client.cloud_credentials.domain = http_api_url
+            renewed = True
 
         # Test device listing. If goes ok, return it immediately. There is no need to update the credentials
         http_devices = await http_client.async_list_devices()
-        return http_client, http_devices, False
+        return http_client, http_devices, renewed
 
     except TokenExpiredException as e:
         # In case the current token is expired or invalid, let's try to re-login.
@@ -406,11 +422,14 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
     if str_creds is not None:
         issued_on = datetime.fromisoformat(str_creds.get("issued_on"))
         creds = MerossCloudCreds(
+            domain=str_creds.get("domain", MEROSS_DEFAULT_CLOUD_API_URL),
+            mqtt_domain=str_creds.get("mqtt_domain"),
             token=str_creds.get("token"),
             key=str_creds.get("key"),
             user_id=str_creds.get("user_id"),
             user_email=str_creds.get("user_email"),
             issued_on=issued_on,
+            mfa_lock_expire=str_creds.get("mfa_lock_expire", 0)
         )
         _LOGGER.info(
             f"Found application token issued on {creds.issued_on} to {creds.user_email}. Using it."
@@ -470,7 +489,7 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
 
         # Register a handler for HTTP events so that we can check for new devices and trigger
         # a discovery when needed
-        meross_coordinator.async_add_listener(_http_api_polled)
+        config_entry.async_on_unload(meross_coordinator.async_add_listener(_http_api_polled))
         config_entry.async_on_unload(config_entry.add_update_listener(update_listener))
 
         return True
@@ -549,8 +568,6 @@ async def async_unload_entry(hass, entry):
     del hass.data[DOMAIN][MANAGER]
     hass.data[DOMAIN].clear()
     del hass.data[DOMAIN]
-
-    # TODO: unregister the http handler device_list_coordinator
 
     _LOGGER.info("Meross cloud component removal done.")
     return True
