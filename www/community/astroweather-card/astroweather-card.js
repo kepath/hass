@@ -4,6 +4,14 @@ const LitElement = customElements.get("ha-panel-lovelace")
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
+const CARD_VERSION = "v0.31.2";
+
+console.info(
+  `%c  ASTROWEATHER-CARD  \n%c Version ${CARD_VERSION}  `,
+  'color: yellow; font-weight: bold; background: navy',
+  'color: white; font-weight: bold; background: black',
+);
+
 import { Chart, registerables } from "https://unpkg.com/chart.js@3.7.1?module";
 Chart.register(...registerables);
 
@@ -216,8 +224,9 @@ class AstroWeatherCard extends LitElement {
   renderCurrent(stateObj) {
     this.numberElements++;
 
-    var dsd_h = Math.floor(Math.round(stateObj.attributes.deep_sky_darkness) / 3600);
-    var dsd_m = Math.round(stateObj.attributes.deep_sky_darkness) % 60;
+    var dsd_duration = stateObj.attributes.deep_sky_darkness / 60
+    var dsd_h = Math.floor(dsd_duration / 60);
+    var dsd_m = Math.round(dsd_duration - dsd_h * 60);
 
     return html`
       <div class="current ${this.numberElements > 1 ? "spacer" : ""}">
@@ -442,6 +451,7 @@ class AstroWeatherCard extends LitElement {
     this.numberElements++;
 
     return html`
+      
       <ul
         class="deepskyforecast clear ${this.numberElements > 1 ? "spacer" : ""}"
       >
@@ -543,6 +553,8 @@ class AstroWeatherCard extends LitElement {
     if (this.forecastChart) {
       this.forecastChart.destroy();
     }
+    // let forecast_svc
+    // this.hass.callService("weather", "get_forecast", {"entity_id": "weather.astroweather_48_31279_11_98474"}, {"response_variable": "forecast_svc"})
     var forecast = weather.attributes.forecast.slice(
       0,
       this._config.number_of_forecasts ? this._config.number_of_forecasts : 5
@@ -621,6 +633,11 @@ class AstroWeatherCard extends LitElement {
     var sun_next_setting_astro = new Date(weather.attributes.sun_next_setting_astro).getHours()
     var sun_next_rising_astro = new Date(weather.attributes.sun_next_rising_astro).getHours()
 
+    var graphCondition = this._config.graph_condition;
+    var graphCloudless = this._config.graph_cloudless;
+    var graphSeeing = this._config.graph_seeing;
+    var graphTransparency = this._config.graph_transparency;
+
     this.forecastChart = new Chart(ctx, {
       type: "bar",
       data: {
@@ -651,7 +668,6 @@ class AstroWeatherCard extends LitElement {
             },
             pointStyle: "star",
           },
-
           {
             label: "Cloudless",
             type: "line",
@@ -782,7 +798,7 @@ class AstroWeatherCard extends LitElement {
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
             position: "bottom",
             labels: {
               boxWitdth: 10,
@@ -793,6 +809,16 @@ class AstroWeatherCard extends LitElement {
               pointStyle: "circle",
               pointStyleWidth: 1,
               usePointStyle: true,
+              filter: function (legendItem, data) {
+                return (legendItem.text == "Condition" && graphCondition) ||
+                  ((legendItem.text == "Cloudless" ||
+                    legendItem.text == "High" ||
+                    legendItem.text == "Medium" ||
+                    legendItem.text == "Low")
+                    && graphCloudless) ||
+                  (legendItem.text == "Seeing" && graphSeeing) ||
+                  (legendItem.text == "Transparency" && graphTransparency);
+              },
             },
           },
           datalabels: {
@@ -879,7 +905,7 @@ class AstroWeatherCard extends LitElement {
   }
 
   _handleClick() {
-    fireEvent(this, "hass-more-info", { entityId: this._config.entity });
+    // fireEvent(this, "hass-more-info", { entityId: this._config.entity });
   }
 
   getCardSize() {
