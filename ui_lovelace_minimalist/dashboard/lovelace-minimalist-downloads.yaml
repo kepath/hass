@@ -103,10 +103,56 @@ views:
                 cloud-question"
             {%- else -%}
                 radiobox-blank"
+            {%- endif -%} title="
+            {%- if item.state=="missing" -%}
+                missing"
+            {%- elif item.state=="unavail" -%}
+                unavailable"
+            {%- elif item.state=="unknown" -%}
+                unknown"
+            {%- else -%}
+                undefined"
             {%- endif -%}></ha-icon></td>
               <td>{{ item.id }}</td>
               <td>{{ item.occurrences.split(':')[1] }}</td>
             </tr>
+          {%- endfor -%}
+          </table>
+        card_mod:
+          style:
+            ha-markdown $: &ref_style |
+                tr {
+                  text-align: left;
+                  overflow-wrap: break-word;
+                  word-break: break-all;
+                }
+                th {
+                  padding-top: 0.5em;
+                  border-top: 1px solid var(--primary-text-color);
+                }
+
+  - title: "Watchmen Pages Missing"
+    icon: "mdi:shield-link-variant"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "markdown"
+        content: >-
+          <h1><ha-icon icon="mdi:shield-link-variant"></ha-icon>&nbsp;Watchman report</h1>
+          <h3>Missing Entities: {{ states("sensor.watchman_missing_entities") }}</h3>
+          <table>
+          {%- for item in state_attr("sensor.watchman_missing_entities", "entities") -%}
+            {%- if item.state=="missing" -%}
+              {%- if loop.changed(item.occurrences.split(':')[0]) -%}
+                <tr>
+                  <th colspan="3">{{ item.occurrences.split(':')[0] }}</th>
+                </tr>
+              {%- endif -%}
+                <tr>
+                  <td><ha-icon icon="mdi:cloud-alert"></ha-icon></td>
+                  <td>{{ item.id }}</td>
+                  <td>{{ item.occurrences.split(':')[1] }}</td>
+                </tr>
+            {%- endif -%}
           {%- endfor -%}
           </table>
         card_mod:

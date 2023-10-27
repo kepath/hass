@@ -3,7 +3,7 @@ template:
   - binary_sensor:
       - unique_id: "devicetracker_yamaha_reciever_state"
         name: "Yamaha Reciever State"
-        state: "{{ is_state('media_player.rx_v777_reciever_yamaha_integration_bed_c', 'on') }}"
+        state: "{{ False if is_state('media_player.rx_v777_reciever_yamaha_integration_bed_c', 'off') else True }}"
         attributes:
           icon: "mdi:audio-video"
           device_class: "connectivity"
@@ -74,9 +74,9 @@ template:
       - unique_id: "binary_state_apple_tv_bed_c"
         name: "Apple TV Bed C State"
         state: >-
-          {% if states('media_player.amazon_fire_tv_kitchen_adb') == 'unknown' or
-            states('media_player.amazon_fire_tv_kitchen_adb') == 'unavailable' or
-            states('media_player.amazon_fire_tv_kitchen_adb') == 'off' %}
+          {% if states('media_player.amazon_firestick_kitchen_unifi') == 'unknown' or
+            states('media_player.amazon_firestick_kitchen_unifi') == 'unavailable' or
+            states('media_player.amazon_firestick_kitchen_unifi') == 'off' %}
               {{ "off" }}
           {% else %}
               {{ "on" }}
@@ -88,9 +88,9 @@ template:
       - unique_id: "binary_state_fire_tv_kitchen"
         name: "Fire TV Kitchen State"
         state: >-
-          {% if states('media_player.amazon_fire_tv_kitchen_adb') == 'unknown' or
-            states('media_player.amazon_fire_tv_kitchen_adb') == 'unavailable' or
-            states('media_player.amazon_fire_tv_kitchen_adb') == 'off' %}
+          {% if states('media_player.amazon_firestick_kitchen_unifi') == 'unknown' or
+            states('media_player.amazon_firestick_kitchen_unifi') == 'unavailable' or
+            states('media_player.amazon_firestick_kitchen_unifi') == 'off' %}
               {{ "off" }}
           {% else %}
               {{ "on" }}
@@ -107,9 +107,9 @@ template:
             states('device_tracker.samsung_ue32f4500_tv_unifi') == 'away' or
             states('device_tracker.samsung_ue32f4500_tv_unifi') == 'not_home'or
             states('device_tracker.samsung_ue32f4500_tv_unifi') == 'off') and
-            (states('media_player.amazon_firestick_bed_a') == 'unknown' or
-            states('media_player.amazon_firestick_bed_a') == 'unavailable' or
-            states('media_player.amazon_firestick_bed_a') == 'off') %}
+            (states('media_player.amazon_firestick_bed_a_unifi') == 'unknown' or
+            states('media_player.amazon_firestick_bed_a_unifi') == 'unavailable' or
+            states('media_player.amazon_firestick_bed_a_unifi') == 'off') %}
               {{ "off" }}
           {% else %}
               {{ "on" }}
@@ -141,9 +141,9 @@ template:
       - unique_id: "binary_state_shield_bed_e"
         name: "NVidia Shield Bed E State"
         state: >-
-          {% if states('media_player.nvidia_shield_adb_bed_e') == 'unknown' or
-            states('media_player.nvidia_shield_adb_bed_e') == 'unavailable' or
-            states('media_player.nvidia_shield_adb_bed_e') == 'off' %}
+          {% if states('media_player.nvidia_shield_bed_e') == 'unknown' or
+            states('media_player.nvidia_shield_bed_e') == 'unavailable' or
+            states('media_player.nvidia_shield_bed_e') == 'off' %}
               {{ "off" }}
           {% else %}
               {{ "on" }}
