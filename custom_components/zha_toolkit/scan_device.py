@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import re
 
 from zigpy import types as t
 from zigpy.exceptions import ControllerException, DeliveryError
@@ -12,6 +11,9 @@ from . import utils as u
 from .params import INTERNAL_PARAMS as p
 
 LOGGER = logging.getLogger(__name__)
+
+
+ACCESS_CONTROL_MAP = {0x01: "READ", 0x02: "WRITE", 0x04: "REPORT"}
 
 
 @u.retryable(
@@ -217,9 +219,10 @@ async def discover_attributes_extended(cluster, manufacturer=None, tries=3):
             attr_type = foundation.DATA_TYPES.get(attr_rec.datatype)
             access_acl = t.uint8_t(attr_rec.acl)
 
-            if attr_rec.datatype not in [0x48] and (
-                access_acl & foundation.AttributeAccessControl.READ != 0
-            ):
+            # Note: reading back Array type was fixed in zigpy 0.58.1 .
+            if (
+                not u.is_zigpy_ge("0.58.1") or attr_rec.datatype not in [0x48]
+            ) and (access_acl & foundation.AttributeAccessControl.READ != 0):
                 to_read.append(attr_id)
 
             attr_type_hex = f"0x{attr_rec.datatype:02x}"
@@ -231,13 +234,16 @@ async def discover_attributes_extended(cluster, manufacturer=None, tries=3):
                 ]
             else:
                 attr_type = attr_type_hex
-            try:
-                access = re.sub(
-                    "^.*\\.",
-                    "",
-                    str(foundation.AttributeAccessControl(access_acl)),
+
+            if access_acl != 0:
+                access = "|".join(
+                    [
+                        s
+                        for x, s in ACCESS_CONTROL_MAP.items()
+                        if x & access_acl != 0
+                    ]
                 )
-            except ValueError:
+            else:
                 access = "undefined"
 
             result[attr_id] = {
