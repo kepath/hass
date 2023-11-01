@@ -1,7 +1,6 @@
 ---
 default_config:
 # discovery:
-api:
 stream:
 python_script:
 frontend:
@@ -9,6 +8,8 @@ frontend:
 browser_mod:
 recorder:
   db_url: !secret "hass_addon_mariadb_url"
+  db_max_retries: 20
+  db_retry_wait: 10
   # purge_keep_days: 3
   exclude:
     entities:
@@ -22,6 +23,7 @@ homeassistant:
   customize_glob: !include "customize_glob.yaml"
   packages: !include_dir_named "packages"
 http:
+api:
 logger:
   default: "info"
   logs:
@@ -55,6 +57,9 @@ device_tracker:
   - platform: "icloud3"
     username: !secret "apple_icloud_main_email"
     password: !secret "apple_icloud_main_password"
+  # - platform: "bluetooth_tracker"
+  # - platform: "bluetooth_le_tracker"
+  #   track_battery: true
 # device_tracker:
 #   - platform: "traccar"
 #     host: !secret "ha_rj45_dns"
