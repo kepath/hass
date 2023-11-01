@@ -210,7 +210,7 @@ card_kepath_floorplan_camera:
           relativeDate = states[variables?.ulm_card_kepath_floorplan_camera_last_activity_entity].state ? states[variables.ulm_card_kepath_floorplan_camera_last_activity_entity].state : "unknown"
         }
       }
-      return relativeDate
+      return relativeDate.replace("minutes", "mins").replace("minute", "min").replace(" ago", "");
     ]]]
   styles:
     icon:
@@ -297,7 +297,7 @@ card_kepath_floorplan_door:
           relativeDate = states[variables?.ulm_card_kepath_floorplan_door_last_opened_entity].state ? states[variables.ulm_card_kepath_floorplan_door_last_opened_entity].state : "unknown"
         }
       }
-      return relativeDate
+      return relativeDate.replace("minutes", "mins").replace("minute", "min").replace(" ago", "");
     ]]]
   styles:
     icon:
@@ -363,7 +363,7 @@ card_kepath_floorplan_nest_protect:
           relativeDate = states[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state ? states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state : "unknown"
         }
       }
-      return relativeDate.replace("minutes", "mins");
+      return relativeDate.replace("minutes", "mins").replace("minute", "min").replace(" ago", "");
     ]]]
   styles:
     icon:
@@ -885,7 +885,7 @@ card_kepath_floorplan_lock:
           relativeDate = states[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state ? states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state : "unknown"
         }
       }
-      return relativeDate
+      return relativeDate.replace("minutes", "mins").replace("minute", "min").replace(" ago", "");
     ]]]
   styles:
     icon:
