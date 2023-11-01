@@ -78,6 +78,14 @@ sensor:
     name: "FastHosts Auth"
     token: !secret "fasthosts_auth_otp"
 
+  - platform: "uk_transport"
+    app_id: "734a3e4d"
+    app_key: "7392c794ad863f41991ceda8166b279b"
+    queries:
+      - mode: "train"
+        origin: "BAN"
+        destination: "RDG" # "GLD"
+
 binary_sensor:
   - platform: "tod"
     name: "nighttime"
@@ -109,7 +117,6 @@ binary_sensor:
     after: "19:00"
     before: "21:00"
     unique_id: "tod_evening_heating_time"
-
 # influxdb:
 #   host: 192.168.1.22
 #   database: unifi
