@@ -84,7 +84,10 @@ sensor:
     queries:
       - mode: "train"
         origin: "BAN"
-        destination: "RDG" # "GLD"
+        destination: "RDG"
+      - mode: "train"
+        origin: "RDG"
+        destination: "GLD"
 
 binary_sensor:
   - platform: "tod"
@@ -137,3 +140,8 @@ binary_sensor:
 #   tags:
 #     instance: prod
 #     source: hass
+
+iperf3:
+  hosts:
+    - host: "iperf.he.net"
+    - host: "speedtest-london.its-tg.net"

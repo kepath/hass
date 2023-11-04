@@ -32,7 +32,7 @@ template:
           climate_devices_on_count: >
             {{
               [(expand('group.all_climate')|map(attribute='entity_id')|select('is_state_attr', 'hvac_action', 'heat')|list|count),
-              (expand('group.all_climate')|rejectattr('attributes.hvac_action', 'defined')|selectattr('state', 'eq', 'heat')|list|count),
+              (expand('group.all_climate')|rejectattr('attributes.hvac_action', 'defined')|selectattr('state', 'in', ['heat','on'])|list|count),
               (( 0 if (states('sensor.air_to_water_heat_pump_out_water_temperature')|round < 45) else 1) if (has_value('sensor.air_to_water_heat_pump_out_water_temperature')) else 0 )]|sum
             }}
           connectivity_disconnected_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
