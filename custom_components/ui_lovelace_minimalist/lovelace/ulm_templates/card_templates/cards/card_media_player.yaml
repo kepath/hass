@@ -11,7 +11,7 @@ card_media_player:
     ulm_card_media_player_enable_controls: false
     ulm_card_media_player_enable_volume_slider: false
     ulm_card_media_player_enable_volume_buttons: false
-    ulm_card_media_player_enable_volume_adjust: false
+    ulm_card_media_player_enable_volume_adjust: 0
     ulm_card_media_player_collapsible: false
     ulm_card_media_player_player_controls_entity: "[[[ return entity.entity_id ]]]"
     ulm_card_media_player_enable_popup: false
@@ -19,7 +19,6 @@ card_media_player:
     ulm_card_media_player_power_button: false
     ulm_card_media_player_force_background_color: false
     ulm_card_media_player_color: "blue"
-  triggers_update: "all"
   show_icon: false
   show_name: false
   show_label: false
@@ -203,54 +202,21 @@ card_media_player:
                 [[[
                   var icon = entity.attributes.icon || "mdi:speaker";
                   if(entity.attributes.app_name){
-                    var app = entity.attributes.app_name.toLowerCase().replace(/ |-|_|\./gi, "");
+                    var app = entity.attributes.app_name.toLowerCase();
                     var icon = {
-                      "spotify": "si:spotify",
-                      "googlepodcasts": "si:googlepodcasts",
-                      "googleplay": "si:googleplay",
-                      "google": "si:google",
-                      "youtubemusic": "si:youtubemusic",
-                      "youtube": "si:youtube",
-                      "applepodcasts": "si:applepodcasts",
-                      "applemusic": "si:applemusic",
-                      "appletv": "si:appletv",
-                      "apple": "si:apple",
-                      "amazon": "si:prime",
-                      "prime": "si:prime",
-                      "plex": "si:plex",
-                      "soundcloud": "si:soundcloud",
-                      "otomusic": "mdi:music-circle",
-                      "pandora": "si:pandora",
-                      "netflix": "si:netflix",
-                      "hulu": "si:hulu",
-                      "bluetoothaudio": "mdi:bluetooth",
-                      "bbciplayer": "si:bbciplayer",
-                      "crunchyroll": "si:crunchyroll",
-                      "deezer": "si:deezer",
-                      "ubiquiti": "si:ubiquiti",
-                      "unifi": "si:ubiquiti",
-                      "jellyfin": "si:jellyfin",
-                      "tunein": "si:tunein",
-                      "pluralsight": "si:pluralsight",
-                      "udemy": "si:udemy",
-                      "vimeo": "si:vimeo",
-                      "steam": "si:steam",
-                      "itv": "si:itvx",
-                      "ted": "si:ted",
-                      "videolan": "si:vlcmediaplayer",
-                      "vlc": "si:vlcmediaplayer",
-                      "now": "si:now",
-                      "disney": "phu:disney-plus",
-                      "twitch": "si:twitch"
-                    }
-                    var obj = JSON.parse(JSON.stringify(icon));
-                    for (var key in obj) {
-                      if (app.includes(key)) {
-                        return obj[key];
-                      }
+                      "spotify": "mdi:spotify",
+                      "google podcasts": "mdi:google-podcast",
+                      "plex": "mdi:plex",
+                      "soundcloud": "mdi:soundcloud",
+                      "youtube music": "mdi:youtube",
+                      "oto music": "mdi:music-circle",
+                      "pandora": "mdi:pandora",
+                      "netflix": "mdi:netflix",
+                      "hulu": "mdi:hulu",
+                      "bluetooth audio": "mdi:bluetooth"
                     }
                   }
-                  return variables.ulm_card_media_player_icon;
+                  return variables.ulm_card_media_player_icon || icon[app];
                 ]]]
               styles:
                 icon:
@@ -802,8 +768,8 @@ card_media_player:
                   volume_level: |
                     [[[
                       var volume = states[entity.entity_id].attributes.volume_level;
-                      if (variables.ulm_card_media_player_enable_volume_adjust) {
-                          volume = states[entity.entity_id].attributes.volume_level + ulm_card_media_player_enable_volume_adjust;
+                      if (variables.ulm_card_media_player_enable_volume_adjust != 0) {
+                          volume = states[entity.entity_id].attributes.volume_level - variables.ulm_card_media_player_enable_volume_adjust;
                       } else {
                           if (states[entity.entity_id].attributes.device_class === "tv") {
                               volume = states[entity.entity_id].attributes.volume_level - 0.01;
@@ -882,8 +848,8 @@ card_media_player:
                   volume_level: |
                     [[[
                       var volume = states[entity.entity_id].attributes.volume_level;
-                      if (variables.ulm_card_media_player_enable_volume_adjust) {
-                          volume = states[entity.entity_id].attributes.volume_level + ulm_card_media_player_enable_volume_adjust;
+                      if (variables.ulm_card_media_player_enable_volume_adjust != 0) {
+                          volume = states[entity.entity_id].attributes.volume_level + variables.ulm_card_media_player_enable_volume_adjust;
                       } else {
                           if (states[entity.entity_id].attributes.device_class === "tv") {
                               volume = states[entity.entity_id].attributes.volume_level + 0.01;
