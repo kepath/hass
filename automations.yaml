@@ -42,11 +42,11 @@
   alias: on_open_garage_door_turn_on_garage_light
   description: ''
   trigger:
-  - device_id: e455b2eeea8937c7ad7cad0320940913
-    domain: zha
+  - type: opened
     platform: device
-    type: device_offline
-    subtype: device_offline
+    device_id: e455b2eeea8937c7ad7cad0320940913
+    entity_id: 7f001b9228a16c5e6a363d939dbfe37a
+    domain: binary_sensor
   condition: []
   action:
   - type: turn_on
@@ -64,8 +64,8 @@
     entity_id: binary_sensor.zigbee_door_sensor_garage_contact
     domain: binary_sensor
     for:
-      hours: 0
-      minutes: 10
+      hours: 2
+      minutes: 0
       seconds: 0
   condition: []
   action:
@@ -937,9 +937,6 @@
       - connectivity
       excluded_entity_groups:
       - group.globally_excluded_entities
-      excluded_entities:
-      - sensor.download_speedtest_london_its_tg_net
-      - sensor.upload_speedtest_london_its_tg_net
   mode: single
 - id: '1693773833620'
   alias: on_start_create_group.all_plug_class_binary_sensors
@@ -1059,6 +1056,8 @@
       - sensor.diskstation_download_throughput
       - sensor.speedtest_download
       - sensor.speedtest_upload
+      - sensor.download_speedtest_london_its_tg_net
+      - sensor.upload_speedtest_london_its_tg_net
   mode: single
 - id: '1693775484055'
   alias: on_start_create_group.all_signal_strength_class_sensors
