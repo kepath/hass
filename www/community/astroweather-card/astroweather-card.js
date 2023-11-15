@@ -250,6 +250,8 @@ class AstroWeatherCard extends LitElement {
     let moon_next_rising;
     let moon_next_setting;
     let moon_next_new_moon;
+    let moon_next_full_moon;
+    let local_time;
 
     sun_next_rising = new Date(
       stateObj.attributes.sun_next_rising
@@ -325,9 +327,20 @@ class AstroWeatherCard extends LitElement {
     });
     moon_next_new_moon = new Date(
       stateObj.attributes.moon_next_new_moon
-    ).toLocaleTimeString(lang, {
+    ).toLocaleDateString(lang, {
       month: "2-digit",
       day: "2-digit",
+    });
+    moon_next_full_moon = new Date(
+      stateObj.attributes.moon_next_full_moon
+    ).toLocaleDateString(lang, {
+      month: "2-digit",
+      day: "2-digit",
+    });
+    let diff = (new Date()).getTimezoneOffset();
+    local_time = new Date(Date.now() + 
+      stateObj.attributes.time_shift * 1000 + diff * 60000
+    ).toLocaleTimeString(lang, {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
@@ -436,12 +449,20 @@ class AstroWeatherCard extends LitElement {
           Rising: ${moon_next_rising}
         </li>
         <li>
+          <ha-icon icon="mdi:moon-new"></ha-icon>
+          New Moon: ${moon_next_new_moon}
+        </li>
+        <li>
+          <ha-icon icon="mdi:moon-full"></ha-icon>
+          Full Moon: ${moon_next_full_moon}
+        </li>
+        <li>
           <ha-icon icon="mdi:moon-waning-gibbous"></ha-icon>
           Moon Phase: ${stateObj.attributes.moon_phase} %
         </li>
         <li>
-          <ha-icon icon="mdi:moon-new"></ha-icon>
-          New Moon: ${moon_next_new_moon}
+          <ha-icon icon="mdi:map-clock-outline"></ha-icon>
+          Local Time: ${local_time}
         </li>
       </ul>
     `;
@@ -655,16 +676,28 @@ class AstroWeatherCard extends LitElement {
             pointBorderColor: function (context) {
               var index = context.dataIndex;
               var hour = new Date(dateTime[index]).getHours();
-              return hour >= sun_next_setting_astro || hour <= sun_next_rising_astro
+              if (sun_next_setting_astro < sun_next_rising_astro) {
+                return hour >= sun_next_setting_astro && hour <= sun_next_rising_astro
+                  ? colorConditionNight
+                  : colorCondition;
+              } else {
+                return hour >= sun_next_setting_astro || hour <= sun_next_rising_astro
                 ? colorConditionNight
                 : colorCondition;
+              }
             },
             pointRadius: function (context) {
               var index = context.dataIndex;
               var hour = new Date(dateTime[index]).getHours();
-              return hour >= sun_next_setting_astro || hour <= sun_next_rising_astro
-                ? 5
-                : 0;
+              if (sun_next_setting_astro < sun_next_rising_astro) {
+                return hour >= sun_next_setting_astro && hour <= sun_next_rising_astro
+                  ? 5
+                  : 0;
+              } else {
+                return hour >= sun_next_setting_astro || hour <= sun_next_rising_astro
+                  ? 5
+                  : 0;
+              }
             },
             pointStyle: "star",
           },
