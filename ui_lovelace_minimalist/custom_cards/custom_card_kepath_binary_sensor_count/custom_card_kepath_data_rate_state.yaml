@@ -15,35 +15,13 @@ custom_card_kepath_data_rate_state:
             return isValueAttribute;
           ]]]
         attribute_name: "unknown_value"
-  # state:
-  #   - operator: "template"
-  #     value: >
-  #       [[[
-  #           var attributeValue = "unknown";
-  #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.data_rate_value?.attribute_name) {
-  #             attributeValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.data_rate_value.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.data_rate_value.attribute_name];
-  #           }
-  #           if(attributeValue == "unknown") {
-  #             return true;
-  #           }
-  #           return false;
-  #       ]]]
-  #     icon: "mdi:numeric-off"
-
   icon: >
     [[[
       var icon = "mdi:numeric-off";
-      //var amountValue = 0;
-      //var icon = "mdi:numeric-0-circle";
       var attributeValue = "unknown";
       if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.data_rate_value?.attribute_name) {
         attributeValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.data_rate_value.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.data_rate_value.attribute_name];
       }
-      //if (variables.notification_counts.is_attribute) {
-      //  amountValue = states[variables?.notification_counts?.entity]?.attributes[variables?.notification_counts?.attribute_name] ? states[variables.notification_counts.entity].attributes[variables.notification_counts.attribute_name] : 0;
-      //} else {
-      //  amountValue = states[variables?.notification_counts?.entity]?.state ? states[variables.notification_counts.entity].state : 0;
-      //}
       if (!isNaN(attributeValue) && attributeValue !== undefined){
         icon = "mdi:numeric-0";
         if (attributeValue > 9) {
@@ -118,30 +96,3 @@ custom_card_kepath_data_rate_state:
             }
             return color;
           ]]]
-
-    # - operator: "template"
-    #   value: >
-    #     [[[
-    #         var attributeValue = 0;
-    #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.data_rate_value?.attribute_name) {
-    #           attributeValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.data_rate_value.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.data_rate_value.attribute_name];
-    #         }
-    #         if(attributeValue > -60) {
-    #           return true;
-    #         }
-    #         return false;
-    #     ]]]
-    #   icon: "mdi:signal-cellular-3"
-    #   styles:
-    #     icon:
-    #       - color: "rgba(var(--color-green),1)"
-    #     img_cell:
-    #       - background-color: "rgba(var(--color-green), 0.2)"
-
-    # - operator: "default"
-    #   icon: "mdi:signal-cellular-outline"
-    #   styles:
-    #     icon:
-    #       - color: "rgba(var(--color-purple),1)"
-    #     img_cell:
-    #       - background-color: "rgba(var(--color-purple), 0.2)"
