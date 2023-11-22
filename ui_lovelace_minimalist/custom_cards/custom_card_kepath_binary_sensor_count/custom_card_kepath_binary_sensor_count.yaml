@@ -130,6 +130,8 @@ custom_card_kepath_binary_sensor_count:
         - position: "absolute"
         - left: "56%"
         - top: "32px"
+      notification:
+        - visibility: "hidden"
 
   custom_fields:
     unavailable:
@@ -292,6 +294,7 @@ custom_popup_auto_entities_list:
         path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.action == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate.page : '/0' ]]]"
         title: "[[[return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.title]]]"
         # dismissable: false
+        autoclose: false
         style:
           $: >
             [[[
@@ -335,6 +338,14 @@ custom_popup_auto_entities_list:
                 type: "entities"
                 show_header_toggle: false
                 state_color: true
+                tap_action:
+                  action: "fire-dom-event"
+                  browser_mod:
+                    service: "browser_mod.more_info"
+                    data:
+                      entity: "[[[ return entity.entity_id ]]]"
+                      large: true
+                      ignore_popup_card: true
               filter:
                 include:
                   - group: "[[[ return entity.entity_id ]]]"
