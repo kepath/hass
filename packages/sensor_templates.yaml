@@ -31,7 +31,7 @@ template:
           cameras_off_count: "{{ expand('group.all_cameras')|rejectattr('state','in', ['recording','idle'])|list|count }}"
           climate_devices_on_count: >
             {{
-              [(expand('group.all_climate')|map(attribute='entity_id')|select('is_state_attr', 'hvac_action', 'heat')|list|count),
+              [(expand('group.all_climate')|map(attribute='entity_id')|select('is_state_attr', 'hvac_action', 'heating')|list|count),
               (expand('group.all_climate')|rejectattr('attributes.hvac_action', 'defined')|selectattr('state', 'in', ['heat','on'])|list|count),
               (( 0 if (states('sensor.air_to_water_heat_pump_out_water_temperature')|round < 45) else 1) if (has_value('sensor.air_to_water_heat_pump_out_water_temperature')) else 0 )]|sum
             }}
@@ -502,55 +502,55 @@ template:
         attributes:
           front_door_last_opened: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.front_door_last_opened') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.front_door_last_opened')) else easy_relative_time('input_datetime.front_door_last_opened') }}
           front_door_last_locked: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.front_door_last_locked') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.front_door_last_locked')) else easy_relative_time('input_datetime.front_door_last_locked') }}
           back_door_last_opened: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.back_door_last_opened') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.back_door_last_opened')) else easy_relative_time('input_datetime.back_door_last_opened') }}
           patio_door1_last_opened: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.patio_door1_last_opened') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.patio_door1_last_opened')) else easy_relative_time('input_datetime.patio_door1_last_opened') }}
           patio_door2_last_opened: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.patio_door2_last_opened') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.patio_door2_last_opened')) else easy_relative_time('input_datetime.patio_door2_last_opened') }}
           garage_door_last_opened: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.garage_door_last_opened') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.garage_door_last_opened')) else easy_relative_time('input_datetime.garage_door_last_opened') }}
           loft_ladder_last_opened: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.loft_ladder_last_opened') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.loft_ladder_last_opened')) else easy_relative_time('input_datetime.loft_ladder_last_opened') }}
           nest_protect_bottom_floor_last_activity: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.nest_protect_bottom_floor_last_activity') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.nest_protect_bottom_floor_last_activity')) else easy_relative_time('input_datetime.nest_protect_bottom_floor_last_activity') }}
           nest_protect_middle_floor_last_activity: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.nest_protect_middle_floor_last_activity') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.nest_protect_middle_floor_last_activity')) else easy_relative_time('input_datetime.nest_protect_middle_floor_last_activity') }}
           nest_protect_top_floor_last_activity: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.nest_protect_top_floor_last_activity') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.nest_protect_top_floor_last_activity')) else easy_relative_time('input_datetime.nest_protect_top_floor_last_activity') }}
           motion_sensor_front_door_stairs_last_activity: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.motion_sensor_front_door_stairs_last_activity') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.motion_sensor_front_door_stairs_last_activity')) else easy_relative_time('input_datetime.motion_sensor_front_door_stairs_last_activity') }}
           motion_sensor_bed_e_last_activity: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('input_datetime.motion_sensor_bed_e_last_activity') }}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.motion_sensor_bed_e_last_activity')) else easy_relative_time('input_datetime.motion_sensor_bed_e_last_activity') }}
           back_g3_flex_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('sensor.back_g3_flex_last_motion_detected') }}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.back_g3_flex_last_motion_detected')) else easy_relative_time('sensor.back_g3_flex_last_motion_detected') }}
           bed_c_g3_instant_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('sensor.bed_c_g3_instant_last_motion_detected') }}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.bed_c_g3_instant_last_motion_detected')) else easy_relative_time('sensor.bed_c_g3_instant_last_motion_detected') }}
           bottom_hallway_g3_instant_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('sensor.bottom_hallway_g3_instant_last_motion_detected') }}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.bottom_hallway_g3_instant_last_motion_detected')) else easy_relative_time('sensor.bottom_hallway_g3_instant_last_motion_detected') }}
           front_g3_flex_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('sensor.front_g3_flex_last_motion_detected') }}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.front_g3_flex_last_motion_detected')) else easy_relative_time('sensor.front_g3_flex_last_motion_detected') }}
           kitchen_g3_instant_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('sensor.kitchen_g3_instant_last_motion_detected') }}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.kitchen_g3_instant_last_motion_detected')) else easy_relative_time('sensor.kitchen_g3_instant_last_motion_detected') }}
           middle_hallway_g3_flex_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
-            {{ easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected') }}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected')) else easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected') }}
