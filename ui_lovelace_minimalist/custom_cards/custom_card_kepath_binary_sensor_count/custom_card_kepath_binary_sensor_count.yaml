@@ -205,7 +205,14 @@ widget_count_indicator:
       - width: "14px"
       - height: "14px"
       - line-height: "0"
-      - color: "rgba(var(--color-red),1)"
+      - color: >
+          [[[
+            var iconColor = "yellow";
+            if(!hass.themes.darkMode) {
+              iconColor = "red";
+            }
+            return "rgba(var(--color-" + iconColor + "),1)"
+          ]]]
     img_cell:
       - border-radius: "50%"
       - background-color: "var(--card-background-color)"
@@ -334,23 +341,31 @@ custom_popup_auto_entities_list:
           type: "vertical-stack"
           cards:
             - type: "custom:auto-entities"
+              # entities:
+              #   - entity: "light.bed_e_light_light_1"
               card:
                 type: "entities"
                 show_header_toggle: false
                 state_color: true
-                tap_action:
-                  action: "fire-dom-event"
-                  browser_mod:
-                    service: "browser_mod.more_info"
-                    data:
-                      entity: "[[[ return entity.entity_id ]]]"
-                      large: true
-                      ignore_popup_card: true
+                # tap_action:
+                #   action: "fire-dom-event"
+                #   browser_mod:
+                #     service: "browser_mod.more_info"
+                #     data:
+                #       entity: "[[[ return this.entity_id ]]]"
+                # ignore_popup_card: true
               filter:
                 include:
                   - group: "[[[ return entity.entity_id ]]]"
-                    options:
-                      secondary_info: "last-changed"
+                    # options:
+                    #   secondary_info: "last-changed"
+                    #   tap_action:
+                    #     action: "fire-dom-event"
+                    #     browser_mod:
+                    #       service: "browser_mod.more_info"
+                    #       data:
+                    #         entity: "[[[ return this.entity_id ]]]"
+                    #         ignore_popup_card: true
               sort:
                 method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method ]]]"
                 numeric: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric ]]]"
