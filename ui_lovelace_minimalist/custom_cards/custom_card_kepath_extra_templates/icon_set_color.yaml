@@ -1,6 +1,20 @@
 ---
 icon_set_color:
   variables:
+    ulm_card_kepath_binary_sensor_count_notifications:
+      unavailable:
+        entity: "sensor.binary_sensor_state_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
     ulm_card_kepath_extra_templates_alternative_state_appearance:
       default_icon: >
         [[[
@@ -50,11 +64,34 @@ icon_set_color:
           }
           return defaultColor;
         ]]]
+      trigger_on_unavailable: >
+        [[[
+          var unavailableTrigger = false;
+          if (variables?.ulm_card_kepath_extra_templates_alternative_state_appearance?.trigger_on_unavailable) {
+            if (typeof variables.ulm_card_kepath_extra_templates_alternative_state_appearance.trigger_on_unavailable === "boolean") {
+              unavailableTrigger = variables.ulm_card_kepath_extra_templates_alternative_state_appearance.trigger_on_unavailable;
+            }
+          }
+          return unavailableTrigger;
+        ]]]
   state:
     - operator: "template"
       value: >
         [[[
-          return (entity.state == 'on' || entity.state == 'recording' || entity.state == 'idle' || entity.state == 'away' || entity.state == 'idle')
+          var amountValue = 0;
+          if (variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute) {
+            amountValue =
+              states[variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity]?.attributes[variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.attribute_name]
+                ? states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name]
+                : 0;
+          } else {
+            amountValue =
+              states[variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity]?.state
+                ? states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.entity].state
+                : 0;
+          }
+          return (entity.state == 'on' || entity.state == 'recording' || entity.state == 'idle' || entity.state == 'away'
+            || (variables.ulm_card_kepath_extra_templates_alternative_state_appearance.trigger_on_unavailable && amountValue != 0))
         ]]]
       icon: >
         [[[
