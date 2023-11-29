@@ -536,7 +536,7 @@ const Mt=new WeakMap,Tt=g(t=>e=>{if(!(e instanceof C)||e instanceof T||"style"!=
             <div class="volume-controls">
                 <ha-icon-button style="${Tt(s)}" icon="${i.volume_down.icon}" @click="${t=>this.volumeCommand(t,e,"volume_down")}" @touchstart="${t=>this.preventBubbling(t)}"><ha-icon icon="${i.volume_down.icon}"></ha-icon></ha-icon-button>
                 <ha-icon-button style="${Tt(a)}" icon="${i.volume_up.icon}" @click="${t=>this.volumeCommand(t,e,"volume_up")}" @touchstart="${t=>this.preventBubbling(t)}"><ha-icon icon="${i.volume_up.icon}"></ha-icon-button>
-                <paper-slider           
+                <ha-slider           
                     @change=${t=>this.volumeCommand(t,e,"volume_set",{volume_level:t.target.value/100})}
                     @click=${t=>t.stopPropagation()}
                     @touchstart="${t=>this.preventBubbling(t)}"
@@ -545,7 +545,7 @@ const Mt=new WeakMap,Tt=g(t=>e=>{if(!(e instanceof C)||e instanceof T||"style"!=
                     value=${100*o}
                     dir=${"ltr"}
                     ignore-bar-touch pin>
-                </paper-slider>
+                </ha-slider>
                 
                 <ha-icon-button style="${Tt(c)}" icon="${i.volume_mute.icon}" @click="${t=>this.volumeCommand(t,e,"volume_mute",{is_volume_muted:!0})}" @touchstart="${t=>this.preventBubbling(t)}"><ha-icon icon="${i.volume_mute.icon}"></ha-icon></ha-icon-button>
             </div>`}renderDeviceVolumeControls(t,e){return I`
