@@ -8,23 +8,6 @@ esphome:
   comment: "${friendly_name}"
   platform: "ESP8266"
   board: "esp01_1m"
-  on_boot:
-    - priority: -100
-      then:
-        - if:
-            condition:
-              - sun.is_below_horizon:
-            then:
-              - light.turn_on: "lightid1"
-              - logger.log: "startup - light should be on"
-            else:
-              - light.turn_off: "lightid1"
-              - logger.log: "startup - light should be off"
-
-  # globals:
-  #   - id: last_value_from_ha
-  #     type: int
-  #     initial_value: '0'
 
 wifi:
   ssid: "${ssid}"
@@ -56,44 +39,21 @@ api:
 ota:
 web_server:
   port: 80
-  # js_include: "./includes/v2/www.js"
-  # js_url: ""
-  # local: true
   version: 2
-# prometheus:
 
 time:
   - platform: "homeassistant"
     id: "homeassistant_time"
-
-  # - platform: sntp
-  #   id: sntp_time
-  #   servers: !secret ha_rj45_ip
-
-#==============================================================
 
 # Text sensors with general information.
 text_sensor:
   # Expose ESPHome version as sensor.
   - platform: "version"
     name: "${device_name} ESPHome Version"
-    # - platform: homeassistant
-    #   name: ${device_name}-uptime
-    #   id: watchdog
-    #   entity_id: sensor.time
-    #   on_value:
-    #     then:
-    #       - lambda: !lambda |-
-    #           auto time_now = id(homeassistant_time).utcnow();
-    #           id(last_value_from_ha) = time_now.timestamp;
   - platform: "template"
     name: "${device_name}-uptime"
     id: "uptime_human"
     icon: "mdi:clock-start"
-  # - platform: template
-  #   name: ${device_name}-isnight
-  #   id: isnight_text
-  #   icon: mdi:weather-night
   # Expose WiFi information as sensors.
   - platform: "wifi_info"
     ip_address:
@@ -104,14 +64,6 @@ text_sensor:
       name: "${device_name}-BSSID"
     mac_address:
       name: "${device_name}-MAC"
-    # scan_results:
-    #   name: ${device_name}-wifi-scan
-  - platform: "sun"
-    name: "Sun Next Sunrise"
-    type: "sunrise"
-  - platform: "sun"
-    name: "Sun Next Sunset"
-    type: "sunset"
 
 sensor:
   - platform: "ntc"
@@ -142,10 +94,6 @@ sensor:
   - platform: "adc"
     id: "temp_analog_reading"
     pin: "A0"
-  # - platform: "internal_temperature"
-  #   name: "Internal Temperature"
-  #   unit_of_measurement: "°C"
-  #   icon: "mdi:thermometer"
   - platform: "wifi_signal"
     name: "${device_name}-RSSI"
     update_interval: "60s"
@@ -174,21 +122,5 @@ sensor:
                 (to_string(seconds) + "s")
               ).c_str();
 
-  # interval:
-  #   - interval: 15s
-  #     then:
-  #     - if:
-  #         condition:
-  #           - lambda: !lambda |-
-  #               auto time_now = id(homeassistant_time).utcnow();
-
-  #               if(time_now.timestamp - id(last_value_from_ha) > 120)
-  #                 return true;
-
-  #               return false;
-  #         then:
-  #           - light.turn_off: lightid1 # lost connection, turn off
-
 status_led:
   pin: "GPIO0"
-#==============================================================

@@ -1,63 +1,5 @@
 ---
-# proximity:
-#   home:
-#     devices:
-#       # Kevin
-#       - "device_tracker.kev_iphone_11_unifi"
-#       - "device_tracker.repl_iphone_11"
-#       - "device_tracker.kevin_iphone_ha_app"
-#       # Julia
-#       - "device_tracker.ju_iphone_8_unifi"
-#       - "device_tracker.julia_s_iphone_6"
-#       # Daniel
-#       - "device_tracker.iphone_12_dan_unifi"
-#       - "device_tracker.iphone"
-#       # Emily
-#       - "device_tracker.iphone_5"
-#       - "device_tracker.patrice"
-#     tolerance: 50
-#     unit_of_measurement: "mi"
-#   kevin_thorn_home:
-#     zone: "home"
-#     devices:
-#       - "device_tracker.kev_iphone_11_unifi"
-#       - "device_tracker.repl_iphone_11"
-#       - "device_tracker.kevin_iphone_ha_app"
-#     tolerance: 50
-#     unit_of_measurement: "mi"
-#   julia_thorn_home:
-#     zone: "home"
-#     devices:
-#       - "device_tracker.ju_iphone_8_unifi"
-#       - "device_tracker.julia_s_iphone_6"
-#     tolerance: 50
-#     unit_of_measurement: "mi"
-#   daniel_thorn_home:
-#     zone: "home"
-#     devices:
-#       - "device_tracker.iphone_12_dan"
-#       - "device_tracker.iphone"
-#     tolerance: 50
-#     unit_of_measurement: "mi"
-#   daniel_thorn_uni:
-#     zone: "dan_uni_accomodation"
-#     devices:
-#       - "device_tracker.iphone_12_dan"
-#       - "device_tracker.iphone"
-#     tolerance: 50
-#     unit_of_measurement: "mi"
-#   emily_thorn_home:
-#     zone: "home"
-#     devices:
-#       - "device_tracker.iphone_5"
-#       - "device_tracker.patrice"
-#     tolerance: 50
-#     unit_of_measurement: "mi"
 sensor:
-  # - platform: "tautulli"
-  #   name: "Plex State Tautulli"
-  #   host: !secret "ha_rj45_ip"
-  #   api_key: !secret "tautulli_api_key"
 
   - platform: "bitcoin"
     currency: "GBP"
@@ -77,17 +19,6 @@ sensor:
   - platform: "otp"
     name: "FastHosts Auth"
     token: !secret "fasthosts_auth_otp"
-
-  # - platform: "uk_transport"
-  #   app_id: "734a3e4d"
-  #   app_key: "7392c794ad863f41991ceda8166b279b"
-  #   queries:
-  #     - mode: "train"
-  #       origin: "BAN"
-  #       destination: "RDG"
-  #     - mode: "train"
-  #       origin: "RDG"
-  #       destination: "GLD"
 
 binary_sensor:
   - platform: "tod"
@@ -120,26 +51,6 @@ binary_sensor:
     after: "19:00"
     before: "21:00"
     unique_id: "tod_evening_heating_time"
-# influxdb:
-#   host: 192.168.1.22
-#   database: unifi
-#   username: !secret "influx_db_user"
-#   password: !secret "influx_db_pass"
-#   max_retries: 3
-#   default_measurement: "state"
-#   exclude:
-#     entities:
-#        - entity.id1
-#        - entity.id2
-#     domains:
-#        - automation
-#   include:
-#     entities:
-#        - entity.id3
-#        - entity.id4
-#   tags:
-#     instance: prod
-#     source: hass
 
 spotcast:   #default is home account
   sp_dc: !secret "spotcast_homeaccount_sp_dc"
@@ -160,78 +71,3 @@ iperf3:
 monitor_docker:
   - name: "Docker"
     url: "tcp://192.168.1.22:2375"
-#     containers:
-#       - appdaemon
-#       - db-dsmr
-#       - db-hass
-#       - deconz
-#       - dsmr
-#       - hass
-#       - influxdb
-#       - mosquitto
-#       - nodered
-#       - unifi
-#     rename:
-#       appdaemon: AppDaemon
-#       db-dsmr: "Database DSMR-Reader"
-#       db-hass: Database Home Assistant
-#       deconz: DeCONZ
-#       dsmr: "DSMR-Reader"
-#       hass: Home Assistant
-#       influxdb: InfluxDB
-#       mosquitto: Mosquitto
-#       nodered: "Node-RED"
-#       unifi: UniFi
-#     monitored_conditions:
-#       - version
-#       - containers_running
-#       - containers_total
-#       - state
-#       - status
-#       - memory
-
-# trakt_tv:
-#   language: en # Prefered language for movie/show title
-#   timezone: Europe/Paris # Prefered timezone
-#   sensors:
-#     upcoming:
-#       show:
-#         days_to_fetch: 90 # How many days in the future you want to fetch
-#         max_medias: 3 # How many medias you want to fetch
-#       new_show:
-#         days_to_fetch: 90
-#         max_medias: 3
-#       premiere:
-#         days_to_fetch: 90
-#         max_medias: 3
-#       movie:
-#         days_to_fetch: 90
-#         max_medias: 3
-#       dvd:
-#         days_to_fetch: 90
-#         max_medias: 3
-#     next_to_watch:
-#       all:
-#         max_medias: 40
-#         exclude:
-#           - veep
-#           - the-original
-#           - friends
-#       only_aired:
-#         max_medias: 40
-#         exclude:
-#           - veep
-#           - the-original
-#           - friends
-#       only_upcoming:
-#         max_medias: 40
-
-# var:
-#   x:
-#     friendly_name: 'X'
-#     initial_value: 0
-#     icon: mdi:bug
-#   y:
-#     friendly_name: 'Y'
-#     initial_value: 'Sleeping'
-#     entity_picture: '/local/sleep.png'

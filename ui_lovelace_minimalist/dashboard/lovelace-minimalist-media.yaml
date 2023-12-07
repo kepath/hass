@@ -104,100 +104,7 @@ views:
 
       - type: "custom:spotify-card"
         account: "kevin"  # <optional> which account to use for spotcast. Defaults to "default"
-        # height: <optional pixels height for the playlist element. If content is larger scrolling will be enabled>
-        # limit: <optional number of playlists to retrieve (default 10)>
-        # device: <optional name of a device to pre-select>
-        # playlist_type: <optional featured|discover-weekly> Change type of playlists shown. Default are your normal playlists.
-        # always_play_random_song: <optional true> Set to start playlists from a random song.
-        # country_code: <optional country code to show featured playlist relevent to a particular country. https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 >
-        # hide_warning: <optional true> Hide warnings if they are displayed.
-        # name: <optional name> Custom title. Leave empty to hide.
-        # display_style: <optional Grid> Change default display style.
-        # grid_covers_per_row: <optional number> Number of covers per row (default 3) in Grid-view.
-        # spotify_entity: <optional> Name of your spotify media player entity if it doesn't start with "spotify"
-        # default_device: <optional> Name of your spotify connect or chromecast device, e.g. "Kitchen"
-        # filter_devices: <optional Array> Hides devices which matches any array entry. The entries have to be regular expressions and are matched against the full device-name. The following are examples
-        #   - .*room <hides all devices ending with room>
-        #   - bath.*,kids.* <hides all devices which start with bath or kids>
-        # known_connect_devices: <optional> List of known Spotify Connect devices, see [Known Spotify Connect devices](Known-Spotify-Connect-devices) section
-        #   - id: The Spotify Connect device id
-        #     name: The name of the device
-        #     entity_id: <optional> The Home Assistant media player entity id of this device (e.g. from Sonos integration)
 
-  # - title: "Overview"
-  #   icon: "mdi:devices"
-  #   theme: "minimalist-mobile"
-  #   cards:
-  #     - type: "horizontal-stack"
-  #       cards:
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #         - type: "custom:button-card"
-  #           template:
-  #             - "chip_navigate"
-  #           variables:
-  #             ulm_chip_navigate_path: "/lovelace-minimalist-home"
-  #             ulm_chip_navigate_icon: "mdi:cellphone-text"
-  #             ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
-  #             ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
-  #     - type: "horizontal-stack"
-  #       cards:
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #     - type: "horizontal-stack"
-  #       cards:
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #         - type: "custom:button-card"
-  #           template: "card_navigate"
-  #           variables:
-  #             ulm_card_navigate_path: "/lovelace-minimalist-media/1"
-  #             ulm_card_navigate_title: "Lounge"
-  #             ulm_card_navigate_icon: "mdi:television"
-  #         - type: "custom:button-card"
-  #           template: "card_navigate"
-  #           variables:
-  #             ulm_card_navigate_path: "/lovelace-minimalist-media/2"
-  #             ulm_card_navigate_title: "Bed A"
-  #             ulm_card_navigate_icon: "mdi:bed-king"
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #     - type: "horizontal-stack"
-  #       cards:
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #         - type: "custom:button-card"
-  #           template: "card_navigate"
-  #           variables:
-  #             ulm_card_navigate_path: "/lovelace-minimalist-media/3"
-  #             ulm_card_navigate_title: "Bed C"
-  #             ulm_card_navigate_icon: "mdi:remote-tv"
-  #         - type: "custom:button-card"
-  #           template: "card_navigate"
-  #           variables:
-  #             ulm_card_navigate_path: "/lovelace-minimalist-media/4"
-  #             ulm_card_navigate_title: "Bed E"
-  #             ulm_card_navigate_icon: "mdi:television-classic"
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #     - type: "horizontal-stack"
-  #       cards:
-  #         - type: "custom:button-card"
-  #           template: "edge"
-  #         - type: "custom:button-card"
-  #           template: "card_navigate"
-  #           variables:
-  #             ulm_card_navigate_path: "/lovelace-minimalist-media/5"
-  #             ulm_card_navigate_title: "Kitchen"
-  #             ulm_card_navigate_icon: "mdi:fridge-outline"
-  #         - type: "custom:button-card"
-  #           template: "card_navigate"
-  #           variables:
-  #             ulm_card_navigate_path: "/lovelace-minimalist-media/6"
-  #             ulm_card_navigate_title: "Apple TV"
-  #             ulm_card_navigate_icon: "mdi:cast-variant"
-  #         - type: "custom:button-card"
-  #           template: "edge"
   - title: "Lounge"
     icon: "mdi:television"
     theme: "minimalist-mobile"
@@ -216,43 +123,33 @@ views:
                 template:
                   - "card_media_player"
                   - "vars_remotecontrol_constants"
-                # entity: "media_player.nvidia_shield_adb_lounge"
                 name: "Nvidia Shield Lounge"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template:
                   - "card_remotecontrol_nvidiashield_group_power"
-                variables:
-                  # entity_id: "media_player.nvidia_shield_adb_lounge"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template:
                   - "card_remotecontrol_nvidiashield_group_home"
-                variables:
-                  # entity_id: "media_player.nvidia_shield_adb_lounge"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template:
                   - "card_remotecontrol_nvidiashield_group_arrows_and_volume"
-                variables:
-                  # entity_id: "media_player.nvidia_shield_adb_lounge"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template:
                   - "card_remotecontrol_nvidiashield_group_play"
-                variables:
-                  # entity_id: "media_player.nvidia_shield_adb_lounge"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template:
                   - "card_remotecontrol_nvidiashield_group_apps"
-                variables:
-                  # entity_id: "media_player.nvidia_shield_adb_lounge"
+
   - title: "Bed A"
     icon: "mdi:bed-king"
     theme: "minimalist-mobile"

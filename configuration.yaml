@@ -1,6 +1,5 @@
 ---
 default_config:
-# discovery:
 stream:
 python_script:
 frontend:
@@ -10,7 +9,6 @@ recorder:
   db_url: !secret "hass_addon_mariadb_url"
   db_max_retries: 20
   db_retry_wait: 10
-  # purge_keep_days: 3
   exclude:
     entities:
       - "sensor.icloud3_event_log"
@@ -36,13 +34,6 @@ influxdb:
   password: !secret "influx_db_pass"
 ffmpeg:
 history:
-# exclude:
-#   domains:
-#     - "device_tracker"
-#   entity_globs:
-#     - "sensor.*_calc"
-#     - "sensor.*_timeticks"
-#     - "sensor.*_uptime"
 wake_on_lan:
 notify:
   - platform: "alexa_media"
@@ -60,13 +51,3 @@ device_tracker:
   - platform: "icloud3"
     username: !secret "apple_icloud_main_email"
     password: !secret "apple_icloud_main_password"
-  # - platform: "bluetooth_tracker"
-  # - platform: "bluetooth_le_tracker"
-  #   track_battery: true
-# device_tracker:
-#   - platform: "traccar"
-#     host: !secret "ha_rj45_dns"
-#     port: !secret "hass_addon_traccar_port"
-#     username: !secret "hass_addon_traccar_username"
-#     password: !secret "hass_addon_traccar_password"
-    # ssl: true

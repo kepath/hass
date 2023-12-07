@@ -26,12 +26,6 @@ output:
 
 binary_sensor:
   # =====================common binary_sensor
-  # - platform: "homeassistant"
-  #   name: "${device_name}-isnight"
-  #   entity_id: "binary_sensor.nighttime"
-  #   id: "isnight"
-  #   internal: true
-
   - platform: "status"
     name: "${device_name}-status"
     device_class: "connectivity"
@@ -47,14 +41,6 @@ binary_sensor:
     on_state:
       then:
         - light.toggle: "lightid1"
-    on_double_click:
-      min_length: "50ms"
-      max_length: "350ms"
-      then:
-        - homeassistant.service:
-            service: "light.turn_off"
-            data:
-              entity_id: "light.all_lights_everywhere"
     filters:
       - delayed_on_off: "50ms"
 
@@ -63,27 +49,3 @@ binary_sensor:
       number: "GPIO14"
     name: "${device_name}-switch-2"
     id: "switchid2"
-
-    # config for multi click actions
-    # on_multi_click:
-    #   # double click
-    #   - timing:
-    #       - ON for at most 1s
-    #       - OFF for at most 1s
-    #       - ON for at most 1s
-    #       - OFF for at least 0.2s
-    #     then:
-    #       - if:
-    #           condition:
-    #             and:
-    #               - wifi.connected:
-    #               - api.connected:
-    #           # send double click event in case wifi and api are conncected
-    #           then:
-    #             - homeassistant.event:
-    #                 event: esphome.button_pressed
-    #                 data:
-    #                   title: ${device_name}-double-click
-    #           # toggle relay in case either wifi or api are not connected
-    #           else:
-    #             - light.toggle: lightid
