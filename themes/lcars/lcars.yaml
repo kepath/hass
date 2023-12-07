@@ -326,6 +326,7 @@
         border-bottom: 10px solid var(--lcars-card-bottom-color);
         border-left: 35px solid var(--lcars-card-bottom-color);
         margin-top: unset;
+        position: relative;
       }
       ha-card.footer > span {
         background: black;
@@ -352,7 +353,7 @@
       }
       ha-card.footer.type-thermostat > .content {
         border-radius: 0px 0px 0px 20px;
-      }
+      } /* to be depraceted eventually due to changes in the card */
       ha-card.footer.type-picture-entity {
         border-radius: 0px 0px 0px 20px;
       }
@@ -372,6 +373,18 @@
       ha-card.footer > .header,
       ha-card.footer > .info {
         background: black !important;
+      }
+      ha-card.footer > .content {
+        background: black;
+        border-radius: 0px 0px 0px 20px;
+      }
+      ha-card.footer.type-thermostat > p {
+        background: black;
+      }
+      ha-card.footer > ha-state-control-climate-temperature {
+        background: black !important;
+        border-radius: 0px 0px 0px 20px;
+        max-width: unset;
       }
       /* Border on the right */
       ha-card.footer-right {
@@ -420,6 +433,18 @@
       ha-card.footer-right > .header,
       ha-card.footer-right > .info {
         background: black !important;
+      }
+      ha-card.footer-right > .content {
+        background: black;
+        border-radius: 0px 0px 20px 0px;
+      }
+      ha-card.footer-right.type-thermostat > p {
+        background: black;
+      }
+      ha-card.footer-right > ha-state-control-climate-temperature {
+        background: black !important;
+        border-radius: 0px 0px 20px 0px;
+        max-width: unset;
       }
       /* Border on both sides */
       ha-card.footer-contained {
@@ -473,6 +498,14 @@
       ha-card.footer-contained > .info {
         background: black !important;
       }
+      ha-card.footer-contained.type-thermostat > p {
+        background: black;
+      }
+      ha-card.footer-contained > ha-state-control-climate-temperature {
+        background: black !important;
+        border-radius: 0px 0px 20px 20px;
+        max-width: unset;
+      }
       /* Border on neither side */
       ha-card.footer-open {
         background: var(--lcars-card-bottom-color) !important;
@@ -514,7 +547,14 @@
       ha-card.footer-open > .info {
         background: black !important;
       }
-      
+      ha-card.footer-open.type-thermostat > p {
+        background: black;
+      }
+      ha-card.footer-open > ha-state-control-climate-temperature {
+        background: black !important;
+        max-width: unset;
+      }
+
       /* Fixes across card types */
       ha-card.footer.type-button,
       ha-card.footer-right.type-button,
@@ -819,9 +859,9 @@
       /* Hacky workaround to add middle-type class to horizontal and vertical stack cards */
       /* More info: https://github.com/thomasloven/lovelace-card-mod#styling-cards-without-an-ha-card-element */
       .type-custom-mod-card {
-        border-radius: 0px !important;
-        border-left: 35.5px solid var(--lcars-card-mid-left-color);
-        padding-left: 6px !important;
+        /* border-radius: 0px !important; */
+        /* border-left: 35.5px solid var(--lcars-card-mid-left-color); */
+        /* padding-left: 6px !important; */
       }
       /* WIP fix for aliasing ugliness on slider tracks */
       .type-light > .bar {
@@ -887,10 +927,6 @@
         border-radius: 0px 0px 0px 20px;
         display: flex;
       }
-      ha-card.footer > .content {
-        background: black;
-        border-radius: 0px 0px 0px 20px;
-      }
       .details > p {
         margin-left: 15px;
       }
@@ -946,8 +982,8 @@
       }
       /* Mushroom Cards */
       ha-card.type-custom-mushroom-chips-card > * {
-        --primary-text-color: black !important;
-        --chip-border-radius: 40px;
+        --primary-text-color: black;
+        --chip-border-radius: var(--ha-card-border-radius);
         text-transform: uppercase;
       }
       /* Mushroom Select Card */
