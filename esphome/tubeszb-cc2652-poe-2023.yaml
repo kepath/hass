@@ -1,0 +1,181 @@
+---
+substitutions:
+  device_name: "tubeszb-cc2652-poe-2023"
+  friendly_name: "TubesZB CC2652 PoE"
+  tubeszb_icon: "mdi:zigbee"
+
+esphome:
+  name: "${device_name}"
+  project:
+    name: "tubezb.cc2652-poe-2023"
+    version: "3.0"
+  on_boot:
+    priority: 600
+    then:
+      - switch.turn_on: "zRST_gpio"
+      - delay: "15ms"
+      - switch.turn_off: "zRST_gpio"
+
+esp32:
+  board: "esp-wrover-kit"
+  framework:
+    type: "arduino"
+
+external_components:
+  - source: "github://tube0013/esphome-stream-server-v2"
+  # - source:
+  #     type: "local"
+  #     path: "firmware"
+  #   components: ["router"]
+
+# dashboard_import:
+#   package_import_url: "github://tube0013/tube_gateways/models/current/tubeszb-router/firmware"
+
+# Olimex ESP32-PoE Ethernet
+ethernet:
+  type: "LAN8720"
+  mdc_pin: "GPIO23"
+  mdio_pin: "GPIO18"
+  clk_mode: "GPIO17_OUT"
+  phy_addr: 0
+  power_pin: "GPIO12"
+  manual_ip:
+    static_ip: "192.168.20.208"
+    gateway: "192.168.20.1"
+    subnet: "255.255.255.0"
+    dns1: "192.168.20.1"
+
+
+# Enable logging
+logger:
+  level: "DEBUG"
+
+# Enable Home Assistant API
+api:
+  reboot_timeout: "0s"
+
+ota:
+web_server:
+  port: 80
+
+# Exposes this data to Home Assistant, and display on the web server
+text_sensor:
+  # Expose ESPHome version as sensor
+  - platform: "version"
+    name: "${device_name} ESPHome Version"
+    icon: "mdi:counter"
+  # Expose the friendly uptime as a sensor
+  - platform: "template"
+    name: "${device_name} Uptime"
+    id: "uptime_human"
+    icon: "mdi:clock-start"
+  # Expose the IP Address as a sensor
+  - platform: "ethernet_info"
+    ip_address:
+      name: "${device_name} IP Address"
+      icon: "mdi:ip-network"
+
+script:
+  - id: "fw_update_mode"
+    then:
+      - switch.turn_on: "zBSL"
+      - delay: "1s"
+      - switch.turn_on: "zRST_gpio"
+      - delay: "1s"
+      - switch.turn_off: "zRST_gpio"
+      - logger.log: "Delaying ~10 seconds for cc2652p2 to settle"
+      - delay: "11s"
+      - switch.turn_off: "zBSL"
+      - logger.log: "Please try update with cc2538-bsl tool now"
+      - logger.log: "cc-bsl usage: cc2538-bsl.py -p socket://ip-of-gw:6638 -evw firmware.hex"
+
+switch:
+  - platform: "gpio"
+    pin: 5
+    id: "zRST_gpio"
+    inverted: "yes"
+    restore_mode: "ALWAYS_OFF"
+
+  - platform: "gpio"
+    pin: 16
+    name: "Zigbee Module Bootloader Pin"
+    id: "zBSL"
+    inverted: "yes"
+    restore_mode: "ALWAYS_OFF"
+    disabled_by_default: true
+    icon: "mdi:memory-arrow-down"
+
+button:
+  - platform: "restart"
+    name: "Restart the Device"
+    icon: "mdi:restart"
+
+  - platform: "template"
+    name: "Zigbee Module Reset"
+    disabled_by_default: true
+    id: "zRST"
+    on_press:
+      - switch.turn_on: "zRST_gpio"
+      - delay: "15ms"
+      - switch.turn_off: "zRST_gpio"
+    icon: "mdi:restore-alert"
+
+  - platform: "template"
+    name: "Trigger Zigbee Module Bootloader"
+    disabled_by_default: true
+    on_press:
+      - script.execute: "fw_update_mode"
+    icon: "mdi:memory-arrow-down"
+
+uart:
+  id: "uart_bus"
+  rx_pin: "GPIO36"
+  tx_pin: "GPIO4"
+  baud_rate: 115200
+
+stream_server:
+  uart_id: "uart_bus"
+  id: "ss"
+  port: 6638  # optional, default is 6638
+
+binary_sensor:
+  - platform: "stream_server"
+    stream_server: "ss"
+    name: "TubesZB Serial Connected"
+    icon: "mdi:serial-port"
+
+# converts uptime in seconds to a more human friendly format
+sensor:
+  - platform: "uptime"
+    name: "Uptime Sensor"
+    id: "uptime_sensor"
+    internal: true
+    update_interval: "60s"
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: "uptime_human"
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "")
+              ).c_str();
+mdns:
+  services:
+    - service: "_tubeszb"
+      protocol: "_tcp"
+      port: 6638
+      txt:
+        version: 1.0
+        name: "TubesZB"
+        radio_type: "znp"
+        baud_rate: 115200
+        data_flow_control: "software"
