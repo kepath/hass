@@ -8,19 +8,27 @@ esphome:
   comment: "${friendly_name}"
   platform: "ESP8266"
   board: "esp01_1m"
+  on_boot:
+    - priority: 300
+      then:
+        - light.turn_off: "lightid1"
+        - logger.log: "startup - light should be off"
 
 wifi:
   ssid: "${ssid}"
   password: !secret "not_wifi_password"
   domain: ".lan"
-  reboot_timeout: "0s"
+  on_connect:
+    - light.turn_off: "${device_name}-light-1"
+  on_disconnect:
+    - light.turn_off: "${device_name}-light-1"
   manual_ip:
     static_ip: "192.168.30.${device_ip}"
     gateway: "192.168.30.1"
     subnet: "255.255.255.0"
     dns1: "192.168.30.1"
 
-# Enable fallback hotspot (captive portal) in case wifi connection fails
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "${device_name}"
     manual_ip:
@@ -41,9 +49,9 @@ web_server:
   port: 80
   version: 2
 
-time:
-  - platform: "homeassistant"
-    id: "homeassistant_time"
+# time:
+#   - platform: "homeassistant"
+#     id: "homeassistant_time"
 
 # Text sensors with general information.
 text_sensor:
