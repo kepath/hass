@@ -14,7 +14,6 @@ export function generateStyles(config) {
     grid-template-rows: repeat(${config.pv_power.is_used ? 5 : 4}, 1fr);
     padding-left: 5px;
     padding-right: 5px;
-    padding-top: 1px;
   }
   .status-grid {
     display: grid;
@@ -22,7 +21,7 @@ export function generateStyles(config) {
     grid-template-rows: repeat(1, 1fr);
     padding-left: 5px;
     padding-right: 5px;
-    padding-top: 4px;
+    padding-top: ${config.title ? 0 : 30}px;
   }
   .diagram-grid img {
     max-width: 100%;
@@ -53,7 +52,7 @@ export function generateStyles(config) {
     text-align: right;
     } */
   .header-text {
-    font-size: min(4vw, 1.17em);
+    font-size: min(4vw, 1em);
     font-weight: bold;
     line-height: 1;
     margin: 0;
@@ -64,6 +63,7 @@ export function generateStyles(config) {
   }
   .sub-text {
     font-size: min(2.5vw, 0.95em);
+    color: var(--secondary-text-color);
     line-height: 1;
     margin: 0;
     padding-left: 3px;
@@ -181,7 +181,6 @@ export function generateStyles(config) {
     line-height: 1;
     padding-left: 5px;
     padding-right: 5px;
-    padding-bottom: 5px;
   }
   .grid-status {
     text-align: right;
@@ -195,17 +194,6 @@ export function generateStyles(config) {
   }  
   `;
 }
-
-export const card_base = `
-  <ha-card>
-    <div id="taskbar-grid" class="status-grid">
-    </div>
-    <div id="card-grid" class="diagram-grid">
-    </div>
-    <div id="datetime-info" class="update-time">
-    </div>
-  </ha-card>
-`;
 
 export function generateStatus(config) {
   let text_box_full = ``;
@@ -245,9 +233,9 @@ export function generateStatus(config) {
 }
 
 export function generateGrid(config) {
-  var cells = ``;
-  var refresh_button_left = ``;
-  var refresh_button_right = ``;
+  let cells = ``;
+  let refresh_button_left = ``;
+  let refresh_button_right = ``;
 
   // Refresh button
   if (config.refresh_button.left) {
@@ -314,9 +302,7 @@ export function generateGrid(config) {
     cells += `<div id="home-info" class="cell text-cell"></div>`; // Home info
     cells += `<div id="home-image" class="cell image-cell"><img src="${constants.getBase64Data("home-normal")}"></div>`; // Home image
     cells += `<div id="power-allocation-arrows" class="cell arrow-cell"></div>`; // Power allocation arrows
-    cells += `<div id="power-allocation-image" class="cell image-cell"><img src="${constants.getBase64Data(
-      "home-normal"
-    )}"></div>`; // Power allocation image
+    cells += `<div id="power-allocation-image" class="cell image-cell"><img src="${constants.getBase64Data("home-normal")}"></div>`; // Power allocation image
     cells += `<div id="power-allocation-info" class="cell text-cell"></div>`; // Power allocation info
   } else {
     cells += `<div class="cell">${refresh_button_left}</div>`;
@@ -331,9 +317,9 @@ export function generateGrid(config) {
 }
 
 export function generateDateTime(config) {
-  var date_time_info = ``;
+  let date_time_info = ``;
   if (config.update_time.is_used) {
-    var date_time_info = `
+    date_time_info = `
       <p id="time-info">Last update at: -</p>
     `;
     if (config.update_time.show_last_update) {
@@ -346,7 +332,7 @@ export function generateDateTime(config) {
 }
 
 export function generateArrows() {
-  var inner_html = ``;
+  let inner_html = ``;
   for (let i = 1; i < 5; i++) {
     inner_html += `<div class="arrow-${i}"><img src="${constants.getBase64Data("arrow")}"></div>`;
   }
