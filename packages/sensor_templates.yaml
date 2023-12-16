@@ -45,6 +45,8 @@ template:
           door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           fans_on_count: "{{ expand('group.all_fans')|selectattr('state','eq', 'on')|list|count }}"
           fans_unavailable_count: "{{ expand('group.all_fans')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
+          lawn_mower_busy_count: "{{ expand('group.all_lawn_mowers')|selectattr('state','in', ['on','mowing','edgecut'])|list|count }}"
+          lawn_mower_error_count: "{{ expand('group.all_lawn_mowers')|rejectattr('state','in', ['on','mowing','edgecut','docked','returning','starting','rain_delay'])|list|count }}"
           lights_on_count: "{{ expand('group.all_lights')|selectattr('state','eq', 'on')|list|count }}"
           locks_unavailable_count: "{{ expand('group.all_locks')|selectattr('state','in', ['unavailable','unknown','jammed'])|list|count }}"
           locks_unlocked_count: "{{ expand('group.all_locks')|selectattr('state','eq', 'unlocked')|list|count }}"
@@ -83,8 +85,6 @@ template:
               {%-set ns.c = 1-%}
             {%-endif-%}
             {{ (ns.s / ns.c)|round(0)|int }}
-          vacuums_busy_count: "{{ expand('group.all_vacuum')|selectattr('state','in', ['on','mowing','edgecut'])|list|count }}"
-          vacuums_error_count: "{{ expand('group.all_vacuum')|rejectattr('state','in', ['on','mowing','edgecut','docked','returning','starting','rain_delay'])|list|count }}"
           unknown_value: "unknown"
           zero_value: "{{ 0|int }}"
 

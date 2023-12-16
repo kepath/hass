@@ -1147,3 +1147,22 @@
     entity_id: 425c765fe3225a803699446e1c87912b
     domain: switch
   mode: single
+- id: '1702627536265'
+  alias: on_start_create_group.all_lawn_mower_domain_entities
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: lawn_mower
+      group_name: all_lawn_mowers
+      icon: mdi:mower
+      friendly_name: All lawn mower domain entities
+      filter_by_device_class: false
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
