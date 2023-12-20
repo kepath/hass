@@ -17,6 +17,20 @@ sensor:
   - platform: "otp"
     name: "FastHosts Auth"
     token: !secret "fasthosts_auth_otp"
+  - platform: "influxdb"
+    database: "unifi"
+    username: !secret "influx_db_user"
+    password: !secret "influx_db_pass"
+    queries:
+      - unique_id: "influxdb_unifi_rx_yaml_imported"
+        name: "InfluxDB Unifi RX"
+        unit_of_measurement: "B/s"
+        field: "rx_bytes"
+        where: "time > now() - 1d"
+        group_function: "last"
+        database: "unifi"
+        measurement: >
+          "unifi"."autogen"."clients"
 
 binary_sensor:
   - platform: "tod"
