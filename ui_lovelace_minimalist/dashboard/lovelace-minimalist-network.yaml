@@ -85,66 +85,6 @@ views:
               - entity: "input_select.floorplan_floor"
                 state: "2"
             card: !include "floorplan_network/floor-second.yaml"
-  - title: "Sankey Chart"
-    icon: "mdi:floor-plan"
-    theme: "minimalist-mobile"
-    cards:
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "chip_back"
-            variables:
-              ulm_chip_back_path: "/lovelace-minimalist-network/0"
-          - type: "custom:button-card"
-            template:
-              - "chip_navigate"
-            variables:
-              ulm_chip_navigate_path: "/lovelace-minimalist-home"
-              ulm_chip_navigate_icon: "mdi:home"
-              ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
-              ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
-      - type: "custom:sankey-chart"
-        show_names: true
-        unit_prefix: "k"
-        round: 1
-        wide: true
-        sections:
-          - entities:
-              - entity_id: "sensor.solar"
-                color: "var(--warning-color)"
-                children:
-                  - "sensor.total_energy"
-              - entity_id: "sensor.grid"
-                children:
-                  - "sensor.total_energy"
-              - entity_id: "sensor.battery"
-                color: "var(--success-color)"
-                children:
-                  - "sensor.total_energy"
-          - entities:
-              - entity_id: "sensor.total_energy"
-                children:
-                  - "sensor.floor1"
-                  - "sensor.floor2"
-                  - "sensor.garage"
-          - entities:
-              - entity_id: "sensor.garage"
-                color: "purple"
-                children:
-                  - "sensor.ev_charger"
-                  - "garage_other"
-              - entity_id: "sensor.floor1"
-                children:
-                  - "sensor.living_room"
-                  - "sensor.washer"
-              - entity_id: "sensor.floor2"
-          - entities:
-              - "sensor.ev_charger"
-              - entity_id: "garage_other"
-                type: "remaining_parent_state"
-                name: "Other"
-              - "sensor.living_room"
-              - "sensor.washer"
   - title: "Home"
     theme: "Backend-selected"
     icon: "mdi:rotate-3d"
@@ -172,7 +112,7 @@ views:
         update_interval: "1m"
         graph_span: "2h"
         series:
-          - entity: "sensor.nvidia_shield_lounge_unifi_rx"
+          - entity: "sensor.nvidia_shield_bed_c_unifi_rx"
             name: "RX"
             color_threshold:
               - value: 0
@@ -199,7 +139,7 @@ views:
                 color: "#F00"
 
 
-          - entity: "sensor.nvidia_shield_lounge_unifi_tx"
+          - entity: "sensor.nvidia_shield_bed_c_unifi_tx"
             name: "TX"
             color_threshold:
               - value: 0
@@ -564,124 +504,90 @@ views:
         min_box_height: 3
         min_box_distance: 5
         show_states: true
-        show_units: true
+        show_units: false
         show_names: true
         wide: true
-        energy_date_selection: true
+        # energy_date_selection: true
         min_state: 0
         sections:
           - entities:
-              - entity_id: "sensor.sankey_usw_pro_total_tx_mb"
+              - entity_id: "sensor.sankey_lvl_1_usw_pro_total_tx_mb"
                 type: "remaining_child_state"
-                name: "USW Pro 24 PoE"
+                name: "USW Pro 24 PoE Total"
                 color: "blue"
                 children:
-                  - "sensor.sankey_wifi_tx_mb"
-                  - "sensor.sankey_usw_flex_mini_bed_a_tv_tx_mb"
-                  - "sensor.sankey_usw_flex_mini_bed_a_laptop_tx_mb"
-                  - "sensor.sankey_uap_iw_hd_tx_mb"
-                  - "sensor.sankey_usw_flex_mini_kitchen_tx_mb"
-                  - "sensor.sankey_usw_flex_mini_study_tx_mb"
-                  - "sensor.sankey_usw_lite_8port_bed_e_tx_mb"
-                  - "sensor.sankey_usw_flex_loft_tx_mb"
-                  - "sensor.apple_tv_4k_unifi_total_increasing_tx"
-                  - "sensor.arcade_machine_unifi_total_increasing_tx"
-                  - "sensor.brother_mfc_j870dw_printer_unifi_total_increasing_tx"
-                  - "sensor.home_assistant_unifi_total_increasing_tx"
-                  - "sensor.synology_diskstation_ds412_unifi_total_increasing_tx"
-                  - "sensor.synology_diskstation_ds412_vpn_unifi_total_increasing_tx"
-                  - "sensor.xbox_series_x_unifi_total_increasing_tx"
-                  - "sensor.yamaha_rx_v777_receiver_unifi_total_increasing_tx"
+                  - "sensor.sankey_lvl_2_wifi_tx_mb"
+                  - "sensor.sankey_lvl_2_usw_flex_mini_bed_a_tv_tx_mb"
+                  - "sensor.sankey_lvl_2_usw_flex_mini_bed_a_laptop_tx_mb"
+                  - "sensor.sankey_lvl_2_usw_flex_mini_bed_c_left_tx_mb"
+                  - "sensor.sankey_lvl_2_usw_flex_mini_study_tx_mb"
+                  - "sensor.sankey_lvl_2_usw_flex_mini_lounge_tx_mb"
+                  - "sensor.sankey_lvl_2_uap_iw_hd_garage_tx_mb"
+                  - "sensor.sankey_lvl_2_usw_lite_8port_bed_e_tx_mb"
+                  - "sensor.sankey_lvl_2_usw_flex_loft_tx_mb"
+                  - "sensor.sankey_lvl_2_uap_flexhd_kitchen_tx_mb"
+                  - "sensor.sankey_lvl_2_usw_pro_total_tx_mb"
           - entities:
-              - entity_id: "sensor.sankey_wifi_tx_mb"
+              - entity_id: "sensor.sankey_lvl_2_wifi_tx_mb"
                 type: "remaining_child_state"
                 name: "Wi-Fi"
                 color: "red"
                 children:
-                  - "sensor.amazon_echo_dot_with_clock_lounge_unifi_total_increasing_tx"
-                  - "sensor.amazon_echo_dot_bed_b_unifi_total_increasing_tx"
-                  - "sensor.amazon_echo_dot_bed_c_unifi_total_increasing_tx"
-                  - "sensor.amazon_echo_dot_bed_d_unifi_total_increasing_tx"
-                  - "sensor.amazon_echo_flex_garage_unifi_total_increasing_tx"
-                  - "sensor.amazon_echo_plus_kitchen_unifi_total_increasing_tx"
-                  - "sensor.amazon_echo_show_8_bed_e_unifi_total_increasing_tx"
-                  - "sensor.amazon_echo_spot_bed_a_unifi_total_increasing_tx"
-                  - "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_tx"
-                  - "sensor.amazon_kindle_oasis_unifi_total_increasing_tx"
-                  - "sensor.amazon_kindle_voyage_dan_unifi_total_increasing_tx"
-                  - "sensor.apple_macbook_pro_2018_kev_unifi_total_increasing_tx"
-                  - "sensor.backdoor_light_unifi_total_increasing_tx"
-                  - "sensor.bathroom_light_unifi_total_increasing_tx"
-                  - "sensor.bed_a_light_unifi_total_increasing_tx"
-                  - "sensor.bed_b_light_unifi_total_increasing_tx"
-                  - "sensor.bed_c_light_unifi_total_increasing_tx"
-                  - "sensor.bed_e_light_unifi_total_increasing_tx"
-                  - "sensor.hallway_bottom_light_unifi_total_increasing_tx"
-                  - "sensor.calex_ip_camera_unifi_total_increasing_tx"
-                  - "sensor.calex_smart_siren_unifi_total_increasing_tx"
-                  - "sensor.dans_nintendo_switch_unifi_total_increasing_tx"
-                  - "sensor.dell_g5_gaming_laptop_dan_unifi_total_increasing_tx"
-                  - "sensor.dell_work_laptop_kev_unifi_wifi_total_increasing_tx"
-                  - "sensor.emily_s_school_laptop_family_unifi_total_increasing_tx"
-                  - "sensor.ensuite_light_unifi_total_increasing_tx"
-                  - "sensor.front_door_light_unifi_total_increasing_tx"
-                  - "sensor.glow_smartmeter_unifi_total_increasing_tx"
-                  - "sensor.google_nest_thermostat_bottom_hallway_unifi_total_increasing_tx"
-                  - "sensor.google_nest_thermostat_middle_hallway_unifi_total_increasing_tx"
-                  - "sensor.ipad_air_4thgen_unifi_total_increasing_tx"
-                  - "sensor.ipad_air_4thgen_emily_unifi_total_increasing_tx"
-                  - "sensor.kev_iphone_11_unifi_total_increasing_tx"
-                  - "sensor.iphone_12_dan_unifi_total_increasing_tx"
-                  - "sensor.iphone_13_emily_unifi_total_increasing_tx"
-                  - "sensor.ju_iphone_8_unifi_total_increasing_tx"
-                  - "sensor.kitchen_main_lights_unifi_total_increasing_tx"
-                  - "sensor.kitchen_utility_lights_unifi_total_increasing_tx"
-                  - "sensor.lg_therma_v_heat_pump_unifi_total_increasing_tx"
-                  - "sensor.logitech_harmony_hub_unifi_total_increasing_tx"
-                  - "sensor.lounge_light_unifi_total_increasing_tx"
-                  - "sensor.meross_smart_switch_unifi_total_increasing_tx"
-                  - "sensor.hallway_middle_light_unifi_total_increasing_tx"
-                  - "sensor.worx_robot_mower_unifi_total_increasing_tx"
-                  - "sensor.msi_gf66_dan_unifi_total_increasing_tx"
-                  - "sensor.nespresso_vertuo_next_unifi_total_increasing_tx"
-                  - "sensor.nest_protect_bottom_hallway_unifi_total_increasing_tx"
-                  - "sensor.nest_protect_middle_hallway_unifi_total_increasing_tx"
-                  - "sensor.nest_protect_top_hallway_unifi_total_increasing_tx"
-                  - "sensor.radiator_plug_bed_b_unifi_total_increasing_tx"
-                  - "sensor.samsung_tumble_dryer_unifi_total_increasing_tx"
-                  - "sensor.study_light_unifi_total_increasing_tx"
-                  - "sensor.tuya_camera_unifi_total_increasing_tx"
-              - entity_id: "sensor.sankey_usw_flex_mini_bed_a_tv_tx_mb"
+                  - "sensor.sankey_lvl_3_wifi_tx_mb"
+              - entity_id: "sensor.sankey_lvl_2_uap_flexhd_kitchen_tx_mb"
+                type: "remaining_child_state"
+                name: "UAP FlexHD Kitchen"
+                color: "red"
+                children:
+                  - "sensor.sankey_lvl_3_uap_flexhd_kitchen_tx_mb"
+              - entity_id: "sensor.sankey_lvl_2_usw_flex_loft_tx_mb"
+                type: "remaining_child_state"
+                name: "USW Flex Loft"
+                children:
+                  - "sensor.download_pc_unifi_total_increasing_tx"
+                  - "sensor.sankey_3_u6_lr_unifi_total_increasing_tx_mb"
+              - entity_id: "sensor.sankey_lvl_2_uap_iw_hd_garage_tx_mb"
+                type: "remaining_child_state"
+                name: "UAP IW HD Garage"
+                children:
+                  - "sensor.solar_battery_1_garage_unifi_total_increasing_tx"
+                  - "sensor.solar_battery_2_garage_unifi_total_increasing_tx"
+                  - "sensor.sankey_lvl_3_uap_iw_hd_garage_tx_mb"
+
+              - entity_id: "sensor.sankey_lvl_2_usw_flex_mini_lounge_tx_mb"
+                type: "remaining_child_state"
+                name: "USW Flex Mini Lounge"
+                children:
+                  - "sensor.samsung_ue48hu7500t_tv_lounge_unifi_total_increasing_tx"
+                  - "sensor.apple_tv_4k_unifi_total_increasing_tx"
+                  - "sensor.sankey_lvl_3_uap_flexhd_lounge_tx_mb"
+
+              - entity_id: "sensor.sankey_lvl_2_usw_flex_mini_bed_a_tv_tx_mb"
                 type: "remaining_child_state"
                 name: "USW Flex Mini Bed A TV"
                 children:
                   - "sensor.amazon_firestick_4k_rj45_bed_a_unifi_total_increasing_tx"
                   - "sensor.samsung_ue32f4500_tv_bed_a_unifi_total_increasing_tx"
-              - entity_id: "sensor.sankey_usw_flex_mini_bed_a_laptop_tx_mb"
+
+              - entity_id: "sensor.sankey_lvl_2_usw_flex_mini_bed_a_laptop_tx_mb"
                 type: "remaining_child_state"
                 name: "USW Flex Mini Bed A Laptop"
                 children:
-                  - "sensor.macbook_2018_usb_c_rj45_unifi_total_increasing_tx"
                   - "sensor.macbook_pro_usb_c_rj45_unifi_total_increasing_tx"
-              - entity_id: "sensor.sankey_uap_iw_hd_tx_mb"
+
+              - entity_id: "sensor.sankey_lvl_2_usw_flex_mini_bed_c_left_tx_mb"
                 type: "remaining_child_state"
-                name: "UAP IW HD"
+                name: "USW Flex Mini Bed C Left"
                 children:
-                  - "sensor.samsung_ue48hu7500t_tv_unifi_total_increasing_tx"
-                  - "sensor.nvidia_shield_lounge_unifi_total_increasing_tx"
-              - entity_id: "sensor.sankey_usw_flex_mini_kitchen_tx_mb"
-                type: "remaining_child_state"
-                name: "USW Flex Mini Kitchen"
-                children:
-                  - "sensor.amazon_firestick_4k_rj45_kitchen_unifi_total_increasing_tx"
-                  - "sensor.solar_battery_1_garage_unifi_total_increasing_tx"
-                  - "sensor.solar_battery_2_garage_unifi_total_increasing_tx"
-              - entity_id: "sensor.sankey_usw_flex_mini_study_tx_mb"
+                  - "sensor.arcade_machine_unifi_total_increasing_tx"
+
+              - entity_id: "sensor.sankey_lvl_2_usw_flex_mini_study_tx_mb"
                 type: "remaining_child_state"
                 name: "USW Flex Mini Study"
                 children:
                   - "sensor.apple_imac_2011_unifi_total_increasing_tx"
-              - entity_id: "sensor.sankey_usw_lite_8port_bed_e_tx_mb"
+
+              - entity_id: "sensor.sankey_lvl_2_usw_lite_8port_bed_e_tx_mb"
                 type: "remaining_child_state"
                 name: "USW Lite 8Port Bed E"
                 children:
@@ -689,237 +595,355 @@ views:
                   - "sensor.sony_bravia_kdl_32ex403_tv_unifi_total_increasing_tx"
                   - "sensor.nvidia_shield_bed_e_unifi_total_increasing_tx"
                   - "sensor.big_pc_unifi_total_increasing_tx"
-              - entity_id: "sensor.sankey_usw_flex_loft_tx_mb"
-                type: "remaining_child_state"
-                name: "USW Flex Loft"
-                children:
-                  - "sensor.download_pc_unifi_total_increasing_tx"
-          - entities:
-              - entity_id: "sensor.amazon_echo_dot_with_clock_lounge_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Echo Dot with Clock Lounge"
-                children: []
-              - entity_id: "sensor.amazon_echo_dot_bed_b_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Echo Dot Bed B"
-                children: []
-              - entity_id: "sensor.amazon_echo_dot_bed_c_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Echo Dot Bed C"
-                children: []
-              - entity_id: "sensor.amazon_echo_dot_bed_d_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Echo Dot Bed D"
-                children: []
-              - entity_id: "sensor.amazon_echo_flex_garage_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Echo Flex Garage"
-                children: []
-              - entity_id: "sensor.amazon_echo_plus_kitchen_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Echo Plus Kitchen"
-                children: []
-              - entity_id: "sensor.amazon_echo_show_8_bed_e_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Echo Show 8 Bed E"
-                children: []
-              - entity_id: "sensor.amazon_echo_spot_bed_a_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Echo Spot Bed A"
-                children: []
-              - entity_id: "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Fire Tablet Bottom Hallway"
-                children: []
-              - entity_id: "sensor.amazon_kindle_oasis_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Kindle Oasis Kev"
-                children: []
-              - entity_id: "sensor.amazon_kindle_voyage_dan_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Kindle Voyage Dan"
-                children: []
-              - entity_id: "sensor.apple_macbook_pro_2018_kev_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Apple MacBook 2018 Kev"
-                color: "orange"
-                children: []
-              - entity_id: "sensor.backdoor_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Backdoor Light"
-                children: []
-              - entity_id: "sensor.bathroom_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Bathroom Light"
-                children: []
-              - entity_id: "sensor.bed_a_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Bed A Light"
-                children: []
-              - entity_id: "sensor.bed_b_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Bed B Light"
-                children: []
 
-              - entity_id: "sensor.bed_c_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Bed C Light"
-                children: []
-              - entity_id: "sensor.bed_e_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Bed E Light"
-                children: []
-              - entity_id: "sensor.hallway_bottom_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Bottom Hallway Light"
-                children: []
-              - entity_id: "sensor.calex_ip_camera_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Calex IP Camera"
-                children: []
-              - entity_id: "sensor.calex_smart_siren_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Calex Smart Siren"
-                children: []
+              - entity_id: "sensor.sankey_lvl_2_usw_pro_total_tx_mb"
+                type: "remaining_child_state"
+                name: "USW Pro 24 PoE Direct"
+                color: "blue"
+                children:
+                  - "sensor.nvidia_shield_bed_c_unifi_total_increasing_tx"
+                  - "sensor.brother_mfc_j870dw_printer_unifi_total_increasing_tx"
+                  - "sensor.home_assistant_unifi_total_increasing_tx"
+                  - "sensor.synology_diskstation_ds412_net_unifi_total_increasing_tx"
+                  - "sensor.synology_diskstation_ds412_vpn_unifi_total_increasing_tx"
+                  - "sensor.xbox_series_x_unifi_total_increasing_tx"
+                  - "sensor.yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_tx"
+          - entities:
+              - entity_id: "sensor.sankey_lvl_3_wifi_tx_mb"
+                type: "remaining_child_state"
+                name: "Roaming WiFi"
+                color: "red"
+                children:
+                  - "sensor.amazon_kindle_oasis_unifi_total_increasing_tx"
+                  - "sensor.apple_macbook_pro_2018_kev_unifi_total_increasing_tx"
+                  - "sensor.dans_nintendo_switch_unifi_total_increasing_tx"
+                  - "sensor.dell_work_laptop_kev_unifi_wifi_total_increasing_tx"
+                  - "sensor.ipad_air_4thgen_emily_unifi_total_increasing_tx"
+                  - "sensor.kev_iphone_11_unifi_total_increasing_tx"
+                  - "sensor.iphone_12_dan_unifi_total_increasing_tx"
+                  - "sensor.iphone_13_emily_patrice_unifi_total_increasing_tx"
+                  - "sensor.ju_iphone_8_unifi_total_increasing_tx"
+                  - "sensor.msi_gf66_dan_wifi_unifi_total_increasing_tx"
+
+              - entity_id: "sensor.sankey_lvl_3_uap_flexhd_kitchen_tx_mb"
+                type: "remaining_child_state"
+                name: "UAP FlexHD Kitchen"
+                color: "red"
+                children:
+                  - "sensor.samsung_tumble_dryer_kitchen_unifi_total_increasing_tx"
+                  - "sensor.nespresso_vertuo_next_unifi_total_increasing_tx"
+                  - "sensor.kitchen_main_lights_unifi_total_increasing_tx"
+                  - "sensor.kitchen_utility_lights_unifi_total_increasing_tx"
+                  - "sensor.glow_smartmeter_unifi_total_increasing_tx"
+                  - "sensor.amazon_echo_plus_kitchen_unifi_total_increasing_tx"
+                  - "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_tx"
+                  - "sensor.bed_b_light_unifi_total_increasing_tx"
+                  - "sensor.google_nest_thermostat_bottom_hallway_unifi_total_increasing_tx"
+                  - "sensor.lg_therma_v_heat_pump_unifi_total_increasing_tx"
+                  - "sensor.amazon_firestick_4k_wifi_kitchen_unifi_total_increasing_tx"
+              - entity_id: "sensor.sankey_3_u6_lr_unifi_total_increasing_tx_mb"
+                type: "remaining_child_state"
+                name: "UAP U6-LR"
+                color: "red"
+                children:
+                  - "sensor.amazon_echo_show_8_bed_e_unifi_total_increasing_tx"
+                  - "sensor.amazon_echo_dot_bed_c_unifi_total_increasing_tx"
+                  - "sensor.amazon_echo_dot_bed_d_unifi_total_increasing_tx"
+                  - "sensor.bed_e_light_unifi_total_increasing_tx"
+                  - "sensor.hallway_bottom_light_unifi_total_increasing_tx"
+                  - "sensor.calex_smart_siren_unifi_total_increasing_tx"
+                  - "sensor.bathroom_light_unifi_total_increasing_tx"
+                  - "sensor.bed_a_light_unifi_total_increasing_tx"
+                  - "sensor.ensuite_light_unifi_total_increasing_tx"
+                  - "sensor.google_nest_thermostat_middle_hallway_unifi_total_increasing_tx"
+                  - "sensor.bed_c_light_unifi_total_increasing_tx"
+                  - "sensor.logitech_harmony_hub_unifi_total_increasing_tx"
+                  - "sensor.meross_smart_switch_unifi_total_increasing_tx"
+                  - "sensor.nest_protect_bottom_hallway_unifi_total_increasing_tx"
+                  - "sensor.nest_protect_middle_hallway_unifi_total_increasing_tx"
+                  - "sensor.nest_protect_top_hallway_unifi_total_increasing_tx"
+                  - "sensor.study_light_unifi_total_increasing_tx"
+              - entity_id: "sensor.sankey_lvl_3_uap_iw_hd_garage_tx_mb"
+                type: "remaining_child_state"
+                name: "UAP IW HD Garage WiFi"
+                color: "red"
+                children:
+                  - "sensor.worx_robot_mower_unifi_total_increasing_tx"
+                  - "sensor.backdoor_light_unifi_total_increasing_tx"
+                  - "sensor.amazon_echo_flex_garage_unifi_total_increasing_tx"
+
+              - entity_id: "sensor.sankey_lvl_3_uap_flexhd_lounge_tx_mb"
+                type: "remaining_child_state"
+                name: "UAP FlexHD Lounge"
+                color: "red"
+                children:
+                  - "sensor.amazon_echo_dot_with_clock_lounge_unifi_total_increasing_tx"
+                  - "sensor.amazon_echo_spot_bed_a_unifi_total_increasing_tx"
+                  - "sensor.front_door_light_unifi_total_increasing_tx"
+                  - "sensor.lounge_light_unifi_total_increasing_tx"
+
+          - entities:
+              ###### Wifi ######
+
+              ###### Roaming ######
               - entity_id: "sensor.dans_nintendo_switch_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Nintendo Switch Dan"
-                children: []
-              - entity_id: "sensor.dell_g5_gaming_laptop_dan_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Dell G5 Gaming Laptop Dan"
-                color: "orange"
+                color: "red"
                 children: []
               - entity_id: "sensor.dell_work_laptop_kev_unifi_wifi_total_increasing_tx"
                 type: "entity"
                 name: "Dell Work Laptop Kev"
-                color: "orange"
-                children: []
-              - entity_id: "sensor.emily_s_school_laptop_family_unifi_total_increasing_tx"
-                type: "entity"
-                name: "School Laptop Emily"
-                color: "orange"
-                children: []
-              - entity_id: "sensor.ensuite_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "En-suite Light"
-                children: []
-              - entity_id: "sensor.front_door_light_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Frontdoor Light"
-                children: []
-              - entity_id: "sensor.glow_smartmeter_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Hildebrand Glow Smartmeter"
-                children: []
-              - entity_id: "sensor.google_nest_thermostat_bottom_hallway_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Nest Thermostat Bottom Hallway"
-                children: []
-              - entity_id: "sensor.google_nest_thermostat_middle_hallway_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Nest Thermostat Middle Hallway"
-                children: []
-              - entity_id: "sensor.ipad_air_4thgen_unifi_total_increasing_tx"
-                type: "entity"
-                name: "iPad Air Emily"
-                color: "green"
+                color: "red"
                 children: []
               - entity_id: "sensor.ipad_air_4thgen_emily_unifi_total_increasing_tx"
                 type: "entity"
                 name: "iPad Air Emily"
-                color: "green"
+                color: "red"
                 children: []
               - entity_id: "sensor.kev_iphone_11_unifi_total_increasing_tx"
                 type: "entity"
                 name: "iPhone 11 Kev"
-                color: "green"
+                color: "red"
                 children: []
               - entity_id: "sensor.iphone_12_dan_unifi_total_increasing_tx"
                 type: "entity"
                 name: "iPhone 12 Dan"
-                color: "green"
+                color: "red"
                 children: []
-              - entity_id: "sensor.iphone_13_emily_unifi_total_increasing_tx"
+              - entity_id: "sensor.msi_gf66_dan_wifi_unifi_total_increasing_tx"
                 type: "entity"
-                name: "iPhone 13 Emily"
-                color: "green"
+                name: "MSI GF66 Laptop Dan"
+                color: "red"
                 children: []
               - entity_id: "sensor.ju_iphone_8_unifi_total_increasing_tx"
                 type: "entity"
                 name: "iPhone 8 Ju"
-                color: "green"
+                color: "red"
                 children: []
-              - entity_id: "sensor.kitchen_main_lights_unifi_total_increasing_tx"
+              - entity_id: "sensor.amazon_kindle_oasis_unifi_total_increasing_tx"
                 type: "entity"
-                name: "Kitchen Main Light"
+                name: "Kindle Oasis Kev"
+                color: "red"
                 children: []
-              - entity_id: "sensor.kitchen_utility_lights_unifi_total_increasing_tx"
+              - entity_id: "sensor.apple_macbook_pro_2018_kev_unifi_total_increasing_tx"
                 type: "entity"
-                name: "Kitchen Utility Light"
+                name: "Apple MacBook 2018 Kev"
+                color: "red"
                 children: []
-              - entity_id: "sensor.lg_therma_v_heat_pump_unifi_total_increasing_tx"
+              - entity_id: "sensor.iphone_13_emily_patrice_unifi_total_increasing_tx"
                 type: "entity"
-                name: "LG Therma Heat Pump"
+                name: "iPhone 13 Emily"
+                color: "red"
                 children: []
-              - entity_id: "sensor.logitech_harmony_hub_unifi_total_increasing_tx"
+
+              ###### Kitchen ######
+              - entity_id: "sensor.amazon_firestick_4k_wifi_kitchen_unifi_total_increasing_tx"
                 type: "entity"
-                name: "Harmony Hub"
+                name: "Amazon FireStick Kitchen"
+                color: "purple"
                 children: []
-              - entity_id: "sensor.lounge_light_unifi_total_increasing_tx"
+              - entity_id: "sensor.amazon_echo_plus_kitchen_unifi_total_increasing_tx"
                 type: "entity"
-                name: "Lounge Light"
+                name: "Echo Plus Kitchen"
+                color: "red"
                 children: []
-              - entity_id: "sensor.meross_smart_switch_unifi_total_increasing_tx"
+              - entity_id: "sensor.backdoor_light_unifi_total_increasing_tx"
                 type: "entity"
-                name: "Meroos Smart Switch"
+                name: "Backdoor Light"
+                color: "red"
                 children: []
-              - entity_id: "sensor.hallway_middle_light_unifi_total_increasing_tx"
+              - entity_id: "sensor.samsung_tumble_dryer_kitchen_unifi_total_increasing_tx"
                 type: "entity"
-                name: "Hallway Middle Light"
-                children: []
-              - entity_id: "sensor.worx_robot_mower_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Worx Robot Mower"
-                children: []
-              - entity_id: "sensor.msi_gf66_dan_unifi_total_increasing_tx"
-                type: "entity"
-                name: "MSI GF66 Laptop Dan"
-                color: "orange"
+                name: "Samsung Tumble Dryer"
+                color: "red"
                 children: []
               - entity_id: "sensor.nespresso_vertuo_next_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Nespresso Coffee Maker"
+                color: "red"
+                children: []
+              - entity_id: "sensor.kitchen_main_lights_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Kitchen Main Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.kitchen_utility_lights_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Kitchen Utility Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.lg_therma_v_heat_pump_unifi_total_increasing_tx"
+                type: "entity"
+                name: "LG Therma Heat Pump"
+                color: "red"
+                children: []
+              - entity_id: "sensor.glow_smartmeter_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Hildebrand Glow Smartmeter"
+                color: "red"
+                children: []
+              - entity_id: "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Fire Tablet Bottom Hallway"
+                color: "red"
+                children: []
+              - entity_id: "sensor.google_nest_thermostat_bottom_hallway_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Nest Thermostat Bottom Hallway"
+                color: "red"
+                children: []
+              - entity_id: "sensor.bed_b_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Bed B Light"
+                color: "red"
+                children: []
+
+              ###### U6 ######
+              - entity_id: "sensor.amazon_echo_dot_bed_c_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Echo Dot Bed C"
+                color: "red"
+                children: []
+              - entity_id: "sensor.amazon_echo_dot_bed_d_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Echo Dot Bed D"
+                color: "red"
+                children: []
+              - entity_id: "sensor.amazon_echo_show_8_bed_e_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Echo Show 8 Bed E"
+                color: "red"
+                children: []
+              - entity_id: "sensor.bathroom_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Bathroom Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.bed_a_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Bed A Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.bed_c_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Bed C Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.bed_e_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Bed E Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.hallway_bottom_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Bottom Hallway Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.calex_smart_siren_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Calex Smart Siren"
+                color: "red"
+                children: []
+              - entity_id: "sensor.ensuite_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "En-suite Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.google_nest_thermostat_middle_hallway_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Nest Thermostat Middle Hallway"
+                color: "red"
+                children: []
+              - entity_id: "sensor.logitech_harmony_hub_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Harmony Hub"
+                color: "red"
+                children: []
+              - entity_id: "sensor.meross_smart_switch_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Meross Smart Switch"
+                color: "red"
                 children: []
               - entity_id: "sensor.nest_protect_bottom_hallway_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Nest Protect Bottom Hallway"
+                color: "red"
                 children: []
               - entity_id: "sensor.nest_protect_middle_hallway_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Nest Protect Middle Hallway"
+                color: "red"
                 children: []
               - entity_id: "sensor.nest_protect_top_hallway_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Nest Protect Top Hallway"
-                children: []
-              - entity_id: "sensor.radiator_plug_bed_b_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Radiator Plug Bed B"
-                children: []
-              - entity_id: "sensor.samsung_tumble_dryer_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Samsung Tumble Dryer"
+                color: "red"
                 children: []
               - entity_id: "sensor.study_light_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Study Light"
-                children: []
-              - entity_id: "sensor.tuya_camera_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Tuya Camera"
+                color: "red"
                 children: []
 
+              ###### Garage ######
+              - entity_id: "sensor.amazon_echo_flex_garage_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Echo Flex Garage"
+                color: "red"
+                children: []
+              - entity_id: "sensor.worx_robot_mower_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Worx Robot Mower"
+                color: "red"
+                children: []
+
+              ###### Lounge ######
+              - entity_id: "sensor.amazon_echo_dot_with_clock_lounge_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Echo Dot with Clock Lounge"
+                color: "red"
+                children: []
+              - entity_id: "sensor.amazon_echo_spot_bed_a_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Echo Spot Bed A"
+                color: "red"
+                children: []
+              - entity_id: "sensor.lounge_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Lounge Light"
+                color: "red"
+                children: []
+              - entity_id: "sensor.front_door_light_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Frontdoor Light"
+                color: "red"
+                children: []
+
+
+              ###### Wired ######
+
+              ###### Loft ######
+              - entity_id: "sensor.download_pc_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Download PC"
+                children: []
+
+
+              ###### Lounge ######
+              - entity_id: "sensor.samsung_ue48hu7500t_tv_lounge_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Samsung TV Lounge"
+                color: "purple"
+                children: []
+              - entity_id: "sensor.apple_tv_4k_unifi_total_increasing_tx"
+                type: "entity"
+                name: "Apple TV 4k Lounge"
+                color: "purple"
+                children: []
+
+
+              ###### Bed A ######
               - entity_id: "sensor.amazon_firestick_4k_rj45_bed_a_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Amazon FireStick Bed A"
@@ -931,33 +955,15 @@ views:
                 color: "purple"
                 children: []
 
-              - entity_id: "sensor.macbook_2018_usb_c_rj45_unifi_total_increasing_tx"
-                type: "entity"
-                name: "MacBook Pro USB-C to RJ45 adapter"
-                color: "orange"
-                children: []
+
+              ###### Bed A Laptop ######
               - entity_id: "sensor.macbook_pro_usb_c_rj45_unifi_total_increasing_tx"
                 type: "entity"
                 name: "MacBook Pro USB-C to RJ45 adapter"
-                color: "orange"
                 children: []
 
-              - entity_id: "sensor.samsung_ue48hu7500t_tv_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Samsung TV Lounge"
-                color: "purple"
-                children: []
-              - entity_id: "sensor.nvidia_shield_lounge_unifi_total_increasing_tx"
-                type: "entity"
-                name: "NVidia Shield Lounge"
-                color: "purple"
-                children: []
 
-              - entity_id: "sensor.amazon_firestick_4k_rj45_kitchen_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Amazon FireStick Kitchen"
-                color: "purple"
-                children: []
+              ###### Garage ######
               - entity_id: "sensor.solar_battery_1_garage_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Solar Battery 1"
@@ -967,16 +973,18 @@ views:
                 name: "Solar Battery 2"
                 children: []
 
+
+              ###### Study ######
               - entity_id: "sensor.apple_imac_2011_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Apple iMac 2011"
-                color: "orange"
                 children: []
 
+
+              ###### Bed E ######
               - entity_id: "sensor.caldigit_thunderbolt_dock_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Caldigit Dock"
-                color: "orange"
                 children: []
               - entity_id: "sensor.sony_bravia_kdl_32ex403_tv_unifi_total_increasing_tx"
                 type: "entity"
@@ -991,34 +999,28 @@ views:
               - entity_id: "sensor.big_pc_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Big PC"
-                color: "orange"
                 children: []
 
-              - entity_id: "sensor.download_pc_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Download PC"
-                children: []
 
-              - entity_id: "sensor.apple_tv_4k_unifi_total_increasing_tx"
-                type: "entity"
-                name: "Apple TV 4k Bed C"
-                color: "purple"
-                children: []
+              ###### Bed C ######
               - entity_id: "sensor.arcade_machine_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Arcade Machine"
-                color: "orange"
                 children: []
               - entity_id: "sensor.brother_mfc_j870dw_printer_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Brother Printer"
                 children: []
+              - entity_id: "sensor.nvidia_shield_bed_c_unifi_total_increasing_tx"
+                type: "entity"
+                name: "NVidia Shield Bed C"
+                color: "purple"
+                children: []
               - entity_id: "sensor.home_assistant_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Home Assistant"
-                color: "orange"
                 children: []
-              - entity_id: "sensor.synology_diskstation_ds412_unifi_total_increasing_tx"
+              - entity_id: "sensor.synology_diskstation_ds412_net_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Synology NAS"
                 children: []
@@ -1030,7 +1032,7 @@ views:
                 type: "entity"
                 name: "Xbox Series X"
                 children: []
-              - entity_id: "sensor.yamaha_rx_v777_receiver_unifi_total_increasing_tx"
+              - entity_id: "sensor.yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_tx"
                 type: "entity"
                 name: "Yamaha Reciever"
                 children: []
@@ -1051,121 +1053,86 @@ views:
         show_units: true
         show_names: true
         wide: true
-        energy_date_selection: true
+        # energy_date_selection: true
         min_state: 0
         sections:
           - entities:
-              - entity_id: "sensor.sankey_usw_pro_total_rx_mb"
+              - entity_id: "sensor.sankey_1_usw_pro_total_rx_mb"
                 type: "remaining_child_state"
                 name: "USW Pro 24 PoE"
                 color: "blue"
                 children:
-                  - "sensor.sankey_wifi_rx_mb"
-                  - "sensor.sankey_usw_flex_mini_bed_a_tv_rx_mb"
-                  - "sensor.sankey_usw_flex_mini_bed_a_laptop_rx_mb"
-                  - "sensor.sankey_uap_iw_hd_rx_mb"
-                  - "sensor.sankey_usw_flex_mini_kitchen_rx_mb"
-                  - "sensor.sankey_usw_flex_mini_study_rx_mb"
-                  - "sensor.sankey_usw_lite_8port_bed_e_rx_mb"
-                  - "sensor.sankey_usw_flex_loft_rx_mb"
-                  - "sensor.apple_tv_4k_unifi_total_increasing_rx"
-                  - "sensor.arcade_machine_unifi_total_increasing_rx"
+                  - "sensor.sankey_2_wifi_rx_mb"
+                  - "sensor.sankey_2_usw_flex_mini_bed_a_tv_rx_mb"
+                  - "sensor.sankey_2_usw_flex_mini_bed_a_laptop_rx_mb"
+                  - "sensor.sankey_2_usw_flex_mini_bed_c_left_rx_mb"
+                  - "sensor.sankey_2_usw_flex_mini_study_rx_mb"
+                  - "sensor.sankey_2_usw_flex_mini_lounge_rx_mb"
+                  - "sensor.sankey_2_uap_iw_hd_garage_rx_mb"
+                  - "sensor.sankey_2_usw_lite_8port_bed_e_rx_mb"
+                  - "sensor.sankey_2_usw_flex_loft_rx_mb"
+                  - "sensor.sankey_2_uap_flexhd_kitchen"
+                  - "sensor.nvidia_shield_bed_c_unifi_total_increasing_rx"
                   - "sensor.brother_mfc_j870dw_printer_unifi_total_increasing_rx"
                   - "sensor.home_assistant_unifi_total_increasing_rx"
-                  - "sensor.synology_diskstation_ds412_unifi_total_increasing_rx"
+                  - "sensor.synology_diskstation_ds412_net_unifi_total_increasing_rx"
                   - "sensor.synology_diskstation_ds412_vpn_unifi_total_increasing_rx"
                   - "sensor.xbox_series_x_unifi_total_increasing_rx"
-                  - "sensor.yamaha_rx_v777_receiver_unifi_total_increasing_rx"
+                  - "sensor.yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_rx"
           - entities:
-              - entity_id: "sensor.sankey_wifi_rx_mb"
+              - entity_id: "sensor.sankey_2_wifi_rx_mb"
                 type: "remaining_child_state"
                 name: "Wi-Fi"
                 color: "red"
                 children:
-                  - "sensor.amazon_echo_dot_with_clock_lounge_unifi_total_increasing_rx"
-                  - "sensor.amazon_echo_dot_bed_b_unifi_total_increasing_rx"
-                  - "sensor.amazon_echo_dot_bed_c_unifi_total_increasing_rx"
-                  - "sensor.amazon_echo_dot_bed_d_unifi_total_increasing_rx"
-                  - "sensor.amazon_echo_flex_garage_unifi_total_increasing_rx"
-                  - "sensor.amazon_echo_plus_kitchen_unifi_total_increasing_rx"
-                  - "sensor.amazon_echo_show_8_bed_e_unifi_total_increasing_rx"
-                  - "sensor.amazon_echo_spot_bed_a_unifi_total_increasing_rx"
-                  - "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_rx"
                   - "sensor.amazon_kindle_oasis_unifi_total_increasing_rx"
-                  - "sensor.amazon_kindle_voyage_dan_unifi_total_increasing_rx"
                   - "sensor.apple_macbook_pro_2018_kev_unifi_total_increasing_rx"
-                  - "sensor.backdoor_light_unifi_total_increasing_rx"
-                  - "sensor.bathroom_light_unifi_total_increasing_rx"
-                  - "sensor.bed_a_light_unifi_total_increasing_rx"
-                  - "sensor.bed_b_light_unifi_total_increasing_rx"
-                  - "sensor.bed_c_light_unifi_total_increasing_rx"
-                  - "sensor.bed_e_light_unifi_total_increasing_rx"
-                  - "sensor.hallway_bottom_light_unifi_total_increasing_rx"
-                  - "sensor.calex_ip_camera_unifi_total_increasing_rx"
-                  - "sensor.calex_smart_siren_unifi_total_increasing_rx"
                   - "sensor.dans_nintendo_switch_unifi_total_increasing_rx"
-                  - "sensor.dell_g5_gaming_laptop_dan_unifi_total_increasing_rx"
                   - "sensor.dell_work_laptop_kev_unifi_wifi_total_increasing_rx"
-                  - "sensor.emily_s_school_laptop_family_unifi_total_increasing_rx"
-                  - "sensor.ensuite_light_unifi_total_increasing_rx"
-                  - "sensor.front_door_light_unifi_total_increasing_rx"
-                  - "sensor.glow_smartmeter_unifi_total_increasing_rx"
-                  - "sensor.google_nest_thermostat_bottom_hallway_unifi_total_increasing_rx"
-                  - "sensor.google_nest_thermostat_middle_hallway_unifi_total_increasing_rx"
-                  - "sensor.ipad_air_4thgen_unifi_total_increasing_rx"
+                  - "sensor.ipad_air_4thgen_emily_unifi_total_increasing_rx"
                   - "sensor.ipad_air_4thgen_emily_unifi_total_increasing_rx"
                   - "sensor.kev_iphone_11_unifi_total_increasing_rx"
                   - "sensor.iphone_12_dan_unifi_total_increasing_rx"
-                  - "sensor.iphone_13_emily_unifi_total_increasing_rx"
+                  - "sensor.iphone_13_emily_patrice_unifi_total_increasing_rx"
                   - "sensor.ju_iphone_8_unifi_total_increasing_rx"
-                  - "sensor.kitchen_main_lights_unifi_total_increasing_rx"
-                  - "sensor.kitchen_utility_lights_unifi_total_increasing_rx"
-                  - "sensor.lg_therma_v_heat_pump_unifi_total_increasing_rx"
-                  - "sensor.logitech_harmony_hub_unifi_total_increasing_rx"
-                  - "sensor.lounge_light_unifi_total_increasing_rx"
-                  - "sensor.meross_smart_switch_unifi_total_increasing_rx"
-                  - "sensor.hallway_middle_light_unifi_total_increasing_rx"
-                  - "sensor.worx_robot_mower_unifi_total_increasing_rx"
-                  - "sensor.msi_gf66_dan_unifi_total_increasing_rx"
-                  - "sensor.nespresso_vertuo_next_unifi_total_increasing_rx"
-                  - "sensor.nest_protect_bottom_hallway_unifi_total_increasing_rx"
-                  - "sensor.nest_protect_middle_hallway_unifi_total_increasing_rx"
-                  - "sensor.nest_protect_top_hallway_unifi_total_increasing_rx"
-                  - "sensor.radiator_plug_bed_b_unifi_total_increasing_rx"
-                  - "sensor.samsung_tumble_dryer_unifi_total_increasing_rx"
-                  - "sensor.study_light_unifi_total_increasing_rx"
-                  - "sensor.tuya_camera_unifi_total_increasing_rx"
-              - entity_id: "sensor.sankey_usw_flex_mini_bed_a_tv_rx_mb"
+                  - "sensor.msi_gf66_dan_wifi_unifi_total_increasing_rx"
+              - entity_id: "sensor.sankey_2_usw_flex_mini_bed_a_tv_rx_mb"
                 type: "remaining_child_state"
                 name: "USW Flex Mini Bed A TV"
                 children:
                   - "sensor.amazon_firestick_4k_rj45_bed_a_unifi_total_increasing_rx"
                   - "sensor.samsung_ue32f4500_tv_bed_a_unifi_total_increasing_rx"
-              - entity_id: "sensor.sankey_usw_flex_mini_bed_a_laptop_rx_mb"
+              - entity_id: "sensor.sankey_2_usw_flex_mini_bed_a_laptop_rx_mb"
                 type: "remaining_child_state"
                 name: "USW Flex Mini Bed A Laptop"
                 children:
                   - "sensor.macbook_2018_usb_c_rj45_unifi_total_increasing_rx"
-                  - "sensor.macbook_pro_usb_c_rj45_unifi_total_increasing_rx"
-              - entity_id: "sensor.sankey_uap_iw_hd_rx_mb"
+              - entity_id: "sensor.sankey_2_usw_flex_mini_bed_c_left_rx_mb"
                 type: "remaining_child_state"
-                name: "UAP IW HD"
+                name: "USW Flex Mini Bed C"
                 children:
-                  - "sensor.samsung_ue48hu7500t_tv_unifi_total_increasing_rx"
-                  - "sensor.nvidia_shield_lounge_unifi_total_increasing_rx"
-              - entity_id: "sensor.sankey_usw_flex_mini_kitchen_rx_mb"
-                type: "remaining_child_state"
-                name: "USW Flex Mini Kitchen"
-                children:
-                  - "sensor.amazon_firestick_4k_rj45_kitchen_unifi_total_increasing_rx"
-                  - "sensor.solar_battery_1_garage_unifi_total_increasing_rx"
-                  - "sensor.solar_battery_2_garage_unifi_total_increasing_rx"
-              - entity_id: "sensor.sankey_usw_flex_mini_study_rx_mb"
+                  - "sensor.arcade_machine_unifi_total_increasing_rx"
+                  - "sensor.sankey_3_uap_flexhd_lounge"
+              - entity_id: "sensor.sankey_2_usw_flex_mini_study_rx_mb"
                 type: "remaining_child_state"
                 name: "USW Flex Mini Study"
                 children:
                   - "sensor.apple_imac_2011_unifi_total_increasing_rx"
-              - entity_id: "sensor.sankey_usw_lite_8port_bed_e_rx_mb"
+              - entity_id: "sensor.sankey_2_usw_flex_mini_lounge_rx_mb"
+                type: "remaining_child_state"
+                name: "USW Flex Mini Lounge"
+                children:
+                  - "sensor.apple_tv_4k_unifi_total_increasing_rx"
+                  - "sensor.samsung_ue48hu7500t_tv_lounge_unifi_total_increasing_rx"
+              - entity_id: "sensor.sankey_2_uap_iw_hd_garage_rx_mb"
+                type: "remaining_child_state"
+                name: "UAP IW HD Garage"
+                children:
+                  - "sensor.solar_battery_1_garage_unifi_total_increasing_rx"
+                  - "sensor.solar_battery_2_garage_unifi_total_increasing_rx"
+                  - "sensor.worx_robot_mower_unifi_total_increasing_rx"
+                  - "sensor.amazon_echo_flex_garage_unifi_total_increasing_rx"
+              - entity_id: "sensor.sankey_2_usw_lite_8port_bed_e_rx_mb"
                 type: "remaining_child_state"
                 name: "USW Lite 8Port Bed E"
                 children:
@@ -1173,19 +1140,65 @@ views:
                   - "sensor.sony_bravia_kdl_32ex403_tv_unifi_total_increasing_rx"
                   - "sensor.nvidia_shield_bed_e_unifi_total_increasing_rx"
                   - "sensor.big_pc_unifi_total_increasing_rx"
-              - entity_id: "sensor.sankey_usw_flex_loft_rx_mb"
+              - entity_id: "sensor.sankey_2_usw_flex_loft_rx_mb"
                 type: "remaining_child_state"
                 name: "USW Flex Loft"
                 children:
+                  - "sensor.sankey_3_u6_lr_unifi_total_increasing_rx"
                   - "sensor.download_pc_unifi_total_increasing_rx"
+              - entity_id: "sensor.sankey_2_uap_flexhd_kitchen"
+                type: "remaining_child_state"
+                name: "UAP FlexHD Kitchen"
+                color: "red"
+                children:
+                  - "sensor.amazon_firestick_4k_wifi_kitchen_unifi_total_increasing_rx"
+                  - "sensor.samsung_tumble_dryer_kitchen_unifi_total_increasing_rx"
+                  - "sensor.nespresso_vertuo_next_unifi_total_increasing_rx"
+                  - "sensor.lg_therma_v_heat_pump_unifi_total_increasing_rx"
+                  - "sensor.kitchen_main_lights_unifi_total_increasing_rx"
+                  - "sensor.kitchen_utility_lights_unifi_total_increasing_rx"
+                  - "sensor.glow_smartmeter_unifi_total_increasing_rx"
+                  - "sensor.backdoor_light_unifi_total_increasing_rx"
+                  - "sensor.logitech_harmony_hub_unifi_total_increasing_rx"
+                  - "sensor.google_nest_thermostat_bottom_hallway_unifi_total_increasing_rx"
+                  - "sensor.bed_b_light_unifi_total_increasing_rx"
+                  - "sensor.bed_c_light_unifi_total_increasing_rx"
+                  - "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_rx"
+                  - "sensor.amazon_echo_plus_kitchen_unifi_total_increasing_rx"
+                  - "sensor.amazon_echo_show_8_bed_e_unifi_total_increasing_rx"
+          - entities:
+              - entity_id: "sensor.sankey_3_uap_flexhd_lounge"
+                type: "passthrough"
+                name: "UAP FlexHD Lounge"
+                color: "red"
+                children:
+                  - "sensor.amazon_echo_spot_bed_a_unifi_total_increasing_rx"
+                  - "sensor.bed_a_light_unifi_total_increasing_rx"
+                  - "sensor.lounge_light_unifi_total_increasing_rx"
+                  - "sensor.amazon_echo_dot_with_clock_lounge_unifi_total_increasing_rx"
+              - entity_id: "sensor.sankey_3_u6_lr_unifi_total_increasing_rx"
+                type: "passthrough"
+                name: "UAP U6-LR"
+                color: "red"
+                children:
+                  - "sensor.nest_protect_middle_hallway_unifi_total_increasing_rx"
+                  - "sensor.nest_protect_top_hallway_unifi_total_increasing_rx"
+                  - "sensor.google_nest_thermostat_middle_hallway_unifi_total_increasing_rx"
+                  - "sensor.bed_e_light_unifi_total_increasing_rx"
+                  - "sensor.nest_protect_bottom_hallway_unifi_total_increasing_rx"
+                  - "sensor.study_light_unifi_total_increasing_rx"
+                  - "sensor.amazon_echo_dot_bed_c_unifi_total_increasing_rx"
+                  - "sensor.amazon_echo_dot_bed_d_unifi_total_increasing_rx"
+                  - "sensor.bathroom_light_unifi_total_increasing_rx"
+                  - "sensor.hallway_bottom_light_unifi_total_increasing_rx"
+                  - "sensor.calex_smart_siren_unifi_total_increasing_rx"
+                  - "sensor.ensuite_light_unifi_total_increasing_rx"
+                  - "sensor.front_door_light_unifi_total_increasing_rx"
+                  - "sensor.meross_smart_switch_unifi_total_increasing_rx"
           - entities:
               - entity_id: "sensor.amazon_echo_dot_with_clock_lounge_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Echo Dot with Clock Lounge"
-                children: []
-              - entity_id: "sensor.amazon_echo_dot_bed_b_unifi_total_increasing_rx"
-                type: "entity"
-                name: "Echo Dot Bed B"
                 children: []
               - entity_id: "sensor.amazon_echo_dot_bed_c_unifi_total_increasing_rx"
                 type: "entity"
@@ -1219,14 +1232,9 @@ views:
                 type: "entity"
                 name: "Kindle Oasis Kev"
                 children: []
-              - entity_id: "sensor.amazon_kindle_voyage_dan_unifi_total_increasing_rx"
-                type: "entity"
-                name: "Kindle Voyage Dan"
-                children: []
               - entity_id: "sensor.apple_macbook_pro_2018_kev_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Apple MacBook 2018 Kev"
-                color: "orange"
                 children: []
               - entity_id: "sensor.backdoor_light_unifi_total_increasing_rx"
                 type: "entity"
@@ -1256,10 +1264,6 @@ views:
                 type: "entity"
                 name: "Bottom Hallway Light"
                 children: []
-              - entity_id: "sensor.calex_ip_camera_unifi_total_increasing_rx"
-                type: "entity"
-                name: "Calex IP Camera"
-                children: []
               - entity_id: "sensor.calex_smart_siren_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Calex Smart Siren"
@@ -1268,20 +1272,9 @@ views:
                 type: "entity"
                 name: "Nintendo Switch Dan"
                 children: []
-              - entity_id: "sensor.dell_g5_gaming_laptop_dan_unifi_total_increasing_rx"
-                type: "entity"
-                name: "Dell G5 Gaming Laptop Dan"
-                color: "orange"
-                children: []
               - entity_id: "sensor.dell_work_laptop_kev_unifi_wifi_total_increasing_rx"
                 type: "entity"
                 name: "Dell Work Laptop Kev"
-                color: "orange"
-                children: []
-              - entity_id: "sensor.emily_s_school_laptop_family_unifi_total_increasing_rx"
-                type: "entity"
-                name: "School Laptop Emily"
-                color: "orange"
                 children: []
               - entity_id: "sensor.ensuite_light_unifi_total_increasing_rx"
                 type: "entity"
@@ -1303,35 +1296,29 @@ views:
                 type: "entity"
                 name: "Nest Thermostat Middle Hallway"
                 children: []
-              - entity_id: "sensor.ipad_air_4thgen_unifi_total_increasing_rx"
+              - entity_id: "sensor.ipad_air_4thgen_emily_unifi_total_increasing_rx"
                 type: "entity"
                 name: "iPad Air Emily"
-                color: "green"
                 children: []
               - entity_id: "sensor.ipad_air_4thgen_emily_unifi_total_increasing_rx"
                 type: "entity"
                 name: "iPad Air Emily"
-                color: "green"
                 children: []
               - entity_id: "sensor.kev_iphone_11_unifi_total_increasing_rx"
                 type: "entity"
                 name: "iPhone 11 Kev"
-                color: "green"
                 children: []
               - entity_id: "sensor.iphone_12_dan_unifi_total_increasing_rx"
                 type: "entity"
                 name: "iPhone 12 Dan"
-                color: "green"
                 children: []
-              - entity_id: "sensor.iphone_13_emily_unifi_total_increasing_rx"
+              - entity_id: "sensor.iphone_13_emily_patrice_unifi_total_increasing_rx"
                 type: "entity"
                 name: "iPhone 13 Emily"
-                color: "green"
                 children: []
               - entity_id: "sensor.ju_iphone_8_unifi_total_increasing_rx"
                 type: "entity"
                 name: "iPhone 8 Ju"
-                color: "green"
                 children: []
               - entity_id: "sensor.kitchen_main_lights_unifi_total_increasing_rx"
                 type: "entity"
@@ -1357,18 +1344,13 @@ views:
                 type: "entity"
                 name: "Meroos Smart Switch"
                 children: []
-              - entity_id: "sensor.hallway_middle_light_unifi_total_increasing_rx"
-                type: "entity"
-                name: "Hallway Middle Light"
-                children: []
               - entity_id: "sensor.worx_robot_mower_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Worx Robot Mower"
                 children: []
-              - entity_id: "sensor.msi_gf66_dan_unifi_total_increasing_rx"
+              - entity_id: "sensor.msi_gf66_dan_wifi_unifi_total_increasing_rx"
                 type: "entity"
                 name: "MSI GF66 Laptop Dan"
-                color: "orange"
                 children: []
               - entity_id: "sensor.nespresso_vertuo_next_unifi_total_increasing_rx"
                 type: "entity"
@@ -1386,11 +1368,7 @@ views:
                 type: "entity"
                 name: "Nest Protect Top Hallway"
                 children: []
-              - entity_id: "sensor.radiator_plug_bed_b_unifi_total_increasing_rx"
-                type: "entity"
-                name: "Radiator Plug Bed B"
-                children: []
-              - entity_id: "sensor.samsung_tumble_dryer_unifi_total_increasing_rx"
+              - entity_id: "sensor.samsung_tumble_dryer_kitchen_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Samsung Tumble Dryer"
                 children: []
@@ -1417,20 +1395,14 @@ views:
               - entity_id: "sensor.macbook_2018_usb_c_rj45_unifi_total_increasing_rx"
                 type: "entity"
                 name: "MacBook Pro USB-C to RJ45 adapter"
-                color: "orange"
-                children: []
-              - entity_id: "sensor.macbook_pro_usb_c_rj45_unifi_total_increasing_rx"
-                type: "entity"
-                name: "MacBook Pro USB-C to RJ45 adapter"
-                color: "orange"
                 children: []
 
-              - entity_id: "sensor.samsung_ue48hu7500t_tv_unifi_total_increasing_rx"
+              - entity_id: "sensor.samsung_ue48hu7500t_tv_lounge_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Samsung TV Lounge"
                 color: "purple"
                 children: []
-              - entity_id: "sensor.nvidia_shield_lounge_unifi_total_increasing_rx"
+              - entity_id: "sensor.nvidia_shield_bed_c_unifi_total_increasing_rx"
                 type: "entity"
                 name: "NVidia Shield Lounge"
                 color: "purple"
@@ -1453,13 +1425,11 @@ views:
               - entity_id: "sensor.apple_imac_2011_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Apple iMac 2011"
-                color: "orange"
                 children: []
 
               - entity_id: "sensor.caldigit_thunderbolt_dock_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Caldigit Dock"
-                color: "orange"
                 children: []
               - entity_id: "sensor.sony_bravia_kdl_32ex403_tv_unifi_total_increasing_rx"
                 type: "entity"
@@ -1474,7 +1444,6 @@ views:
               - entity_id: "sensor.big_pc_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Big PC"
-                color: "orange"
                 children: []
               - entity_id: "sensor.download_pc_unifi_total_increasing_rx"
                 type: "entity"
@@ -1489,7 +1458,6 @@ views:
               - entity_id: "sensor.arcade_machine_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Arcade Machine"
-                color: "orange"
                 children: []
               - entity_id: "sensor.brother_mfc_j870dw_printer_unifi_total_increasing_rx"
                 type: "entity"
@@ -1498,9 +1466,8 @@ views:
               - entity_id: "sensor.home_assistant_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Home Assistant"
-                color: "orange"
                 children: []
-              - entity_id: "sensor.synology_diskstation_ds412_unifi_total_increasing_rx"
+              - entity_id: "sensor.synology_diskstation_ds412_net_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Synology NAS"
                 children: []
@@ -1512,7 +1479,7 @@ views:
                 type: "entity"
                 name: "Xbox Series X"
                 children: []
-              - entity_id: "sensor.yamaha_rx_v777_receiver_unifi_total_increasing_rx"
+              - entity_id: "sensor.yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_rx"
                 type: "entity"
                 name: "Yamaha Reciever"
                 children: []
