@@ -20,7 +20,40 @@ function hasConfigOrEntityChanged(element, changedProps) {
   return true;
 }
 
+function sortDataBy (d, byKey){
+  let sortedData;
+
+  if (byKey == 'name') {
+    sortedData = d.sort(function(a,b){
+      let x = a.name;
+      let y = b.name;
+      if (x > y) { return 1; }
+      if (x < y) { return -1; }
+      return 0;
+    });
+
+  } else if (byKey == 'id') {
+    sortedData = d.sort(function(a,b){
+      return a.id - b.id;
+    });
+  } else if (byKey == 'added_date') {
+    sortedData = d.sort(function(a,b){
+      return a.added_date - b.added_date;
+    });
+  } else if (byKey == 'status') {
+    sortedData = d.sort(function(a,b){
+      let x = a.status;
+      let y = b.status;
+      if (x > y) { return 1; }
+      if (x < y) { return -1; }
+      return 0;
+    });
+  }
+  return sortedData;
+}
+
 const torrent_types = ['total','active','completed','paused','started'];
+const sort_types = ['name','added_date','id','status'];
 
 class TransmissionCard extends LitElement {
 
@@ -28,11 +61,12 @@ class TransmissionCard extends LitElement {
     return {
       config: {},
       hass: {},
-      selectedType: {state: true}
+      selectedType: {state: true},
+      selectedSort: {state: true}
     };
   }
 
-  _getTorrents(hass, type, sensor_entity_id) {
+  _getTorrents(hass, type, sort, sensor_entity_id) {
     var res = [];
     if (typeof this.hass.states[`sensor.${sensor_entity_id}_${type}_torrents`] != "undefined") {
       const data1 = this.hass.states[`sensor.${sensor_entity_id}_${type}_torrents`].attributes['torrent_info'];
@@ -41,13 +75,13 @@ class TransmissionCard extends LitElement {
           name: key,
           id: data1[key].id,
           percent: parseInt(data1[key].percent_done, 10),
-          state: data1[key].status,
+          status: data1[key].status,
           added_date: data1[key].added_date,
           eta: data1[key].eta,
         });
       });
     }
-    return res;
+    return sortDataBy(res, sort);
   }
 
   _getGAttributes() {
@@ -91,6 +125,10 @@ class TransmissionCard extends LitElement {
 
   _toggleType(ev) {
     this.selectedType = ev.target.value;
+  }
+
+  _toggleSort(ev) {
+    this.selectedSort = ev.target.value;
   }
 
   _startStop() {
@@ -159,7 +197,7 @@ class TransmissionCard extends LitElement {
   get config_entry() {
     return this.device.config_entries[0];
   }
-  
+
   setConfig(config) {
     if (config.display_mode &&
       !['compact', 'full'].includes(config.display_mode)) {
@@ -181,6 +219,8 @@ class TransmissionCard extends LitElement {
       'hide_delete_torrent': false,
       'hide_delete_torrent_full': false,
       'hide_torrent_list': false,
+      'hide_sort': true,
+      'default_sort': 'name',
     }
 
     this.config = {
@@ -189,6 +229,7 @@ class TransmissionCard extends LitElement {
     };
 
     this.selectedType = this.config.default_type;
+    this.selectedSort = this.config.default_sort;
   }
 
   render() {
@@ -196,7 +237,7 @@ class TransmissionCard extends LitElement {
       return html``;
     }
 
-    const torrents = this._getTorrents(this.hass, this.selectedType, this.config.sensor_entity_id);
+    const torrents = this._getTorrents(this.hass, this.selectedType, this.selectedSort, this.config.sensor_entity_id);
     return html`
       <ha-card>
         <div class="card-header">
@@ -244,10 +285,11 @@ class TransmissionCard extends LitElement {
         ${this.renderTurtleButton()}
         ${this.renderStartStopButton()}
         ${this.renderTypeSelect()}
+        ${this.renderSortSelect()}
       </div>
     `;
   }
-  
+
   _show_more_info(entity_id) {
     let e = new Event("hass-more-info", { composed: true });
     e.detail = {
@@ -267,7 +309,7 @@ class TransmissionCard extends LitElement {
   _show_status() {
     this._show_more_info(this.status_entity_id);
   }
-  
+
   renderAddTorrent() {
     if (this.config.hide_add_torrent) {
       return html``;
@@ -290,7 +332,7 @@ class TransmissionCard extends LitElement {
     return html
     `
       <div class="progressbar">
-          <div class="${torrent.state} progressin" style="width:${torrent.percent}%">
+          <div class="${torrent.status} progressin" style="width:${torrent.percent}%">
           </div>
           <div class="name">${torrent.name}</div>
         <div class="percent">${torrent.percent}%</div>
@@ -302,9 +344,9 @@ class TransmissionCard extends LitElement {
     return html`
     <div class="torrent">
       <div class="torrent_name">${torrent.name}</div>
-      <div class="torrent_state">${torrent.state}</div>
+      <div class="torrent_state">${torrent.status}</div>
       <div class="progressbar">
-        <div class="${torrent.state} progressin" style="width:${torrent.percent}%">
+        <div class="${torrent.status} progressin" style="width:${torrent.percent}%">
         </div>
       </div>
       <div class="torrent_details">${torrent.percent} %</div>
@@ -322,13 +364,13 @@ class TransmissionCard extends LitElement {
       return html``;
     }
     const activeTorrentStatus = ['seeding', 'downloading']
-    const isActive = activeTorrentStatus.includes(torrent.state);
+    const isActive = activeTorrentStatus.includes(torrent.status);
     const label = isActive ? 'Stop' : 'Start';
     const icon = isActive ? 'mdi:stop' : 'mdi:play';
 
     return html`
       <ha-icon-button
-        class="start_${torrent.state}"
+        class="start_${torrent.status}"
         data-torrent-id=${torrent.id}
         @click="${isActive ? this._stopTorrent : this._startTorrent}"
         title="${label}"
@@ -357,7 +399,7 @@ class TransmissionCard extends LitElement {
 
     return html`
       <ha-icon-button
-        class="start_${torrent.state}"
+        class="start_${torrent.status}"
         data-torrent-id=${torrent.id}
         data-delete-data=${deleteData}
         @click="${this._deleteTorrent}"
@@ -447,6 +489,30 @@ class TransmissionCard extends LitElement {
           naturalMenuWidth
         >
           ${torrent_types.map(
+            (type) => html`
+              <mwc-list-item .value=${type}>${type}</mwc-list-item>`
+          )}
+        </ha-select>
+      </div>
+    `;
+  }
+
+  renderSortSelect() {
+    if (this.config.hide_sort) {
+      return html``;
+    }
+
+    return html`
+      <div class="titleitem">
+        <ha-select
+          class="type-dropdown"
+          .label=${this.label}
+          @selected=${this._toggleSort}
+          .value=${this.selectedSort}
+          fixedMenuPosition
+          naturalMenuWidth
+        >
+          ${sort_types.map(
             (type) => html`
               <mwc-list-item .value=${type}>${type}</mwc-list-item>`
           )}
