@@ -1,0 +1,2168 @@
+---
+# take rate measurements from Unifi Protect as Unifi Network is always zero. The Protect unit is bytes
+# The Unifi Protect measurements are total increasing (reset on reboot?), so the unit needs changing
+template:
+  - sensor:
+      # create non-increasing Mb sensor
+      - unique_id: "_unique_back_g3_flex_rx_total_mb"
+        name: "Back G3 Flex Total Rx to Mb"
+        state: "{{ states('sensor.back_g3_flex_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+      - unique_id: "_unique_back_g3_flex_tx_total_mb"
+        name: "Back G3 Flex Total Tx to Mb"
+        state: "{{ states('sensor.back_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+
+      - unique_id: "_unique_doorbell_g4_flex_rx_total_mb"
+        name: "Doorbell G4 Total Rx to Mb"
+        state: "{{ states('sensor.doorbell_g4_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+      - unique_id: "_unique_doorbell_g4_flex_tx_total_mb"
+        name: "Doorbell G4 Total Tx to Mb"
+        state: "{{ states('sensor.doorbell_g4_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+
+      - unique_id: "_unique_front_g3_flex_rx_total_mb"
+        name: "Front G3 Flex Total Rx to Mb"
+        state: "{{ states('sensor.front_g3_flex_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+      - unique_id: "_unique_front_g3_flex_tx_total_mb"
+        name: "Front G3 Flex Total Tx to Mb"
+        state: "{{ states('sensor.front_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+
+      - unique_id: "_unique_middle_hallway_g3_flex_rx_total_mb"
+        name: "Middle Hallway G3 Flex Total Rx to Mb"
+        state: "{{ states('sensor.middle_hallway_g3_flex_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+      - unique_id: "_unique_middle_hallway_g3_flex_tx_total_mb"
+        name: "Middle Hallway G3 Flex Total Tx to Mb"
+        state: "{{ states('sensor.middle_hallway_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+
+      - unique_id: "_unique_bottom_hallway_g3_instant_rx_total_mb"
+        name: "Bottom Hallway G3 Instant Total Rx to Mb"
+        state: "{{ states('sensor.bottom_hallway_g3_instant_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+      - unique_id: "_unique_bottom_hallway_g3_instant_tx_total_mb"
+        name: "Bottom Hallway G3 Instant Total Tx to Mb"
+        state: "{{ states('sensor.bottom_hallway_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+
+      - unique_id: "_unique_kitchen_g3_instant_rx_total_mb"
+        name: "Kitchen G3 Instant Total Rx to Mb"
+        state: "{{ states('sensor.kitchen_g3_instant_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+      - unique_id: "_unique_kitchen_g3_instant_tx_total_mb"
+        name: "Kitchen G3 Instant Total Tx to Mb"
+        state: "{{ states('sensor.kitchen_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+
+      - unique_id: "_unique_bed_c_g3_instant_rx_total_mb"
+        name: "Bed C G3 Instant Total Rx to Mb"
+        state: "{{ states('sensor.bed_c_g3_instant_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+      - unique_id: "_unique_bed_c_g3_instant_tx_total_mb"
+        name: "Bed C G3 Instant Total Tx to Mb"
+        state: "{{ states('sensor.bed_c_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total"
+          device_class: "data_size"
+
+
+      # create total increasing Mb sensor
+      - unique_id: "_unique_back_g3_flex_rx_total_increasing_mb"
+        name: "Back G3 Flex Total Increasing Rx to Mb"
+        state: "{{ states('sensor.back_g3_flex_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "_unique_back_g3_flex_tx_total_increasing_mb"
+        name: "Back G3 Flex Total Increasing Tx to Mb"
+        state: "{{ states('sensor.back_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "_unique_doorbell_g4_flex_rx_total_increasing_mb"
+        name: "Doorbell G4 Total Increasing Rx to Mb"
+        state: "{{ states('sensor.doorbell_g4_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "_unique_doorbell_g4_flex_tx_total_increasing_mb"
+        name: "Doorbell G4 Total Increasing Tx to Mb"
+        state: "{{ states('sensor.doorbell_g4_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "_unique_front_g3_flex_rx_total_increasing_mb"
+        name: "Front G3 Flex Total Increasing Rx to Mb"
+        state: "{{ states('sensor.front_g3_flex_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "_unique_front_g3_flex_tx_total_increasing_mb"
+        name: "Front G3 Flex Total Increasing Tx to Mb"
+        state: "{{ states('sensor.front_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "_unique_middle_hallway_g3_flex_rx_total_increasing_mb"
+        name: "Middle Hallway G3 Flex Total Increasing Rx to Mb"
+        state: "{{ states('sensor.middle_hallway_g3_flex_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "_unique_middle_hallway_g3_flex_tx_total_increasing_mb"
+        name: "Middle Hallway G3 Flex Total Increasing Tx to Mb"
+        state: "{{ states('sensor.middle_hallway_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "_unique_bottom_hallway_g3_instant_rx_total_increasing_mb"
+        name: "Bottom Hallway G3 Instant Total Increasing Rx to Mb"
+        state: "{{ states('sensor.bottom_hallway_g3_instant_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "_unique_bottom_hallway_g3_instant_tx_total_increasing_mb"
+        name: "Bottom Hallway G3 Instant Total Increasing Tx to Mb"
+        state: "{{ states('sensor.bottom_hallway_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "_unique_kitchen_g3_instant_rx_total_increasing_mb"
+        name: "Kitchen G3 Instant Total Increasing Rx to Mb"
+        state: "{{ states('sensor.kitchen_g3_instant_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "_unique_kitchen_g3_instant_tx_total_increasing_mb"
+        name: "Kitchen G3 Instant Total Increasing Tx to Mb"
+        state: "{{ states('sensor.kitchen_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+      - unique_id: "_unique_bed_c_g3_instant_rx_total_increasing_mb"
+        name: "Bed C G3 Instant Total Increasing Rx to Mb"
+        state: "{{ states('sensor.bed_c_g3_instant_received_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+      - unique_id: "_unique_bed_c_g3_instant_tx_total_increasing_mb"
+        name: "Bed C G3 Instant Total Increasing Tx to Mb"
+        state: "{{ states('sensor.bed_c_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
+        attributes:
+          unit_of_measurement: "MB"
+          state_class: "total_increasing"
+          device_class: "data_size"
+
+
+utility_meter:
+  back_g3_flex_total_increasing_utility_meter_rx:
+    source: "sensor.back_g3_flex_total_increasing_rx_to_mb"
+    name: "Back G3 Flex Total Increasing Utility Meter Rx"
+    unique_id: "_unique_back_g3_flex_total_increasing_utility_meter_rx"
+    periodically_resetting: true
+  back_g3_flex_total_increasing_utility_meter_tx:
+    source: "sensor.back_g3_flex_total_increasing_tx_to_mb"
+    name: "Back G3 Flex Total Increasing Utility Meter Tx"
+    unique_id: "_unique_back_g3_flex_total_increasing_utility_meter_tx"
+    periodically_resetting: true
+
+  doorbell_g4_flex_total_increasing_utility_meter_rx:
+    source: "sensor.doorbell_g4_flex_total_increasing_rx_to_mb"
+    name: "Doorbell G4 Total Increasing Utility Meter Rx"
+    unique_id: "_unique_doorbell_g4_flex_total_increasing_utility_meter_rx"
+    periodically_resetting: true
+  doorbell_g4_flex_total_increasing_utility_meter_tx:
+    source: "sensor.doorbell_g4_flex_total_increasing_tx_to_mb"
+    name: "Doorbell G4 Total Increasing Utility Meter Tx"
+    unique_id: "_unique_doorbell_g4_flex_total_increasing_utility_meter_tx"
+    periodically_resetting: true
+
+  front_g3_flex_total_increasing_utility_meter_rx:
+    source: "sensor.front_g3_flex_total_increasing_rx_to_mb"
+    name: "Front G3 Flex Total Increasing Utility Meter Rx"
+    unique_id: "_unique_front_g3_flex_total_increasing_utility_meter_rx"
+    periodically_resetting: true
+  front_g3_flex_total_increasing_utility_meter_tx:
+    source: "sensor.front_g3_flex_total_increasing_tx_to_mb"
+    name: "Front G3 Flex Total Increasing Utility Meter Tx"
+    unique_id: "_unique_front_g3_flex_total_increasing_utility_meter_tx"
+    periodically_resetting: true
+
+  middle_hallway_g3_flex_total_increasing_utility_meter_rx:
+    source: "sensor.middle_hallway_g3_flex_total_increasing_rx_to_mb"
+    name: "Middle Hallway G3 Flex Total Increasing Utility Meter Rx"
+    unique_id: "_unique_middle_hallway_g3_flex_total_increasing_utility_meter_rx"
+    periodically_resetting: true
+  middle_hallway_g3_flex_increasing_utility_meter_tx:
+    source: "sensor.middle_hallway_g3_flex_total_increasing_tx_to_mb"
+    name: "Middle Hallway G3 Flex Total Increasing Utility Meter Tx"
+    unique_id: "_unique_middle_hallway_g3_flex_total_increasing_utility_meter_tx"
+    periodically_resetting: true
+
+  bottom_hallway_g3_instant_total_increasing_utility_meter_rx:
+    source: "sensor.bottom_hallway_g3_instant_total_increasing_rx_to_mb"
+    name: "Bottom Hallway G3 Instant Total Increasing Utility Meter Rx"
+    unique_id: "_unique_bottom_hallway_g3_instant_total_increasing_utility_meter_rx"
+    periodically_resetting: true
+  bottom_hallway_g3_instant_total_increasing_utility_meter_tx:
+    source: "sensor.bottom_hallway_g3_instant_total_increasing_tx_to_mb"
+    name: "Bottom Hallway G3 Instant Total Increasing Utility Meter Tx"
+    unique_id: "_unique_bottom_hallway_g3_instant_total_increasing_utility_meter_tx"
+    periodically_resetting: true
+
+  kitchen_g3_instant_total_increasing_utility_meter_rx:
+    source: "sensor.kitchen_g3_instant_total_increasing_rx_to_mb"
+    name: "Kitchen G3 Instant Total Increasing Utility Meter Rx"
+    unique_id: "_unique_kitchen_g3_instant_total_increasing_utility_meter_rx"
+    periodically_resetting: true
+  kitchen_g3_instant_total_increasing_utility_meter_tx:
+    source: "sensor.kitchen_g3_instant_total_increasing_tx_to_mb"
+    name: "Kitchen G3 Instant Total Increasing Utility Meter Tx"
+    unique_id: "_unique_kitchen_g3_instant_total_increasing_utility_meter_tx"
+    periodically_resetting: true
+
+  bed_c_g3_instant_total_increasing_utility_meter_rx:
+    source: "sensor.bed_c_g3_instant_total_increasing_rx_to_mb"
+    name: "Bed C G3 Instant Total Increasing Utility Meter Rx"
+    unique_id: "_unique_bed_c_g3_instant_total_increasing_utility_meter_rx"
+    periodically_resetting: true
+  bed_c_g3_instant_total_increasing_utility_meter_tx:
+    source: "sensor.bed_c_g3_instant_total_increasing_tx_to_mb"
+    name: "Bed C G3 Instant Total Increasing Utility Meter Tx"
+    unique_id: "_unique_bed_c_g3_instant_total_increasing_utility_meter_tx"
+    periodically_resetting: true
+
+
+sensor:
+  # total increasing unifi rx rates wireless
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_with_clock_lounge_unifi_rx"
+    name: "amazon_echo_dot_with_clock_lounge_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_echo_dot_with_clock_lounge_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_bed_c_unifi_rx"
+    name: "amazon_echo_dot_bed_c_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_echo_dot_bed_c_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_bed_d_unifi_rx"
+    name: "amazon_echo_dot_bed_d_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_echo_dot_bed_d_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_flex_garage_unifi_rx"
+    name: "amazon_echo_flex_garage_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_echo_flex_garage_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_plus_kitchen_unifi_rx"
+    name: "amazon_echo_plus_kitchen_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_echo_plus_kitchen_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_show_8_bed_e_unifi_rx"
+    name: "amazon_echo_show_8_bed_e_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_echo_show_8_bed_e_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_spot_bed_a_unifi_rx"
+    name: "amazon_echo_spot_bed_a_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_echo_spot_bed_a_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_rx"
+    name: "amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_firestick_4k_wifi_kitchen_unifi_rx"
+    name: "amazon_firestick_4k_wifi_kitchen_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_firestick_4k_wifi_kitchen_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_kindle_oasis_unifi_rx"
+    name: "amazon_kindle_oasis_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_kindle_oasis_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_kindle_voyage_emily_unifi_rx"
+    name: "amazon_kindle_voyage_emily_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_kindle_voyage_emily_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.apple_macbook_pro_2018_kev_unifi_rx"
+    name: "apple_macbook_pro_2018_kev_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_apple_macbook_pro_2018_kev_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.macbook_pro_2021_kev_unifi_rx"
+    name: "apple_macbook_pro_2021_kev_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_apple_macbook_pro_2021_kev_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.backdoor_light_unifi_rx"
+    name: "backdoor_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_backdoor_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bathroom_light_unifi_rx"
+    name: "bathroom_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_bathroom_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bed_a_light_unifi_rx"
+    name: "bed_a_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_bed_a_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bed_b_light_unifi_rx"
+    name: "bed_b_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_bed_b_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bed_c_light_unifi_rx"
+    name: "bed_c_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_bed_c_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bed_e_light_unifi_rx"
+    name: "bed_e_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_bed_e_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.hallway_bottom_light_unifi_rx"
+    name: "hallway_bottom_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_hallway_bottom_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.calex_smart_siren_unifi_rx"
+    name: "calex_smart_siren_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_calex_smart_siren_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.dans_nintendo_switch_unifi_rx"
+    name: "dans_nintendo_switch_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_dans_nintendo_switch_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.dell_work_laptop_kev_unifi_wifi_rx"
+    name: "dell_work_laptop_kev_unifi_wifi_total_increasing_rx"
+    unique_id: "_unique_sensor_dell_work_laptop_kev_unifi_wifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.ensuite_light_unifi_rx"
+    name: "ensuite_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_ensuite_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.front_door_light_unifi_rx"
+    name: "front_door_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_front_door_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.glow_smartmeter_unifi_rx"
+    name: "glow_smartmeter_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_glow_smartmeter_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.google_nest_thermostat_bottom_hallway_unifi_rx"
+    name: "google_nest_thermostat_bottom_hallway_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_google_nest_thermostat_bottom_hallway_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.google_nest_thermostat_middle_hallway_unifi_rx"
+    name: "google_nest_thermostat_middle_hallway_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_google_nest_thermostat_middle_hallway_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.ipad_air_4thgen_emily_unifi_rx"
+    name: "ipad_air_4thgen_emily_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_ipad_air_4thgen_emily_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.ipad_air_4thgen_emily_unifi_rx"
+    name: "ipad_air_4thgen_emily_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_ipad_air_4thgen_emily_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kev_iphone_11_unifi_rx"
+    name: "kev_iphone_11_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_kev_iphone_11_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.iphone_12_dan_unifi_rx"
+    name: "iphone_12_dan_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_iphone_12_dan_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.iphone_13_emily_patrice_unifi_rx"
+    name: "iphone_13_emily_patrice_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_iphone_13_emily_patrice_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.ju_iphone_8_unifi_rx"
+    name: "ju_iphone_8_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_ju_iphone_8_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kitchen_main_lights_unifi_rx"
+    name: "kitchen_main_lights_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_kitchen_main_lights_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kitchen_utility_lights_unifi_rx"
+    name: "kitchen_utility_lights_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_kitchen_utility_lights_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.lg_therma_v_heat_pump_unifi_rx"
+    name: "lg_therma_v_heat_pump_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_lg_therma_v_heat_pump_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.logitech_harmony_hub_unifi_rx"
+    name: "logitech_harmony_hub_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_logitech_harmony_hub_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.lounge_light_unifi_rx"
+    name: "lounge_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_lounge_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.meross_smart_switch_unifi_rx"
+    name: "meross_smart_switch_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_meross_smart_switch_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.worx_robot_mower_unifi_rx"
+    name: "worx_robot_mower_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_worx_robot_mower_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.msi_gf66_dan_wifi_unifi_rx"
+    name: "msi_gf66_dan_wifi_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_msi_gf66_dan_wifi_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nespresso_vertuo_next_unifi_rx"
+    name: "nespresso_vertuo_next_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_nespresso_vertuo_next_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nest_protect_bottom_hallway_unifi_rx"
+    name: "nest_protect_bottom_hallway_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_nest_protect_bottom_hallway_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nest_protect_middle_hallway_unifi_rx"
+    name: "nest_protect_middle_hallway_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_nest_protect_middle_hallway_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nest_protect_top_hallway_unifi_rx"
+    name: "nest_protect_top_hallway_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_nest_protect_top_hallway_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.samsung_tumble_dryer_kitchen_unifi_rx"
+    name: "samsung_tumble_dryer_kitchen_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_samsung_tumble_dryer_kitchen_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.study_light_unifi_rx"
+    name: "study_light_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_study_light_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.tuya_camera_unifi_rx"
+    name: "tuya_camera_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_tuya_camera_unifi_total_increasing_rx"
+    round: 3
+
+  - platform: "integration"
+    source: "sensor.chest_freezer_plug_garage_unifi_rx"
+    name: "chest_freezer_plug_garage_total_increasing_rx"
+    unique_id: "_unique_sensor_chest_freezer_plug_garage_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.dreo_fan_bed_c_unifi_rx"
+    name: "dreo_fan_bed_c_total_increasing_rx"
+    unique_id: "_unique_sensor_dreo_fan_bed_c_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.dreo_fan_bed_e_unifi_rx"
+    name: "dreo_fan_bed_e_total_increasing_rx"
+    unique_id: "_unique_sensor_dreo_fan_bed_e_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.drinks_fridge_plug_bed_c_unifi_rx"
+    name: "drinks_fridge_plug_bed_c_total_increasing_rx"
+    unique_id: "_unique_sensor_drinks_fridge_plug_bed_c_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.emilys_macbook_wifi_unifi_rx"
+    name: "emilys_macbook_wifi_total_increasing_rx"
+    unique_id: "_unique_sensor_emilys_macbook_wifi_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.fridge_freezer_plug_garage_unifi_rx"
+    name: "fridge_freezer_plug_garage_total_increasing_rx"
+    unique_id: "_unique_sensor_fridge_freezer_plug_garage_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.fridge_kitchen_rx"
+    name: "fridge_kitchen_total_increasing_rx"
+    unique_id: "_unique_sensor_fridge_kitchen_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kettle_plug_kitchen_unifi_rx"
+    name: "kettle_plug_kitchen_total_increasing_rx"
+    unique_id: "_unique_sensor_kettle_plug_kitchen_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.lamp_plug_lounge_unifi_rx"
+    name: "lamp_plug_lounge_total_increasing_rx"
+    unique_id: "_unique_sensor_lamp_plug_lounge__unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.microwave_plug_kitchen_unifi_rx"
+    name: "microwave_plug_kitchen_total_increasing_rx"
+    unique_id: "_unique_sensor_microwave_plug_kitchen_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.tubeszb_cc2652_poe_zigbee_router_unifi_rx"
+    name: "tubeszb_cc2652_poe_zigbee_router_total_increasing_rx"
+    unique_id: "_unique_sensor_tubeszb_cc2652_poe_zigbee_router_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.udm_pro_plug_bed_c_unifi_rx"
+    name: "cudm_pro_plug_bed_c_total_increasing_rx"
+    unique_id: "_unique_sensor_udm_pro_plug_bed_c_unifi_total_increasing_rx"
+    round: 3
+
+  # total increasing unifi tx rates wireless
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_with_clock_lounge_unifi_tx"
+    name: "amazon_echo_dot_with_clock_lounge_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_echo_dot_with_clock_lounge_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_bed_c_unifi_tx"
+    name: "amazon_echo_dot_bed_c_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_echo_dot_bed_c_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_dot_bed_d_unifi_tx"
+    name: "amazon_echo_dot_bed_d_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_echo_dot_bed_d_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_flex_garage_unifi_tx"
+    name: "amazon_echo_flex_garage_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_echo_flex_garage_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_plus_kitchen_unifi_tx"
+    name: "amazon_echo_plus_kitchen_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_echo_plus_kitchen_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_show_8_bed_e_unifi_tx"
+    name: "amazon_echo_show_8_bed_e_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_echo_show_8_bed_e_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_echo_spot_bed_a_unifi_tx"
+    name: "amazon_echo_spot_bed_a_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_echo_spot_bed_a_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_tx"
+    name: "amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_fire_hd_8_tablet_bottomhallway_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_firestick_4k_wifi_kitchen_unifi_tx"
+    name: "amazon_firestick_4k_wifi_kitchen_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_firestick_4k_wifi_kitchen_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_kindle_oasis_unifi_tx"
+    name: "amazon_kindle_oasis_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_kindle_oasis_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_kindle_voyage_emily_unifi_tx"
+    name: "amazon_kindle_voyage_emily_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_kindle_voyage_emily_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.apple_macbook_pro_2018_kev_unifi_tx"
+    name: "apple_macbook_pro_2018_kev_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_apple_macbook_pro_2018_kev_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.macbook_pro_2021_kev_unifi_tx"
+    name: "apple_macbook_pro_2021_kev_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_apple_macbook_pro_2021_kev_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.backdoor_light_unifi_tx"
+    name: "backdoor_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_backdoor_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bathroom_light_unifi_tx"
+    name: "bathroom_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_bathroom_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bed_a_light_unifi_tx"
+    name: "bed_a_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_bed_a_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bed_b_light_unifi_tx"
+    name: "bed_b_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_bed_b_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bed_c_light_unifi_tx"
+    name: "bed_c_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_bed_c_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.bed_e_light_unifi_tx"
+    name: "bed_e_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_bed_e_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.hallway_bottom_light_unifi_tx"
+    name: "hallway_bottom_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_hallway_bottom_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.calex_smart_siren_unifi_tx"
+    name: "calex_smart_siren_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_calex_smart_siren_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.dans_nintendo_switch_unifi_tx"
+    name: "dans_nintendo_switch_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_dans_nintendo_switch_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.dell_work_laptop_kev_unifi_wifi_tx"
+    name: "dell_work_laptop_kev_unifi_wifi_total_increasing_tx"
+    unique_id: "_unique_sensor_dell_work_laptop_kev_unifi_wifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.ensuite_light_unifi_tx"
+    name: "ensuite_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_ensuite_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.front_door_light_unifi_tx"
+    name: "front_door_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_front_door_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.glow_smartmeter_unifi_tx"
+    name: "glow_smartmeter_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_glow_smartmeter_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.google_nest_thermostat_bottom_hallway_unifi_tx"
+    name: "google_nest_thermostat_bottom_hallway_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_google_nest_thermostat_bottom_hallway_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.google_nest_thermostat_middle_hallway_unifi_tx"
+    name: "google_nest_thermostat_middle_hallway_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_google_nest_thermostat_middle_hallway_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.ipad_air_4thgen_emily_unifi_tx"
+    name: "ipad_air_4thgen_emily_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_ipad_air_4thgen_emily_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.ipad_air_4thgen_emily_unifi_tx"
+    name: "ipad_air_4thgen_emily_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_ipad_air_4thgen_emily_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kev_iphone_11_unifi_tx"
+    name: "kev_iphone_11_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_kev_iphone_11_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.iphone_12_dan_unifi_tx"
+    name: "iphone_12_dan_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_iphone_12_dan_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.iphone_13_emily_patrice_unifi_tx"
+    name: "iphone_13_emily_patrice_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_iphone_13_emily_patrice_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.ju_iphone_8_unifi_tx"
+    name: "ju_iphone_8_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_ju_iphone_8_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kitchen_main_lights_unifi_tx"
+    name: "kitchen_main_lights_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_kitchen_main_lights_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kitchen_utility_lights_unifi_tx"
+    name: "kitchen_utility_lights_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_kitchen_utility_lights_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.lg_therma_v_heat_pump_unifi_tx"
+    name: "lg_therma_v_heat_pump_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_lg_therma_v_heat_pump_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.logitech_harmony_hub_unifi_tx"
+    name: "logitech_harmony_hub_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_logitech_harmony_hub_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.lounge_light_unifi_tx"
+    name: "lounge_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_lounge_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.meross_smart_switch_unifi_tx"
+    name: "meross_smart_switch_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_meross_smart_switch_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.worx_robot_mower_unifi_tx"
+    name: "worx_robot_mower_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_worx_robot_mower_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.msi_gf66_dan_wifi_unifi_tx"
+    name: "msi_gf66_dan_wifi_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_msi_gf66_dan_wifi_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nespresso_vertuo_next_unifi_tx"
+    name: "nespresso_vertuo_next_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_nespresso_vertuo_next_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nest_protect_bottom_hallway_unifi_tx"
+    name: "nest_protect_bottom_hallway_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_nest_protect_bottom_hallway_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nest_protect_middle_hallway_unifi_tx"
+    name: "nest_protect_middle_hallway_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_nest_protect_middle_hallway_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nest_protect_top_hallway_unifi_tx"
+    name: "nest_protect_top_hallway_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_nest_protect_top_hallway_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.samsung_tumble_dryer_kitchen_unifi_tx"
+    name: "samsung_tumble_dryer_kitchen_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_samsung_tumble_dryer_kitchen_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.study_light_unifi_tx"
+    name: "study_light_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_study_light_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.tuya_camera_unifi_tx"
+    name: "tuya_camera_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_tuya_camera_unifi_total_increasing_tx"
+    round: 3
+
+  - platform: "integration"
+    source: "sensor.chest_freezer_plug_garage_unifi_tx"
+    name: "chest_freezer_plug_garage_total_increasing_tx"
+    unique_id: "_unique_sensor_chest_freezer_plug_garage_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.dreo_fan_bed_c_unifi_tx"
+    name: "dreo_fan_bed_c_total_increasing_tx"
+    unique_id: "_unique_sensor_dreo_fan_bed_c_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.dreo_fan_bed_e_unifi_tx"
+    name: "dreo_fan_bed_e_total_increasing_tx"
+    unique_id: "_unique_sensor_dreo_fan_bed_e_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.drinks_fridge_plug_bed_c_unifi_tx"
+    name: "drinks_fridge_plug_bed_c_total_increasing_tx"
+    unique_id: "_unique_sensor_drinks_fridge_plug_bed_c_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.emilys_macbook_wifi_unifi_tx"
+    name: "emilys_macbook_wifi_total_increasing_tx"
+    unique_id: "_unique_sensor_emilys_macbook_wifi_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.fridge_freezer_plug_garage_unifi_tx"
+    name: "fridge_freezer_plug_garage_total_increasing_tx"
+    unique_id: "_unique_sensor_fridge_freezer_plug_garage_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.fridge_kitchen_tx"
+    name: "fridge_kitchen_total_increasing_tx"
+    unique_id: "_unique_sensor_fridge_kitchen_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kettle_plug_kitchen_unifi_tx"
+    name: "kettle_plug_kitchen_total_increasing_tx"
+    unique_id: "_unique_sensor_kettle_plug_kitchen_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.lamp_plug_lounge_unifi_tx"
+    name: "lamp_plug_lounge_total_increasing_tx"
+    unique_id: "_unique_sensor_lamp_plug_lounge__unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.microwave_plug_kitchen_unifi_tx"
+    name: "microwave_plug_kitchen_total_increasing_tx"
+    unique_id: "_unique_sensor_microwave_plug_kitchen_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.tubeszb_cc2652_poe_zigbee_router_unifi_tx"
+    name: "tubeszb_cc2652_poe_zigbee_router_total_increasing_tx"
+    unique_id: "_unique_sensor_tubeszb_cc2652_poe_zigbee_router_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.udm_pro_plug_bed_c_unifi_tx"
+    name: "cudm_pro_plug_bed_c_total_increasing_tx"
+    unique_id: "_unique_sensor_udm_pro_plug_bed_c_unifi_total_increasing_tx"
+    round: 3
+
+  # total increasing unifi rx rates wired
+  - platform: "integration"
+    source: "sensor.amazon_firestick_4k_rj45_bed_a_unifi_rx"
+    name: "amazon_firestick_4k_rj45_bed_a_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_firestick_4k_rj45_bed_a_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_firestick_4k_rj45_kitchen_unifi_rx"
+    name: "amazon_firestick_4k_rj45_kitchen_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_amazon_firestick_4k_rj45_kitchen_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.apple_imac_2011_unifi_rx"
+    name: "apple_imac_2011_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_apple_imac_2011_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.apple_tv_4k_unifi_rx"
+    name: "apple_tv_4k_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_apple_tv_4k_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.arcade_machine_unifi_rx"
+    name: "arcade_machine_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_arcade_machine_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.big_pc_unifi_rx"
+    name: "big_pc_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_big_pc_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.brother_mfc_j870dw_printer_unifi_rx"
+    name: "brother_mfc_j870dw_printer_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_brother_mfc_j870dw_printer_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.caldigit_thunderbolt_dock_unifi_rx"
+    name: "caldigit_thunderbolt_dock_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_caldigit_thunderbolt_dock_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.download_pc_unifi_rx"
+    name: "download_pc_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_download_pc_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.home_assistant_unifi_rx"
+    name: "home_assistant_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_home_assistant_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.macbook_2018_usb_c_rj45_unifi_rx"
+    name: "macbook_2018_usb_c_rj45_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_macbook_2018_usb_c_rj45_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nvidia_shield_bed_e_unifi_rx"
+    name: "nvidia_shield_bed_e_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_nvidia_shield_bed_e_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nvidia_shield_bed_c_unifi_rx"
+    name: "nvidia_shield_bed_c_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_nvidia_shield_bed_c_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.samsung_ue32f4500_tv_bed_a_unifi_rx"
+    name: "samsung_ue32f4500_tv_bed_a_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_samsung_ue32f4500_tv_bed_a_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.samsung_ue48hu7500t_tv_lounge_unifi_rx"
+    name: "samsung_ue48hu7500t_tv_lounge_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_samsung_ue48hu7500t_tv_lounge_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.solar_battery_1_garage_unifi_rx"
+    name: "solar_battery_1_garage_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_solar_battery_1_garage_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.solar_battery_2_garage_unifi_rx"
+    name: "solar_battery_2_garage_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_solar_battery_2_garage_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.sony_bravia_kdl_32ex403_tv_unifi_rx"
+    name: "sony_bravia_kdl_32ex403_tv_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_sony_bravia_kdl_32ex403_tv_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.sony_playstation_3_bed_c_unifi_rx"
+    name: "sony_playstation_3_bed_c_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_sony_playstation_3_bed_c_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.synology_diskstation_ds412_net_unifi_rx"
+    name: "synology_diskstation_ds412_net_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_synology_diskstation_ds412_net_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.synology_diskstation_ds412_vpn_unifi_rx"
+    name: "synology_diskstation_ds412_vpn_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_synology_diskstation_ds412_vpn_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.xbox_series_x_unifi_rx"
+    name: "xbox_series_x_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_xbox_series_x_unifi_total_increasing_rx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.yamaha_rx_v777_receiver_bed_c_unifi_rx"
+    name: "yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_rx"
+    round: 3
+
+  # total increasing unifi tx rates wired
+  - platform: "integration"
+    source: "sensor.amazon_firestick_4k_rj45_bed_a_unifi_tx"
+    name: "amazon_firestick_4k_rj45_bed_a_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_firestick_4k_rj45_bed_a_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.amazon_firestick_4k_rj45_kitchen_unifi_tx"
+    name: "amazon_firestick_4k_rj45_kitchen_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_amazon_firestick_4k_rj45_kitchen_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.apple_imac_2011_unifi_tx"
+    name: "apple_imac_2011_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_apple_imac_2011_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.apple_tv_4k_unifi_tx"
+    name: "apple_tv_4k_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_apple_tv_4k_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.arcade_machine_unifi_tx"
+    name: "arcade_machine_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_arcade_machine_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.big_pc_unifi_tx"
+    name: "big_pc_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_big_pc_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.brother_mfc_j870dw_printer_unifi_tx"
+    name: "brother_mfc_j870dw_printer_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_brother_mfc_j870dw_printer_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.caldigit_thunderbolt_dock_unifi_tx"
+    name: "caldigit_thunderbolt_dock_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_caldigit_thunderbolt_dock_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.download_pc_unifi_tx"
+    name: "download_pc_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_download_pc_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.home_assistant_unifi_tx"
+    name: "home_assistant_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_home_assistant_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.macbook_2018_usb_c_rj45_unifi_tx"
+    name: "macbook_2018_usb_c_rj45_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_macbook_2018_usb_c_rj45_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.macbook_pro_usb_c_rj45_unifi_tx"
+    name: "macbook_pro_usb_c_rj45_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_macbook_pro_usb_c_rj45_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nvidia_shield_bed_e_unifi_tx"
+    name: "nvidia_shield_bed_e_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_nvidia_shield_bed_e_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.nvidia_shield_bed_c_unifi_tx"
+    name: "nvidia_shield_bed_c_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_nvidia_shield_bed_c_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.samsung_ue32f4500_tv_bed_a_unifi_tx"
+    name: "samsung_ue32f4500_tv_bed_a_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_samsung_ue32f4500_tv_bed_a_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.samsung_ue48hu7500t_tv_lounge_unifi_tx"
+    name: "samsung_ue48hu7500t_tv_lounge_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_samsung_ue48hu7500t_tv_lounge_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.solar_battery_1_garage_unifi_tx"
+    name: "solar_battery_1_garage_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_solar_battery_1_garage_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.solar_battery_2_garage_unifi_tx"
+    name: "solar_battery_2_garage_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_solar_battery_2_garage_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.sony_bravia_kdl_32ex403_tv_unifi_tx"
+    name: "sony_bravia_kdl_32ex403_tv_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_sony_bravia_kdl_32ex403_tv_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.sony_playstation_3_bed_c_unifi_tx"
+    name: "sony_playstation_3_bed_c_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_sony_playstation_3_bed_c_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.synology_diskstation_ds412_net_unifi_tx"
+    name: "synology_diskstation_ds412_net_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_synology_diskstation_ds412_net_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.synology_diskstation_ds412_vpn_unifi_tx"
+    name: "synology_diskstation_ds412_vpn_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_synology_diskstation_ds412_vpn_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.xbox_series_x_unifi_tx"
+    name: "xbox_series_x_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_xbox_series_x_unifi_total_increasing_tx"
+    round: 3
+  - platform: "integration"
+    source: "sensor.yamaha_rx_v777_receiver_bed_c_unifi_tx"
+    name: "yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_tx"
+    round: 3
+
+  # # Unifi Cameras Rx
+  # - platform: "integration"
+  #   source: "sensor.back_g3_flex_received_data"
+  #   name: "back_g3_flex_unifi_total_increasing_rx"
+  #   unique_id: "_unique_sensor_back_g3_flex_unifi_total_increasing_rx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.doorbell_g4_received_data"
+  #   name: "doorbell_g4_unifi_total_increasing_rx"
+  #   unique_id: "_unique_sensor_doorbell_g4_unifi_total_increasing_rx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.front_g3_flex_received_data"
+  #   name: "front_g3_flex_unifi_total_increasing_rx"
+  #   unique_id: "_unique_sensor_front_g3_flex_unifi_total_increasing_rx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.middle_hallway_g3_flex_received_data"
+  #   name: "middle_hallway_g3_flex_unifi_total_increasing_rx"
+  #   unique_id: "_unique_sensor_middle_hallway_g3_flex_unifi_total_increasing_rx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.bottom_hallway_g3_instant_received_data"
+  #   name: "bottom_hallway_g3_instant_unifi_total_increasing_rx"
+  #   unique_id: "_unique_sensor_bottom_hallway_g3_instant_unifi_total_increasing_rx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.kitchen_g3_instant_received_data"
+  #   name: "kitchen_g3_instant_unifi_total_increasing_rx"
+  #   unique_id: "_unique_sensor_kitchen_g3_instant_unifi_total_increasing_rx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.bed_c_g3_instant_received_data"
+  #   name: "bed_c_g3_instant_unifi_total_increasing_rx"
+  #   unique_id: "_unique_sensor_bed_c_g3_instant_unifi_total_increasing_rx"
+  #   round: 3
+
+  # # Unifi Cameras Tx
+  # - platform: "integration"
+  #   source: "sensor.back_g3_flex_transferred_data"
+  #   name: "back_g3_flex_unifi_total_increasing_tx"
+  #   unique_id: "_unique_sensor_back_g3_flex_unifi_total_increasing_tx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.doorbell_g4_transferred_data"
+  #   name: "doorbell_g4_unifi_total_increasing_tx"
+  #   unique_id: "_unique_sensor_doorbell_g4_unifi_total_increasing_tx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.front_g3_flex_transferred_data"
+  #   name: "front_g3_flex_unifi_total_increasing_tx"
+  #   unique_id: "_unique_sensor_front_g3_flex_unifi_total_increasing_tx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.middle_hallway_g3_flex_transferred_data"
+  #   name: "middle_hallway_g3_flex_unifi_total_increasing_tx"
+  #   unique_id: "_unique_sensor_middle_hallway_g3_flex_unifi_total_increasing_tx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.bottom_hallway_g3_instant_transferred_data"
+  #   name: "bottom_hallway_g3_instant_unifi_total_increasing_tx"
+  #   unique_id: "_unique_sensor_bottom_hallway_g3_instant_unifi_total_increasing_tx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.kitchen_g3_instant_transferred_data"
+  #   name: "kitchen_g3_instant_unifi_total_increasing_tx"
+  #   unique_id: "_unique_sensor_kitchen_g3_instant_unifi_total_increasing_tx"
+  #   round: 3
+  # - platform: "integration"
+  #   source: "sensor.bed_c_g3_instant_transferred_data"
+  #   name: "bed_c_g3_instant_unifi_total_increasing_tx"
+  #   unique_id: "_unique_sensor_bed_c_g3_instant_unifi_total_increasing_tx"
+  #   round: 3
+
+
+  - platform: "min_max"
+    name: "Nvidia Shield Bed C Unifi Data Rate"
+    unique_id: "_unique_nvidia_shield_bed_c_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.nvidia_shield_bed_c_unifi_tx"
+      - "sensor.nvidia_shield_bed_c_unifi_rx"
+
+  - platform: "min_max"
+    name: "Nvidia Shield Bed E Unifi Data Rate"
+    unique_id: "_unique_nvidia_shield_bed_e_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.nvidia_shield_bed_e_unifi_tx"
+      - "sensor.nvidia_shield_bed_e_unifi_rx"
+
+  - platform: "min_max"
+    name: "Amazon FireStick Bed A Unifi RJ45 Data Rate"
+    unique_id: "_unique_amazon_firestick_4k_rj45_bed_a_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_firestick_4k_rj45_bed_a_unifi_tx"
+      - "sensor.amazon_firestick_4k_rj45_bed_a_unifi_rx"
+
+  - platform: "min_max"
+    name: "Amazon FireStick Kitchen RJ45 Unifi Data Rate"
+    unique_id: "_unique_amazon_firestick_4k_rj45_kitchen_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_firestick_4k_rj45_kitchen_unifi_tx"
+      - "sensor.amazon_firestick_4k_rj45_kitchen_unifi_rx"
+
+  - platform: "min_max"
+    name: "Amazon FireStick Kitchen WiFi Unifi Data Rate"
+    unique_id: "_unique_amazon_firestick_4k_wifi_kitchen_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_firestick_4k_wifi_kitchen_unifi_rx"
+      - "sensor.amazon_firestick_4k_wifi_kitchen_unifi_tx"
+
+  - platform: "min_max"
+    name: "Apple iMac 2011 Unifi Data Rate"
+    unique_id: "_unique_apple_imac_2011_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.apple_imac_2011_unifi_tx"
+      - "sensor.apple_imac_2011_unifi_rx"
+
+  - platform: "min_max"
+    name: "Apple MacBook Pro 2018 Data Rate"
+    unique_id: "_unique_apple_macbook_pro_2018_kev_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.apple_macbook_pro_2018_kev_unifi_tx"
+      - "sensor.apple_macbook_pro_2018_kev_unifi_rx"
+
+  - platform: "min_max"
+    name: "Apple TV 4k Unifi Data Rate"
+    unique_id: "_unique_apple_tv_4k_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.apple_tv_4k_unifi_tx"
+      - "sensor.apple_tv_4k_unifi_rx"
+
+  - platform: "min_max"
+    name: "Arcade Machine Unifi Data Rate"
+    unique_id: "_unique_arcade_machine_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.arcade_machine_unifi_tx"
+      - "sensor.arcade_machine_unifi_rx"
+
+  - platform: "min_max"
+    name: "Big PC Unifi Data Rate"
+    unique_id: "_unique_big_pc_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.big_pc_unifi_tx"
+      - "sensor.big_pc_unifi_rx"
+
+  - platform: "min_max"
+    name: "Caldigit Thunderbolt Dock Unifi Data Rate"
+    unique_id: "_unique_caldigit_thunderbolt_dock_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.caldigit_thunderbolt_dock_unifi_tx"
+      - "sensor.caldigit_thunderbolt_dock_unifi_rx"
+
+  - platform: "min_max"
+    name: "Nintendo Switch Unifi Data Rate"
+    unique_id: "_unique_dans_nintendo_switch_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.dans_nintendo_switch_unifi_tx"
+      - "sensor.dans_nintendo_switch_unifi_rx"
+
+  - platform: "min_max"
+    name: "Dell Work Laptop WiFi Unifi Data Rate"
+    unique_id: "_unique_dell_work_laptop_kev_wifi_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.dell_work_laptop_kev_unifi_wifi_tx"
+      - "sensor.dell_work_laptop_kev_unifi_wifi_rx"
+
+  - platform: "min_max"
+    name: "Download PC Unifi Data Rate"
+    unique_id: "_unique_download_pc_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.download_pc_unifi_tx"
+      - "sensor.download_pc_unifi_rx"
+
+  - platform: "min_max"
+    name: "iPhone 11 Kev Unifi Data Rate"
+    unique_id: "_unique_kev_iphone_11_data_rate"
+    type: "last"
+    round_digits: 3
+    entity_ids:
+      - "sensor.kev_iphone_11_unifi_tx"
+      - "sensor.kev_iphone_11_unifi_rx"
+
+  - platform: "min_max"
+    name: "Home Assistant Unifi Data Rate"
+    unique_id: "_unique_home_assistant_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.home_assistant_unifi_tx"
+      - "sensor.home_assistant_unifi_rx"
+
+  - platform: "min_max"
+    name: "iPhone 12 Dan Unifi Data Rate"
+    unique_id: "_unique_iphone_12_dan_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.iphone_12_dan_unifi_tx"
+      - "sensor.iphone_12_dan_unifi_rx"
+
+
+  - platform: "min_max"
+    name: "iPhone 8 Ju Unifi Data Rate"
+    unique_id: "_unique_ju_iphone_8_data_rate"
+    type: "max"
+    round_digits: 3
+    entity_ids:
+      - "sensor.ju_iphone_8_unifi_tx"
+      - "sensor.ju_iphone_8_unifi_rx"
+
+  - platform: "min_max"
+    name: "Samsung TV Bed A Unifi Data Rate"
+    unique_id: "_unique_samsung_ue32f4500_tv_bed_a_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.samsung_ue32f4500_tv_bed_a_unifi_tx"
+      - "sensor.samsung_ue32f4500_tv_bed_a_unifi_rx"
+  - platform: "min_max"
+    name: "Samsung TV Lounge Unifi Data Rate"
+    unique_id: "_unique_samsung_ue48hu7500t_tv_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.samsung_ue48hu7500t_tv_lounge_unifi_tx"
+      - "sensor.samsung_ue48hu7500t_tv_lounge_unifi_rx"
+  - platform: "min_max"
+    name: "Sony PlayStation 3 Unifi Data Rate"
+    unique_id: "_unique_sony_playstation_3_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.sony_playstation_3_bed_c_unifi_tx"
+      - "sensor.sony_playstation_3_bed_c_unifi_rx"
+  - platform: "min_max"
+    name: "Synology DiskStation DS412+ Unifi Data Rate"
+    unique_id: "_unique_synology_diskstation_ds412_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.synology_diskstation_ds412_net_unifi_tx"
+      - "sensor.synology_diskstation_ds412_net_unifi_rx"
+
+  - platform: "min_max"
+    name: "XBox Series X Dan Unifi Data Rate"
+    unique_id: "_unique_xbox_series_x_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.xbox_series_x_unifi_tx"
+      - "sensor.xbox_series_x_unifi_rx"
+
+  - platform: "min_max"
+    name: "Amazon Echo Dot Bed C Data Rate"
+    unique_id: "_unique_amazon_echo_dot_bed_c_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_echo_dot_bed_c_unifi_rx"
+      - "sensor.amazon_echo_dot_bed_c_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Echo Dot Bed D Data Rate"
+    unique_id: "_unique_amazon_echo_dot_bed_d_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_echo_dot_bed_d_unifi_rx"
+      - "sensor.amazon_echo_dot_bed_d_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Echo Dot with Clock Lounge Data Rate"
+    unique_id: "_unique_amazon_echo_dot_with_clock_lounge_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_echo_dot_with_clock_lounge_unifi_rx"
+      - "sensor.amazon_echo_dot_with_clock_lounge_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Echo Flex Garage Data Rate"
+    unique_id: "_unique_amazon_echo_flex_garage_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_echo_flex_garage_unifi_rx"
+      - "sensor.amazon_echo_flex_garage_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Echo Plus Kitchen Data Rate"
+    unique_id: "_unique_amazon_echo_plus_kitchen_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_echo_plus_kitchen_unifi_rx"
+      - "sensor.amazon_echo_plus_kitchen_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Echo Show 8 Bed E Data Rate"
+    unique_id: "_unique_amazon_echo_show_8_bed_e_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_echo_show_8_bed_e_unifi_rx"
+      - "sensor.amazon_echo_show_8_bed_e_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Echo Spot Bed A Data Rate"
+    unique_id: "_unique_amazon_echo_spot_bed_a_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_echo_spot_bed_a_unifi_rx"
+      - "sensor.amazon_echo_spot_bed_a_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Fire HD 8 Tablet Bottom Hallway Data Rate"
+    unique_id: "_unique_amazon_fire_hd_8_tablet_bottomhallway_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_rx"
+      - "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Kindle Oasis Data Rate"
+    unique_id: "_unique_amazon_kindle_oasis_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_kindle_oasis_unifi_rx"
+      - "sensor.amazon_kindle_oasis_unifi_tx"
+  - platform: "min_max"
+    name: "Amazon Kindle Voyage Emily Data Rate"
+    unique_id: "_unique_amazon_kindle_voyage_emily_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.amazon_kindle_voyage_emily_unifi_rx"
+      - "sensor.amazon_kindle_voyage_emily_unifi_tx"
+  - platform: "min_max"
+    name: "Light Backdoor Data Rate"
+    unique_id: "_unique_backdoor_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.backdoor_light_unifi_rx"
+      - "sensor.backdoor_light_unifi_tx"
+  - platform: "min_max"
+    name: "Light Bathroom Data Rate"
+    unique_id: "_unique_bathroom_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.bathroom_light_unifi_rx"
+      - "sensor.bathroom_light_unifi_tx"
+  - platform: "min_max"
+    name: "Light Bed A Data Rate"
+    unique_id: "_unique_bed_a_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.bed_a_light_unifi_rx"
+      - "sensor.bed_a_light_unifi_tx"
+  - platform: "min_max"
+    name: "Light Bed B Data Rate"
+    unique_id: "_unique_bed_b_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.bed_b_light_unifi_rx"
+      - "sensor.bed_b_light_unifi_tx"
+  - platform: "min_max"
+    name: "Light Bed C Data Rate"
+    unique_id: "_unique_bed_c_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.bed_c_light_unifi_rx"
+      - "sensor.bed_c_light_unifi_tx"
+  - platform: "min_max"
+    name: "Light Bed E Data Rate"
+    unique_id: "_unique_bed_e_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.bed_e_light_unifi_rx"
+      - "sensor.bed_e_light_unifi_tx"
+  - platform: "min_max"
+    name: "Brother MFC-J870DW Printer Data Rate"
+    unique_id: "_unique_brother_mfc_j870dw_printer_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.brother_mfc_j870dw_printer_unifi_rx"
+      - "sensor.brother_mfc_j870dw_printer_unifi_tx"
+  - platform: "min_max"
+    name: "Calex Smart Siren Data Rate"
+    unique_id: "_unique_calex_smart_siren_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.calex_smart_siren_unifi_rx"
+      - "sensor.calex_smart_siren_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Chest Freezer Garage Data Rate"
+    unique_id: "_unique_chest_freezer_plug_garage_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.chest_freezer_plug_garage_unifi_rx"
+      - "sensor.chest_freezer_plug_garage_unifi_tx"
+  - platform: "min_max"
+    name: "Fan Dreo Bed C Data Rate"
+    unique_id: "_unique_dreo_fan_bed_c_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.dreo_fan_bed_c_unifi_rx"
+      - "sensor.dreo_fan_bed_c_unifi_tx"
+  - platform: "min_max"
+    name: "Fan Dreo Bed E Data Rate"
+    unique_id: "_unique_dreo_fan_bed_e_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.dreo_fan_bed_e_unifi_rx"
+      - "sensor.dreo_fan_bed_e_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Drinks Fridge Bed C Data Rate"
+    unique_id: "_unique_drinks_fridge_plug_bed_c_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.drinks_fridge_plug_bed_c_unifi_rx"
+      - "sensor.drinks_fridge_plug_bed_c_unifi_tx"
+  - platform: "min_max"
+    name: "Emily MacBook WiFi Data Rate"
+    unique_id: "_unique_emilys_macbook_wifi_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.emilys_macbook_wifi_unifi_rx"
+      - "sensor.emilys_macbook_wifi_unifi_tx"
+  - platform: "min_max"
+    name: "Light Ensuite Data Rate"
+    unique_id: "_unique_ensuite_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.ensuite_light_unifi_rx"
+      - "sensor.ensuite_light_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Fridge Freezer Garage Data Rate"
+    unique_id: "_unique_fridge_freezer_plug_garage_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.fridge_freezer_plug_garage_unifi_rx"
+      - "sensor.fridge_freezer_plug_garage_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Fridge Kitchen Data Rate"
+    unique_id: "_unique_fridge_kitchen_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.fridge_kitchen_rx"
+      - "sensor.fridge_kitchen_tx"
+  - platform: "min_max"
+    name: "Light Front Door Data Rate"
+    unique_id: "_unique_front_door_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.front_door_light_unifi_rx"
+      - "sensor.front_door_light_unifi_tx"
+
+  - platform: "min_max"
+    name: "Glow Smartmeter Data Rate"
+    unique_id: "_unique_glow_smartmeter_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.glow_smartmeter_unifi_rx"
+      - "sensor.glow_smartmeter_unifi_tx"
+  - platform: "min_max"
+    name: "Nest Thermostat Bottom Hallway Data Rate"
+    unique_id: "_unique_google_nest_thermostat_bottom_hallway_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.google_nest_thermostat_bottom_hallway_unifi_rx"
+      - "sensor.google_nest_thermostat_bottom_hallway_unifi_tx"
+  - platform: "min_max"
+    name: "Nest Thermostat Middle Hallway Data Rate"
+    unique_id: "_unique_google_nest_thermostat_middle_hallway_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.google_nest_thermostat_middle_hallway_unifi_rx"
+      - "sensor.google_nest_thermostat_middle_hallway_unifi_tx"
+  - platform: "min_max"
+    name: "Light Bottom Hallway Data Rate"
+    unique_id: "_unique_hallway_bottom_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.hallway_bottom_light_unifi_rx"
+      - "sensor.hallway_bottom_light_unifi_tx"
+  - platform: "min_max"
+    name: "iPhone 13 Emily Data Rate"
+    unique_id: "_unique_iphone13_emily_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.iphone13_emily_unifi_rx"
+      - "sensor.iphone13_emily_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Kettle Kitchen Data Rate"
+    unique_id: "_unique_kettle_plug_kitchen_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.kettle_plug_kitchen_unifi_rx"
+      - "sensor.kettle_plug_kitchen_unifi_tx"
+  - platform: "min_max"
+    name: "Light Kitchen Main Data Rate"
+    unique_id: "_unique_kitchen_main_lights_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.kitchen_main_lights_unifi_rx"
+      - "sensor.kitchen_main_lights_unifi_tx"
+  - platform: "min_max"
+    name: "Light Kitchen Utility Data Rate"
+    unique_id: "_unique_kitchen_utility_lights_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.kitchen_utility_lights_unifi_rx"
+      - "sensor.kitchen_utility_lights_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Fly Killer Kitchen Data Rate"
+    unique_id: "_unique_fly_killer_plug_kitchen_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.lamp_plug_lounge_unifi_rx"
+      - "sensor.lamp_plug_lounge_unifi_tx"
+  - platform: "min_max"
+    name: "LG Therma V Heat Pump Data Rate"
+    unique_id: "_unique_lg_therma_v_heat_pump_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.lg_therma_v_heat_pump_unifi_rx"
+      - "sensor.lg_therma_v_heat_pump_unifi_tx"
+  - platform: "min_max"
+    name: "Logitech Harmony Hub Data Rate"
+    unique_id: "_unique_logitech_harmony_hub_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.logitech_harmony_hub_unifi_rx"
+      - "sensor.logitech_harmony_hub_unifi_tx"
+  - platform: "min_max"
+    name: "Light Lounge Data Rate"
+    unique_id: "_unique_lounge_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.lounge_light_unifi_rx"
+      - "sensor.lounge_light_unifi_tx"
+  - platform: "min_max"
+    name: "MacBook Pro 2018 USB-C Data Rate"
+    unique_id: "_unique_macbook_2018_usb_c_rj45_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.macbook_2018_usb_c_rj45_unifi_rx"
+      - "sensor.macbook_2018_usb_c_rj45_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Meross Smart Switch Bed E Data Rate"
+    unique_id: "_unique_meross_smart_switch_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.meross_smart_switch_unifi_rx"
+      - "sensor.meross_smart_switch_unifi_tx"
+  - platform: "min_max"
+    name: "Microsoft Surface Ju WiFi Data Rate"
+    unique_id: "_unique_microsoft_surface_ju_wifi_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.microsoft_surface_ju_wifi_unifi_rx"
+      - "sensor.microsoft_surface_ju_wifi_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Microwave Kitchen Data Rate"
+    unique_id: "_unique_microwave_plug_kitchen_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.microwave_plug_kitchen_unifi_rx"
+      - "sensor.microwave_plug_kitchen_unifi_tx"
+  - platform: "min_max"
+    name: "MSI GF66 Dan WiFi Data Rate"
+    unique_id: "_unique_msi_gf66_dan_wifi_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.msi_gf66_dan_wifi_unifi_rx"
+      - "sensor.msi_gf66_dan_wifi_unifi_tx"
+  - platform: "min_max"
+    name: "Nespresso Vertuo Next Data Rate"
+    unique_id: "_unique_nespresso_vertuo_next_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.nespresso_vertuo_next_unifi_rx"
+      - "sensor.nespresso_vertuo_next_unifi_tx"
+  - platform: "min_max"
+    name: "Nest Protect Bottom Hallway Data Rate"
+    unique_id: "_unique_nest_protect_bottom_hallway_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.nest_protect_bottom_hallway_unifi_rx"
+      - "sensor.nest_protect_bottom_hallway_unifi_tx"
+  - platform: "min_max"
+    name: "Nest Protect Middle Hallway Data Rate"
+    unique_id: "_unique_nest_protect_middle_hallway_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.nest_protect_middle_hallway_unifi_rx"
+      - "sensor.nest_protect_middle_hallway_unifi_tx"
+  - platform: "min_max"
+    name: "Nest Protect Top Hallway Data Rate"
+    unique_id: "_unique_nest_protect_top_hallway_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.nest_protect_top_hallway_unifi_rx"
+      - "sensor.nest_protect_top_hallway_unifi_tx"
+  - platform: "min_max"
+    name: "Plug Samsung Tumble Dryer Kitchen Data Rate"
+    unique_id: "_unique_samsung_tumble_dryer_kitchen_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.samsung_tumble_dryer_kitchen_unifi_rx"
+      - "sensor.samsung_tumble_dryer_kitchen_unifi_tx"
+  - platform: "min_max"
+    name: "Solar Battery 1 Garage Data Rate"
+    unique_id: "_unique_solar_battery_1_garage_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.solar_battery_1_garage_unifi_rx"
+      - "sensor.solar_battery_1_garage_unifi_tx"
+  - platform: "min_max"
+    name: "Solar Battery 2 Garage Data Rate"
+    unique_id: "_unique_solar_battery_2_garage_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.solar_battery_2_garage_unifi_rx"
+      - "sensor.solar_battery_2_garage_unifi_tx"
+  - platform: "min_max"
+    name: "Sony Bravia KDL-32EX403 TV Data Rate"
+    unique_id: "_unique_sony_bravia_kdl_32ex403_tv_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.sony_bravia_kdl_32ex403_tv_unifi_rx"
+      - "sensor.sony_bravia_kdl_32ex403_tv_unifi_tx"
+  - platform: "min_max"
+    name: "Sony PlayStation 3 Bed C Data Rate"
+    unique_id: "_unique_sony_playstation_3_bed_c_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.sony_playstation_3_bed_c_unifi_rx"
+      - "sensor.sony_playstation_3_bed_c_unifi_tx"
+  - platform: "min_max"
+    name: "Light Study Data Rate"
+    unique_id: "_unique_study_light_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.study_light_unifi_rx"
+      - "sensor.study_light_unifi_tx"
+  - platform: "min_max"
+    name: "DiskStation DS412+ VPN Data Rate"
+    unique_id: "_unique_synology_diskstation_ds412_vpn_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.synology_diskstation_ds412_vpn_unifi_rx"
+      - "sensor.synology_diskstation_ds412_vpn_unifi_tx"
+  - platform: "min_max"
+    name: "ZigBee Router TubeSZB-CC2652-POE Data Rate"
+    unique_id: "_unique_tubeszb_cc2652_poe_zigbee_router_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.tubeszb_cc2652_poe_zigbee_router_unifi_rx"
+      - "sensor.tubeszb_cc2652_poe_zigbee_router_unifi_tx"
+  - platform: "min_max"
+    name: "Tuya Camera Data Rate"
+    unique_id: "_unique_tuya_camera_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.tuya_camera_unifi_rx"
+      - "sensor.tuya_camera_unifi_tx"
+  - platform: "min_max"
+    name: "Plug UDMPRO Bed C Data Rate"
+    unique_id: "_unique_udm_pro_plug_bed_c_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.udm_pro_plug_bed_c_unifi_rx"
+      - "sensor.udm_pro_plug_bed_c_unifi_tx"
+  - platform: "min_max"
+    name: "Unifi G3 Flex Back Data Rate"
+    unique_id: "_unique_unifi_g3_flex_back_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.unifi_g3_flex_back_unifi_rx"
+      - "sensor.unifi_g3_flex_back_unifi_tx"
+  - platform: "min_max"
+    name: "Unifi G3 Flex Front Data Rate"
+    unique_id: "_unique_unifi_g3_flex_front_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.unifi_g3_flex_front_unifi_rx"
+      - "sensor.unifi_g3_flex_front_unifi_tx"
+  - platform: "min_max"
+    name: "Unifi G3 Flex Middle Hallway Data Rate"
+    unique_id: "_unique_unifi_g3_flex_middle_hallway_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.unifi_g3_flex_middle_hallway_unifi_rx"
+      - "sensor.unifi_g3_flex_middle_hallway_unifi_tx"
+  - platform: "min_max"
+    name: "Unifi G3 Instant Bottom Hallway Data Rate"
+    unique_id: "_unique_unifi_g3_instant_bottom_hallway_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.unifi_g3_instant_bottom_hallway_unifi_rx"
+      - "sensor.unifi_g3_instant_bottom_hallway_unifi_tx"
+  - platform: "min_max"
+    name: "Unifi G4 Doorbell Data Rate"
+    unique_id: "_unique_unifi_g4_doorbell_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.unifi_g4_doorbell_unifi_rx"
+      - "sensor.unifi_g4_doorbell_unifi_tx"
+  - platform: "min_max"
+    name: "Unifi G3 Instant Kitchen Data Rate"
+    unique_id: "_unique_unifi_kitchen_g3_instant_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.unifi_kitchen_g3_instant_unifi_rx"
+      - "sensor.unifi_kitchen_g3_instant_unifi_tx"
+  - platform: "min_max"
+    name: "Worx Robot Mower Data Rate"
+    unique_id: "_unique_worx_robot_mower_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.worx_robot_mower_unifi_rx"
+      - "sensor.worx_robot_mower_unifi_tx"
+  - platform: "min_max"
+    name: "Yamaha RX-V777 Receiver Data Rate"
+    unique_id: "_unique_yamaha_rx_v777_receiver_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.yamaha_rx_v777_receiver_bed_c_unifi_rx"
+      - "sensor.yamaha_rx_v777_receiver_bed_c_unifi_tx"
+  - platform: "min_max"
+    name: "iPhone 13 Emily Patrice Unifi Data Rate"
+    unique_id: "_unique_iphone_13_emily_patrice_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.iphone_13_emily_patrice_unifi_rx"
+      - "sensor.iphone_13_emily_patrice_unifi_tx"
+  - platform: "min_max"
+    name: "MacBook Pro USB-C RJ45 Data Rate"
+    unique_id: "_unique_macbook_pro_usb_c_rj45_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.macbook_pro_usb_c_rj45_unifi_rx"
+      - "sensor.macbook_pro_usb_c_rj45_unifi_tx"
+  - platform: "min_max"
+    name: "iPad Air 4thGen Emily Data Rate"
+    unique_id: "_unique_ipad_air_4thgen_emily_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.ipad_air_4thgen_emily_unifi_rx"
+      - "sensor.ipad_air_4thgen_emily_unifi_tx"
+  - platform: "min_max"
+    name: "MacBook Pro 2021 Data Rate"
+    unique_id: "_unique_macbook_pro_2021_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.macbook_pro_2021_kev_unifi_rx"
+      - "sensor.macbook_pro_2021_kev_unifi_tx"
+
+
+  - platform: "min_max"
+    name: "Back G3 Flex Data Rate"
+    unique_id: "_unique_back_g3_flex_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.back_g3_flex_total_rx_to_mb"
+      - "sensor.back_g3_flex_total_tx_to_mb"
+  - platform: "min_max"
+    name: "Doorbell G4 Flex Data Rate"
+    unique_id: "_unique_doorbell_g4_flex_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.doorbell_g4_total_rx_to_mb"
+      - "sensor.doorbell_g4_total_tx_to_mb"
+  - platform: "min_max"
+    name: "Front G3 Flex Data Rate"
+    unique_id: "_unique_front_g3_flex_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.front_g3_flex_total_rx_to_mb"
+      - "sensor.front_g3_flex_total_tx_to_mb"
+  - platform: "min_max"
+    name: "Middle Hallway G3 Flex Data Rate"
+    unique_id: "_unique_middle_hallway_g3_flex_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.middle_hallway_g3_flex_total_rx_to_mb"
+      - "sensor.middle_hallway_g3_flex_total_tx_to_mb"
+  - platform: "min_max"
+    name: "Bottom Hallway G3 Flex Data Rate"
+    unique_id: "_unique_bottom_hallway_g3_instant_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.bottom_hallway_g3_instant_total_rx_to_mb"
+      - "sensor.bottom_hallway_g3_instant_total_tx_to_mb"
+  - platform: "min_max"
+    name: "Kitchen G3 Instant Data Rate"
+    unique_id: "_unique_kitchen_g3_instant_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.kitchen_g3_instant_total_rx_to_mb"
+      - "sensor.kitchen_g3_instant_total_tx_to_mb"
+  - platform: "min_max"
+    name: "Bed C G3 Instant Data Rate"
+    unique_id: "_unique_bed_c_g3_instant_data_rate"
+    type: "median"
+    round_digits: 3
+    entity_ids:
+      - "sensor.bed_c_g3_instant_total_rx_to_mb"
+      - "sensor.bed_c_g3_instant_total_tx_to_mb"
+
+
+  # kitchen
+  - platform: "integration"
+    source: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
+    name: "washing_machine_plug_total_increasing_energy"
+    unique_id: "sensor.washing_machine_plug_total_increasing_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_instantaneous_demand"
+    name: "dishwasher_plug_total_increasing_energy"
+    unique_id: "sensor.dishwasher_plug_total_increasing_energy"
+    round: 3
+  # Unifi
+  - platform: "integration"
+    source: "sensor.usw_pro_24_poe_bed_a_laptop_poe_power"
+    name: "usw_pro_24_poe_bed_a_laptop_poe_energy"
+    unique_id: "sensor.usw_pro_24_poe_bed_a_laptop_poe_energy"
+    unit_prefix: "k"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_pro_24_poe_bed_a_tv_poe_power"
+    name: "usw_pro_24_poe_bed_a_tv_poe_energy"
+    unique_id: "sensor.usw_pro_24_poe_bed_a_tv_poe_energy"
+    unit_prefix: "k"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_pro_24_poe_bed_b_poe_power"
+    name: "usw_pro_24_poe_bed_b_poe_energy"
+    unique_id: "sensor.usw_pro_24_poe_bed_b_poe_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_pro_24_poe_kitchen_poe_power"
+    name: "usw_pro_24_poe_kitchen_poe_energy"
+    unique_id: "sensor.usw_pro_24_poe_kitchen_poe_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_pro_24_poe_loft_poe_power"
+    name: "usw_pro_24_poe_loft_poe_energy"
+    unique_id: "sensor.usw_pro_24_poe_loft_poe_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_pro_24_poe_lounge_right_poe_power"
+    name: "usw_pro_24_poe_lounge_right_poe_energy"
+    unique_id: "sensor.usw_pro_24_poe_lounge_right_poe_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_pro_24_poe_study_poe_power"
+    name: "usw_pro_24_poe_study_poe_energy"
+    unique_id: "sensor.usw_pro_24_poe_study_poe_energy"
+    round: 3
+
+  - platform: "integration"
+    source: "sensor.usw_flex_loft_ap_top_poe_power"
+    name: "usw_flex_loft_ap_top_poe_energy"
+    unique_id: "sensor.usw_flex_loft_ap_top_poe_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_flex_loft_cam_back_poe_power"
+    name: "usw_flex_loft_cam_back_poe_energy"
+    unique_id: "sensor.usw_flex_loft_cam_back_poe_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_flex_loft_cam_front_poe_power"
+    name: "usw_flex_loft_cam_front_poe_energy"
+    unique_id: "sensor.usw_flex_loft_cam_front_poe_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.usw_flex_loft_dlpc_isolated_poe_power"
+    name: "usw_flex_loft_dlpc_isolated_poe_energy"
+    unique_id: "sensor.usw_flex_loft_dlpc_isolated_poe_energy"
+    round: 3
+
+  - platform: "integration"
+    source: "sensor.usw_lite_8port_bed_e_g3_flex_hall_poe_power"
+    name: "usw_lite_8port_bed_e_g3_flex_hall_poe_energy"
+    unique_id: "sensor.usw_lite_8port_bed_e_g3_flex_hall_poe_energy"
+    round: 3
+
+  # TP 110 plugs
+  - platform: "integration"
+    source: "sensor.fridge_plug_kitchen_current_power"
+    name: "Fridge Plug Energy:Kitchen"
+    unique_id: "sensor.kitchen_fridge_total_increasing_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.kettle_plug_kitchen_current_power"
+    name: "Kettle Plug Energy:Kitchen"
+    unique_id: "sensor.kitchen_kettle_total_increasing_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.microwave_plug_kitchen_current_power"
+    name: "Microwave Plug Energy:Kitchen"
+    unique_id: "sensor.kitchen_microwave_total_increasing_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.chest_freezer_plug_garage_current_power"
+    name: "Chest Freezer Plug Energy:Garage"
+    unique_id: "sensor.garage_chest_freezer_total_increasing_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.fridge_freezer_plug_garage_current_power"
+    name: "Fridge/Freezer Plug Energy:Garage"
+    unique_id: "sensor.garage_fridgefreezer_total_increasing_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.drinks_fridge_plug_bed_c_current_power"
+    name: "Drinks Fridge Plug Energy:Bed C"
+    unique_id: "sensor.bed_c_drinks_fridge_total_increasing_energy"
+    round: 3
+  - platform: "integration"
+    source: "sensor.udm_pro_plug_bed_c_current_power"
+    name: "UDM Pro Plug Energy:Bed C"
+    unique_id: "sensor.bed_c_udm_pro_total_increasing_energy"
+    round: 3
