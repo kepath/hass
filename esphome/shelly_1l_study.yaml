@@ -1,22 +1,22 @@
 ---
 substitutions:
-  device_name: "shelly1l-bed-b"
-  friendly_name: "Shelly Light Switch Bed B"
-  light1_icon: "mdi:ceiling-light"
-  device_ip: "24"
+  device_name: "shelly_1l_study"
+  friendly_name: "Shelly Light Switch Study"
+  light1_icon: "mdi:chandelier"
+  device_ip: "11"
   ssid: !secret "not_wifi_ssid"
   log_level: "INFO"
   max_temp: "80.0"  # Centigrade
 
 # Common Include
-<<: !include "includes/shelly-common.yaml"
+<<: !include "includes/shelly_1l_common.yaml"
 
 # Extended Config
 light:
   - platform: "binary"
-    name: "${device_name}-light-1"
+    name: "${device_name}_light_1"
     output: "shelly_1l_relay"
-    id: "lightid1"
+    id: "${device_name}_lightid1"
     icon: "${light1_icon}"
 
 output:
@@ -27,7 +27,7 @@ output:
 binary_sensor:
   # =====================common binary_sensor
   - platform: "status"
-    name: "${device_name}-status"
+    name: "${device_name}_status"
     device_class: "connectivity"
     filters:
       - delayed_off: "5min"
@@ -36,16 +36,17 @@ binary_sensor:
   - platform: "gpio"
     pin:
       number: "GPIO4"
-    name: "${device_name}-switch-1"
-    id: "switchid1"
+    name: "${device_name}_switch_1"
+    id: "${device_name}_switchid1"
     on_state:
       then:
-        - light.toggle: "lightid1"
+        - light.toggle: "${device_name}_lightid1"
     filters:
       - delayed_on_off: "50ms"
 
   - platform: "gpio"
     pin:
       number: "GPIO14"
-    id: "switchid2"
+    name: "${device_name}_switch_2"
+    id: "${device_name}_switchid2"
     disabled_by_default: true

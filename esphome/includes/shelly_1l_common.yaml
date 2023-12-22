@@ -1,8 +1,4 @@
 ---
-sun:
-  latitude: "52.0786°"
-  longitude: "-1.3418°"
-
 esphome:
   name: "${device_name}"
   comment: "${friendly_name}"
@@ -11,7 +7,7 @@ esphome:
   on_boot:
     - priority: 300
       then:
-        - light.turn_off: "lightid1"
+        - light.turn_off: "${device_name}_lightid1"
         - logger.log: "startup - light should be off"
 
 wifi:
@@ -19,9 +15,9 @@ wifi:
   password: !secret "not_wifi_password"
   domain: ".lan"
   on_connect:
-    - light.turn_off: "${device_name}-light-1"
+    - light.turn_off: "${device_name}_lightid1"
   on_disconnect:
-    - light.turn_off: "${device_name}-light-1"
+    - light.turn_off: "${device_name}_lightid1"
   manual_ip:
     static_ip: "192.168.30.${device_ip}"
     gateway: "192.168.30.1"
@@ -59,24 +55,24 @@ text_sensor:
   - platform: "version"
     name: "${device_name} ESPHome Version"
   - platform: "template"
-    name: "${device_name}-uptime"
-    id: "uptime_human"
+    name: "${device_name}_uptime"
+    id: "${device_name}_uptimehuman"
     icon: "mdi:clock-start"
   # Expose WiFi information as sensors.
   - platform: "wifi_info"
     ip_address:
-      name: "${device_name}-IP"
+      name: "${device_name}_IP"
     ssid:
-      name: "${device_name}-SSID"
+      name: "${device_name}_SSID"
     bssid:
-      name: "${device_name}-BSSID"
+      name: "${device_name}_BSSID"
     mac_address:
-      name: "${device_name}-MAC"
+      name: "${device_name}_MAC"
 
 sensor:
   - platform: "ntc"
     sensor: "temp_resistance_reading"
-    name: "${device_name}-temperature"
+    name: "${device_name}_temperature"
     unit_of_measurement: "°C"
     accuracy_decimals: 1
     icon: "mdi:thermometer"
@@ -87,7 +83,7 @@ sensor:
     on_value_range:
       - above: "${max_temp}"
         then:
-          - light.turn_off: "lightid1"
+          - light.turn_off: "${device_name}_lightid1"
           - homeassistant.service:
               service: "persistent_notification.create"
               data:
@@ -103,18 +99,18 @@ sensor:
     id: "temp_analog_reading"
     pin: "A0"
   - platform: "wifi_signal"
-    name: "${device_name}-RSSI"
+    name: "${device_name}_RSSI"
     update_interval: "60s"
     icon: "mdi:wifi"
   - platform: "uptime"
-    name: "Uptime Sensor"
+    name: "uptime_sensor"
     id: "uptime_sensor"
     internal: true
     update_interval: "60s"
     on_raw_value:
       then:
         - text_sensor.template.publish:
-            id: "uptime_human"
+            id: "${device_name}_uptimehuman"
             state: !lambda |-
               int seconds = round(id(uptime_sensor).raw_state);
               int days = seconds / (24 * 3600);
