@@ -3,113 +3,6 @@
 # The Unifi Protect measurements are total increasing (reset on reboot?), so the unit needs changing
 template:
   - sensor:
-      # create non-increasing Mb sensor
-      - unique_id: "_unique_back_g3_flex_rx_total_mb"
-        name: "Back G3 Flex Total Rx to Mb"
-        state: "{{ states('sensor.back_g3_flex_received_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-      - unique_id: "_unique_back_g3_flex_tx_total_mb"
-        name: "Back G3 Flex Total Tx to Mb"
-        state: "{{ states('sensor.back_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-
-      - unique_id: "_unique_doorbell_g4_flex_rx_total_mb"
-        name: "Doorbell G4 Total Rx to Mb"
-        state: "{{ states('sensor.doorbell_g4_received_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-      - unique_id: "_unique_doorbell_g4_flex_tx_total_mb"
-        name: "Doorbell G4 Total Tx to Mb"
-        state: "{{ states('sensor.doorbell_g4_transferred_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-
-      - unique_id: "_unique_front_g3_flex_rx_total_mb"
-        name: "Front G3 Flex Total Rx to Mb"
-        state: "{{ states('sensor.front_g3_flex_received_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-      - unique_id: "_unique_front_g3_flex_tx_total_mb"
-        name: "Front G3 Flex Total Tx to Mb"
-        state: "{{ states('sensor.front_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-
-      - unique_id: "_unique_middle_hallway_g3_flex_rx_total_mb"
-        name: "Middle Hallway G3 Flex Total Rx to Mb"
-        state: "{{ states('sensor.middle_hallway_g3_flex_received_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-      - unique_id: "_unique_middle_hallway_g3_flex_tx_total_mb"
-        name: "Middle Hallway G3 Flex Total Tx to Mb"
-        state: "{{ states('sensor.middle_hallway_g3_flex_transferred_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-
-      - unique_id: "_unique_bottom_hallway_g3_instant_rx_total_mb"
-        name: "Bottom Hallway G3 Instant Total Rx to Mb"
-        state: "{{ states('sensor.bottom_hallway_g3_instant_received_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-      - unique_id: "_unique_bottom_hallway_g3_instant_tx_total_mb"
-        name: "Bottom Hallway G3 Instant Total Tx to Mb"
-        state: "{{ states('sensor.bottom_hallway_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-
-      - unique_id: "_unique_kitchen_g3_instant_rx_total_mb"
-        name: "Kitchen G3 Instant Total Rx to Mb"
-        state: "{{ states('sensor.kitchen_g3_instant_received_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-      - unique_id: "_unique_kitchen_g3_instant_tx_total_mb"
-        name: "Kitchen G3 Instant Total Tx to Mb"
-        state: "{{ states('sensor.kitchen_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-
-      - unique_id: "_unique_bed_c_g3_instant_rx_total_mb"
-        name: "Bed C G3 Instant Total Rx to Mb"
-        state: "{{ states('sensor.bed_c_g3_instant_received_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-      - unique_id: "_unique_bed_c_g3_instant_tx_total_mb"
-        name: "Bed C G3 Instant Total Tx to Mb"
-        state: "{{ states('sensor.bed_c_g3_instant_transferred_data') | float / 1073741824 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total"
-          device_class: "data_size"
-
-
       # create total increasing Mb sensor
       - unique_id: "_unique_back_g3_flex_rx_total_increasing_mb"
         name: "Back G3 Flex Total Increasing Rx to Mb"
@@ -127,14 +20,14 @@ template:
           device_class: "data_size"
 
       - unique_id: "_unique_doorbell_g4_flex_rx_total_increasing_mb"
-        name: "Doorbell G4 Total Increasing Rx to Mb"
+        name: "Doorbell G4 Flex Total Increasing Rx to Mb"
         state: "{{ states('sensor.doorbell_g4_received_data') | float / 1073741824 | round(3) }}"
         attributes:
           unit_of_measurement: "MB"
           state_class: "total_increasing"
           device_class: "data_size"
       - unique_id: "_unique_doorbell_g4_flex_tx_total_increasing_mb"
-        name: "Doorbell G4 Total Increasing Tx to Mb"
+        name: "Doorbell G4 Flex Total Increasing Tx to Mb"
         state: "{{ states('sensor.doorbell_g4_transferred_data') | float / 1073741824 | round(3) }}"
         attributes:
           unit_of_measurement: "MB"
@@ -231,12 +124,12 @@ utility_meter:
 
   doorbell_g4_flex_total_increasing_utility_meter_rx:
     source: "sensor.doorbell_g4_flex_total_increasing_rx_to_mb"
-    name: "Doorbell G4 Total Increasing Utility Meter Rx"
+    name: "Doorbell G4 Flex Total Increasing Utility Meter Rx"
     unique_id: "_unique_doorbell_g4_flex_total_increasing_utility_meter_rx"
     periodically_resetting: true
   doorbell_g4_flex_total_increasing_utility_meter_tx:
     source: "sensor.doorbell_g4_flex_total_increasing_tx_to_mb"
-    name: "Doorbell G4 Total Increasing Utility Meter Tx"
+    name: "Doorbell G4 Flex Total Increasing Utility Meter Tx"
     unique_id: "_unique_doorbell_g4_flex_total_increasing_utility_meter_tx"
     periodically_resetting: true
 
@@ -256,7 +149,7 @@ utility_meter:
     name: "Middle Hallway G3 Flex Total Increasing Utility Meter Rx"
     unique_id: "_unique_middle_hallway_g3_flex_total_increasing_utility_meter_rx"
     periodically_resetting: true
-  middle_hallway_g3_flex_increasing_utility_meter_tx:
+  middle_hallway_g3_flex_total_increasing_utility_meter_tx:
     source: "sensor.middle_hallway_g3_flex_total_increasing_tx_to_mb"
     name: "Middle Hallway G3 Flex Total Increasing Utility Meter Tx"
     unique_id: "_unique_middle_hallway_g3_flex_total_increasing_utility_meter_tx"
@@ -297,6 +190,112 @@ utility_meter:
 
 
 sensor:
+  - platform: "statistics"
+    name: "Back G3 Flex Rx Mb per second"
+    entity_id: "sensor.back_g3_flex_total_increasing_utility_meter_rx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_back_g3_flex_rx_mb_per_second"
+    sampling_size: 6
+  - platform: "statistics"
+    name: "Back G3 Flex Tx Mb per second"
+    entity_id: "sensor.back_g3_flex_total_increasing_utility_meter_tx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_back_g3_flex_tx_mb_per_second"
+    sampling_size: 6
+
+  - platform: "statistics"
+    name: "Doorbell G4 Flex Rx Mb per second"
+    entity_id: "sensor.doorbell_g4_flex_total_increasing_utility_meter_rx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_doorbell_g4_flex_rx_mb_per_second"
+    sampling_size: 6
+  - platform: "statistics"
+    name: "Doorbell G4 Flex Tx Mb per second"
+    entity_id: "sensor.doorbell_g4_flex_total_increasing_utility_meter_tx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_doorbell_g4_flex_tx_mb_per_second"
+    sampling_size: 6
+
+  - platform: "statistics"
+    name: "Front G3 Flex Rx Mb per second"
+    entity_id: "sensor.front_g3_flex_total_increasing_utility_meter_rx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_front_g3_flex_rx_mb_per_second"
+    sampling_size: 6
+  - platform: "statistics"
+    name: "Front G3 Flex Tx Mb per second"
+    entity_id: "sensor.front_g3_flex_total_increasing_utility_meter_tx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_front_g3_flex_tx_mb_per_second"
+    sampling_size: 6
+
+  - platform: "statistics"
+    name: "Middle Hallway G3 Flex Rx Mb per second"
+    entity_id: "sensor.middle_hallway_g3_flex_total_increasing_utility_meter_rx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_middle_hallway_g3_instant_rx_mb_per_second"
+    sampling_size: 6
+  - platform: "statistics"
+    name: "Middle Hallway G3 Flex Tx Mb per second"
+    entity_id: "sensor.middle_hallway_g3_flex_total_increasing_utility_meter_tx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_middle_hallway_g3_instant_tx_mb_per_second"
+    sampling_size: 6
+
+  - platform: "statistics"
+    name: "Bottom Hallway G3 Instant Rx Mb per second"
+    entity_id: "sensor.bottom_hallway_g3_instant_total_increasing_utility_meter_rx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_bottom_hallway_g3_instant_rx_mb_per_second"
+    sampling_size: 6
+  - platform: "statistics"
+    name: "Bottom Hallway G3 Instant Tx Mb per second"
+    entity_id: "sensor.bottom_hallway_g3_instant_total_increasing_utility_meter_tx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_bottom_hallway_g3_instant_tx_mb_per_second"
+    sampling_size: 6
+
+  - platform: "statistics"
+    name: "Kitchen G3 Instant Rx Mb per second"
+    entity_id: "sensor.kitchen_g3_instant_total_increasing_utility_meter_rx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_kitchen_g3_instant_rx_mb_per_second"
+    sampling_size: 6
+  - platform: "statistics"
+    name: "Kitchen G3 Instant Tx Mb per second"
+    entity_id: "sensor.kitchen_g3_instant_total_increasing_utility_meter_tx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_kitchen_g3_instant_tx_mb_per_second"
+    sampling_size: 6
+
+  - platform: "statistics"
+    name: "Bed C G3 Instant Rx Mb per second"
+    entity_id: "sensor.bed_c_g3_instant_total_increasing_utility_meter_rx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_bed_c_g3_instant_rx_mb_per_second"
+    sampling_size: 6
+  - platform: "statistics"
+    name: "Bed C G3 Instant Tx Mb per second"
+    entity_id: "sensor.bed_c_g3_instant_total_increasing_utility_meter_tx"
+    state_characteristic: "change_second"
+    precision: 3
+    unique_id: "_unique_sensor_bed_c_g3_instant_tx_mb_per_second"
+    sampling_size: 6
+
+
   # total increasing unifi rx rates wireless
   - platform: "integration"
     source: "sensor.amazon_echo_dot_with_clock_lounge_unifi_rx"
@@ -1152,85 +1151,11 @@ sensor:
     unique_id: "_unique_sensor_yamaha_rx_v777_receiver_bed_c_unifi_total_increasing_tx"
     round: 3
 
-  # # Unifi Cameras Rx
-  # - platform: "integration"
-  #   source: "sensor.back_g3_flex_received_data"
-  #   name: "back_g3_flex_unifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_back_g3_flex_unifi_total_increasing_rx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.doorbell_g4_received_data"
-  #   name: "doorbell_g4_unifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_doorbell_g4_unifi_total_increasing_rx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.front_g3_flex_received_data"
-  #   name: "front_g3_flex_unifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_front_g3_flex_unifi_total_increasing_rx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.middle_hallway_g3_flex_received_data"
-  #   name: "middle_hallway_g3_flex_unifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_middle_hallway_g3_flex_unifi_total_increasing_rx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.bottom_hallway_g3_instant_received_data"
-  #   name: "bottom_hallway_g3_instant_unifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_bottom_hallway_g3_instant_unifi_total_increasing_rx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.kitchen_g3_instant_received_data"
-  #   name: "kitchen_g3_instant_unifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_kitchen_g3_instant_unifi_total_increasing_rx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.bed_c_g3_instant_received_data"
-  #   name: "bed_c_g3_instant_unifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_bed_c_g3_instant_unifi_total_increasing_rx"
-  #   round: 3
-
-  # # Unifi Cameras Tx
-  # - platform: "integration"
-  #   source: "sensor.back_g3_flex_transferred_data"
-  #   name: "back_g3_flex_unifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_back_g3_flex_unifi_total_increasing_tx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.doorbell_g4_transferred_data"
-  #   name: "doorbell_g4_unifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_doorbell_g4_unifi_total_increasing_tx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.front_g3_flex_transferred_data"
-  #   name: "front_g3_flex_unifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_front_g3_flex_unifi_total_increasing_tx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.middle_hallway_g3_flex_transferred_data"
-  #   name: "middle_hallway_g3_flex_unifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_middle_hallway_g3_flex_unifi_total_increasing_tx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.bottom_hallway_g3_instant_transferred_data"
-  #   name: "bottom_hallway_g3_instant_unifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_bottom_hallway_g3_instant_unifi_total_increasing_tx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.kitchen_g3_instant_transferred_data"
-  #   name: "kitchen_g3_instant_unifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_kitchen_g3_instant_unifi_total_increasing_tx"
-  #   round: 3
-  # - platform: "integration"
-  #   source: "sensor.bed_c_g3_instant_transferred_data"
-  #   name: "bed_c_g3_instant_unifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_bed_c_g3_instant_unifi_total_increasing_tx"
-  #   round: 3
-
 
   - platform: "min_max"
     name: "Nvidia Shield Bed C Unifi Data Rate"
     unique_id: "_unique_nvidia_shield_bed_c_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.nvidia_shield_bed_c_unifi_tx"
@@ -1239,7 +1164,7 @@ sensor:
   - platform: "min_max"
     name: "Nvidia Shield Bed E Unifi Data Rate"
     unique_id: "_unique_nvidia_shield_bed_e_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.nvidia_shield_bed_e_unifi_tx"
@@ -1248,7 +1173,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon FireStick Bed A Unifi RJ45 Data Rate"
     unique_id: "_unique_amazon_firestick_4k_rj45_bed_a_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_firestick_4k_rj45_bed_a_unifi_tx"
@@ -1257,7 +1182,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon FireStick Kitchen RJ45 Unifi Data Rate"
     unique_id: "_unique_amazon_firestick_4k_rj45_kitchen_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_firestick_4k_rj45_kitchen_unifi_tx"
@@ -1266,7 +1191,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon FireStick Kitchen WiFi Unifi Data Rate"
     unique_id: "_unique_amazon_firestick_4k_wifi_kitchen_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_firestick_4k_wifi_kitchen_unifi_rx"
@@ -1275,7 +1200,7 @@ sensor:
   - platform: "min_max"
     name: "Apple iMac 2011 Unifi Data Rate"
     unique_id: "_unique_apple_imac_2011_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.apple_imac_2011_unifi_tx"
@@ -1284,7 +1209,7 @@ sensor:
   - platform: "min_max"
     name: "Apple MacBook Pro 2018 Data Rate"
     unique_id: "_unique_apple_macbook_pro_2018_kev_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.apple_macbook_pro_2018_kev_unifi_tx"
@@ -1293,7 +1218,7 @@ sensor:
   - platform: "min_max"
     name: "Apple TV 4k Unifi Data Rate"
     unique_id: "_unique_apple_tv_4k_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.apple_tv_4k_unifi_tx"
@@ -1302,7 +1227,7 @@ sensor:
   - platform: "min_max"
     name: "Arcade Machine Unifi Data Rate"
     unique_id: "_unique_arcade_machine_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.arcade_machine_unifi_tx"
@@ -1311,7 +1236,7 @@ sensor:
   - platform: "min_max"
     name: "Big PC Unifi Data Rate"
     unique_id: "_unique_big_pc_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.big_pc_unifi_tx"
@@ -1320,7 +1245,7 @@ sensor:
   - platform: "min_max"
     name: "Caldigit Thunderbolt Dock Unifi Data Rate"
     unique_id: "_unique_caldigit_thunderbolt_dock_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.caldigit_thunderbolt_dock_unifi_tx"
@@ -1329,7 +1254,7 @@ sensor:
   - platform: "min_max"
     name: "Nintendo Switch Unifi Data Rate"
     unique_id: "_unique_dans_nintendo_switch_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.dans_nintendo_switch_unifi_tx"
@@ -1338,7 +1263,7 @@ sensor:
   - platform: "min_max"
     name: "Dell Work Laptop WiFi Unifi Data Rate"
     unique_id: "_unique_dell_work_laptop_kev_wifi_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.dell_work_laptop_kev_unifi_wifi_tx"
@@ -1347,7 +1272,7 @@ sensor:
   - platform: "min_max"
     name: "Download PC Unifi Data Rate"
     unique_id: "_unique_download_pc_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.download_pc_unifi_tx"
@@ -1365,7 +1290,7 @@ sensor:
   - platform: "min_max"
     name: "Home Assistant Unifi Data Rate"
     unique_id: "_unique_home_assistant_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.home_assistant_unifi_tx"
@@ -1374,7 +1299,7 @@ sensor:
   - platform: "min_max"
     name: "iPhone 12 Dan Unifi Data Rate"
     unique_id: "_unique_iphone_12_dan_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.iphone_12_dan_unifi_tx"
@@ -1393,7 +1318,7 @@ sensor:
   - platform: "min_max"
     name: "Samsung TV Bed A Unifi Data Rate"
     unique_id: "_unique_samsung_ue32f4500_tv_bed_a_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.samsung_ue32f4500_tv_bed_a_unifi_tx"
@@ -1401,7 +1326,7 @@ sensor:
   - platform: "min_max"
     name: "Samsung TV Lounge Unifi Data Rate"
     unique_id: "_unique_samsung_ue48hu7500t_tv_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.samsung_ue48hu7500t_tv_lounge_unifi_tx"
@@ -1409,7 +1334,7 @@ sensor:
   - platform: "min_max"
     name: "Sony PlayStation 3 Unifi Data Rate"
     unique_id: "_unique_sony_playstation_3_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.sony_playstation_3_bed_c_unifi_tx"
@@ -1417,7 +1342,7 @@ sensor:
   - platform: "min_max"
     name: "Synology DiskStation DS412+ Unifi Data Rate"
     unique_id: "_unique_synology_diskstation_ds412_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.synology_diskstation_ds412_net_unifi_tx"
@@ -1426,7 +1351,7 @@ sensor:
   - platform: "min_max"
     name: "XBox Series X Dan Unifi Data Rate"
     unique_id: "_unique_xbox_series_x_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.xbox_series_x_unifi_tx"
@@ -1435,7 +1360,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Echo Dot Bed C Data Rate"
     unique_id: "_unique_amazon_echo_dot_bed_c_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_echo_dot_bed_c_unifi_rx"
@@ -1443,7 +1368,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Echo Dot Bed D Data Rate"
     unique_id: "_unique_amazon_echo_dot_bed_d_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_echo_dot_bed_d_unifi_rx"
@@ -1451,7 +1376,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Echo Dot with Clock Lounge Data Rate"
     unique_id: "_unique_amazon_echo_dot_with_clock_lounge_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_echo_dot_with_clock_lounge_unifi_rx"
@@ -1459,7 +1384,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Echo Flex Garage Data Rate"
     unique_id: "_unique_amazon_echo_flex_garage_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_echo_flex_garage_unifi_rx"
@@ -1467,7 +1392,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Echo Plus Kitchen Data Rate"
     unique_id: "_unique_amazon_echo_plus_kitchen_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_echo_plus_kitchen_unifi_rx"
@@ -1475,7 +1400,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Echo Show 8 Bed E Data Rate"
     unique_id: "_unique_amazon_echo_show_8_bed_e_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_echo_show_8_bed_e_unifi_rx"
@@ -1483,7 +1408,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Echo Spot Bed A Data Rate"
     unique_id: "_unique_amazon_echo_spot_bed_a_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_echo_spot_bed_a_unifi_rx"
@@ -1491,7 +1416,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Fire HD 8 Tablet Bottom Hallway Data Rate"
     unique_id: "_unique_amazon_fire_hd_8_tablet_bottomhallway_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_fire_hd_8_tablet_bottomhallway_unifi_rx"
@@ -1499,7 +1424,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Kindle Oasis Data Rate"
     unique_id: "_unique_amazon_kindle_oasis_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_kindle_oasis_unifi_rx"
@@ -1507,7 +1432,7 @@ sensor:
   - platform: "min_max"
     name: "Amazon Kindle Voyage Emily Data Rate"
     unique_id: "_unique_amazon_kindle_voyage_emily_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.amazon_kindle_voyage_emily_unifi_rx"
@@ -1515,7 +1440,7 @@ sensor:
   - platform: "min_max"
     name: "Light Backdoor Data Rate"
     unique_id: "_unique_backdoor_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.backdoor_light_unifi_rx"
@@ -1523,7 +1448,7 @@ sensor:
   - platform: "min_max"
     name: "Light Bathroom Data Rate"
     unique_id: "_unique_bathroom_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.bathroom_light_unifi_rx"
@@ -1531,7 +1456,7 @@ sensor:
   - platform: "min_max"
     name: "Light Bed A Data Rate"
     unique_id: "_unique_bed_a_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.bed_a_light_unifi_rx"
@@ -1539,7 +1464,7 @@ sensor:
   - platform: "min_max"
     name: "Light Bed B Data Rate"
     unique_id: "_unique_bed_b_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.bed_b_light_unifi_rx"
@@ -1547,7 +1472,7 @@ sensor:
   - platform: "min_max"
     name: "Light Bed C Data Rate"
     unique_id: "_unique_bed_c_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.bed_c_light_unifi_rx"
@@ -1555,7 +1480,7 @@ sensor:
   - platform: "min_max"
     name: "Light Bed E Data Rate"
     unique_id: "_unique_bed_e_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.bed_e_light_unifi_rx"
@@ -1563,7 +1488,7 @@ sensor:
   - platform: "min_max"
     name: "Brother MFC-J870DW Printer Data Rate"
     unique_id: "_unique_brother_mfc_j870dw_printer_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.brother_mfc_j870dw_printer_unifi_rx"
@@ -1571,7 +1496,7 @@ sensor:
   - platform: "min_max"
     name: "Calex Smart Siren Data Rate"
     unique_id: "_unique_calex_smart_siren_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.calex_smart_siren_unifi_rx"
@@ -1579,7 +1504,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Chest Freezer Garage Data Rate"
     unique_id: "_unique_chest_freezer_plug_garage_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.chest_freezer_plug_garage_unifi_rx"
@@ -1587,7 +1512,7 @@ sensor:
   - platform: "min_max"
     name: "Fan Dreo Bed C Data Rate"
     unique_id: "_unique_dreo_fan_bed_c_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.dreo_fan_bed_c_unifi_rx"
@@ -1595,7 +1520,7 @@ sensor:
   - platform: "min_max"
     name: "Fan Dreo Bed E Data Rate"
     unique_id: "_unique_dreo_fan_bed_e_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.dreo_fan_bed_e_unifi_rx"
@@ -1603,7 +1528,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Drinks Fridge Bed C Data Rate"
     unique_id: "_unique_drinks_fridge_plug_bed_c_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.drinks_fridge_plug_bed_c_unifi_rx"
@@ -1611,7 +1536,7 @@ sensor:
   - platform: "min_max"
     name: "Emily MacBook WiFi Data Rate"
     unique_id: "_unique_emilys_macbook_wifi_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.emilys_macbook_wifi_unifi_rx"
@@ -1619,7 +1544,7 @@ sensor:
   - platform: "min_max"
     name: "Light Ensuite Data Rate"
     unique_id: "_unique_ensuite_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.ensuite_light_unifi_rx"
@@ -1627,7 +1552,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Fridge Freezer Garage Data Rate"
     unique_id: "_unique_fridge_freezer_plug_garage_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.fridge_freezer_plug_garage_unifi_rx"
@@ -1635,7 +1560,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Fridge Kitchen Data Rate"
     unique_id: "_unique_fridge_kitchen_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.fridge_kitchen_rx"
@@ -1643,7 +1568,7 @@ sensor:
   - platform: "min_max"
     name: "Light Front Door Data Rate"
     unique_id: "_unique_front_door_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.front_door_light_unifi_rx"
@@ -1652,7 +1577,7 @@ sensor:
   - platform: "min_max"
     name: "Glow Smartmeter Data Rate"
     unique_id: "_unique_glow_smartmeter_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.glow_smartmeter_unifi_rx"
@@ -1660,7 +1585,7 @@ sensor:
   - platform: "min_max"
     name: "Nest Thermostat Bottom Hallway Data Rate"
     unique_id: "_unique_google_nest_thermostat_bottom_hallway_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.google_nest_thermostat_bottom_hallway_unifi_rx"
@@ -1668,7 +1593,7 @@ sensor:
   - platform: "min_max"
     name: "Nest Thermostat Middle Hallway Data Rate"
     unique_id: "_unique_google_nest_thermostat_middle_hallway_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.google_nest_thermostat_middle_hallway_unifi_rx"
@@ -1676,7 +1601,7 @@ sensor:
   - platform: "min_max"
     name: "Light Bottom Hallway Data Rate"
     unique_id: "_unique_hallway_bottom_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.hallway_bottom_light_unifi_rx"
@@ -1684,7 +1609,7 @@ sensor:
   - platform: "min_max"
     name: "iPhone 13 Emily Data Rate"
     unique_id: "_unique_iphone13_emily_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.iphone13_emily_unifi_rx"
@@ -1692,7 +1617,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Kettle Kitchen Data Rate"
     unique_id: "_unique_kettle_plug_kitchen_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.kettle_plug_kitchen_unifi_rx"
@@ -1700,7 +1625,7 @@ sensor:
   - platform: "min_max"
     name: "Light Kitchen Main Data Rate"
     unique_id: "_unique_kitchen_main_lights_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.kitchen_main_lights_unifi_rx"
@@ -1708,7 +1633,7 @@ sensor:
   - platform: "min_max"
     name: "Light Kitchen Utility Data Rate"
     unique_id: "_unique_kitchen_utility_lights_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.kitchen_utility_lights_unifi_rx"
@@ -1716,7 +1641,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Fly Killer Kitchen Data Rate"
     unique_id: "_unique_fly_killer_plug_kitchen_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.lamp_plug_lounge_unifi_rx"
@@ -1724,7 +1649,7 @@ sensor:
   - platform: "min_max"
     name: "LG Therma V Heat Pump Data Rate"
     unique_id: "_unique_lg_therma_v_heat_pump_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.lg_therma_v_heat_pump_unifi_rx"
@@ -1732,7 +1657,7 @@ sensor:
   - platform: "min_max"
     name: "Logitech Harmony Hub Data Rate"
     unique_id: "_unique_logitech_harmony_hub_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.logitech_harmony_hub_unifi_rx"
@@ -1740,7 +1665,7 @@ sensor:
   - platform: "min_max"
     name: "Light Lounge Data Rate"
     unique_id: "_unique_lounge_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.lounge_light_unifi_rx"
@@ -1748,7 +1673,7 @@ sensor:
   - platform: "min_max"
     name: "MacBook Pro 2018 USB-C Data Rate"
     unique_id: "_unique_macbook_2018_usb_c_rj45_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.macbook_2018_usb_c_rj45_unifi_rx"
@@ -1756,7 +1681,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Meross Smart Switch Bed E Data Rate"
     unique_id: "_unique_meross_smart_switch_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.meross_smart_switch_unifi_rx"
@@ -1764,7 +1689,7 @@ sensor:
   - platform: "min_max"
     name: "Microsoft Surface Ju WiFi Data Rate"
     unique_id: "_unique_microsoft_surface_ju_wifi_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.microsoft_surface_ju_wifi_unifi_rx"
@@ -1772,7 +1697,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Microwave Kitchen Data Rate"
     unique_id: "_unique_microwave_plug_kitchen_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.microwave_plug_kitchen_unifi_rx"
@@ -1780,7 +1705,7 @@ sensor:
   - platform: "min_max"
     name: "MSI GF66 Dan WiFi Data Rate"
     unique_id: "_unique_msi_gf66_dan_wifi_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.msi_gf66_dan_wifi_unifi_rx"
@@ -1788,7 +1713,7 @@ sensor:
   - platform: "min_max"
     name: "Nespresso Vertuo Next Data Rate"
     unique_id: "_unique_nespresso_vertuo_next_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.nespresso_vertuo_next_unifi_rx"
@@ -1796,7 +1721,7 @@ sensor:
   - platform: "min_max"
     name: "Nest Protect Bottom Hallway Data Rate"
     unique_id: "_unique_nest_protect_bottom_hallway_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.nest_protect_bottom_hallway_unifi_rx"
@@ -1804,7 +1729,7 @@ sensor:
   - platform: "min_max"
     name: "Nest Protect Middle Hallway Data Rate"
     unique_id: "_unique_nest_protect_middle_hallway_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.nest_protect_middle_hallway_unifi_rx"
@@ -1812,7 +1737,7 @@ sensor:
   - platform: "min_max"
     name: "Nest Protect Top Hallway Data Rate"
     unique_id: "_unique_nest_protect_top_hallway_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.nest_protect_top_hallway_unifi_rx"
@@ -1820,7 +1745,7 @@ sensor:
   - platform: "min_max"
     name: "Plug Samsung Tumble Dryer Kitchen Data Rate"
     unique_id: "_unique_samsung_tumble_dryer_kitchen_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.samsung_tumble_dryer_kitchen_unifi_rx"
@@ -1828,7 +1753,7 @@ sensor:
   - platform: "min_max"
     name: "Solar Battery 1 Garage Data Rate"
     unique_id: "_unique_solar_battery_1_garage_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.solar_battery_1_garage_unifi_rx"
@@ -1836,7 +1761,7 @@ sensor:
   - platform: "min_max"
     name: "Solar Battery 2 Garage Data Rate"
     unique_id: "_unique_solar_battery_2_garage_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.solar_battery_2_garage_unifi_rx"
@@ -1844,7 +1769,7 @@ sensor:
   - platform: "min_max"
     name: "Sony Bravia KDL-32EX403 TV Data Rate"
     unique_id: "_unique_sony_bravia_kdl_32ex403_tv_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.sony_bravia_kdl_32ex403_tv_unifi_rx"
@@ -1852,7 +1777,7 @@ sensor:
   - platform: "min_max"
     name: "Sony PlayStation 3 Bed C Data Rate"
     unique_id: "_unique_sony_playstation_3_bed_c_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.sony_playstation_3_bed_c_unifi_rx"
@@ -1860,7 +1785,7 @@ sensor:
   - platform: "min_max"
     name: "Light Study Data Rate"
     unique_id: "_unique_study_light_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.study_light_unifi_rx"
@@ -1868,7 +1793,7 @@ sensor:
   - platform: "min_max"
     name: "DiskStation DS412+ VPN Data Rate"
     unique_id: "_unique_synology_diskstation_ds412_vpn_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.synology_diskstation_ds412_vpn_unifi_rx"
@@ -1876,7 +1801,7 @@ sensor:
   - platform: "min_max"
     name: "ZigBee Router TubeSZB-CC2652-POE Data Rate"
     unique_id: "_unique_tubeszb_cc2652_poe_zigbee_router_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.tubeszb_cc2652_poe_zigbee_router_unifi_rx"
@@ -1884,7 +1809,7 @@ sensor:
   - platform: "min_max"
     name: "Tuya Camera Data Rate"
     unique_id: "_unique_tuya_camera_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.tuya_camera_unifi_rx"
@@ -1892,63 +1817,15 @@ sensor:
   - platform: "min_max"
     name: "Plug UDMPRO Bed C Data Rate"
     unique_id: "_unique_udm_pro_plug_bed_c_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.udm_pro_plug_bed_c_unifi_rx"
       - "sensor.udm_pro_plug_bed_c_unifi_tx"
   - platform: "min_max"
-    name: "Unifi G3 Flex Back Data Rate"
-    unique_id: "_unique_unifi_g3_flex_back_data_rate"
-    type: "median"
-    round_digits: 3
-    entity_ids:
-      - "sensor.unifi_g3_flex_back_unifi_rx"
-      - "sensor.unifi_g3_flex_back_unifi_tx"
-  - platform: "min_max"
-    name: "Unifi G3 Flex Front Data Rate"
-    unique_id: "_unique_unifi_g3_flex_front_data_rate"
-    type: "median"
-    round_digits: 3
-    entity_ids:
-      - "sensor.unifi_g3_flex_front_unifi_rx"
-      - "sensor.unifi_g3_flex_front_unifi_tx"
-  - platform: "min_max"
-    name: "Unifi G3 Flex Middle Hallway Data Rate"
-    unique_id: "_unique_unifi_g3_flex_middle_hallway_data_rate"
-    type: "median"
-    round_digits: 3
-    entity_ids:
-      - "sensor.unifi_g3_flex_middle_hallway_unifi_rx"
-      - "sensor.unifi_g3_flex_middle_hallway_unifi_tx"
-  - platform: "min_max"
-    name: "Unifi G3 Instant Bottom Hallway Data Rate"
-    unique_id: "_unique_unifi_g3_instant_bottom_hallway_data_rate"
-    type: "median"
-    round_digits: 3
-    entity_ids:
-      - "sensor.unifi_g3_instant_bottom_hallway_unifi_rx"
-      - "sensor.unifi_g3_instant_bottom_hallway_unifi_tx"
-  - platform: "min_max"
-    name: "Unifi G4 Doorbell Data Rate"
-    unique_id: "_unique_unifi_g4_doorbell_data_rate"
-    type: "median"
-    round_digits: 3
-    entity_ids:
-      - "sensor.unifi_g4_doorbell_unifi_rx"
-      - "sensor.unifi_g4_doorbell_unifi_tx"
-  - platform: "min_max"
-    name: "Unifi G3 Instant Kitchen Data Rate"
-    unique_id: "_unique_unifi_kitchen_g3_instant_data_rate"
-    type: "median"
-    round_digits: 3
-    entity_ids:
-      - "sensor.unifi_kitchen_g3_instant_unifi_rx"
-      - "sensor.unifi_kitchen_g3_instant_unifi_tx"
-  - platform: "min_max"
     name: "Worx Robot Mower Data Rate"
     unique_id: "_unique_worx_robot_mower_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.worx_robot_mower_unifi_rx"
@@ -1956,7 +1833,7 @@ sensor:
   - platform: "min_max"
     name: "Yamaha RX-V777 Receiver Data Rate"
     unique_id: "_unique_yamaha_rx_v777_receiver_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.yamaha_rx_v777_receiver_bed_c_unifi_rx"
@@ -1964,7 +1841,7 @@ sensor:
   - platform: "min_max"
     name: "iPhone 13 Emily Patrice Unifi Data Rate"
     unique_id: "_unique_iphone_13_emily_patrice_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.iphone_13_emily_patrice_unifi_rx"
@@ -1972,7 +1849,7 @@ sensor:
   - platform: "min_max"
     name: "MacBook Pro USB-C RJ45 Data Rate"
     unique_id: "_unique_macbook_pro_usb_c_rj45_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.macbook_pro_usb_c_rj45_unifi_rx"
@@ -1980,7 +1857,7 @@ sensor:
   - platform: "min_max"
     name: "iPad Air 4thGen Emily Data Rate"
     unique_id: "_unique_ipad_air_4thgen_emily_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.ipad_air_4thgen_emily_unifi_rx"
@@ -1988,7 +1865,7 @@ sensor:
   - platform: "min_max"
     name: "MacBook Pro 2021 Data Rate"
     unique_id: "_unique_macbook_pro_2021_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
       - "sensor.macbook_pro_2021_kev_unifi_rx"
@@ -1998,59 +1875,59 @@ sensor:
   - platform: "min_max"
     name: "Back G3 Flex Data Rate"
     unique_id: "_unique_back_g3_flex_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
-      - "sensor.back_g3_flex_total_rx_to_mb"
-      - "sensor.back_g3_flex_total_tx_to_mb"
+      - "sensor.back_g3_flex_rx_mb_per_second"
+      - "sensor.back_g3_flex_tx_mb_per_second"
   - platform: "min_max"
     name: "Doorbell G4 Flex Data Rate"
     unique_id: "_unique_doorbell_g4_flex_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
-      - "sensor.doorbell_g4_total_rx_to_mb"
-      - "sensor.doorbell_g4_total_tx_to_mb"
+      - "sensor.doorbell_g4_rx_mb_per_second"
+      - "sensor.doorbell_g4_tx_mb_per_second"
   - platform: "min_max"
     name: "Front G3 Flex Data Rate"
     unique_id: "_unique_front_g3_flex_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
-      - "sensor.front_g3_flex_total_rx_to_mb"
-      - "sensor.front_g3_flex_total_tx_to_mb"
+      - "sensor.front_g3_flex_rx_mb_per_second"
+      - "sensor.front_g3_flex_tx_mb_per_second"
   - platform: "min_max"
     name: "Middle Hallway G3 Flex Data Rate"
     unique_id: "_unique_middle_hallway_g3_flex_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
-      - "sensor.middle_hallway_g3_flex_total_rx_to_mb"
-      - "sensor.middle_hallway_g3_flex_total_tx_to_mb"
+      - "sensor.middle_hallway_g3_flex_rx_mb_per_second"
+      - "sensor.middle_hallway_g3_flex_tx_mb_per_second"
   - platform: "min_max"
     name: "Bottom Hallway G3 Flex Data Rate"
     unique_id: "_unique_bottom_hallway_g3_instant_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
-      - "sensor.bottom_hallway_g3_instant_total_rx_to_mb"
-      - "sensor.bottom_hallway_g3_instant_total_tx_to_mb"
+      - "sensor.bottom_hallway_g3_instant_rx_mb_per_second"
+      - "sensor.bottom_hallway_g3_instant_tx_mb_per_second"
   - platform: "min_max"
     name: "Kitchen G3 Instant Data Rate"
     unique_id: "_unique_kitchen_g3_instant_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
-      - "sensor.kitchen_g3_instant_total_rx_to_mb"
-      - "sensor.kitchen_g3_instant_total_tx_to_mb"
+      - "sensor.kitchen_g3_instant_rx_mb_per_second"
+      - "sensor.kitchen_g3_instant_tx_mb_per_second"
   - platform: "min_max"
     name: "Bed C G3 Instant Data Rate"
     unique_id: "_unique_bed_c_g3_instant_data_rate"
-    type: "median"
+    type: "mean"
     round_digits: 3
     entity_ids:
-      - "sensor.bed_c_g3_instant_total_rx_to_mb"
-      - "sensor.bed_c_g3_instant_total_tx_to_mb"
+      - "sensor.bed_c_g3_instant_rx_mb_per_second"
+      - "sensor.bed_c_g3_instant_tx_mb_per_second"
 
 
   # kitchen
