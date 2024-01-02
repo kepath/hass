@@ -185,7 +185,7 @@ elements:
     template: "card_kepath_floorplan_binary_item_light"
     entity: "light.zigbee_bulb_garage_light"
     style:
-      left: "87%"
+      left: "89%"
       top: "10%"
       color: "rgba(100, 100, 100, 0.0)"
 
@@ -209,8 +209,8 @@ elements:
       ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
       ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
     style:
-      left: "39%"
-      top: "61%"
+      left: "62%"
+      top: "48%"
       color: "rgba(100, 100, 100, 0.0)"
   # FRIDGE
   - type: "custom:button-card"
@@ -231,9 +231,9 @@ elements:
     entity: "switch.zigbee_energy_monitor_outlet_switch_dishwasher_switch"
     variables:
       ulm_card_kepath_floorplan_item_power_usage_denotes_on: true
-      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_summation_delivered"
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_instantaneous_demand"
       ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
-      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_summation_delivered"
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_instantaneous_demand"
     style:
       left: "64%"
       top: "32%"
@@ -288,6 +288,17 @@ elements:
     style:
       left: "48%"
       top: "28%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # SMART METER
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_outlet_switch_smart_meter_switch"
+    variables:
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+    style:
+      left: "72%"
+      top: "29%"
       color: "rgba(100, 100, 100, 0.0)"
   # GARAGE FRIDGE/FREEZER
   - type: "custom:button-card"
@@ -427,7 +438,7 @@ elements:
       color: "rgba(100, 100, 100, 0.0)"
 
   # DOORS
-  # FRONT DOOR
+  # FRONT DOOR OPENER
   - type: "custom:button-card"
     template: "card_kepath_floorplan_door"
     entity: "binary_sensor.lock_45f7_door"
@@ -437,6 +448,17 @@ elements:
     style:
       left: "51%"
       top: "95%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # FRONT DOOR LOCK
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_lock"
+    entity: "lock.front_door_top_bolt"
+    variables:
+      ulm_card_kepath_floorplan_door_last_locked_entity: "sensor.floorplan_dates_template_generated"
+      ulm_card_kepath_floorplan_door_last_locked_attribute: "front_door_last_locked"
+    style:
+      left: "47%"
+      top: "85%"
       color: "rgba(100, 100, 100, 0.0)"
   # BACK DOOR
   - type: "custom:button-card"
