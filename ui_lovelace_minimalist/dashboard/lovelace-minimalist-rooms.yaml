@@ -48,6 +48,14 @@ views:
                   label_use_temperature: true
                   label_use_brightness: false
                   entity_1:
+                    entity_id: "lock.front_door_top_bolt"
+                    templates:
+                      - "card_room_locked_state"
+                    tap_action:
+                      action: "toggle"
+                    hold_action:
+                      action: "more-info"
+                  entity_2:
                     entity_id: "input_boolean.doorbell_rung"
                     templates:
                       - "green_off"
@@ -58,7 +66,7 @@ views:
                       show_live_stream: true
                     hold_action:
                       action: "more-info"
-                  entity_2:
+                  entity_3:
                     entity_id: "binary_sensor.front_g3_flex_motion"
                     templates:
                       - "green_off"
@@ -67,14 +75,6 @@ views:
                       action: "more-info"
                       entity: "camera.front_g3_flex_medium"
                       show_live_stream: true
-                    hold_action:
-                      action: "more-info"
-                  entity_3:
-                    entity_id: "input_boolean.placeholder"
-                    templates:
-                      - "grey_no_state"
-                    tap_action:
-                      action: "toggle"
                     hold_action:
                       action: "more-info"
                   entity_4:
@@ -122,7 +122,7 @@ views:
                     hold_action:
                       action: "more-info"
                   entity_3:
-                    entity_id: "vacuum.moe"
+                    entity_id: "lawn_mower.moe"
                     templates:
                       - "card_room_mower_state"
                     tap_action:

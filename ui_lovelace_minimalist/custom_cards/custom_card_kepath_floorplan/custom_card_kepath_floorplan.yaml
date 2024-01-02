@@ -458,6 +458,7 @@ card_kepath_floorplan_nest_protect:
                 - background-color: "rgba(130, 130, 130, 0.5)"
         tap_action:
           action: "more-info"
+          entity: "[[[ return variables.ulm_card_kepath_floorplan_nest_protect_co_status ]]]"
     heat:
       card:
         type: "custom:button-card"
@@ -501,6 +502,7 @@ card_kepath_floorplan_nest_protect:
                 - background-color: "rgba(130, 130, 130, 0.5)"
         tap_action:
           action: "more-info"
+          entity: "[[[ return variables.ulm_card_kepath_floorplan_nest_protect_heat_status ]]]"
     smoke:
       card:
         type: "custom:button-card"
@@ -544,6 +546,7 @@ card_kepath_floorplan_nest_protect:
                 - background-color: "rgba(130, 130, 130, 0.5)"
         tap_action:
           action: "more-info"
+          entity: "[[[ return variables.ulm_card_kepath_floorplan_nest_protect_smoke_status ]]]"
           # card:
           #   type: "custom:button-card"
           #   template: "card_kepath_floorplan_nest_protect_alert"
@@ -867,20 +870,20 @@ card_kepath_floorplan_lock:
   show_name: false
   icon: >
     [[[
-      var doorIcon = "mdi:door";
-      if (variables?.ulm_card_kepath_floorplan_door_closed_icon) {
-        doorIcon = variables.ulm_card_kepath_floorplan_door_closed_icon;
+      var doorIcon = "mdi:lock";
+      if (variables?.ulm_card_kepath_floorplan_lock_closed_icon) {
+        doorIcon = variables.ulm_card_kepath_floorplan_lock_closed_icon;
       }
       return doorIcon;
     ]]]
   label: >
     [[[
       var relativeDate = "unknown";
-      if(variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity) {
-        if(variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute) {
-          relativeDate = states[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].attributes[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute] ? states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].attributes[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_attribute] : "unknown"
+      if(variables?.ulm_card_kepath_floorplan_door_last_locked_entity) {
+        if(variables?.ulm_card_kepath_floorplan_door_last_locked_attribute) {
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_door_last_locked_entity].attributes[variables?.ulm_card_kepath_floorplan_door_last_locked_attribute] ? states[variables.ulm_card_kepath_floorplan_door_last_locked_entity].attributes[variables.ulm_card_kepath_floorplan_door_last_locked_attribute] : "unknown"
         } else {
-          relativeDate = states[variables?.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state ? states[variables.ulm_card_kepath_floorplan_nest_protect_last_activity_entity].state : "unknown"
+          relativeDate = states[variables?.ulm_card_kepath_floorplan_door_last_locked_entity].state ? states[variables.ulm_card_kepath_floorplan_door_last_locked_entity].state : "unknown"
         }
       }
       return relativeDate.replace("minutes", "mins").replace("minute", "min").replace(" ago", "");
@@ -911,20 +914,20 @@ card_kepath_floorplan_lock:
   tap_action:
     action: "more-info"
   state:
-    - value: "on"
+    - value: "unlocked"
       icon: >
         [[[
-          var doorIcon = "mdi:door-open";
-          if (variables?.ulm_card_kepath_floorplan_door_open_icon) {
-            doorIcon = variables.ulm_card_kepath_floorplan_door_open_icon;
+          var doorIcon = "mdi:lock-open-outline";
+          if (variables?.ulm_card_kepath_floorplan_lock_open_icon) {
+            doorIcon = variables.ulm_card_kepath_floorplan_lock_open_icon;
           }
           return doorIcon;
         ]]]
       styles:
         icon:
-          - color: "rgba(var(--color-green),1)"
+          - color: "rgba(var(--color-red),1)"
         img_cell:
-          - background-color: "rgba(var(--color-green), 0.2)"
+          - background-color: "rgba(var(--color-red), 0.2)"
     - operator: "template"
       value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
       styles:
