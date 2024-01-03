@@ -12,6 +12,7 @@ import requests
 
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from homeassistant import exceptions
 
 _LOGGER = logging.getLogger(__name__)
 defaultHeaders = {
@@ -162,6 +163,9 @@ class Vehicle:
         _LOGGER.debug(step1post.status_code)
         cookie_dict = step1_session.cookies.get_dict()
         _LOGGER.debug(cookie_dict)
+
+        if step1post.status_code == 400:
+            raise exceptions.HomeAssistantError(step1post.json()["message"])
 
 
 
@@ -635,6 +639,9 @@ class Vehicle:
     def get_status(self):
         """Get status from Autonomics endpoint"""
         params = {"lrdt": "01-01-1970 00:00:00"}
+
+        if self.auto_token is None:
+            self.__acquire_token()
 
         headers = {
             **apiHeaders,
