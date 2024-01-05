@@ -35,9 +35,11 @@ homekit:
       - "climate"
       - "fan"
       - "input_select"
+      - "lawn_mower"
       - "light"
       - "lock"
       - "person"
+      - "scene"
       - "sun"
       - "vacuum"
       - "water_heater"
@@ -98,8 +100,17 @@ homekit:
       - "binary_sensor.nest_protect_top_floor_smoke_test"
       - "binary_sensor.nest_protect_top_floor_speaker_test"
       - "binary_sensor.nest_protect_top_floor_online"
+      - "sensor.zigbee_motion_sensor_bed_e_illuminance"
+      - "sensor.zigbee_motion_sensor_middle_hallway_illuminance"
       - "input_select.floorplan_floor"
+      - "input_select.bed_c_fan_mode"
+      - "input_select.bed_e_fan_mode"
+      - "switch.bed_c_fan_display_auto_off"
+      - "switch.bed_c_fan_panel_sound"
+      - "switch.bed_e_fan_adaptive_brightness"
+      - "switch.bed_e_fan_panel_sound"
       - "light.shelly_1l_hallway_bottom_light_2"
+      - "light.shelly_1l_kitchen_utility_light_2"
       - "person.tablet"
       - "sensor.nest_protect_top_floor_battery_level"
       - "switch.lounge_lamp"
@@ -123,7 +134,11 @@ homekit:
       - "light.3967c3de_75e0c3ee_screen"
       - "light.1999f1b8_8c50d6ce_screen"
       - "light.e7e9d9cf_b340d230_screen"
+      - "light.81a6f440_9f96a370_screen"
       - "light.lumi_lumi_router_light"
+      - "light.kev_iphone_remote_screen"
+      - "light.db28001f_55312599_screen"
+      - "light.73b3e31c_cd8a9656_screen"
       - "binary_sensor.diskstation_security_status"
       - "binary_sensor.diskstation_drive_1_below_min_remaining_life"
       - "binary_sensor.diskstation_drive_2_below_min_remaining_life"
@@ -153,7 +168,7 @@ homekit:
       - "binary_sensor.doorbell_g4_doorbell"
 
   entity_config:
-  # outlets
+    # outlets
     switch.zigbee_outlet_switch_arcade_pc_switch:
       name: "Bed C Arcade Power"
       type: "outlet"
@@ -169,9 +184,12 @@ homekit:
     switch.zigbee_outlet_switch_unifi_g4_doorbell_switch:
       name: "Hallway - Bottom Doorbell Power"
       type: "outlet"
+    switch.zigbee_outlet_switch_smart_meter_switch:
+      name: "Kitchen Smart Meter"
+      type: "outlet"
 
 
-  # lights
+    # lights
     light.back_door_smartbulb:
       name: "External Back Light"
     light.shelly_1l_bathroom_light_1:
@@ -205,7 +223,7 @@ homekit:
     light.zigbee_bulb_garage_light:
       name: "Garage Light"
 
-  # smoke and CO sensors
+    # smoke and CO sensors
     binary_sensor.nest_protect_bottom_floor_co_status:
       name: "Hallway - Bottom CO Nest Protect"
       linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
@@ -235,15 +253,15 @@ homekit:
       name: "House Banbury Temperature"
 
     climate.air_to_water_heat_pump:
-      name: "Air to Water Heat Pump"
+      name: "External Back Air to Water Heat Pump"
     climate.nest_bottom_floor:
       name: "Hallway - Bottom Nest"
     climate.nest_middle_floor:
       name: "Hallway - Middle Nest"
     water_heater.air_to_water_heat_pump_water_heater:
-      name: "Air to Water Heat Pump Water Heater"
+      name: "Hallway - Middle Air to Water Heat Pump Water Heater"
 
-  # occupancy sensors
+    # occupancy sensors
     binary_sensor.back_g3_flex_occupancy:
       name: "External Back G3 Flex Occupancy"
     binary_sensor.bed_c_g3_instant_occupancy:
@@ -274,10 +292,10 @@ homekit:
       name: "Hallway - Middle Aqara Occupancy"
       linked_battery_sensor: "sensor.zigbee_motion_sensor_middle_hallway_battery"
 
-    vacuum.moe:
+    lawn_mower.moe:
       name: "External Back Worx Landroid Moe"
 
-# contact
+    # contact
     binary_sensor.zigbee_door_sensor_back_contact:
       name: "External Back Door"
     binary_sensor.zigbee_door_sensor_bed_c_contact:
@@ -294,3 +312,29 @@ homekit:
       name: "External Back Patio 2"
     binary_sensor.zigbee_vibration_sensor_patio_door_vibration:
       name: "External Back Patio Vibration"
+
+    # temperature
+    sensor.zigbee_door_sensor_bed_c_temperature:
+      name: "Bed C Temperature"
+    sensor.zigbee_door_sensor_back_temperature:
+      name: "Kitchen Temperature"
+    sensor.zigbee_door_sensor_garage_temperature:
+      name: "Garage Temperature"
+    sensor.zigbee_door_sensor_loft_temperature:
+      name: "Hallway - Top Temperature"
+    sensor.zigbee_door_sensor_patio_1_temperature:
+      name: "Lounge Temperature"
+    sensor.zigbee_door_sensor_patio_2_temperature:
+      name: "Lounge Temperature"
+    sensor.bed_c_fan_temperature:
+      name: "Bed C Fan Temperature"
+    sensor.bed_e_fan_temperature:
+      name: "Bed E Fan Temperature"
+    sensor.zigbee_vibration_sensor_patio_door_temperature:
+      name: "Lounge Vibration Sensor Temperature"
+    sensor.zigbee_motion_sensor_bed_e_temperature:
+      name: "Bed E Motion Sensor Temperature"
+    sensor.zigbee_motion_sensor_middle_hallway_occupancy_temperature:
+      name: "Hallway - Middle Motion Sensor Temperature"
+
+# fans - normal, natural, sleep, auto
