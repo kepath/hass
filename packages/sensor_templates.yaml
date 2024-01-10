@@ -24,7 +24,7 @@ template:
                 {%- set ns.c = loop.length -%}
               {%-endif-%}
             {%endfor%}
-            {%-if ns.c == 0-%}
+            {%-if ns.c == 0-%}  # stop divide by zero error
               {%-set ns.c = 1-%}
             {%-endif-%}
             {{ (ns.s / ns.c)|round(-1)|int }}
