@@ -1,13 +1,11 @@
 """The Chime TTS integration."""
 
 import logging
-import tempfile
 import os
 import hashlib
 import io
 import asyncio
 from datetime import datetime
-import json
 
 
 from pydub import AudioSegment
@@ -234,7 +232,7 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
             if _data["is_save_generated"] is True:
                 if cache:
                     _LOGGER.debug("Saving generated mp3 file to cache")
-                filepath_hash = get_filename_hash(_data["generated_filename"])
+                filepath_hash = _data["generated_filename"]
                 await async_store_data(hass, filepath_hash, audio_dict)
         else:
             if os.path.exists(audio_path):
@@ -245,7 +243,10 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
 
         # Convert URL to external for chime_tts.say_url
         if entity_ids is None or len(entity_ids) == 0:
-            instance_url = str(get_url(hass))
+            instance_url = hass.config.external_url
+            if instance_url is None:
+                instance_url = str(get_url(hass))
+
             external_url = (
                 (instance_url + audio_path).replace("/config", "").replace("www/", "local/")
             )
@@ -613,7 +614,7 @@ async def async_request_tts_audio(
 
     # Data validation
 
-    tts_options = options.copy()
+    tts_options = options.copy() if isinstance(options, dict) else (str(options) if isinstance(options, str) else options)
 
     if message is False or message == "":
         _LOGGER.warning("No message text provided for TTS audio")
@@ -639,8 +640,7 @@ async def async_request_tts_audio(
         language = None
 
     # Cache
-    if tts_platform not in [GOOGLE_TRANSLATE, NABU_CASA_CLOUD_TTS]:
-        cache = False
+    use_cache = True if cache is True and tts_platform not in [GOOGLE_TRANSLATE, NABU_CASA_CLOUD_TTS] else False
 
     # tld
     if "tld" in tts_options and tts_platform not in [GOOGLE_TRANSLATE]:
@@ -650,15 +650,11 @@ async def async_request_tts_audio(
     if "gender" in tts_options and tts_platform not in [NABU_CASA_CLOUD_TTS]:
         del tts_options["gender"]
 
-    # Piper - convert tts_options to json dict string
-    if tts_platform == PIPER and tts_options is not None and len(tts_options) > 0:
-        tts_options = json.dumps(tts_options).replace('{', '').replace('}', '').replace('"', '')
-
     _LOGGER.debug("async_request_tts_audio(%s)",
         "tts_platform='" + tts_platform
         + "', message='" + str(message)
         + "', tts_playback_speed=" + str(tts_playback_speed)
-        + ", cache=" + str(cache)
+        + ", cache=" + str(use_cache)
         + ", language=" + ("'" + str(language) + "'" if language is not None else "None")
         + ", options=" + str(tts_options)
     )
@@ -792,12 +788,12 @@ async def async_get_playback_audio_path(params: dict, options: dict):
     _data["is_save_generated"] = False
     _LOGGER.debug("async_get_playback_audio_path")
 
-    _data["generated_filename"] = get_generated_filename({**params, **options})
+    filepath_hash = get_filename_hash_from_service_data({**params}, {**options})
+    _data["generated_filename"] = filepath_hash
 
     # Load previously generated audio from cache
     if cache is True:
         _LOGGER.debug("Attempting to retrieve generated mp3 file from cache")
-        filepath_hash = get_filename_hash(_data["generated_filename"])
         audio_dict = await async_get_cached_audio_data(hass, filepath_hash)
         if audio_dict is not None:
             filepath = audio_dict[AUDIO_PATH_KEY]
@@ -841,61 +837,33 @@ async def async_get_playback_audio_path(params: dict, options: dict):
             # Use the public folder path (i.e chime_tts.say_url service calls)
             new_audio_folder = _data[WWW_PATH_KEY]
 
-        if os.path.exists(new_audio_folder) is False:
-            _LOGGER.debug("  - Creating audio folder: %s", new_audio_folder)
-            try:
-                os.makedirs(new_audio_folder)
-                _LOGGER.debug("  - Audio folder created")
-            except OSError as error:
-                _LOGGER.warning(
-                    "  - An error occurred while creating the folder '%s': %s",
-                    new_audio_folder,
-                    error,
-                )
-            except Exception as error:
-                _LOGGER.warning(
-                    "  - An error occurred when creating the folder: %s", error
-                )
-        else:
-            _LOGGER.debug("  - Audio folder exists: %s", new_audio_folder)
+        new_audio_full_path = helpers.save_audio_to_folder(output_audio, new_audio_folder)
 
-        try:
-            with tempfile.NamedTemporaryFile(
-                prefix=new_audio_folder, suffix=".mp3"
-            ) as temp_obj:
-                new_audio_full_path = temp_obj.name
-            output_audio.export(new_audio_full_path, format="mp3")
+        # Perform FFmpeg conversion
+        if ffmpeg_args:
+            _LOGGER.debug("  - Performing FFmpeg audio conversion...")
+            converted_output_audio = helpers.ffmpeg_convert_from_file(new_audio_full_path, ffmpeg_args)
+            if converted_output_audio is not False:
+                _LOGGER.debug("  - ...FFmpeg audio conversion completed.")
+                new_audio_full_path = converted_output_audio
+            else:
+                _LOGGER.warning("  - ...FFmpeg audio conversion failed. Using unconverted audio file")
 
-            # Perform FFmpeg conversion
-            if ffmpeg_args:
-                _LOGGER.debug("  - Performing FFmpeg audio conversion...")
-                converted_output_audio = helpers.ffmpeg_convert_from_file(new_audio_full_path, ffmpeg_args)
-                if converted_output_audio is not False:
-                    _LOGGER.debug("  - ...FFmpeg audio conversion completed.")
-                    new_audio_full_path = converted_output_audio
-                else:
-                    _LOGGER.warning("  - ...FFmpeg audio conversion failed. Using unconverted audio file")
-
-            _LOGGER.debug("  - Filepath = '%s'", new_audio_full_path)
-            _data["is_save_generated"] = True
+        _LOGGER.debug("  - Filepath = '%s'", new_audio_full_path)
+        _data["is_save_generated"] = True
 
 
-            # Check URL (chime_tts.say_url)
-            if entity_ids is None or len(entity_ids) == 0:
-                relative_path = new_audio_full_path
-                new_audio_full_path = helpers.get_file_path(hass, new_audio_full_path)
-                if relative_path != new_audio_full_path:
-                    _LOGGER.debug("  - Non-relative filepath = '%s'", new_audio_full_path)
+        # Check URL (chime_tts.say_url)
+        if entity_ids is None or len(entity_ids) == 0:
+            relative_path = new_audio_full_path
+            new_audio_full_path = helpers.get_file_path(hass, new_audio_full_path)
+            if relative_path != new_audio_full_path:
+                _LOGGER.debug("  - Non-relative filepath = '%s'", new_audio_full_path)
 
-            _LOGGER.debug("  - File saved successfully")
-        except Exception as error:
-            _LOGGER.warning(
-                "An error occurred when creating the temp mp3 file: %s", error
-            )
-            return None
+        _LOGGER.debug("  - File saved successfully")
 
+        # Valdiation
         audio_dict = {AUDIO_PATH_KEY: new_audio_full_path, AUDIO_DURATION_KEY: duration}
-        # Validate
         if audio_dict[AUDIO_DURATION_KEY] == 0:
             _LOGGER.error("async_get_playback_audio_path --> Audio has no duration")
             audio_dict = None
@@ -907,6 +875,7 @@ async def async_get_playback_audio_path(params: dict, options: dict):
                 "async_get_playback_audio_path --> Audio has no file path data"
             )
             audio_dict = None
+
         return audio_dict
 
     return None
@@ -917,7 +886,7 @@ async def async_process_segment(hass, segments, output_audio, params, options):
     if segments is not None and len(segments) > 0:
         for index, segment in enumerate(segments):
 
-            segment_delay = float(segment["delay"]) if "delay" in segment and output_audio is not None else params["delay"]
+            segment_delay = float(segment["delay"]) if "delay" in segment and output_audio is not None else (params["delay"] if "delay" in params else 0.0)
 
             # Chime tag
             if segment["type"] == "chime":
@@ -940,36 +909,96 @@ async def async_process_segment(hass, segments, output_audio, params, options):
             if segment["type"] == "tts":
                 if "message" in segment and len(segment["message"]) > 0:
                     segment_message = segment["message"]
+                    if len(segment_message) == 0 or segment_message == "None":
+                        continue
+
                     segment_tts_platform = segment["tts_platform"] if "tts_platform" in segment else params["tts_platform"]
                     segment_language = segment["language"] if "language" in segment else params["language"]
                     segment_cache = segment["cache"] if "cache" in segment else params["cache"]
                     segment_tts_playback_speed = segment["tts_playback_speed"] if "tts_playback_speed" in segment else params["tts_playback_speed"]
+
+                    # Use exposed parameters if not present in the options dictionary
                     segment_options = segment["options"] if "options" in segment else {}
+                    exposed_option_keys = ["gender", "tld", "voice"]
+                    for exposed_option_key in exposed_option_keys:
+                        value = None
+                        if exposed_option_key in segment_options:
+                           value = segment_options[exposed_option_key]
+                        elif exposed_option_key in segment:
+                            value = segment[exposed_option_key]
+                        if value is not None:
+                            segment_options[exposed_option_key] = value
+
                     for key, value in options.items():
                         if key not in segment_options:
                             segment_options[key] = value
+                    segment_params = {
+                        "message": segment_message,
+                        "tts_platform": segment_tts_platform,
+                        "language": segment_language,
+                        "cache": segment_cache,
+                        "tts_playback_speed": segment_tts_playback_speed
+                    }
+                    segment_filepath_hash = get_filename_hash_from_service_data({**segment_params}, {**segment_options}, )
 
-                    tts_audio = await async_request_tts_audio(
-                        hass=hass,
-                        tts_platform=segment_tts_platform,
-                        message=segment_message,
-                        language=segment_language,
-                        cache=segment_cache,
-                        options=segment_options,
-                        tts_playback_speed=segment_tts_playback_speed,
-                    )
+                    tts_audio = None
+
+                    # Use cached TTS audio
+                    if segment_cache is True:
+                        _LOGGER.debug(" - Attempting to retrieve TTS file from cache...")
+                        audio_dict = await async_get_cached_audio_data(hass, segment_filepath_hash)
+                        if audio_dict is not None:
+                            tts_audio = get_audio_from_path(hass, audio_dict[AUDIO_PATH_KEY])
+                            tts_audio_duration = audio_dict[AUDIO_DURATION_KEY]
+                            _LOGGER.debug(" - ...cached TTS file retrieved with duration: %ss", str(tts_audio_duration))
+                        else:
+                            _LOGGER.debug(" - ...cached TTS file not found")
+
+
+                    # Generate new TTS audio
+                    if tts_audio is None:
+                        tts_audio = await async_request_tts_audio(
+                            hass=hass,
+                            tts_platform=segment_tts_platform,
+                            message=segment_message,
+                            language=segment_language,
+                            cache=segment_cache,
+                            options=segment_options,
+                            tts_playback_speed=segment_tts_playback_speed,
+                        )
+                        tts_audio_duration = float(len(tts_audio) / 1000.0)
+
+
                     if tts_audio is not None:
                         if output_audio is not None:
                             output_audio = (
-                                output_audio + (AudioSegment.silent(duration=segment_delay)) + tts_audio
-                            )
+                                output_audio + (
+                                    AudioSegment.silent(duration=segment_delay)) + tts_audio)
                         else:
                             output_audio = tts_audio
+
+                        # Cache the new TTS audio?
+                        if segment_cache is True and audio_dict is None:
+                            _LOGGER.debug("Saving generated TTS audio to cache")
+                            tts_audio_full_path = helpers.save_audio_to_folder(
+                                tts_audio, _data[TEMP_PATH_KEY])
+                            if tts_audio_full_path is not None:
+                                _LOGGER.debug(f"tts_audio_full_path = {tts_audio_full_path}")
+                                audio_dict = {
+                                    AUDIO_PATH_KEY: tts_audio_full_path,
+                                    AUDIO_DURATION_KEY: tts_audio_duration
+                                }
+                                await async_store_data(hass, segment_filepath_hash, audio_dict)
+
+                            else:
+                                _LOGGER.warning("Unable to save generated TTS audio to cache")
+
                     else:
-                        _LOGGER.warning("Unable to generate TTS audio from messsage segment #%s", str(index+1))
+                        _LOGGER.warning("Error generating TTS audio from messsage segment #%s: %s",
+                                        str(index+1), str(segment))
                 else:
-                    _LOGGER.warning("TTS message missing from messsage segment #%s", str(index+1))
-                    _LOGGER.warning("%s", str(segment))
+                    _LOGGER.warning("TTS message missing from messsage segment #%s: %s",
+                                    str(index+1), str(segment))
     return output_audio
 
 def get_audio_from_path(hass: HomeAssistant, filepath: str, delay=0, audio=None):
@@ -979,7 +1008,10 @@ def get_audio_from_path(hass: HomeAssistant, filepath: str, delay=0, audio=None)
         return audio
 
     filepath = str(filepath)
-    _LOGGER.debug('get_audio_from_path("%s", %s, audio)', filepath, str(delay))
+    _LOGGER.debug('get_audio_from_path("%s", %s, %s)',
+                  filepath,
+                  str(delay),
+                  ("audio" if audio is not None else "None"))
 
     filepath = helpers.get_file_path(hass, filepath)
     if filepath is None:
@@ -1068,9 +1100,9 @@ async def async_play_media(
     # media_content_id
     media_source_path = audio_path
     media_folder = "/media/"
-    media_folder_index_in_path = media_source_path.find(media_folder)
-    if media_folder_index_in_path != -1:
-        media_path = media_source_path[media_folder_index_in_path + len(media_folder) :].replace("//", "/")
+    media_folder_path_index = media_source_path.find(media_folder)
+    if media_folder_path_index != -1:
+        media_path = media_source_path[media_folder_path_index + len(media_folder) :].replace("//", "/")
         media_source_path = "media-source://media_source/<media_dir>/<media_path>".replace(
             "<media_dir>", _data[MEDIA_DIR_KEY]
         ).replace(
@@ -1247,7 +1279,7 @@ async def async_remove_cached_audio_data(hass: HomeAssistant, filepath_hash: str
 def get_chime_path(chime_path: str = ""):
     """Retrieve preset chime path if selected."""
     # Remove prefix (prefix deprecated in v0.9.1)
-    chime_path = chime_path.replace(MP3_PRESET_PATH_PLACEHOLDER, "").lower()
+    chime_path = chime_path.replace(MP3_PRESET_PATH_PLACEHOLDER, "")
 
     # Preset chime mp3 path?
     if chime_path in MP3_PRESETS:
@@ -1258,22 +1290,23 @@ def get_chime_path(chime_path: str = ""):
         custom_path = _data[MP3_PRESET_CUSTOM_KEY][chime_path]
         if custom_path == "":
             _LOGGER.warning(
-                "No mp3 file path specified for custom chime path `Custom #%s`. Please add the mp3 file path to the Chime TTS configuration.",
+                "MP3 file path missing for custom chime path `Custom #%s`",
                 chime_path.replace(MP3_PRESET_CUSTOM_PREFIX, ""),
             )
         return custom_path
 
     return chime_path
 
+def get_filename_hash_from_service_data(params: dict, options: dict):
+    """Generate a hash from a unique string."""
 
-def get_generated_filename(params: dict):
-    """Generate a unique generated filename based on specific parameters."""
-    filename = ""
+    unique_string = ""
     relevant_params = [
         "message",
         "tts_platform",
         "gender",
         "tld",
+        "voice",
         "language",
         "chime_path",
         "end_chime_path",
@@ -1281,19 +1314,16 @@ def get_generated_filename(params: dict):
         "tts_playback_speed",
     ]
     for param in relevant_params:
-        if (
-            param in params
-            and params[param] is not None
-            and len(str(params[param])) > 0
-        ):
-            filename = filename + "-" + str(params[param])
-    return filename
+        for dictionary in [params, options]:
+            if (
+                param in dictionary
+                and dictionary[param] is not None
+                and len(str(dictionary[param])) > 0
+            ):
+                unique_string = unique_string + "-" + str(dictionary[param])
 
-
-def get_filename_hash(string: str):
-    """Generate a hash from a filename string."""
     hash_object = hashlib.sha256()
-    hash_object.update(string.encode("utf-8"))
+    hash_object.update(unique_string.encode("utf-8"))
     hash_value = str(hash_object.hexdigest())
     return hash_value
 
