@@ -60,8 +60,9 @@ entity_list = []
 if not isinstance(domain, str) or not domain or not group_name:
     logger.error(f"Domain {domain} or group_name {group_name} does not exist")
 
-# List of entity_id's to globally exclude from the groups.
-# Any entity_id that contains any text in the list will be excluded.
+# List of hard coded entity_id's to globally exclude from the groups.
+# If a complete entity_id is given, this will remove just that entity
+# if a partial match is given, any entity_id that contains that text will be excluded.
 globally_excluded_matches = []
 
 try:
