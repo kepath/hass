@@ -1,0 +1,237 @@
+---
+custom_card_kepath_binary_sensor_conditional_selector:
+  template:
+    - "icon_info_bg"
+    - "ulm_translation_engine"
+    - "custom_tab_selector"
+  variables:
+    ulm_card_kepath_binary_sensor_count_notifications:
+      unavailable:
+        entity: "sensor.binary_sensor_state_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
+        count_tooltip: ""
+      amount:
+        entity: "sensor.binary_sensor_state_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
+        count_tooltip: ""
+    ulm_card_kepath_binary_sensor_tab_list:
+      - "input_boolean.minimalist_ui_binary_diagnostic_sensors"
+      - "input_boolean.minimalist_ui_binary_action_sensors"
+      - "input_boolean.minimalist_ui_binary_information_sensors"
+
+  # icon: "mdi:lightbulb"
+  show_icon: true
+  show_label: false
+  show_name: false
+  group_expand: true
+  triggers_update: "all"
+  styles:
+    grid:
+      - grid-template-areas: "'i' 'n'"
+      - grid-template-rows: "1fr min-content"
+      - grid-template-columns: "1fr"
+      - justify-items: "center"
+    icon:
+      - width: "20px"
+    card:
+      - box-shadow: "none"
+      - border-radius: "none"
+      - padding: "5px"
+    # name:
+    #   - place-self: "center"
+    #   - font-weight: "bold"
+    #   - font-size: "10px"
+    #   - text-overflow: "ellipsis"
+    #   - overflow: "hidden"
+    #   - padding-top: "10px"
+    #   - margin: "0"
+    #   - min-width: "20px"
+    #   - color: "var(--primary-text-color)"
+    custom_fields:
+      unavailable:
+        - position: "absolute"
+        - left: "56%"
+        - top: "2px"
+      amount:
+        - position: "absolute"
+        - left: "56%"
+        - top: "32px"
+      notification:
+        - visibility: "hidden"
+  state:
+    - value: "on"
+      styles:
+        card:
+          - border-bottom-left-radius: "0px"
+          - border-bottom-right-radius: "0px"
+          - box-shadow: "var(--box-shadow)"
+          - padding: "12px"
+          - padding-bottom: "18px"
+          - margin-bottom: "-9px"
+          - box-shadow: "rgba(0, 0, 0, 0.16) 0px -3px 7px -3px"
+        icon:
+          - color: "rgba(var(--color-theme),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-theme), 0.2)"
+        custom_fields:
+          unavailable:
+            - top: "8px"
+          amount:
+            - top: "38px"
+    # - value: "off"
+    #   styles:
+    #     card:
+    #     icon:
+    #       - color: >
+    #           [[[
+    #             return `rgba(var(--color-theme),1)`;
+    #           ]]]
+    #     img_cell:
+    #       - background-color: >
+    #           [[[
+    #             return `rgba(var(--color-theme), 0.2)`;
+    #           ]]]
+  custom_fields:
+    unavailable:
+      card:
+        type: "custom:button-card"
+        template:
+          - "widget_count_indicator"
+        variables:
+          notification_counts: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable; ]]]"
+        entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity; ]]]"
+
+    amount:
+      card:
+        type: "custom:button-card"
+        template:
+          - "widget_count_indicator"
+        variables:
+          notification_counts: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount; ]]]"
+        entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity; ]]]"
+
+widget_count_indicator:
+  show_icon: true
+  show_label: false
+  show_name: false
+  group_expand: true
+  styles:
+    icon:
+      - width: "14px"
+      - height: "14px"
+      - line-height: "0"
+      - color: >
+          [[[
+            var iconColor = "yellow";
+            if(!hass.themes.darkMode) {
+              iconColor = "red";
+            }
+            return "rgba(var(--color-" + iconColor + "),1)"
+          ]]]
+    img_cell:
+      - border-radius: "50%"
+      - background-color: "var(--card-background-color)"
+      - height: "16px"
+      - width: "16px"
+      - border: "2px solid var(--card-background-color)"
+    card:
+      - height: "100%"
+      - box-shadow: "none"
+      - padding: "0"
+      - border-radius: "50%"
+  style:
+    $: >
+      .tooltip .tooltiptext {
+        display:none;
+      }
+
+  icon: >
+    [[[
+      var amountValue = 0;
+      var icon = "mdi:numeric-0-circle";
+      if (variables.notification_counts.is_attribute) {
+        amountValue = states[variables?.notification_counts?.entity]?.attributes[variables?.notification_counts?.attribute_name] ? states[variables.notification_counts.entity].attributes[variables.notification_counts.attribute_name] : 0;
+      } else {
+        amountValue = states[variables?.notification_counts?.entity]?.state ? states[variables.notification_counts.entity].state : 0;
+      }
+      if (!isNaN(amountValue) && amountValue !== undefined){
+        if (amountValue > 9) {
+          var amountValue = "9-plus";
+        }
+        icon = icon.replace("0",amountValue);
+      }
+      return icon;
+    ]]]
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          var isZeroValue = true;
+          var amountValue = 0;
+          if (variables.notification_counts.is_attribute) {
+            amountValue = states[variables?.notification_counts?.entity]?.attributes[variables?.notification_counts?.attribute_name] ? states[variables.notification_counts.entity].attributes[variables.notification_counts.attribute_name] : 0;
+          } else {
+            amountValue = states[variables?.notification_counts?.entity]?.state ? states[variables.notification_counts.entity].state : 0;
+          }
+          if (!isNaN(amountValue) && amountValue != 0 && amountValue !== undefined) {
+            isZeroValue = false;
+          }
+          return isZeroValue;
+        ]]]
+      styles:
+        card:
+          - display: "none"
+  tap_action:
+    action: "none"
+  tooltip: >
+    [[[
+      var tooltipValue = null;
+      if(variables?.notification_counts?.count_tooltip) {
+        tooltipValue = variables.notification_counts.count_tooltip;
+      }
+      return tooltipValue;
+    ]]]
+
+custom_tab_selector:
+  tap_action:
+    action: "fire-dom-event"
+    browser_mod:
+      service: "browser_mod.sequence"
+      data:
+        sequence:
+          - service: "input_boolean.turn_off"
+            data:
+              entity_id: >
+                [[[
+                  const dropdown_list = variables.ulm_card_kepath_binary_sensor_tab_list;
+                  for (let i = 0; i < dropdown_list.length; i++) {
+                    if (dropdown_list[i] == entity.entity_id) {
+                      dropdown_list.splice(i,1);
+                    }
+                  }
+                  return dropdown_list;
+                ]]]
+          - service: "input_boolean.turn_on"
+            data:
+              entity_id: >
+                [[[ return entity.entity_id ]]]

@@ -85,6 +85,61 @@ template:
               {%-set ns.c = 1-%}
             {%-endif-%}
             {{ (ns.s / ns.c)|round(0)|int }}
+          tab_action_sensors_triggered_count: >
+            {{
+              [states('sensor.binary_sensor_state_counts')|int,
+              state_attr('sensor.binary_sensor_state_counts', 'lights_on_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'plugs_off_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'fans_on_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'locks_unlocked_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')]
+              |sum
+            }}
+          tab_information_sensors_triggered_count: >
+            {{
+              [state_attr('sensor.binary_sensor_state_counts', 'safety_sensors_triggered_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'door_sensors_triggered_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_triggered_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'cameras_off_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'media_player_audio_on_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'media_player_tv_and_remote_on_count')]
+              |sum
+            }}
+          tab_diagnostic_sensors_triggered_count: >
+            {{
+              [state_attr('sensor.binary_sensor_state_counts', 'device_trackers_away_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'connectivity_disconnected_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'running_stopped_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'batteries_below20_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'signal_sensors_low_count')]
+              |sum
+            }}
+          tab_action_sensors_unavailable_count: >
+            {{
+              [state_attr('sensor.binary_sensor_state_counts', 'fans_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'locks_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_error_count')]
+              |sum
+            }}
+          tab_information_sensors_unavailable_count: >
+            {{
+              [state_attr('sensor.binary_sensor_state_counts', 'safety_sensors_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'door_sensors_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'media_player_audio_unavailable_count')]
+              |sum
+            }}
+          tab_diagnostic_sensors_unavailable_count: >
+            {{
+              [state_attr('sensor.binary_sensor_state_counts', 'data_rate_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'device_trackers_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'connectivity_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'running_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'batteries_unavailable_count'),
+              state_attr('sensor.binary_sensor_state_counts', 'signal_sensors_unavailable_count')]
+              |sum
+            }}
           unknown_value: "unknown"
           zero_value: "{{ 0|int }}"
 
