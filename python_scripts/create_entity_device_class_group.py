@@ -131,4 +131,4 @@ try:
     logger.info(f"Calling the service 'set group' with the data '{service_data}' at {time.time()}")
     hass.services.call("group", "set", service_data, False)
 except:
-    logger.error(logger, f"Error - a problem occured calling the hass group set service")
+    logger.error(logger, f"Error - a problem occured calling the hass set group service")
