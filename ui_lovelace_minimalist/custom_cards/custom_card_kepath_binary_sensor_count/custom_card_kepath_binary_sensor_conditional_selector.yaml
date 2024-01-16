@@ -39,7 +39,6 @@ custom_card_kepath_binary_sensor_conditional_selector:
       - "input_boolean.minimalist_ui_binary_action_sensors"
       - "input_boolean.minimalist_ui_binary_information_sensors"
 
-  # icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
   show_name: false
@@ -53,64 +52,37 @@ custom_card_kepath_binary_sensor_conditional_selector:
       - justify-items: "center"
     icon:
       - width: "20px"
+      - color: "rgba(var(--color-theme),1)"
+    img_cell:
+      - background-color: "rgba(var(--color-theme), 0.2)"
     card:
+      - border-bottom-left-radius: "0px"
+      - border-bottom-right-radius: "0px"
+      - padding: "12px"
+      - padding-bottom: "18px"
       - box-shadow: "none"
-      - border-radius: "none"
-      - padding: "5px"
-    # name:
-    #   - place-self: "center"
-    #   - font-weight: "bold"
-    #   - font-size: "10px"
-    #   - text-overflow: "ellipsis"
-    #   - overflow: "hidden"
-    #   - padding-top: "10px"
-    #   - margin: "0"
-    #   - min-width: "20px"
-    #   - color: "var(--primary-text-color)"
     custom_fields:
       unavailable:
         - position: "absolute"
         - left: "56%"
-        - top: "2px"
+        - top: "8px"
       amount:
         - position: "absolute"
         - left: "56%"
-        - top: "32px"
+        - top: "38px"
       notification:
         - visibility: "hidden"
   state:
     - value: "on"
       styles:
         card:
-          - border-bottom-left-radius: "0px"
-          - border-bottom-right-radius: "0px"
-          - box-shadow: "var(--box-shadow)"
-          - padding: "12px"
-          - padding-bottom: "18px"
-          - margin-bottom: "-9px"
-          - box-shadow: "rgba(0, 0, 0, 0.16) 0px -3px 7px -3px"
+          - margin-bottom: "-10px"
+          - box-shadow: "rgba(0, 0, 0, 0.16) 0px -4px 7px -1px"
         icon:
-          - color: "rgba(var(--color-theme),1)"
+          - color: "rgba(var(--color-blue),1)"
         img_cell:
-          - background-color: "rgba(var(--color-theme), 0.2)"
-        custom_fields:
-          unavailable:
-            - top: "8px"
-          amount:
-            - top: "38px"
-    # - value: "off"
-    #   styles:
-    #     card:
-    #     icon:
-    #       - color: >
-    #           [[[
-    #             return `rgba(var(--color-theme),1)`;
-    #           ]]]
-    #     img_cell:
-    #       - background-color: >
-    #           [[[
-    #             return `rgba(var(--color-theme), 0.2)`;
-    #           ]]]
+          - background-color: "rgba(var(--color-blue), 0.2)"
+
   custom_fields:
     unavailable:
       card:
@@ -226,7 +198,7 @@ custom_tab_selector:
                   const dropdown_list = variables.ulm_card_kepath_binary_sensor_tab_list;
                   for (let i = 0; i < dropdown_list.length; i++) {
                     if (dropdown_list[i] == entity.entity_id) {
-                      dropdown_list.splice(i,1);
+                      dropdown_list.splice(i,1); //remove selected tab button
                     }
                   }
                   return dropdown_list;

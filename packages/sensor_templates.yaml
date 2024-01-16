@@ -89,7 +89,6 @@ template:
             {{
               [states('sensor.binary_sensor_state_counts')|int,
               state_attr('sensor.binary_sensor_state_counts', 'lights_on_count'),
-              state_attr('sensor.binary_sensor_state_counts', 'plugs_off_count'),
               state_attr('sensor.binary_sensor_state_counts', 'fans_on_count'),
               state_attr('sensor.binary_sensor_state_counts', 'locks_unlocked_count'),
               state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count'),
@@ -126,8 +125,7 @@ template:
             {{
               [state_attr('sensor.binary_sensor_state_counts', 'safety_sensors_unavailable_count'),
               state_attr('sensor.binary_sensor_state_counts', 'door_sensors_unavailable_count'),
-              state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_unavailable_count'),
-              state_attr('sensor.binary_sensor_state_counts', 'media_player_audio_unavailable_count')]
+              state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_unavailable_count')]
               |sum
             }}
           tab_diagnostic_sensors_unavailable_count: >
