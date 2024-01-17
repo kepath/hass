@@ -2,11 +2,9 @@
 
 import logging
 import os
-import hashlib
 import io
 import asyncio
 from datetime import datetime
-
 
 from pydub import AudioSegment
 
@@ -21,7 +19,7 @@ from homeassistant.components.media_player.const import (
     SERVICE_UNJOIN,
     MEDIA_TYPE_MUSIC,
 )
-from homeassistant.const import CONF_ENTITY_ID, SERVICE_VOLUME_SET, SERVICE_TURN_ON
+from homeassistant.const import CONF_ENTITY_ID, SERVICE_VOLUME_SET
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceResponse, SupportsResponse
 from homeassistant.helpers import storage
@@ -42,11 +40,13 @@ from .const import (
     SERVICE_SAY_URL,
     SERVICE_CLEAR_CACHE,
     VERSION,
-    PAUSE_DURATION_MS,
     DATA_STORAGE_KEY,
     AUDIO_PATH_KEY,
     AUDIO_DURATION_KEY,
     ROOT_PATH_KEY,
+    DEFAULT_TEMP_CHIMES_PATH_KEY,
+    TEMP_CHIMES_PATH_KEY,
+    TEMP_CHIMES_PATH_DEFAULT,
     DEFAULT_TEMP_PATH_KEY,
     TEMP_PATH_KEY,
     TEMP_PATH_DEFAULT,
@@ -55,12 +55,8 @@ from .const import (
     WWW_PATH_DEFAULT,
     MEDIA_DIR_KEY,
     MEDIA_DIR_DEFAULT,
-    ALEXA_FFMPEG_ARGS,
-    MP3_PRESET_PATH,
-    MP3_PRESETS,
     MP3_PRESET_CUSTOM_PREFIX,
     MP3_PRESET_CUSTOM_KEY,
-    MP3_PRESET_PATH_PLACEHOLDER,  # DEPRECATED
     QUEUE,
     QUEUE_STATUS_KEY,
     QUEUE_IDLE,
@@ -94,7 +90,7 @@ helpers = ChimeTTSHelper()
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up an entry."""
-    await async_init_stored_data(hass)
+    await async_refresh_stored_data(hass)
     init_queue()
     update_configuration(config_entry, hass)
     config_entry.async_on_unload(config_entry.add_update_listener(async_reload_entry))
@@ -123,114 +119,50 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
         dequeue_service_call()
         return False
 
+
     async def async_say_execute(service):
         """Play TTS audio with local chime MP3 audio."""
         start_time = datetime.now()
 
-        # Parse TTS service options YAML
+        # Parse service parameters & TTS options
+        params = await helpers.async_parse_params(service.data, hass)
         options = helpers.parse_options_yaml(service.data)
 
-        # Parse entity_id/s
-        entity_ids = helpers.parse_entity_ids(service.data, hass)
-        chime_path = get_chime_path(str(service.data.get("chime_path", "")))
-        end_chime_path = get_chime_path(str(service.data.get("end_chime_path", "")))
-        delay = float(service.data.get("delay", PAUSE_DURATION_MS))
-        final_delay = float(service.data.get("final_delay", 0))
-        message = str(service.data.get("message", ""))
-        tts_platform = str(service.data.get("tts_platform", ""))
-        tts_playback_speed = float(service.data.get("tts_playback_speed", 100))
-        volume_level = float(service.data.get(ATTR_MEDIA_VOLUME_LEVEL, -1))
-        media_players_dict = await async_initialize_media_players(
-            hass, entity_ids, volume_level
-        )
-        join_players = service.data.get("join_players", False)
-        unjoin_players = service.data.get("unjoin_players", False)
-        language = service.data.get("language", None)
-        cache = service.data.get("cache", False)
-        announce = service.data.get("announce", False)
-
-        # FFmpeg arguments
-        ffmpeg_args = service.data.get("audio_conversion", None)
-        if ffmpeg_args is not None:
-            if service.data.get("audio_conversion", None).lower() == "alexa":
-                ffmpeg_args = ALEXA_FFMPEG_ARGS
-            else:
-                if service.data.get("audio_conversion", None).lower() == "custom":
-                    ffmpeg_args = None
-                else:
-                    service.data.get("audio_conversion", None)
-
-        params = {
-            "entity_ids": entity_ids,
-            "hass": hass,
-            "chime_path": chime_path,
-            "end_chime_path": end_chime_path,
-            "cache": cache,
-            "delay": delay,
-            "message": message,
-            "language": language,
-            "tts_platform": tts_platform,
-            "tts_playback_speed": tts_playback_speed,
-            "announce": announce,
-            "volume_level": volume_level,
-            "join_players": join_players,
-            "unjoin_players": unjoin_players,
-            "ffmpeg_args": ffmpeg_args,
-        }
-
-        for params_list in [params, options]:
-            if params_list is params:
-                _LOGGER.debug("----- General Parameters -----")
-            else:
-                _LOGGER.debug("----- TTS-Specific Params -----")
-            for key, value in params_list.items():
-                if value is not None and key != "hass":
-                    _LOGGER.debug(" * %s = %s", key, str(value))
-        _LOGGER.debug("-------------------------------")
-
-        media_players_dict = await async_initialize_media_players(
-            hass, entity_ids, volume_level
-        )
-        if media_players_dict is not False:
-            entity_ids = [
-                media_player_dict["entity_id"]
-                for media_player_dict in media_players_dict
-            ]
-            params["entity_ids"] = entity_ids
+        media_players_array = params["media_players_array"]
 
         # Create audio file to play on media player
         audio_dict = await async_get_playback_audio_path(params, options)
         if audio_dict is None:
             return False
-        _LOGGER.debug("  - audio_dict = %s", str(audio_dict))
+        _LOGGER.debug(" - audio_dict = %s", str(audio_dict))
         audio_path = audio_dict[AUDIO_PATH_KEY]
         audio_duration = audio_dict[AUDIO_DURATION_KEY]
 
         # Play audio with service_data
-        if media_players_dict is not False:
+        if media_players_array is not False:
             play_result = await async_play_media(
                 hass,
                 audio_path,
-                entity_ids,
-                announce,
-                join_players,
-                media_players_dict,
-                volume_level,
+                params["entity_ids"],
+                params["announce"],
+                params["join_players"],
+                media_players_array,
+                params["volume_level"],
             )
             if play_result is True:
                 await async_post_playback_actions(
                     hass,
                     audio_duration,
-                    final_delay,
-                    media_players_dict,
-                    volume_level,
-                    unjoin_players,
+                    params["final_delay"],
+                    media_players_array,
+                    params["volume_level"],
+                    params["unjoin_players"],
                 )
 
         # Save generated temp mp3 file to cache
-        if cache is True or entity_ids is None or len(entity_ids) == 0:
+        if params["cache"] is True or params["entity_ids"] is None or len(params["entity_ids"]) == 0:
             if _data["is_save_generated"] is True:
-                if cache:
+                if params["cache"]:
                     _LOGGER.debug("Saving generated mp3 file to cache")
                 filepath_hash = _data["generated_filename"]
                 await async_store_data(hass, filepath_hash, audio_dict)
@@ -242,13 +174,13 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
         elapsed_time = (end_time - start_time).total_seconds() * 1000
 
         # Convert URL to external for chime_tts.say_url
-        if entity_ids is None or len(entity_ids) == 0:
+        if params["entity_ids"] is None or len(params["entity_ids"]) == 0:
             instance_url = hass.config.external_url
             if instance_url is None:
                 instance_url = str(get_url(hass))
 
             external_url = (
-                (instance_url + audio_path).replace("/config", "").replace("www/", "local/")
+                (instance_url + "/" + audio_path).replace(instance_url + "//", instance_url + "/").replace("/config", "").replace("www/", "local/")
             )
             _LOGGER.debug("Final URL = %s", external_url)
 
@@ -273,9 +205,7 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
         _LOGGER.debug("----- Chime TTS Say URL Called. Version %s -----", VERSION)
         return await async_say(service, True)
 
-    hass.services.async_register(
-        DOMAIN, SERVICE_SAY_URL, async_say_url, supports_response=SupportsResponse.ONLY
-    )
+    hass.services.async_register(DOMAIN, SERVICE_SAY_URL, async_say_url, supports_response=SupportsResponse.ONLY)
 
     #######################
     # Clear Cahce Service #
@@ -284,18 +214,57 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     async def async_clear_cache(service):
         """Play TTS audio with local chime MP3 audio."""
         _LOGGER.debug("----- Chime TTS Clear Cache Called -----")
+        clear_chimes_cache = bool(service.data.get("clear_chimes_cache", False))
+        clear_temp_tts_cache = bool(service.data.get("clear_temp_tts_cache", False))
+        clear_www_tts_cache = bool(service.data.get("clear_www_tts_cache", False))
+        clear_ha_tts_cache = bool(service.data.get("clear_ha_tts_cache", False))
+
         start_time = datetime.now()
+
+        to_log = []
+        if clear_chimes_cache:
+            to_log.append("cached downloaded chimes")
+        if clear_temp_tts_cache is True:
+            to_log.append("cached temporary Chime TTS audio files")
+        if clear_www_tts_cache:
+            to_log.append("cached publicly accessible Chime TTS audio files")
+        if len(to_log) > 0:
+            log_message = "Clearing "
+            for i in range(len(to_log)):
+                elem = to_log[i]
+                if i == len(to_log)-1:
+                    log_message += " and "
+                elif i > 0:
+                    log_message += ", "
+                log_message += elem
+            log_message += "..."
+            _LOGGER.debug("%s", log_message)
+        else:
+            return
+
+
+        # CLEAR CHIME TTS CACHE #
         cached_dicts = dict(_data[DATA_STORAGE_KEY])
-
-        # Delete generated mp3 files
-        _LOGGER.debug("Deleting generated mp3 cache files.")
         for key in cached_dicts:
-            await async_remove_cached_audio_data(hass, str(key))
+            await async_remove_cached_audio_data(hass,
+                                                 str(key),
+                                                 clear_chimes_cache,
+                                                 clear_temp_tts_cache,
+                                                 clear_www_tts_cache)
 
+        # CLEAR HA TTS CACHE #
+        if clear_ha_tts_cache:
+            _LOGGER.debug("Clearing cached Home Assistant TTS audio files...")
+            await hass.services.async_call(domain="TTS",
+                                           service="clear_cache",
+                                           blocking=True)
+
+        # Summary
         elapsed_time = (datetime.now() - start_time).total_seconds() * 1000
         _LOGGER.debug(
             "----- Chime TTS Clear Cache Completed in %s ms -----", str(elapsed_time)
         )
+
         return True
 
     hass.services.async_register(DOMAIN, SERVICE_CLEAR_CACHE, async_clear_cache)
@@ -431,78 +400,11 @@ async def start_queue(service, hass, say_execute_callback):
         return False
 
 
-##############################
-### Media Player Functions ###
-##############################
-
-
-async def async_initialize_media_players(
-    hass: HomeAssistant, entity_ids, volume_level: float
-):
-    """Initialize media player entities."""
-    # Service call was from chime_tts.say_url, so media_players are irrelevant
-    if len(entity_ids) == 0:
-        return False
-
-    entity_found = False
-    _data["group_members_supported"] = 0
-    media_players_dict = []
-    for entity_id in entity_ids:
-        # Validate media player entity_id
-        entity = hass.states.get(entity_id)
-        if entity is None:
-            _LOGGER.warning('Media player entity: "%s" not found', entity_id)
-            continue
-        else:
-            entity_found = True
-
-        # Ensure media player is turned on
-        if entity.state == "off":
-            _LOGGER.info(
-                'Media player entity "%s" is turned off. Turning on...', entity_id
-            )
-            await hass.services.async_call(
-                "media_player", SERVICE_TURN_ON, {CONF_ENTITY_ID: entity_id}, True
-            )
-
-        # Store media player's current volume level
-        should_change_volume = False
-        initial_volume_level = -1
-        if volume_level >= 0:
-            initial_volume_level = float(
-                entity.attributes.get(ATTR_MEDIA_VOLUME_LEVEL, -1)
-            )
-            if float(initial_volume_level) == float(volume_level / 100):
-                _LOGGER.debug(
-                    "%s's volume_level is already %s", entity_id, str(volume_level)
-                )
-            else:
-                should_change_volume = True
-
-        # Group members supported?
-        group_member_support = helpers.get_supported_feature(entity, ATTR_GROUP_MEMBERS)
-        if group_member_support is True:
-            _data["group_members_supported"] += 1
-
-        media_players_dict.append(
-            {
-                "entity_id": entity_id,
-                "should_change_volume": should_change_volume,
-                "initial_volume_level": initial_volume_level,
-                "group_members_supported": group_member_support,
-            }
-        )
-    if entity_found is False:
-        _LOGGER.error("No valid media player found")
-        return False
-    return media_players_dict
-
-
 async def async_post_playback_actions(
     hass: HomeAssistant,
     delay_duration: float,
     final_delay: float,
-    media_players_dict: dict,
+    media_players_array: list,
     volume_level: float,
     unjoin_players: bool,
 ):
@@ -519,7 +421,7 @@ async def async_post_playback_actions(
     entity_ids = []
 
     # Reset volume
-    for media_player_dict in media_players_dict:
+    for media_player_dict in media_players_array:
         entity_id = media_player_dict["entity_id"]
         entity_ids.append(entity_id)
         should_change_volume = bool(media_player_dict["should_change_volume"])
@@ -539,7 +441,7 @@ async def async_post_playback_actions(
         and _data["joint_media_player_entity_id"] is not None
     ):
         _LOGGER.debug(" - Calling media_player.unjoin service...")
-        for media_player_dict in media_players_dict:
+        for media_player_dict in media_players_array:
             if media_player_dict["group_members_supported"] is True:
                 entity_id = media_player_dict["entity_id"]
                 _LOGGER.debug("   - media_player.unjoin: %s", entity_id)
@@ -811,8 +713,10 @@ async def async_get_playback_audio_path(params: dict, options: dict):
     ######################
 
     # Load chime audio
-    if chime_path is not None:
-        output_audio = get_audio_from_path(hass, chime_path)
+    if chime_path is not None and len(chime_path) > 0:
+        output_audio = await async_get_audio_from_path(hass=hass,
+                                                       filepath=chime_path,
+                                                       cache=cache)
 
     # Process message tags
     segments = helpers.parse_message(message)
@@ -820,7 +724,11 @@ async def async_get_playback_audio_path(params: dict, options: dict):
 
     # Load end chime audio
     if end_chime_path is not None and len(end_chime_path) > 0:
-        output_audio = get_audio_from_path(hass, end_chime_path, delay, output_audio)
+        output_audio = await async_get_audio_from_path(hass=hass,
+                                                       filepath=end_chime_path,
+                                                       cache=cache,
+                                                       delay=delay,
+                                                       audio=output_audio)
 
     # Save generated audio file
     if output_audio is not None:
@@ -856,7 +764,7 @@ async def async_get_playback_audio_path(params: dict, options: dict):
         # Check URL (chime_tts.say_url)
         if entity_ids is None or len(entity_ids) == 0:
             relative_path = new_audio_full_path
-            new_audio_full_path = helpers.get_file_path(hass, new_audio_full_path)
+            new_audio_full_path = helpers.validate_path(hass, new_audio_full_path)
             if relative_path != new_audio_full_path:
                 _LOGGER.debug("  - Non-relative filepath = '%s'", new_audio_full_path)
 
@@ -887,13 +795,23 @@ async def async_process_segment(hass, segments, output_audio, params, options):
         for index, segment in enumerate(segments):
 
             segment_delay = float(segment["delay"]) if "delay" in segment and output_audio is not None else (params["delay"] if "delay" in params else 0.0)
+            segment_cache = segment["cache"] if "cache" in segment else params["cache"]
 
             # Chime tag
             if segment["type"] == "chime":
                 if "path" in segment:
-                    segment_chime_path = get_chime_path(segment["path"])
+                    # await async_refresh_stored_data(hass)
+                    segment_chime_path = await helpers.async_get_chime_path(
+                        segment["path"],
+                        segment_cache,
+                        _data,
+                        hass)
                     if segment_chime_path is not None:
-                        output_audio = get_audio_from_path(hass, segment_chime_path, segment_delay, output_audio)
+                        output_audio = await async_get_audio_from_path(hass=hass,
+                                                                       filepath=segment_chime_path,
+                                                                       cache=segment_cache,
+                                                                       delay=segment_delay,
+                                                                       audio=output_audio)
                 else:
                     _LOGGER.warning("Chime path missing from messsage segment #%s", str(index+1))
 
@@ -914,7 +832,6 @@ async def async_process_segment(hass, segments, output_audio, params, options):
 
                     segment_tts_platform = segment["tts_platform"] if "tts_platform" in segment else params["tts_platform"]
                     segment_language = segment["language"] if "language" in segment else params["language"]
-                    segment_cache = segment["cache"] if "cache" in segment else params["cache"]
                     segment_tts_playback_speed = segment["tts_playback_speed"] if "tts_playback_speed" in segment else params["tts_playback_speed"]
 
                     # Use exposed parameters if not present in the options dictionary
@@ -923,7 +840,7 @@ async def async_process_segment(hass, segments, output_audio, params, options):
                     for exposed_option_key in exposed_option_keys:
                         value = None
                         if exposed_option_key in segment_options:
-                           value = segment_options[exposed_option_key]
+                            value = segment_options[exposed_option_key]
                         elif exposed_option_key in segment:
                             value = segment[exposed_option_key]
                         if value is not None:
@@ -948,7 +865,11 @@ async def async_process_segment(hass, segments, output_audio, params, options):
                         _LOGGER.debug(" - Attempting to retrieve TTS file from cache...")
                         audio_dict = await async_get_cached_audio_data(hass, segment_filepath_hash)
                         if audio_dict is not None:
-                            tts_audio = get_audio_from_path(hass, audio_dict[AUDIO_PATH_KEY])
+                            tts_audio = await async_get_audio_from_path(hass=hass,
+                                                                        filepath=audio_dict[AUDIO_PATH_KEY],
+                                                                        cache=segment_cache,
+                                                                        audio=None)
+
                             tts_audio_duration = audio_dict[AUDIO_DURATION_KEY]
                             _LOGGER.debug(" - ...cached TTS file retrieved with duration: %ss", str(tts_audio_duration))
                         else:
@@ -966,10 +887,10 @@ async def async_process_segment(hass, segments, output_audio, params, options):
                             options=segment_options,
                             tts_playback_speed=segment_tts_playback_speed,
                         )
-                        tts_audio_duration = float(len(tts_audio) / 1000.0)
 
 
                     if tts_audio is not None:
+                        tts_audio_duration = float(len(tts_audio) / 1000.0)
                         if output_audio is not None:
                             output_audio = (
                                 output_audio + (
@@ -983,7 +904,6 @@ async def async_process_segment(hass, segments, output_audio, params, options):
                             tts_audio_full_path = helpers.save_audio_to_folder(
                                 tts_audio, _data[TEMP_PATH_KEY])
                             if tts_audio_full_path is not None:
-                                _LOGGER.debug(f"tts_audio_full_path = {tts_audio_full_path}")
                                 audio_dict = {
                                     AUDIO_PATH_KEY: tts_audio_full_path,
                                     AUDIO_DURATION_KEY: tts_audio_duration
@@ -1001,29 +921,28 @@ async def async_process_segment(hass, segments, output_audio, params, options):
                                     str(index+1), str(segment))
     return output_audio
 
-def get_audio_from_path(hass: HomeAssistant, filepath: str, delay=0, audio=None):
+async def async_get_audio_from_path(hass: HomeAssistant, filepath: str, cache=False, delay=0, audio=None):
     """Add audio from a given file path to existing audio (optional) with delay (optional)."""
-    if filepath is None or filepath == "None" or len(filepath) <= 5:
-        _LOGGER.debug("Invalid audio filepath provided")
+    if filepath is None or filepath == "None":
+        _LOGGER.warning("Invalid audio filepath provided")
         return audio
 
-    filepath = str(filepath)
-    _LOGGER.debug('get_audio_from_path("%s", %s, %s)',
-                  filepath,
-                  str(delay),
-                  ("audio" if audio is not None else "None"))
+    # Load/download audio file & validate local path
+    # await async_refresh_stored_data(hass)
+    filepath = await helpers.async_get_chime_path(
+        chime_path=filepath,
+        cache=cache,
+        data=_data,
+        hass=hass)
 
-    filepath = helpers.get_file_path(hass, filepath)
-    if filepath is None:
-        _LOGGER.warning("Unable to find audio file %s", filepath)
-    else:
-        _LOGGER.debug(' - Retrieving audio from path: "%s"...', filepath)
+    if filepath is not None:
+        _LOGGER.debug('Retrieving audio from path: "%s"', filepath)
         try:
             audio_from_path = AudioSegment.from_file(filepath)
             if audio_from_path is not None:
                 duration = float(len(audio_from_path) / 1000.0)
                 _LOGGER.debug(
-                    " - ...retrieved successfully. Audio duration: %ss",
+                    " - Audio retrieved. Duration: %ss",
                     str(duration),
                 )
                 if audio is None:
@@ -1036,10 +955,10 @@ def get_audio_from_path(hass: HomeAssistant, filepath: str, delay=0, audio=None)
 
 
 async def async_set_volume_level_for_media_players(
-    hass: HomeAssistant, media_players_dict, volume_level: float
+    hass: HomeAssistant, media_players_array, volume_level: float
 ):
     """Set the volume level for all media_players."""
-    for media_player_dict in media_players_dict:
+    for media_player_dict in media_players_array:
         entity_id = media_player_dict["entity_id"]
         should_change_volume = bool(media_player_dict["should_change_volume"])
         initial_volume_level = media_player_dict["initial_volume_level"]
@@ -1088,7 +1007,7 @@ async def async_play_media(
     entity_ids,
     announce,
     join_players,
-    media_players_dict,
+    media_players_array,
     volume_level,
 ):
     """Call the media_player.play_media service."""
@@ -1117,7 +1036,8 @@ async def async_play_media(
     service_data[CONF_ENTITY_ID] = entity_ids
     if join_players is True:
         # join entity_ids as a group
-        if _data["group_members_supported"] > 1:
+        group_members_suppored = helpers.get_group_members_suppored(media_players_array)
+        if group_members_suppored > 1:
             joint_speakers_entity_id = await async_join_media_players(hass, entity_ids)
             if joint_speakers_entity_id is not False:
                 service_data[CONF_ENTITY_ID] = joint_speakers_entity_id
@@ -1126,7 +1046,7 @@ async def async_play_media(
                     "Unable to join speakers. Only 1 media_player supported."
                 )
         else:
-            if _data["group_members_supported"] == 1:
+            if group_members_suppored == 1:
                 _LOGGER.warning(
                     "Unable to join speakers. Only 1 media_player supported."
                 )
@@ -1137,7 +1057,7 @@ async def async_play_media(
 
     # Set volume to desired level
     await async_set_volume_level_for_media_players(
-        hass, media_players_dict, volume_level
+        hass, media_players_array, volume_level
     )
 
     # Play the audio
@@ -1181,8 +1101,8 @@ async def async_play_media(
 ### Storage Helper Functions ###
 ################################
 
-async def async_init_stored_data(hass: HomeAssistant):
-    """Retrieve the stored data for the integration."""
+async def async_refresh_stored_data(hass: HomeAssistant):
+    """Refresh the stored data of the integration."""
     store = storage.Store(hass, 1, DATA_STORAGE_KEY)
     _data[DATA_STORAGE_KEY] = await store.async_load()
     if _data[DATA_STORAGE_KEY] is None:
@@ -1201,9 +1121,6 @@ async def async_store_data(hass: HomeAssistant, key: str, value: str):
 async def async_retrieve_data(key: str):
     """Retrieve a value from the integration's stored data based on the provided key."""
     if key in _data[DATA_STORAGE_KEY]:
-        _LOGGER.debug(" - Retrieving key/value from chime_tts storage:")
-        _LOGGER.debug("   - key: %s", key)
-        _LOGGER.debug("   - value: %s", str(_data[DATA_STORAGE_KEY][key]))
         return _data[DATA_STORAGE_KEY][key]
     return None
 
@@ -1216,21 +1133,21 @@ async def async_save_data(hass: HomeAssistant):
 
 async def async_get_cached_audio_data(hass: HomeAssistant, filepath_hash: str):
     """Return cached audio data previously stored in Chime TTS' cache."""
-    _LOGGER.debug(" - async_get_cached_audio_data('%s')", filepath_hash)
-
     audio_dict = await async_retrieve_data(filepath_hash)
     if audio_dict is not None:
         cached_path = None
-        # Validate Path
         # Old cache format?
         if AUDIO_PATH_KEY not in audio_dict:
             audio_dict = {AUDIO_PATH_KEY: audio_dict, AUDIO_DURATION_KEY: None}
         cached_path = audio_dict[AUDIO_PATH_KEY]
+
+        # Validate Path
         if cached_path is not None and os.path.exists(str(cached_path)):
-            _LOGGER.debug(" - Cached audio data found")
             if audio_dict[AUDIO_DURATION_KEY] is None:
                 # Add duration data if audio_dict is old format
-                audio = get_audio_from_path(hass, cached_path)
+                audio = await async_get_audio_from_path(hass=hass,
+                                                        filepath=cached_path,
+                                                        cache=True)
                 if audio is not None:
                     audio_dict[AUDIO_DURATION_KEY] = float(len(audio) / 1000.0)
                     await async_store_data(hass, filepath_hash, audio_dict)
@@ -1238,19 +1155,39 @@ async def async_get_cached_audio_data(hass: HomeAssistant, filepath_hash: str):
         return audio_dict
 
     _LOGGER.debug(" - Audio data not found in cache.")
-    await async_remove_cached_audio_data(hass, filepath_hash)
+    await async_remove_cached_audio_data(hass, filepath_hash, True, True)
     return None
 
 
-async def async_remove_cached_audio_data(hass: HomeAssistant, filepath_hash: str):
+async def async_remove_cached_audio_data(hass: HomeAssistant,
+                                         filepath_hash: str,
+                                         clear_chimes_cache: bool = False,
+                                         clear_temp_tts_cache: bool = False,
+                                         clear_www_tts_cache: bool = False):
     """Remove cached audio data from Chime TTS' cache and deletes audio filepath from filesystem."""
     audio_dict = await async_retrieve_data(filepath_hash)
+    temp_chimes_path = _data[TEMP_CHIMES_PATH_KEY]
+    temp_path = _data[TEMP_PATH_KEY]
+    public_path = _data[WWW_PATH_KEY]
+
     if audio_dict is not None:
         # Old cache format?
         if AUDIO_PATH_KEY not in audio_dict:
             audio_dict = {AUDIO_PATH_KEY: audio_dict}
+
         cached_path = audio_dict[AUDIO_PATH_KEY]
         if cached_path and os.path.exists(cached_path):
+
+            # Stop if user wishes to keep chime file
+            if temp_chimes_path in cached_path and clear_chimes_cache is False:
+                return
+            # Stop if user wishes to keep temp file
+            if temp_path in cached_path and clear_temp_tts_cache is False:
+                return
+            # Stop if user wishes to keep public file
+            if public_path in cached_path and clear_www_tts_cache is False:
+                return
+
             os.remove(str(cached_path))
             if os.path.exists(cached_path):
                 _LOGGER.warning(
@@ -1271,31 +1208,8 @@ async def async_remove_cached_audio_data(hass: HomeAssistant, filepath_hash: str
         )
 
 
-################################
-### Audio Filename Functions ###
-################################
 
 
-def get_chime_path(chime_path: str = ""):
-    """Retrieve preset chime path if selected."""
-    # Remove prefix (prefix deprecated in v0.9.1)
-    chime_path = chime_path.replace(MP3_PRESET_PATH_PLACEHOLDER, "")
-
-    # Preset chime mp3 path?
-    if chime_path in MP3_PRESETS:
-        return MP3_PRESET_PATH + chime_path + ".mp3"
-
-    # Custom chime mp3 path?
-    if chime_path.startswith(MP3_PRESET_CUSTOM_PREFIX):
-        custom_path = _data[MP3_PRESET_CUSTOM_KEY][chime_path]
-        if custom_path == "":
-            _LOGGER.warning(
-                "MP3 file path missing for custom chime path `Custom #%s`",
-                chime_path.replace(MP3_PRESET_CUSTOM_PREFIX, ""),
-            )
-        return custom_path
-
-    return chime_path
 
 def get_filename_hash_from_service_data(params: dict, options: dict):
     """Generate a hash from a unique string."""
@@ -1322,9 +1236,7 @@ def get_filename_hash_from_service_data(params: dict, options: dict):
             ):
                 unique_string = unique_string + "-" + str(dictionary[param])
 
-    hash_object = hashlib.sha256()
-    hash_object.update(unique_string.encode("utf-8"))
-    hash_value = str(hash_object.hexdigest())
+    hash_value = helpers.get_hash_for_string(unique_string)
     return hash_value
 
 
@@ -1355,6 +1267,9 @@ def update_configuration(config_entry: ConfigEntry, hass: HomeAssistant = None):
     if DEFAULT_TEMP_PATH_KEY not in _data:
         _data[DEFAULT_TEMP_PATH_KEY] = hass.config.path(TEMP_PATH_DEFAULT)
 
+    if DEFAULT_TEMP_CHIMES_PATH_KEY not in _data:
+        _data[DEFAULT_TEMP_CHIMES_PATH_KEY] = hass.config.path(TEMP_CHIMES_PATH_DEFAULT)
+
     if DEFAULT_WWW_PATH_KEY not in _data:
         _data[DEFAULT_WWW_PATH_KEY] = hass.config.path(WWW_PATH_DEFAULT)
 
@@ -1373,6 +1288,12 @@ def update_configuration(config_entry: ConfigEntry, hass: HomeAssistant = None):
     )
     _data[WWW_PATH_KEY] = (_data[WWW_PATH_KEY] + "/").replace("//", "/")
 
+    # Temp chimes folder path
+    _data[TEMP_CHIMES_PATH_KEY] = hass.config.path(
+        options.get(TEMP_CHIMES_PATH_KEY, _data[DEFAULT_TEMP_CHIMES_PATH_KEY])
+    )
+    _data[TEMP_CHIMES_PATH_KEY] = (_data[TEMP_CHIMES_PATH_KEY] + "/").replace("//", "/")
+
     # Temp folder path
     _data[TEMP_PATH_KEY] = hass.config.path(
         options.get(TEMP_PATH_KEY, _data[DEFAULT_TEMP_PATH_KEY])
@@ -1389,6 +1310,7 @@ def update_configuration(config_entry: ConfigEntry, hass: HomeAssistant = None):
     # Debug summary
     for key_string in [
         QUEUE_TIMEOUT_KEY,
+        TEMP_CHIMES_PATH_KEY,
         TEMP_PATH_KEY,
         WWW_PATH_KEY,
         MEDIA_DIR_KEY,
