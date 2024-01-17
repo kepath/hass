@@ -5,29 +5,29 @@ template:
         name: "binary_sensor_state_counts"
         state: "{{ expand('group.all_updates')|selectattr('state','eq', 'on')|list|count }}"
         attributes:
-          batteries_below20_count: >
-            {% set ns = namespace(c = 0) %}
-            {% for battery in expand('group.all_battery_class_sensors')-%}
-              {%-if is_number(battery.state)-%}
-                {%-if battery.state|int < 20%}
-                  {% set ns.c = ns.c + 1 %}
-                {%-endif-%}
-              {%-endif-%}
-            {%endfor%}
-            {{ ns.c }}
+          batteries_below20_count: "{{expand('group.all_battery_class_sensors')|map(attribute='state')|map('int',50)|select('lt',20)|list|count}}"
+    # {% set ns = namespace(c = 0) %}
+    # {% for battery in expand('group.all_battery_class_sensors')-%}
+    #   {%-if is_number(battery.state)-%}
+    #     {%-if battery.state|int < 20%}
+    #       {% set ns.c = ns.c + 1 %}
+    #     {%-endif-%}
+    #   {%-endif-%}
+    # {%endfor%}
+    # {{ ns.c }}
           batteries_unavailable_count: "{{ expand('group.all_battery_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          batteries_average_value: >
-            {% set ns = namespace(s = 0,c = 0) %}
-            {% for battery in expand('group.all_battery_class_sensors')-%}
-              {%-if is_number(battery.state)-%}
-                {%- set ns.s = ns.s + battery.state|int -%}
-                {%- set ns.c = loop.length -%}
-              {%-endif-%}
-            {%endfor%}
-            {%-if ns.c == 0-%}  # stop divide by zero error
-              {%-set ns.c = 1-%}
-            {%-endif-%}
-            {{ (ns.s / ns.c)|round(-1)|int }}
+          batteries_average_value: "{{expand('group.all_battery_class_sensors')|map(attribute='state')|reject('undefined')|map('int',50)|list|average|round(-1)|int}}"
+    # {% set ns = namespace(s = 0,c = 0) %}
+    # {% for battery in expand('group.all_battery_class_sensors')-%}
+    #   {%-if is_number(battery.state)-%}
+    #     {%- set ns.s = ns.s + battery.state|int -%}
+    #     {%- set ns.c = loop.length -%}
+    #   {%-endif-%}
+    # {%endfor%}
+    # {%-if ns.c == 0-%}  # stop divide by zero error
+    #   {%-set ns.c = 1-%}
+    # {%-endif-%}
+    # {{ (ns.s / ns.c)|round(-1)|int }}
           cameras_off_count: "{{ expand('group.all_cameras')|rejectattr('state','in', ['recording','idle'])|list|count }}"
           climate_devices_on_count: >
             {{
@@ -62,29 +62,29 @@ template:
           running_unavailable_count: "{{ expand('group.all_running_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           safety_sensors_triggered_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           safety_sensors_unavailable_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          signal_sensors_low_count: >
-            {% set ns = namespace(c = 0) %}
-            {% for battery in expand('group.all_signal_strength_class_sensors')-%}
-              {%-if is_number(battery.state)-%}
-                {%-if battery.state|int < -80%}
-                  {% set ns.c = ns.c + 1 %}
-                {%-endif-%}
-              {%-endif-%}
-            {%endfor%}
-            {{ ns.c }}
+          signal_sensors_low_count: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|map('int',0)|select('lt',-80)|list|count}}"
+      # {% set ns = namespace(c = 0) %}
+      # {% for battery in expand('group.all_signal_strength_class_sensors')-%}
+      #   {%-if is_number(battery.state)-%}
+      #     {%-if battery.state|int < -80%}
+      #       {% set ns.c = ns.c + 1 %}
+      #     {%-endif-%}
+      #   {%-endif-%}
+      # {%endfor%}
+      # {{ ns.c }}
           signal_sensors_unavailable_count: "{{ expand('group.all_signal_strength_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          signal_sensors_average_value: >
-            {% set ns = namespace(s = 0,c = 0) %}
-            {% for signal in expand('group.all_signal_strength_class_sensors')-%}
-              {%-if is_number(signal.state)-%}
-                {%- set ns.s = ns.s + signal.state|int -%}
-                {%- set ns.c = loop.length -%}
-              {%-endif-%}
-            {%endfor%}
-            {%-if ns.c == 0-%}
-              {%-set ns.c = 1-%}
-            {%-endif-%}
-            {{ (ns.s / ns.c)|round(0)|int }}
+          signal_sensors_average_value: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|reject('undefined')|reject('in',['unavailable','unknown'])|map('int',0)|list|average|int}}"
+      # {% set ns = namespace(s = 0,c = 0) %}
+      # {% for signal in expand('group.all_signal_strength_class_sensors')-%}
+      #   {%-if is_number(signal.state)-%}
+      #     {%- set ns.s = ns.s + signal.state|int -%}
+      #     {%- set ns.c = loop.length -%}
+      #   {%-endif-%}
+      # {%endfor%}
+      # {%-if ns.c == 0-%}
+      #   {%-set ns.c = 1-%}
+      # {%-endif-%}
+      # {{ (ns.s / ns.c)|round(0)|int }}
           tab_action_sensors_triggered_count: >
             {{
               [states('sensor.binary_sensor_state_counts')|int,
