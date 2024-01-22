@@ -1669,7 +1669,7 @@ let pt = class extends x {
 							>${this.getArrow(this.data.linePos || 0)} ${this.formatPower(this.data.in.total)}</span
 						>` : _``}
 				${this.data.out !== void 0 ? _`<span data-power="${this.data.out.total}" class="gtpc-entity-out"
-							>${this.getArrow((this.data.linePos || 0) * -1)} ${this.formatPower(this.data.out.total)}</span
+							>${this.getArrow(((this.data.linePos || 0) + 180) % 360)} ${this.formatPower(this.data.out.total)}</span
 						>` : _``}
 				<ha-icon class="gtpc-entity-icon" .icon="${this.data.icon}"></ha-icon>
 				${this.data.extra !== void 0 ? _`<span class="gtpc-entity-extra">${this.data.extra}</span>` : _``}
@@ -2360,7 +2360,7 @@ let ot = class extends x {
   get _epsTotal() {
     return this._inverterName && this._epsEnabled ? this._inverterName.reduce(
       (e, t) => {
-        const i = this.hass.states[`sensor.${t.prefix}_eps_power${t.suffix}}`];
+        const i = this.hass.states[`sensor.${t.prefix}_eps_power${t.suffix}`];
         return i && (e.total += parseInt(i == null ? void 0 : i.state, 10), e.parts.push({ type: "eps", value: parseInt(i == null ? void 0 : i.state, 10) })), e;
       },
       { total: 0, parts: [] }
@@ -2578,7 +2578,7 @@ let ot = class extends x {
     var s, r;
     let i;
     if (t === "custom1" ? i = i = this.hass.states[(s = this._config) == null ? void 0 : s.custom1_sensor] : t === "custom2" ? i = i = this.hass.states[(r = this._config) == null ? void 0 : r.custom2_sensor] : i = this.hass.states[`sensor.${this._inverterName[0].prefix}_${e}_to_${t}${this._inverterName[0].suffix}`], i !== void 0)
-      return e === "grid" && t === "house" ? 668 : e === "solar" && t === "house" ? 724 : e === "solar" && t === "battery" ? 764 : e === "battery" && t === "house" || e === "battery" && t === "grid" ? 0 : e === "grid" && t === "battery" ? 445 : e === "solar" && t === "grid" ? 0 : e === "house" && t === "custom1" ? 800 : e === "house" && t === "custom2" ? 1e3 : 0;
+      return e === "grid" && t === "house" ? 0 : e === "solar" && t === "house" ? 870 : e === "solar" && t === "battery" ? 3600 : e === "battery" && t === "house" || e === "battery" && t === "grid" || e === "grid" && t === "battery" ? 0 : e === "solar" && t === "grid" ? 567 : 0;
   }
   getCleanPowerForFlow(e, t) {
     var i;
@@ -2735,8 +2735,8 @@ let ot = class extends x {
         icon: this.getIconFor("battery", this._batterySoc),
         name: "Battery",
         extra: this._batterySoc !== void 0 ? `${this._batterySoc}${Pi}` : void 0,
-        out: this.getTotalFor("battery", m.Out),
-        in: this.getTotalFor("battery", m.In)
+        out: this.getTotalFor("battery", m.In),
+        in: this.getTotalFor("battery", m.Out)
       }
     ].filter((a) => a.in !== void 0 || a.out !== void 0), t = this._activeFlows.map((a) => ({
       from: a.from,
