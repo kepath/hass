@@ -1,8 +1,7 @@
 
 
 from ..global_variables import GlobalVariables as Gb
-from ..const            import (NOT_HOME, STATIONARY, CIRCLE_LETTERS_DARK, UNKNOWN, CRLF_DOT, CRLF,
-                                BATTERY_STATUS_FNAME,)
+from ..const            import (NOT_HOME, STATIONARY, CIRCLE_LETTERS_DARK, UNKNOWN, CRLF_DOT, CRLF, )
 from collections        import OrderedDict
 import os
 
@@ -41,13 +40,36 @@ def list_to_str(list_value, separator=None):
         return list_str
 
 #--------------------------------------------------------------------
+def list_add(list_value, add_value):
+    if add_value not in list_value:
+        list_value.append(add_value)
+    return list_value
+
+#--------------------------------------------------------------------
+def list_del(list_value, del_value):
+    if del_value in list_value:
+        list_value.remove(del_value)
+    return list_value
+
+#--------------------------------------------------------------------
 def str_to_list(str_value):
     '''
     Create a list of a comma separated strings
     str_value   - ('icloud,iosapp')
     Return      - ['icloud','iosapp']
     '''
-    return list(str_value.split((',')))
+
+    while instr(str_value,', '):
+        str_value = str_value.replace( ', ', ',')
+
+    return str_value.split(',')
+
+#--------------------------------------------------------------------
+def delete_from_list(list_value, item):
+    if item in list_value:
+        list_value.remove(item)
+
+    return list_value
 
 #--------------------------------------------------------------------
 def instr(string, substring):
@@ -100,14 +122,22 @@ def inlist(string, list_items):
 def round_to_zero(value):
     if abs(value) < .0001: value = 0
     return round(value, 8)
+#-------------------------------------------------------------------------------------------
+def set_precision(value, um=None):
+    '''
+    Return the distance value as an integer or float value
+    '''
+    try:
+        um = um if um else Gb.um
+        precision = 5 if um in ['km', 'mi'] else 2 if um in ['m', 'ft'] else 4
+        value = round(float(value), precision)
+        if value == int(value):
+            return int(value)
 
-#--------------------------------------------------------------------
-# def is_inzone_zone(zone):
-#     return (zone != NOT_HOME)
+    except Exception as err:
+        pass
 
-#--------------------------------------------------------------------
-# def isnot_inzone_zone(zone):
-#     return (zone == NOT_HOME)
+    return value
 
 #--------------------------------------------------------------------
 def is_zone(zone):
@@ -183,6 +213,10 @@ def format_gps(latitude, longitude, accuracy, latitude_to=None, longitude_to=Non
 
     if longitude is None or latitude is None:
         gps_text = UNKNOWN
+
+    # elif Gb.display_gps_lat_long_flag is False:
+    #     gps_text     = f"/±{accuracy:.0f}m"
+
     else:
         accuracy_text = (f"/±{accuracy:.0f}m)") if accuracy > 0 else ")"
         gps_to_text   = (f" to {latitude_to:.5f}, {longitude_to:.5f})") if latitude_to else ""

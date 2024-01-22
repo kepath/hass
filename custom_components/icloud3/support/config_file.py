@@ -1,17 +1,22 @@
 
 from ..global_variables     import GlobalVariables as Gb
 from ..const                import (
-                                    APPLE_SPECIAL_ICLOUD_SERVER_COUNTRY_CODE,
+                                    ICLOUD3, APPLE_SPECIAL_ICLOUD_SERVER_COUNTRY_CODE,
                                     RARROW, HHMMSS_ZERO, DATETIME_ZERO, NONE_FNAME, INACTIVE_DEVICE,
+                                    ICLOUD, FAMSHR, FMF,
                                     CONF_PARAMETER_TIME_STR,
-                                    CONF_INZONE_INTERVALS, CONF_MAX_INTERVAL, CONF_EXIT_ZONE_INTERVAL,
+                                    CONF_INZONE_INTERVALS, CONF_FIXED_INTERVAL, CONF_EXIT_ZONE_INTERVAL,
                                     CONF_IOSAPP_ALIVE_INTERVAL,
                                     CONF_IC3_VERSION, VERSION, CONF_EVLOG_CARD_DIRECTORY, CONF_EVLOG_CARD_PROGRAM,
                                     CONF_UPDATE_DATE, CONF_VERSION_INSTALL_DATE, CONF_PASSWORD, CONF_ICLOUD_SERVER_ENDPOINT_SUFFIX,
-                                    CONF_DEVICES, CONF_SETUP_ICLOUD_SESSION_EARLY,
+                                    CONF_DEVICES, CONF_IC3_DEVICENAME, CONF_SETUP_ICLOUD_SESSION_EARLY,
                                     CONF_UNIT_OF_MEASUREMENT, CONF_TIME_FORMAT, CONF_LOG_LEVEL,
+                                    CONF_DATA_SOURCE, CONF_DISPLAY_GPS_LAT_LONG, CONF_LOG_ZONES,
                                     CONF_FAMSHR_DEVICENAME, CONF_FMF_EMAIL, CONF_IOSAPP_DEVICE, CONF_TRACKING_MODE,
-                                    CONF_STAT_ZONE_FNAME,
+                                    CONF_STAT_ZONE_FNAME, CONF_DEVICE_TRACKER_STATE_SOURCE,
+                                    CONF_AWAY_TIME_ZONE_1_OFFSET, CONF_AWAY_TIME_ZONE_1_DEVICES,
+                                    CONF_AWAY_TIME_ZONE_2_OFFSET, CONF_AWAY_TIME_ZONE_2_DEVICES,
+                                    CONF_TRACK_FROM_BASE_ZONE_USED,
                                     CF_DEFAULT_IC3_CONF_FILE,
                                     DEFAULT_PROFILE_CONF, DEFAULT_TRACKING_CONF, DEFAULT_GENERAL_CONF,
                                     DEFAULT_SENSORS_CONF,
@@ -20,6 +25,7 @@ from ..const                import (
                                     CONF_WAZE_USED, CONF_WAZE_REGION, CONF_WAZE_MAX_DISTANCE, CONF_DISTANCE_METHOD,
                                     WAZE_SERVERS_BY_COUNTRY_CODE, WAZE_SERVERS_FNAME,
                                     CONF_EXCLUDED_SENSORS, CONF_OLD_LOCATION_ADJUSTMENT, CONF_DISTANCE_BETWEEN_DEVICES,
+                                    CONF_EVLOG_BTNCONFIG_URL,
                                     RANGE_DEVICE_CONF, RANGE_GENERAL_CONF, MIN, MAX, STEP, RANGE_UM,
                                     )
 
@@ -27,7 +33,7 @@ from ..support              import start_ic3
 from ..support              import waze
 from ..helpers.common       import (instr, ordereddict_to_dict, )
 from ..helpers.messaging    import (log_exception, _trace, _traceha, log_info_msg,
-                                    close_reopen_ic3_debug_log_file, )
+                                    close_reopen_ic3_log_file, )
 from ..helpers.time_util    import (datetime_now, )
 
 import os
@@ -120,6 +126,9 @@ def read_storage_icloud3_configuration_file(filename_suffix=''):
             Gb.log_level      = Gb.conf_general[CONF_LOG_LEVEL]
 
             Gb.conf_tracking[CONF_PASSWORD] = decode_password(Gb.conf_tracking[CONF_PASSWORD])
+            set_conf_devices_index_by_devicename()
+            if instr(Gb.conf_tracking[CONF_DATA_SOURCE], FMF):
+                Gb.conf_tracking[CONF_DATA_SOURCE].pop(FMF)
 
             try:
                 config_file_add_new_parameters()
@@ -153,13 +162,13 @@ def count_device_tracking_methods_configured():
             if conf_device[CONF_TRACKING_MODE] == INACTIVE_DEVICE:
                 continue
 
-            if conf_device[CONF_FAMSHR_DEVICENAME] != NONE_FNAME:
+            if conf_device[CONF_FAMSHR_DEVICENAME].startswith(NONE_FNAME) is False:
                 Gb.conf_famshr_device_cnt += 1
 
-            if conf_device[CONF_FMF_EMAIL] != NONE_FNAME:
+            if conf_device[CONF_FMF_EMAIL].startswith(NONE_FNAME) is False:
                 Gb.conf_fmf_device_cnt += 1
 
-            if conf_device[CONF_IOSAPP_DEVICE] != NONE_FNAME:
+            if conf_device[CONF_IOSAPP_DEVICE].startswith(NONE_FNAME) is False:
                 Gb.conf_iosapp_device_cnt += 1
 
     except Exception as err:
@@ -191,7 +200,7 @@ def config_file_add_new_parameters():
 
     update_config_file_flag = False
 
-    # v3.0.0 beta 1 - Fix time format from migration
+    # Fix time format from migration (b1)
     if instr(Gb.conf_data['general'][CONF_TIME_FORMAT], '-hour-hour'):
         Gb.conf_data['general'][CONF_TIME_FORMAT].replace('-hour-hour', '-hour')
         update_config_file_flag = True
@@ -199,7 +208,7 @@ def config_file_add_new_parameters():
     if Gb.conf_profile[CONF_EVLOG_CARD_DIRECTORY].startswith('www/') is False:
         Gb.conf_profile[CONF_EVLOG_CARD_DIRECTORY] = f"www/{Gb.conf_profile[CONF_EVLOG_CARD_DIRECTORY]}"
 
-    # v3.0.0 beta 3 - remove tracking_from_zone item from sensors list which shouldn't have been added
+    # Remove tracking_from_zone item from sensors list which shouldn't have been added (b3)
     if BATTERY_STATUS in Gb.conf_sensors[CONF_SENSORS_DEVICE]:
         Gb.conf_sensors[CONF_SENSORS_DEVICE].pop(BATTERY_STATUS, None)
         update_config_file_flag = True
@@ -216,32 +225,47 @@ def config_file_add_new_parameters():
             conf_device.pop(CONF_STAT_ZONE_FNAME)
             update_config_file_flag = True
 
-    # Add HOME_DISTANCE sensor to conf_sensors
+        # Add zones for logging enter/exit activity rc8.2
+        if CONF_LOG_ZONES not in conf_device:
+            conf_device[CONF_LOG_ZONES] = ['none']
+            update_config_file_flag = True
+
+        # Add zones for logging enter/exit activity rc8.2
+        if CONF_FIXED_INTERVAL not in conf_device:
+            conf_device[CONF_FIXED_INTERVAL] = 0.0
+            update_config_file_flag = True
+
+        # Cleanup a bug introduced in v3.0.rc8
+        if 'action_items' in conf_device:
+            conf_device.pop('action_items')
+            update_config_file_flag = True
+
+    # Add sensors.HOME_DISTANCE sensor to conf_sensors
     if HOME_DISTANCE not in Gb.conf_sensors[CONF_SENSORS_TRACKING_DISTANCE]:
         Gb.conf_sensors[CONF_SENSORS_TRACKING_DISTANCE].append(HOME_DISTANCE)
         update_config_file_flag = True
 
-    # Add CONF_SETUP_ICLOUD_SESSION_EARLY
+    # Add tracking.CONF_SETUP_ICLOUD_SESSION_EARLY
     update_config_file_flag = (_add_config_file_parameter(Gb.conf_tracking, CONF_SETUP_ICLOUD_SESSION_EARLY, True)
             or update_config_file_flag)
 
-    # Add CONF_EXCLUDED_SENSORS
+    # Add sensors.CONF_EXCLUDED_SENSORS
     update_config_file_flag = (_add_config_file_parameter(Gb.conf_sensors, CONF_EXCLUDED_SENSORS, ['None'])
             or update_config_file_flag)
 
-    # Add CONF_OLD_LOCATION_ADJUSTMENT
+    # Add general.CONF_OLD_LOCATION_ADJUSTMENT
     update_config_file_flag = (_add_config_file_parameter(Gb.conf_general, CONF_OLD_LOCATION_ADJUSTMENT, HHMMSS_ZERO)
             or update_config_file_flag)
 
-    # Add CONF_DISTANCE_BETWEEN_DEVICES
+    # Add generalCONF_DISTANCE_BETWEEN_DEVICES
     update_config_file_flag = (_add_config_file_parameter(Gb.conf_general, CONF_DISTANCE_BETWEEN_DEVICES, True)
             or update_config_file_flag)
 
-    # Add CONF_EXIT_ZONE_INTERVAL
+    # Add general.CONF_EXIT_ZONE_INTERVAL
     update_config_file_flag = (_add_config_file_parameter(Gb.conf_general, CONF_EXIT_ZONE_INTERVAL, 3)
             or update_config_file_flag)
 
-    # Add CONF_EXIT_ZONE_INTERVAL
+    # Add profile.CONF_VERSION_INSTALL_DATE
     update_config_file_flag = (_add_config_file_parameter(Gb.conf_profile, CONF_VERSION_INSTALL_DATE, DATETIME_ZERO)
             or update_config_file_flag)
 
@@ -259,7 +283,7 @@ def config_file_add_new_parameters():
         Gb.conf_general[CONF_WAZE_REGION] = 'row'
         update_config_file_flag = True
 
-    # beta 12 - Change all time fields from hh:mm:ss to minutes
+    # Change all time fields from hh:mm:ss to minutes (b12)
     update_config_file_flag = (_convert_hhmmss_to_minutes(Gb.conf_general)
             or update_config_file_flag)
     update_config_file_flag = (_convert_hhmmss_to_minutes(Gb.conf_general[CONF_INZONE_INTERVALS])
@@ -268,14 +292,55 @@ def config_file_add_new_parameters():
         update_config_file_flag = (_convert_hhmmss_to_minutes(conf_device)
                 or update_config_file_flag)
 
-    # beta 16 - Change StatZone friendly Name
+    # Change StatZone friendly Name (b16)
     if instr(Gb.conf_general[CONF_STAT_ZONE_FNAME], '[name]'):
         Gb.conf_general[CONF_STAT_ZONE_FNAME] = 'StatZon#'
         update_config_file_flag = True
 
+    # Add general.Display GPS coordinates Flag (b17)
+    update_config_file_flag = (_add_config_file_parameter(Gb.conf_general, CONF_DISPLAY_GPS_LAT_LONG, True)
+            or update_config_file_flag)
+
     if 'device_tracker_state_format' in Gb.conf_general:
         Gb.conf_general.pop('device_tracker_state_format')
 
+    # Change icloud to famshr since fmf no longer works (b16d)
+    if instr(Gb.conf_tracking[CONF_DATA_SOURCE], ICLOUD):
+        Gb.conf_tracking[CONF_DATA_SOURCE] = \
+            Gb.conf_tracking[CONF_DATA_SOURCE].replace(ICLOUD, FAMSHR)
+        update_config_file_flag = True
+
+    # Remove profile.CONF_HA_CONFIG_IC3_URL that is used by EvLog to open Configuration Wizard (b20)
+    if 'ha_config_ic3_url' in Gb.conf_profile:
+        Gb.conf_profile.pop('ha_config_ic3_url')
+        update_config_file_flag = True
+
+    # Add profile.CONF_EVLOG_BTNCONFIG_URL that is used by EvLog to open HA iCloud3 Configure screen (b20)
+    update_config_file_flag = (_add_config_file_parameter(Gb.conf_profile, CONF_EVLOG_BTNCONFIG_URL, '')
+            or update_config_file_flag)
+
+    # Add profile.event_log_version that is being used, set via action/event_log_version svc call (b20)
+    update_config_file_flag = (_add_config_file_parameter(Gb.conf_profile, 'event_log_version', '')
+            or update_config_file_flag)
+
+    # Add track from base zone used control on the Special Zones screen (rc9)
+    update_config_file_flag = (_add_config_file_parameter(Gb.conf_general, CONF_TRACK_FROM_BASE_ZONE_USED, False)
+            or update_config_file_flag)
+
+    # Add general.CONF_DEVICE_TRACKER_STATE_SOURCE, b20
+    update_config_file_flag = (_add_config_file_parameter(Gb.conf_general, CONF_DEVICE_TRACKER_STATE_SOURCE, 'ic3_fname')
+            or update_config_file_flag)
+    if Gb.conf_general[CONF_DEVICE_TRACKER_STATE_SOURCE] == ICLOUD3:
+        Gb.conf_general[CONF_DEVICE_TRACKER_STATE_SOURCE] = 'ic3_fname'
+        update_config_file_flag = True
+
+    # Add Local Zone Time display (rc9)
+    if CONF_AWAY_TIME_ZONE_1_OFFSET not in Gb.conf_general:
+        _add_config_file_parameter(Gb.conf_general, CONF_AWAY_TIME_ZONE_1_OFFSET, 0)
+        _add_config_file_parameter(Gb.conf_general, CONF_AWAY_TIME_ZONE_1_DEVICES, ['none'])
+        _add_config_file_parameter(Gb.conf_general, CONF_AWAY_TIME_ZONE_2_OFFSET, 0)
+        _add_config_file_parameter(Gb.conf_general, CONF_AWAY_TIME_ZONE_2_DEVICES, ['none'])
+        update_config_file_flag = True
 
     if update_config_file_flag:
         write_storage_icloud3_configuration_file()
@@ -374,15 +439,21 @@ def write_storage_icloud3_configuration_file(filename_suffix=''):
             Gb.conf_file_data['profile']    = Gb.conf_profile
             Gb.conf_file_data['data']       = Gb.conf_data
 
-            decoded_password = Gb.conf_tracking[CONF_PASSWORD]
+            # The Gb.conf_tracking[CONF_PASSWORD] field contains the real password
+            # while iCloud3 is running. This makes it easier logging into PyiCloud
+            # and in config_flow. Save it, then put the encoded password in the file
+            # update the file and then restore the real password
             Gb.conf_tracking[CONF_PASSWORD] = encode_password(Gb.conf_tracking[CONF_PASSWORD])
 
             json.dump(Gb.conf_file_data, f, indent=4, ensure_ascii=False)
 
-            Gb.conf_tracking[CONF_PASSWORD] = decoded_password
+            Gb.conf_tracking[CONF_PASSWORD] = decode_password(Gb.conf_tracking[CONF_PASSWORD])
 
-        if Gb.iC3DebugLogFile:
-            close_reopen_ic3_debug_log_file()
+        close_reopen_ic3_log_file()
+
+        # rc9 Update conf_devices devicename index dictionary
+        if len(Gb.conf_devices) != len(Gb.conf_devices_idx_by_devicename):
+            set_conf_devices_index_by_devicename()
 
         return True
 
@@ -390,6 +461,28 @@ def write_storage_icloud3_configuration_file(filename_suffix=''):
         log_exception(err)
 
     return False
+
+#--------------------------------------------------------------------
+def set_conf_devices_index_by_devicename():
+    '''
+    Update the device name index position in the conf_devices parameter.
+    This let you access a devices configuration without searching through
+    the  devices list to get a specific device.
+
+    idx = Gb.conf_devices_idx_by_devicename('gary_iphone')
+    conf_device = Gb.conf_devices.index(idx)
+    '''
+    Gb.conf_devices_idx_by_devicename = {}
+    for index, conf_device in enumerate(Gb.conf_devices):
+        Gb.conf_devices_idx_by_devicename[conf_device[CONF_IC3_DEVICENAME]] = index
+
+def get_conf_device(devicename):
+
+    idx = Gb.conf_devices_idx_by_devicename.get(devicename, -1)
+    if idx == -1:
+        return None
+
+    return Gb.conf_devices[idx]
 
 #--------------------------------------------------------------------
 def encode_password(password):
@@ -407,7 +500,7 @@ def encode_password(password):
 
     except Exception as err:
         log_exception(err)
-        password = password.replace('««', '').replace('»»', '')
+        password = password.replace('«', '').replace('»', '')
         return password
 
 def base64_encode(string):
@@ -417,9 +510,16 @@ def base64_encode(string):
     # encoded = base64.urlsafe_b64encode(string)
     # return encoded.rstrip("=")
 
-    string_bytes = string.encode('ascii')
-    base64_bytes = base64.b64encode(string_bytes)
-    return base64_bytes.decode('ascii')
+    try:
+        string_bytes = string.encode('ascii')
+        base64_bytes = base64.b64encode(string_bytes)
+        return base64_bytes.decode('ascii')
+
+    except Exception as err:
+        log_exception(err)
+        password = password.replace('«', '').replace('»', '')
+        return password
+
 
 #--------------------------------------------------------------------
 def decode_password(password):
@@ -430,13 +530,24 @@ def decode_password(password):
         Decoded password
     '''
     try:
+        # If the password in the configuration file is not encoded (no '««' or '»»')
+        # and it should be encoded, save the configuration file which will encode it
+        if (Gb.encode_password_flag
+                and password != ''
+                and (password.startswith('««') is False
+                    or password.endswith('»»') is False)):
+            password = password.replace('«', '').replace('»', '')
+            Gb.conf_tracking[CONF_PASSWORD] = password
+            write_storage_icloud3_configuration_file()
+
+        # Decode password if it is encoded and has the '««password»»' format
         if (password.startswith('««') or password.endswith('»»')):
-            password = password.replace('««', '').replace('»»', '')
+            password = password.replace('«', '').replace('»', '')
             return base64_decode(password)
 
     except Exception as err:
         log_exception(err)
-        password = password.replace('««', '').replace('»»', '')
+        password = password.replace('«', '').replace('»', '')
 
     return password
 
@@ -518,4 +629,47 @@ def build_initial_config_file_structure():
         pass
 
 
-#--------------------------------------------------------------------:)
+#--------------------------------------------------------------------
+def count_lines_of_code(start_directory, total_file_lines=0, total_code_lines=0, begin_start=None):
+
+    if begin_start is None:
+        log_info_msg(f"Lines Of Code Count - {start_directory}")
+        log_info_msg(" ")
+        log_info_msg("---All Lines---     ---Code Lines---   Module")
+        log_info_msg("Total     Lines     Total     Lines")
+        #           ("11111111  22222222  33333333  44444444
+
+    for file_name in os.listdir(start_directory):
+        file_name = os.path.join(start_directory, file_name)
+        if os.path.isfile(file_name):
+            if file_name.endswith('.py') or file_name.endswith('.js'):
+                with open(file_name, 'r') as f:
+                    lines = f.readlines()
+                    line_cnt = len(lines)
+                    total_file_lines += line_cnt
+                    code_cnt = 0
+                    for line in lines:
+                        if line is not None and len(line.strip()) > 3:
+                            if (line.startswith("'")
+                                    or line.startswith('#')):
+                                continue
+
+                        code_cnt += 1
+
+                    total_code_lines += code_cnt
+
+                    if begin_start is not None:
+                        reldir_of_file_name = '.' + file_name.replace(begin_start, '')
+                    else:
+                        reldir_of_file_name = '.' + file_name.replace(start_directory, '')
+
+                    log_info_msg(   f"{total_file_lines:<9} {line_cnt:<9} {total_code_lines:<9} "
+                                    f"{code_cnt:<8} {reldir_of_file_name}")
+
+    for file_name in os.listdir(start_directory):
+        file_name = os.path.join(start_directory, file_name)
+        if os.path.isdir(file_name):
+            total_file_lines, total_code_lines = \
+                count_lines_of_code(file_name, total_file_lines, total_code_lines, begin_start=start_directory)
+
+    return total_file_lines, total_code_lines

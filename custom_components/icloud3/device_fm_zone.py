@@ -18,13 +18,13 @@
 
 from .global_variables  import GlobalVariables as Gb
 from .const             import (HOME, NOT_SET,
-                                DATETIME_ZERO, HHMMSS_ZERO,
+                                DATETIME_ZERO, HHMMSS_ZERO, HHMM_ZERO,
                                 TOWARDS, AWAY_FROM,
                                 INTERVAL,
                                 DISTANCE, ZONE_DISTANCE, ZONE_DISTANCE_M, ZONE_DISTANCE_M_EDGE,
                                 MAX_DISTANCE, CALC_DISTANCE, WAZE_DISTANCE, WAZE_METHOD,
                                 FROM_ZONE, ZONE_INFO,
-                                TRAVEL_TIME, TRAVEL_TIME_MIN, DIR_OF_TRAVEL, MOVED_DISTANCE,
+                                TRAVEL_TIME, TRAVEL_TIME_MIN, TRAVEL_TIME_HHMM, ARRIVAL_TIME, DIR_OF_TRAVEL, MOVED_DISTANCE,
                                 LAST_LOCATED, LAST_LOCATED_TIME, LAST_LOCATED_DATETIME,
                                 LAST_UPDATE, LAST_UPDATE_TIME, LAST_UPDATE_DATETIME,
                                 NEXT_UPDATE, NEXT_UPDATE_TIME, NEXT_UPDATE_DATETIME,
@@ -62,10 +62,11 @@ class iCloud3_DeviceFmZone():
             self.interval_secs           = 0
             self.interval_str            = '0'
             self.interval_method         = ''
-            self.last_tavel_time         = ''
+            self.last_travel_time        = ''
             self.last_distance_str       = ''
             self.last_distance_km        = 0
             self.dir_of_travel           = NOT_SET
+            self.dir_of_travel_history   = ''
             self.last_update_time        = HHMMSS_ZERO
             self.last_update_secs        = 0
             self.next_update_time        = HHMMSS_ZERO
@@ -106,6 +107,8 @@ class iCloud3_DeviceFmZone():
         self.sensors[LAST_UPDATE]          = HHMMSS_ZERO
         self.sensors[TRAVEL_TIME]          = 0
         self.sensors[TRAVEL_TIME_MIN]      = 0
+        self.sensors[TRAVEL_TIME_HHMM]     = HHMM_ZERO
+        self.sensors[ARRIVAL_TIME]         = HHMMSS_ZERO
         self.sensors[DISTANCE]             = 0
         self.sensors[MAX_DISTANCE]         = 0
         self.sensors[ZONE_DISTANCE]        = 0
@@ -122,7 +125,7 @@ class iCloud3_DeviceFmZone():
         from_this_zone_sensors = {k:v for k, v in Sensors_from_zone.items()
                                         if v.from_zone == self.from_zone}
         for sensor, Sensor in from_this_zone_sensors.items():
-            Sensor.DeviceFmZone = self
+            Sensor.FromZone = self
 
     def __repr__(self):
         return (f"<DeviceFmZone: {self.devicename_zone}>")
@@ -154,3 +157,22 @@ class iCloud3_DeviceFmZone():
     @property
     def isnot_going_awayfrom(self):
         return self.dir_of_travel != AWAY_FROM
+
+    @property
+    def format_dir_of_travel_history(self):
+        ''' Format the dir_of_travel_history into groups. '''
+        if self.dir_of_travel_history == '':
+            return
+
+        hist_chars = list(self.dir_of_travel_history[-36:])
+        hist_disp = ''
+        cnt = 0
+        for hist_char in hist_chars:
+            hist_disp += hist_char
+            cnt += 1
+            if cnt == 10:
+                hist_disp += ','
+                cnt = 0
+        if hist_disp.endswith(','): hist_disp = hist_disp[:-1]
+
+        return hist_disp.replace('i', 'Z')

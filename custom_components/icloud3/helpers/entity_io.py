@@ -3,7 +3,7 @@ from ..global_variables import GlobalVariables as Gb
 from ..const            import ( HIGH_INTEGER, NOT_SET,
                                 HOME, UTC_TIME, IOS_TRIGGER_ABBREVIATIONS,
                                 TRACE_ICLOUD_ATTRS_BASE, TRACE_ATTRS_BASE,
-                                BATTERY_LEVEL, BATTERY_STATUS, BATTERY_STATUS_REFORMAT,
+                                BATTERY_LEVEL, BATTERY_STATUS, BATTERY_STATUS_CODES,
                                 LAST_CHANGED_SECS, LAST_CHANGED_TIME, STATE,
                                 LOCATION, ATTRIBUTES, TRIGGER, RAW_MODEL)
 from .common            import (instr,  )
@@ -35,26 +35,27 @@ def get_state(entity_id):
     """
 
     try:
-        entity_state = ''
-        entity_data  = Gb.hass.states.get(entity_id)
+        entity_data = Gb.hass.states.get(entity_id)
+
+        if entity_data is None: return NOT_SET
+
         entity_state = entity_data.state
-        #entity_attrs = entity_data.attributes.copy()
-        last_changed_secs = int(entity_data.last_changed.timestamp())
 
         if entity_state in IOS_TRIGGER_ABBREVIATIONS:
             state = IOS_TRIGGER_ABBREVIATIONS[entity_state]
         else:
             state = Gb.state_to_zone.get(entity_state, entity_state.lower())
 
-        if instr(entity_id, BATTERY_STATUS):
-            state = BATTERY_STATUS_REFORMAT.get(state.lower(), state.lower())
+        if instr(entity_id, 'battery_state'):
+            state = BATTERY_STATUS_CODES.get(state.lower(), state)
+
         if instr(entity_id, BATTERY_LEVEL) and state == 'not_set':
             state = 0
 
+    # When starting iCloud3, the device_tracker for the iosapp might
+    # not have been set up yet. Catch the entity_id error here.
     except Exception as err:
         #log_exception(err)
-        #When starting iCloud3, the device_tracker for the iosapp might
-        #not have been set up yet. Catch the entity_id error here.
         state = NOT_SET
 
     return state
@@ -69,19 +70,22 @@ def get_attributes(entity_id):
         entity_data  = Gb.hass.states.get(entity_id)
         entity_state = entity_data.state
         entity_attrs = entity_data.attributes.copy()
+
         last_changed_secs = int(entity_data.last_changed.timestamp())
 
         entity_attrs[STATE] = entity_state
         entity_attrs[LAST_CHANGED_SECS] = last_changed_secs
         entity_attrs[LAST_CHANGED_TIME] = secs_to_time(last_changed_secs)
-        #_traceha(f"{entity_id} {entity_attrs=}")
+
+        if BATTERY_STATUS in entity_attrs:
+            battery_status = entity_attrs[BATTERY_STATUS].lower()
+            entity_attrs[BATTERY_STATUS] = BATTERY_STATUS_CODES.get(battery_status, battery_status)
 
     except (KeyError, AttributeError):
         entity_attrs = {}
-        pass
 
     except Exception as err:
-        log_exception(err)
+        #log_exception(err)
         entity_attrs = {}
         entity_attrs[TRIGGER] = (f"Error {err}")
 
@@ -95,13 +99,42 @@ def get_last_changed_time(entity_id):
     """
 
     try:
-        changed_time  = Gb.hass.states.get(entity_id).last_changed
+        if entity_id == '':
+            return 0
 
-        timestamp_utc = str(changed_time).split(".")[0]
-        time_secs     = datetime_to_secs(timestamp_utc, UTC_TIME)
+        States = Gb.hass.states.get(entity_id)
+        if States is None:
+            return 0
+
+        # try:
+        #     if entity_id.endswith('trigger'):
+        #         trig_states = {k:v for k,v in States.__dict__.items()
+        #             if k in ['state','attributes','last_changed','last_updated']}
+
+        #         _traceha(f"{trig_states}")
+        # except:
+        #     pass
+
+        last_changed  = States.last_changed
+        last_updated  = States.last_updated
+
+        timestamp_utc = str(last_changed).split(".")[0]
+        time_secs_old = datetime_to_secs(timestamp_utc, UTC_TIME)
+
+        if lc := last_changed.timestamp():
+            time_secs = int(lc)
+        elif lu := last_updated.timestamp():
+            time_secs = int(lu)
+        else:
+            time_secs = 0
+
+        if time_secs != time_secs_old:
+            _trace(f"{time_secs=} {time_secs_old=}")
 
     except Exception as err:
-        time_secs = HIGH_INTEGER
+        log_exception(err)
+        time_secs = 0
+
 
     return time_secs
 
@@ -272,8 +305,7 @@ def extract_attr_value(attributes, attribute_name, numeric=False):
         return ''
 
 #--------------------------------------------------------------------
-def trace_device_attributes(Device,
-                description, fct_name, attrs):
+def trace_device_attributes(Device, description, fct_name, attrs):
 
     try:
         #Extract only attrs needed to update the device

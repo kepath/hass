@@ -1,11 +1,11 @@
 """Support for tracking for iCloud devices."""
 
 from .global_variables  import GlobalVariables as Gb
-from .const             import (DOMAIN, ICLOUD3,
+from .const             import (DOMAIN, ICLOUD3, CONF_VERSION,
                                 DISTANCE_TO_DEVICES,
-                                NOT_SET, NOT_SET_FNAME, HOME, NOT_HOME,
+                                NOT_SET, NOT_SET_FNAME, HOME, NOT_HOME, RARROW,
                                 DEVICE_TYPE_ICONS, DEVICE_TYPE_FNAME,
-                                BLANK_SENSOR_FIELD, STATIONARY_FNAME,
+                                BLANK_SENSOR_FIELD, STATIONARY_FNAME, DEVICE_TRACKER_STATE,
                                 TRACK_DEVICE, INACTIVE_DEVICE,
                                 NAME, FNAME,
                                 PICTURE,
@@ -32,6 +32,7 @@ from .helpers.common    import (instr, isnumber, is_statzone, zone_display_as)
 from .helpers.messaging import (post_event,
                                 log_info_msg, log_debug_msg, log_error_msg, log_exception,
                                 _trace, _traceha, )
+from .helpers.time_util import (adjust_time_hour_values)
 from .support           import start_ic3
 from .support           import config_file
 
@@ -40,46 +41,51 @@ from homeassistant.components.device_tracker import device_trigger
 from homeassistant.config_entries       import ConfigEntry
 from homeassistant.core                 import HomeAssistant
 from homeassistant.helpers.entity       import DeviceInfo
-from homeassistant.helpers              import entity_registry as er, device_registry as dr
+from homeassistant.helpers              import (entity_registry as er, device_registry as dr, )
 from homeassistant.const                import (CONF_DEVICE_ID, CONF_DOMAIN, CONF_ENTITY_ID, CONF_EVENT,
                                                 CONF_PLATFORM, CONF_TYPE, CONF_ZONE, )
 
 import logging
-# _LOGGER = logging.getLogger(__name__)
-_LOGGER = logging.getLogger(f"icloud3")
+_HA_LOGGER = logging.getLogger(__name__)
+# _LOGGER = logging.getLogger(f"icloud3")
 
 #-------------------------------------------------------------------------------------------
 async def async_setup_scanner(hass: HomeAssistant, config, see, discovery_info=None):
-    """Old way of setting up the iCloud tracker."""
-    Gb.ha_config_platform_stmt = True
-    if Gb.conf_profile[CONF_VERSION] == 1:
-        return True
+    """Old way of setting up the iCloud tracker with platform: icloud3 statement."""
 
-    _LOGGER.warning("ICLOUD3 ALERT: The HA `configuration.yaml` file contains a `PLATFORM: ICLOUD3` statement. iCloud3 v3 is "
-                    "now an integration and does not use the `configuration.yaml` or `config_ic3.yam` files. \n\n"
-                    "1. Remove `PLATFORM: ICLOUD3` statements from `configuration.yaml`.\n"
-                    "2. Restart Home Assistant\n"
-                    "3. Add iCloud3 on the `Devices & Settings > Integrations` screen\n"
-                    "4. Configure iCloud3 on the Integrations screen\n"
-                    "5. Restart iCloud3")
+    Gb.ha_config_platform_stmt = True if config.get('platform') == 'icloud3' else False
+
     return True
 
 #-------------------------------------------------------------------------------------------
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities):
     """Set up iCloud3 device tracker component."""
     # Save the hass `add_entities` call object for use in config_flow for adding devices
+
+    Gb.hass = hass
     Gb.async_add_entities_device_tracker = async_add_entities
 
     try:
         if Gb.conf_file_data == {}:
-            Gb.hass = hass
             start_ic3.initialize_directory_filenames()
             config_file.load_storage_icloud3_configuration_file()
 
+        try:
+            Gb.conf_devicenames = [conf_device[CONF_IC3_DEVICENAME]
+                                        for conf_device in Gb.conf_devices
+                                        if conf_device[CONF_IC3_DEVICENAME] != '']
+
+            _get_ha_device_ids_from_device_registry(hass)
+
+        except Exception as err:
+            log_exception(err)
+
         NewDeviceTrackers = []
+        Gb.device_trackers_cnt = 0
         for conf_device in Gb.conf_devices:
             devicename = conf_device[CONF_IC3_DEVICENAME]
-            Gb.conf_devicenames.append(devicename)
+            if devicename == '':
+                continue
 
             if (devicename in Gb.DeviceTrackers_by_devicename
                     or conf_device[CONF_TRACKING_MODE] == INACTIVE_DEVICE):
@@ -94,20 +100,32 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         # Set the total count of the device_trackers that will be created
         if Gb.device_trackers_cnt == 0:
             Gb.device_trackers_cnt = len(NewDeviceTrackers)
-            log_info_msg(f'Device Tracker entities created: {Gb.device_trackers_cnt}')
+            log_info_msg(f'Device Tracker Entities: {Gb.device_trackers_cnt}')
 
-        if NewDeviceTrackers is not []:
+        if NewDeviceTrackers != []:
             async_add_entities(NewDeviceTrackers, True)
-            _get_dr_device_ids_from_device_registry(hass)
+            _get_ha_device_ids_from_device_registry(hass)
+            _HA_LOGGER.info(f"iCloud3 Device Tracker entities: {Gb.device_trackers_cnt}")
+
+        Devices_no_area = [Device   for Device in Gb.DeviceTrackers_by_devicename.values() \
+                                    if Device.ha_area_id in [None, 'unknown', '']]
+
+        Devices_no_area = []
+        if Devices_no_area != []:
+            for Device in Devices_no_area:
+                try:
+                    Device.update_entity_attribute(area_id=Gb.area_id_personal_device)
+                except:
+                    pass
 
     except Exception as err:
-        _LOGGER.exception(err)
+        _HA_LOGGER.exception(err)
         log_exception(err)
         log_msg = f"►INTERNAL ERROR (Create device_tracker loop-{err})"
         log_error_msg(log_msg)
 
 #-------------------------------------------------------------------------------------------
-def _get_dr_device_ids_from_device_registry(hass):
+def _get_ha_device_ids_from_device_registry(hass):
     '''
     Cycle thru the ha device registry, extract the iCloud3 entries and associate the
     ha device_id with the ic3_devicename parameters
@@ -116,20 +134,36 @@ def _get_dr_device_ids_from_device_registry(hass):
     '''
     try:
         dev_reg = dr.async_get(hass)
-        Gb.dr_device_id_by_devicename = {}
-        Gb.dr_area_id_by_devicename   = {}
 
-        for device, device_entry in dev_reg.deleted_devices.items():
-            _get_dr_device_id_from_device_entry(hass, device, device_entry)
-        for device, device_entry in dev_reg.devices.items():
-            _get_dr_device_id_from_device_entry(hass, device, device_entry)
+        icloud3_dev_reg = {device: device_entry for device, device_entry in dev_reg.deleted_devices.items()
+                                                if _icloud3_dev_reg_item(device_entry)}
+
+        for device, device_entry in icloud3_dev_reg.items():
+            _get_ha_device_id_from_device_entry(hass, device, device_entry)
+
+        icloud3_dev_reg = {device: device_entry for device, device_entry in dev_reg.devices.items()
+                                                if _icloud3_dev_reg_item(device_entry)}
+
+        for device, device_entry in icloud3_dev_reg.items():
+            _get_ha_device_id_from_device_entry(hass, device, device_entry)
 
     except Exception as err:
         log_exception(err)
         pass
 
+def _icloud3_dev_reg_item(device_entry):
+    ''' See if icloud3 is in the identifiers field'''
+    # identifiers={('icloud3', 'gary_airpods')}
+    try:
+        de_identifiers = list(device_entry.identifiers)
+        de_identifiers = list(de_identifiers[0])
+        return 'icloud3' in de_identifiers
+
+    except:
+        return False
+
 #-------------------------------------------------------------------------------------------
-def _get_dr_device_id_from_device_entry(hass, device, device_entry):
+def _get_ha_device_id_from_device_entry(hass, device, device_entry):
     '''
     For each entry in the device registry, determine if it is an iCloud3 entry (iCloud3 is in
     the device_entry.identifiers field. If so, check the other items, determine if one is a
@@ -149,23 +183,22 @@ def _get_dr_device_id_from_device_entry(hass, device, device_entry):
         id='9045bf3f0363c28957353cf2c47163d0', orphaned_timestamp=None
     '''
     try:
-        de_identifiers = device_entry.identifiers
-        for identifiers in de_identifiers:
-            if 'icloud3' in identifiers or 'iCloud3' in identifiers:
-                # Search thru identifier items for the devicename
-                for item in identifiers:
-                    if item in Gb.conf_devicenames:
-                        try:
-                            Gb.dr_device_id_by_devicename[item] = device_entry.id
-                        except:
-                            pass
+        if device_entry.name in [DOMAIN, ICLOUD3, 'iCloud3 Integration']:
+            Gb.ha_device_id_by_devicename[ICLOUD3] = device_entry.id
+            Gb.ha_area_id_by_devicename[ICLOUD3]   = device_entry.area_id
+            return
+    except:
+        pass
 
-                        try:
-                            Gb.dr_area_id_by_devicename[item]   = device_entry.area_id
-                        except:
-                            pass
+    try:
+        de_identifiers = list(device_entry.identifiers)
+        de_identifiers = list(de_identifiers[0])
 
-                        break
+        for item in de_identifiers:
+            if item in Gb.conf_devicenames:
+                Gb.ha_device_id_by_devicename[item] = device_entry.id
+                Gb.ha_area_id_by_devicename[item]   = device_entry.area_id
+
 
     except Exception as err:
         #log_exception(err)
@@ -184,7 +217,8 @@ class iCloud3_DeviceTracker(TrackerEntity):
             self.devicename    = devicename
             self.Device        = None   # Filled in after Device object has been created in start_ic3
             self.entity_id     = f"device_tracker.{devicename}"
-            self.dr_device_id  = Gb.dr_device_id_by_devicename.get(self.devicename)
+            self.ha_device_id  = Gb.ha_device_id_by_devicename.get(self.devicename)
+            self.ha_area_id    = Gb.ha_area_id_by_devicename.get(self.devicename)
 
             self.device_fname  = conf_device[FNAME]
             self.device_type   = conf_device[CONF_DEVICE_TYPE]
@@ -199,7 +233,7 @@ class iCloud3_DeviceTracker(TrackerEntity):
                 self.default_value = BLANK_SENSOR_FIELD
 
             self.triggers           = None
-            self.from_state_zonee   = ''
+            self.from_state_zone    = ''
             self.to_state_zone      = ''
             self._state             = self.default_value
             self._data              = data          # Used by .see to issue change triggers
@@ -223,14 +257,37 @@ class iCloud3_DeviceTracker(TrackerEntity):
         return f"{DOMAIN}_{self.devicename}"
 
     @property
-    def name(self) -> str:
+    def should_poll2(self):
+        return False
+
+    @property
+    def force_update(self):
+        return True
+
+    @property
+    def name(self):
         """Return the name of the device."""
         return self.device_fname
 
     @property
+    def get_device_id(self):
+        return self.device_id
+
+    @property
+    def get_area_id(self):
+        """Return the area_id of the device."""
+        # if self.ha_area_id is None:
+        #     self.ha_area_id = Gb.ha_area_id_by_devicename[self.devicename] = \
+        #         Gb.area_id_personal_device
+        return self.area_id
+
+    @property
     def location_name(self):
         """Return the location name of the device."""
-        return None
+        try:
+            return self.Device.sensors.get(DEVICE_TRACKER_STATE, None)
+        except:
+            return None
 
     @property
     def location_accuracy(self):
@@ -293,7 +350,8 @@ class iCloud3_DeviceTracker(TrackerEntity):
             extra_attrs = {}
 
             extra_attrs[GPS]                 = f"({self.latitude}, {self.longitude})"
-            extra_attrs['data_source']       = f"{self._get_sensor_value(LOCATION_SOURCE)} (iCloud3)"
+            extra_attrs['integration']       = ICLOUD3
+            extra_attrs['data_source']       = f"{self._get_sensor_value(LOCATION_SOURCE)}"
             extra_attrs[DEVICE_STATUS]       = self._get_sensor_value(DEVICE_STATUS)
             extra_attrs[NAME]                = self._get_sensor_value(NAME)
             extra_attrs[PICTURE]             = self._get_sensor_value(PICTURE)
@@ -313,15 +371,19 @@ class iCloud3_DeviceTracker(TrackerEntity):
                 extra_attrs[CALC_DISTANCE]   = self._get_sensor_value(CALC_DISTANCE)
 
             if self.Device:
-                if  self.Device.track_from_zones != [HOME]:
+                if self.Device.track_from_zones != [HOME]:
                     extra_attrs['track_from_zones'] = ', '.join(self.Device.track_from_zones)
-                if  self.Device.track_from_base_zone != HOME:
+                if self.Device.track_from_base_zone != HOME:
                     extra_attrs['primary_home_zone'] = zone_display_as(self.Device.track_from_base_zone)
+                if self.Device.away_time_zone_offset != 0:
+                    plus_minus = '+' if self.Device.away_time_zone_offset > 0 else ''
+                    extra_attrs['away_time_zone_offset'] = \
+                                f"HomeZone {plus_minus}{self.Device.away_time_zone_offset} hours"
 
-            extra_attrs['icloud3_version']     = Gb.version
-            extra_attrs['event_log_version']   = Gb.version_evlog
-            extra_attrs['tracking']            = ', '.join(Gb.Devices_by_devicename.keys())
-            extra_attrs['icloud3_directory']   = Gb.icloud3_directory
+                extra_attrs['icloud3_version']     = Gb.version
+                extra_attrs['event_log_version']   = Gb.version_evlog
+                extra_attrs['tracking']            = ', '.join(Gb.Devices_by_devicename.keys())
+                extra_attrs['icloud3_directory']   = Gb.icloud3_directory
 
             return extra_attrs
 
@@ -341,6 +403,11 @@ class iCloud3_DeviceTracker(TrackerEntity):
                 return self._get_restore_or_default_value(sensor, not_set_value)
 
             sensor_value = self.Device.sensors.get(sensor, None)
+            if self.Device and self.Device.away_time_zone_offset != 0:
+                sensor_value = adjust_time_hour_values(sensor_value, self.Device.away_time_zone_offset)
+
+            if instr(sensor, DEVICE_TRACKER_STATE):
+                return sensor_value
 
             if number and instr(sensor_value, ' '):
                 sensor_value = float(sensor_value.split(' ')[0])
@@ -349,8 +416,6 @@ class iCloud3_DeviceTracker(TrackerEntity):
             if number is False and type(sensor_value) is str:
                 if sensor_value is None or sensor_value.strip() == '' or sensor_value == NOT_SET:
                     sensor_value = BLANK_SENSOR_FIELD
-                elif is_statzone(sensor_value):
-                    sensor_value = STATIONARY_FNAME
 
         except Exception as err:
             log_error_msg(f"►INTERNAL ERROR (Create device_tracker object-{err})")
@@ -393,16 +458,33 @@ class iCloud3_DeviceTracker(TrackerEntity):
         return attr_value
 
 #-------------------------------------------------------------------------------------------
-    def update_entity_attribute(self, new_fname=None):
+    def update_entity_attribute(self, new_fname=None, area_id=None):
         """ Update entity definition attributes """
 
-        if new_fname is None or self.Device.dr_device_id == '':
+        ha_device_id = Gb.ha_device_id_by_devicename.get(self.devicename)
+        if ha_device_id is None:
             return
 
-        self.device_fname = new_fname
+        if new_fname is None and area_id is None:
+            return
+
+        try:
+            area_id   = area_id or self.ha_area_id or Gb.area_id_personal_device
+            area_reg  = ar.async_get(Gb.hass)
+            area_name = area_reg.async_get_area(area_id).name
+        except:
+            area_id = area_name = None
+
+        self.device_fname = new_fname or self.device_fname
+        self.ha_area_id   = Gb.ha_area_id_by_devicename[self.devicename] = \
+                                area_id
+
+        log_debug_msg(f"Device Tracker entity changed: device_tracker.{self.devicename}, "
+                        f"{self.device_fname} "
+                        f"({area_name})")
 
         kwargs = {}
-        kwargs['original_name'] = new_fname
+        kwargs['original_name'] = self.device_fname
 
         entity_registry = er.async_get(Gb.hass)
         er_entry = entity_registry.async_update_entity(self.entity_id, **kwargs)
@@ -431,11 +513,12 @@ class iCloud3_DeviceTracker(TrackerEntity):
     """
 
         kwargs = {}
-        kwargs['name'] = f"{new_fname} ({self.devicename})"
+        kwargs['name']         = f"{self.device_fname} ({self.devicename})"
         kwargs['name_by_user'] = ""
+        kwargs['area_id']      = self.ha_area_id
 
         device_registry = dr.async_get(Gb.hass)
-        dr_entry = device_registry.async_update_device(self.Device.dr_device_id, **kwargs)
+        dr_entry = device_registry.async_update_device(self.ha_device_id, **kwargs)
 
 #-------------------------------------------------------------------------------------------
     def remove_device_tracker(self):
@@ -443,7 +526,7 @@ class iCloud3_DeviceTracker(TrackerEntity):
             Gb.hass.async_create_task(self.async_remove(force_remove=True))
 
         except Exception as err:
-            _LOGGER.exception(err)
+            log_exception(err)
 
 #-------------------------------------------------------------------------------------------
     def after_removal_cleanup(self):

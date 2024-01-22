@@ -4,11 +4,12 @@ from ..global_variables import GlobalVariables as Gb
 from ..const            import (DOT, ICLOUD3_ERROR_MSG, EVLOG_DEBUG, EVLOG_ERROR, EVLOG_INIT_HDR, EVLOG_MONITOR,
                                 EVLOG_TIME_RECD, EVLOG_UPDATE_HDR, EVLOG_UPDATE_START, EVLOG_UPDATE_END,
                                 EVLOG_ALERT, EVLOG_WARNING, EVLOG_HIGHLIGHT, EVLOG_IC3_STARTING,EVLOG_IC3_STAGE_HDR,
-                                DEBUG_LOG_FILENAME, EVLOG_TIME_RECD,
+                                IC3_LOG_FILENAME, EVLOG_TIME_RECD,
                                 CRLF, CRLF_DOT, NBSP, NBSP2, NBSP3, NBSP4, NBSP5, NBSP6,
                                 DATETIME_FORMAT, DATETIME_ZERO,
                                 NEXT_UPDATE_TIME, INTERVAL,
                                 CONF_IC3_DEVICENAME, CONF_FNAME, CONF_LOG_LEVEL, CONF_PASSWORD, CONF_USERNAME,
+                                CONF_DEVICES,
                                 LATITUDE,  LONGITUDE, LOCATION_SOURCE, TRACKING_METHOD,
                                 ZONE, ZONE_DATETIME, INTO_ZONE_DATETIME, LAST_ZONE,
                                 TIMESTAMP, TIMESTAMP_SECS, TIMESTAMP_TIME, LOCATION_TIME, DATETIME, AGE,
@@ -22,14 +23,17 @@ from ..const            import (DOT, ICLOUD3_ERROR_MSG, EVLOG_DEBUG, EVLOG_ERROR
                                 ICLOUD3_VERSION,
                                 BADGE,
                                 )
+from ..const_more_info  import more_info_text
+from .common import obscure_field
 
-import homeassistant.util.dt as dt_util
+import homeassistant.util.dt   as dt_util
+from homeassistant.components  import persistent_notification
 
 import os
 import time
 from inspect import getframeinfo, stack
 import traceback
-from .common import obscure_field
+
 
 FILTER_DATA_DICTS = ['items', 'userInfo', 'dsid', 'dsInfo', 'webservices', 'locations','location', ]
 FILTER_DATA_LISTS = ['devices', 'content', 'followers', 'following', 'contactDetails',]
@@ -116,7 +120,7 @@ def post_event(devicename, event_msg='+'):
 
     if (Gb.log_debug_flag and event_msg.startswith(EVLOG_TIME_RECD) is False):
         event_msg = (f"{devicename} > {str(event_msg)}")
-        write_ic3_debug_log_recd(event_msg)
+        write_ic3_log_recd(event_msg)
 
     # Starting up, update event msg to print all messages together
     elif (Gb.start_icloud3_inprocess_flag
@@ -137,7 +141,7 @@ def post_error_msg(devicename, event_msg="+"):
     '''
     devicename, event_msg = resolve_system_event_msg(devicename, event_msg)
     if event_msg.find("iCloud3 Error") >= 0:
-        for td_devicename, Device in Gb.Devices_by_devicename.items():   #
+        for Device in Gb.Devices_by_devicename.values():
             Device.display_info_msg(ICLOUD3_ERROR_MSG)
 
     post_event(devicename, event_msg)
@@ -161,7 +165,28 @@ def post_monitor_msg(devicename, event_msg='+'):
     devicename, event_msg = resolve_system_event_msg(devicename, event_msg)
     post_event(devicename, f"{EVLOG_MONITOR}{event_msg}")
 
-    # write_ic3_debug_log_recd(f"{devicename} > {event_msg}")
+    # write_ic3_log_recd(f"{devicename} > {event_msg}")
+
+#-------------------------------------------------------------------------------------------
+def refresh_event_log(devicename='', show_one_screen=False):
+    Gb.EvLog.update_event_log_display(devicename='', show_one_screen=False)
+
+#-------------------------------------------------------------------------------------------
+def post_alert(alert_message):
+    '''
+    Post an Alert Message on the first line of the event log items
+    '''
+
+    if alert_message == '':
+        Gb.EvLog.clear_alert()
+    else:
+        Gb.EvLog.alert_message = alert_message
+    Gb.EvLog.display_user_message('')
+
+#-------------------------------------------------------------------------------------------
+def clear_alert():
+    Gb.EvLog.clear_alert()
+    Gb.EvLog.display_user_message('')
 
 #-------------------------------------------------------------------------------------------
 def resolve_system_event_msg(devicename, event_msg):
@@ -173,17 +198,55 @@ def resolve_system_event_msg(devicename, event_msg):
 #--------------------------------------------------------------------
 def resolve_log_msg_module_name(module_name, log_msg):
     if log_msg == "+":
-        return (module_name.replace(NBSP, ''))
+        try:
+            return (module_name.replace(NBSP, ''))
+        except:
+            pass
+
+    return (f"{module_name} {log_msg.replace(NBSP, '')}")
+
+#--------------------------------------------------------------------
+def post_startup_alert(alert_msg):
+
+    if alert_msg not in Gb.startup_alerts:
+        Gb.startup_alerts.append(alert_msg)
+
+#-------------------------------------------------------------------------------------------
+def ha_notification(msg_line1, msg_line2=None) -> None:
+
+    if msg_line2:
+        msg_line1 += f"<br />{msg_line2}"
+
+    persistent_notification.create(
+        Gb.hass,
+        f"Notification: {msg_line1}",
+        title=f"iCloud3 Notification",
+        notification_id="icloud3",
+    )
+
+#--------------------------------------------------------------------
+def more_info(key):
+
+    Gb.HALogger.info(f"{Gb.startup_stage_status_controls=} {key}")
+    if key in Gb.startup_stage_status_controls:
+        return f"{more_info_text['instructions_already_displayed']}"
+
+    elif key in more_info_text:
+        Gb.startup_stage_status_controls.append(key)
+        Gb.HALogger.info(f"{Gb.startup_stage_status_controls=} {key}")
+        return more_info_text[key]
+
+
     else:
-        return (f"{module_name} {log_msg.replace(NBSP, '')}")
+        return f"{more_info_text['invalid_msg_key']} `{key}`"
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #
 #   ICLOUD3-DEBUG.LOG FILE ROUTINES
 #
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-DEBUG_LOG_LINE_TABS = "\t\t\t\t\t\t\t\t\t\t"
-def open_ic3_debug_log_file(new_debug_log=False):
+IC3_LOG_LINE_TABS = "\t\t\t\t\t\t\t\t\t\t"
+def open_ic3_log_file(new_log_file=False):
     '''
     Open the icloud3-debug.log file
 
@@ -192,103 +255,135 @@ def open_ic3_debug_log_file(new_debug_log=False):
                 False - Create a new file
     '''
 
-    if new_debug_log:
+    if new_log_file:
         filemode = 'w'
-        Gb.ic3_debug_log_new_file_secs = int(time.time())
+        Gb.ic3_log_file_create_secs = int(time.time())
 
-    elif Gb.iC3DebugLogFile:
-        write_ic3_debug_log_recd(f"{'-'*25} Debug Log File Already Open {'-'*25}")
+    elif Gb.iC3_LogFile:
         return
 
     else:
         filemode = 'a'
 
-    debug_log_file = Gb.hass.config.path(DEBUG_LOG_FILENAME)
-    Gb.iC3DebugLogFile = open(debug_log_file, filemode, encoding='utf8')
-    Gb.ic3_debug_log_file_last_write_secs = 0
-    Gb.ic3_debug_log_update_flag = False
+    log_file = Gb.hass.config.path(IC3_LOG_FILENAME)
 
-    # write_ic3_debug_log_recd(f"\n{'-'*25} Opened by Event Log  {'-'*25}")
+    Gb.iC3_LogFile = open(log_file, filemode, encoding='utf8')
+    Gb.ic3_log_file_last_write_secs = 0
+    Gb.ic3_log_file_update_flag = False
 
-    if new_debug_log is False:
+    if new_log_file is False:
         return
 
-    write_ic3_debug_log_recd(f"iCloud3 v{Gb.version}, "
-                            f"Debug Log File: {dt_util.now().strftime(DATETIME_FORMAT)[0:19]}\n")
-
-    # Write the ic3 configuration (general & devices) to the debug log file
-    write_ic3_debug_log_recd(f"Profile:\n{DEBUG_LOG_LINE_TABS}{Gb.conf_profile}")
-    write_ic3_debug_log_recd(f"General Configuration:\n{DEBUG_LOG_LINE_TABS}{Gb.conf_general}")
-    write_ic3_debug_log_recd(f"{DEBUG_LOG_LINE_TABS}{Gb.ha_location_info}")
-    write_ic3_debug_log_recd("")
-
-    for conf_device in Gb.conf_devices:
-        write_ic3_debug_log_recd(   f"{conf_device[CONF_FNAME]}, {conf_device[CONF_IC3_DEVICENAME]}:\n"
-                                    f"{DEBUG_LOG_LINE_TABS}{conf_device}")
-    write_ic3_debug_log_recd("")
+    write_config_file_to_ic3_log()
 
 #------------------------------------------------------------------------------
-def close_ic3_debug_log_file(new_debug_log=False):
+def close_ic3_log_file(new_log_file=False):
     '''
     Close the icloud3-debug.log file is it is open
     '''
-    if Gb.iC3DebugLogFile is None:
+    if Gb.iC3_LogFile is None:
         return
 
-    if new_debug_log:
-        write_ic3_debug_log_recd(f"\n")
-        write_ic3_debug_log_recd(f"iCloud3 v{Gb.version}, Closing Debug Log File, "
+    if new_log_file:
+        write_ic3_log_recd(f"\n")
+        write_ic3_log_recd(f"iCloud3 v{Gb.version}, Closing Log File, "
                                 f"ConfigLogLevel-{Gb.conf_general[CONF_LOG_LEVEL]}, "
                                 f"CurrentLogLevel-{Gb.log_level}")
 
-    Gb.iC3DebugLogFile.close()
-    Gb.iC3DebugLogFile = None
-    Gb.ic3_debug_log_update_flag = False
+    Gb.iC3_LogFile.close()
+    Gb.iC3_LogFile = None
+    Gb.ic3_log_file_update_flag = False
 
 #------------------------------------------------------------------------------
-def close_reopen_ic3_debug_log_file(closed_by=None):
+def close_reopen_ic3_log_file(closed_by=None):
     '''
-    Close and reopen the debug log file to commit the newly written records
+    Close and reopen the Log file to commit the newly written records
     '''
-    if Gb.ic3_debug_log_update_flag is False:
+    if Gb.ic3_log_file_update_flag is False:
         return
 
     if closed_by:
-        write_ic3_debug_log_recd(f"Commit Log File Records, RequestedBy-{closed_by}")
+        write_ic3_log_recd(f"Commit Log File Records, RequestedBy-{closed_by}")
 
-    close_ic3_debug_log_file()
-    open_ic3_debug_log_file()
+    close_ic3_log_file()
+    open_ic3_log_file()
 
 #------------------------------------------------------------------------------
-def write_ic3_debug_log_recd(recd, force_write=False):
+def write_ic3_log_recd(recd, force_write=False):
 
-    if Gb.log_debug_flag is False and force_write is False:
-        return
-
-    if Gb.iC3DebugLogFile is None:
-        open_ic3_debug_log_file()
+    if Gb.iC3_LogFile is None:
+        open_ic3_log_file()
 
     date_time_now = dt_util.now().strftime(DATETIME_FORMAT)[0:19]
     recd = _debug_recd_filter(recd)
 
     try:
-        Gb.iC3DebugLogFile.write(f"{date_time_now} {_called_from()} {Gb.trace_prefix}{recd}\n")
-    except: #I/O operation on closed file:
+        Gb.iC3_LogFile.write(f"{date_time_now} {_called_from()} {Gb.trace_prefix}{recd}\n")
+    except:
         pass
 
-    Gb.ic3_debug_log_file_last_write_secs = int(time.time())
-    Gb.ic3_debug_log_update_flag = True
+    Gb.ic3_log_file_last_write_secs = int(time.time())
+    Gb.ic3_log_file_update_flag = True
 
 #--------------------------------------------------------------------
-def archive_debug_log_file():
-        debug_log_file   = Gb.hass.config.path(DEBUG_LOG_FILENAME)
-        debug_log_file_1 = Gb.hass.config.path(DEBUG_LOG_FILENAME).replace('.log', '-1.log')
+def delete_open_log_file():
+    log_file = Gb.hass.config.path(IC3_LOG_FILENAME)
 
-        if os.path.isfile(debug_log_file_1):
-            os.remove(debug_log_file_1)
+    if os.path.isfile(log_file):
+        close_ic3_log_file()
+        os.remove(log_file)
 
-        if os.path.isfile(debug_log_file):
-            os.rename(debug_log_file, debug_log_file_1)
+    open_ic3_log_file(new_log_file=True)
+
+#--------------------------------------------------------------------
+def archive_log_file():
+    try:
+        log_file_0 = Gb.hass.config.path(IC3_LOG_FILENAME)
+        log_file_1 = Gb.hass.config.path(IC3_LOG_FILENAME).replace('-0.', '-1.')
+        log_file_2 = Gb.hass.config.path(IC3_LOG_FILENAME).replace('-0.', '-2.')
+
+        close_ic3_log_file()
+
+        if os.path.isfile(log_file_2):
+            os.remove(log_file_2)
+
+        if os.path.isfile(log_file_1):
+            os.rename(log_file_1, log_file_2)
+
+        if os.path.isfile(log_file_0):
+            os.rename(log_file_0, log_file_1)
+
+        open_ic3_log_file(new_log_file=True)
+
+        post_event(f"iCloud3 Log File Archive complete")
+
+    except Exception as err:
+        post_event(f"iCloud3 Log File Archive encountered an error > {err}")
+
+#------------------------------------------------------------------------------
+def write_config_file_to_ic3_log():
+
+    conf_tracking_recd = Gb.conf_tracking.copy()
+    conf_tracking_recd[CONF_USERNAME] = obscure_field(conf_tracking_recd[CONF_USERNAME])
+    conf_tracking_recd[CONF_PASSWORD] = obscure_field(conf_tracking_recd[CONF_PASSWORD])
+    conf_tracking_recd[CONF_DEVICES]  = f"{len(Gb.conf_devices)}"
+
+    write_ic3_log_recd(f"iCloud3 v{Gb.version}, "
+                        f"Log File: {dt_util.now().strftime('%A')}, "
+                        f"{dt_util.now().strftime(DATETIME_FORMAT)[0:19]}\n")
+
+    # Write the ic3 configuration (general & devices) to the Log file
+    write_ic3_log_recd(f"Profile:\n{IC3_LOG_LINE_TABS}{Gb.conf_profile}")
+    write_ic3_log_recd(f"Tracking:\n{IC3_LOG_LINE_TABS}{conf_tracking_recd}")
+
+    write_ic3_log_recd(f"General Configuration:\n{IC3_LOG_LINE_TABS}{Gb.conf_general}")
+    write_ic3_log_recd(f"{IC3_LOG_LINE_TABS}{Gb.ha_location_info}")
+    write_ic3_log_recd("")
+
+    for conf_device in Gb.conf_devices:
+        write_ic3_log_recd(   f"{conf_device[CONF_FNAME]}, {conf_device[CONF_IC3_DEVICENAME]}:\n"
+                                    f"{IC3_LOG_LINE_TABS}{conf_device}")
+    write_ic3_log_recd("")
 
 #--------------------------------------------------------------------
 def _debug_recd_filter(recd):
@@ -306,7 +401,7 @@ def _debug_recd_filter(recd):
     recd = recd.replace(NBSP5, ' ')
     recd = recd.replace(NBSP6, ' ')
     recd = recd.strip()
-    recd = recd.replace(CRLF, f"\n{DEBUG_LOG_LINE_TABS}{extra_tabs}")
+    recd = recd.replace(CRLF, f"\n{IC3_LOG_LINE_TABS}{extra_tabs}")
     recd = recd.replace('* >', '')
 
     if recd.find('^') == -1: return recd.strip()
@@ -341,6 +436,7 @@ def log_filter(log_msg):
                 log_msg = log_msg[:p] + log_msg[p+3:]
 
             log_msg = log_msg.replace('* > ', '')
+            log_msg = _debug_recd_filter(log_msg)
     except:
         pass
 
@@ -352,29 +448,27 @@ def log_info_msg(module_name, log_msg='+'):
 
     if type(log_msg) is str and log_msg.startswith('^'): log_msg = log_msg[3:]
 
-    Gb.HALogger.info(log_filter(log_msg))
-
-    if Gb.iC3DebugLogFile is not None:
-        write_ic3_debug_log_recd(log_filter(log_msg))
+    # Gb.HALogger.info(log_filter(log_msg))
+    write_ic3_log_recd(log_filter(log_msg))
 
 #--------------------------------------------------------------------
 def log_warning_msg(module_name, log_msg='+'):
     log_msg = resolve_log_msg_module_name(module_name, log_msg)
     log_msg = log_filter(log_msg)
     Gb.HALogger.warning(log_msg)
-    write_ic3_debug_log_recd(log_msg)
+    write_ic3_log_recd(log_msg)
 
 #--------------------------------------------------------------------
 def log_error_msg(module_name, log_msg='+'):
     log_msg = resolve_log_msg_module_name(module_name, log_msg)
     log_msg = log_filter(log_msg)
     Gb.HALogger.error(log_msg)
-    write_ic3_debug_log_recd(log_msg)
+    write_ic3_log_recd(log_msg)
 
 #--------------------------------------------------------------------
 def log_exception(err):
     Gb.HALogger.exception(err)
-    write_ic3_debug_log_recd(traceback.format_exc())
+    write_ic3_log_recd(traceback.format_exc())
 
 #--------------------------------------------------------------------
 def log_debug_msg(devicename, log_msg="+"):
@@ -385,7 +479,7 @@ def log_debug_msg(devicename, log_msg="+"):
     dn_str = '' if devicename == '*' else f"{devicename} > "
     log_msg = f"{dn_str}{str(log_msg).replace(CRLF, ', ')}"
 
-    write_ic3_debug_log_recd(log_filter(log_msg))
+    write_ic3_log_recd(log_filter(log_msg))
 
 #--------------------------------------------------------------------
 def log_start_finish_update_banner(start_finish_char, devicename,
@@ -406,6 +500,20 @@ def log_start_finish_update_banner(start_finish_char, devicename,
                 f"{start_finish_chars}").upper()
 
     log_debug_msg(devicename, log_msg)
+
+#--------------------------------------------------------------------
+def write_debug_log(debug_log_title=None):
+    '''
+    Cycle thru the debuf_log and write all items to the icloud2-0.log file
+    '''
+    if Gb.log_debug_flag is False or Gb.debug_log  == {}:  return
+
+    log_debug_msg(f"{'-'*25} {debug_log_title.upper() } {'-'*25}")
+    for field, values in Gb.debug_log.items():
+        log_debug_msg(f"{field}={values}")
+    log_debug_msg(f"{'-'*25} {debug_log_title.upper() } {'-'*25}")
+
+    Gb.debug_log = {}
 
 #--------------------------------------------------------------------
 def log_rawdata(title, rawdata, log_rawdata_flag=False):
@@ -432,8 +540,7 @@ def log_rawdata(title, rawdata, log_rawdata_flag=False):
 
     try:
         if 'raw' in rawdata or log_rawdata_flag:
-            log_debug_msg(f"{'─'*8} {title.upper()} {'─'*8}")
-            log_debug_msg(rawdata)
+            write_ic3_log_recd(f"{'─'*8} {title.upper()} {'─'*8}\n{rawdata}")
             return
 
         rawdata_items = {k: v for k, v in rawdata['filter'].items()
@@ -480,14 +587,16 @@ def log_rawdata(title, rawdata, log_rawdata_flag=False):
         pass
 
     if log_msg != {}:
-        log_debug_msg(f"{'─'*8} {title.upper()} {'─'*8}")
-        log_debug_msg(log_msg)
+        write_ic3_log_recd(f"{'─'*8} {title.upper()} {'─'*8}\n{log_msg}")
 
     return
 
 #--------------------------------------------------------------------
 def _filter_data_dict(rawdata_data, data_dict_items):
     try:
+        if data_dict_items == 'webservices':
+            return rawdata_data.get('webservices')
+
         filter_results = {k: v for k, v in rawdata_data[data_dict_items].items()
                                     if k in FILTER_FIELDS}
         if 'id' in filter_results and len(filter_results['id']) > 10:
@@ -496,6 +605,7 @@ def _filter_data_dict(rawdata_data, data_dict_items):
         return filter_results
 
     except Exception as err:
+        # log_exception(err)
         return {}
 
 #--------------------------------------------------------------------
@@ -571,10 +681,14 @@ def post_internal_error(err_text, traceback_format_exec_obj='+'):
     - traceback_format_exc  = traceback.format_exec_obj object with the error information
 
     Example traceback_format_exec_obj():
-        Traceback (most recent call last):
-        File "/config/custom_components/icloud3_v3/determine_interval.py", line 74, in determine_interval
-        distance = location_data[76]
-        IndexError: list index out of range
+        [
+        'Traceback (most recent call last):'
+        '  File "/config/custom_components/icloud3/support/start_ic3.py", line 1268, in setup_tracked_devices_for_famshr'
+        "    a = 1 + 'a'"
+        '        ~~^~~~~'
+        "TypeError: unsupported operand type(s) for +: 'int' and 'str'"
+        ''
+        ]
     '''
     if traceback_format_exec_obj == '+':
         traceback_format_exec_obj = err_text
@@ -583,29 +697,34 @@ def post_internal_error(err_text, traceback_format_exec_obj='+'):
     tb_err_msg = traceback_format_exec_obj()
     log_error_msg(tb_err_msg)
 
+    # rc9 Reworked message extraction due to Python code change
     err_lines = tb_err_msg.split('\n')
-    err_lines_f = []
+    err_error_msg = err_code = err_file_line_module = ""
+    err_lines.reverse()
+
     for err_line in err_lines:
-        err_line_f = err_line.strip(' ').replace(Gb.icloud3_directory, '')
-        err_line_f = err_line_f.replace('File ', '').replace(', line ', f"{CRLF_DOT}Line.. > ")
-        if err_line_f:
-            err_lines_f.append(err_line_f)
+        err_line = err_line.strip(' ')
+        if err_line == "":
+            continue
+        elif err_error_msg == "":
+            err_error_msg = err_line
+        elif err_line.find('~') >= 0 or err_line.find('^^') >= 0:
+            continue
+        elif err_code == "":
+            err_code = err_line
 
-    err_msg = (f"{EVLOG_ERROR}INTERNAL ERROR > {err_text}")
+        elif err_line.startswith('File'):
+            err_file_line_module = err_line.replace(Gb.icloud3_directory, '')
+
     try:
-        n = len(err_lines_f) - 1
+        err_msg =  (f"{CRLF_DOT}File... > {err_file_line_module})"
+                    f"{CRLF_DOT}Code > {err_code}"
+                    f"{CRLF_DOT}Error. > {err_error_msg}")
 
-        if n >= 5:
-            err_msg += (f"{CRLF_DOT}File... > {err_lines_f[n-4]}(...)"
-                        f"{CRLF_DOT}Code > {err_lines_f[n-3]}")
-        err_msg += (f"{CRLF_DOT}File... > {err_lines_f[n-2]}(...)"
-                    f"{CRLF_DOT}Code > {err_lines_f[n-1]}"
-                    f"{CRLF_DOT}Error. > {err_lines_f[n]}")
     except Exception as err:
-        err_msg += (f"{CRLF_DOT}Error > Unknown")
-        pass
+        err_msg = f"{CRLF_DOT}Unknown Error, Review HA Logs"
 
-    post_event(err_msg)
+    post_event(f"{EVLOG_ERROR}INTERNAL ERROR > {err_text}{err_msg}")
 
     attrs = {}
     attrs[INTERVAL]         = '0 sec'
@@ -618,14 +737,27 @@ def post_internal_error(err_text, traceback_format_exec_obj='+'):
 #   DEBUG TRACE ROUTINES
 #
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+def dummy_trace():
+    _trace(None, None)
+    _traceha(None, None)
 
+#--------------------------------------------------------------------
 def _trace(devicename, log_text='+'):
-
+    '''
+    Display a message or variable in the Event Log
+    '''
     devicename, log_text = resolve_system_event_msg(devicename, log_text)
 
-    log_text = log_text.replace('<', '《').replace('>', '》')
+    if (type(log_text) is str) is False:
+        log_text = f"{log_text}"
+    log_text = log_text.replace('<', '&lt;')
     called_from = _called_from()
-    post_event(devicename, f"^3^{called_from} {log_text}")
+
+    #rc9 Reworked post_event and write_config_file to call modules directly
+    Gb.EvLog.post_event(devicename, f"^3^{called_from} {log_text}")
+    save_trace_prefix, Gb.trace_prefix = Gb.trace_prefix, '::::::::: '
+    write_ic3_log_recd(log_text)
+    Gb.trace_prefix = save_trace_prefix
 
 #--------------------------------------------------------------------
 def _traceha(log_text, v1='+++', v2='', v3='', v4='', v5=''):
@@ -647,7 +779,7 @@ def _traceha(log_text, v1='+++', v2='', v3='', v4='', v5=''):
         save_gb_trace_prefix, Gb.trace_prefix = (Gb.trace_prefix, '::::::::: ')
 
         Gb.HALogger.info(trace_msg)
-        write_ic3_debug_log_recd(trace_msg, force_write=True)
+        write_ic3_log_recd(trace_msg, force_write=True)
 
         Gb.trace_prefix = save_gb_trace_prefix
 
@@ -665,6 +797,9 @@ def _called_from():
     while level < 5:
         level += 1
         caller = getframeinfo(stack()[level][0])
+        # Gb.HALogger.info(f"741 {level=}")
+        # Gb.HALogger.info(f"742 {caller.filename=} {caller.lineno=}")
+
         if caller.filename.endswith('messaging.py') is False:
             break
 

@@ -69,6 +69,7 @@ class WazeRouteCalculator(object):
         'AU': 'row-RoutingManager/routingRequest',
     }
 
+#--------------------------------------------------------------------
     def __init__(self, region, real_time):
         # self.log = logging.getLogger(__name__)
         # self.log.addHandler(logging.NullHandler())
@@ -85,7 +86,7 @@ class WazeRouteCalculator(object):
         self.start_coords = ''
         self.end_coords = ''
 
-
+#--------------------------------------------------------------------
     def get_route(self, from_lat, from_long, to_lat, to_long,):
         """Get route data from waze"""
 
@@ -119,6 +120,7 @@ class WazeRouteCalculator(object):
 
                 return response_obj
 
+#--------------------------------------------------------------------
     @staticmethod
     def _check_response(response):
         """Check waze server response."""
@@ -130,6 +132,7 @@ class WazeRouteCalculator(object):
             log_exception(err)
             return None
 
+#--------------------------------------------------------------------
     def _add_up_route(self, results, stop_at_bounds=False):
         """Calculate route time and distance."""
         try:
@@ -150,6 +153,7 @@ class WazeRouteCalculator(object):
             log_exception(err)
             return (-1, -1)
 
+#--------------------------------------------------------------------
     def calc_route_info(self, from_lat, from_long, to_lat, to_long, log_results_flag=True):
         """Calculate best route info."""
         try:
@@ -163,7 +167,8 @@ class WazeRouteCalculator(object):
                 route_time, route_distance = self._add_up_route(route['results'])
 
                 if log_results_flag:
-                    log_info_msg(f"Waze Results > GPS-({from_lat:0.5f}, {from_long:0.5f}) --> ({to_lat:0.5f}, {to_long:0.5f}), "
+                    log_info_msg(f"Waze Results > GPS-({from_lat:0.5f}, {from_long:0.5f}) --> "
+                                    f"({to_lat:0.5f}, {to_long:0.5f}), "
                                     f"Time-{route_time:0.2f}min, "
                                     f"Distance-{route_distance:0.2f}km")
 

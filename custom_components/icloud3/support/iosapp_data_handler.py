@@ -15,10 +15,10 @@ from ..helpers.common       import (instr, is_statzone, is_zone, zone_display_as
 from ..helpers.messaging    import (post_event, post_monitor_msg,
                                     log_debug_msg, log_exception, log_error_msg, log_rawdata,
                                     _trace, _traceha, )
-from ..helpers.time_util    import (secs_to_time, secs_since, format_time_age, format_age, )
+from ..helpers.time_util    import (secs_to_time, secs_since, format_time_age, format_age, format_age_hrs, )
 from ..helpers.dist_util    import (format_dist_km, format_dist_m, )
 from ..helpers              import entity_io
-from ..support              import iosapp_interface #as iosapp_interface
+from ..support              import iosapp_interface
 from ..support              import stationary_zone as statzone
 
 
@@ -57,42 +57,46 @@ def check_iosapp_state_trigger_change(Device):
         iosapp_data_state_time = device_trkr_attrs[f"state_{TIMESTAMP_TIME}"]
 
         # Get the trigger data
-        entity_id                = Device.iosapp_entity[TRIGGER]
-        iosapp_data_trigger      = device_trkr_attrs["trigger"]                   = entity_io.get_state(entity_id)
-        iosapp_data_trigger_secs = device_trkr_attrs[f"trigger_{TIMESTAMP_SECS}"] = entity_io.get_last_changed_time(entity_id)
-        iosapp_data_trigger_time = device_trkr_attrs[f"trigger_{TIMESTAMP_TIME}"] = secs_to_time(iosapp_data_trigger_secs)
-
-        # If not a zone enter/exit trigger (periodic, Sig Location Change, Background refresh, etc)
-        if iosapp_data_trigger not in [ENTER_ZONE, EXIT_ZONE]:
-            # If the iosapp_state is a zone and the Device is not in a zone, change trigger to zone enter
-            if iosapp_data_state != NOT_HOME and Device.isnot_inzone:
-                iosapp_data_trigger = device_trkr_attrs["trigger"] = ENTER_ZONE
-            # If the iosapp_state is not a zone and the Device is in a zone, change trigger to zone exit
-            elif iosapp_data_state == NOT_HOME and Device.is_inzone:
-                iosapp_data_trigger = device_trkr_attrs["trigger"] = EXIT_ZONE
-
-        # Get the latest of the state time or trigger time for the new data
-        if iosapp_data_state_secs > iosapp_data_trigger_secs:
-            iosapp_data_secs = device_trkr_attrs[TIMESTAMP_SECS] = iosapp_data_trigger_secs
-            iosapp_data_time = device_trkr_attrs[TIMESTAMP_TIME] = iosapp_data_trigger_time
+        entity_id = Device.iosapp[TRIGGER]
+        if entity_id:
+            iosapp_data_trigger      = device_trkr_attrs["trigger"]                   = entity_io.get_state(entity_id)
+            iosapp_data_trigger_secs = device_trkr_attrs[f"trigger_{TIMESTAMP_SECS}"] = entity_io.get_last_changed_time(entity_id)
+            iosapp_data_trigger_time = device_trkr_attrs[f"trigger_{TIMESTAMP_TIME}"] = secs_to_time(iosapp_data_trigger_secs)
         else:
+            iosapp_data_trigger      = device_trkr_attrs["trigger"]                   = 'None'
+            iosapp_data_trigger_secs = device_trkr_attrs[f"trigger_{TIMESTAMP_SECS}"] = 0
+            iosapp_data_trigger_time = device_trkr_attrs[f"trigger_{TIMESTAMP_TIME}"] = HHMMSS_ZERO
+
+
+        # Get the latest of the state time or trigger time for the new data (rc9)
+        if (iosapp_data_state_not_set_flag
+                and iosapp_data_state_secs == 0
+                and iosapp_data_trigger_secs == 0):
+            Device.iosapp_data_trigger_secs = iosapp_data_secs = iosapp_data_trigger_secs = Gb.this_update_secs
+            Device.iosapp_data_trigger_time = iosapp_data_time = iosapp_data_trigger_time = Gb.this_update_time
+            iosapp_data_change_flag = True
+
+        if iosapp_data_state_secs > iosapp_data_trigger_secs:
+            iosapp_data_from = f" (State), Trig-{iosapp_data_trigger_time}"
             iosapp_data_secs = device_trkr_attrs[TIMESTAMP_SECS] = iosapp_data_state_secs
             iosapp_data_time = device_trkr_attrs[TIMESTAMP_TIME] = iosapp_data_state_time
+        else:
+            iosapp_data_from = f" (Trig), State-{iosapp_data_state_time}"
+            iosapp_data_secs = device_trkr_attrs[TIMESTAMP_SECS] = iosapp_data_trigger_secs
+            iosapp_data_time = device_trkr_attrs[TIMESTAMP_TIME] = iosapp_data_trigger_time
 
-        # if Gb.log_rawdata_flag:
-        if True is True:
-            change_msg = ''
-            if Device.iosapp_data_trigger != iosapp_data_trigger:
-                change_msg += f'Trigger ({Device.iosapp_data_trigger}{RARROW}{iosapp_data_trigger}, '
-            # if Device.iosapp_data_time != iosapp_data_time:
-            # beta 13
-            if abs(Device.iosapp_data_secs - iosapp_data_secs) >= 5:
-                change_msg += f'Time ({Device.iosapp_data_time}{RARROW}{iosapp_data_time}), '
-            if iosapp_data_state == NOT_SET:
-                change_msg += 'NotSet, '
+        # Build message if data has changed (rc9)
+        change_msg = ''
+        if Device.iosapp_data_trigger != iosapp_data_trigger:
+            change_msg += f'Trigger ({Device.iosapp_data_trigger}{RARROW}{iosapp_data_trigger}, '
 
-            if change_msg:
-                log_rawdata(f"iOSApp Data - <{Device.devicename}> {change_msg}", device_trkr_attrs, log_rawdata_flag=True)
+        if abs(Device.iosapp_data_secs - iosapp_data_secs) >= 5:
+            change_msg += f'Time ({Device.iosapp_data_time}{RARROW}{iosapp_data_time}), '
+        if iosapp_data_state == NOT_SET:
+            change_msg += 'NotSet, '
+
+        if  Gb.log_rawdata_flag and change_msg:
+            log_rawdata(f"iOSApp Data - <{Device.devicename}> {change_msg}", device_trkr_attrs, log_rawdata_flag=True)
 
         iosapp_data_change_flag = (Device.iosapp_data_trigger != iosapp_data_trigger
                                 or Device.iosapp_data_secs != iosapp_data_secs
@@ -100,14 +104,15 @@ def check_iosapp_state_trigger_change(Device):
 
         # Force a reject if periodic and has not moved
         if iosapp_data_trigger == 'periodic':
-            if (Device.dev_data_source != NOT_SET
+            if (Device.is_dev_data_source_SET
                     and device_trkr_attrs[LATITUDE] == Device.iosapp_data_latitude
                     and device_trkr_attrs[LONGITUDE] == Device.iosapp_data_longitude):
                 iosapp_data_change_flag = False
 
         # Update Device iosapp_data with the state & trigger location data
-        if iosapp_data_change_flag:
-            update_iosapp_data_from_entity_attrs(Device, device_trkr_attrs)
+        # rc3 - Always try update, will check time in update_data fct
+        # if iosapp_data_change_flag:
+        update_iosapp_data_from_entity_attrs(Device, device_trkr_attrs)
 
         Device.iosapp_data_trigger = iosapp_data_trigger
 
@@ -159,21 +164,18 @@ def check_iosapp_state_trigger_change(Device):
                 Device.iosapp_zone_enter_dist_m = -1
 
         iosapp_msg =(f"iOSApp Monitor > "
-                    f"Trigger-{iosapp_data_trigger}@{iosapp_data_trigger_time} (^trig_age), "
-                    f"State-{Device.iosapp_data_state}@{Device.iosapp_data_state_time} (^state_age), ")
+                    f"State-{Device.iosapp_data_state}@{Device.iosapp_data_state_time} (^state_age), "
+                    f"Trigger-{iosapp_data_trigger}@{iosapp_data_trigger_time} (^trig_age), ")
 
         if iosapp_data_state_not_set_flag:
-            Device.iosapp_data_change_reason = f"Initial Locate@{Gb.this_update_time}"
-            Device.iosapp_data_trigger       = f"Initial Locate@{Gb.this_update_time}"
-
-        elif (is_statzone(Device.iosapp_data_state)
-                and f'{Device.iosapp_data_latitude:.5f}'  == f'{Gb.statzone_base_latitude:.5f}'
-                and f'{Device.iosapp_data_longitude:.5f}' == f'{Gb.statzone_base_longitude:.5f}'):
-            Device.iosapp_data_reject_reason = "StatZone Base Location"
+            Device.iosapp_data_change_reason = \
+                Device.iosapp_data_trigger = f"Initial iOSApp Locate@{iosapp_data_time}"
 
         # Reject State and trigger changes older than the current data
         elif (Device.iosapp_data_secs <= Device.last_update_loc_secs):
-            Device.iosapp_data_reject_reason = "Before Last Update"
+            Device.iosapp_data_reject_reason = (f"Before Last Update "
+                                                f"({secs_to_time(Device.iosapp_data_secs)} <= "
+                                                f"{secs_to_time(Device.last_update_loc_secs)})")
 
         elif iosapp_data_change_flag is False:
             Device.iosapp_data_reject_reason = "Data has not changed"
@@ -200,7 +202,7 @@ def check_iosapp_state_trigger_change(Device):
                 and Device.iosapp_data_secs > Device.located_secs_plus_5
                 and Device.iosapp_data_gps_accuracy > Gb.gps_accuracy_threshold):
             Device.iosapp_data_reject_reason = (f"Poor GPS Accuracy-{Device.iosapp_data_gps_accuracy}m "
-                                                f"(#{Device.old_loc_poor_gps_cnt})")
+                                                f"#{Device.old_loc_cnt}")
 
         # Discard StatZone entered if StatZone was created in the last 15-secs
         if (Device.iosapp_data_trigger == ENTER_ZONE
@@ -211,7 +213,7 @@ def check_iosapp_state_trigger_change(Device):
 
         # Discard if already in the zone
         elif (Device.iosapp_data_trigger == ENTER_ZONE
-                and Device.iosapp_data_state == Device.loc_data_zone):      #Device.last_update_loc_zone):
+                and Device.iosapp_data_state == Device.loc_data_zone):
             Device.iosapp_data_reject_reason = "Enter Zone and already in zone"
 
         if Device.is_passthru_zone_delay_active:
@@ -228,7 +230,6 @@ def check_iosapp_state_trigger_change(Device):
 
         # trigger time is after last locate
         elif Device.iosapp_data_secs > Device.located_secs_plus_5:
-            Device.count_trigger_changed += 1
             Device.iosapp_data_change_reason = (f"{Device.iosapp_data_trigger}@"
                                                 f"{Device.iosapp_data_time}")
                                                 # f"{Device.iosapp_data_trigger_time}")
@@ -242,7 +243,6 @@ def check_iosapp_state_trigger_change(Device):
         # iOSAPP location changed and State changed more than 5-secs after last locate
         elif Device.iosapp_data_secs > Device.located_secs_plus_5:
             Device.iosapp_data_change_reason = (f"Location Change")
-            Device.count_state_changed += 1
             Device.iosapp_data_trigger = (f"Location Change, "
                     f"GPS-{Device.iosapp_data_fgps}")
 
@@ -262,10 +262,22 @@ def check_iosapp_state_trigger_change(Device):
         else:
             Device.iosapp_data_reject_reason = "Failed Update Tests"
 
-        # Display iOSApp Monitor info message if the state or trigger changed
-        if (iosapp_msg == Device.last_iosapp_msg):
-            return
+        # If data time is very old, change it to it's age
+        if secs_since(Device.iosapp_data_secs) >= 10800:
+            Device.iosapp_data_time = device_trkr_attrs[TIMESTAMP_TIME] = \
+                    format_age_hrs(Device.iosapp_data_secs)
 
+        # Display iOSApp Monitor info message if the state or trigger changed
+        if (Gb.this_update_time.endswith('00:00')
+                or iosapp_msg != Device.last_iosapp_msg):
+            _display_iosapp_msg(Device, iosapp_msg)
+
+    except Exception as err:
+            log_exception(err)
+
+#--------------------------------------------------------------------
+def _display_iosapp_msg(Device, iosapp_msg):
+    try:
         Device.last_iosapp_msg = iosapp_msg
         iosapp_msg += (f"LastTrigger-{Device.sensors[TRIGGER]}, "
                         f"iOSAppData-{Device.iosapp_data_time}")
@@ -293,11 +305,8 @@ def check_iosapp_state_trigger_change(Device):
         iosapp_msg += f", {Device.iosapp_zone_exit_trigger_info}"
         post_monitor_msg(Device.devicename, iosapp_msg)
 
-        return
-
     except Exception as err:
         log_exception(err)
-        return
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #
@@ -332,10 +341,10 @@ def check_if_iosapp_is_alive(Device):
     try:
         if (Device.iosapp_monitor_flag is False
                 or Device.is_offline
-                or Device.iosapp_entity[NOTIFY] == ''):
+                or Device.iosapp[NOTIFY] == ''):
             return
 
-        # Send a location request if the iosapp data is more than 1-hour old
+        # Send a location request if the iosapp data is more than 'alive Interval'
         # and the check for request sent > 1 hr ago. Only send once an hour.
         if (secs_since(Device.iosapp_request_loc_first_secs) % Gb.iosapp_alive_interval_secs == 0
                 and secs_since(Device.iosapp_data_secs) > Gb.iosapp_alive_interval_secs
@@ -366,7 +375,7 @@ def get_iosapp_device_trkr_entity_attrs(Device):
         None -  error or no data is available
     '''
     try:
-        entity_id = Device.iosapp_entity[DEVICE_TRACKER]
+        entity_id = Device.iosapp[DEVICE_TRACKER]
         device_trkr_attrs = {}
         device_trkr_attrs[DEVICE_TRACKER] =  entity_io.get_state(entity_id)
 
@@ -402,27 +411,34 @@ def update_iosapp_data_from_entity_attrs(Device, device_trkr_attrs):
 
     if (device_trkr_attrs is None
             or LATITUDE not in device_trkr_attrs):
-        log_error_msg(Device.devicename, 'iOSApp Date Error > No data available')
+        log_error_msg(Device.devicename, 'iOSApp Data Error > No data available')
+        return
+
+    iosapp_data_secs = device_trkr_attrs.get(TIMESTAMP_SECS, Device.iosapp_data_state_secs)
+    iosapp_data_time = device_trkr_attrs.get(TIMESTAMP_TIME, Device.iosapp_data_state_time)
+    gps_accuracy     = device_trkr_attrs.get(GPS_ACCURACY, 99999)
+
+    if Device.iosapp_data_secs >= iosapp_data_secs or gps_accuracy > Gb.gps_accuracy_threshold:
         return
 
     log_rawdata(f"iOS App - {Device.devicename}", device_trkr_attrs)
 
-    Device.iosapp_data_state      = device_trkr_attrs.get(DEVICE_TRACKER, NOT_SET)
-    Device.iosapp_data_state_secs = device_trkr_attrs.get(f"state_{TIMESTAMP_SECS}", 0)
-    Device.iosapp_data_state_time = device_trkr_attrs.get(f"state_{TIMESTAMP_TIME}", HHMMSS_ZERO)
+    Device.iosapp_data_state             = device_trkr_attrs.get(DEVICE_TRACKER, NOT_SET)
+    Device.iosapp_data_state_secs        = device_trkr_attrs.get(f"state_{TIMESTAMP_SECS}", 0)
+    Device.iosapp_data_state_time        = device_trkr_attrs.get(f"state_{TIMESTAMP_TIME}", HHMMSS_ZERO)
 
-    Device.iosapp_data_trigger   = device_trkr_attrs.get("trigger", NOT_SET)
-    Device.iosapp_data_secs      = device_trkr_attrs.get(TIMESTAMP_SECS, Device.iosapp_data_state_secs)
-    Device.iosapp_data_time      = device_trkr_attrs.get(TIMESTAMP_TIME, Device.iosapp_data_state_time)
+    Device.iosapp_data_trigger           = device_trkr_attrs.get("trigger", NOT_SET)
+    Device.iosapp_data_secs              = iosapp_data_secs
+    Device.iosapp_data_time              = iosapp_data_time
     Device.iosapp_data_invalid_error_cnt = 0
-    Device.iosapp_data_latitude          = entity_io.extract_attr_value(device_trkr_attrs, LATITUDE, NUMERIC)
-    Device.iosapp_data_longitude         = entity_io.extract_attr_value(device_trkr_attrs, LONGITUDE, NUMERIC)
-    Device.iosapp_data_gps_accuracy      = entity_io.extract_attr_value(device_trkr_attrs, GPS_ACCURACY, NUMERIC)
-    Device.iosapp_data_vertical_accuracy = entity_io.extract_attr_value(device_trkr_attrs, VERT_ACCURACY, NUMERIC)
-    Device.iosapp_data_altitude          = entity_io.extract_attr_value(device_trkr_attrs, ALTITUDE, NUMERIC)
+    Device.iosapp_data_latitude          = device_trkr_attrs.get(LATITUDE, 0)
+    Device.iosapp_data_longitude         = device_trkr_attrs.get(LONGITUDE, 0)
+    Device.iosapp_data_gps_accuracy      = gps_accuracy
+    Device.iosapp_data_vertical_accuracy = device_trkr_attrs.get(VERT_ACCURACY, 99999)
+    Device.iosapp_data_altitude          = device_trkr_attrs.get(ALTITUDE, 0)
 
-    if Device.DeviceFmZoneHome:
-        home_dist = format_dist_km(Device.DeviceFmZoneHome.distance_km_iosapp)
+    if Device.FromZone_Home:
+        home_dist = format_dist_km(Device.FromZone_Home.distance_km_iosapp)
     else:
         home_dist = ''
 
@@ -430,4 +446,42 @@ def update_iosapp_data_from_entity_attrs(Device, device_trkr_attrs):
                     f"{CRLF_DOT}Loc-{Device.iosapp_data_time}, "
                     f"Home-{home_dist}, "
                     f"{Device.iosapp_data_fgps}")
-    post_monitor_msg(monitor_msg)
+    if monitor_msg != Device.update_iosapp_data_monitor_msg:
+        Device.update_iosapp_data_monitor_msg = monitor_msg
+        post_monitor_msg(Device.devicename, monitor_msg)
+
+
+#--------------------------------------------------------------------
+def sync_iosapp_data_state_statzone(Device):
+    '''
+    Update the Device's iosapp_data_state value to sync it with the statzone
+    the device is in. If the iosapp state is a statzone but ic3 has it set to
+    not_home and the device is in a statzone, the iosapp state value may be
+    out of sync because the state value changed byt the actual location did not
+    change.
+
+    This is done at the befinning of the process_update function in icloud3_main
+    sot the iosapp state value will be correct when the Event Log is displayed
+
+    Return:
+        True - The iosapp_data_state was updated
+        False - The iosapp_data_state was not updated
+
+    '''
+    if (Device.iosapp_monitor_flag is False
+            or Gb.conf_data_source_IOSAPP is False
+            or Device.iosapp.get(DEVICE_TRACKER) is None):
+        return False
+
+    iosapp_data_state = entity_io.get_state(Device.iosapp[DEVICE_TRACKER])
+
+    if (is_statzone(iosapp_data_state)
+            and is_statzone(Device.loc_data_zone)
+            and Device.iosapp_data_state == NOT_HOME):
+        Device.iosapp_data_state      = iosapp_data_state
+        Device.iosapp_data_state_secs = Gb.this_update_secs
+        Device.iosapp_data_state_time = Gb.this_update_time
+
+        return True
+
+    return False
