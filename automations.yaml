@@ -1166,3 +1166,50 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
   mode: single
+- id: '1705495940138'
+  alias: on_start_create_group.all_duration_class_and_min_unit_of_measurement_sensors
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_duration_class_and_min_unit_of_measurement_sensors
+      icon: mdi:volume-off
+      friendly_name: All sensor duration device class min unit of measurement group
+      filter_by_device_class: true
+      included_device_classes:
+      - duration
+      filter_by_unit_of_measurement: true
+      filtered_unit_of_measurement: min
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1705591084335'
+  alias: New automation
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_data_size_device_class_measurement_state_class_and_min_unit_of_measurement_sensors
+      icon: mdi:volume-off
+      friendly_name: All sensor data_size device class state_class measurement MB
+        unit of measurement group
+      filter_by_device_class: true
+      included_device_classes:
+      - data_size
+      filter_by_state_class: true
+      filtered_state_class: measurement
+      filter_by_unit_of_measurement: true
+      filtered_unit_of_measurement: MB
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
