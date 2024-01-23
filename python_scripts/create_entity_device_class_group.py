@@ -51,6 +51,10 @@ icon = data.get('icon', '')
 friendly_name = data.get('friendly_name', group_name)
 filter_by_device_class = data.get('filter_by_device_class', False)
 included_device_classes = data.get('included_device_classes', ['door'])
+filter_by_state_class = data.get('filter_by_state_class', False)
+filtered_state_class = data.get('filtered_state_class', '')
+filter_by_unit_of_measurement = data.get('filter_by_unit_of_measurement', False)
+filtered_unit_of_measurement = data.get('filtered_unit_of_measurement', '')
 excluded_entity_groups = data.get('excluded_entity_groups', [])
 excluded_entities = data.get('excluded_entities', [])
 
@@ -84,7 +88,7 @@ try:
                         globally_excluded_matches.append(entity_id)
                         logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
 except:
-    logger.error(logger, f"Error - a problem occured adding the memebers of {excluded_entity_groups} entities to the globally excluded matches list")
+    logger.error(logger, f"Error - a problem occured adding the members of {excluded_entity_groups} entities to the excluded matches list")
 
 try:
     for entity_id in hass.states.entity_ids(domain):
@@ -97,19 +101,46 @@ try:
                 if entity is None:
                     logger.error(logger, f"Error - entity object not found")
                 else:
-                    if filter_by_device_class:
-                        for attr in entity.attributes:
-                            logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
-                            if attr is not None:
-                                if attr == "device_class":
-                                    for device_class_option in included_device_classes:
-                                        logger.debug(f"iterating '{device_class_option}' in device_class '{included_device_classes}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
-                                        if entity.attributes.get(attr) == device_class_option:
-                                            entity_list.append(entity_id)
-                                            logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
-                    else:
-                        entity_list.append(entity_id)
-                        logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
+                    try:
+                        if filter_by_device_class:
+                            for attr in entity.attributes:
+                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                if attr is not None:
+                                    if attr == "device_class":
+                                        for device_class_option in included_device_classes:
+                                            logger.debug(f"iterating '{device_class_option}' in device_class '{included_device_classes}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                            if entity.attributes.get(attr) == device_class_option:
+                                                entity_list.append(entity_id)
+                                                logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
+                        else:
+                            entity_list.append(entity_id)
+                            logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
+                    except:
+                        logger.error(logger, f"Error - a problem occured adding an entity to the entity list")
+
+                    try:
+                        if filter_by_state_class:
+                            for attr in entity.attributes:
+                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                if attr is not None:
+                                    if attr == "state_class":
+                                        if entity.attributes.get(attr) != filtered_state_class:
+                                            entity_list.remove(entity_id)
+                                            logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_state_class}' at {time.time()}")
+                    except:
+                        logger.error(logger, f"Error - a problem occured removing a filtered state_class entity from the entity list")
+
+                    try:
+                        if filter_by_unit_of_measurement:
+                            for attr in entity.attributes:
+                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                if attr is not None:
+                                    if attr == "unit_of_measurement":
+                                        if entity.attributes.get(attr) != filtered_unit_of_measurement:
+                                            entity_list.remove(entity_id)
+                                            logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_unit_of_measurement}' at {time.time()}")
+                    except:
+                        logger.error(logger, f"Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
 
 except:
     logger.error(logger, f"Error - a problem occured creating the entity list")
