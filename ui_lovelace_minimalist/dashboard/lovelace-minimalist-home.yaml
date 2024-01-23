@@ -70,71 +70,75 @@ views:
                     name: "Data"
                     color: "purple"
 
-          - type: "vertical-stack"
+          - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 styles:
                   grid:
                     # - grid-template-areas: "'item1 item1 item1 item1 item1 item2 item2 item2 item2 item2' 'item3 item3 item4 item4 item5 item5 item6 item6 item7 item7' 'item8 item8 item9 item9 item10 item10 item11 item11 item12 item12'"
-                    - grid-template-areas: "'item1 item1 item1 item1 item1 item2 item2 item2 item2 item2' 'item3 item3 item4 item4 item5 item5 item6 item6 item7 item7'"
-                    - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
+                    # - grid-template-areas: "'item1 item1 item1 item1 item1 item2 item2 item2 item2 item2' 'item3 item3 item4 item4 item5 item5 item6 item6 item7 item7'"
+                    - grid-template-areas: "'item1 item2 item3 item4 item5'"
+                    - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
                     - grid-template-rows: "min-content"
                     - justify-items: "center"
                   card:
-                    - padding: "10px 10px 0px 10px"
+                    # - padding: "10px 10px 0px 10px"
+                    - padding: "0"
                     - overflow: "visible"
                     - border-bottom-left-radius: "0px"
                     - border-bottom-right-radius: "0px"
+                    # - background-color: "var(--primary-background-color)"
+                    # - box-shadow: "none"
 
                   custom_fields:
-                    item1: &widget_update_styling
+                    # item1: &widget_update_styling
+                    #   - border-radius: "none"
+                    #   - box-shadow: "none"
+                    #   - padding: "4px"
+                    #   - margin-bottom: "10px"
+                    #   - cursor: "default"
+                    #   - width: "86%"
+                    #   - justify-items: "center"
+                    # item2: *widget_update_styling
+                    item1: &widget_icon_binary_sensor_styling
                       - border-radius: "none"
                       - box-shadow: "none"
                       - padding: "4px"
-                      - margin-bottom: "10px"
                       - cursor: "default"
-                      - width: "86%"
-                      - justify-items: "center"
-                    item2: *widget_update_styling
-                    item3: &widget_icon_binary_sensor_styling
-                      - border-radius: "none"
-                      - box-shadow: "none"
-                      - padding: "4px"
-                      - cursor: "default"
+                    item2: *widget_icon_binary_sensor_styling
+                    item3: *widget_icon_binary_sensor_styling
                     item4: *widget_icon_binary_sensor_styling
                     item5: *widget_icon_binary_sensor_styling
-                    item6: *widget_icon_binary_sensor_styling
-                    item7: *widget_icon_binary_sensor_styling
                 custom_fields:
-                  item1:
-                    card:
-                      type: "custom:button-card"
-                      template: "card_kepath_update"
-                      entity: "update.home_assistant_core_update"
-                      variables:
-                        ulm_card_neekster_update_enable_controls: true
-                        ulm_card_neekster_update_collapsible: false
-                        ulm_card_neekster_update_horizontal: false
-                        ulm_card_neekster_update_narrow_buttons: true
-                        ulm_card_neekster_update_view_release_notes: true
-                  item2:
-                    card:
-                      type: "custom:button-card"
-                      template: "card_kepath_update"
-                      entity: "update.home_assistant_supervisor_update"
-                      variables:
-                        ulm_card_neekster_update_enable_controls: true
-                        ulm_card_neekster_update_collapsible: false
-                        ulm_card_neekster_update_horizontal: false
-                        ulm_card_neekster_update_narrow_buttons: true
-                        ulm_card_neekster_update_view_release_notes: true
+                  # item1:
+                  #   card:
+                  #     type: "custom:button-card"
+                  #     template: "card_kepath_update"
+                  #     entity: "update.home_assistant_core_update"
+                  #     variables:
+                  #       ulm_card_neekster_update_enable_controls: true
+                  #       ulm_card_neekster_update_collapsible: false
+                  #       ulm_card_neekster_update_horizontal: false
+                  #       ulm_card_neekster_update_narrow_buttons: true
+                  #       ulm_card_neekster_update_view_release_notes: true
+                  # item2:
+                  #   card:
+                  #     type: "custom:button-card"
+                  #     template: "card_kepath_update"
+                  #     entity: "update.home_assistant_supervisor_update"
+                  #     variables:
+                  #       ulm_card_neekster_update_enable_controls: true
+                  #       ulm_card_neekster_update_collapsible: false
+                  #       ulm_card_neekster_update_horizontal: false
+                  #       ulm_card_neekster_update_narrow_buttons: true
+                  #       ulm_card_neekster_update_view_release_notes: true
 
-                  item3:
+                  item1:
                     card:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_conditional_selector"
-                        # - "icon_set_color"
+                        - "icon_set_color"
                       entity: "input_boolean.minimalist_ui_binary_action_sensors"
                       variables:
                         ulm_card_kepath_extra_templates_alternative_state_appearance:
@@ -147,12 +151,12 @@ views:
                             attribute_name: "tab_action_sensors_triggered_count"
                             count_tooltip: "Action Sum"
 
-                  item4:
+                  item2:
                     card:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_conditional_selector"
-                        # - "icon_set_color"
+                        - "icon_set_color"
                       entity: "input_boolean.minimalist_ui_binary_information_sensors"
                       variables:
                         ulm_card_kepath_extra_templates_alternative_state_appearance:
@@ -165,12 +169,12 @@ views:
                             attribute_name: "tab_information_sensors_triggered_count"
                             count_tooltip: "Info Sum"
 
-                  item5:
+                  item3:
                     card:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_conditional_selector"
-                        # - "icon_set_color"
+                        - "icon_set_color"
                       entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
                       variables:
                         ulm_card_kepath_extra_templates_alternative_state_appearance:
@@ -183,26 +187,80 @@ views:
                             attribute_name: "tab_diagnostic_sensors_triggered_count"
                             count_tooltip: "Diag on"
 
-                  # item6:
-                  #   card:
-                  #     type: "custom:button-card"
-                  #     template:
-                  #       - "custom_card_kepath_binary_sensor_conditional_selector"
-                  #       - "icon_set_color"
-                  #     entity: "input_boolean.placeholder"
+                  item4:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_conditional_selector"
+                        - "icon_set_color"
+                      entity: "input_boolean.minimalist_ui_binary_alert_sensors"
+                      variables:
+                        ulm_card_kepath_extra_templates_alternative_state_appearance:
+                          default_color: "theme"
+                          triggered_color: "yellow"
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          unavailable:
+                            attribute_name: "tab_alert_sensors_unavailable_count"
+                          amount:
+                            attribute_name: "tab_alert_sensors_triggered_count"
+                            count_tooltip: "Alert on"
 
-                  # item7:
-                  #   card:
-                  #     type: "custom:button-card"
-                  #     template:
-                  #       - "custom_card_kepath_binary_sensor_conditional_selector"
-                  #       - "icon_set_color"
-                  #     entity: "input_boolean.placeholder"
+                  item5:
+                    card:
+                      type: "custom:button-card"
+                      template:
+                        - "custom_card_kepath_binary_sensor_conditional_selector"
+                        - "icon_set_color"
+                      entity: "input_boolean.minimalist_ui_binary_update_sensors"
+                      variables:
+                        ulm_card_kepath_extra_templates_alternative_state_appearance:
+                          default_color: "theme"
+                          triggered_color: "yellow"
+                        ulm_card_kepath_binary_sensor_count_notifications:
+                          unavailable:
+                            attribute_name: "tab_update_sensors_unavailable_count"
+                          amount:
+                            attribute_name: "tab_update_sensors_triggered_count"
+                            count_tooltip: "Update on"
+          # - type: "custom:mod-card"
+          #   card_mod:
+          #     style: |
+          #       hui-horizontal-stack-card $:
+          #         div#root $:
+          #           hui-conditional-card: |
+          #             {
+          #               margin: 0px;
+          #             }
+          #       hui-horizontal-stack-card $:
+          #         div#root $: |
+          #           hui-conditional-card:
+          #           {
+          #             margin: 0px;
+          #           }
+          #       hui-horizontal-stack-card $: |
+          #         div#root > *:
+          #         {
+          #           margin: 0px;
+          #         }
+          #       div#root > *:
+          #       {
+          #         background-color: red;
+          #       }
+          #   card:
 
+          - type: "horizontal-stack"
+            cards:
               - type: "conditional"
                 conditions:
                   - entity: "input_boolean.minimalist_ui_binary_action_sensors"
                     state: "on"
+                # card:
+                #   type: "custom:mod-card"
+                #   card_mod:
+                #     style: |
+                #       div#root {
+                #         margin: 0px;
+                #       }
                 card:
                   type: "custom:button-card"
                   styles:
@@ -216,9 +274,17 @@ views:
                       - overflow: "visible"
                       - border-top-left-radius: "0px"
                       - border-top-right-radius: "0px"
-                      - margin-top: "-7px"
-                      - margin-bottom: "-4px"
-
+                      - margin: "-7px 0 0 0"
+                      - background-color: >
+                          [[[
+                            var BGColor = "";
+                            if(hass.themes.darkMode) {
+                              BGColor = "rgba(var(--color-theme),0.1)";
+                            }
+                            return BGColor;
+                          ]]]
+                      # - margin-top: "-7px"
+                      # - margin-bottom: "-4px"
                     custom_fields:
                       item1: &widget_icon_binary_sensor_expanded_styling
                         - border-radius: "none"
@@ -350,25 +416,6 @@ views:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_count"
-                          - "custom_card_kepath_lock_state"
-                        entity: "group.all_locks"
-                        icon: "mdi:lock"
-                        name: "Locks"
-                        variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "locks_unavailable_count"
-                            amount:
-                              attribute_name: "locks_unlocked_count"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "Lock entities"
-                    item7:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_sensor_count"
                           - "red_heating_icon"
                         entity: "group.all_climate"
                         icon: "mdi:thermometer"
@@ -383,7 +430,7 @@ views:
                               title: "climate entities"
                               auto_entities:
                                 sort_reversed: true
-                    item8:
+                    item7:
                       card:
                         type: "custom:button-card"
                         template:
@@ -418,50 +465,26 @@ views:
                       - overflow: "visible"
                       - border-top-left-radius: "0px"
                       - border-top-right-radius: "0px"
-                      - margin-top: "-7px"
-                      - margin-bottom: "-4px"
+                      - margin: "-7px 0 0 0"
+                      # - margin-top: "-7px"
+                      # - margin-bottom: "-4px"
                     custom_fields:
-                      item1: &widget_icon_binary_sensor_expanded_styling
+                      item1: &widget_icon_binary_tabs_expanded_styling
                         - border-radius: "none"
                         - box-shadow: "none"
                         - padding: "4px"
                         - cursor: "default"
-                      item2: *widget_icon_binary_sensor_expanded_styling
-                      item3: *widget_icon_binary_sensor_expanded_styling
-                      item4: *widget_icon_binary_sensor_expanded_styling
-                      item5: *widget_icon_binary_sensor_expanded_styling
-                      item6: *widget_icon_binary_sensor_expanded_styling
-                      item7: *widget_icon_binary_sensor_expanded_styling
-                      item8: *widget_icon_binary_sensor_expanded_styling
-                      item9: *widget_icon_binary_sensor_expanded_styling
-                      item10: *widget_icon_binary_sensor_expanded_styling
+                      item2: *widget_icon_binary_tabs_expanded_styling
+                      item3: *widget_icon_binary_tabs_expanded_styling
+                      item4: *widget_icon_binary_tabs_expanded_styling
+                      item5: *widget_icon_binary_tabs_expanded_styling
+                      item6: *widget_icon_binary_tabs_expanded_styling
+                      item7: *widget_icon_binary_tabs_expanded_styling
+                      item8: *widget_icon_binary_tabs_expanded_styling
+                      item9: *widget_icon_binary_tabs_expanded_styling
+                      item10: *widget_icon_binary_tabs_expanded_styling
                   custom_fields:
                     item1:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_sensor_count"
-                          - "icon_set_color"
-                        entity: "group.all_safety_class_binary_sensors"
-                        name: "Alerts"
-                        variables:
-                          ulm_card_kepath_extra_templates_alternative_state_appearance:
-                            default_color: "green"
-                            triggered_icon: "mdi:alarm-light"
-                            triggered_color: "red"
-                            trigger_on_unavailable: true
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "safety_sensors_unavailable_count"
-                            amount:
-                              attribute_name: "safety_sensors_triggered_count"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "safety entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                    item2:
                       card:
                         type: "custom:button-card"
                         template:
@@ -483,30 +506,7 @@ views:
                               title: "occupancy entities"
                               auto_entities:
                                 sort_method: "last_changed"
-                    item3:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_sensor_count"
-                          - "icon_set_color"
-                        entity: "group.all_cameras"
-                        name: "Camera"
-                        variables:
-                          ulm_card_kepath_extra_templates_alternative_state_appearance:
-                            default_color: "green"
-                            triggered_icon: "mdi:camera-off"
-                            triggered_color: "red"
-                            trigger_on_unavailable: true
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            amount:
-                              attribute_name: "cameras_off_count"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "camera entities"
-                              auto_entities:
-                                sort_method: "name"
-                    item4:
+                    item2:
                       card:
                         type: "custom:button-card"
                         template:
@@ -529,7 +529,7 @@ views:
                               auto_entities:
                                 sort_method: "name"
                                 sort_reversed: true
-                    item5:
+                    item3:
                       card:
                         type: "custom:button-card"
                         template:
@@ -553,7 +553,7 @@ views:
                               title: "speaker entities"
                               auto_entities:
                                 sort_method: "last_changed"
-                    item6:
+                    item4:
                       card:
                         type: "custom:button-card"
                         template:
@@ -578,7 +578,6 @@ views:
                               auto_entities:
                                 sort_method: "last_changed"
 
-
               - type: "conditional"
                 conditions:
                   - entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
@@ -596,8 +595,9 @@ views:
                       - overflow: "visible"
                       - border-top-left-radius: "0px"
                       - border-top-right-radius: "0px"
-                      - margin-top: "-7px"
-                      - margin-bottom: "0px"
+                      - margin: "-7px 0 0 0"
+                      # - margin-top: "-7px"
+                      # - margin-bottom: "0px"
                     custom_fields:
                       item1: &widget_icon_binary_sensor_expanded_styling
                         - border-radius: "none"
@@ -754,6 +754,240 @@ views:
                                 sort_method: "state"
                                 sort_numeric: true
                                 exclude_unknown_state: true
+
+              - type: "conditional"
+                conditions:
+                  - entity: "input_boolean.minimalist_ui_binary_alert_sensors"
+                    state: "on"
+                card:
+                  type: "custom:button-card"
+                  styles:
+                    grid:
+                      - grid-template-areas: "'item1 item2 item3 item4 item5' 'item6 item7 item8 item9 item10'"
+                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
+                      - grid-template-rows: "min-content"
+                      - justify-items: "center"
+                    card:
+                      - padding: "10px"
+                      - overflow: "visible"
+                      - border-top-left-radius: "0px"
+                      - border-top-right-radius: "0px"
+                      - margin: "-7px 0 0 0"
+                      # - margin-top: "-7px"
+                      # - margin-bottom: "0px"
+                    custom_fields:
+                      item1: &widget_icon_binary_sensor_expanded_styling
+                        - border-radius: "none"
+                        - box-shadow: "none"
+                        - padding: "4px"
+                        - cursor: "default"
+                      item2: *widget_icon_binary_sensor_expanded_styling
+                      item3: *widget_icon_binary_sensor_expanded_styling
+                      item4: *widget_icon_binary_sensor_expanded_styling
+                      item5: *widget_icon_binary_sensor_expanded_styling
+                      item6: *widget_icon_binary_sensor_expanded_styling
+                      item7: *widget_icon_binary_sensor_expanded_styling
+                      item8: *widget_icon_binary_sensor_expanded_styling
+                      item9: *widget_icon_binary_sensor_expanded_styling
+                      item10: *widget_icon_binary_sensor_expanded_styling
+                  custom_fields:
+                    item1:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "icon_set_color"
+                        entity: "group.all_safety_class_binary_sensors"
+                        name: "Alerts"
+                        variables:
+                          ulm_card_kepath_extra_templates_alternative_state_appearance:
+                            default_color: "green"
+                            triggered_icon: "mdi:alarm-light"
+                            triggered_color: "red"
+                            trigger_on_unavailable: true
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "safety_sensors_unavailable_count"
+                            amount:
+                              attribute_name: "safety_sensors_triggered_count"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "safety entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                    item2:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "custom_card_kepath_lock_state"
+                        entity: "lock.front_door_top_bolt"
+                        icon: "mdi:lock"
+                        name: "Lock"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "locks_unavailable_count"
+                            amount:
+                              attribute_name: "locks_unlocked_count"
+                        tap_action:
+                          action: "more-info"
+
+                    item3:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "icon_set_color"
+                        entity: "group.all_cameras"
+                        name: "Camera"
+                        variables:
+                          ulm_card_kepath_extra_templates_alternative_state_appearance:
+                            default_color: "green"
+                            triggered_icon: "mdi:camera-off"
+                            triggered_color: "red"
+                            trigger_on_unavailable: true
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            amount:
+                              attribute_name: "cameras_off_count"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "camera entities"
+                              auto_entities:
+                                sort_method: "name"
+
+              - type: "conditional"
+                conditions:
+                  - entity: "input_boolean.minimalist_ui_binary_update_sensors"
+                    state: "on"
+                card:
+                  # - type: "horizontal-stack"
+                  #   cards:
+                  type: "custom:button-card"
+                  styles:
+                    grid:
+                      # - grid-template-areas: "'item1 item1 item1 item1 item1 item2 item2 item2 item2 item2' 'item3 item3 item4 item4 item5 item5 item6 item6 item7 item7' 'item8 item8 item9 item9 item10 item10 item11 item11 item12 item12'"
+                      # - grid-template-areas: "'item1 item1 item1 item1 item1 item2 item2 item2 item2 item2' 'item3 item3 item4 item4 item5 item5 item6 item6 item7 item7'"
+                      - grid-template-areas: >
+                          'doubleitem1 doubleitem1 doubleitem1 doubleitem1 doubleitem1 doubleitem2 doubleitem2 doubleitem2 doubleitem2 doubleitem2'
+                          'item1 item1 item2 item2 item3 item3 item4 item4 item5 item5'
+                          'item6 item6 item7 item7 item8 item8 item9 item9 item10 item10'
+                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
+                      - grid-template-rows: "min-content"
+                      - justify-items: "center"
+                    card:
+                      - padding: "10px"
+                      - overflow: "visible"
+                      - border-top-left-radius: "0px"
+                      - border-top-right-radius: "0px"
+                      # - margin-top: "-7px"
+                      # - margin-bottom: "-4px"
+                      - margin: "-7px 0 0 0"
+                      # - padding: "10px 10px 0px 10px"
+                      # - overflow: "visible"
+                      # - border-bottom-left-radius: "0px"
+                      # - border-bottom-right-radius: "0px"
+
+                    custom_fields:
+                      doubleitem1: &widget_update_styling
+                        - border-radius: "none"
+                        - box-shadow: "none"
+                        - padding: "4px"
+                        - margin-bottom: "10px"
+                        - cursor: "default"
+                        - width: "86%"
+                        - justify-items: "center"
+                      doubleitem2: *widget_update_styling
+                      item1: &widget_icon_binary_sensor_expanded_styling
+                        - border-radius: "none"
+                        - box-shadow: "none"
+                        - padding: "4px"
+                        - cursor: "default"
+                      item2: *widget_icon_binary_sensor_expanded_styling
+                      item3: *widget_icon_binary_sensor_expanded_styling
+                      item4: *widget_icon_binary_sensor_expanded_styling
+                      item5: *widget_icon_binary_sensor_expanded_styling
+                      item6: *widget_icon_binary_sensor_expanded_styling
+                      item7: *widget_icon_binary_sensor_expanded_styling
+                      item8: *widget_icon_binary_sensor_expanded_styling
+                      item9: *widget_icon_binary_sensor_expanded_styling
+                      item10: *widget_icon_binary_sensor_expanded_styling
+                  custom_fields:
+                    doubleitem1:
+                      card:
+                        type: "custom:button-card"
+                        template: "card_kepath_update"
+                        entity: "update.home_assistant_core_update"
+                        variables:
+                          ulm_card_neekster_update_enable_controls: true
+                          ulm_card_neekster_update_collapsible: false
+                          ulm_card_neekster_update_horizontal: false
+                          ulm_card_neekster_update_narrow_buttons: true
+                          ulm_card_neekster_update_view_release_notes: true
+                    doubleitem2:
+                      card:
+                        type: "custom:button-card"
+                        template: "card_kepath_update"
+                        entity: "update.home_assistant_supervisor_update"
+                        variables:
+                          ulm_card_neekster_update_enable_controls: true
+                          ulm_card_neekster_update_collapsible: false
+                          ulm_card_neekster_update_horizontal: false
+                          ulm_card_neekster_update_narrow_buttons: true
+                          ulm_card_neekster_update_view_release_notes: true
+
+                # - type: "custom:button-card"
+                #   styles:
+                #     grid:
+                #       - grid-template-areas: "'item1 item2 item3 item4 item5' 'item6 item7 item8 item9 item10'"
+                #       - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
+                #       - grid-template-rows: "min-content"
+                #       - justify-items: "center"
+                #     card:
+                #       - padding: "10px"
+                #       - overflow: "visible"
+                #       - border-top-left-radius: "0px"
+                #       - border-top-right-radius: "0px"
+                #       - margin-top: "-7px"
+                #       - margin-bottom: "0px"
+                #     custom_fields:
+                #       item1: &widget_icon_binary_sensor_expanded_styling
+                #         - border-radius: "none"
+                #         - box-shadow: "none"
+                #         - padding: "4px"
+                #         - cursor: "default"
+                #       item2: *widget_icon_binary_sensor_expanded_styling
+                #       item3: *widget_icon_binary_sensor_expanded_styling
+                #       item4: *widget_icon_binary_sensor_expanded_styling
+                #       item5: *widget_icon_binary_sensor_expanded_styling
+                #       item6: *widget_icon_binary_sensor_expanded_styling
+                #       item7: *widget_icon_binary_sensor_expanded_styling
+                #       item8: *widget_icon_binary_sensor_expanded_styling
+                #       item9: *widget_icon_binary_sensor_expanded_styling
+                #       item10: *widget_icon_binary_sensor_expanded_styling
+                #   custom_fields:
+                    item1:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "icon_set_color"
+                        entity: "group.all_updates"
+                        name: "Updates"
+                        variables:
+                          ulm_card_kepath_extra_templates_alternative_state_appearance:
+                            default_color: "green"
+                            triggered_color: "yellow"
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            amount:
+                              is_attribute: false
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "update entities"
+
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"

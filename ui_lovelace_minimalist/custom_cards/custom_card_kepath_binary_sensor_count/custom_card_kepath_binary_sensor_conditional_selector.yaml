@@ -4,6 +4,7 @@ custom_card_kepath_binary_sensor_conditional_selector:
     - "icon_info_bg"
     - "ulm_translation_engine"
     - "custom_tab_selector"
+    - "ulm_card_kepath_binary_sensor_tab_list"
   variables:
     ulm_card_kepath_binary_sensor_count_notifications:
       unavailable:
@@ -34,10 +35,6 @@ custom_card_kepath_binary_sensor_conditional_selector:
           ]]]
         attribute_name: "zero_value"
         count_tooltip: ""
-    ulm_card_kepath_binary_sensor_tab_list:
-      - "input_boolean.minimalist_ui_binary_diagnostic_sensors"
-      - "input_boolean.minimalist_ui_binary_action_sensors"
-      - "input_boolean.minimalist_ui_binary_information_sensors"
 
   show_icon: true
   show_label: false
@@ -60,7 +57,16 @@ custom_card_kepath_binary_sensor_conditional_selector:
       - border-bottom-right-radius: "0px"
       - padding: "12px"
       - padding-bottom: "18px"
+      - margin-bottom: "-5px"
       - box-shadow: "none"
+      - background-color: >
+          [[[
+            var BGColor = "";
+            if(!hass.themes.darkMode) {
+              BGColor = "rgba(var(--color-theme),0.05)";
+            }
+            return BGColor;
+          ]]]
     custom_fields:
       unavailable:
         - position: "absolute"
@@ -76,8 +82,23 @@ custom_card_kepath_binary_sensor_conditional_selector:
     - value: "on"
       styles:
         card:
-          - margin-bottom: "-10px"
+          - margin-bottom: >
+              [[[
+                var marginBottom = "-6px";
+                if(!hass.themes.darkMode) {
+                  marginBottom = "-10px";
+                }
+                return marginBottom;
+              ]]]
           - box-shadow: "rgba(0, 0, 0, 0.16) 0px -4px 7px -1px"
+          - background-color: >
+              [[[
+                var BGColor = "";
+                if(hass.themes.darkMode) {
+                  BGColor = "rgba(var(--color-theme),0.05)";
+                }
+                return BGColor;
+              ]]]
         icon:
           - color: "rgba(var(--color-blue),1)"
         img_cell:
@@ -131,6 +152,7 @@ widget_count_indicator:
       - box-shadow: "none"
       - padding: "0"
       - border-radius: "50%"
+      - background-color: "rgba(var(--color-theme),0)"
   style:
     $: >
       .tooltip .tooltiptext {
