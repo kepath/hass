@@ -57,13 +57,30 @@ custom_card_kepath_binary_sensor_conditional_selector:
       - border-bottom-right-radius: "0px"
       - padding: "12px"
       - padding-bottom: "18px"
-      - margin-bottom: "-5px"
-      - box-shadow: "none"
+      - margin-bottom: >
+          [[[
+            var marginBottom = "-5px";
+            if (entity.state == "on") {
+              marginBottom = "-10px";
+              if (hass.themes.darkMode) {
+                marginBottom = "-6px";
+              }
+            }
+            return marginBottom;
+          ]]]
+      - box-shadow: >
+          [[[
+            var boxShadow = "none";
+            if (entity.state == "on") {
+              boxShadow = "rgba(0, 0, 0, 0.16) 0px -4px 7px -1px";
+            }
+            return boxShadow;
+          ]]]
       - background-color: >
           [[[
-            var BGColor = "";
-            if(!hass.themes.darkMode) {
-              BGColor = "rgba(var(--color-theme),0.05)";
+            var BGColor = "rgba(var(--color-theme),0)";
+            if (entity.state == "on") {
+              BGColor = "";
             }
             return BGColor;
           ]]]
@@ -78,31 +95,24 @@ custom_card_kepath_binary_sensor_conditional_selector:
         - top: "38px"
       notification:
         - visibility: "hidden"
-  state:
-    - value: "on"
-      styles:
-        card:
-          - margin-bottom: >
-              [[[
-                var marginBottom = "-6px";
-                if(!hass.themes.darkMode) {
-                  marginBottom = "-10px";
-                }
-                return marginBottom;
-              ]]]
-          - box-shadow: "rgba(0, 0, 0, 0.16) 0px -4px 7px -1px"
-          - background-color: >
-              [[[
-                var BGColor = "";
-                if(hass.themes.darkMode) {
-                  BGColor = "rgba(var(--color-theme),0.05)";
-                }
-                return BGColor;
-              ]]]
-        icon:
-          - color: "rgba(var(--color-blue),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-blue), 0.2)"
+  # state:
+  #   - value: "on"
+  #     styles:
+  #       card:
+  #         - margin-bottom: >
+  #             [[[
+  #               var marginBottom = "-10px";
+  #               if(hass.themes.darkMode) {
+  #                 marginBottom = "-6px";
+  #               }
+  #               return marginBottom;
+  #             ]]]
+  #         - box-shadow:
+  #         - background-color: ""
+  #       # icon:
+  #       #   - color: "rgba(var(--color-blue),1)"
+  #       # img_cell:
+  #       #   - background-color: "rgba(var(--color-blue), 0.2)"
 
   custom_fields:
     unavailable:
@@ -135,24 +145,33 @@ widget_count_indicator:
       - line-height: "0"
       - color: >
           [[[
-            var iconColor = "yellow";
-            if(!hass.themes.darkMode) {
-              iconColor = "red";
+            var iconColor = "red";
+            if(hass.themes.darkMode) {
+              iconColor = "yellow";
             }
             return "rgba(var(--color-" + iconColor + "),1)"
           ]]]
     img_cell:
       - border-radius: "50%"
-      - background-color: "var(--card-background-color)"
+      # - background-color: "var(--card-background-color)"
       - height: "16px"
       - width: "16px"
-      - border: "2px solid var(--card-background-color)"
+      # - border: "2px solid var(--card-background-color)"
+      - border: >
+            [[[
+              var borderColor = "rgba(var(--color-theme),0.05)";
+              if(hass.themes.darkMode) {
+                borderColor = "rgba(var(--color-theme),0.1)";
+              }
+              return "2px solid " + borderColor;
+            ]]]
+
     card:
       - height: "100%"
       - box-shadow: "none"
       - padding: "0"
       - border-radius: "50%"
-      - background-color: "rgba(var(--color-theme),0)"
+      - background-color: "rgba(#000,0)"
   style:
     $: >
       .tooltip .tooltiptext {
