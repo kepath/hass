@@ -9,8 +9,8 @@ import subprocess
 import shutil
 from io import BytesIO
 import re
-import requests
 import yaml
+import requests
 from pydub import AudioSegment
 from homeassistant.core import HomeAssistant, State
 from homeassistant.const import CONF_ENTITY_ID, SERVICE_TURN_ON
@@ -20,7 +20,7 @@ from homeassistant.components.media_player.const import (
     ATTR_GROUP_MEMBERS
 )
 from .const import (
-    PAUSE_DURATION_MS,
+    DEFAULT_DELAY_MS,
     ALEXA_FFMPEG_ARGS,
     MP3_PRESET_PATH,
     MP3_PRESETS,
@@ -66,7 +66,7 @@ class ChimeTTSHelper:
         entity_ids = self.parse_entity_ids(data, hass)
         chime_path =str(data.get("chime_path", ""))
         end_chime_path = str(data.get("end_chime_path", ""))
-        delay = float(data.get("delay", PAUSE_DURATION_MS))
+        offset = float(data.get("delay", data.get("offset", DEFAULT_DELAY_MS)))
         final_delay = float(data.get("final_delay", 0))
         message = str(data.get("message", ""))
         tts_platform = str(data.get("tts_platform", ""))
@@ -98,7 +98,7 @@ class ChimeTTSHelper:
             "chime_path": chime_path,
             "end_chime_path": end_chime_path,
             "cache": cache,
-            "delay": delay,
+            "offset": offset,
             "final_delay": final_delay,
             "media_players_array": media_players_array,
             "message": message,
@@ -114,7 +114,7 @@ class ChimeTTSHelper:
 
         _LOGGER.debug("----- General Parameters -----")
         for key, value in params.items():
-            if value is not None and key not in ["hass", "media_players_array"]:
+            if value is not None and value != "" and key not in ["hass", "media_players_array"]:
                 _LOGGER.debug(" * %s = %s", key, str(value))
 
         return params
@@ -297,8 +297,53 @@ class ChimeTTSHelper:
         chime_path = self.validate_path(hass, chime_path)
         return chime_path
 
-    def ffmpeg_convert_from_file(self, file_path, ffmpeg_args):
-        """Convert audio stream with FFmpeg and provided arguments."""
+    def ffmpeg_convert_from_audio_segment(self,
+                                          audio_segment: AudioSegment,
+                                          ffmpeg_args: str,
+                                          folder: str):
+        """Convert pydub AudioSegment with FFmpeg and provided arguments."""
+        # Save to temp file
+        temp_filename = "temp_segment.mp3"
+        temp_audio_file = self.save_audio_to_folder(audio=audio_segment,
+                                                    folder=folder,
+                                                    file_name=temp_filename)
+        if temp_audio_file is None:
+            _LOGGER.warning("ffmpeg_convert_from_audio_segment - Unable to store audio segment")
+            return audio_segment
+
+        # Convert with FFmpeg
+        converted_audio_file = self.ffmpeg_convert_from_file(temp_audio_file, ffmpeg_args)
+        if converted_audio_file is None or converted_audio_file is False or len(converted_audio_file) < 5:
+            _LOGGER.warning("ffmpeg_convert_from_audio_segment - Unable convert audio segment")
+            return audio_segment
+
+        # Load new AudioSegment from converted file
+        try:
+            converted_audio_segment = AudioSegment.from_file(converted_audio_file)
+        except Exception as error:
+            _LOGGER.warning("ffmpeg_convert_from_audio_segment - Unable to load converted audio segment %s", error)
+            return audio_segment
+
+        # Delete temp file & converted file
+        if os.path.exists(temp_audio_file):
+            try:
+                os.remove(temp_audio_file)
+            except Exception as error:
+                _LOGGER.warning("ffmpeg_convert_from_audio_segment - Unable to delete temp files: %s", error)
+        if os.path.exists(converted_audio_file):
+            try:
+                os.remove(converted_audio_file)
+            except Exception as error:
+                _LOGGER.warning("ffmpeg_convert_from_audio_segment - Unable to delete temp files: %s", error)
+
+        if converted_audio_segment is not None:
+            return converted_audio_segment
+
+        return audio_segment
+
+
+    def ffmpeg_convert_from_file(self, file_path: str, ffmpeg_args: str):
+        """Convert audio file with FFmpeg and provided arguments."""
         try:
             ffmpeg_cmd = [
                 'ffmpeg',
@@ -316,9 +361,12 @@ class ChimeTTSHelper:
                 # Use the default file type of mp3
                 converted_file_path = file_path.replace(".mp3", "_converted.mp3")
             ffmpeg_cmd.append(converted_file_path)
+
+            # Overwrite output file if it already exists
+            ffmpeg_cmd.append('-y')
+
+            # Convert the audil file
             ffmpeg_cmd_string = " ".join(ffmpeg_cmd)
-
-
             ffmpeg_process = subprocess.Popen(ffmpeg_cmd,
                                               stdin=subprocess.PIPE,
                                               stdout=subprocess.PIPE,
@@ -407,6 +455,41 @@ class ChimeTTSHelper:
         _LOGGER.debug(" - File saved to path: %s", audio_full_path)
         return audio_full_path
 
+    def combine_audio(self,
+                      audio_1: AudioSegment,
+                      audio_2: AudioSegment,
+                      offset: int = 0):
+        """Combine two AudioSegment object with either a delay (if >0) or overlay (if <0)."""
+        if audio_1 is None:
+            return audio_2
+        if audio_2 is None:
+            return audio_1
+        ret_val = audio_1 + audio_2
+
+        # Overlay / delay
+        if offset < 0:
+            _LOGGER.debug("Performing overlay of %sms", str(offset))
+            ret_val = self.overlay(audio_1, audio_2, offset)
+        elif offset > 0:
+            _LOGGER.debug("Performing delay of %sms", str(offset))
+            ret_val = audio_1 + (AudioSegment.silent(duration=offset) + audio_2)
+        else:
+            _LOGGER.debug("Combining audio files with no delay or overlay")
+
+        return ret_val
+
+
+    def overlay(self, audio_1: AudioSegment, audio_2: AudioSegment, overlay: int = 0):
+        """Overlay two audio segments."""
+        overlay = abs(overlay)
+        overlap_point = len(audio_1) - overlay
+        overlap_point = max(0, overlap_point)
+
+        crossover_audio = audio_1.overlay(audio_2, position=overlap_point)
+        if len(audio_2) > overlay:
+            crossover_audio += audio_2[overlay:]
+        return crossover_audio
+
 
     ##############################
     ### Media Player Functions ###
@@ -416,7 +499,7 @@ class ChimeTTSHelper:
         """Get the number of media player which support the join feature."""
         group_members_supported = 0
         for media_player_dict in media_players_array:
-            if media_player_dict["group_member_support"] is True:
+            if "group_member_support" in media_player_dict and media_player_dict["group_member_support"] is True:
                 group_members_supported += 1
         return group_members_supported
 
@@ -487,7 +570,7 @@ class ChimeTTSHelper:
         try:
             _LOGGER.debug("Downloading chime at URL: %s", url)
             response = await hass.async_add_executor_job(requests.get, url)
-            response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx status codes)
+            response.raise_for_status() # Raise an HTTPError for bad responses (4xx and 5xx status codes)
         except requests.exceptions.HTTPError as errh:
             _LOGGER.warning(" - HTTP Error: %s", str(errh))
             return None
@@ -524,7 +607,8 @@ class ChimeTTSHelper:
                     AUDIO_DURATION_KEY: audio_duration
                 }
         else:
-            _LOGGER.warning(" - Unable to extract audio from URL with content-type '%s'", str(content_type))
+            _LOGGER.warning(" - Unable to extract audio from URL with content-type '%s'",
+                            str(content_type))
         return None
 
     def get_hash_for_string(self, string):

@@ -3,7 +3,6 @@
 import logging
 import os
 import io
-import asyncio
 from datetime import datetime
 
 from pydub import AudioSegment
@@ -33,6 +32,7 @@ from homeassistant.exceptions import (
 
 from .config_flow import ChimeTTSOptionsFlowHandler
 from .helpers import ChimeTTSHelper
+from .queue_manager import ChimeTTSQueueManager
 
 from .const import (
     DOMAIN,
@@ -57,12 +57,6 @@ from .const import (
     MEDIA_DIR_DEFAULT,
     MP3_PRESET_CUSTOM_PREFIX,
     MP3_PRESET_CUSTOM_KEY,
-    QUEUE,
-    QUEUE_STATUS_KEY,
-    QUEUE_IDLE,
-    QUEUE_RUNNING,
-    QUEUE_CURRENT_ID_KEY,
-    QUEUE_LAST_ID,
     QUEUE_TIMEOUT_KEY,
     QUEUE_TIMEOUT_DEFAULT,
     AMAZON_POLLY,
@@ -86,13 +80,15 @@ _LOGGER = logging.getLogger(__name__)
 _data = {}
 
 helpers = ChimeTTSHelper()
+queue = ChimeTTSQueueManager()
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up an entry."""
     await async_refresh_stored_data(hass)
-    init_queue()
     update_configuration(config_entry, hass)
+    queue.set_timeout(_data[QUEUE_TIMEOUT_KEY])
+
     config_entry.async_on_unload(config_entry.add_update_listener(async_reload_entry))
     return True
 
@@ -109,14 +105,16 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
         if is_say_url is False:
             _LOGGER.debug("----- Chime TTS Say Called. Version %s -----", VERSION)
 
-        result = await start_queue(service, hass, async_say_execute)
-        # Service call completed successfully
+        # Add service calls to the queue with arguments
+        result = await queue.add_to_queue(async_say_execute,service)
+
+        # Stop the queue processing
+        # await queue.stop_queue_processing()
 
         if result is not False:
             return result
 
         # Service call failed
-        dequeue_service_call()
         return False
 
 
@@ -160,7 +158,7 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
                 )
 
         # Save generated temp mp3 file to cache
-        if params["cache"] is True or params["entity_ids"] is None or len(params["entity_ids"]) == 0:
+        if params["cache"] is True or params["entity_ids"] is None or len(params["entity_ids"])==0:
             if _data["is_save_generated"] is True:
                 if params["cache"]:
                     _LOGGER.debug("Saving generated mp3 file to cache")
@@ -180,7 +178,10 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
                 instance_url = str(get_url(hass))
 
             external_url = (
-                (instance_url + "/" + audio_path).replace(instance_url + "//", instance_url + "/").replace("/config", "").replace("www/", "local/")
+                (instance_url + "/" + audio_path)
+                .replace(instance_url + "//", instance_url + "/")
+                .replace("/config", "")
+                .replace("www/", "local/")
             )
             _LOGGER.debug("Final URL = %s", external_url)
 
@@ -205,7 +206,10 @@ async def async_setup(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
         _LOGGER.debug("----- Chime TTS Say URL Called. Version %s -----", VERSION)
         return await async_say(service, True)
 
-    hass.services.async_register(DOMAIN, SERVICE_SAY_URL, async_say_url, supports_response=SupportsResponse.ONLY)
+    hass.services.async_register(DOMAIN,
+                                 SERVICE_SAY_URL,
+                                 async_say_url,
+                                 supports_response=SupportsResponse.ONLY)
 
     #######################
     # Clear Cahce Service #
@@ -285,133 +289,18 @@ async def async_reload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     await async_setup(hass, config_entry)
 
 
-#############
-### QUEUE ###
-#############
-
-
-def init_queue():
-    """Initialize variables and states for queuing service calls."""
-    _data[QUEUE] = []
-    _data[QUEUE_STATUS_KEY] = QUEUE_IDLE
-    _data[QUEUE_CURRENT_ID_KEY] = -1
-    _data[QUEUE_LAST_ID] = -1
-
-
-def queue_new_service_call(service):
-    """Add a new service call to the queue."""
-    service_id = _data[QUEUE_LAST_ID] + 1
-    if _data[QUEUE] is None:
-        _data[QUEUE] = []
-
-    service_dict = {"service": service, "id": service_id}
-    _data[QUEUE].append(service_dict)
-    _data[QUEUE_LAST_ID] = service_id
-
-    _LOGGER.debug("Service call #%s was added to the queue.", service_id)
-    return service_dict
-
-
-def get_queued_service_call():
-    """Get the next queued service call from the queue."""
-    if len(_data[QUEUE]) > 0:
-        return _data[QUEUE][0]
-    _LOGGER.debug("Queue empty")
-    return None
-
-
-def dequeue_service_call():
-    """Remove the oldest service call from the queue."""
-    if _data[QUEUE] and len(_data[QUEUE]) > 0:
-        _LOGGER.debug("Removing current queued service call.")
-        _data[QUEUE].pop(0)
-
-        # All queued jobs completed
-        if len(_data[QUEUE]) == 0:
-            _LOGGER.debug("Queue emptied. Reinitializing values.")
-            init_queue()
-        else:
-            # Move on to the next item (queued or in the future)
-            _LOGGER.debug("Incrementing to next queued service call.")
-            _data[QUEUE_CURRENT_ID_KEY] += 1
-            _data[QUEUE_STATUS_KEY] = QUEUE_IDLE
-
-
-async def start_queue(service, hass, say_execute_callback):
-    """Start the queue for chime_tts.say service calls."""
-    service_dict = queue_new_service_call(service)
-
-    # Start queue
-    while _data[QUEUE_CURRENT_ID_KEY] < service_dict["id"]:
-        # Wait for the previous service call to end
-        timeout = _data[QUEUE_TIMEOUT_KEY]
-        if _data[QUEUE_STATUS_KEY] is QUEUE_RUNNING:
-            # Wait until current job is completed
-            previous_jobs_count = int(
-                int(service_dict["id"]) - int(_data[QUEUE_CURRENT_ID_KEY])
-            )
-            _LOGGER.debug(
-                "...waiting for %s previous queued job%s to complete.",
-                "a" if previous_jobs_count == 1 else str(previous_jobs_count),
-                "s" if previous_jobs_count > 1 else "",
-            )
-            retry_interval = 0.1
-            elapsed_time = 0
-            while elapsed_time < timeout and _data[QUEUE_STATUS_KEY] is QUEUE_RUNNING:
-                await hass.async_add_executor_job(helpers.sleep, retry_interval)
-                elapsed_time += retry_interval
-                if _data[QUEUE_STATUS_KEY] is QUEUE_IDLE:
-                    break
-            if _data[QUEUE_STATUS_KEY] is not QUEUE_IDLE:
-                # Timeout
-                _LOGGER.error(
-                    "Timeout reached on queued job #%s.", str(service_dict["id"])
-                )
-                dequeue_service_call()
-                break
-
-        # Execute the next service call in the queue
-        if _data[QUEUE_STATUS_KEY] is QUEUE_IDLE:
-            next_service_dict = get_queued_service_call()
-            if next_service_dict is not None:
-                next_service = next_service_dict["service"]
-                next_service_id = next_service_dict["id"]
-                _data[QUEUE_STATUS_KEY] = QUEUE_RUNNING
-                result = None
-                try:
-                    _LOGGER.debug("Executing queued job #%s", str(next_service_id))
-                    task = asyncio.create_task(say_execute_callback(next_service))
-                    result = await asyncio.wait_for(task, timeout)
-                except asyncio.TimeoutError:
-                    _LOGGER.error(
-                        "Service call to chime_tts.say timed out after %s seconds.",
-                        timeout,
-                    )
-                dequeue_service_call()
-                _data[QUEUE_STATUS_KEY] = QUEUE_IDLE
-                return result
-            _LOGGER.error("Unable to get next queued service call.")
-        else:
-            _LOGGER.error("Unable to run queued service call.")
-
-        # Service call failed
-        dequeue_service_call()
-        _data[QUEUE_STATUS_KEY] = QUEUE_IDLE
-        return False
-
-
 async def async_post_playback_actions(
     hass: HomeAssistant,
-    delay_duration: float,
+    audio_duration: float,
     final_delay: float,
     media_players_array: list,
     volume_level: float,
     unjoin_players: bool,
 ):
     """Run post playback actions."""
-    # Delay by audio playback duration
-    _LOGGER.debug("Waiting %ss for audio playback to complete...", str(delay_duration))
-    await hass.async_add_executor_job(helpers.sleep, delay_duration)
+    # Wait the audio playback duration
+    _LOGGER.debug("Waiting %ss for audio playback to complete...", str(audio_duration))
+    await hass.async_add_executor_job(helpers.sleep, audio_duration)
     if final_delay > 0:
         final_delay_s = float(final_delay / 1000)
         _LOGGER.debug("Waiting %ss for final_delay to complete...", str(final_delay_s))
@@ -681,12 +570,11 @@ async def async_get_playback_audio_path(params: dict, options: dict):
     hass = params["hass"]
     chime_path = params["chime_path"]
     end_chime_path = params["end_chime_path"]
-    delay = params["delay"]
+    offset = params["offset"]
     message = params["message"]
     cache = params["cache"]
     entity_ids = params["entity_ids"]
     ffmpeg_args = params["ffmpeg_args"]
-    _data["delay"] = 0
     _data["is_save_generated"] = False
     _LOGGER.debug("async_get_playback_audio_path")
 
@@ -713,27 +601,27 @@ async def async_get_playback_audio_path(params: dict, options: dict):
     ######################
 
     # Load chime audio
-    if chime_path is not None and len(chime_path) > 0:
-        output_audio = await async_get_audio_from_path(hass=hass,
-                                                       filepath=chime_path,
-                                                       cache=cache)
+    output_audio = await async_get_audio_from_path(hass=hass,
+                                                    filepath=chime_path,
+                                                    cache=cache)
 
     # Process message tags
-    segments = helpers.parse_message(message)
-    output_audio = await async_process_segment(hass, segments, output_audio, params, options)
+    output_audio = await async_process_segments(hass,
+                                                message,
+                                                output_audio,
+                                                params,
+                                                options)
 
     # Load end chime audio
-    if end_chime_path is not None and len(end_chime_path) > 0:
-        output_audio = await async_get_audio_from_path(hass=hass,
-                                                       filepath=end_chime_path,
-                                                       cache=cache,
-                                                       delay=delay,
-                                                       audio=output_audio)
+    output_audio = await async_get_audio_from_path(hass=hass,
+                                                   filepath=end_chime_path,
+                                                   cache=cache,
+                                                   offset=offset,
+                                                   audio=output_audio)
 
     # Save generated audio file
     if output_audio is not None:
         duration = float(len(output_audio) / 1000.0)
-        _data["delay"] = duration
         _LOGGER.debug(" - Final audio created. Duration: %ss", duration)
 
         # Save MP3 file
@@ -750,7 +638,8 @@ async def async_get_playback_audio_path(params: dict, options: dict):
         # Perform FFmpeg conversion
         if ffmpeg_args:
             _LOGGER.debug("  - Performing FFmpeg audio conversion...")
-            converted_output_audio = helpers.ffmpeg_convert_from_file(new_audio_full_path, ffmpeg_args)
+            converted_output_audio = helpers.ffmpeg_convert_from_file(new_audio_full_path,
+                                                                      ffmpeg_args)
             if converted_output_audio is not False:
                 _LOGGER.debug("  - ...FFmpeg audio conversion completed.")
                 new_audio_full_path = converted_output_audio
@@ -789,142 +678,164 @@ async def async_get_playback_audio_path(params: dict, options: dict):
     return None
 
 
-async def async_process_segment(hass, segments, output_audio, params, options):
+def get_segment_offset(output_audio, segment, params):
+    """Offset value for segment."""
+    segment_offset = 0
+    if output_audio is not None:
+        # Get "offset" parameter
+        if "offset" in segment:
+            segment_offset = segment["offset"]
+
+        # Support deprecated "delay" parmeter
+        else:
+            if "delay" in segment:
+                segment_offset = segment["delay"]
+            elif "delay" in params:
+                segment_offset = params["delay"]
+            elif "offset" in params:
+                segment_offset = params["offset"]
+
+    return segment_offset
+
+
+async def async_process_segments(hass, message, output_audio, params, options):
     """Process all message segments and add the audio."""
-    if segments is not None and len(segments) > 0:
-        for index, segment in enumerate(segments):
+    segments = helpers.parse_message(message)
+    if segments is None or len(segments) == 0:
+        return output_audio
 
-            segment_delay = float(segment["delay"]) if "delay" in segment and output_audio is not None else (params["delay"] if "delay" in params else 0.0)
-            segment_cache = segment["cache"] if "cache" in segment else params["cache"]
+    for index, segment in enumerate(segments):
+        segment_cache = segment["cache"] if "cache" in segment else params["cache"]
+        segment_audio_conversion = segment["audio_conversion"] if "audio_conversion" in segment else None
+        segment_offset = get_segment_offset(output_audio, segment, params)
 
-            # Chime tag
-            if segment["type"] == "chime":
-                if "path" in segment:
-                    # await async_refresh_stored_data(hass)
-                    segment_chime_path = await helpers.async_get_chime_path(
-                        segment["path"],
-                        segment_cache,
-                        _data,
-                        hass)
-                    if segment_chime_path is not None:
-                        output_audio = await async_get_audio_from_path(hass=hass,
-                                                                       filepath=segment_chime_path,
-                                                                       cache=segment_cache,
-                                                                       delay=segment_delay,
-                                                                       audio=output_audio)
-                else:
-                    _LOGGER.warning("Chime path missing from messsage segment #%s", str(index+1))
+        # Chime tag
+        if segment["type"] == "chime":
+            if "path" in segment:
+                output_audio = await async_get_audio_from_path(hass=hass,
+                                                               filepath=segment["path"],
+                                                               cache=segment_cache,
+                                                               offset=segment_offset,
+                                                               audio=output_audio)
+            else:
+                _LOGGER.warning("Chime path missing from messsage segment #%s", str(index+1))
 
-            # Delay tag
-            if segment["type"] == "delay":
-                if "length" in segment:
-                    segment_delay_length = float(segment["length"])
-                    output_audio = output_audio + AudioSegment.silent(duration=segment_delay_length)
-                else:
-                    _LOGGER.warning("Delay length missing from messsage segment #%s", str(index+1))
+        # Delay tag
+        if segment["type"] == "delay":
+            if "length" in segment:
+                segment_delay_length = float(segment["length"])
+                output_audio = output_audio + AudioSegment.silent(duration=segment_delay_length)
+            else:
+                _LOGGER.warning("Delay length missing from messsage segment #%s", str(index+1))
 
-            # Request TTS audio file
-            if segment["type"] == "tts":
-                if "message" in segment and len(segment["message"]) > 0:
-                    segment_message = segment["message"]
-                    if len(segment_message) == 0 or segment_message == "None":
-                        continue
+        # Request TTS audio file
+        if segment["type"] == "tts":
+            if "message" in segment and len(segment["message"]) > 0:
+                segment_message = segment["message"]
+                if len(segment_message) == 0 or segment_message == "None":
+                    continue
 
-                    segment_tts_platform = segment["tts_platform"] if "tts_platform" in segment else params["tts_platform"]
-                    segment_language = segment["language"] if "language" in segment else params["language"]
-                    segment_tts_playback_speed = segment["tts_playback_speed"] if "tts_playback_speed" in segment else params["tts_playback_speed"]
+                segment_tts_platform = segment["tts_platform"] if "tts_platform" in segment else params["tts_platform"]
+                segment_language = segment["language"] if "language" in segment else params["language"]
+                segment_tts_playback_speed = segment["tts_playback_speed"] if "tts_playback_speed" in segment else params["tts_playback_speed"]
 
-                    # Use exposed parameters if not present in the options dictionary
-                    segment_options = segment["options"] if "options" in segment else {}
-                    exposed_option_keys = ["gender", "tld", "voice"]
-                    for exposed_option_key in exposed_option_keys:
-                        value = None
-                        if exposed_option_key in segment_options:
-                            value = segment_options[exposed_option_key]
-                        elif exposed_option_key in segment:
-                            value = segment[exposed_option_key]
-                        if value is not None:
-                            segment_options[exposed_option_key] = value
+                # Use exposed parameters if not present in the options dictionary
+                segment_options = segment["options"] if "options" in segment else {}
+                exposed_option_keys = ["gender", "tld", "voice"]
+                for exposed_option_key in exposed_option_keys:
+                    value = None
+                    if exposed_option_key in segment_options:
+                        value = segment_options[exposed_option_key]
+                    elif exposed_option_key in segment:
+                        value = segment[exposed_option_key]
+                    if value is not None:
+                        segment_options[exposed_option_key] = value
 
-                    for key, value in options.items():
-                        if key not in segment_options:
-                            segment_options[key] = value
-                    segment_params = {
-                        "message": segment_message,
-                        "tts_platform": segment_tts_platform,
-                        "language": segment_language,
-                        "cache": segment_cache,
-                        "tts_playback_speed": segment_tts_playback_speed
-                    }
-                    segment_filepath_hash = get_filename_hash_from_service_data({**segment_params}, {**segment_options}, )
+                for key, value in options.items():
+                    if key not in segment_options:
+                        segment_options[key] = value
+                segment_params = {
+                    "message": segment_message,
+                    "tts_platform": segment_tts_platform,
+                    "language": segment_language,
+                    "cache": segment_cache,
+                    "tts_playback_speed": segment_tts_playback_speed
+                }
+                segment_filepath_hash = get_filename_hash_from_service_data({**segment_params}, {**segment_options}, )
 
-                    tts_audio = None
+                tts_audio = None
 
-                    # Use cached TTS audio
-                    if segment_cache is True:
-                        _LOGGER.debug(" - Attempting to retrieve TTS file from cache...")
-                        audio_dict = await async_get_cached_audio_data(hass, segment_filepath_hash)
-                        if audio_dict is not None:
-                            tts_audio = await async_get_audio_from_path(hass=hass,
-                                                                        filepath=audio_dict[AUDIO_PATH_KEY],
-                                                                        cache=segment_cache,
-                                                                        audio=None)
+                # Use cached TTS audio
+                if segment_cache is True:
+                    _LOGGER.debug(" - Attempting to retrieve TTS file from cache...")
+                    audio_dict = await async_get_cached_audio_data(hass, segment_filepath_hash)
+                    if audio_dict is not None:
+                        tts_audio = await async_get_audio_from_path(hass=hass,
+                                                                    filepath=audio_dict[AUDIO_PATH_KEY],
+                                                                    cache=segment_cache,
+                                                                    audio=None)
 
-                            tts_audio_duration = audio_dict[AUDIO_DURATION_KEY]
-                            _LOGGER.debug(" - ...cached TTS file retrieved with duration: %ss", str(tts_audio_duration))
-                        else:
-                            _LOGGER.debug(" - ...cached TTS file not found")
-
-
-                    # Generate new TTS audio
-                    if tts_audio is None:
-                        tts_audio = await async_request_tts_audio(
-                            hass=hass,
-                            tts_platform=segment_tts_platform,
-                            message=segment_message,
-                            language=segment_language,
-                            cache=segment_cache,
-                            options=segment_options,
-                            tts_playback_speed=segment_tts_playback_speed,
-                        )
-
-
-                    if tts_audio is not None:
-                        tts_audio_duration = float(len(tts_audio) / 1000.0)
-                        if output_audio is not None:
-                            output_audio = (
-                                output_audio + (
-                                    AudioSegment.silent(duration=segment_delay)) + tts_audio)
-                        else:
-                            output_audio = tts_audio
-
-                        # Cache the new TTS audio?
-                        if segment_cache is True and audio_dict is None:
-                            _LOGGER.debug("Saving generated TTS audio to cache")
-                            tts_audio_full_path = helpers.save_audio_to_folder(
-                                tts_audio, _data[TEMP_PATH_KEY])
-                            if tts_audio_full_path is not None:
-                                audio_dict = {
-                                    AUDIO_PATH_KEY: tts_audio_full_path,
-                                    AUDIO_DURATION_KEY: tts_audio_duration
-                                }
-                                await async_store_data(hass, segment_filepath_hash, audio_dict)
-
-                            else:
-                                _LOGGER.warning("Unable to save generated TTS audio to cache")
-
+                        tts_audio_duration = audio_dict[AUDIO_DURATION_KEY]
+                        _LOGGER.debug(" - ...cached TTS file retrieved with duration: %ss", str(tts_audio_duration))
                     else:
-                        _LOGGER.warning("Error generating TTS audio from messsage segment #%s: %s",
-                                        str(index+1), str(segment))
+                        _LOGGER.debug(" - ...cached TTS file not found")
+
+
+                # Generate new TTS audio
+                if tts_audio is None:
+                    tts_audio = await async_request_tts_audio(
+                        hass=hass,
+                        tts_platform=segment_tts_platform,
+                        message=segment_message,
+                        language=segment_language,
+                        cache=segment_cache,
+                        options=segment_options,
+                        tts_playback_speed=segment_tts_playback_speed,
+                    )
+
+
+                # Combine audio
+                if tts_audio is not None:
+                    tts_audio_duration = float(len(tts_audio) / 1000.0)
+                    output_audio = helpers.combine_audio(output_audio, tts_audio, segment_offset)
+
+                    # Cache the new TTS audio?
+                    if segment_cache is True and audio_dict is None:
+                        _LOGGER.debug("Saving generated TTS audio to cache")
+                        tts_audio_full_path = helpers.save_audio_to_folder(
+                            tts_audio, _data[TEMP_PATH_KEY])
+                        if tts_audio_full_path is not None:
+                            audio_dict = {
+                                AUDIO_PATH_KEY: tts_audio_full_path,
+                                AUDIO_DURATION_KEY: tts_audio_duration
+                            }
+                            await async_store_data(hass, segment_filepath_hash, audio_dict)
+
+                        else:
+                            _LOGGER.warning("Unable to save generated TTS audio to cache")
+
                 else:
-                    _LOGGER.warning("TTS message missing from messsage segment #%s: %s",
+                    _LOGGER.warning("Error generating TTS audio from messsage segment #%s: %s",
                                     str(index+1), str(segment))
+            else:
+                _LOGGER.warning("TTS message missing from messsage segment #%s: %s",
+                                str(index+1), str(segment))
+
+        # Audio Conversion with FFmpeg
+        if segment_audio_conversion is not None:
+            _LOGGER.debug("Converting audio segment with FFmpeg...")
+            temp_folder = _data[TEMP_PATH_KEY]
+            output_audio = helpers.ffmpeg_convert_from_audio_segment(output_audio, segment_audio_conversion, temp_folder)
+
     return output_audio
 
-async def async_get_audio_from_path(hass: HomeAssistant, filepath: str, cache=False, delay=0, audio=None):
-    """Add audio from a given file path to existing audio (optional) with delay (optional)."""
-    if filepath is None or filepath == "None":
-        _LOGGER.warning("Invalid audio filepath provided")
+async def async_get_audio_from_path(hass: HomeAssistant,
+                                    filepath: str,
+                                    cache=False,
+                                    offset=0,
+                                    audio=None):
+    """Add audio from a given file path to existing audio (optional) with offset (optional)."""
+    if filepath is None or filepath == "None" or len(filepath) == 0:
         return audio
 
     # Load/download audio file & validate local path
@@ -947,7 +858,9 @@ async def async_get_audio_from_path(hass: HomeAssistant, filepath: str, cache=Fa
                 )
                 if audio is None:
                     return audio_from_path
-                return audio + (AudioSegment.silent(duration=delay) + audio_from_path)
+
+                # Apply offset
+                return helpers.combine_audio(audio, audio_from_path, offset)
             _LOGGER.warning("Unable to find audio at filepath: %s", filepath)
         except Exception as error:
             _LOGGER.warning('Unable to extract audio from file: "%s"', error)
@@ -1224,7 +1137,7 @@ def get_filename_hash_from_service_data(params: dict, options: dict):
         "language",
         "chime_path",
         "end_chime_path",
-        "delay",
+        "offset",
         "tts_playback_speed",
     ]
     for param in relevant_params:
