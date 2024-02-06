@@ -144,18 +144,36 @@ generic_set_icon_and_color:
         ]]]
       icon: >
         [[[
-          return variables?.ulm_card_kepath_generic_icon_appearance?.triggered?.icon ? variables.ulm_card_kepath_generic_icon_appearance.triggered.icon : variables.ulm_card_kepath_generic_icon_appearance.default.icon;
+          var icon = "mdi:close-circle";
+          if (variables.ulm_card_kepath_generic_icon_appearance.triggered.icon != icon) {
+            icon = variables.ulm_card_kepath_generic_icon_appearance.triggered.icon;
+          } else {
+            icon = variables.ulm_card_kepath_generic_icon_appearance.default.icon;
+          }
+          return icon;
         ]]]
       styles:
         icon:
           - color: >
               [[[
-                return variables?.ulm_card_kepath_generic_icon_appearance?.triggered?.icon_color ? variables.ulm_card_kepath_generic_icon_appearance.triggered.icon_color : variables.ulm_card_kepath_generic_icon_appearance.default.icon_color;
+                var setColor = "grey";
+                if (variables.ulm_card_kepath_generic_icon_appearance.triggered.icon_color != setColor) {
+                  setColor = variables.ulm_card_kepath_generic_icon_appearance.triggered.icon_color;
+                } else {
+                  setColor = variables.ulm_card_kepath_generic_icon_appearance.default.icon_color;
+                }
+                return setColor;
               ]]]
         img_cell:
           - background-color: >
               [[[
-                return variables?.ulm_card_kepath_generic_icon_appearance?.triggered?.background_color ? variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color : variables.ulm_card_kepath_generic_icon_appearance.default.background_color;
+                var setBGColor = "var(--primary-text-color)";
+                if (variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color != setBGColor) {
+                  setBGColor = variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color;
+                } else {
+                  setBGColor = variables.ulm_card_kepath_generic_icon_appearance.default.background_color;
+                }
+                return setBGColor;
               ]]]
     - operator: "default"
       icon: "[[[ return variables.ulm_card_kepath_generic_icon_appearance.default.icon; ]]]"
