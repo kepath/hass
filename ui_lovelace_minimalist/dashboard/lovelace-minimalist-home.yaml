@@ -694,6 +694,100 @@ views:
                                 sort_numeric: true
                                 exclude_unknown_state: true
 
+                    item7:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "card_notification_script_trigger"
+                          - "green_icon_off"
+                        entity: "input_boolean.away_script_active"
+                        icon: "mdi:home-lock-open"
+                        name: "Passive"
+                        variables:
+                          script_activate:
+                            icon:
+                              mdi: "mdi:home-lock"
+                              color: "red"
+                            name: "Active"
+                            script:
+                              name: "script.lockdown_mode_on"
+                              confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
+                          script_deactivate:
+                            script:
+                              name: "script.lockdown_mode_off"
+                              confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
+
+                    item8:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "minimalist_ui_set_icon_and_color"
+                        entity: "group.all_duration_class_and_min_unit_of_measurement_sensors"
+                        name: "Runtime"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            data_rate_value:
+                              attribute_name: "zero_value"
+                            unavailable:
+                              attribute_name: "zero_value"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "runtime entities"
+                              auto_entities:
+                                sort_method: "state"
+                                sort_numeric: true
+                                exclude_unknown_state: false
+
+                    item9:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "minimalist_ui_set_icon_and_color"
+                        entity: "group.all_power_class_sensors"
+                        name: "Power"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            data_rate_value:
+                              attribute_name: "zero_value"
+                            unavailable:
+                              attribute_name: "zero_value"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "power entities"
+                              auto_entities:
+                                sort_method: "state"
+                                sort_numeric: true
+                                exclude_unknown_state: true
+                                exclude_unavailable_state: true
+
+                    item10:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "minimalist_ui_set_icon_and_color"
+                        entity: "group.all_monetary_class_sensors"
+                        name: "Money"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            data_rate_value:
+                              attribute_name: "zero_value"
+                            unavailable:
+                              attribute_name: "zero_value"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "money entities"
+                              auto_entities:
+                                sort_method: "state"
+                                sort_numeric: true
+                                exclude_unknown_state: true
+                                exclude_unavailable_state: true
+
               - type: "conditional"
                 conditions:
                   - entity: "input_boolean.minimalist_ui_binary_alert_sensors"
@@ -821,24 +915,48 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "card_notification_script_trigger"
-                          - "green_icon_off"
-                        entity: "input_boolean.away_script_active"
-                        icon: "mdi:home-lock-open"
-                        name: "Passive"
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "custom_card_kepath_occupancy_state"
+                        entity: "group.all_occupancy_class_binary_sensors"
+                        name: "Motion"
                         variables:
-                          script_activate:
-                            icon:
-                              mdi: "mdi:home-lock"
-                              color: "red"
-                            name: "Active"
-                            script:
-                              name: "script.lockdown_mode_on"
-                              confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
-                          script_deactivate:
-                            script:
-                              name: "script.lockdown_mode_off"
-                              confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "occupancy_sensors_unavailable_count"
+                            amount:
+                              attribute_name: "occupancy_no_persons_home_triggered_count"
+                            person:
+                              attribute_name: "occupancy_persons_home_count"
+                              ignore_on_known_occupancy: true
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "occupancy entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+
+                    # item5:
+                    #   card:
+                    #     type: "custom:button-card"
+                    #     template:
+                    #       - "card_notification_script_trigger"
+                    #       - "green_icon_off"
+                    #     entity: "input_boolean.away_script_active"
+                    #     icon: "mdi:home-lock-open"
+                    #     name: "Passive"
+                    #     variables:
+                    #       script_activate:
+                    #         icon:
+                    #           mdi: "mdi:home-lock"
+                    #           color: "red"
+                    #         name: "Active"
+                    #         script:
+                    #           name: "script.lockdown_mode_on"
+                    #           confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
+                    #       script_deactivate:
+                    #         script:
+                    #           name: "script.lockdown_mode_off"
+                    #           confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
 
               - type: "conditional"
                 conditions:
@@ -937,13 +1055,13 @@ views:
                           ulm_card_kepath_extra_templates_icon_appearance:
                             default_theme:
                               default_state:
-                                icon: "update.hacs_update.attributes.entity_picture"
+                                icon: "hacs:hacs"
                                 icon_color: "green"
                                 background_color: "yellow"
                           ulm_card_kepath_binary_sensor_count_tap_action:
                             action: "navigate"
                             navigate:
-                              page: "/5c53de3b_esphome"
+                              page: "/hacs"
                     item3:
                       card:
                         type: "custom:button-card"
@@ -958,7 +1076,7 @@ views:
                               default_state:
                                 icon: "si:adguard"
                                 icon_color: "#68BC71"
-                                background_color: "var(--primary-text-color)"
+                                background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.adguard_home_update"
@@ -975,18 +1093,19 @@ views:
                           - "generic_set_icon_and_color"
                         entity: "update.plex_media_server_update"
                         name: "Plex"
+                        # entity_picture: "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/plex/icon.png"
                         variables:
                           ulm_card_kepath_extra_templates_icon_appearance:
                             default_theme:
                               default_state:
                                 icon: "si:plex"
-                                icon_color: "#EBAF00"
-                                background_color: "#000"
+                                icon_color: "#000"
+                                background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
                                 icon: "si:plex"
-                                icon_color: "#000"
-                                background_color: "#EBAF00"
+                                icon_color: "#EBAF00"
+                                background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.plex_media_server_update"
@@ -1009,12 +1128,12 @@ views:
                               default_state:
                                 icon: "si:apacheguacamole"
                                 icon_color: "#FFF"
-                                background_color: "#213121"
+                                background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
                                 icon: "si:apacheguacamole"
                                 icon_color: "#578B34"
-                                background_color: "white"
+                                background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.guacamole_client_update"
@@ -1037,12 +1156,12 @@ views:
                               default_state:
                                 icon: "si:esphome"
                                 icon_color: "black"
-                                background_color: "white"
+                                background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
-                                icon: "si:apacheguacamole"
+                                icon: "si:esphome"
                                 icon_color: "white"
-                                background_color: "black"
+                                background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.esphome_update"
@@ -1066,7 +1185,12 @@ views:
                               default_state:
                                 icon: "si:docker"
                                 icon_color: "#13BEF9"
-                                background_color: "white"
+                                background_color: "rgba(var(--color-theme),0)"
+                            # dark_theme:
+                            #   default_state:
+                            #     icon: "si:docker"
+                            #     icon_color: "#13BEF9"
+                            #     background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.portainer_update"
@@ -1089,7 +1213,7 @@ views:
                               default_state:
                                 icon: "si:mqtt"
                                 icon_color: "#660066"
-                                background_color: "white"
+                                background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.emqx_update"
@@ -1111,13 +1235,13 @@ views:
                             default_theme:
                               default_state:
                                 icon: "si:uptimekuma"
-                                icon_color: "#69E084"
-                                background_color: "#808183"
+                                icon_color: "#5CDD8B"
+                                background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
                                 icon: "si:uptimekuma"
-                                icon_color: "#5CDD8B"
-                                background_color: "white"
+                                icon_color: "#69E084"
+                                background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.uptime_kuma_update"
@@ -1140,12 +1264,12 @@ views:
                               default_state:
                                 icon: "si:alwaysdata"
                                 icon_color: "#E9568E"
-                                background_color: "black"
-                            dark_theme:
-                              default_state:
-                                icon: "si:alwaysdata"
-                                icon_color: "#E9568E"
-                                background_color: "white"
+                                background_color: "rgba(var(--color-theme),0)"
+                            # dark_theme:
+                            #   default_state:
+                            #     icon: "si:alwaysdata"
+                            #     icon_color: "#E9568E"
+                            #     background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.netdata_update"
