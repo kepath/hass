@@ -185,23 +185,38 @@ widget_count_indicator:
       - line-height: "0"
       - color: >
           [[[
-            var iconColor = "red";
+            var iconColor = "rgba(var(--color-red),1)";
             if(hass.themes.darkMode) {
-              iconColor = "yellow";
+              iconColor = "rgba(var(--color-yellow),1)";
             }
-            return "rgba(var(--color-" + iconColor + "),1)"
+            return iconColor;
           ]]]
     img_cell:
       - border-radius: "50%"
-      - background-color: "var(--card-background-color)"
+      - background-color: >
+          [[[
+            var BGColor = "rgba(var(--color-theme),0)";
+            if(hass.themes.darkMode) {
+              BGColor = "rgba(var(--color-theme),0)";
+            }
+            return BGColor;
+          ]]]
       - height: "16px"
       - width: "16px"
-      - border: "2px solid var(--card-background-color)"
+      - border: >
+          [[[
+            var borderStyle = "2px solid rgba(var(--color-theme),0)";
+            if(hass.themes.darkMode) {
+              borderStyle = "2px solid rgba(var(--color-theme),0)";
+            }
+            return borderStyle;
+          ]]]
     card:
       - height: "100%"
       - box-shadow: "none"
       - padding: "0"
       - border-radius: "50%"
+      # - background-color: "rgba(var(--color-theme),0)"
   style:
     $: >
       .tooltip .tooltiptext {
@@ -219,9 +234,15 @@ widget_count_indicator:
       }
       if (!isNaN(amountValue) && amountValue !== undefined){
         if (amountValue > 9) {
-          var amountValue = "9-plus";
+          amountValue = "9-plus";
         }
         icon = icon.replace("0",amountValue);
+      }
+      if (amountValue == "on") {
+        icon = "mdi:arrow-up-bold-circle";
+      }
+      if(hass.themes.darkMode) {
+        icon = icon.replace("-circle","");
       }
       return icon;
     ]]]
@@ -237,6 +258,9 @@ widget_count_indicator:
             amountValue = states[variables?.notification_counts?.entity]?.state ? states[variables.notification_counts.entity].state : 0;
           }
           if (!isNaN(amountValue) && amountValue != 0 && amountValue !== undefined) {
+            isZeroValue = false;
+          }
+          if (amountValue == "on") {
             isZeroValue = false;
           }
           return isZeroValue;

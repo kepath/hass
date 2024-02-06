@@ -2,8 +2,44 @@
 custom_card_kepath_occupancy_state:
   variables:
     ulm_card_kepath_binary_sensor_count_notifications:
+      unavailable:
+        entity: "sensor.binary_sensor_state_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
+      amount:
+        entity: "sensor.binary_sensor_state_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
       person:
         entity: "sensor.binary_sensor_state_counts"
+        ignore_on_known_occupancy: >
+          [[[
+            var ignoreOnKnownOccupancy = false;
+            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.person?.ignore_on_known_occupancy) {
+              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.person.ignore_on_known_occupancy === "boolean") {
+                ignoreOnKnownOccupancy = variables.ulm_card_kepath_binary_sensor_count_notifications.person.ignore_on_known_occupancy;
+              }
+            }
+            return ignoreOnKnownOccupancy;
+          ]]]
         is_attribute: >
           [[[
             var isValueAttribute = true;
@@ -21,11 +57,11 @@ custom_card_kepath_occupancy_state:
         [[[
             var show_detected_home_color = false;
             var known_home = states[variables.ulm_card_kepath_binary_sensor_count_notifications.person.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.person.attribute_name];
-
-            if (!isNaN(known_home) && known_home !== undefined && known_home != 0){
-              show_detected_home_color = true;
+            if (!variables.ulm_card_kepath_binary_sensor_count_notifications.person.ignore_on_known_occupancy) {
+              if (!isNaN(known_home) && known_home !== undefined && known_home != 0){
+                show_detected_home_color = true;
+              }
             }
-
             return show_detected_home_color;
         ]]]
       icon: "mdi:human-greeting"
@@ -40,13 +76,11 @@ custom_card_kepath_occupancy_state:
             var show_detected_away_color = false;
             var known_home = states[variables.ulm_card_kepath_binary_sensor_count_notifications.person.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.person.attribute_name];
             var person_detected = states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name];
-
-            if (!isNaN(known_home) && known_home !== undefined && known_home == 0){
+            if (!isNaN(known_home) && known_home !== undefined && known_home == 0) {
               if (!isNaN(person_detected) && person_detected !== undefined && person_detected != 0){
                 show_detected_away_color = true;
               }
             }
-
             return show_detected_away_color;
         ]]]
       icon: "mdi:motion-sensor"
@@ -56,6 +90,7 @@ custom_card_kepath_occupancy_state:
         img_cell:
           - background-color: "rgba(var(--color-red), 0.2)"
     - operator: "default"
+      icon: "mdi:cctv"
       styles:
         icon:
           - color: "rgba(var(--color-green),1)"
