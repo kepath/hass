@@ -1213,3 +1213,116 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
   mode: single
+- id: '1706816168075'
+  alias: on_create_1424
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: binary_sensor
+      group_name: all_moisture_class_binary_sensors
+      icon: mdi:door
+      friendly_name: All binary_sensor moisture device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - moisture
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1706816937410'
+  alias: on_create_57973
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_duration_class_and_total_increasing_state_and_min_unit_of_measurement_sensors
+      icon: mdi:volume-off
+      friendly_name: All sensor duration device class total_increasing state min unit
+        of measurement group
+      filter_by_device_class: true
+      included_device_classes:
+      - duration
+      filter_by_state_class: true
+      filtered_state_class: total_increasing
+      filter_by_unit_of_measurement: true
+      filtered_unit_of_measurement: min
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1706817011614'
+  alias: on_create_u88257
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_duration_class_and_measurement_state_class_and_min_unit_of_measurement_sensors
+      icon: mdi:volume-off
+      friendly_name: All sensor duration device class measurement state min unit of
+        measurement group
+      filter_by_device_class: true
+      included_device_classes:
+      - duration
+      filter_by_state_class: true
+      filtered_state_class: measurement
+      filter_by_unit_of_measurement: true
+      filtered_unit_of_measurement: min
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1707250998794'
+  alias: New automation66678b76
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_power_class_sensors
+      icon: mdi:door
+      friendly_name: All sensor power device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - power
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1707254937478'
+  alias: New automation3543fg
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_monetary_class_sensors
+      icon: mdi:door
+      friendly_name: All sensor monetary device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - monetary
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
