@@ -2,6 +2,7 @@
 A high-level, convenient abstraction for interacting with
 the LG SmartThinQ API for most use cases.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -38,6 +39,8 @@ LOCAL_LANG_PACK = {
     "LOCK": StateOptions.ON,
     "INITIAL_BIT_OFF": StateOptions.OFF,
     "INITIAL_BIT_ON": StateOptions.ON,
+    "STANDBY_OFF": StateOptions.OFF,
+    "STANDBY_ON": StateOptions.ON,
     "@WM_EDD_REFILL_W": StateOptions.OFF,
     "IGNORE": StateOptions.NONE,
     "NONE": StateOptions.NONE,
@@ -376,12 +379,15 @@ class Device:
         client: ClientAsync,
         device_info: DeviceInfo,
         status: DeviceStatus | None = None,
+        *,
+        sub_device: str | None = None,
     ):
         """Create a wrapper for a `DeviceInfo` object associated with a Client."""
 
         self._client = client
         self._device_info = device_info
         self._status = status
+        self._sub_device = sub_device
         self._model_data = None
         self._model_info: ModelInfo | None = None
         self._model_lang_pack = None
@@ -396,6 +402,9 @@ class Device:
         # attributes for properties
         self._attr_unique_id = self._device_info.device_id
         self._attr_name = self._device_info.name
+        if sub_device:
+            self._attr_unique_id += f"-{sub_device}"
+            self._attr_name += f" {sub_device.capitalize()}"
 
         # for logging unknown states received
         self._unknown_states = []
@@ -456,7 +465,9 @@ class Device:
                 if self._model_data is None:
                     return False
 
-            self._model_info = ModelInfo.get_model_info(self._model_data)
+            self._model_info = ModelInfo.get_model_info(
+                self._model_data, self._sub_device
+            )
             if self._model_info is None:
                 return False
 
@@ -950,11 +961,11 @@ class DeviceStatus:
 
     def update_status(self, key, value) -> bool:
         """Update the status key to a specific value."""
-        if key in self._data:
-            self._data[key] = value
-            self._features_updated = False
-            return True
-        return False
+        if not (upd_key := self._get_data_key(key)):
+            return False
+        self._data[upd_key] = value
+        self._features_updated = False
+        return True
 
     def update_status_feat(self, key, value, upd_features=False) -> bool:
         """Update device status and features."""
@@ -1030,20 +1041,27 @@ class DeviceStatus:
 
         # exception because doorlock bit
         # is not inside the model enum
-        if key == "DoorLock" and ret_val is None:
-            if str_val == "1":
+        door_locks = {"DoorLock": "1", "doorLock": "DOORLOCK_ON"}
+        if ret_val is None and key in door_locks:
+            if self.is_info_v2 and not str_val:
+                return None
+            if str_val == door_locks[key]:
                 return LABEL_BIT_ON
             return LABEL_BIT_OFF
 
         return ret_val
 
-    def lookup_bit(self, key):
+    def lookup_bit(self, key, invert=False):
         """Lookup bit value for a specific key of type enum."""
         enum_val = self.lookup_bit_enum(key)
         if enum_val is None:
             return None
-        bit_val = LOCAL_LANG_PACK.get(enum_val, StateOptions.OFF)
-        if bit_val == StateOptions.ON:
+        bit_val = LOCAL_LANG_PACK.get(enum_val)
+        if not bit_val:
+            return StateOptions.OFF
+        if not invert:
+            return bit_val
+        if bit_val == StateOptions.OFF:
             return StateOptions.ON
         return StateOptions.OFF
 
