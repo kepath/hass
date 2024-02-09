@@ -323,3 +323,48 @@ night_mode_on:
       - ecdc93708d2afbf8f645e3eb84d0e39c
   mode: single
   icon: mdi:home-lock
+'1707435755604':
+  alias: Navigate to House Security View Ground Floor
+  sequence:
+  - service: input_select.select_option
+    metadata: {}
+    data:
+      option: G
+    target:
+      entity_id: input_select.floorplan_floor
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: /lovelace-minimalist-security/1
+  mode: single
+  icon: mdi:home-floor-g
+navigate_to_house_security_view_first_floor:
+  alias: Navigate to House Security View First Floor
+  sequence:
+  - service: input_select.select_option
+    metadata: {}
+    data:
+      option: '1'
+    target:
+      entity_id: input_select.floorplan_floor
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: /lovelace-minimalist-security/1
+  mode: single
+  icon: mdi:home-floor-1
+navigate_to_house_security_view_second_floor:
+  alias: Navigate to House Security View Second Floor
+  sequence:
+  - service: input_select.select_option
+    metadata: {}
+    data:
+      option: '2'
+    target:
+      entity_id: input_select.floorplan_floor
+  - service: browser_mod.navigate
+    metadata: {}
+    data:
+      path: /lovelace-minimalist-security/1
+  mode: single
+  icon: mdi:home-floor-1
