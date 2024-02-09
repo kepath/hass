@@ -792,7 +792,7 @@
     data:
       domain: vacuum
       group_name: all_vacuum
-      icon: mdi:account
+      icon: mdi:robot-vacuum
       friendly_name: All vacuum domain entities
       filter_by_device_class: false
       excluded_entity_groups:
@@ -931,7 +931,7 @@
     data:
       domain: binary_sensor
       group_name: all_connectivity_class_binary_sensors
-      icon: mdi:door
+      icon: mdi:connection
       friendly_name: All binary_sensor connectivity device class group
       filter_by_device_class: true
       included_device_classes:
@@ -952,7 +952,7 @@
     data:
       domain: binary_sensor
       group_name: all_plug_class_binary_sensors
-      icon: mdi:door
+      icon: mdi:power-socket-uk
       friendly_name: All binary_sensor plug device class group
       filter_by_device_class: true
       included_device_classes:
@@ -973,7 +973,7 @@
     data:
       domain: binary_sensor
       group_name: all_power_class_binary_sensors
-      icon: mdi:door
+      icon: mdi:home-lightning-bolt
       friendly_name: All binary_sensor power device class group
       filter_by_device_class: true
       included_device_classes:
@@ -1178,7 +1178,7 @@
     data:
       domain: sensor
       group_name: all_duration_class_and_min_unit_of_measurement_sensors
-      icon: mdi:volume-off
+      icon: mdi:sort-clock-ascending-outline
       friendly_name: All sensor duration device class min unit of measurement group
       filter_by_device_class: true
       included_device_classes:
@@ -1189,7 +1189,7 @@
       - group.globally_excluded_entities
   mode: single
 - id: '1705591084335'
-  alias: New automation
+  alias: on_start_create_group.all_data_size_device_class_measurement_state_class_and_min_unit_of_measurement_sensors
   description: Uses python script create_entity_class_group to create an entity group
   trigger:
   - platform: homeassistant
@@ -1200,7 +1200,7 @@
     data:
       domain: sensor
       group_name: all_data_size_device_class_measurement_state_class_and_min_unit_of_measurement_sensors
-      icon: mdi:volume-off
+      icon: mdi:sort-clock-ascending-outline
       friendly_name: All sensor data_size device class state_class measurement MB
         unit of measurement group
       filter_by_device_class: true
@@ -1214,7 +1214,7 @@
       - group.globally_excluded_entities
   mode: single
 - id: '1706816168075'
-  alias: on_create_1424
+  alias: on_start_create_group.all_moisture_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
@@ -1226,7 +1226,7 @@
     data:
       domain: binary_sensor
       group_name: all_moisture_class_binary_sensors
-      icon: mdi:door
+      icon: mdi:water-alert-outline
       friendly_name: All binary_sensor moisture device class group
       filter_by_device_class: true
       included_device_classes:
@@ -1235,7 +1235,7 @@
       - group.globally_excluded_entities
   mode: single
 - id: '1706816937410'
-  alias: on_create_57973
+  alias: on_start_create_group.all_duration_class_and_total_increasing_state_and_min_unit_of_measurement_sensors
   description: Uses python script create_entity_class_group to create an entity group
   trigger:
   - platform: homeassistant
@@ -1246,7 +1246,7 @@
     data:
       domain: sensor
       group_name: all_duration_class_and_total_increasing_state_and_min_unit_of_measurement_sensors
-      icon: mdi:volume-off
+      icon: mdi:sort-clock-ascending-outline
       friendly_name: All sensor duration device class total_increasing state min unit
         of measurement group
       filter_by_device_class: true
@@ -1260,7 +1260,7 @@
       - group.globally_excluded_entities
   mode: single
 - id: '1706817011614'
-  alias: on_create_u88257
+  alias: on_start_create_group.all_duration_class_and_measurement_state_class_and_min_unit_of_measurement_sensors
   description: Uses python script create_entity_class_group to create an entity group
   trigger:
   - platform: homeassistant
@@ -1271,7 +1271,7 @@
     data:
       domain: sensor
       group_name: all_duration_class_and_measurement_state_class_and_min_unit_of_measurement_sensors
-      icon: mdi:volume-off
+      icon: mdi:sort-clock-ascending-outline
       friendly_name: All sensor duration device class measurement state min unit of
         measurement group
       filter_by_device_class: true
@@ -1285,7 +1285,7 @@
       - group.globally_excluded_entities
   mode: single
 - id: '1707250998794'
-  alias: New automation66678b76
+  alias: on_start_create_group.all_power_class_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
@@ -1297,7 +1297,7 @@
     data:
       domain: sensor
       group_name: all_power_class_sensors
-      icon: mdi:door
+      icon: mdi:home-lightning-bolt
       friendly_name: All sensor power device class group
       filter_by_device_class: true
       included_device_classes:
@@ -1306,7 +1306,7 @@
       - group.globally_excluded_entities
   mode: single
 - id: '1707254937478'
-  alias: New automation3543fg
+  alias: on_start_create_group.all_monetary_class_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
   trigger:
@@ -1318,11 +1318,32 @@
     data:
       domain: sensor
       group_name: all_monetary_class_sensors
-      icon: mdi:door
+      icon: mdi:currency-gbp
       friendly_name: All sensor monetary device class group
       filter_by_device_class: true
       included_device_classes:
       - monetary
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1707345933326'
+  alias: on_start_create_group.all_restart_class_buttons
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: button
+      group_name: all_restart_class_buttons
+      icon: mdi:restart
+      friendly_name: All button restart device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - restart
       excluded_entity_groups:
       - group.globally_excluded_entities
   mode: single
