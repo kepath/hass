@@ -1,0 +1,42 @@
+---
+type: "picture-elements"
+image: "local/floorplan/2nd/light_transparent.png"
+dark_mode_image: "local/floorplan/2nd/dark_transparent.png"
+elements:
+  ############## COMMON ELEMENTS ###############################
+
+  #### IMAGES ####
+  # BED E
+  - type: "image"
+    entity: "light.shelly_1l_bed_e_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/2nd/bed_e_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  # LOFT
+  - type: "image"
+    entity: "binary_sensor.zigbee_door_sensor_loft_contact"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/2nd/loft_door.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "call-service"
+      service: "script.1707435755604"
+      data: {}
+    hold_action:
+      action: "none"
