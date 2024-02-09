@@ -26,7 +26,6 @@ from .const import (
     DEFAULT_NAME,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
-    FORECAST_MODES,
     LANGUAGES,
     CONF_UNITS,
     DEFAULT_UNITS,
@@ -73,9 +72,6 @@ class PirateWeatherConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(PW_PLATFORM, default=[PW_PLATFORMS[1]]): cv.multi_select(
                     PW_PLATFORMS
                 ),
-                vol.Required(CONF_MODE, default=DEFAULT_FORECAST_MODE): vol.In(
-                    FORECAST_MODES
-                ),
                 vol.Required(CONF_LANGUAGE, default=DEFAULT_LANGUAGE): vol.In(
                     LANGUAGES
                 ),
@@ -94,7 +90,7 @@ class PirateWeatherConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             latitude = user_input[CONF_LATITUDE]
             longitude = user_input[CONF_LONGITUDE]
-            forecastMode = user_input[CONF_MODE]
+            forecastMode = "daily"
             forecastPlatform = user_input[PW_PLATFORM]
             entityNamee = user_input[CONF_NAME]
 
@@ -234,15 +230,6 @@ class PirateWeatherOptionsFlow(config_entries.OptionsFlow):
                             self.config_entry.data.get(PW_PLATFORM, []),
                         ),
                     ): cv.multi_select(PW_PLATFORMS),
-                    vol.Optional(
-                        CONF_MODE,
-                        default=self.config_entry.options.get(
-                            CONF_MODE,
-                            self.config_entry.data.get(
-                                CONF_MODE, DEFAULT_FORECAST_MODE
-                            ),
-                        ),
-                    ): vol.In(FORECAST_MODES),
                     vol.Optional(
                         CONF_LANGUAGE,
                         default=self.config_entry.options.get(
