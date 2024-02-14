@@ -17,8 +17,8 @@ views:
                 variables:
                   ulm_card_kepath_welcome_collapse: "input_boolean.welcome_toggle"
                   ulm_chip_temperature_inside:
-                  ulm_chip_temperature_outside: "sensor.banbury_temperature"
-                  ulm_chip_temperature_weather: "weather.met_office_banbury"
+                  ulm_chip_temperature_outside: "sensor.openweathermap_temperature"
+                  ulm_chip_temperature_weather: "weather.openweathermap"
                   entity_1:
                     nav: "/lovelace-minimalist-rooms"
                     icon: "mdi:floor-plan"
@@ -363,10 +363,8 @@ views:
                   type: "custom:button-card"
                   styles:
                     grid:
-                      - grid-template-areas: >
-                          'item1 item1 item1 item2 item2 item2 item3 item3 item3 item4 item4 item4 item5 item5 item5'
-                          'floorplan1 floorplan1 floorplan1 floorplan1 floorplan1 floorplan2 floorplan2 floorplan2 floorplan2 floorplan2 floorplan3 floorplan3 floorplan3 floorplan3 floorplan3'
-                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
+                      - grid-template-areas: "'item1 item2 item3 item4 item5' 'item6 item7 item8 item9 item10'"
+                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
                     card:
@@ -458,13 +456,6 @@ views:
                               title: "speaker entities"
                               auto_entities:
                                 sort_method: "last_changed"
-                    floorplan1:
-                      card: !include "floorplan_pictures/floor-ground.yaml"
-                    floorplan2:
-                      card: !include "floorplan_pictures/floor-first.yaml"
-                    floorplan3:
-                      card: !include "floorplan_pictures/floor-second.yaml"
-
 
               - type: "conditional"
                 conditions:
@@ -752,8 +743,10 @@ views:
                   type: "custom:button-card"
                   styles:
                     grid:
-                      - grid-template-areas: "'item1 item2 item3 item4 item5' 'item6 item7 item8 item9 item10'"
-                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
+                      - grid-template-areas: >
+                          'item1 item1 item1 item2 item2 item2 item3 item3 item3 item4 item4 item4 item5 item5 item5'
+                          'floorplan1 floorplan1 floorplan1 floorplan1 floorplan1 floorplan2 floorplan2 floorplan2 floorplan2 floorplan2 floorplan3 floorplan3 floorplan3 floorplan3 floorplan3'
+                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
                     card:
@@ -774,6 +767,12 @@ views:
                       item8: *widget_icon_binary_sensor_custom_styling
                       item9: *widget_icon_binary_sensor_custom_styling
                       item10: *widget_icon_binary_sensor_custom_styling
+                      floorplan1: &floorplan_styling
+                        - border-radius: "none"
+                        - box-shadow: "none"
+                      floorplan2: *floorplan_styling
+                      floorplan3: *floorplan_styling
+
                   custom_fields:
                     item1:
                       card:
@@ -890,6 +889,12 @@ views:
                               title: "occupancy entities"
                               auto_entities:
                                 sort_method: "last_changed"
+                    floorplan1:
+                      card: !include "floorplan_pictures/floor-ground.yaml"
+                    floorplan2:
+                      card: !include "floorplan_pictures/floor-first.yaml"
+                    floorplan3:
+                      card: !include "floorplan_pictures/floor-second.yaml"
 
               - type: "conditional"
                 conditions:

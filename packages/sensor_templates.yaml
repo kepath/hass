@@ -18,7 +18,7 @@ template:
           connectivity_disconnected_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           connectivity_unavailable_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           data_rate_unavailable_count: "{{ expand('group.all_data_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          data_rate_total_value: "{{expand('group.all_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float')|sum|round()}}"
+          data_rate_total_value: "{{expand('group.all_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|sum|round()}}"
           device_trackers_away_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['away','not_home'])|list|count }}"
           device_trackers_unavailable_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
@@ -139,14 +139,49 @@ template:
           device_class_list: "{{ states|rejectattr('attributes.device_class', 'undefined')|map(attribute='attributes.device_class')|unique|list|sort }}"
           unit_of_measurement_list: "{{ states|rejectattr('attributes.unit_of_measurement', 'undefined')|map(attribute='attributes.unit_of_measurement')|unique|list|sort }}"
           integrations_installed_list: "{{ states|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
-          area_id_list: >
-            {%- for area in areas()|sort %}
-              {{[
-                area,
-                area_name(area),
-                area_name(area)|map('lower')|map('replace', ':', '')|map('replace', ',', '')|map('replace', ' ', '_')|join
-              ]}}
-            {%- endfor %}
+          # area_id_list: >
+          #   {%- for area in areas()|sort %}
+          #     {{[
+          #       area,
+          #       area_name(area),
+          #       area_name(area)|map('lower')|map('replace', ':', '')|map('replace', ',', '')|map('replace', ' ', '_')|join
+          #     ]}}
+          #   {%- endfor %}
+
+      - unique_id: "areas_and_entities_template_generated"
+        name: "Areas Entity Attributes"
+        state: "0"
+        attributes:
+          all_entities: "{{area_entities('All')}}"
+          bathroom_entities: "{{area_entities('Bathroom')}}"
+          bed_a_entities: "{{area_entities('Bed A')}}"
+          bed_b_entities: "{{area_entities('Bed B')}}"
+          bed_c_entities: "{{area_entities('Bed C')}}"
+          bed_d_entities: "{{area_entities('Bed D')}}"
+          bed_e_entities: "{{area_entities('Bed E')}}"
+          external_back_entities: "{{area_entities('External: Back')}}"
+          external_front_entities: "{{area_entities('External: Front')}}"
+          garage_entities: "{{area_entities('Garage')}}"
+          hallway_bottom_entities: "{{area_entities('Hallway, Bottom')}}"
+          hallway_middle_entities: "{{area_entities('Hallway, Middle')}}"
+          hallway_top_entities: "{{area_entities('Hallway, Top')}}"
+          hass_internal_entities: "{{area_entities('HASS Internal')}}"
+          kitchen_entities: "{{area_entities('Kitchen')}}"
+          loft_entities: "{{area_entities('Loft')}}"
+          lounge_entities: "{{area_entities('Lounge')}}"
+          mobile_entities: "{{area_entities('Mobile')}}"
+          retired_entities: "{{area_entities('Retired')}}"
+          study_entities: "{{area_entities('Study')}}"
+          unknown_device_entities: "{{area_entities('Unknown Device')}}"
+
+      - unique_id: "floor_grouped_areas_and_entities_template_generated"
+        name: "Floor Grouped Areas Entity Attributes"
+        state: "0"
+        attributes:
+          bottom_floor_entities: "{{area_entities('Kitchen')+area_entities('Lounge')+area_entities('Garage')+area_entities('Hallway, Bottom')+area_entities('Study')+area_entities('External: Back')+area_entities('External: Front')|sort}}"
+          middle_floor_entities: "{{area_entities('Bed A')+area_entities('Bed B')+area_entities('Bed C')+area_entities('Hallway, Middle')+area_entities('Bathroom')|sort}}"
+          top_floor_entities: "{{area_entities('Bed D')+area_entities('Bed E')+area_entities('Loft')+area_entities('Hallway, Top')|sort}}"
+
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"
@@ -424,3 +459,7 @@ template:
           middle_hallway_g3_flex_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
             {{ 'Unknown' if has_value(easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected')) else easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected') }}
+
+      # - unique_id: "group_bottom_floor_entities_template_generated"
+      #   name: "Bottom Floor Entities"
+      #   state: "{{area_entities('Kitchen')+area_entities('Lounge')+area_entities('Garage')+area_entities('Hallway, Bottom')+area_entities('Study')+area_entities('External: Back')+area_entities('External: Front')|sort}}"
