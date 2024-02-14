@@ -49,6 +49,8 @@ domain = data.get('domain', '')
 group_name = data.get('group_name', '')
 icon = data.get('icon', '')
 friendly_name = data.get('friendly_name', group_name)
+filter_by_area = data.get('filter_by_area', False)
+included_areas = data.get('included_areas', [])
 filter_by_device_class = data.get('filter_by_device_class', False)
 included_device_classes = data.get('included_device_classes', ['door'])
 filter_by_state_class = data.get('filter_by_state_class', False)
@@ -61,8 +63,11 @@ excluded_entities = data.get('excluded_entities', [])
 # integration_exclusion_template_sensor = "sensor.integration_entity_attributes"
 entity_list = []
 
-if not isinstance(domain, str) or not domain or not group_name:
-    logger.error(f"Domain {domain} or group_name {group_name} does not exist")
+try:
+    if not isinstance(domain, str) or not domain or not group_name:
+        logger.error(f"Domain {domain} or group_name {group_name} does not exist")
+except:
+    logger.error(logger, "Error - a problem occured looking up the domain")
 
 # List of hard coded entity_id's to globally exclude from the groups.
 # If a complete entity_id is given, this will remove just that entity
@@ -141,6 +146,24 @@ try:
                                             logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_unit_of_measurement}' at {time.time()}")
                     except:
                         logger.error(logger, f"Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
+
+                    try:
+                        if filter_by_area:
+                            logger.error(f"Calling the template at {time.time()}")
+                            entity_area = hass.templates('{"template": "{{ areas() }}"}')
+                            logger.error(f"Calling the template with the result '{entity_area}' at {time.time()}")
+                            # for area in included_areas:
+                            #     logger.info(f"iterating '{included_areas}' in entity 'included_areas' at {time.time()}")
+                            #     if area is not None:
+
+                            #         if attr == "unit_of_measurement":
+                            #             if entity.attributes.get(attr) != filtered_unit_of_measurement:
+                            #                 entity_list.remove(entity_id)
+                            #                 logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_unit_of_measurement}' at {time.time()}")
+                    except:
+                        logger.error(logger, f"Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
+
+
 
 except:
     logger.error(logger, f"Error - a problem occured creating the entity list")
