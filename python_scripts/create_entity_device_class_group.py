@@ -50,6 +50,7 @@ group_name = data.get('group_name', '')
 icon = data.get('icon', '')
 friendly_name = data.get('friendly_name', group_name)
 filter_by_area = data.get('filter_by_area', False)
+group_areas_by_floor = data.get('group_areas_by_floor', False)
 included_areas = data.get('included_areas', [])
 filter_by_device_class = data.get('filter_by_device_class', False)
 included_device_classes = data.get('included_device_classes', ['door'])
@@ -149,21 +150,41 @@ try:
 
                     try:
                         if filter_by_area:
-                            logger.error(f"Calling the template at {time.time()}")
-                            entity_area = hass.templates('{"template": "{{ areas() }}"}')
-                            logger.error(f"Calling the template with the result '{entity_area}' at {time.time()}")
-                            # for area in included_areas:
-                            #     logger.info(f"iterating '{included_areas}' in entity 'included_areas' at {time.time()}")
-                            #     if area is not None:
+                            area_entity_list = []
+                            if group_areas_by_floor:
+                                area_lookup_entity = "sensor.floor_grouped_areas_entity_attributes"
+                            else:
+                                area_lookup_entity = "sensor.area_and_entities_attributes"
 
-                            #         if attr == "unit_of_measurement":
-                            #             if entity.attributes.get(attr) != filtered_unit_of_measurement:
-                            #                 entity_list.remove(entity_id)
-                            #                 logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_unit_of_measurement}' at {time.time()}")
+                            try:
+                                for area in included_areas:
+                                    remove_entity = True
+                                    logger.debug(f"Iterating '{area}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                    area_lookup_attribute = str(area.replace(" ","_").replace(":","").replace(",","").lower()) + "_entities"
+                                    logger.debug(f"Looking up entities from the list found at '{area_lookup_entity}.attributes.{area_lookup_attribute}' at {time.time()}")
+                                    try:
+                                        area_entity_list = list(hass.states.get(area_lookup_entity).attributes[area_lookup_attribute])
+                                    except:
+                                        logger.error(logger, f"Error - a problem occured looking up the area entity list from the template sensor")
+
+                                    try:
+                                        for area_entity in area_entity_list:
+                                            logger.debug(f"Iterating '{area_entity}' in entity_list '{area_lookup_entity}.attributes.{area_lookup_attribute}' when checking area '{area}' at {time.time()}")
+                                            if area_entity is not None:
+                                                if area_entity == entity_id:
+                                                    remove_entity = False
+                                                    logger.debug(f"The entity '{area_entity}' has been found in the list from '{area_lookup_entity}.attributes.{area_lookup_attribute}' at {time.time()}")
+                                    except:
+                                        logger.error(logger, f"Error - a problem occured iterating through the looked up entity list")
+
+                                    if remove_entity:
+                                        entity_list.remove(entity_id)
+                                        logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because it was not in the area '{area}' at {time.time()}")
+
+                            except:
+                                logger.error(logger, f"Error - a problem occured iterating through the list of areas")
                     except:
                         logger.error(logger, f"Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
-
-
 
 except:
     logger.error(logger, f"Error - a problem occured creating the entity list")

@@ -1347,3 +1347,118 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
   mode: single
+- id: '1707920066600'
+  alias: on_start_create_group.all_area_bed_e_sensors
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: sensor
+      group_name: all_area_bed_e_sensors
+      icon: mdi:sort-clock-ascending-outline
+      friendly_name: All sensors in area BedE group
+      filter_by_area: true
+      included_areas:
+      - Bed E
+      - Kitchen
+      - Halway Bottom
+      - External Front
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1707944939122'
+  alias: on_start_create_group.all_bottom_floor_area_security_device_class_binary_sensors
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: binary_sensor
+      group_name: all_bottom_floor_area_security_device_class_binary_sensors
+      icon: mdi:home-floor-g
+      friendly_name: All binary_sensors in areas on the bottom floor with security
+        device_classes
+      filter_by_device_class: true
+      included_device_classes:
+      - carbon_monoxide
+      - heat
+      - problem
+      - safety
+      - smoke
+      - occupancy
+      - vibration
+      filter_by_area: true
+      group_areas_by_floor: true
+      included_areas:
+      - Bottom Floor
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1707946451163'
+  alias: on_start_create_group.all_middle_floor_area_security_device_class_binary_sensors
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: binary_sensor
+      group_name: all_middle_floor_area_security_device_class_binary_sensors
+      icon: mdi:home-floor-1
+      friendly_name: All binary_sensors in areas on the middle floor with security
+        device_classes
+      filter_by_device_class: true
+      included_device_classes:
+      - carbon_monoxide
+      - heat
+      - problem
+      - safety
+      - smoke
+      - occupancy
+      - vibration
+      filter_by_area: true
+      group_areas_by_floor: true
+      included_areas:
+      - Middle Floor
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
+- id: '1707946473303'
+  alias: on_start_create_group.all_top_floor_area_security_device_class_binary_sensors
+  description: Uses python script create_entity_class_group to create an entity group
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: python_script.create_entity_device_class_group
+    data:
+      domain: binary_sensor
+      group_name: all_top_floor_area_security_device_class_binary_sensors
+      icon: mdi:home-floor-2
+      friendly_name: All binary_sensors in areas on the top floor with security device_classes
+      filter_by_device_class: true
+      included_device_classes:
+      - carbon_monoxide
+      - heat
+      - problem
+      - safety
+      - smoke
+      - occupancy
+      - vibration
+      filter_by_area: true
+      group_areas_by_floor: true
+      included_areas:
+      - Top Floor
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+  mode: single
