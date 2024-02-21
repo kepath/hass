@@ -1,5 +1,8 @@
 ---
 type: "picture-elements"
+card_mod:
+  style: |
+    ha-card { border-radius: none !important; box-shadow: none !important; }
 image: "local/floorplan/2nd/light_transparent.png"
 dark_mode_image: "local/floorplan/2nd/dark_transparent.png"
 elements:
@@ -40,3 +43,22 @@ elements:
       data: {}
     hold_action:
       action: "none"
+  - type: "custom:button-card"
+    template:
+      - "custom_card_kepath_floorplan_binary_sensor_count"
+    entity: "group.all_door_class_binary_sensors"
+    name: ""
+    variables:
+      ulm_card_kepath_binary_sensor_count_notifications:
+        unavailable:
+          attribute_name: "area_top_floor_security_sensors_unavailable_count"
+        amount:
+          attribute_name: "area_top_floor_security_sensors_triggered_count"
+    # styles:
+    #   custom_fields:
+    #     unavailable:
+    #       - left: "2px"
+    #       - top: "-106px"
+    #     amount:
+    #       - left: "138px"
+    #       - top: "-106px"
