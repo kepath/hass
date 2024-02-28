@@ -264,6 +264,30 @@ views:
                 type: "entity"
                 name: "Fridge/Freezer Garage"
                 children: []
+
+  - title: "Floorplan"
+    icon: "mdi:floor-plan"
+    theme: "minimalist-mobile"
+    panel: true
+    cards:
+      - type: "vertical-stack"
+        cards:
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "G"
+            card: !include "floorplan_energy/floor-ground.yaml"
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "1"
+            card: !include "floorplan_energy/floor-first.yaml"
+          - type: "conditional"
+            conditions:
+              - entity: "input_select.floorplan_floor"
+                state: "2"
+            card: !include "floorplan_energy/floor-second.yaml"
+
   - title: "Water Heater"
     icon: "mdi:water-boiler"
     type: "custom:masonry-layout"

@@ -1,10 +1,6 @@
 ---
 type: "picture-elements"
-card_mod:
-  style: |
-    ha-card { border-radius: none !important; box-shadow: none !important; }
-image: "local/floorplan/2nd/light_transparent.png"
-dark_mode_image: "local/floorplan/2nd/dark_transparent.png"
+image: "local/floorplan/2nd/dark.png"
 elements:
   ############## COMMON ELEMENTS ###############################
 
@@ -38,23 +34,33 @@ elements:
       "unavailable": "local/floorplan/transparent.png"
       "unknown": "local/floorplan/transparent.png"
     tap_action:
-      action: "call-service"
-      service: "script.navigate_to_house_security_view_second_floor"
-      data: {}
+      action: "none"
     hold_action:
       action: "none"
+
+  #### LIGHTS ####
+  # BED E
   - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.shelly_1l_bed_e_light_1"
     style:
-      left: "50%"
-      top: "10%"
-      width: "100%"
-    template:
-      - "custom_card_kepath_floorplan_binary_sensor_count"
-    entity: "group.all_door_class_binary_sensors"
-    name: ""
-    variables:
-      ulm_card_kepath_binary_sensor_count_notifications:
-        unavailable:
-          attribute_name: "area_top_floor_security_sensors_unavailable_count"
-        amount:
-          attribute_name: "area_top_floor_security_sensors_triggered_count"
+      left: "75%"
+      top: "35%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # BED E LAMP
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.mss425e_6025_outlet_3"
+    style:
+      left: "62%"
+      top: "67%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  #### FLOOR NAVIGATION #####
+  - type: "custom:button-card"
+    template: "card_kepath_service_buttons"
+    style:
+      left: "5%"
+      top: "15%"
+
+  ############## COMMON ELEMENTS END ###########################

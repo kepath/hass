@@ -198,177 +198,142 @@ elements:
 
   ############## COMMON ELEMENTS END ###########################
 
-  # MOTION
-  # MIDDLE HALLWAY MOTION SENSOR
+  #### PLUGS #####
+  # G4 DOORBELL
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_camera"
-    entity: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_outlet_switch_unifi_g4_doorbell_switch"
     variables:
-      ulm_card_kepath_floorplan_camera_icon: "mdi:human-greeting"
-      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy"
-      ulm_card_kepath_floorplan_camera_last_activity_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_camera_last_activity_attribute: "motion_sensor_front_door_stairs_last_activity"
-      ulm_card_kepath_floorplan_camera_view_borders: "bottom"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
     style:
-      left: "47%"
-      top: "35%"
+      left: "59%"
+      top: "81%"
       color: "rgba(100, 100, 100, 0.0)"
-  # BOTTOM HALWAY G3 INSTANT
+  # KITCHEN FIRESTICK
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_camera"
-    entity: "camera.bottom_hallway_g3_instant_medium"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_outlet_switch_amazon_firestick_kitchen_switch"
     variables:
-      ulm_card_kepath_floorplan_camera_icon: "mdi:webcam"
-      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.bottom_hallway_g3_instant_motion"
-      ulm_card_kepath_floorplan_camera_last_activity_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_camera_last_activity_attribute: "bottom_hallway_g3_instant_last_motion_detected"
-      ulm_card_kepath_floorplan_camera_view_borders: "bottom"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
     style:
-      left: "53%"
-      top: "36%"
-      color: "rgba(100, 100, 100, 0.0)"
-  # KITCHEN G3 INSTANT
-  - type: "custom:button-card"
-    template: "card_kepath_floorplan_camera"
-    entity: "camera.kitchen_g3_instant_medium"
-    variables:
-      ulm_card_kepath_floorplan_camera_icon: "mdi:webcam"
-      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.kitchen_g3_instant_motion"
-      ulm_card_kepath_floorplan_camera_last_activity_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_camera_last_activity_attribute: "kitchen_g3_instant_last_motion_detected"
-      ulm_card_kepath_floorplan_camera_view_borders: "left,top"
-    style:
-      left: "81%"
+      left: "62%"
       top: "48%"
       color: "rgba(100, 100, 100, 0.0)"
-  # EXTERNAL BACK G3 FLEX
+  # FRIDGE
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_camera"
-    entity: "camera.back_g3_flex_medium"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.fridge_plug_kitchen"
     variables:
-      ulm_card_kepath_floorplan_camera_icon: "mdi:cctv"
-      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.back_g3_flex_motion"
-      ulm_card_kepath_floorplan_camera_last_activity_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_camera_last_activity_attribute: "back_g3_flex_last_motion_detected"
-      ulm_card_kepath_floorplan_camera_view_borders: "top,right"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.fridge_plug_kitchen_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.fridge_plug_kitchen_current_power"
     style:
-      left: "22%"
-      top: "16%"
+      left: "60%"
+      top: "32%"
       color: "rgba(100, 100, 100, 0.0)"
-  # EXTERNAL FRONT G3 FLEX
+  # DISHWASHER
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_camera"
-    entity: "camera.front_g3_flex_medium"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_energy_monitor_outlet_switch_dishwasher_switch"
     variables:
-      ulm_card_kepath_floorplan_camera_icon: "mdi:cctv"
-      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.front_g3_flex_motion"
-      ulm_card_kepath_floorplan_camera_last_activity_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_camera_last_activity_attribute: "front_g3_flex_last_motion_detected"
-      ulm_card_kepath_floorplan_camera_view_borders: "bottom,right"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: true
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_instantaneous_demand"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.zigbee_energy_monitor_outlet_switch_dishwasher_instantaneous_demand"
     style:
-      left: "7%"
-      top: "83%"
+      left: "64%"
+      top: "32%"
       color: "rgba(100, 100, 100, 0.0)"
-  # DOORBELL G4
+  # MICROWAVE
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_camera"
-    entity: "camera.doorbell_g4_medium"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.microwave_plug_kitchen"
     variables:
-      ulm_card_kepath_floorplan_camera_icon: "mdi:doorbell-video"
-      ulm_card_kepath_floorplan_camera_motion_sensor: "binary_sensor.doorbell_g4_person_detected"
-      ulm_card_kepath_floorplan_camera_last_activity_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_camera_last_activity_attribute: "doorbell_g4_last_doorbell_ring"
-      ulm_card_kepath_floorplan_camera_view_borders: "bottom,left"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.microwave_plug_kitchen_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.microwave_plug_kitchen_current_power"
     style:
-      left: "58%"
-      top: "86%"
+      left: "75%"
+      top: "32%"
       color: "rgba(100, 100, 100, 0.0)"
-  # NEST PROTECT BOTTOM FLOOR
+  # KETTLE
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_nest_protect"
-    entity: "binary_sensor.nest_protect_bottom_floor_occupancy"
-    triggers_update: "all"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.kettle_plug_kitchen"
     variables:
-      ulm_card_kepath_floorplan_nest_protect_last_activity_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_nest_protect_last_activity_attribute: "nest_protect_bottom_floor_last_activity"
-      ulm_card_kepath_floorplan_nest_protect_co_status: "binary_sensor.nest_protect_bottom_floor_co_status"
-      ulm_card_kepath_floorplan_nest_protect_heat_status: "binary_sensor.nest_protect_bottom_floor_heat_status"
-      ulm_card_kepath_floorplan_nest_protect_smoke_status: "binary_sensor.nest_protect_bottom_floor_smoke_status"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.kettle_plug_kitchen_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.kettle_plug_kitchen_current_power"
     style:
-      left: "54%"
-      top: "57%"
+      left: "76%"
+      top: "35%"
       color: "rgba(100, 100, 100, 0.0)"
-
-  # DOORS
-  # FRONT DOOR OPENER
+  # WASHING MACHINE
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_door"
-    entity: "binary_sensor.lock_45f7_door"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch"
     variables:
-      ulm_card_kepath_floorplan_door_last_opened_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_door_last_opened_attribute: "front_door_last_opened"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: true
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
     style:
-      left: "51%"
-      top: "95%"
+      left: "48%"
+      top: "31%"
       color: "rgba(100, 100, 100, 0.0)"
-  # FRONT DOOR LOCK
+  # TUMBLE DRYER
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_lock"
-    entity: "lock.front_door_top_bolt"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.samsung_tumble_dryer"
     variables:
-      ulm_card_kepath_floorplan_door_last_locked_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_door_last_locked_attribute: "front_door_last_locked"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: true
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.samsung_tumble_dryer_deltaenergy"
     style:
-      left: "47%"
-      top: "85%"
+      left: "48%"
+      top: "28%"
       color: "rgba(100, 100, 100, 0.0)"
-  # BACK DOOR
+  # SMART METER
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_door"
-    entity: "binary_sensor.zigbee_door_sensor_back_contact"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.zigbee_outlet_switch_smart_meter_switch"
     variables:
-      ulm_card_kepath_floorplan_door_last_opened_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_door_last_opened_attribute: "back_door_last_opened"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
     style:
-      left: "54%"
-      top: "16%"
+      left: "72%"
+      top: "29%"
       color: "rgba(100, 100, 100, 0.0)"
-  # GARAGE DOOR
+  # GARAGE FRIDGE/FREEZER
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_door"
-    entity: "binary_sensor.zigbee_door_sensor_garage_contact"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.fridge_freezer_plug_garage"
     variables:
-      ulm_card_kepath_floorplan_door_last_opened_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_door_last_opened_attribute: "garage_door_last_opened"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.fridge_freezer_plug_garage_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.fridge_freezer_plug_garage_current_power"
     style:
-      left: "84%"
+      left: "93%"
       top: "10%"
       color: "rgba(100, 100, 100, 0.0)"
-  # PATIO DOOR 1
+  # GARAGE CHEST FREEZER
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_door"
-    entity: "binary_sensor.zigbee_door_sensor_patio_1_contact"
+    template: "card_kepath_floorplan_binary_item_plug"
+    entity: "switch.chest_freezer_plug_garage"
     variables:
-      ulm_card_kepath_floorplan_door_last_opened_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_door_last_opened_attribute: "patio_door1_last_opened"
-      ulm_card_kepath_floorplan_door_closed_icon: "mdi:door-sliding"
-      ulm_card_kepath_floorplan_door_open_icon: "mdi:door-sliding-open"
+      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
+      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.chest_freezer_plug_garage_current_power"
+      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
+      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.chest_freezer_plug_garage_current_power"
     style:
-      left: "36%"
-      top: "16%"
-      color: "rgba(100, 100, 100, 0.0)"
-  # PATIO DOOR 2
-  - type: "custom:button-card"
-    template: "card_kepath_floorplan_door"
-    entity: "binary_sensor.zigbee_door_sensor_patio_2_contact"
-    variables:
-      ulm_card_kepath_floorplan_door_last_opened_entity: "sensor.floorplan_dates_template_generated"
-      ulm_card_kepath_floorplan_door_last_opened_attribute: "patio_door2_last_opened"
-      ulm_card_kepath_floorplan_door_closed_icon: "mdi:door-sliding"
-      ulm_card_kepath_floorplan_door_open_icon: "mdi:door-sliding-open"
-    style:
-      left: "29%"
-      top: "16%"
+      left: "96%"
+      top: "10%"
       color: "rgba(100, 100, 100, 0.0)"
 
   # THERMOSTATS
