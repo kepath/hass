@@ -902,7 +902,7 @@
     domain: light
   mode: single
 - id: '1690839144197'
-  alias: on_lock_front_door_set_input_datetime_timestamp
+  alias: on_lock_or_unlock_front_door_set_input_datetime_timestamp
   description: ''
   trigger:
   - platform: device
@@ -910,6 +910,11 @@
     domain: lock
     entity_id: 2aa351b0b7bdb31860450ecf842ca28b
     type: locked
+  - platform: device
+    device_id: c433a6de7503fff598e3b00eebd934b8
+    domain: lock
+    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
+    type: unlocked
   condition: []
   action:
   - service: input_datetime.set_datetime
