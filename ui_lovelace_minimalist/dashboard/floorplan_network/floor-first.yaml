@@ -143,43 +143,6 @@ elements:
       top: "15%"
       color: "rgba(100, 100, 100, 0.0)"
 
-  #### PLUGS #####
-  # ARCADE PC
-  - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item_plug"
-    entity: "switch.zigbee_outlet_switch_arcade_pc_switch"
-    variables:
-      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
-      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
-    style:
-      left: "64%"
-      top: "68%"
-      color: "rgba(100, 100, 100, 0.0)"
-  # DRINKS FRIDGE
-  - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item_plug"
-    entity: "switch.drinks_fridge_plug_bed_c"
-    variables:
-      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
-      ulm_card_kepath_floorplan_item_binary_device_power: "sensor.drinks_fridge_plug_bed_c_current_power"
-      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
-      ulm_card_kepath_floorplan_item_binary_device_more_info: "sensor.drinks_fridge_plug_bed_c_current_power"
-    style:
-      left: "85%"
-      top: "68%"
-      color: "rgba(100, 100, 100, 0.0)"
-  # BED A FIRESTICK
-  - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item_plug"
-    entity: "switch.zigbee_outlet_switch_amazon_firestick_kitchen_switch"
-    variables:
-      ulm_card_kepath_floorplan_item_power_usage_denotes_on: false
-      ulm_card_kepath_floorplan_item_binary_device_off_is_stopped: false
-    style:
-      left: "39%"
-      top: "61%"
-      color: "rgba(100, 100, 100, 0.0)"
-
   #### FLOOR NAVIGATION #####
   - type: "custom:button-card"
     template: "card_kepath_service_buttons"
@@ -191,7 +154,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.amazon_firestick_4k_rj45_bed_a_data_rate"
+    entity: "sensor.amazon_firestick_bed_a_unifi_rj45_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "si:amazonfiretv"
       ulm_card_kepath_floorplan_network_device_color: "#FC4C02"
@@ -203,7 +166,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.apple_macbook_pro_2018_kev_data_rate"
+    entity: "sensor.apple_macbook_pro_2018_wifi_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "mdi:laptop"
       ulm_card_kepath_floorplan_network_device_color: ""
@@ -215,7 +178,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.nvidia_shield_bed_c_data_rate"
+    entity: "sensor.nvidia_shield_bed_c_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "si:nvidia"
       ulm_card_kepath_floorplan_network_device_color: "#76B900"
@@ -227,7 +190,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.arcade_machine_data_rate"
+    entity: "sensor.arcade_machine_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "mdi:gamepad-variant"
       ulm_card_kepath_floorplan_network_device_color: ""
@@ -239,7 +202,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.dans_nintendo_switch_data_rate"
+    entity: "sensor.nintendo_switch_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "si:nintendoswitch"
       ulm_card_kepath_floorplan_network_device_color: "#E60012"
@@ -251,7 +214,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.home_assistant_data_rate"
+    entity: "sensor.home_assistant_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "si:homeassistant"
       ulm_card_kepath_floorplan_network_device_color: "#41BDF5"
@@ -263,7 +226,19 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.ipad_air_4thgen_emily_data_rate"
+    entity: "sensor.emily_macbook_wifi_unifi_data_rate"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "mdi:laptop"
+      ulm_card_kepath_floorplan_network_device_color: ""
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "72%"
+      top: "30%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.ipad_air_4thgen_emily_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "mdi:tablet"
       ulm_card_kepath_floorplan_network_device_color: ""
@@ -275,7 +250,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.ju_iphone_8_data_rate"
+    entity: "sensor.iphone_8_ju_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "mdi:alpha-j-box-outline"
       ulm_card_kepath_floorplan_network_device_color: ""
@@ -287,7 +262,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.kev_iphone_11_data_rate"
+    entity: "sensor.iphone_11_kev_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "mdi:alpha-k-box-outline"
       ulm_card_kepath_floorplan_network_device_color: ""
@@ -311,7 +286,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.samsung_ue32f4500_tv_bed_a_data_rate"
+    entity: "sensor.samsung_tv_bed_a_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "si:samsung"
       ulm_card_kepath_floorplan_network_device_color: "#1428A0"
@@ -335,7 +310,7 @@ elements:
 
   - type: "custom:button-card"
     template: "card_kepath_floorplan_network_item"
-    entity: "sensor.synology_diskstation_ds412_data_rate"
+    entity: "sensor.synology_diskstation_ds412_net_unifi_data_rate"
     variables:
       ulm_card_kepath_floorplan_network_device_icon: "si:synology"
       ulm_card_kepath_floorplan_network_device_color: "#B5B5B6"
