@@ -51,6 +51,7 @@ ATTR_TYPE = "type"
 ATTR_UPDATE_INTERVAL = "update_interval"
 ATTR_CLEAR_TIMEOUT = "clear_timeout"
 ATTR_ACTIVE_SENSORS = "active_sensors"
+ATTR_LAST_ACTIVE_SENSORS = "last_active_sensors"
 ATTR_FEATURES = "features"
 ATTR_PRESENCE_SENSORS = "presence_sensors"
 
@@ -93,6 +94,8 @@ MAGIC_AREAS_COMPONENTS_META = [
 ]
 
 MAGIC_AREAS_COMPONENTS_GLOBAL = MAGIC_AREAS_COMPONENTS_META
+
+MAGIC_DEVICE_ID_PREFIX = "magic_area_device_"
 
 # Meta Areas
 META_AREA_GLOBAL = "Global"
@@ -277,6 +280,11 @@ AGGREGATE_BINARY_SENSOR_CLASSES = [
     BinarySensorDeviceClass.MOTION,
     BinarySensorDeviceClass.MOISTURE,
     BinarySensorDeviceClass.LIGHT,
+]
+
+AGGREGATE_MODE_ALL = [
+    BinarySensorDeviceClass.CONNECTIVITY,
+    BinarySensorDeviceClass.PLUG,
 ]
 
 # Health related

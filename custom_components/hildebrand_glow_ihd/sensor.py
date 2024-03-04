@@ -19,9 +19,9 @@ from homeassistant.const import (
     CONF_DEVICE_ID,
     ATTR_DEVICE_ID,
 
-    ENERGY_KILO_WATT_HOUR,
-    VOLUME_CUBIC_METERS,
-    POWER_KILO_WATT,
+    UnitOfEnergy,
+    UnitOfVolume,
+    UnitOfPower,
     SIGNAL_STRENGTH_DECIBELS,
 )
 from homeassistant.core import callback
@@ -54,6 +54,15 @@ STATE_SENSORS = [
     "func": lambda js: js["hardware"],
   },
   {
+    "name": "Smart Meter IHD HAN Status",
+    "device_class": None,
+    "unit_of_measurement": None,
+    "state_class": None,
+    "entity_category": EntityCategory.DIAGNOSTIC,
+    "icon": "mdi:information-outline",
+    "func": lambda js: js["han"]["status"]
+  },
+  {
     "name": "Smart Meter IHD HAN RSSI",
     "device_class": SensorDeviceClass.SIGNAL_STRENGTH,
     "unit_of_measurement": SIGNAL_STRENGTH_DECIBELS,
@@ -77,7 +86,7 @@ ELECTRICITY_SENSORS = [
   {
     "name": "Smart Meter Electricity: Export",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:flash",
     "func": lambda js : js['electricitymeter']['energy']['export']['cumulative'],
@@ -85,7 +94,7 @@ ELECTRICITY_SENSORS = [
   {
     "name": "Smart Meter Electricity: Import",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:flash",
     "func": lambda js : js['electricitymeter']['energy']['import']['cumulative'],
@@ -94,7 +103,7 @@ ELECTRICITY_SENSORS = [
   {
     "name": "Smart Meter Electricity: Import (Today)",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:flash",
     "func": lambda js : js['electricitymeter']['energy']['import']['day'],
@@ -102,7 +111,7 @@ ELECTRICITY_SENSORS = [
   {
     "name": "Smart Meter Electricity: Import (This week)",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:flash",
     "func": lambda js : js['electricitymeter']['energy']['import']['week'],
@@ -110,7 +119,7 @@ ELECTRICITY_SENSORS = [
   {
     "name": "Smart Meter Electricity: Import (This month)",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:flash",
     "func": lambda js : js['electricitymeter']['energy']['import']['month'],
@@ -136,7 +145,7 @@ ELECTRICITY_SENSORS = [
   {
     "name": "Smart Meter Electricity: Power",
     "device_class": SensorDeviceClass.POWER,
-    "unit_of_measurement": POWER_KILO_WATT,
+    "unit_of_measurement": UnitOfPower.KILO_WATT,
     "state_class": SensorStateClass.MEASUREMENT,
     "icon": "mdi:flash",
     "func": lambda js : js['electricitymeter']['power']['value'],
@@ -156,7 +165,7 @@ GAS_SENSORS = [
   {
     "name": "Smart Meter Gas: Import",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:fire",
     "func": lambda js : js['gasmeter']['energy']['import']['cumulative'],
@@ -165,7 +174,7 @@ GAS_SENSORS = [
   {
     "name": "Smart Meter Gas: Import Vol",
     "device_class": SensorDeviceClass.GAS,
-    "unit_of_measurement": VOLUME_CUBIC_METERS,
+    "unit_of_measurement": UnitOfVolume.CUBIC_METERS,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:fire",
     "func": lambda js : js['gasmeter']['energy']['import']['cumulativevol'],
@@ -174,7 +183,7 @@ GAS_SENSORS = [
   {
     "name": "Smart Meter Gas: Import Vol (Today)",
     "device_class": SensorDeviceClass.ENERGY, # Change this to GAS if cubic meters is used
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR, # Might change to VOLUME_CUBIC_METERS soon
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR, # Might change to VOLUME_CUBIC_METERS soon
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:fire",
     "func": lambda js : js['gasmeter']['energy']['import']['dayvol']
@@ -182,7 +191,7 @@ GAS_SENSORS = [
   {
     "name": "Smart Meter Gas: Import Vol (This week)",
     "device_class": SensorDeviceClass.ENERGY, # Change this to GAS if cubic meters is used
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR, # Might change to VOLUME_CUBIC_METERS soon
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR, # Might change to VOLUME_CUBIC_METERS soon
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:fire",
     "func": lambda js : js['gasmeter']['energy']['import']['weekvol']
@@ -190,7 +199,7 @@ GAS_SENSORS = [
   {
     "name": "Smart Meter Gas: Import Vol (This month)",
     "device_class": SensorDeviceClass.ENERGY, # Change this to GAS if cubic meters is used
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR, # Might change to VOLUME_CUBIC_METERS soon
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR, # Might change to VOLUME_CUBIC_METERS soon
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:fire",
     "func": lambda js : js['gasmeter']['energy']['import']['monthvol']
@@ -198,7 +207,7 @@ GAS_SENSORS = [
   {
     "name": "Smart Meter Gas: Import (Today)",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:fire",
     "func": lambda js : js['gasmeter']['energy']['import']['day']
@@ -206,7 +215,7 @@ GAS_SENSORS = [
   {
     "name": "Smart Meter Gas: Import (This week)",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:fire",
     "func": lambda js : js['gasmeter']['energy']['import']['week']
@@ -214,7 +223,7 @@ GAS_SENSORS = [
   {
     "name": "Smart Meter Gas: Import (This month)",
     "device_class": SensorDeviceClass.ENERGY,
-    "unit_of_measurement": ENERGY_KILO_WATT_HOUR,
+    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
     "state_class": SensorStateClass.TOTAL_INCREASING,
     "icon": "mdi:fire",
     "func": lambda js : js['gasmeter']['energy']['import']['month']
@@ -241,7 +250,7 @@ GAS_SENSORS = [
   # {
   #   "name": "Smart Meter Gas: Power",
   #   "device_class": SensorDeviceClass.POWER,
-  #   "unit_of_measurement": POWER_KILO_WATT,
+  #   "unit_of_measurement": UnitOfPower.KILO_WATT,
   #   "state_class": SensorStateClass.MEASUREMENT,
   #   "icon": "mdi:fire",
   #   "func": lambda js : js['gasmeter']['power']['value'],
@@ -332,7 +341,7 @@ class HildebrandGlowMqttSensorUpdateGroup:
 class HildebrandGlowMqttSensor(SensorEntity):
     """Representation of a room sensor that is updated via MQTT."""
 
-    def __init__(self, device_id, name, icon, device_class, unit_of_measurement, state_class, func, entity_category = EntityCategory.CONFIG, ignore_zero_values = False) -> None:
+    def __init__(self, device_id, name, icon, device_class, unit_of_measurement, state_class, func, entity_category = None, ignore_zero_values = False) -> None:
         """Initialize the sensor."""
         self._device_id = device_id
         self._ignore_zero_values = ignore_zero_values
