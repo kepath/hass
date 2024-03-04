@@ -392,6 +392,7 @@ views:
                           'item1 item2 item3 item4 item5'
                           'item6 item7 item8 item9 item10'
                           'weather1 weather1 weather1 weather1 weather1'
+                          'weather2 weather2 weather2 weather2 weather2'
                       - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
@@ -494,6 +495,38 @@ views:
                         show_precipitation_probability: true
                         show_date: "boundary"
                         num_segments: 12
+                        offset: 0
+                        hold_action:
+                          action: "navigate"
+                          navigation_path: ""
+                        colors:
+                          # foreground: "rgba(var(--primary-background-color),1)"
+                          # background: "rgba(var(--primary-text-color),1)"
+                          clear-night: "rgba(0, 0, 0 , 1)"
+                          cloudy: "rgba(187, 187, 187, 1)"
+                          fog: "rgba(187, 187, 187,0.5)"
+                          hail: "rgba(255, 255, 255,0.9)"
+                          lightning: "rgba(255, 145, 1, 1)"
+                          lightning-rainy: "rgba(255, 145, 1, 0.8)"
+                          partlycloudy: "rgba(187, 187, 187,1)"
+                          pouring: "rgba(137, 179, 248, 0.3)"
+                          rainy: "rgba(137, 179, 248, 0.5)"
+                          snowy: "rgba(255, 255, 255, 1)"
+                          snowy-rainy: "rgba(255, 255, 255, 0.8)"
+                          sunny: "rgba(252, 214, 99,1)"
+                          windy: "rgba(252, 214, 99,0.8)"
+                          windy-variant: "rgba(252, 214, 99,0.8)"
+                          exceptional: "rgba(241, 139, 130, 1)"
+                    weather2:
+                      card:
+                        type: "custom:hourly-weather"
+                        entity: "weather.openweathermap"
+                        forecast_type: "daily"
+                        name: null
+                        icons: true
+                        show_precipitation_probability: true
+                        show_date: "boundary"
+                        num_segments: 8
                         offset: 0
                         hold_action:
                           action: "navigate"
@@ -973,12 +1006,20 @@ views:
                         cameras:
                           - entity: "camera.front_g3_flex_medium"
                             motion_entity: "binary_sensor.front_g3_flex_motion"
+                            tap_action:
+                              action: "more-info"
                           - entity: "camera.back_g3_flex_medium"
                             motion_entity: "binary_sensor.back_g3_flex_motion"
                           - entity: "camera.bottom_hallway_g3_instant_medium"
                             motion_entity: "binary_sensor.bottom_hallway_g3_instant_motion"
                           - entity: "camera.doorbell_g4_medium"
                             motion_entity: "binary_sensor.doorbell_g4_motion"
+                          - entity: "camera.middle_hallway_g3_flex_medium"
+                            motion_entity: "binary_sensor.middle_hallway_g3_flex_motion"
+                          - entity: "camera.kitchen_g3_instant_medium"
+                            motion_entity: "binary_sensor.kitchen_g3_instant_motion"
+                        tap_action:
+                          action: "more-info"
 
               - type: "conditional"
                 conditions:
@@ -992,6 +1033,7 @@ views:
                           'doubleitem1 doubleitem1 doubleitem1 doubleitem1 doubleitem1 doubleitem2 doubleitem2 doubleitem2 doubleitem2 doubleitem2'
                           'item1 item1 item2 item2 item3 item3 item4 item4 item5 item5'
                           'item6 item6 item7 item7 item8 item8 item9 item9 item10 item10'
+                          'item11 item11 item12 item12 item13 item13 item14 item14 item15 item15'
                       - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
@@ -1129,15 +1171,14 @@ views:
                               default_state:
                                 icon: "si:plex"
                                 icon_color: "#EBAF00"
-                                background_color: "rgba(var(--color-theme),0)"
+                                # background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.plex_media_server_update"
                               is_attribute: false
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "navigate"
-                            navigate:
-                              page: "http://192.168.1.22:32400/web"
+                        tap_action:
+                          action: "url"
+                          url_path: "http://192.168.1.22:3400/web"
                     item5:
                       card:
                         type: "custom:button-card"
@@ -1150,12 +1191,7 @@ views:
                           ulm_card_kepath_extra_templates_icon_appearance:
                             default_theme:
                               default_state:
-                                icon: "si:apacheguacamole"
-                                icon_color: "#FFF"
-                                background_color: "rgba(var(--color-theme),0)"
-                            dark_theme:
-                              default_state:
-                                icon: "si:apacheguacamole"
+                                icon: "mdi:lan-connect"
                                 icon_color: "#578B34"
                                 background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
@@ -1183,9 +1219,9 @@ views:
                                 background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
-                                icon: "si:esphome"
+                                # icon: "si:esphome"
                                 icon_color: "white"
-                                background_color: "rgba(var(--color-theme),0)"
+                                # background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.esphome_update"
@@ -1230,8 +1266,8 @@ views:
                           ulm_card_kepath_extra_templates_icon_appearance:
                             default_theme:
                               default_state:
-                                icon: "si:mqtt"
-                                icon_color: "#660066"
+                                icon: "mdi:pipe"
+                                icon_color: "#16A560"
                                 background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
@@ -1258,17 +1294,16 @@ views:
                                 background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
-                                icon: "si:uptimekuma"
+                                # icon: "si:uptimekuma"
                                 icon_color: "#69E084"
-                                background_color: "rgba(var(--color-theme),0)"
+                                # background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.uptime_kuma_update"
                               is_attribute: false
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "navigate"
-                            navigate:
-                              page: "http://192.168.1.22:3001/"
+                        tap_action:
+                          action: "url"
+                          url_path: "http://192.168.1.22:3001/"
                     item10:
                       card:
                         type: "custom:button-card"
@@ -1281,7 +1316,7 @@ views:
                           ulm_card_kepath_extra_templates_icon_appearance:
                             default_theme:
                               default_state:
-                                icon: "si:alwaysdata"
+                                icon: "mdi:chart-bar"
                                 icon_color: "#E9568E"
                                 background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
@@ -1292,6 +1327,126 @@ views:
                             action: "navigate"
                             navigate:
                               page: "/47146a2b_netdata"
+                    item11:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "generic_set_icon_and_color"
+                        entity: "update.scrutiny_full_access_update"
+                        name: "Scrutiny"
+                        variables:
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            default_theme:
+                              default_state:
+                                icon: "mdi:glasses"
+                                icon_color: "#4422CB"
+                                background_color: "rgba(var(--color-theme),0)"
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            amount:
+                              entity: "update.scrutiny_full_access_update"
+                              is_attribute: false
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "navigate"
+                            navigate:
+                              page: "/db21ed7f_scrutiny_fa"
+                    item12:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "generic_set_icon_and_color"
+                        entity: "update.vscode_remote_update"
+                        name: "VS Code"
+                        variables:
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            default_theme:
+                              default_state:
+                                icon: "si:visualstudiocode"
+                                icon_color: "#007ACC"
+                                background_color: "rgba(var(--color-theme),0)"
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            amount:
+                              entity: "update.vscode_remote_update"
+                              is_attribute: false
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "navigate"
+                            navigate:
+                              page: "/a0d7b954_vscode"
+                    item13:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "generic_set_icon_and_color"
+                        entity: "update.nginx_proxy_manager_update"
+                        name: "NGinx"
+                        variables:
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            default_theme:
+                              default_state:
+                                icon: "si:nginx"
+                                icon_color: "#009639"
+                                background_color: "rgba(var(--color-theme),0)"
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            amount:
+                              entity: "update.nginx_proxy_manager_update"
+                              is_attribute: false
+                        tap_action:
+                          action: "url"
+                          url_path: "http://192.168.1.22:81/"
+
+                    item14:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "generic_set_icon_and_color"
+                        entity: "update.music_assistant_update"
+                        name: "Music Assistant"
+                        variables:
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            default_theme:
+                              default_state:
+                                icon: "mdi:music-circle"
+                                icon_color: "black"
+                                background_color: "rgba(var(--color-theme),0)"
+                            dark_theme:
+                              default_state:
+                                # icon: "mdi:music-circle"
+                                icon_color: "white"
+                                # background_color: "rgba(var(--color-theme),0)"
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            amount:
+                              entity: "update.music_assistant_update"
+                              is_attribute: false
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "navigate"
+                            navigate:
+                              page: "/d5369777_music_assistant_beta"
+                    item15:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_count"
+                          - "generic_set_icon_and_color"
+                        entity: "update.phpmyadmin_update"
+                        name: "phpMyAdmin"
+                        variables:
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            default_theme:
+                              default_state:
+                                icon: "si:phpmyadmin"
+                                icon_color: "#6C78AF"
+                                background_color: "rgba(var(--color-theme),0)"
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            amount:
+                              entity: "update.phpmyadmin_update"
+                              is_attribute: false
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "navigate"
+                            navigate:
+                              page: "/a0d7b954_phpmyadmin"
 
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
