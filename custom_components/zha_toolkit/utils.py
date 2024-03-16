@@ -356,7 +356,11 @@ def set_state(
     #              entity_id, key, value, stateAttrs)
     if key is not None:
         stateAttrs[key] = value
-        value = None
+        if stateObj is not None:
+            # Copy existing state, to update selected item
+            value = stateObj.state
+        else:
+            value = None
 
     # LOGGER.debug("entity:%s key:%s value:%s attrs:%s",
     #              entity_id, key, value, stateAttrs)
@@ -435,7 +439,7 @@ def get_cluster_from_params(
 
         if not isinstance(cluster_id, int):
             msg = f"Cluster must be numeric {cluster_id}"
-            raise Exception(msg)
+            raise ValueError(msg)
 
     # Get best endpoint
     if params[p.EP_ID] is None or params[p.EP_ID] == "":
@@ -448,7 +452,7 @@ def get_cluster_from_params(
             f" for '{dev.ieee!r}'"
         )
         LOGGER.error(msg)
-        raise Exception(msg)
+        raise ValueError(msg)
 
     cluster = None
     if cluster_id not in dev.endpoints[params[p.EP_ID]].in_clusters:
@@ -464,11 +468,36 @@ def get_cluster_from_params(
             cluster = dev.endpoints[params[p.EP_ID]].out_clusters[cluster_id]
         else:
             LOGGER.error(msg)
-            raise Exception(msg)
+            raise ValueError(msg)
     else:
         cluster = dev.endpoints[params[p.EP_ID]].in_clusters[cluster_id]
 
     return cluster
+
+
+def value_to_jsonable(value):
+    if not isJsonable(value):
+        LOGGER.debug(
+            "Can't convert %r to JSON, serializing if possible.", value
+        )
+        if callable(getattr(value, "serialize", None)):
+            # Serialization results in "bytes"
+            value = value.serialize()
+        if isinstance(value, bytes):
+            # "bytes" is not compatible with json, convert
+            # try:
+            #    value = value.split(b"\x00")[0].decode().strip()
+            # except:
+            #    value = value.hex()
+
+            try:
+                value = str(value, encoding="ascii")
+            except Exception:
+                value = "0x" + value.hex()
+        else:
+            # Anything else: get a textual representation
+            value = repr(value)
+    return value
 
 
 def dict_to_jsonable(src_dict):
@@ -476,21 +505,7 @@ def dict_to_jsonable(src_dict):
     if isJsonable(src_dict):
         return src_dict
     for key, value in src_dict.items():
-        if not isJsonable(value):
-            LOGGER.debug(
-                "Can't convert %r to JSON, serializing if possible.", value
-            )
-            if callable(getattr(value, "serialize", None)):
-                # Serialization results in "bytes"
-                value = value.serialize()
-            if isinstance(value, bytes):
-                # "bytes" is not compatible with json, get a "string"
-                value = str(value, encoding="ascii")
-            else:
-                # Anything else: get a textual representation
-                value = repr(value)
-
-        result[key] = value
+        result[key] = value_to_jsonable(value)
 
     return result
 

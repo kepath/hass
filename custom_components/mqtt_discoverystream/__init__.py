@@ -5,7 +5,11 @@ import logging
 
 import voluptuous as vol
 
-from homeassistant.components.mqtt import valid_publish_topic
+from homeassistant.components.mqtt import (
+  valid_publish_topic, 
+  async_subscribe,
+  async_publish,
+)
 from homeassistant.const import (
     MATCH_ALL,
     ATTR_ENTITY_ID,
@@ -24,6 +28,7 @@ from homeassistant.components.light import (
     ATTR_XY_COLOR,
     ATTR_HS_COLOR,
     ATTR_TRANSITION,
+    ATTR_EFFECT,
     SUPPORT_BRIGHTNESS,
     SUPPORT_COLOR,
     SUPPORT_COLOR_TEMP,
@@ -38,6 +43,7 @@ from homeassistant.helpers.entityfilter import (
 )
 from homeassistant.helpers.event import async_track_state_change
 from homeassistant.helpers.json import JSONEncoder
+from homeassistant.setup import async_when_setup
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -55,6 +61,7 @@ CONF_DISCOVERY_TOPIC = "discovery_topic"
 CONF_PUBLISH_ATTRIBUTES = "publish_attributes"
 CONF_PUBLISH_TIMESTAMPS = "publish_timestamps"
 CONF_PUBLISH_DISCOVERY = "publish_discovery"
+CONF_UNIQUE_PREFIX = "unique_prefix"
 
 DOMAIN = "mqtt_discoverystream"
 
@@ -67,6 +74,7 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_PUBLISH_ATTRIBUTES, default=False): cv.boolean,
                 vol.Optional(CONF_PUBLISH_TIMESTAMPS, default=False): cv.boolean,
                 vol.Optional(CONF_PUBLISH_DISCOVERY, default=False): cv.boolean,
+                vol.Optional(CONF_UNIQUE_PREFIX, default="mqtt"): cv.string,
             }
         ),
     },
@@ -84,6 +92,7 @@ async def async_setup(hass, config):
     publish_attributes = conf.get(CONF_PUBLISH_ATTRIBUTES)
     publish_timestamps = conf.get(CONF_PUBLISH_TIMESTAMPS)
     publish_discovery = conf.get(CONF_PUBLISH_DISCOVERY)
+    unique_prefix = conf.get(CONF_UNIQUE_PREFIX)
     if not base_topic.endswith("/"):
         base_topic = f"{base_topic}/"
     if not discovery_topic.endswith("/"):
@@ -102,6 +111,10 @@ async def async_setup(hass, config):
         entity = explode_topic[2]
         element = explode_topic[3]
 
+        # Only handle service calls for discoveries we published
+        if f"{domain}.{entity}" not in hass.data[DOMAIN][discovery_topic]["conf_published"]:
+            return
+        
         _LOGGER.debug(f"Message received: topic {msg.topic}; payload: {msg.payload}")
         if element == "set":
             if msg.payload == STATE_ON:
@@ -133,6 +146,8 @@ async def async_setup(hass, config):
                             service_payload[ATTR_XY_COLOR] = [ payload_json[ATTR_COLOR][ATTR_X], payload_json[ATTR_COLOR][ATTR_Y] ]
                         if ATTR_R in payload_json[ATTR_COLOR]:
                             service_payload[ATTR_RGB_COLOR] = [ payload_json[ATTR_COLOR][ATTR_R], payload_json[ATTR_COLOR][ATTR_G], payload_json[ATTR_COLOR][ATTR_B] ]
+                    if ATTR_EFFECT in payload_json:
+                        service_payload[ATTR_EFFECT] = payload_json[ATTR_EFFECT]
                     await hass.services.async_call(domain, SERVICE_TURN_ON, service_payload)
                 elif payload_json["state"] == "OFF":
                     await hass.services.async_call(domain, SERVICE_TURN_OFF, service_payload)
@@ -141,8 +156,8 @@ async def async_setup(hass, config):
 
 
     async def mqtt_publish(topic, payload, qos=None, retain=None):
-        if asyncio.iscoroutinefunction(hass.components.mqtt.async_publish):
-            await hass.components.mqtt.async_publish(hass, topic, payload, qos, retain)
+        if asyncio.iscoroutinefunction(async_publish):
+            await async_publish(hass, topic, payload, qos, retain)
         else:
             hass.components.mqtt.publish(topic, payload, qos, retain)
 
@@ -176,7 +191,7 @@ async def async_setup(hass, config):
 
         if publish_discovery and not entity_id in hass.data[DOMAIN][discovery_topic]["conf_published"]:
             config = {
-                "uniq_id": f"mqtt_{entity_id}",
+                "uniq_id": f"{unique_prefix}_{entity_id}",
                 "name": ent_id.replace("_", " ") .title(),
                 "stat_t": f"{mybase}state",
                 "json_attr_t": f"{mybase}attributes",
@@ -213,13 +228,17 @@ async def async_setup(hass, config):
                 config["schema"] = "json"
 
                 supported_features = get_supported_features(hass, entity_id)
-                if supported_features & SUPPORT_BRIGHTNESS:
+                if (supported_features & SUPPORT_BRIGHTNESS) or ("brightness" in new_state.attributes):
                     config["brightness"] = True
                 if supported_features & SUPPORT_EFFECT:
                     config["effect"] = True
                 if "supported_color_modes" in new_state.attributes:
                     config["color_mode"] = True
                     config["supported_color_modes"] = new_state.attributes["supported_color_modes"]
+                    config["brightness"] = True
+                if "effect_list" in new_state.attributes:
+                    config["effect"] = True
+                    config["fx_list"] = new_state.attributes["effect_list"]
 
                 publish_config = True
 
@@ -250,6 +269,10 @@ async def async_setup(hass, config):
                 hass.data[DOMAIN][discovery_topic]["conf_published"].append(entity_id)
 
         if publish_discovery:
+            if new_state.state in (STATE_UNAVAILABLE, STATE_UNKNOWN, None):
+                await mqtt_publish(f"{mybase}availability", "offline", 1, True)
+                return
+
             if ent_domain == "light":
                 payload = {
                     "state": "ON" if new_state.state == STATE_ON else "OFF",
@@ -264,13 +287,13 @@ async def async_setup(hass, config):
                     payload["effect"] = new_state.attributes["effect"]
                 
                 color = {}
-                if ("hs_color" in new_state.attributes):
+                if ("hs_color" in new_state.attributes and new_state.attributes["hs_color"]):
                     color["h"] = new_state.attributes["hs_color"][0]
                     color["s"] = new_state.attributes["hs_color"][1]
-                if ("xy_color" in new_state.attributes):
+                if ("xy_color" in new_state.attributes and new_state.attributes["xy_color"]):
                     color["x"] = new_state.attributes["xy_color"][0]
-                    color["x"] = new_state.attributes["xy_color"][1]
-                if ("rgb_color" in new_state.attributes):
+                    color["y"] = new_state.attributes["xy_color"][1]
+                if ("rgb_color" in new_state.attributes and new_state.attributes["rgb_color"]):
                     color["r"] = new_state.attributes["rgb_color"][0]
                     color["g"] = new_state.attributes["rgb_color"][1]
                     color["b"] = new_state.attributes["rgb_color"][2]
@@ -278,29 +301,28 @@ async def async_setup(hass, config):
                     payload["color"] = color
 
                 await mqtt_publish(f"{mybase}state", json.dumps(payload, cls=JSONEncoder), 1, True)
-
-                payload = "offline" if new_state.state in (STATE_UNAVAILABLE, STATE_UNKNOWN, None) else "online"
-                await mqtt_publish(f"{mybase}availability", payload, 1, True)
             else:
                 payload = new_state.state
                 await mqtt_publish(f"{mybase}state", payload, 1, True)
-
-                payload = "offline" if new_state.state in (STATE_UNAVAILABLE, STATE_UNKNOWN, None) else "online"
-                await mqtt_publish(f"{mybase}availability", payload, 1, True)
 
                 attributes = {}
                 for key, val in new_state.attributes.items():
                     attributes[key] = val
                 encoded = json.dumps(attributes, cls=JSONEncoder)
                 await mqtt_publish(f"{mybase}attributes", encoded, 1, True)
+
+            await mqtt_publish(f"{mybase}availability", "online", 1, True)
         else:
             payload = new_state.state
             await mqtt_publish(f"{mybase}state", payload, 1, True)
 
 
+    async def my_async_subscribe_mqtt(hass, _):
+        await async_subscribe(hass, f"{base_topic}switch/+/set", message_received)
+        await async_subscribe(hass, f"{base_topic}light/+/set_light", message_received)
+
     if publish_discovery:
-        await hass.components.mqtt.async_subscribe(f"{base_topic}switch/+/set", message_received)
-        await hass.components.mqtt.async_subscribe(f"{base_topic}light/+/set_light", message_received)
+        async_when_setup(hass, "mqtt", my_async_subscribe_mqtt)
 
     async_track_state_change(hass, MATCH_ALL, _state_publisher)
     return True

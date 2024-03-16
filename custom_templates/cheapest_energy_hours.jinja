@@ -1,4 +1,4 @@
-{%- set _version = '5.4.1'-%}
+{%- set _version = 'v5.4.4'-%}
 
 {#- sub-macro to format datetimes to selected time_format -#}
 {%- macro _format_date(datetime, time_format) -%}
@@ -314,6 +314,7 @@
                 {%- endif -%}
             {#- convert start and end input to local datetime -#}
                 {%- set n = now().replace(microsecond=0) -%}
+                {%- set before = true if mode == 'is_now' else false -%}
                 {#- start -#}
                     {%- if start is datetime -%}
                         {%- set start = start.replace(microsecond=0) | as_local -%}
@@ -322,13 +323,13 @@
                     {%- else -%}
                         {%- set start = today_at(start) if start is string and ':' in start and start | replace(':', '') | is_number else today_at() -%}
                         {%- set start = start if include_today else start + day -%}
-                        {%- if look_ahead -%}
-                            {%- set start = [n, start] | max -%}
-                        {%- endif -%}
+                    {%- endif -%}
+                    {%- if look_ahead -%}
+                        {%- set start = [n, start] | max -%}
                     {%- endif -%}
                     {%- set seconds = start.minute * 60 + start.second -%}
-                    {%- set remain = _div_calc(seconds, h, dph, before=true if mode == 'is_now' else false, mode='remain') | int -%}
-                    {%- set start_dph = _div_calc(seconds, h, dph, before=true) | int -%}
+                    {%- set remain = _div_calc(seconds, h, dph, before=before, mode='remain') | int -%}
+                    {%- set start_dph = _div_calc(seconds, h, dph, before=before) | int -%}
                 {#- end -#}
                     {%- if end is datetime -%}
                         {%- set end = end.replace(microsecond=0) | as_local -%}
@@ -363,15 +364,15 @@
             {#- calculate start, end and h based on dph -#}
                 {#- h -#}
                     {%- set seconds = (h % 1 * 3600) | round(0) -%}
-                    {%- set h = _div_calc(seconds, h, dph, no_weight_points, mode='hours') | float -%}
+                    {%- set h = _div_calc(seconds, h, dph, no_weight_points, mode='hours', before=before) | float -%}
                 {#- start -#}
                     {%- set seconds = start.minute * 60 + start.second -%}
-                    {%- set remain = _div_calc(seconds, h, dph, no_weight_points, before=true if mode == 'is_now' else false, mode='remain') | int -%} 
-                    {%- set start = start - timedelta(seconds=remain) -%}
+                    {%- set remain = _div_calc(seconds, h, dph, no_weight_points, before=before, mode='remain') | int -%}
+                    {%- set start = start + timedelta(seconds=remain * (-1 if mode == 'is_now' else 1)) -%}
                 {#- end -#}
                     {%- set seconds = end.minute * 60 + end.second -%}
-                    {%- set remain = _div_calc(seconds, h, dph, no_weight_points, mode='remain') | int -%} 
-                    {%- set end = end + timedelta(seconds=remain) -%}
+                    {%- set remain = _div_calc(seconds, h, dph, no_weight_points, before=before, mode='remain') | int -%} 
+                    {%- set end = end + timedelta(seconds=remain * (-1 if mode == 'is_now' else 1)) -%}
             {#- set weight values based on number of hours (either add zeros, or remove unneeded part) -#}
                 {%- if w is not none -%}
                     {%- if w | count <= h * no_weight_points -%}
@@ -635,7 +636,7 @@
                             {%- set macro_output = output.all if mode == 'split' else output[mode] -%}
                     {%- else -%}
                         {#- create output for all modes -#}
-                            {%- set output = namespace(average=none, start=none, min=none, max=none, weighted_average=none, compare=none, time_min=none, time_max=none, list=[], is_now=false, extreme_now=none, estimated_costs="unknown") -%}
+                            {%- set output = namespace(average=none, start=none, min=none, max=none, weighted_average=none, compare=none, time_min=none, time_max=none, prices_list=[], list=[], is_now=false, extreme_now=none, estimated_costs="unknown") -%}
                             {%- set last_values = (h * no_weight_points) | round(0) | int -%}
                             {%- for i in range(values | count - (last_values - 1)) -%}
                                 {%- set prices_list = values[i:i + last_values] | map(attribute=value_key) | list -%}
@@ -664,8 +665,8 @@
                                 {%- set min, max = (prices_list | min, prices_list | max) if pt == 0 else (original_price_list | min, original_price_list | max) -%}
                                 {%- set avg = prices_list | average | round(pr) if pt == 0 else original_price_list | average | round(pr) -%}
                                 {%- if loop.first or (((a <= b) if lowest else (a >= b)) if latest_possible | bool else ((a < b) if lowest else (a > b))) -%}
-                                    {%- set prices_list = original_price_list if pt != 0 else prices_list -%}
-                                    {%- set output.list = prices_list | map('round', pr) | list -%}
+                                    {%- set output.prices_list = original_price_list if pt != 0 else prices_list -%}
+                                    {%- set output.list = output.prices_list | map('round', pr) | list -%}
                                     {%- set output.min = min | round(pr) -%}
                                     {%- set output.max = max | round(pr) -%}
                                     {%- set output.weighted_average = a | round(pr) if pt == 0 else original_w_avg | default(avg) | round(pr) -%}
@@ -673,7 +674,7 @@
                                     {%- set output.average = avg -%}
                                     {%- set output.start = _format_date(values[i][time_key], time_format | default(none)) -%}
                                     {%- set output.end = _format_date(values[i][time_key] + timedelta(hours=h), time_format | default(none)) -%}
-                                    {%- set index_min, index_max = prices_list.index(min), prices_list.index(max) -%}
+                                    {%- set index_min, index_max = output.prices_list.index(min), output.prices_list.index(max) -%}
                                     {%- set output.time = values[i:i+last_values] | map(attribute=time_key) | list -%}
                                     {%- set output.time_min = _format_date(output.time[index_min], time_format | default(none)) -%}
                                     {%- set output.time_max = _format_date(output.time[index_max], time_format | default(none)) -%}
@@ -682,7 +683,7 @@
                             {%- endfor -%}
                         {#- determine estimated_costs if kwh is provided -#}
                             {%- if kwh is not none -%}
-                                {%- set price_count = output.list | count %}
+                                {%- set price_count = output.prices_list | count %}
                                 {%- if w is none -%}
                                     {%- set kwh_list = [kwh/price_count] * price_count -%}
                                 {%- else -%}
@@ -693,8 +694,9 @@
                                     {%- set kwh_list = ns.kwh_list-%}
                                 {%- endif -%}
                                 {%- set output.estimated_costs = 0 -%}
-                                {%- for p in output.list -%}
-                                    {%- set output.estimated_costs = (output.estimated_costs + p * kwh_list[loop.index0]) | round(pr) -%}
+                                {%- for p in output.prices_list -%}
+                                    {%- set output.estimated_costs = (output.estimated_costs + p * kwh_list[loop.index0]) -%}
+                                    {%- set output.estimated_costs = output.estimated_costs | round(pr) if loop.last else output.estimated_costs -%}
                                 {%- endfor -%}
                             {%- endif -%}
                         {#- determine extreme_now -#}
@@ -737,7 +739,7 @@
                     {%- set macro_output = value_on_error if use_voe and not debug else error_msg -%}
                 {%- endif -%}
                 {%- if debug -%}
-                    {%- set dict_add = dict(values_count=values|count, datapoints_source=datapoints_source, datapoints_used=datapoints_used) -%}
+                    {%- set dict_add = dict(values_count=values|count, datapoints_source=datapoints_source, datapoints_used=datapoints_used, original_prices=output.prices_list, price_count=price_count, kwh_list=kwh_list) -%}
                     {{- dict(
                                 version=_version,
                                 output=macro_output,

@@ -275,7 +275,11 @@ async def discover_attributes_extended(cluster, manufacturer=None, tries=3):
                         value = value.split(b"\x00")[0].decode().strip()
                     except UnicodeDecodeError:
                         value = value.hex()
-                result[attr_id]["attribute_value"] = value
+                    result[attr_id]["attribute_value"] = value
+                else:
+                    result[attr_id]["attribute_value"] = u.value_to_jsonable(
+                        value
+                    )
         except (
             DeliveryError,
             asyncio.TimeoutError,
@@ -433,7 +437,7 @@ async def scan_device(
 ):
     if ieee is None:
         LOGGER.error("missing ieee")
-        raise Exception("missing ieee")
+        raise ValueError("missing ieee")
 
     LOGGER.debug("Running 'scan_device'")
 
