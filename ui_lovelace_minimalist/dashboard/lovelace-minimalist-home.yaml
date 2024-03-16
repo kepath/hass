@@ -19,7 +19,12 @@ views:
     theme: "minimalist-mobile"
 
     cards:
-      - type: "vertical-stack"
+      - type: "custom:layout-card"
+        layout_type: "custom:masonry-layout"
+        layout:
+          margin: "0px"
+          card_margin: "0px"
+          layout_margin: "0px"
         cards:
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
@@ -1106,13 +1111,16 @@ views:
                             action: "popup"
                             popup:
                               title: "update entities"
+                        hold_action:
+                          action: "navigate"
+                          navigation_path: "/config/updates"
                     item2:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_count"
                           - "generic_set_icon_and_color"
-                        entity: "update.esphome_update"
+                        entity: "update.hacs_update"
                         name: "HACS"
                         variables:
                           ulm_card_kepath_extra_templates_icon_appearance:
@@ -1159,7 +1167,6 @@ views:
                           - "generic_set_icon_and_color"
                         entity: "update.plex_media_server_update"
                         name: "Plex"
-                        # entity_picture: "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/plex/icon.png"
                         variables:
                           ulm_card_kepath_extra_templates_icon_appearance:
                             default_theme:
@@ -1171,7 +1178,6 @@ views:
                               default_state:
                                 icon: "si:plex"
                                 icon_color: "#EBAF00"
-                                # background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.plex_media_server_update"
@@ -1219,9 +1225,7 @@ views:
                                 background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
-                                # icon: "si:esphome"
                                 icon_color: "white"
-                                # background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.esphome_update"
@@ -1250,10 +1254,13 @@ views:
                             amount:
                               entity: "update.portainer_update"
                               is_attribute: false
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "navigate"
-                            navigate:
-                              page: "/db21ed7f_portainer"
+                          # ulm_card_kepath_binary_sensor_count_tap_action:
+                          #   action: "navigate"
+                          #   navigate:
+                          #     page: "/db21ed7f_portainer"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/db21ed7f_portainer"
                     item8:
                       card:
                         type: "custom:button-card"
@@ -1294,9 +1301,7 @@ views:
                                 background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
-                                # icon: "si:uptimekuma"
                                 icon_color: "#69E084"
-                                # background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.uptime_kuma_update"
@@ -1413,9 +1418,7 @@ views:
                                 background_color: "rgba(var(--color-theme),0)"
                             dark_theme:
                               default_state:
-                                # icon: "mdi:music-circle"
                                 icon_color: "white"
-                                # background_color: "rgba(var(--color-theme),0)"
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.music_assistant_update"
