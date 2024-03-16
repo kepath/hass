@@ -297,6 +297,7 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.zigbee_door_sensor_bed_c_contact
+      - binary_sensor.dishwasher_door
   mode: single
 - id: '1673133770721'
   alias: on_start_create_group.all_occupancy_class_binary_sensors
@@ -1467,3 +1468,22 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
   mode: single
+- id: '1710616457500'
+  alias: on_error_restart_octopus_energy
+  description: Force restart of Octopus Integration if it becomes unavailable.
+  trigger:
+  - alias: Check Octopus Integration State every 15 minutes
+    platform: time_pattern
+    minutes: /15
+  condition:
+  - alias: Check to see if Intelligent Dispatching is Unavailable
+    condition: state
+    state: unavailable
+    entity_id: sensor.octopus_energy_electricity_17p0704368_1460000856420_current_rate
+  action:
+  - alias: Reload Octopus Integration if Intelligent Dispatching is Unavailable
+    service: homeassistant.reload_config_entry
+    target:
+      device_id: db71d2fa24fc8e587b5861f0de011f0f
+    data: {}
+  mode: restart
