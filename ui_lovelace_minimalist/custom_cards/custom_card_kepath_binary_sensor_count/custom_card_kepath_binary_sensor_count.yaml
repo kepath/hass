@@ -38,7 +38,7 @@ custom_card_kepath_binary_sensor_count:
       action: >
         [[[
           var tapAction = "navigate";
-          const tap_actions = ['navigate', 'popup', 'more_info'];
+          const tap_actions = ['navigate', 'popup', 'more_info', 'navigate_local'];
           if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.action) {
             for (let i = 0; i < tap_actions.length; i++) {
               if (tap_actions[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.action) {
@@ -50,6 +50,8 @@ custom_card_kepath_binary_sensor_count:
         ]]]
       navigate:
         page: "/0"
+      navigate_local:
+        path: ""
       popup:
         title: "entity group"
         auto_entities:
@@ -266,7 +268,15 @@ widget_count_indicator:
 
 custom_popup_auto_entities_list:
   tap_action:
-    action: "fire-dom-event"
+    action: >
+      [[[
+        var action = "fire-dom-event";
+        if (variables.ulm_card_kepath_binary_sensor_count_tap_action.action == "navigate_local") {
+          action = "navigate";
+        }
+        return action;
+      ]]]
+    navigation_path: "[[[return variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate_local.path]]]"
     browser_mod:
       service: >
         [[[
@@ -277,6 +287,9 @@ custom_popup_auto_entities_list:
               break;
             case "more_info":
               service = "browser_mod.more_info";
+              break;
+            case "navigate_local":
+              service = "";
               break;
             default:
               service = "browser_mod.popup";
