@@ -1,35 +1,6 @@
 ---
 custom_card_kepath_binary_sensor_popup:
   variables:
-    # ulm_card_kepath_binary_sensor_count_notifications:
-    #   unavailable:
-    #     entity: "sensor.binary_sensor_state_counts"
-    #     is_attribute: >
-    #       [[[
-    #         var isValueAttribute = true;
-    #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
-    #           if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute === "boolean") {
-    #             isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute;
-    #           }
-    #         }
-    #         return isValueAttribute;
-    #       ]]]
-    #     attribute_name: "zero_value"
-    #     count_tooltip: ""
-    #   amount:
-    #     entity: "sensor.binary_sensor_state_counts"
-    #     is_attribute: >
-    #       [[[
-    #         var isValueAttribute = true;
-    #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
-    #           if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
-    #             isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
-    #           }
-    #         }
-    #         return isValueAttribute;
-    #       ]]]
-    #     attribute_name: "zero_value"
-    #     count_tooltip: ""
     ulm_card_kepath_binary_sensor_count_tap_action:
       action: >
         [[[
@@ -44,10 +15,6 @@ custom_card_kepath_binary_sensor_popup:
           }
           return tapAction;
         ]]]
-      # navigate:
-      #   page: "/0"
-      # navigate_local:
-      #   path: ""
       popup:
         title: "entity group"
         auto_entities:
@@ -113,15 +80,6 @@ custom_card_kepath_binary_sensor_popup:
             ]]]
   tap_action:
     action: "fire-dom-event"
-    # action: >
-    #   [[[
-    #     var action = "fire-dom-event";
-    #     if (variables.ulm_card_kepath_binary_sensor_count_tap_action.action == "navigate_local") {
-    #       action = "navigate";
-    #     }
-    #     return action;
-    #   ]]]
-    # navigation_path: "[[[return variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate_local.path]]]"
     browser_mod:
       service: >
         [[[
@@ -142,7 +100,6 @@ custom_card_kepath_binary_sensor_popup:
       data:
         path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.action == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate.page : '/0' ]]]"
         title: "[[[return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.title]]]"
-        # dismissable: false
         autoclose: false
         style:
           $: >
@@ -218,5 +175,3 @@ custom_card_kepath_binary_sensor_popup:
                     }
                     return sortReversed;
                   ]]]
-  # hold_action:
-  #   action: "more-info"

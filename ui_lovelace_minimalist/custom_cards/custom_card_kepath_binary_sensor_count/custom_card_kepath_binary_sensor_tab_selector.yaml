@@ -1,54 +1,13 @@
 ---
-custom_card_kepath_binary_sensor_conditional_selector:
+custom_card_kepath_binary_sensor_tab_selector:
   template:
     - "icon_info_bg"
     - "ulm_translation_engine"
     - "custom_tab_selector"
     - "ulm_card_kepath_binary_sensor_tab_list"
-  # variables:
-  #   ulm_card_kepath_binary_sensor_count_notifications:
-  #     unavailable:
-  #       entity: "sensor.binary_sensor_state_counts"
-  #       is_attribute: >
-  #         [[[
-  #           var isValueAttribute = true;
-  #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
-  #             if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute === "boolean") {
-  #               isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute;
-  #             }
-  #           }
-  #           return isValueAttribute;
-  #         ]]]
-  #       attribute_name: "zero_value"
-  #       count_tooltip: ""
-  #     amount:
-  #       entity: "sensor.binary_sensor_state_counts"
-  #       is_attribute: >
-  #         [[[
-  #           var isValueAttribute = true;
-  #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
-  #             if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
-  #               isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
-  #             }
-  #           }
-  #           return isValueAttribute;
-  #         ]]]
-  #       attribute_name: "zero_value"
-  #       count_tooltip: ""
-
-  # show_icon: true
-  # show_label: false
   show_name: false
-  # group_expand: true
-  # triggers_update: "all"
-  # styles:
-  #   grid:
-  #     - grid-template-areas: "'i' 'n'"
-  #     - grid-template-rows: "1fr min-content"
-  #     - grid-template-columns: "1fr"
-  #     - justify-items: "center"
+  styles:
     icon:
-      # - width: "20px"
       - color: "rgba(var(--color-theme),1)"
     img_cell:
       - background-color: "rgba(var(--color-theme), 0.2)"
@@ -86,54 +45,13 @@ custom_card_kepath_binary_sensor_conditional_selector:
           ]]]
     custom_fields:
       unavailable:
-        # - position: "absolute"
-        # - left: "56%"
         - top: "8px"
       amount:
-        # - position: "absolute"
-        # - left: "56%"
         - top: "38px"
-      # notification:
-      #   - visibility: "hidden"
-
-  # custom_fields:
-  #   unavailable:
-  #     card:
-  #       type: "custom:button-card"
-  #       template:
-  #         - "widget_count_indicator"
-  #       variables:
-  #         notification_counts: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable; ]]]"
-  #       entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity; ]]]"
-  #   amount:
-  #     card:
-  #       type: "custom:button-card"
-  #       template:
-  #         - "widget_count_indicator"
-  #       variables:
-  #         notification_counts: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount; ]]]"
-  #       entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity; ]]]"
 
 widget_count_indicator:
-  # show_icon: true
-  # show_label: false
-  # show_name: false
-  # group_expand: true
   styles:
-    # icon:
-    #   - width: "14px"
-    #   - height: "14px"
-    #   - line-height: "0"
-    #   - color: >
-    #       [[[
-    #         var iconColor = "red";
-    #         if(hass.themes.darkMode) {
-    #           iconColor = "yellow";
-    #         }
-    #         return "rgba(var(--color-" + iconColor + "),1)"
-    #       ]]]
     img_cell:
-      # - border-radius: "50%"
       - background-color: >
           [[[
             var BGColor = "blue";
@@ -142,8 +60,6 @@ widget_count_indicator:
             }
             return BGColor;
           ]]]
-      # - height: "16px"
-      # - width: "16px"
       - border: >
             [[[
               var borderColor = "blue";
@@ -154,72 +70,7 @@ widget_count_indicator:
             ]]]
 
     card:
-      # - height: "100%"
-      # - box-shadow: "none"
-      # - padding: "0"
-      # - border-radius: "50%"
       - background-color: "rgba(#000,0)"
-  # style:
-  #   $: >
-  #     .tooltip .tooltiptext {
-  #       display:none;
-  #     }
-
-  icon: >
-    [[[
-      var amountValue = 0;
-      var icon = "mdi:numeric-0-circle";
-      if (variables.notification_counts.is_attribute) {
-        amountValue = states[variables?.notification_counts?.entity]?.attributes[variables?.notification_counts?.attribute_name] ? states[variables.notification_counts.entity].attributes[variables.notification_counts.attribute_name] : 0;
-      } else {
-        amountValue = states[variables?.notification_counts?.entity]?.state ? states[variables.notification_counts.entity].state : 0;
-      }
-      if (!isNaN(amountValue) && amountValue !== undefined){
-        if (amountValue > 9) {
-          amountValue = "9-plus";
-        }
-        icon = icon.replace("0",amountValue);
-      }
-      if (amountValue == "on") {
-        icon = "mdi:arrow-up-bold-circle";
-      }
-      if(hass.themes.darkMode) {
-        icon = icon.replace("-circle","");
-      }
-      return icon;
-    ]]]
-  # state:
-  #   - operator: "template"
-  #     value: >
-  #       [[[
-  #         var isZeroValue = true;
-  #         var amountValue = 0;
-  #         if (variables.notification_counts.is_attribute) {
-  #           amountValue = states[variables?.notification_counts?.entity]?.attributes[variables?.notification_counts?.attribute_name] ? states[variables.notification_counts.entity].attributes[variables.notification_counts.attribute_name] : 0;
-  #         } else {
-  #           amountValue = states[variables?.notification_counts?.entity]?.state ? states[variables.notification_counts.entity].state : 0;
-  #         }
-  #         if (!isNaN(amountValue) && amountValue != 0 && amountValue !== undefined) {
-  #           isZeroValue = false;
-  #         }
-  #         if (amountValue == "on") {
-  #           isZeroValue = false;
-  #         }
-  #         return isZeroValue;
-  #       ]]]
-  #     styles:
-  #       card:
-  #         - display: "none"
-  # tap_action:
-  #   action: "none"
-  # tooltip: >
-  #   [[[
-  #     var tooltipValue = null;
-  #     if(variables?.notification_counts?.count_tooltip) {
-  #       tooltipValue = variables.notification_counts.count_tooltip;
-  #     }
-  #     return tooltipValue;
-  #   ]]]
 
 custom_tab_selector:
   tap_action:

@@ -2,6 +2,34 @@
 generic_set_icon_and_color:
   variables:
     ulm_card_kepath_generic_icon_appearance:
+      evaluated_object: >
+        [[[
+          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.evaluated_object) {
+            return variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object;
+          } else {
+            return entity.entity_id;
+          }
+        ]]]
+      use_theme_colors: >
+        [[[
+          var useThemeColors = false;
+          if (variables?.ulm_card_kepath_generic_icon_appearance?.use_theme_colors) {
+            if (typeof variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors === "boolean") {
+              useThemeColors = variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors;
+            }
+          }
+          return useThemeColors;
+        ]]]
+      trigger_on_reversed: >
+        [[[
+          var triggerOnReversed = false;
+          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.trigger_on_reversed) {
+            if (typeof variables.ulm_card_kepath_extra_templates_icon_appearance.trigger_on_reversed === "boolean") {
+              triggerOnReversed = variables.ulm_card_kepath_extra_templates_icon_appearance.trigger_on_reversed;
+            }
+          }
+          return triggerOnReversed;
+        ]]]
       default:
         icon: >
           [[[
@@ -29,7 +57,7 @@ generic_set_icon_and_color:
           ]]]
         icon_color: >
           [[[
-            var setColor = "grey";
+            var setColor = "red";
             if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.icon_color) {
@@ -50,7 +78,7 @@ generic_set_icon_and_color:
           ]]]
         background_color: >
           [[[
-            var setBGColor = "var(--primary-text-color)";
+            var setBGColor = "grey";
             if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.background_color) {
@@ -96,7 +124,7 @@ generic_set_icon_and_color:
           ]]]
         icon_color: >
           [[[
-            var setColor = "grey";
+            var setColor = "red";
             if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.icon_color) {
@@ -117,7 +145,7 @@ generic_set_icon_and_color:
           ]]]
         background_color: >
           [[[
-            var setBGColor = "var(--primary-text-color)";
+            var setBGColor = "grey";
             if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.background_color) {
@@ -136,11 +164,47 @@ generic_set_icon_and_color:
             }
             return setBGColor;
           ]]]
+
   state:
     - operator: "template"
       value: >
         [[[
-          return (entity.state == 'on' || entity.state == 'recording' || entity.state == 'idle' || entity.state == 'away')
+          var stateValue = false;
+          var evaluatedState = null;
+          if (states[variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object]?.state) {
+            evaluatedState = states[variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object].state
+          }
+          if (!variables.ulm_card_kepath_generic_icon_appearance.trigger_on_reversed) {
+            if (isNaN(evaluatedState)) {
+              if (evaluatedState == 'on'
+                  || evaluatedState == 'recording'
+                  || evaluatedState == 'idle'
+                  || evaluatedState == 'away') {
+                stateValue = true;
+              }
+            }
+            else {
+              if (evaluatedState != 0) {
+                stateValue = true;
+              }
+            }
+          }
+          else {
+            if (isNaN(evaluatedState)) {
+              if (evaluatedState == 'off'
+                  || evaluatedState == 'playing'
+                  || evaluatedState == 'home') {
+                stateValue = true;
+              }
+            }
+            else {
+              if (evaluatedState == 0) {
+                stateValue = true;
+              }
+            }
+          }
+
+          return stateValue;
         ]]]
       icon: >
         [[[
@@ -156,24 +220,46 @@ generic_set_icon_and_color:
         icon:
           - color: >
               [[[
-                var setColor = "grey";
-                if (variables.ulm_card_kepath_generic_icon_appearance.triggered.icon_color != setColor) {
-                  setColor = variables.ulm_card_kepath_generic_icon_appearance.triggered.icon_color;
+                var returnedColor = "red";
+                var testColor = "red";
+                const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
+                if (variables.ulm_card_kepath_generic_icon_appearance.triggered.icon_color != returnedColor) {
+                  testColor = variables.ulm_card_kepath_generic_icon_appearance.triggered.icon_color;
                 } else {
-                  setColor = variables.ulm_card_kepath_generic_icon_appearance.default.icon_color;
+                  testColor = variables.ulm_card_kepath_generic_icon_appearance.default.icon_color;
                 }
-                return setColor;
+                if (variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (testColor.includes(colorOptions[i])){
+                      returnedColor = testColor;
+                    }
+                  }
+                } else {
+                  returnedColor = testColor;
+                }
+                return returnedColor;
               ]]]
         img_cell:
           - background-color: >
               [[[
-                var setBGColor = "var(--primary-text-color)";
-                if (variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color != setBGColor) {
-                  setBGColor = variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color;
+                var returnedBGColor = "grey";
+                var testBGColor = "grey";
+                const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
+                if (variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color != returnedBGColor) {
+                  testBGColor = variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color;
                 } else {
-                  setBGColor = variables.ulm_card_kepath_generic_icon_appearance.default.background_color;
+                  testBGColor = variables.ulm_card_kepath_generic_icon_appearance.default.background_color;
                 }
-                return setBGColor;
+                if (variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (testBGColor.includes(colorOptions[i])){
+                      returnedBGColor = testBGColor;
+                    }
+                  }
+                } else {
+                  returnedBGColor = testBGColor;
+                }
+                return returnedBGColor;
               ]]]
     - operator: "default"
       icon: "[[[ return variables.ulm_card_kepath_generic_icon_appearance.default.icon; ]]]"
