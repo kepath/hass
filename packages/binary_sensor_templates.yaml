@@ -165,3 +165,10 @@ template:
         attributes:
           icon: "mdi:television-play"
           device_class: "power"
+
+      - unique_id: "_unique_binary_sensor_docker_containers_all_running"
+        name: "Docker Containers All Running"
+        state: "{{ state_attr('sensor.binary_sensor_state_counts', 'running_stopped_count') > 0 }}"
+        attributes:
+          icon: "mdi:server"
+          device_class: "running"

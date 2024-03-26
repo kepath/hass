@@ -1000,13 +1000,15 @@
     data:
       domain: binary_sensor
       group_name: all_running_class_binary_sensors
-      icon: mdi:server-network-off
+      icon: mdi:server-network
       friendly_name: All binary_sensor running device class group
       filter_by_device_class: true
       included_device_classes:
       - running
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_entities:
+      - binary_sensor.docker_containers_all_running
   mode: single
 - id: '1693774320732'
   alias: on_start_create_group.all_battery_class_sensors

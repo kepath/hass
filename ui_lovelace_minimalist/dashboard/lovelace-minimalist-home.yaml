@@ -476,6 +476,7 @@ views:
                             amount:
                               attribute_name: "climate_devices_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
+                            # evaluated_object: "group.all_climate"
                             use_theme_colors: true
                             default_theme:
                               default_state:
@@ -561,6 +562,7 @@ views:
                           - "custom_card_kepath_binary_sensor_display"
                           # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                           - "custom_card_kepath_occupancy_state"
+                          - "custom_card_kepath_binary_sensor_popup"
                         entity: "group.all_occupancy_class_binary_sensors"
                         name: "Motion"
                         variables:
@@ -856,16 +858,16 @@ views:
                               attribute_name: "running_stopped_count"
                               count_tooltip: "Num stopped"
                           ulm_card_kepath_extra_templates_icon_appearance:
+                            evaluated_object: "binary_sensor.docker_containers_all_running"
                             use_theme_colors: true
                             default_theme:
                               default_state:
-                                # icon: "mdi:lightbulb-multiple-off-outline"
-                                icon_color: "rgba(var(--color-red), 1)"
-                                background_color: "rgba(var(--color-red), 0.2)"
-                              triggered_state:
-                                icon: "mdi:server-network"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
+                              triggered_state:
+                                icon: "mdi:server-network-off"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                           ulm_card_kepath_binary_sensor_count_tap_action:
                             action: "popup"
                             popup:
@@ -896,12 +898,13 @@ views:
                             default_theme:
                               default_state:
                                 # icon: "mdi:lightbulb-multiple-off-outline"
+                                icon: "mdi:sort-clock-descending"
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                icon: "mdi:server-network"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
+                              # triggered_state:
+                              #   # icon: "mdi:server-network"
+                              #   icon_color: "rgba(var(--color-green), 1)"
+                              #   background_color: "rgba(var(--color-green), 0.2)"
                           ulm_card_kepath_binary_sensor_count_tap_action:
                             action: "popup"
                             popup:
@@ -938,10 +941,10 @@ views:
                                 # icon: "mdi:lightbulb-multiple-off-outline"
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                icon: "mdi:server-network"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
+                              # triggered_state:
+                              #   icon: "mdi:flash-alert"
+                              #   icon_color: "rgba(var(--color-green), 1)"
+                              #   background_color: "rgba(var(--color-green), 0.2)"
                           ulm_card_kepath_binary_sensor_count_tap_action:
                             action: "popup"
                             popup:
@@ -959,6 +962,7 @@ views:
                           - "custom_card_kepath_binary_sensor_display"
                           # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                           - "custom_card_kepath_data_rate_state"
+                          - "custom_card_kepath_binary_sensor_popup"
                         entity: "group.all_data_rate_class_sensors"
                         name: "Data"
                         variables:
@@ -985,6 +989,7 @@ views:
                           - "custom_card_kepath_binary_sensor_display"
                           # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                           - "custom_card_kepath_battery_state"
+                          - "custom_card_kepath_binary_sensor_popup"
                         entity: "group.all_battery_class_sensors"
                         name: "Battery"
                         variables:
@@ -1012,6 +1017,7 @@ views:
                           - "custom_card_kepath_binary_sensor_display"
                           # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                           - "custom_card_kepath_signal_strength_state"
+                          - "custom_card_kepath_binary_sensor_popup"
                         entity: "group.all_signal_strength_class_sensors"
                         name: "Signal"
                         variables:
@@ -1058,10 +1064,10 @@ views:
                                 # icon: "mdi:lightbulb-multiple-off-outline"
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                icon: "mdi:server-network"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
+                              # triggered_state:
+                              #   icon: "mdi:cash-off"
+                              #   icon_color: "rgba(var(--color-green), 1)"
+                              #   background_color: "rgba(var(--color-green), 0.2)"
                           ulm_card_kepath_binary_sensor_count_tap_action:
                             action: "popup"
                             popup:
@@ -1294,6 +1300,7 @@ views:
                           - "custom_card_kepath_binary_sensor_display"
                           # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                           - "custom_card_kepath_occupancy_state"
+                          - "custom_card_kepath_binary_sensor_popup"
                         entity: "group.all_occupancy_class_binary_sensors"
                         name: "Motion"
                         variables:
@@ -1449,6 +1456,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.hacs_update"
                         name: "HACS"
                         variables:
@@ -1461,6 +1469,9 @@ views:
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               attribute_name: "hacs_updates_available"
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: false
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1476,6 +1487,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.adguard_home_update"
                         name: "AdGuard"
                         variables:
@@ -1489,6 +1501,9 @@ views:
                             amount:
                               entity: "update.adguard_home_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1504,6 +1519,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.plex_media_server_update"
                         name: "Plex"
                         variables:
@@ -1521,6 +1537,9 @@ views:
                             amount:
                               entity: "update.plex_media_server_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                         tap_action:
                           action: "url"
                           url_path: "http://192.168.1.22:3400/web"
@@ -1532,6 +1551,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.guacamole_client_update"
                         name: "Guacamole"
                         variables:
@@ -1545,6 +1565,9 @@ views:
                             amount:
                               entity: "update.guacamole_client_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1560,6 +1583,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.esphome_update"
                         name: "ESPHome"
                         variables:
@@ -1576,6 +1600,9 @@ views:
                             amount:
                               entity: "update.esphome_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1592,6 +1619,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.portainer_update"
                         name: "Portainer"
                         variables:
@@ -1604,6 +1632,9 @@ views:
                           ulm_card_kepath_binary_sensor_count_notifications:
                             amount:
                               entity: "update.portainer_update"
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           #     is_attribute: false
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate_local"
@@ -1620,6 +1651,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.emqx_update"
                         name: "EMQX"
                         variables:
@@ -1633,6 +1665,9 @@ views:
                             amount:
                               entity: "update.emqx_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1648,6 +1683,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.uptime_kuma_update"
                         name: "Kuma"
                         variables:
@@ -1664,6 +1700,9 @@ views:
                             amount:
                               entity: "update.uptime_kuma_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                         tap_action:
                           action: "url"
                           url_path: "http://192.168.1.22:3001/"
@@ -1675,6 +1714,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.netdata_update"
                         name: "Netdata"
                         variables:
@@ -1688,6 +1728,9 @@ views:
                             amount:
                               entity: "update.netdata_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1703,6 +1746,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.scrutiny_full_access_update"
                         name: "Scrutiny"
                         variables:
@@ -1716,6 +1760,9 @@ views:
                             amount:
                               entity: "update.scrutiny_full_access_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1731,6 +1778,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.vscode_remote_update"
                         name: "VS Code"
                         variables:
@@ -1744,6 +1792,9 @@ views:
                             amount:
                               entity: "update.vscode_remote_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1759,6 +1810,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.nginx_proxy_manager_update"
                         name: "NGinx"
                         variables:
@@ -1772,6 +1824,9 @@ views:
                             amount:
                               entity: "update.nginx_proxy_manager_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                         tap_action:
                           action: "url"
                           url_path: "http://192.168.1.22:81/"
@@ -1784,6 +1839,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.music_assistant_update"
                         name: "Music Assistant"
                         variables:
@@ -1800,6 +1856,9 @@ views:
                             amount:
                               entity: "update.music_assistant_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
@@ -1815,6 +1874,7 @@ views:
                           # - "generic_set_icon_and_color"
                           - "custom_card_kepath_binary_sensor_display"
                           - "generic_set_icon_and_color"
+                          - "custom_card_kepath_binary_sensor_update_links"
                         entity: "update.phpmyadmin_update"
                         name: "phpMyAdmin"
                         variables:
@@ -1828,6 +1888,9 @@ views:
                             amount:
                               entity: "update.phpmyadmin_update"
                               is_attribute: false
+                          ulm_card_kepath_binary_sensor_update_links:
+                            # evaluated_object:
+                            use_picture: true
                           # ulm_card_kepath_binary_sensor_count_tap_action:
                           #   action: "navigate"
                           #   navigate:
