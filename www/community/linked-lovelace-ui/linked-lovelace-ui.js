@@ -138,7 +138,8 @@ const jt=t=>e=>"function"==typeof e?((t,e)=>(customElements.define(t,e),e))(t,e)
         </div>
         `:""}
         </div>
-        ${o.length?mt`
+        ${o.length&&this._difference?mt`
+        <div class="tab-content ${"dashboards"===this._tab?"active":""}">
         <div class="unsafe-html">
         <div class="accordion expanded">
         <span class="accordion-bar" @click=${this.toggleShowDryRun}><span class="icon">${this._show_difference?mt`&#9660;`:mt`&#9658;`} </span><span class="title">Preview Changes</span></span>
@@ -160,6 +161,7 @@ const jt=t=>e=>"function"==typeof e?((t,e)=>(customElements.define(t,e),e))(t,e)
           `}))}
         </div>`:""}
         `}
+        </div>
         </div>
         `:""}
         <div class="card-actions">
@@ -282,7 +284,7 @@ const jt=t=>e=>"function"==typeof e?((t,e)=>(customElements.define(t,e),e))(t,e)
         background-color: rgba(0, 0, 0, 0);
         border: 1px solid;
       }
-    `}};var zr;L([It({attribute:!1})],Hr.prototype,"hass",void 0),L([Mt()],Hr.prototype,"loaded",void 0),L([Mt()],Hr.prototype,"config",void 0),Hr=L([jt("linked-lovelace-partials")],Hr),zr=()=>{t("Version: 2.2.1")},(async()=>{for(;void 0===customElements.get("home-assistant");)await new Promise((t=>window.setTimeout(t,100)));k.instance.log("initalized"),zr&&zr()})();
+    `}};var zr;L([It({attribute:!1})],Hr.prototype,"hass",void 0),L([Mt()],Hr.prototype,"loaded",void 0),L([Mt()],Hr.prototype,"config",void 0),Hr=L([jt("linked-lovelace-partials")],Hr),zr=()=>{t("Version: 2.2.2")},(async()=>{for(;void 0===customElements.get("home-assistant");)await new Promise((t=>window.setTimeout(t,100)));k.instance.log("initalized"),zr&&zr()})();
 /**
  * @license
  * Copyright 2019 Google LLC
