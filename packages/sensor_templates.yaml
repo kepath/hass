@@ -146,14 +146,6 @@ template:
           device_class_list: "{{ states|rejectattr('attributes.device_class', 'undefined')|map(attribute='attributes.device_class')|unique|list|sort }}"
           unit_of_measurement_list: "{{ states|rejectattr('attributes.unit_of_measurement', 'undefined')|map(attribute='attributes.unit_of_measurement')|unique|list|sort }}"
           integrations_installed_list: "{{ states|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
-          # area_id_list: >
-          #   {%- for area in areas()|sort %}
-          #     {{[
-          #       area,
-          #       area_name(area),
-          #       area_name(area)|map('lower')|map('replace', ':', '')|map('replace', ',', '')|map('replace', ' ', '_')|join
-          #     ]}}
-          #   {%- endfor %}
 
       - unique_id: "areas_and_entities_template_generated"
         name: "Areas Entity Attributes"
@@ -188,7 +180,6 @@ template:
           bottom_floor_entities: "{{area_entities('Kitchen')+area_entities('Lounge')+area_entities('Garage')+area_entities('Hallway, Bottom')+area_entities('Study')+area_entities('External: Back')+area_entities('External: Front')|sort}}"
           middle_floor_entities: "{{area_entities('Bed A')+area_entities('Bed B')+area_entities('Bed C')+area_entities('Hallway, Middle')+area_entities('Bathroom')|sort}}"
           top_floor_entities: "{{area_entities('Bed D')+area_entities('Bed E')+area_entities('Loft')+area_entities('Hallway, Top')|sort}}"
-
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"
@@ -466,7 +457,3 @@ template:
           middle_hallway_g3_flex_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
             {{ 'Unknown' if has_value(easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected')) else easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected') }}
-
-      # - unique_id: "group_bottom_floor_entities_template_generated"
-      #   name: "Bottom Floor Entities"
-      #   state: "{{area_entities('Kitchen')+area_entities('Lounge')+area_entities('Garage')+area_entities('Hallway, Bottom')+area_entities('Study')+area_entities('External: Back')+area_entities('External: Front')|sort}}"
