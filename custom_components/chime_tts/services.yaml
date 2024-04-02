@@ -57,6 +57,8 @@ say:
           custom_value: true
           mode: dropdown
           options:
+            - label: "Ba-Dum Tss!"
+              value: "ba_dum_tss"
             - label: "Bells"
               value: "bells"
             - label: "Bells 2"
@@ -71,6 +73,8 @@ say:
               value: "chord"
             - label: "Classical"
               value: "classical"
+            - label: "Crickets"
+              value: "crickets"
             - label: "Ding Dong"
               value: "ding_dong"
             - label: "Drum Roll"
@@ -85,6 +89,8 @@ say:
               value: "glockenspiel"
             - label: "Hail"
               value: "hail"
+            - label: "Knock"
+              value: "knock"
             - label: "Marimba"
               value: "marimba"
             - label: "Mario Coin"
@@ -99,6 +105,8 @@ say:
               value: "twenty_four"
             - label: "Sad Trombone"
               value: "sad_trombone"
+            - label: "Soft"
+              value: "soft"
             - label: "Whistle"
               value: "whistle"
             - label: "Custom 1"
@@ -124,6 +132,8 @@ say:
           custom_value: true
           mode: dropdown
           options:
+            - label: "Ba-Dum Tss!"
+              value: "ba_dum_tss"
             - label: "Bells"
               value: "bells"
             - label: "Bells 2"
@@ -138,6 +148,8 @@ say:
               value: "chord"
             - label: "Classical"
               value: "classical"
+            - label: "Crickets"
+              value: "crickets"
             - label: "Ding Dong"
               value: "ding_dong"
             - label: "Drum Roll"
@@ -146,10 +158,14 @@ say:
               value: "dun_dun_dun"
             - label: "Error"
               value: "error"
+            - label: "Fanfare"
+              value: "fanfare"
             - label: "Glockenspiel"
               value: "glockenspiel"
             - label: "Hail"
               value: "hail"
+            - label: "Knock"
+              value: "knock"
             - label: "Marimba"
               value: "marimba"
             - label: "Mario Coin"
@@ -164,6 +180,8 @@ say:
               value: "twenty_four"
             - label: "Sad Trombone"
               value: "sad_trombone"
+            - label: "Soft"
+              value: "soft"
             - label: "Whistle"
               value: "whistle"
             - label: "Custom 1"
@@ -225,6 +243,8 @@ say:
               value: "amazon_polly"
             - label: "Baidu"
               value: "baidu"
+            - label: "ElevenLabs TTS"
+              value: "tts.elevenlabs_tts"
             - label: "Google Cloud"
               value: "google_cloud"
             - label: "Google Translate"
@@ -249,19 +269,32 @@ say:
               value: "voicerss"
             - label: "Yandex TTS"
               value: "yandextts"
-    tts_playback_speed:
-      name: TTS Playback Speed
-      description: "Playback speed of the TTS audio, between 100% - 200%"
+    tts_speed:
+      name: TTS Speed
+      description: "Set the speed of the TTS audio to between 1% and 500% of the original"
       example: 125
       required: false
       default: 100
       selector:
         number:
           mode: slider
-          min: 100
-          max: 200
+          min: 1
+          max: 500
           step: 5
           unit_of_measurement: '%'
+    tts_pitch:
+      name: TTS Pitch
+      description: "Change the the TTS pitch in semitones. Negative values for lower, positive for higher"
+      example: 3
+      required: false
+      default: 0
+      selector:
+        number:
+          mode: slider
+          min: -100
+          max: 100
+          step: 1
+          unit_of_measurement: 'semitones'
     volume_level:
       name: Volume Level
       description: "The volume to use when playing audio"
@@ -297,7 +330,7 @@ say:
         boolean:
     announce:
       name: Announce
-      description: "Stops current media during the announcement and then resume (on supported devices)"
+      description: "Pauses media during announcement and resumes when completed (on supported devices)"
       example: "True"
       required: false
       selector:
@@ -314,6 +347,8 @@ say:
           options:
             - label: Alexa
               value: Alexa
+            - label: "Volume x% (replace this text, eg: \"Volume 125%\")"
+              value: Volume 100%
             - label: Custom (replace this text with your FFmpeg arguments)
               value: Custom
     language:
@@ -376,7 +411,7 @@ say:
 
 say_url:
   name: "Say URL"
-  description: "Creates a public URL to an audio file generated with the `chime_tts.say` service"
+  description: "Generates an audio file with the `chime_tts.say` service and returns either an external URL or a local file path, depending on the folder set in the configuration"
   fields:
     chime_path:
       name: "Chime Path"
@@ -391,6 +426,8 @@ say_url:
           custom_value: true
           mode: dropdown
           options:
+            - label: "Ba-Dum Tss!"
+              value: "ba_dum_tss"
             - label: "Bells"
               value: "bells"
             - label: "Bells 2"
@@ -405,6 +442,8 @@ say_url:
               value: "chord"
             - label: "Classical"
               value: "classical"
+            - label: "Crickets"
+              value: "crickets"
             - label: "Ding Dong"
               value: "ding_dong"
             - label: "Drum Roll"
@@ -419,6 +458,8 @@ say_url:
               value: "glockenspiel"
             - label: "Hail"
               value: "hail"
+            - label: "Knock"
+              value: "knock"
             - label: "Marimba"
               value: "marimba"
             - label: "Mario Coin"
@@ -433,6 +474,8 @@ say_url:
               value: "twenty_four"
             - label: "Sad Trombone"
               value: "sad_trombone"
+            - label: "Soft"
+              value: "soft"
             - label: "Whistle"
               value: "whistle"
             - label: "Custom 1"
@@ -442,7 +485,7 @@ say_url:
             - label: "Custom 3"
               value: "custom_chime_path_3"
             - label: "Custom 4"
-              value: "custom_chime_path_$"
+              value: "custom_chime_path_4"
             - label: "Custom 5"
               value: "custom_chime_path_5"
     end_chime_path:
@@ -458,6 +501,8 @@ say_url:
           custom_value: true
           mode: dropdown
           options:
+            - label: "Ba-Dum Tss!"
+              value: "ba_dum_tss"
             - label: "Bells"
               value: "bells"
             - label: "Bells 2"
@@ -472,6 +517,8 @@ say_url:
               value: "chord"
             - label: "Classical"
               value: "classical"
+            - label: "Crickets"
+              value: "crickets"
             - label: "Ding Dong"
               value: "ding_dong"
             - label: "Drum Roll"
@@ -480,10 +527,14 @@ say_url:
               value: "dun_dun_dun"
             - label: "Error"
               value: "error"
+            - label: "Fanfare"
+              value: "fanfare"
             - label: "Glockenspiel"
               value: "glockenspiel"
             - label: "Hail"
               value: "hail"
+            - label: "Knock"
+              value: "knock"
             - label: "Marimba"
               value: "marimba"
             - label: "Mario Coin"
@@ -498,6 +549,8 @@ say_url:
               value: "twenty_four"
             - label: "Sad Trombone"
               value: "sad_trombone"
+            - label: "Soft"
+              value: "soft"
             - label: "Whistle"
               value: "whistle"
             - label: "Custom 1"
@@ -507,7 +560,7 @@ say_url:
             - label: "Custom 3"
               value: "custom_chime_path_3"
             - label: "Custom 4"
-              value: "custom_chime_path_$"
+              value: "custom_chime_path_4"
             - label: "Custom 5"
               value: "custom_chime_path_5"
     offset:
@@ -559,6 +612,8 @@ say_url:
               value: "amazon_polly"
             - label: "Baidu"
               value: "baidu"
+            - label: "ElevenLabs TTS"
+              value: "tts.elevenlabs_tts"
             - label: "Google Cloud"
               value: "google_cloud"
             - label: "Google Translate"
@@ -583,19 +638,32 @@ say_url:
               value: "voicerss"
             - label: "Yandex TTS"
               value: "yandextts"
-    tts_playback_speed:
-      name: TTS Playback Speed
-      description: "Playback speed of the TTS audio, between 100% - 200%"
+    tts_speed:
+      name: TTS Speed
+      description: "Set the speed of the TTS audio to between 1% and 500% of the original"
       example: 125
       required: false
       default: 100
       selector:
         number:
           mode: slider
-          min: 100
-          max: 200
+          min: 1
+          max: 500
           step: 5
           unit_of_measurement: '%'
+    tts_pitch:
+      name: TTS Pitch
+      description: "Change the the TTS pitch in semitones. Negative values for lower, positive for higher"
+      example: 3
+      required: false
+      default: 0
+      selector:
+        number:
+          mode: slider
+          min: -100
+          max: 100
+          step: 1
+          unit_of_measurement: 'semitones'
     cache:
       name: Cache
       description: "Whether or not to save/reuse the generated audio file in a local cache"
@@ -615,8 +683,11 @@ say_url:
           options:
             - label: Alexa
               value: Alexa
+            - label: "Volume x% (replace this text, eg: \"Volume 125%\")"
+              value: Volume 100%
             - label: Custom (replace this text with your FFmpeg arguments)
               value: Custom
+
     language:
       name: Language
       description: "The TTS language (supported by Google Translate, Microsoft Edge TTS and Nabu Casa Cloud TTS)"

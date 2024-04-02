@@ -1,4 +1,12 @@
 {
+    "config": {
+        "step": {
+            "no_tts_platforms": {
+                "title": "Chime TTS",
+                "description": "ℹ️ No TTS Platforms Found.\n\nThe Chime TTS integration uses TTS platform/s already installed in your Home Assistant Instance.\n\nPlease add at least 1 TTS platform to begin using it.\n\nFor more details please review the documentation."
+            }
+        }
+    },
     "services": {
         "clear_cache": {
             "name": "Clear Cache",
@@ -51,9 +59,13 @@
                     "name": "TTS Platform",
                     "description": "TTS platform used to generate TTS audio"
                 },
-                "tts_playback_speed": {
-                    "name": "TTS Playback Speed",
-                    "description": "Playback speed of the TTS audio, between 100% - 200%"
+                "tts_speed": {
+                    "name": "TTS Speed",
+                    "description": "Set the speed of the TTS audio to between 1% and 500% of the original"
+                },
+                "tts_pitch": {
+                    "name": "TTS Pitch",
+                    "description": "Change the the TTS pitch in semitones. Negative values for lower, positive for higher"
                 },
                 "volume_level": {
                     "name": "Volume Level",
@@ -73,7 +85,7 @@
                 },
                 "announce": {
                     "name": "Announce",
-                    "description": "Stops current media during the announcement and then resume (on supported devices)"
+                    "description": "Pauses media during announcement and resumes when completed (on supported devices)"
                 },
                 "language": {
                     "name": "Language",
@@ -99,7 +111,7 @@
         },
         "say_url": {
             "name": "Say URL",
-            "description": "Creates a public URL to an audio file generated with the `chime_tts.say` service",
+            "description": "Generates an audio file with the `chime_tts.say` service and returns either an external URL or a local file path, depending on the folder set in the configuration",
             "fields": {
                 "chime_path": {
                     "name": "Chime Path",
@@ -126,9 +138,13 @@
                     "name": "TTS Platform",
                     "description": "TTS platform used to generate TTS audio"
                 },
-                "tts_playback_speed": {
-                    "name": "TTS Playback Speed",
-                    "description": "Playback speed of the TTS audio, between 100% - 200%"
+                "tts_speed": {
+                    "name": "TTS Speed",
+                    "description": "Set the speed of the TTS audio to between 1% and 500% of the original"
+                },
+                "tts_pitch": {
+                    "name": "TTS Pitch",
+                    "description": "Change the the TTS pitch in semitones. Negative values for lower, positive for higher"
                 },
                 "cache": {
                     "name": "Cache",
@@ -166,6 +182,7 @@
         },
         "chime_paths": {
             "options": {
+                "ba_dum_tss": "Ba-Dum Tss!",
                 "bells": "Bells",
                 "bells_2": "Bells 2",
                 "bright": "Bright",
@@ -173,6 +190,7 @@
                 "choir": "Choir",
                 "chord": "Chord",
                 "classical": "Classical",
+                "crickets": "Crickets",
                 "ding_dong": "Ding Dong",
                 "drumroll": "Drum Roll",
                 "dun_dun_dun": "Dun dun DUUUN!",
@@ -180,6 +198,7 @@
                 "fanfare": "Fanfare",
                 "glockenspiel": "Glockenspiel",
                 "hail": "Hail",
+                "knock": "Knock",
                 "marimba": "Marimba",
                 "mario_coin": "Mario Coin",
                 "microphone_tap": "Microphone Tap",
@@ -187,6 +206,7 @@
                 "toast": "Toast",
                 "twenty_four": "Twenty Four",
                 "sad_trombone": "Sad Trombone",
+                "soft": "Soft",
                 "whistle": "Whistle",
                 "custom_chime_path_1": "Custom 1",
                 "custom_chime_path_2": "Custom 2",
@@ -203,10 +223,12 @@
                 "description": "Configure the `chime_tts.say` and `chime_tts.say_url` services and add custom chime mp3 paths:",
                 "data": {
                     "queue_timeout": "Service call timeout (in seconds)",
+                    "tts_platform_key": "Default TTS platform",
+                    "offset": "Default offset value (ms) between chimes & TTS audio",
                     "media_dir": "Media folder (default 'local')",
                     "temp_chimes_path": "Folder path to store downloaded chime audio files",
                     "temp_path": "Folder path to store tempoary TTS audio mp3 files",
-                    "www_path": "Folder path to publicly accessible Chime TTS mp3s (generated by `chime_tts.say_url`)",
+                    "www_path": "Folder path to save Chime TTS mp3s generated by `chime_tts.say_url`",
                     "custom_chime_path_1": "'Custom 1' chime local mp3 file path",
                     "custom_chime_path_2": "'Custom 2' chime local mp3 file path",
                     "custom_chime_path_3": "'Custom 3' chime local mp3 file path",
@@ -218,8 +240,11 @@
         "error": {
             "timeout": "The timeout value is invalid",
             "timeout_sub": "Enter a valid timeout duration",
+            "default_tts_platform_none": "No TTS platforms were detected. Please add at least 1 TTS integration.",
+            "default_tts_platform_select": "The TTS platform was not found. Please make sure it has been installed before setting it as the default.",
             "multiple": "Multiple issues detected",
             "invalid_chime_paths": "Invalid custom chime path detected",
+            "www_path": "Folder path must be within `/config/www/` or `/media/`",
             "custom_chime_path_1": "'Custom 1' file path invalid",
             "custom_chime_path_2": "'Custom 2' file path invalid",
             "custom_chime_path_3": "'Custom 3' file path invalid",

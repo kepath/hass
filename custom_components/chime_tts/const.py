@@ -10,7 +10,7 @@ DOMAIN = "chime_tts"
 NAME = "Chime TTS"
 DESCRIPTION = "A custom Home Assistant integration to play audio with text-to-speech (TTS) messages"
 
-# Get version number from manifest.json
+# Current version number from manifest.json
 integration_dir = os.path.dirname(__file__)
 manifest_path = os.path.join(integration_dir, "manifest.json")
 if os.path.isfile(manifest_path):
@@ -23,12 +23,27 @@ else:
 SERVICE_SAY = "say"
 SERVICE_SAY_URL = "say_url"
 SERVICE_CLEAR_CACHE = "clear_cache"
-DEFAULT_DELAY_MS = 450
+
+OFFSET_KEY = "offset"
+DEFAULT_OFFSET_MS = 450
+
 DATA_STORAGE_KEY = "chime_tts_integration_data"
-AUDIO_PATH_KEY = "audio_path"
+AUDIO_PATH_KEY = "audio_path" # <-- Deprecated
+LOCAL_PATH_KEY = "local_path"
+PUBLIC_PATH_KEY = "public_path"
 AUDIO_DURATION_KEY = "audio_duration"
 
+PAUSE_RESUME_MEDIA_PLAYER_DICTS_KEY = "pause_media_player_dicts"
+SET_VOLUME_MEDIA_PLAYER_DICTS_KEY = "set_volume_media_player_dicts"
+FADE_TRANSITION_S = 0.4
+FADE_TRANSITION_STEPS = 5
+
+ALEXA_MEDIA_PLAYER_PLATFORM = "alexa_media"
+SPOTIFY_PLATFORM = "spotify"
+
 ROOT_PATH_KEY = "root_path_key"
+MEDIA_FOLDER_PATH = "/local/"
+PUBLIC_FOLDER_PATH = "/config/www/"
 DEFAULT_TEMP_CHIMES_PATH_KEY = "default_temp_chimes_path"
 TEMP_CHIMES_PATH_KEY = "temp_chimes_path"
 TEMP_CHIMES_PATH_DEFAULT = "/media/sounds/temp/chime_tts/chimes/"
@@ -37,13 +52,14 @@ TEMP_PATH_KEY = "temp_path"
 TEMP_PATH_DEFAULT = "/media/sounds/temp/chime_tts/"
 DEFAULT_WWW_PATH_KEY = "default_www_path"
 WWW_PATH_KEY = "www_path"
-WWW_PATH_DEFAULT = "/www/chime_tts/"
+WWW_PATH_DEFAULT = "/config/www/chime_tts/"
 MEDIA_DIR_KEY = "media_dir"
 MEDIA_DIR_DEFAULT = "local"
 
 MP3_PRESET_PATH = "custom_components/chime_tts/mp3s/"
 MP3_PRESET_PATH_PLACEHOLDER = "mp3_path_placeholder-"  # DEPRECATED
 MP3_PRESETS = [
+    "ba_dum_tss",
     "bells",
     "bells_2",
     "bright",
@@ -51,6 +67,7 @@ MP3_PRESETS = [
     "choir",
     "chord",
     "classical",
+    "crickets",
     "ding_dong",
     "drumroll",
     "dun_dun_dun",
@@ -58,6 +75,7 @@ MP3_PRESETS = [
     "fanfare",
     "glockenspiel",
     "hail",
+    "knock",
     "marimba",
     "mario_coin",
     "microphone_tap",
@@ -65,6 +83,7 @@ MP3_PRESETS = [
     "toast",
     "twenty_four",
     "sad_trombone",
+    "soft",
     "whistle",
 ]
 MP3_PRESET_CUSTOM_PREFIX = "custom_chime_path_"
@@ -77,13 +96,16 @@ QUEUE_CURRENT_ID_KEY = "QUEUE_CURRENT_ID"
 QUEUE_LAST_ID = "QUEUE_LAST_ID"
 QUEUE_TIMEOUT_KEY = "queue_timeout"
 QUEUE_TIMEOUT_DEFAULT = 60
+TTS_PLATFORM_KEY = "tts_platform_key"
 
 # FFmpeg Arguments
-ALEXA_FFMPEG_ARGS = "-y -ac 2 -codec:a libmp3lame -b:a 48k -ar 24000 -write_xing 0"
+FFMPEG_ARGS_ALEXA = "-y -ac 2 -codec:a libmp3lame -b:a 48k -ar 24000 -write_xing 0"
+FFMPEG_ARGS_VOLUME = '-filter:a volume=X'
 
 # TTS Platforms
 AMAZON_POLLY = "amazon_polly"
 BAIDU = "baidu"
+ELEVENLABS_TTS = "tts.elevenlabs_tts"
 GOOGLE_CLOUD = "google_cloud"
 GOOGLE_TRANSLATE = "google_translate"
 IBM_WATSON_TTS = "watson_tts"
