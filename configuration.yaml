@@ -6,6 +6,8 @@ frontend:
   themes: !include_dir_merge_named "themes"
   extra_module_url: "/local/lovelace-card-mod/card-mod.js"
 browser_mod:
+# wallpanel:
+#   enabled: false
 recorder:
   db_url: !secret "hass_addon_mariadb_url"
   db_max_retries: 20
@@ -30,9 +32,6 @@ logger:
   default: "info"
   logs:
     custom_components.ui_lovelace_minimalist: "debug"
-influxdb:
-  username: !secret "influx_db_user"
-  password: !secret "influx_db_pass"
 ffmpeg:
 history:
 wake_on_lan:

@@ -83,3 +83,21 @@ iperf3:
 monitor_docker:
   - name: "Docker"
     url: "tcp://192.168.1.22:2375"
+
+influxdb:
+  username: !secret "influx_db_user"
+  password: !secret "influx_db_pass"
+  exclude:
+    domains:
+      - "event"
+      - "group"
+      - "update"
+
+      # - automation, binary_sensor, button, calendar, camera, climate, device_tracker,
+      # event,
+      # fan,
+      # group,
+      # image, input_boolean, input_datetime, input_select, input_text, lawn_mower,
+      # light, lock, media_player, number, person, remote, scene, script, select, sensor, siren, stt,
+      # sun, switch, text, tts,
+      # update, wake_word, water_heater, weather, zone
