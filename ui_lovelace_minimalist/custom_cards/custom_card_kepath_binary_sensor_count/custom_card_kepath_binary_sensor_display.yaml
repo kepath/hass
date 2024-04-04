@@ -1,20 +1,100 @@
 ---
 custom_card_kepath_binary_sensor_display:
-  template:
-    - "icon_info_bg"
-    - "ulm_translation_engine"
   variables:
-    ulm_card_kepath_binary_sensor_count_notifications:
-      has_no_border_displayed_in_light_mode: >
+    ulm_card_kepath_position_overrides:
+      evaluated_position_entity: >
         [[[
-          var isValueAttribute = false;
-          if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.has_no_border_displayed_in_light_mode) {
-            if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.has_no_border_displayed_in_light_mode === "boolean") {
-              isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.has_no_border_displayed_in_light_mode;
+          var entity = entity?.entity_id;
+          if (variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity) {
+            entity = variables.ulm_card_kepath_position_overrides.evaluated_position_entity;
+          }
+          return entity;
+        ]]]
+      is_compact_mode: >
+        [[[
+          var isCompactMode = false;
+          if (variables?.ulm_card_kepath_position_overrides) {
+            if (variables?.ulm_card_kepath_position_overrides?.is_compact_mode) {
+              if (typeof variables.ulm_card_kepath_position_overrides.is_compact_mode === "boolean") {
+                isCompactMode = variables.ulm_card_kepath_position_overrides.is_compact_mode;
+              }
             }
           }
-          return isValueAttribute;
+          return isCompactMode;
         ]]]
+      off_state_only: >
+        [[[
+          var offStateOnly = false;
+          if (variables?.ulm_card_kepath_position_overrides) {
+            if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+              if (typeof variables?.ulm_card_kepath_position_overrides?.off_state_only === "boolean") {
+                offStateOnly = variables?.ulm_card_kepath_position_overrides?.off_state_only;
+              }
+            }
+          }
+          return offStateOnly;
+        ]]]
+      position_type: >
+        [[[
+          var returnedPositionType = "popup";
+          const positionTypes = ["popup", "floorplan", "tab"];
+          if (variables?.ulm_card_kepath_position_overrides) {
+            if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+              for (let i = 0; i < positionTypes.length; i++) {
+                if (variables?.ulm_card_kepath_position_overrides?.position_type.includes(positionTypes[i])) {
+                  returnedPositionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                }
+              }
+            }
+          }
+          return returnedPositionType;
+        ]]]
+      popup:
+        unavailable:
+          left: "60%"
+          top: "0px"
+          width: "20px"
+          height: "20px"
+        amount:
+          left: "60%"
+          top: "32px"
+          width: "20px"
+          height: "20px"
+      floorplan:
+        unavailable:
+          left: "81%"
+          top: "5px"
+          width: "14px"
+          height: "14px"
+        amount:
+          left: "15px"
+          top: "5px"
+          width: "14px"
+          height: "14px"
+      tab:
+        unavailable:
+          left: "60%"
+          top: "6px"
+          width: "20px"
+          height: "20px"
+        amount:
+          left: "60%"
+          top: "38px"
+          width: "20px"
+          height: "20px"
+      tab-alternative:
+        unavailable:
+          left: "64%"
+          top: "9px"
+          width: "14px"
+          height: "14px"
+        amount:
+          left: "64%"
+          top: "41px"
+          width: "14px"
+          height: "14px"
+
+    ulm_card_kepath_binary_sensor_count_notifications:
       unavailable:
         entity: "sensor.binary_sensor_state_counts"
         is_attribute: >
@@ -43,7 +123,9 @@ custom_card_kepath_binary_sensor_display:
           ]]]
         attribute_name: "zero_value"
         count_tooltip: ""
-
+  template:
+    - "icon_info_bg"
+    - "ulm_translation_engine"
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
@@ -76,90 +158,204 @@ custom_card_kepath_binary_sensor_display:
     custom_fields:
       unavailable:
         - position: "absolute"
-        - left: "56%"
-        - top: "2px"
+        - left: >
+            [[[
+              var positionType = "popup";
+              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (positionType == "tab") {
+                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                      if (!hass.themes.darkMode) {
+                        positionType = "tab-alternative"
+                      }
+                    }
+                  }
+                }
+              }
+              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.unavailable?.left
+            ]]]
+        - top: >
+            [[[
+              var positionType = "popup";
+              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (positionType == "tab") {
+                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                      if (!hass.themes.darkMode) {
+                        positionType = "tab-alternative"
+                      }
+                    }
+                  }
+                }
+              }
+              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.unavailable?.top
+            ]]]
+        - width: >
+            [[[
+              var positionType = "popup";
+              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (positionType == "tab") {
+                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                      if (!hass.themes.darkMode) {
+                        positionType = "tab-alternative"
+                      }
+                    }
+                  }
+                }
+              }
+              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.unavailable?.width
+            ]]]
+        - height: >
+            [[[
+              var positionType = "popup";
+              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (positionType == "tab") {
+                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                      if (!hass.themes.darkMode) {
+                        positionType = "tab-alternative"
+                      }
+                    }
+                  }
+                }
+              }
+              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.unavailable?.height
+            ]]]
       amount:
         - position: "absolute"
-        - left: "56%"
-        - top: "32px"
-      notification:
-        - visibility: "hidden"
+        - left: >
+            [[[
+              var positionType = "popup";
+              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (positionType == "tab") {
+                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                      if (!hass.themes.darkMode) {
+                        positionType = "tab-alternative"
+                      }
+                    }
+                  }
+                }
+              }
+              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.amount?.left
+            ]]]
+        - top: >
+            [[[
+              var positionType = "popup";
+              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (positionType == "tab") {
+                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                      if (!hass.themes.darkMode) {
+                        positionType = "tab-alternative"
+                      }
+                    }
+                  }
+                }
+              }
+              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.amount?.top
+            ]]]
+        - width: >
+            [[[
+              var positionType = "popup";
+              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (positionType == "tab") {
+                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                      if (!hass.themes.darkMode) {
+                        positionType = "tab-alternative"
+                      }
+                    }
+                  }
+                }
+              }
+              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.amount?.width
+            ]]]
+        - height: >
+            [[[
+              var positionType = "popup";
+              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (positionType == "tab") {
+                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                      if (!hass.themes.darkMode) {
+                        positionType = "tab-alternative"
+                      }
+                    }
+                  }
+                }
+              }
+              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.amount?.height
+            ]]]
 
   custom_fields:
     unavailable:
       card:
         type: "custom:button-card"
-        template:
-          - "widget_count_mdi_number_indicator"
+        template: >
+          [[[
+            let styleTemplate = [ "widget_count_mdi_number_indicator" ];
+            var extraTemplate = "widget_count_mdi_number_indicator_default_style"
+            if (variables?.ulm_card_kepath_position_overrides?.is_compact_mode) {
+              if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  extraTemplate = "widget_count_mdi_number_indicator_compact_style"
+                }
+              } else {
+                extraTemplate = "widget_count_mdi_number_indicator_compact_style"
+              }
+            }
+            styleTemplate.push(extraTemplate);
+
+            return styleTemplate;
+          ]]]
         variables:
           notification_counts: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable; ]]]"
-          has_no_border_displayed_in_light_mode: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.has_no_border_displayed_in_light_mode; ]]]"
         entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity; ]]]"
-
     amount:
       card:
         type: "custom:button-card"
-        template:
-          - "widget_count_mdi_number_indicator"
+        template: >
+          [[[
+            let styleTemplate = [ "widget_count_mdi_number_indicator" ];
+            var extraTemplate = "widget_count_mdi_number_indicator_default_style"
+            if (variables?.ulm_card_kepath_position_overrides?.is_compact_mode) {
+              if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
+                if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  extraTemplate = "widget_count_mdi_number_indicator_compact_style"
+                }
+              } else {
+                extraTemplate = "widget_count_mdi_number_indicator_compact_style"
+              }
+            }
+            styleTemplate.push(extraTemplate);
+
+            return styleTemplate;
+          ]]]
         variables:
           notification_counts: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount; ]]]"
-          has_no_border_displayed_in_light_mode: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.has_no_border_displayed_in_light_mode; ]]]"
         entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity; ]]]"
+
 
 widget_count_mdi_number_indicator:
   show_icon: true
   show_label: false
   show_name: false
   group_expand: true
-  styles:
-    icon:
-      - width: "14px"
-      - height: "14px"
-      - line-height: "0"
-      - color: >
-          [[[
-            var iconColor = "rgba(var(--color-red),1)";
-            if(hass.themes.darkMode) {
-              iconColor = "rgba(var(--color-yellow),1)";
-            }
-            return iconColor;
-          ]]]
-    img_cell:
-      - border-radius: "50%"
-      - background-color: "rgba(var(--color-theme),0)"
-      - height: "16px"
-      - width: "16px"
-      - border: >
-          [[[
-            var border = "2px solid rgba(var(--color-theme),0)";
-            if(!hass.themes.darkMode) {
-              if (variables?.has_no_border_displayed_in_light_mode) {
-                border = "0px";
-              }
-            }
-            return border;
-          ]]]
-    card:
-      - height: "100%"
-      - box-shadow: "none"
-      - padding: "0"
-      - border-radius: "50%"
-      # - background-color: >
-      #     [[[
-      #       var border = "";
-      #       if (!variables.ulm_card_kepath_binary_sensor_count_notifications.has_no_border_displayed_in_light_mode) {
-      #         if(!hass.themes.darkMode) {
-      #           border = "rgba(#000,0)";
-      #         }
-      #       }
-      #       return border;
-      #     ]]]
   style:
     $: >
       .tooltip .tooltiptext {
         display:none;
       }
-
   icon: >
     [[[
       var amountValue = 0;
@@ -213,3 +409,59 @@ widget_count_mdi_number_indicator:
       }
       return tooltipValue;
     ]]]
+
+
+widget_count_mdi_number_indicator_default_style:
+  styles:
+    icon:
+      - width: "14px"
+      - height: "14px"
+      - line-height: "0"
+      - color: >
+          [[[
+            var iconColor = "rgba(var(--color-red),1)";
+            if(hass.themes.darkMode) {
+              iconColor = "rgba(var(--color-yellow),1)";
+            }
+            return iconColor;
+          ]]]
+    img_cell:
+      - border-radius: "50%"
+      - background-color: "rgba(var(--color-theme),0)"
+      - height: "16px"
+      - width: "16px"
+      - border: "2px solid rgba(var(--color-theme),0)"
+    card:
+      - height: "20px"
+      - width: "20px"
+      - box-shadow: "none"
+      - padding: "0"
+      - border-radius: "50%"
+
+
+widget_count_mdi_number_indicator_compact_style:
+  styles:
+    icon:
+      - width: "14px"
+      - height: "14px"
+      - line-height: "0"
+      - color: >
+          [[[
+            var iconColor = "rgba(var(--color-red),1)";
+            if(hass.themes.darkMode) {
+              iconColor = "rgba(var(--color-yellow),1)";
+            }
+            return iconColor;
+          ]]]
+    img_cell:
+      - border-radius: "50%"
+      - background-color: "rgba(var(--color-theme),0)"
+      - height: "14px"
+      - width: "14px"
+      - border: "0px"
+    card:
+      - height: "14px"
+      - width: "14px"
+      - box-shadow: "none"
+      - padding: "0"
+      - border-radius: "50%"

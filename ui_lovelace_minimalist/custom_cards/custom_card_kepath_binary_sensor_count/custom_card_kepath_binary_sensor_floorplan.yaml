@@ -176,14 +176,40 @@ custom_card_kepath_binary_sensor_floorplan:
               return autoEntitiesExcludeUnavailableState;
             ]]]
     ulm_card_kepath_binary_sensor_floorplan:
-      navigate_floor: >
-        [[[
-          var navigateFloor = "G";
-          if (variables?.ulm_card_kepath_binary_sensor_floorplan?.navigate_floor) {
-            navigateFloor = variables.ulm_card_kepath_binary_sensor_floorplan.navigate_floor;
-          }
-          return navigateFloor;
-        ]]]
+      tap_action:
+        navigate_floor: >
+          [[[
+            var navigateFloor = "G";
+            if (variables?.ulm_card_kepath_binary_sensor_floorplan?.tap_action?.navigate_floor) {
+              navigateFloor = variables.ulm_card_kepath_binary_sensor_floorplan.tap_action.navigate_floor;
+            }
+            return navigateFloor;
+          ]]]
+        navigate_path: >
+          [[[
+            var navigatePath = "/lovelace-minimalist-energy/3";
+            if (variables?.ulm_card_kepath_binary_sensor_floorplan?.tap_action?.navigate_path) {
+              navigatePath = variables.ulm_card_kepath_binary_sensor_floorplan.tap_action.navigate_path;
+            }
+            return navigatePath;
+          ]]]
+      hold_action:
+        navigate_floor: >
+          [[[
+            var navigateFloor = "G";
+            if (variables?.ulm_card_kepath_binary_sensor_floorplan?.hold_action?.navigate_floor) {
+              navigateFloor = variables.ulm_card_kepath_binary_sensor_floorplan.hold_action.navigate_floor;
+            }
+            return navigateFloor;
+          ]]]
+        navigate_path: >
+          [[[
+            var navigatePath = "/lovelace-minimalist-security/2";
+            if (variables?.ulm_card_kepath_binary_sensor_floorplan?.hold_action?.navigate_path) {
+              navigatePath = variables.ulm_card_kepath_binary_sensor_floorplan.hold_action.navigate_path;
+            }
+            return navigatePath;
+          ]]]
   show_icon: false
   show_name: false
   styles:
@@ -196,21 +222,14 @@ custom_card_kepath_binary_sensor_floorplan:
       - box-shadow: "none"
       - border-radius: "none"
       - height: "100%"
-    custom_fields:
-      unavailable:
-        - left: "10px"
-        - top: "10px"
-      amount:
-        - left: "130px"
-        - top: "10px"
-      notification:
-        - visibility: "hidden"
 
   custom_fields:
     unavailable:
       card:
         type: "custom:button-card"
         template:
+          - "widget_count_mdi_number_indicator"
+          - "widget_count_mdi_number_indicator_compact_style"
           - "custom_card_kepath_binary_sensor_popup"
         variables:
           ulm_card_kepath_binary_sensor_count_tap_action:
@@ -229,6 +248,8 @@ custom_card_kepath_binary_sensor_floorplan:
       card:
         type: "custom:button-card"
         template:
+          - "widget_count_mdi_number_indicator"
+          - "widget_count_mdi_number_indicator_compact_style"
           - "custom_card_kepath_binary_sensor_popup"
         variables:
           ulm_card_kepath_binary_sensor_count_tap_action:
@@ -243,9 +264,6 @@ custom_card_kepath_binary_sensor_floorplan:
                 exclude_unavailable_state: "[[[ return variables.ulm_card_kepath_binary_sensor_count_amount_tap_action.popup.auto_entities.exclude_unavailable_state; ]]]"
         entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount_tap_action?.entity; ]]]"
 
-  # hold_action:
-  #   action: "more-info"
-
 custom_floor_selector:
   tap_action:
     action: "fire-dom-event"
@@ -255,8 +273,21 @@ custom_floor_selector:
         sequence:
           - service: "input_select.select_option"
             data:
-              option: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.navigate_floor;]]]"
+              option: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.tap_action.navigate_floor;]]]"
               entity_id: "input_select.floorplan_floor"
           - service: "browser_mod.navigate"
             data:
-              path: "/lovelace-minimalist-energy/3"
+              path: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.tap_action.navigate_path;]]]"
+  hold_action:
+    action: "fire-dom-event"
+    browser_mod:
+      service: "browser_mod.sequence"
+      data:
+        sequence:
+          - service: "input_select.select_option"
+            data:
+              option: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.hold_action.navigate_floor;]]]"
+              entity_id: "input_select.floorplan_floor"
+          - service: "browser_mod.navigate"
+            data:
+              path: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.hold_action.navigate_path;]]]"

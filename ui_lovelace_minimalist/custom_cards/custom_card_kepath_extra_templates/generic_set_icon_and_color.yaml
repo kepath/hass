@@ -4,18 +4,18 @@ generic_set_icon_and_color:
     ulm_card_kepath_generic_icon_appearance:
       evaluated_object: >
         [[[
+          var entity = entity.entity_id;
           if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.evaluated_object) {
-            return variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object;
-          } else {
-            return entity.entity_id;
+            entity = variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object;
           }
+          return entity;
         ]]]
       use_theme_colors: >
         [[[
           var useThemeColors = false;
-          if (variables?.ulm_card_kepath_generic_icon_appearance?.use_theme_colors) {
-            if (typeof variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors === "boolean") {
-              useThemeColors = variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors;
+          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.use_theme_colors) {
+            if (typeof variables.ulm_card_kepath_extra_templates_icon_appearance.use_theme_colors === "boolean") {
+              useThemeColors = variables.ulm_card_kepath_extra_templates_icon_appearance.use_theme_colors;
             }
           }
           return useThemeColors;
@@ -169,10 +169,11 @@ generic_set_icon_and_color:
     - operator: "template"
       value: >
         [[[
+          //hass.callService('system_log', 'write', {level:'info',message:'variables.ulm_card_kepath_generic_icon_appearance.evaluated_object ' + variables.ulm_card_kepath_generic_icon_appearance.evaluated_object});
           var stateValue = false;
           var evaluatedState = null;
-          if (states[variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object]?.state) {
-            evaluatedState = states[variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object].state
+          if (states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object]?.state) {
+            evaluatedState = states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object].state
           }
           if (!variables.ulm_card_kepath_generic_icon_appearance.trigger_on_reversed) {
             if (isNaN(evaluatedState)) {
