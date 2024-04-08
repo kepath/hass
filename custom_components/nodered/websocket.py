@@ -8,8 +8,16 @@ from hassil.recognize import RecognizeResult
 from homeassistant.components import device_automation
 from homeassistant.components.conversation import (
     HOME_ASSISTANT_AGENT,
-    _get_agent_manager,
 )
+
+try:
+    from homeassistant.components.conversation import get_agent_manager
+except ImportError:
+    # _get_agent_manager was renamed to get_agent_manager in 2024.4.0
+    from homeassistant.components.conversation import (
+        _get_agent_manager as get_agent_manager,
+    )
+
 from homeassistant.components.conversation.default_agent import DefaultAgent
 from homeassistant.components.device_automation import DeviceAutomationType
 from homeassistant.components.device_automation.exceptions import (
@@ -17,7 +25,11 @@ from homeassistant.components.device_automation.exceptions import (
     InvalidDeviceAutomationConfig,
 )
 from homeassistant.components.device_automation.trigger import TRIGGER_SCHEMA
-from homeassistant.components.webhook import SUPPORTED_METHODS
+from homeassistant.components.webhook import (
+    async_register as webhook_async_register,
+    async_unregister as webhook_async_unregister,
+    SUPPORTED_METHODS,
+)
 from homeassistant.components.websocket_api import (
     async_register_command,
     async_response,
@@ -46,6 +58,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.entity_registry import async_entries_for_device, async_get
 from homeassistant.helpers.typing import HomeAssistantType
 import voluptuous as vol
+
 
 from .const import (
     CONF_ATTRIBUTES,
@@ -263,7 +276,7 @@ async def websocket_webhook(
     def remove_webhook() -> None:
         """Remove webhook command."""
         try:
-            hass.components.webhook.async_unregister(webhook_id)
+            webhook_async_unregister(hass, webhook_id)
 
         except ValueError:
             pass
@@ -272,7 +285,8 @@ async def websocket_webhook(
         connection.send_message(result_message(msg[CONF_ID]))
 
     try:
-        hass.components.webhook.async_register(
+        webhook_async_register(
+            hass,
             DOMAIN,
             msg[CONF_NAME],
             webhook_id,
@@ -342,7 +356,7 @@ async def websocket_sentence(
         _LOGGER.info(f"Sentence trigger removed: {sentences}")
 
     try:
-        default_agent = await _get_agent_manager(hass).async_get_agent(
+        default_agent = await get_agent_manager(hass).async_get_agent(
             HOME_ASSISTANT_AGENT
         )
         assert isinstance(default_agent, DefaultAgent)
