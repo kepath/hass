@@ -677,8 +677,8 @@ views:
                     cameras1:
                       card:
                         type: "custom:surveillance-card"
-                        thumb_interval: 30
-                        update_interval: 10
+                        thumb_interval: 15
+                        update_interval: 5
                         recording_duration: 10
                         show_capture_buttons: false
                         focus_motion: false
@@ -686,7 +686,7 @@ views:
                         cameras:
                           - entity: "camera.front_g3_flex_medium"
                             motion_entity: "binary_sensor.front_g3_flex_motion"
-                            tap_action:
+                            hold_action:
                               action: "more-info"
                           - entity: "camera.back_g3_flex_medium"
                             motion_entity: "binary_sensor.back_g3_flex_motion"
@@ -734,7 +734,15 @@ views:
                       item8: *widget_icon_binary_sensor_custom_styling
                       item9: *widget_icon_binary_sensor_custom_styling
                       item10: *widget_icon_binary_sensor_custom_styling
-                      weather1:
+                      weather1: &widget_weather_styling
+                        - border-radius: "none"
+                        - box-shadow: "none"
+                        - padding: "4px"
+                        - margin-bottom: "10px"
+                        - cursor: "default"
+                        # - width: "86%"
+                        - justify-items: "center"
+                      weather2: *widget_weather_styling
                   custom_fields:
                     item1:
                       card:
@@ -821,40 +829,46 @@ views:
                               auto_entities:
                                 sort_method: "last_changed"
                                 exclude_unavailable_state: true
-                    # weather1:
-                    #   card:
-                    #     type: "custom:hourly-weather"
-                    #     entity: "weather.met_office_banbury"
-                    #     forecast_type: "hourly"
-                    #     name: null
-                    #     icons: true
-                    #     show_precipitation_probability: true
-                    #     show_date: "boundary"
-                    #     num_segments: 12
-                    #     offset: 0
-                    #     hold_action:
-                    #       action: "navigate"
-                    #       navigation_path: ""
-                    #     colors:
-                    #       clear-night: "rgba(0, 0, 0 , 1)"
-                    #       cloudy: "rgba(187, 187, 187, 1)"
-                    #       fog: "rgba(187, 187, 187,0.5)"
-                    #       hail: "rgba(255, 255, 255,0.9)"
-                    #       lightning: "rgba(255, 145, 1, 1)"
-                    #       lightning-rainy: "rgba(255, 145, 1, 0.8)"
-                    #       partlycloudy: "rgba(187, 187, 187,1)"
-                    #       pouring: "rgba(137, 179, 248, 0.3)"
-                    #       rainy: "rgba(137, 179, 248, 0.5)"
-                    #       snowy: "rgba(255, 255, 255, 1)"
-                    #       snowy-rainy: "rgba(255, 255, 255, 0.8)"
-                    #       sunny: "rgba(252, 214, 99,1)"
-                    #       windy: "rgba(252, 214, 99,0.8)"
-                    #       windy-variant: "rgba(252, 214, 99,0.8)"
-                    #       exceptional: "rgba(241, 139, 130, 1)"
+                    weather1:
+                      card:
+                        type: "custom:simple-weather-card"
+                        entity: "weather.met_office_banbury_daily"
+                        card_mod:
+                          style: |
+                            ha-card{
+                              margin-top: 15px !important;
+                              box-shadow: none !important;
+                              font-weight: var(--swc-font-weight, 400) !important;
+                              font-size: 13px !important;
+                            }
+                        name: "Banbury"
+                        # backdrop: true
+                        primary_info:
+                          - "wind_bearing"
+                          - "wind_speed"
+                        secondary_info:
+                          - "humidity"
+                          - "precipitation"
+                        custom:
+                          - wind_bearing: "sensor.banbury_wind_direction"
+                          - wind_speed: "sensor.banbury_wind_speed"
+                        backdrop:
+                          day: "rgba(var(--color-blue), 0.2)"
+                          night: "rgba(var(--color-blue), 0.2)"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/lovelace-minimalist-climate/0"
                     weather2:
                       card:
                         type: "custom:hourly-weather"
                         entity: "weather.openweathermap"
+                        card_mod:
+                          style: |
+                            ha-card{
+                              margin-top: 0px !important;
+                              box-shadow: none !important;
+                              --mdc-icon-size: 16px !important;
+                            }
                         forecast_type: "daily"
                         name: null
                         icons: true
