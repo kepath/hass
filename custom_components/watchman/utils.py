@@ -1,32 +1,23 @@
 """Miscellaneous support functions for watchman"""
-import glob
-import re
 import fnmatch
-import time
+import glob
 import logging
+import os
+import re
+import time
 from datetime import datetime
 from textwrap import wrap
-import os
 from typing import Any
-import pytz
-from prettytable import PrettyTable
-from homeassistant.exceptions import HomeAssistantError
-from homeassistant.core import HomeAssistant
 
-from .const import (
-    DOMAIN,
-    DOMAIN_DATA,
-    DEFAULT_HEADER,
-    DEFAULT_CHUNK_SIZE,
-    CONF_HEADER,
-    CONF_IGNORED_ITEMS,
-    CONF_IGNORED_STATES,
-    CONF_CHUNK_SIZE,
-    CONF_COLUMNS_WIDTH,
-    CONF_FRIENDLY_NAMES,
-    BUNDLED_IGNORED_ITEMS,
-    DEFAULT_REPORT_FILENAME,
-)
+import pytz
+from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
+from prettytable import PrettyTable
+
+from .const import (BUNDLED_IGNORED_ITEMS, CONF_CHUNK_SIZE, CONF_COLUMNS_WIDTH,
+                    CONF_FRIENDLY_NAMES, CONF_HEADER, CONF_IGNORED_ITEMS,
+                    CONF_IGNORED_STATES, DEFAULT_CHUNK_SIZE, DEFAULT_HEADER,
+                    DEFAULT_REPORT_FILENAME, DOMAIN, DOMAIN_DATA)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,7 +26,7 @@ async def read_file(hass: HomeAssistant, path: str) -> Any:
     """Read a file."""
 
     def read():
-        with open(hass.config.path(path), "r", encoding="utf-8") as open_file:
+        with open(hass.config.path(path), encoding="utf-8") as open_file:
             return open_file.read()
 
     return await hass.async_add_executor_job(read)
@@ -242,7 +233,7 @@ def parse(hass, folders, ignored_files, root=None):
         r"scene|script|select|sensor|sun|switch|timer|vacuum|weather|zone)\.[A-Za-z_*0-9]+)"
     )
     service_pattern = re.compile(r"service:\s*([A-Za-z_0-9]*\.[A-Za-z_0-9]+)")
-    comment_pattern = re.compile(r"#.*")
+    comment_pattern = re.compile(r"\s*#.*")
     entity_list = {}
     service_list = {}
     effectively_ignored = []
