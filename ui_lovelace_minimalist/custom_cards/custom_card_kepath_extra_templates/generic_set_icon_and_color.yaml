@@ -98,6 +98,17 @@ generic_set_icon_and_color:
             return setBGColor;
           ]]]
       triggered:
+        matching_state: >
+          [[[
+            var matchingState = "on";
+            if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.matching_state) {
+                  matchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.matching_state;
+                }
+              }
+            }
+          ]]]
         icon: >
           [[[
             var setIcon = "mdi:close-circle";
@@ -164,44 +175,110 @@ generic_set_icon_and_color:
             }
             return setBGColor;
           ]]]
+      triggered_alt:
+        matching_state: >
+          [[[
+            var matchingState = "on";
+            if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.matching_state) {
+                  matchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.matching_state;
+                }
+              }
+            }
+          ]]]
+        icon: >
+          [[[
+            var setIcon = "mdi:close-circle";
+            if (entity?.attributes?.icon) {
+              setIcon = entity.attributes.icon;
+            }
+            if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.icon) {
+                  setIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.icon;
+                }
+              }
+            }
+            if (hass.themes.darkMode) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.icon) {
+                    setIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.icon;
+                  }
+                }
+              }
+            }
+            return setIcon;
+          ]]]
+        icon_color: >
+          [[[
+            var setColor = "red";
+            if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.icon_color) {
+                  setColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.icon_color;
+                }
+              }
+            }
+            if (hass.themes.darkMode) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.icon_color) {
+                    setColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.icon_color;
+                  }
+                }
+              }
+            }
+            return setColor;
+          ]]]
+        background_color: >
+          [[[
+            var setBGColor = "grey";
+            if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.background_color) {
+                  setBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.background_color;
+                }
+              }
+            }
+            if (hass.themes.darkMode) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.background_color) {
+                    setBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.background_color;
+                  }
+                }
+              }
+            }
+            return setBGColor;
+          ]]]
 
   state:
     - operator: "template"
       value: >
         [[[
-          //hass.callService('system_log', 'write', {level:'info',message:'variables.ulm_card_kepath_generic_icon_appearance.evaluated_object ' + variables.ulm_card_kepath_generic_icon_appearance.evaluated_object});
           var stateValue = false;
           var evaluatedState = null;
+          var matchedStates = null;
+          var isMatched = false;
           if (states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object]?.state) {
             evaluatedState = states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object].state
           }
-          if (!variables.ulm_card_kepath_generic_icon_appearance.trigger_on_reversed) {
-            if (isNaN(evaluatedState)) {
-              if (evaluatedState == 'on'
-                  || evaluatedState == 'recording'
-                  || evaluatedState == 'idle'
-                  || evaluatedState == 'away') {
-                stateValue = true;
-              }
-            }
-            else {
-              if (evaluatedState != 0) {
-                stateValue = true;
-              }
+          if (variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_state) {
+            matchedStates = variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_state;
+          }
+          for (let i = 0; i < matchedStates.length; i++) {
+            if (evaluatedState = matchedStates[i]) {
+              isMatched = true;
+              stateValue = true;
             }
           }
-          else {
-            if (isNaN(evaluatedState)) {
-              if (evaluatedState == 'off'
-                  || evaluatedState == 'playing'
-                  || evaluatedState == 'home') {
-                stateValue = true;
-              }
-            }
-            else {
-              if (evaluatedState == 0) {
-                stateValue = true;
-              }
+          if (variables.ulm_card_kepath_generic_icon_appearance.trigger_on_reversed) {
+            if (isMatched) {
+              stateValue = false;
+            } else {
+              stateValue = true;
             }
           }
 
@@ -248,6 +325,83 @@ generic_set_icon_and_color:
                 const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
                 if (variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color != returnedBGColor) {
                   testBGColor = variables.ulm_card_kepath_generic_icon_appearance.triggered.background_color;
+                } else {
+                  testBGColor = variables.ulm_card_kepath_generic_icon_appearance.default.background_color;
+                }
+                if (variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (testBGColor.includes(colorOptions[i])){
+                      returnedBGColor = testBGColor;
+                    }
+                  }
+                } else {
+                  returnedBGColor = testBGColor;
+                }
+                return returnedBGColor;
+              ]]]
+
+
+    - operator: "template"
+      value: >
+        [[[
+          var stateValue = false;
+          var evaluatedState = null;
+          var matchedStates = null;
+          if (states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object]?.state) {
+            evaluatedState = states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object].state
+          }
+          if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.matching_state) {
+            matchedStates = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.matching_state;
+          }
+          for (let i = 0; i < matchedStates.length; i++) {
+            if (evaluatedState = matchedStates[i]) {
+              stateValue = true;
+            }
+          }
+
+          return stateValue;
+        ]]]
+      icon: >
+        [[[
+          var icon = "mdi:close-circle";
+          if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon != icon) {
+            icon = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon;
+          } else {
+            icon = variables.ulm_card_kepath_generic_icon_appearance.default.icon;
+          }
+          return icon;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColor = "red";
+                var testColor = "red";
+                const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
+                if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon_color != returnedColor) {
+                  testColor = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon_color;
+                } else {
+                  testColor = variables.ulm_card_kepath_generic_icon_appearance.default.icon_color;
+                }
+                if (variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (testColor.includes(colorOptions[i])){
+                      returnedColor = testColor;
+                    }
+                  }
+                } else {
+                  returnedColor = testColor;
+                }
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedBGColor = "grey";
+                var testBGColor = "grey";
+                const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
+                if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.background_color != returnedBGColor) {
+                  testBGColor = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.background_color;
                 } else {
                   testBGColor = variables.ulm_card_kepath_generic_icon_appearance.default.background_color;
                 }
