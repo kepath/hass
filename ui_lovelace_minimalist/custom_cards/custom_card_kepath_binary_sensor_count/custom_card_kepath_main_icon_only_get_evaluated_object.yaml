@@ -3,123 +3,127 @@ custom_card_kepath_main_icon_only_get_evaluated_object:
   template:
     - "generic_set_icon_and_color"
   variables:
-    ulm_card_kepath_binary_sensor_count_notifications:
-      main_icon_triggers: >
-        [[[
-          var mainIconTrigger = "amount";
-          const entityOptions = ['amount', 'unavailable'];
-          if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.main_icon_trigger) {
-              for (let i = 0; i < entityOptions.length; i++) {
-                if (entityOptions[i] == variables.ulm_card_kepath_binary_sensor_count_notifications.main_icon_trigger){
-                  mainIconTrigger = variables.ulm_card_kepath_binary_sensor_count_notifications.main_icon_trigger;
-                }
-              }
-            }
-          }
-          return mainIconTrigger;
-        ]]]
-      amount:
-        source_entity: >
-          [[[
-            var sourceEntity = "sensor.binary_sensor_state_counts";
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-              if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount) {
-                if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity) {
-                  sourceEntity = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.entity;
-                }
-              }
-            }
-            return sourceEntity;
-          ]]]
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-              if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
-                if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
-                  isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
-                }
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: >
-          [[[
-            var attributeName = "zero_value";
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-              if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount) {
-                if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.attribute_name) {
-                  attributeName = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name;
-                  //hass.callService('system_log', 'write', {level:'info',message:'attributeName ' + attributeName});
-                }
-              }
-            }
-            return attributeName;
-          ]]]
-        count_tooltip: >
-          [[[
-            var countTooltip = "";
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-              if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount) {
-                if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.count_tooltip) {
-                  countTooltip = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.count_tooltip;
-                }
-              }
-            }
-            return countTooltip;
-          ]]]
-      unavailable:
-        source_entity: >
-          [[[
-            var sourceEntity = "sensor.binary_sensor_state_counts";
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-              if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
-                if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity) {
-                  sourceEntity = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.entity;
-                }
-              }
-            }
-            return sourceEntity;
-          ]]]
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-              if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
-                if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
-                  if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute === "boolean") {
-                    isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute;
-                  }
-                }
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: >
-          [[[
-            var attributeName = "zero_value";
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-              if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
-                if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.attribute_name) {
-                  attributeName = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name;
-                }
-              }
-            }
-            return attributeName;
-          ]]]
-        count_tooltip: >
-          [[[
-            var countTooltip = "";
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
-              if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
-                if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.count_tooltip) {
-                  countTooltip = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.count_tooltip;
-                }
-              }
-            }
-            return countTooltip;
-          ]]]
+    ulm_card_kepath_main_icon_definition:
+      evaluated_object:
+      # evaluated_state:
+
+    # ulm_card_kepath_binary_sensor_count_notifications:
+      # main_icon_triggers: >
+      #   [[[
+      #     var mainIconTrigger = "amount";
+      #     const entityOptions = ['amount', 'unavailable'];
+      #     if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.main_icon_trigger) {
+      #         for (let i = 0; i < entityOptions.length; i++) {
+      #           if (entityOptions[i] == variables.ulm_card_kepath_binary_sensor_count_notifications.main_icon_trigger){
+      #             mainIconTrigger = variables.ulm_card_kepath_binary_sensor_count_notifications.main_icon_trigger;
+      #           }
+      #         }
+      #       }
+      #     }
+      #     return mainIconTrigger;
+      #   ]]]
+      # amount:
+      #   source_entity: >
+      #     [[[
+      #       var sourceEntity = "sensor.binary_sensor_state_counts";
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount) {
+      #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity) {
+      #             sourceEntity = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.entity;
+      #           }
+      #         }
+      #       }
+      #       return sourceEntity;
+      #     ]]]
+      #   is_attribute: >
+      #     [[[
+      #       var isValueAttribute = true;
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
+      #           if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
+      #             isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
+      #           }
+      #         }
+      #       }
+      #       return isValueAttribute;
+      #     ]]]
+      #   attribute_name: >
+      #     [[[
+      #       var attributeName = "zero_value";
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount) {
+      #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.attribute_name) {
+      #             attributeName = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name;
+      #             //hass.callService('system_log', 'write', {level:'info',message:'attributeName ' + attributeName});
+      #           }
+      #         }
+      #       }
+      #       return attributeName;
+      #     ]]]
+      #   count_tooltip: >
+      #     [[[
+      #       var countTooltip = "";
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount) {
+      #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.count_tooltip) {
+      #             countTooltip = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.count_tooltip;
+      #           }
+      #         }
+      #       }
+      #       return countTooltip;
+      #     ]]]
+      # unavailable:
+      #   source_entity: >
+      #     [[[
+      #       var sourceEntity = "sensor.binary_sensor_state_counts";
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
+      #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.entity) {
+      #             sourceEntity = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.entity;
+      #           }
+      #         }
+      #       }
+      #       return sourceEntity;
+      #     ]]]
+      #   is_attribute: >
+      #     [[[
+      #       var isValueAttribute = true;
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
+      #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
+      #             if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute === "boolean") {
+      #               isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute;
+      #             }
+      #           }
+      #         }
+      #       }
+      #       return isValueAttribute;
+      #     ]]]
+      #   attribute_name: >
+      #     [[[
+      #       var attributeName = "zero_value";
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
+      #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.attribute_name) {
+      #             attributeName = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name;
+      #           }
+      #         }
+      #       }
+      #       return attributeName;
+      #     ]]]
+      #   count_tooltip: >
+      #     [[[
+      #       var countTooltip = "";
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #         if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
+      #           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.count_tooltip) {
+      #             countTooltip = variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.count_tooltip;
+      #           }
+      #         }
+      #       }
+      #       return countTooltip;
+      #     ]]]
     ulm_card_kepath_extra_templates_icon_appearance:
       evaluated_object: >
         [[[
@@ -135,14 +139,12 @@ custom_card_kepath_main_icon_only_get_evaluated_object:
                         if (variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute) {
                           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.source_entity) {
                             if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.attribute_name) {
-                              //hass.callService('system_log', 'write', {level:'info',message:'1 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity});
                               objectValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity]?.attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name] ?
                                 states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name] : 0;
                             }
                           }
                         } else {
                           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.source_entity) {
-                            //hass.callService('system_log', 'write', {level:'info',message:'2 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity});
                             objectValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity]?.state ?
                               states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity].state : 0;
                           }
@@ -159,16 +161,12 @@ custom_card_kepath_main_icon_only_get_evaluated_object:
                         if (variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute) {
                           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.source_entity) {
                             if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.attribute_name) {
-                              //hass.callService('system_log', 'write', {level:'info',message:'3 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity});
-                              //hass.callService('system_log', 'write', {level:'info',message:'3 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name});
                               objectValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity]?.attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name] ?
                                 states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name] : 0;
-                              //hass.callService('system_log', 'write', {level:'info',message:'3 objectValue ' + objectValue});
                             }
                           }
                         } else {
                           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.source_entity) {
-                            //hass.callService('system_log', 'write', {level:'info',message:'4 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity});
                             objectValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity]?.state ?
                               states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity].state : 0;
                           }
