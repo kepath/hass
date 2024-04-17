@@ -121,10 +121,62 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             return countTooltip;
           ]]]
     ulm_card_kepath_extra_templates_icon_appearance:
-      evaluated_object: >
+      # evaluated_object: >
+      #   [[[
+      #     var evaluatedObject;
+      #     if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #       if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.main_icon_trigger) {
+      #         switch (variables.ulm_card_kepath_binary_sensor_count_notifications.main_icon_trigger) {
+      #           case "unavailable":
+      #             if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #               if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable) {
+      #                 if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.is_attribute) {
+      #                   if (variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute) {
+      #                     if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.source_entity) {
+      #                       if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.attribute_name) {
+      #                         evaluatedObject = [variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity]?.attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name];
+      #                       }
+      #                     }
+      #                   } else {
+      #                     if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.source_entity) {
+      #                       evaluatedObject = [variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity]?.state;
+      #                     }
+      #                   }
+      #                 }
+      #               }
+      #             }
+      #             break;
+      #           case "amount":
+      #           default:
+      #             if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
+      #               if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount) {
+      #                 if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
+      #                   if (variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute) {
+      #                     if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.source_entity) {
+      #                       if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.attribute_name) {
+      #                         evaluatedObject = [variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity]?.attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name];
+      #                       }
+      #                     }
+      #                   } else {
+      #                     if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.source_entity) {
+      #                       evaluatedObject = [variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity]?.state;
+      #                     }
+      #                   }
+      #                 }
+      #               }
+      #             }
+      #             break;
+      #         }
+      #       }
+      #     }
+
+      #     return evaluatedObject;
+      #   ]]]
+      evaluated_state: >
         [[[
-          var isZeroValue = true;
-          var objectValue = 0;
+          //var isZeroValue = true;
+          //var objectValue = 0;
+          var evaluatedState;
           if (variables?.ulm_card_kepath_binary_sensor_count_notifications) {
             if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.main_icon_trigger) {
               switch (variables.ulm_card_kepath_binary_sensor_count_notifications.main_icon_trigger) {
@@ -135,15 +187,13 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
                         if (variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.is_attribute) {
                           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.source_entity) {
                             if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.attribute_name) {
-                              //hass.callService('system_log', 'write', {level:'info',message:'1 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity});
-                              objectValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity]?.attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name] ?
+                              evaluatedState = states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity]?.attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name] ?
                                 states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name] : 0;
                             }
                           }
                         } else {
                           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.unavailable?.source_entity) {
-                            //hass.callService('system_log', 'write', {level:'info',message:'2 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity});
-                            objectValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity]?.state ?
+                            evaluatedState = states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity]?.state ?
                               states[variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity].state : 0;
                           }
                         }
@@ -159,17 +209,13 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
                         if (variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute) {
                           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.source_entity) {
                             if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.attribute_name) {
-                              //hass.callService('system_log', 'write', {level:'info',message:'3 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity});
-                              //hass.callService('system_log', 'write', {level:'info',message:'3 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.attribute_name});
-                              objectValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity]?.attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name] ?
+                              evaluatedState = states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity]?.attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name] ?
                                 states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name] : 0;
-                              //hass.callService('system_log', 'write', {level:'info',message:'3 objectValue ' + objectValue});
                             }
                           }
                         } else {
                           if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.source_entity) {
-                            //hass.callService('system_log', 'write', {level:'info',message:'4 variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity ' + variables.ulm_card_kepath_binary_sensor_count_notifications.unavailable.source_entity});
-                            objectValue = states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity]?.state ?
+                            evaluatedState = states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity]?.state ?
                               states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.source_entity].state : 0;
                           }
                         }
@@ -180,38 +226,40 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
               }
             }
           }
-          if (!isNaN(objectValue) && objectValue != 0 && objectValue !== undefined) {
-            isZeroValue = false;
-          }
-          if (objectValue == "on") {
-            isZeroValue = false;
-          }
-          if (isZeroValue) {
-            objectValue = 0;
-          }
-          return objectValue;
+          //if (!isNaN(objectValue) && objectValue != 0 && objectValue !== undefined) {
+          //  isZeroValue = false;
+          //}
+          //if (objectValue == "on") {
+          //  isZeroValue = false;
+          //}
+          //if (isZeroValue) {
+          //  objectValue = 0;
+          //}
+          //return objectValue;
+
+          return evaluatedState;
         ]]]
       use_theme_colors: >
         [[[
           var useThemeColors = false;
           if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.use_theme_colors) {
-            useThemeColors = variables.ulm_card_kepath_extra_templates_icon_appearance.use_theme_colors
+            useThemeColors = variables.ulm_card_kepath_extra_templates_icon_appearance.use_theme_colors;
           }
           return useThemeColors;
         ]]]
-      trigger_on_reversed: >
-        [[[
-          var triggerOnReversed = false;
-          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.trigger_on_reversed) {
-            triggerOnReversed = variables.ulm_card_kepath_extra_templates_icon_appearance.trigger_on_reversed
-          }
-          return triggerOnReversed;
-        ]]]
+      # trigger_on_reversed: >
+      #   [[[
+      #     var triggerOnReversed = false;
+      #     if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.trigger_on_reversed) {
+      #       triggerOnReversed = variables.ulm_card_kepath_extra_templates_icon_appearance.trigger_on_reversed
+      #     }
+      #     return triggerOnReversed;
+      #   ]]]
       default_theme:
         default_state:
           icon: >
             [[[
-              var defaultThemeDefaultStateIcon = null;
+              var defaultThemeDefaultStateIcon = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.icon) {
@@ -223,7 +271,7 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             ]]]
           icon_color: >
             [[[
-              var defaultThemeDefaultStateIconColor = null;
+              var defaultThemeDefaultStateIconColor = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.icon_color) {
@@ -235,7 +283,7 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             ]]]
           background_color: >
             [[[
-              var defaultThemeDefaultStateBGColor = null;
+              var defaultThemeDefaultStateBGColor = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.background_color) {
@@ -246,14 +294,37 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
               return defaultThemeDefaultStateBGColor;
             ]]]
         triggered_state:
-          matching_state: "0"
+          matching_state: >
+            [[[
+              var defaultThemeTriggeredStateMatchingState = "0";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.matching_state;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingState;
+            ]]]
+          matching_type: >
+            [[[
+              var defaultThemeTriggeredStateMatchingType = "gt";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.matching_type;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingType;
+            ]]]
           icon: >
             [[[
-              var defaultThemeTriggeredStateIcon = null;
+              var defaultThemeTriggeredStateIcon = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.icon) {
-                    defaultThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.icon
+                    defaultThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.icon;
                   }
                 }
               }
@@ -261,11 +332,11 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             ]]]
           icon_color: >
             [[[
-              var defaultThemeTriggeredStateIconColor = null;
+              var defaultThemeTriggeredStateIconColor = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.icon_color) {
-                    defaultThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.icon_color
+                    defaultThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.icon_color;
                   }
                 }
               }
@@ -273,11 +344,11 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             ]]]
           background_color: >
             [[[
-              var defaultThemeTriggeredStateBGColor = null;
+              var defaultThemeTriggeredStateBGColor = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.background_color) {
-                    defaultThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.background_color
+                    defaultThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.background_color;
                   }
                 }
               }
@@ -287,11 +358,11 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
         default_state:
           icon: >
             [[[
-              var darkThemeDefaultStateIcon = null;
+              var darkThemeDefaultStateIcon = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.icon) {
-                    darkThemeDefaultStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.icon
+                    darkThemeDefaultStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.icon;
                   }
                 }
               }
@@ -299,11 +370,11 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             ]]]
           icon_color: >
             [[[
-              var darkThemeDefaultStateIconColor = null;
+              var darkThemeDefaultStateIconColor = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.icon_color) {
-                    darkThemeDefaultStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.icon_color
+                    darkThemeDefaultStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.icon_color;
                   }
                 }
               }
@@ -311,25 +382,48 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             ]]]
           background_color: >
             [[[
-              var darkThemeDefaultStateBGColor = null;
+              var darkThemeDefaultStateBGColor = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.background_color) {
-                    darkThemeDefaultStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.background_color
+                    darkThemeDefaultStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.background_color;
                   }
                 }
               }
               return darkThemeDefaultStateBGColor;
             ]]]
         triggered_state:
-          matching_state: "0"
+          matching_state: >
+            [[[
+              var defaultThemeTriggeredStateMatchingState = "0";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.matching_state;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingState;
+            ]]]
+          matching_type: >
+            [[[
+              var defaultThemeTriggeredStateMatchingType = "gt";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.matching_type;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingType;
+            ]]]
           icon: >
             [[[
-              var darkThemeTriggeredStateIcon = null;
+              var darkThemeTriggeredStateIcon = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.icon) {
-                    darkThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.icon
+                    darkThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.icon;
                   }
                 }
               }
@@ -337,11 +431,11 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             ]]]
           icon_color: >
             [[[
-              var darkThemeTriggeredStateIconColor = null;
+              var darkThemeTriggeredStateIconColor = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.icon_color) {
-                    darkThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.icon_color
+                    darkThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.icon_color;
                   }
                 }
               }
@@ -349,11 +443,11 @@ custom_card_kepath_binary_sensor_get_evaluated_object:
             ]]]
           background_color: >
             [[[
-              var darkThemeTriggeredStateBGColor = null;
+              var darkThemeTriggeredStateBGColor = "";
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
                   if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.background_color) {
-                    darkThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.background_color
+                    darkThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.background_color;
                   }
                 }
               }

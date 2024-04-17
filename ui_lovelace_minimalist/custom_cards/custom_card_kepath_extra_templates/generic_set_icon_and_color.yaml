@@ -10,6 +10,14 @@ generic_set_icon_and_color:
           }
           return entity;
         ]]]
+      evaluated_state: >
+          [[[
+            var evaluatedState = "0";
+            if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.evaluated_state) {
+              evaluatedState = variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_state;
+            }
+            return evaluatedState;
+          ]]]
       use_theme_colors: >
         [[[
           var useThemeColors = false;
@@ -20,16 +28,16 @@ generic_set_icon_and_color:
           }
           return useThemeColors;
         ]]]
-      trigger_on_reversed: >
-        [[[
-          var triggerOnReversed = false;
-          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.trigger_on_reversed) {
-            if (typeof variables.ulm_card_kepath_extra_templates_icon_appearance.trigger_on_reversed === "boolean") {
-              triggerOnReversed = variables.ulm_card_kepath_extra_templates_icon_appearance.trigger_on_reversed;
-            }
-          }
-          return triggerOnReversed;
-        ]]]
+      # trigger_on_reversed: >
+      #   [[[
+      #     var triggerOnReversed = false;
+      #     if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.trigger_on_reversed) {
+      #       if (typeof variables.ulm_card_kepath_extra_templates_icon_appearance.trigger_on_reversed === "boolean") {
+      #         triggerOnReversed = variables.ulm_card_kepath_extra_templates_icon_appearance.trigger_on_reversed;
+      #       }
+      #     }
+      #     return triggerOnReversed;
+      #   ]]]
       default:
         icon: >
           [[[
@@ -98,6 +106,18 @@ generic_set_icon_and_color:
             return setBGColor;
           ]]]
       triggered:
+        matching_type: >
+          [[[
+            var matchingType = "eq";
+            if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.matching_type) {
+                  matchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.matching_type;
+                }
+              }
+            }
+            return matchingType;
+          ]]]
         matching_state: >
           [[[
             var matchingState = "on";
@@ -108,6 +128,7 @@ generic_set_icon_and_color:
                 }
               }
             }
+            return matchingState;
           ]]]
         icon: >
           [[[
@@ -176,9 +197,21 @@ generic_set_icon_and_color:
             return setBGColor;
           ]]]
       triggered_alt:
+        matching_type: >
+          [[[
+            var matchingType = "alt_type";
+            if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.matching_type) {
+                  matchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.matching_type;
+                }
+              }
+            }
+            return matchingType;
+          ]]]
         matching_state: >
           [[[
-            var matchingState = "on";
+            var matchingState = "alt_state";
             if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
               if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
                 if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.matching_state) {
@@ -186,6 +219,7 @@ generic_set_icon_and_color:
                 }
               }
             }
+            return matchingState;
           ]]]
         icon: >
           [[[
@@ -259,31 +293,104 @@ generic_set_icon_and_color:
       value: >
         [[[
           var stateValue = false;
-          var evaluatedState = null;
-          var matchedStates = null;
+          var evaluatedState = "";
+          var matchedStates = "";
+          var matchType = "in";
+          const matchedTypes = ['gt','lt','eq','in','not_in','not_eq'];
           var isMatched = false;
-          if (states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object]?.state) {
-            evaluatedState = states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object].state
-            hass.callService('system_log', 'write', {level:'info',message:'triggered evaluatedState: '+evaluatedState});
+          if (variables.ulm_card_kepath_generic_icon_appearance.evaluated_state) {
+            evaluatedState = variables.ulm_card_kepath_generic_icon_appearance.evaluated_state;
+          } else {
+            if (states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object]?.state) {
+              evaluatedState = states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object].state
+            }
           }
-          if (variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_state) {
+          //hass.callService('system_log', 'write', {level:'info',message:'triggered evaluatedState: '+evaluatedState});
+          if (variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_state !== undefined) {
             matchedStates = variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_state;
-            hass.callService('system_log', 'write', {level:'info',message:'triggered matchedStates: '+matchedStates});
+            //hass.callService('system_log', 'write', {level:'info',message:'triggered matchedStates: '+matchedStates});
           }
-          for (let i = 0; i < matchedStates.length; i++) {
-            if (evaluatedState = matchedStates[i]) {
-              isMatched = true;
-              stateValue = true;
+          if (variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_type) {
+            matchType = variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_type;
+            //hass.callService('system_log', 'write', {level:'info',message:'triggered matchType: '+matchType});
+            for (let i = 0; i < matchedTypes.length; i++) {
+              if (matchType == matchedTypes[i]){
+                matchType = matchedTypes[i];
+              }
             }
           }
-          if (variables.ulm_card_kepath_generic_icon_appearance.trigger_on_reversed) {
-            if (isMatched) {
+          //hass.callService('system_log', 'write', {level:'info',message:'evaluated_object: '+variables.ulm_card_kepath_generic_icon_appearance.evaluated_object});
+          switch (true) {
+            case matchType == "gt":
+            case matchType == "lt": {
+              var matchedStateInt;
+              var evaluatedStateInt;
+              if (matchedStates.length == 1) {
+                matchedStateInt = parseInt(matchedStates);
+                evaluatedStateInt = parseInt(evaluatedState);
+              }
+              //hass.callService('system_log', 'write', {level:'info',message:'gt:lt matchedStateInt: '+matchedStateInt+', typeof: '+typeof(matchedStateInt)});
+              //hass.callService('system_log', 'write', {level:'info',message:'gt:lt evaluatedStateInt: '+evaluatedStateInt+', typeof: '+typeof(evaluatedStateInt)});
+              if ((!isNaN(matchedStateInt)) && (matchedStateInt !== undefined)) {
+                if ((!isNaN(evaluatedStateInt)) && (evaluatedStateInt !== undefined)) {
+                  if ((matchType == "gt") && (evaluatedStateInt > matchedStateInt)) {
+                    stateValue = true;
+                    //hass.callService('system_log', 'write', {level:'info',message:'gt stateValue: '+stateValue});
+                  }
+                  if ((matchType == "lt") && (evaluatedStateInt < matchedStateInt )) {
+                    stateValue = true;
+                    //hass.callService('system_log', 'write', {level:'info',message:'lt stateValue: '+stateValue});
+                  }
+                }
+              }
+              break;
+            }
+            case matchType == "eq":
+            case matchType == "not_eq": {
+              if ((matchedStates !== undefined) && (evaluatedState !== undefined)) {
+                if (matchedStates.length == 1) {
+                  if (matchedStates == evaluatedState) {
+                    isMatched = true;
+                    stateValue = true;
+                  }
+                  if (matchType == "not_eq") {
+                    if (isMatched) {
+                      stateValue = false;
+                    } else {
+                      stateValue = true;
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'info',message:'(not_)eq stateValue: '+stateValue});
+              }
+              break;
+            }
+            case matchType == "in":
+            case matchType == "not_in": {
+              if ((matchedStates !== undefined) && (evaluatedState !== undefined)) {
+                for (let i = 0; i < matchedStates.length; i++) {
+                  if (evaluatedState == matchedStates[i]) {
+                    isMatched = true;
+                    stateValue = true;
+                  }
+                }
+                if (matchType == "not_in") {
+                  if (isMatched) {
+                    stateValue = false;
+                  } else {
+                    stateValue = true;
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'info',message:'(not_)in stateValue: '+stateValue});
+              }
+              break;
+            }
+            default:
               stateValue = false;
-            } else {
-              stateValue = true;
-            }
+              //hass.callService('system_log', 'write', {level:'info',message:'7 stateValue: '+stateValue});
           }
-
+          //hass.callService('system_log', 'write', {level:'info',message:'8 stateValue: '+stateValue});
+          //hass.callService('system_log', 'write', {level:'info',message:'8 matchType: '+matchType});
           return stateValue;
         ]]]
       icon: >
@@ -343,83 +450,148 @@ generic_set_icon_and_color:
               ]]]
 
 
-    - operator: "template"
-      value: >
-        [[[
-          var stateValue = false;
-          var evaluatedState = null;
-          var matchedStates = null;
-          if (states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object]?.state) {
-            evaluatedState = states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object].state
-            hass.callService('system_log', 'write', {level:'info',message:'triggered_alt evaluatedState: '+evaluatedState});
-          }
-          if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.matching_state) {
-            matchedStates = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.matching_state;
-            hass.callService('system_log', 'write', {level:'info',message:'triggered_alt matchedStates: '+matchedStates});
-          }
-          for (let i = 0; i < matchedStates.length; i++) {
-            if (evaluatedState = matchedStates[i]) {
-              stateValue = true;
-            }
-          }
+    # - operator: "template"
+    #   value: >
+    #     [[[
+    #       var stateValue = false;
+    #       var evaluatedState = "";
+    #       var matchedStates = "";
+    #       var matchType = "in";
+    #       const matchedTypes = ['gt','lt','eq','in'];
+    #       if (states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object]?.state) {
+    #         evaluatedState = states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object].state
+    #         //hass.callService('system_log', 'write', {level:'info',message:'triggered evaluatedState: '+evaluatedState});
+    #       }
+    #       if (variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_state) {
+    #         matchedStates = variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_state;
+    #         //hass.callService('system_log', 'write', {level:'info',message:'triggered matchedStates: '+matchedStates});
+    #       }
+    #       if (variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_type) {
+    #         matchType = variables.ulm_card_kepath_generic_icon_appearance.triggered.matching_type;
+    #         for (let i = 0; i < matchedTypes.length; i++) {
+    #           if (matchType = matchedTypes[i]){
+    #             matchType = matchedTypes[i];
+    #           }
+    #         }
+    #       }
+    #       switch ( matchType ) {
+    #         case "gt":
+    #         case "lt":
+    #           var matchedStateInt;
+    #           var evaluatedStateInt;
+    #           if (matchedStates.length == 1) {
+    #             matchedStateInt = parseInt(matchedStates);
+    #             evaluatedStateInt = parseInt(evaluatedState);
+    #           }
+    #           if (!isNaN(matchedStateInt) && matchedStateInt !== undefined) {
+    #             if (!isNaN(evaluatedStateInt) && evaluatedStateInt !== undefined) {
+    #               if ((matchType == "gt") && (matchedStateInt > evaluatedStateInt)) {
+    #                 stateValue = true;
+    #               }
+    #               if ((matchType == "lt") && (matchedStateInt < evaluatedStateInt)) {
+    #                 stateValue = true;
+    #               }
+    #             }
+    #           }
+    #           break;
+    #         case "eq":
+    #           if ((matchedStates !== undefined) && (evaluatedState !== undefined)) {
+    #             if (matchedStates == evaluatedState) {
+    #               stateValue = true;
+    #             }
+    #           }
+    #           break;
+    #         case "in":
+    #           if ((matchedStates !== undefined) && (evaluatedState !== undefined)) {
+    #             for (let i = 0; i < matchedStates.length; i++) {
+    #               if (evaluatedState = matchedStates[i]) {
+    #                 stateValue = true;
+    #               }
+    #             }
+    #           }
+    #           break;
+    #         default:
+    #           stateValue = false;
+    #       }
 
-          return stateValue;
-        ]]]
-      icon: >
-        [[[
-          var icon = "mdi:close-circle";
-          if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon != icon) {
-            icon = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon;
-          } else {
-            icon = variables.ulm_card_kepath_generic_icon_appearance.default.icon;
-          }
-          return icon;
-        ]]]
-      styles:
-        icon:
-          - color: >
-              [[[
-                var returnedColor = "red";
-                var testColor = "red";
-                const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
-                if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon_color != returnedColor) {
-                  testColor = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon_color;
-                } else {
-                  testColor = variables.ulm_card_kepath_generic_icon_appearance.default.icon_color;
-                }
-                if (variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors) {
-                  for (let i = 0; i < colorOptions.length; i++) {
-                    if (testColor.includes(colorOptions[i])){
-                      returnedColor = testColor;
-                    }
-                  }
-                } else {
-                  returnedColor = testColor;
-                }
-                return returnedColor;
-              ]]]
-        img_cell:
-          - background-color: >
-              [[[
-                var returnedBGColor = "grey";
-                var testBGColor = "grey";
-                const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
-                if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.background_color != returnedBGColor) {
-                  testBGColor = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.background_color;
-                } else {
-                  testBGColor = variables.ulm_card_kepath_generic_icon_appearance.default.background_color;
-                }
-                if (variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors) {
-                  for (let i = 0; i < colorOptions.length; i++) {
-                    if (testBGColor.includes(colorOptions[i])){
-                      returnedBGColor = testBGColor;
-                    }
-                  }
-                } else {
-                  returnedBGColor = testBGColor;
-                }
-                return returnedBGColor;
-              ]]]
+    #       return stateValue;
+
+    #       /*var stateValue = false;
+    #       var evaluatedState = "";
+    #       var matchedStates = "";
+    #       if (states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object]?.state) {
+    #         evaluatedState = states[variables.ulm_card_kepath_generic_icon_appearance.evaluated_object].state
+    #         hass.callService('system_log', 'write', {level:'info',message:'triggered_alt evaluatedState: '+evaluatedState});
+    #       }
+    #       if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.matching_state) {
+    #         matchedStates = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.matching_state;
+    #         //hass.callService('system_log', 'write', {level:'info',message:'triggered_alt matchedStates: '+matchedStates});
+    #       }
+    #       for (let i = 0; i < matchedStates.length; i++) {
+    #         if (evaluatedState = matchedStates[i]) {
+    #           stateValue = true;
+    #         }
+    #       }
+
+    #       return stateValue;*/
+    #     ]]]
+    #   icon: >
+    #     [[[
+    #       var icon = "mdi:close-circle";
+    #       if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon != icon) {
+    #         icon = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon;
+    #       } else {
+    #         icon = variables.ulm_card_kepath_generic_icon_appearance.default.icon;
+    #       }
+    #       return icon;
+    #     ]]]
+    #   styles:
+    #     icon:
+    #       - color: >
+    #           [[[
+    #             var returnedColor = "red";
+    #             var testColor = "red";
+    #             const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
+    #             if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon_color != returnedColor) {
+    #               testColor = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.icon_color;
+    #             } else {
+    #               testColor = variables.ulm_card_kepath_generic_icon_appearance.default.icon_color;
+    #             }
+    #             if (variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors) {
+    #               for (let i = 0; i < colorOptions.length; i++) {
+    #                 if (testColor.includes(colorOptions[i])){
+    #                   returnedColor = testColor;
+    #                 }
+    #               }
+    #             } else {
+    #               returnedColor = testColor;
+    #             }
+    #             return returnedColor;
+    #           ]]]
+    #     img_cell:
+    #       - background-color: >
+    #           [[[
+    #             var returnedBGColor = "grey";
+    #             var testBGColor = "grey";
+    #             const colorOptions = ['color-grey', 'color-red', 'color-green', 'color-yellow', 'color-blue', 'color-purple', 'color-pink', 'color-amber', 'color-theme'];
+    #             if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.background_color != returnedBGColor) {
+    #               testBGColor = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.background_color;
+    #             } else {
+    #               testBGColor = variables.ulm_card_kepath_generic_icon_appearance.default.background_color;
+    #             }
+    #             if (variables.ulm_card_kepath_generic_icon_appearance.use_theme_colors) {
+    #               for (let i = 0; i < colorOptions.length; i++) {
+    #                 if (testBGColor.includes(colorOptions[i])){
+    #                   returnedBGColor = testBGColor;
+    #                 }
+    #               }
+    #             } else {
+    #               returnedBGColor = testBGColor;
+    #             }
+    #             return returnedBGColor;
+    #           ]]]
+
+
     - operator: "default"
       icon: "[[[ return variables.ulm_card_kepath_generic_icon_appearance.default.icon; ]]]"
       styles:
@@ -427,5 +599,3 @@ generic_set_icon_and_color:
           - color: "[[[ return variables.ulm_card_kepath_generic_icon_appearance.default.icon_color; ]]]"
         img_cell:
           - background-color: "[[[ return variables.ulm_card_kepath_generic_icon_appearance.default.background_color; ]]]"
-
-# hass.callService('system_log', 'write', {level:'info',message:'mode.dark.default.icon '+setIcon});
