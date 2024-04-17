@@ -887,7 +887,7 @@ class LandroidSelect(SelectEntity):
             option,
         )
 
-        self.entity_description.command_fn(self._api, str(option - 1))
+        self.entity_description.command_fn(self._api, str(int(option) - 1))
 
 
 class LandroidButton(ButtonEntity):
@@ -1155,7 +1155,7 @@ class LandroidNumber(NumberEntity):
             _connections = {(dr.CONNECTION_NETWORK_MAC, self.device.mac_address)}
             self._attr_device_info.update({"connections": _connections})
 
-        self._value = None #self.entity_description.value_fn(self._api)
+        self._value = None  # self.entity_description.value_fn(self._api)
 
         async_dispatcher_connect(
             self.hass,

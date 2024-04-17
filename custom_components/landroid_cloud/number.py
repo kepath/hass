@@ -16,8 +16,8 @@ from .device_base import LandroidNumber, LandroidNumberEntityDescription
 
 INPUT_NUMBERS = [
     LandroidNumberEntityDescription(
-        key="timeextention",
-        name="Time extention",
+        key="timeextension",
+        name="Time extension",
         entity_category=EntityCategory.CONFIG,
         device_class=None,
         entity_registry_enabled_default=True,
@@ -26,7 +26,9 @@ INPUT_NUMBERS = [
         native_max_value=100,
         native_step=1,
         mode=NumberMode.SLIDER,
-        value_fn=lambda api: api.cloud.devices[api.device_name].schedules["time_extension"],
+        value_fn=lambda api: api.cloud.devices[api.device_name].schedules[
+            "time_extension"
+        ],
         command_fn=lambda api, value: api.cloud.send(
             api.device.serial_number, json.dumps({"sc": {"p": value}})
         ),
