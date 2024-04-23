@@ -136,7 +136,7 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        - "custom_card_kepath_binary_sensor_get_evaluated_object"
+                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_action_sensors"
                       variables:
@@ -159,6 +159,8 @@ views:
                               icon_color: "rgba(var(--color-theme), 1)"
                               background_color: "rgba(var(--color-theme), 0.2)"
                             triggered_state:
+                              matching_type: "eq"
+                              matching_state: "on"
                               icon: "mdi:tune-variant"
                               icon_color: "rgba(var(--color-blue), 1)"
                               background_color: "rgba(var(--color-blue), 0.2)"
@@ -168,7 +170,7 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        - "custom_card_kepath_binary_sensor_get_evaluated_object"
+                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_alert_sensors"
                       variables:
@@ -191,6 +193,8 @@ views:
                               icon_color: "rgba(var(--color-theme), 1)"
                               background_color: "rgba(var(--color-theme), 0.2)"
                             triggered_state:
+                              matching_type: "eq"
+                              matching_state: "on"
                               icon: "mdi:bell-alert"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -201,7 +205,7 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        - "custom_card_kepath_binary_sensor_get_evaluated_object"
+                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_information_sensors"
                       variables:
@@ -224,6 +228,8 @@ views:
                               icon_color: "rgba(var(--color-theme), 1)"
                               background_color: "rgba(var(--color-theme), 0.2)"
                             triggered_state:
+                              matching_type: "eq"
+                              matching_state: "on"
                               icon: "mdi:information-variant-circle"
                               icon_color: "rgba(var(--color-green), 1)"
                               background_color: "rgba(var(--color-green), 0.2)"
@@ -232,7 +238,7 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        - "custom_card_kepath_binary_sensor_get_evaluated_object"
+                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
                       variables:
@@ -255,6 +261,8 @@ views:
                               icon_color: "rgba(var(--color-theme), 1)"
                               background_color: "rgba(var(--color-theme), 0.2)"
                             triggered_state:
+                              matching_type: "eq"
+                              matching_state: "on"
                               icon: "mdi:cog"
                               icon_color: "rgba(var(--color-yellow), 1)"
                               background_color: "rgba(var(--color-yellow), 0.2)"
@@ -264,7 +272,7 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        - "custom_card_kepath_binary_sensor_get_evaluated_object"
+                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_update_sensors"
                       variables:
@@ -287,6 +295,8 @@ views:
                               icon_color: "rgba(var(--color-theme), 1)"
                               background_color: "rgba(var(--color-theme), 0.2)"
                             triggered_state:
+                              matching_type: "eq"
+                              matching_state: "on"
                               icon: "mdi:refresh-circle"
                               icon_color: "rgba(var(--color-yellow), 1)"
                               background_color: "rgba(var(--color-yellow), 0.2)"
@@ -307,9 +317,10 @@ views:
                   styles:
                     grid:
                       - grid-template-areas: >
-                          'item1 item1 item1 item2 item2 item2 item3 item3 item3 item4 item4 item4 item5 item5 item5'
-                          'floorplan1 floorplan1 floorplan1 floorplan1 floorplan1 floorplan2 floorplan2 floorplan2 floorplan2 floorplan2 floorplan3 floorplan3 floorplan3 floorplan3 floorplan3'
-                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
+                          'item1 item2 item3 item4 item5'
+                          'item6 item7 item8 item9 item10'
+                          'item11 item12 item13 item14 item15'
+                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
                     card:
@@ -333,11 +344,16 @@ views:
                       item8: *widget_icon_binary_sensor_custom_styling
                       item9: *widget_icon_binary_sensor_custom_styling
                       item10: *widget_icon_binary_sensor_custom_styling
-                      floorplan1: &floorplan_styling
-                        - border-radius: "none"
-                        - box-shadow: "none"
-                      floorplan2: *floorplan_styling
-                      floorplan3: *floorplan_styling
+                      item11: *widget_icon_binary_sensor_custom_styling
+                      item12: *widget_icon_binary_sensor_custom_styling
+                      item13: *widget_icon_binary_sensor_custom_styling
+                      item14: *widget_icon_binary_sensor_custom_styling
+                      item15: *widget_icon_binary_sensor_custom_styling
+                      # floorplan1: &floorplan_styling
+                      #   - border-radius: "none"
+                      #   - box-shadow: "none"
+                      # floorplan2: *floorplan_styling
+                      # floorplan3: *floorplan_styling
                   custom_fields:
                     item1:
                       card:
@@ -345,7 +361,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_lights"
                         name: "Lights"
                         variables:
@@ -375,7 +391,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_outlet_class_switch"
                         name: "Plugs"
                         variables:
@@ -404,7 +420,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_fans"
                         name: "Fans"
                         variables:
@@ -436,7 +452,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_climate"
                         icon: "mdi:thermometer"
                         name: "Heating"
@@ -477,12 +493,326 @@ views:
                               attribute_name: "lawn_mower_busy_count"
                         tap_action:
                           action: "more-info"
-                    floorplan1:
-                      card: !include "floorplan_pictures/floor-ground.yaml"
-                    floorplan2:
-                      card: !include "floorplan_pictures/floor-first.yaml"
-                    floorplan3:
-                      card: !include "floorplan_pictures/floor-second.yaml"
+
+                    item6:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "Washer"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:washing-machine-off"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:washing-machine"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item7:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "Dryer"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:tumble-dryer-off"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:tumble-dryer"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item8:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "Dishwasher"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:dishwasher-off"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:dishwasher"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item9:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "Mini Fridge"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:fridge-industrial-off"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:fridge-industrial"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item10:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "Spotify"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:controller-off"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:controller"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item11:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "Arcade"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:controller-off"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:controller"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item12:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "BigPC"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:desktop-tower"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:desktop-tower"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item13:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "Printer"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:printer-off-outline"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:printer"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item14:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "NAS"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:nas"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:nas"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
+
+                    item15:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_sensor_display"
+                        entity: "group.all_audio_class_media_player"
+                        name: "UPS"
+                        variables:
+                          ulm_card_kepath_binary_sensor_count_notifications:
+                            unavailable:
+                              attribute_name: "media_player_audio_unavailable_count"
+                            amount:
+                              attribute_name: "media_player_audio_on_count"
+                          ulm_card_kepath_extra_templates_icon_appearance:
+                            use_theme_colors: true
+                            default_theme:
+                              default_state:
+                                icon: "mdi:power-plug-battery-outline"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_state:
+                                icon: "mdi:power-plug-battery"
+                                icon_color: "rgba(var(--color-green), 1)"
+                                background_color: "rgba(var(--color-green), 0.2)"
+                          ulm_card_kepath_binary_sensor_count_tap_action:
+                            action: "popup"
+                            popup:
+                              title: "speaker entities"
+                              auto_entities:
+                                sort_method: "last_changed"
+                                exclude_unavailable_state: true
 
               - type: "conditional"
                 conditions:
@@ -543,7 +873,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_safety_class_binary_sensors"
                         name: "Alerts"
                         variables:
@@ -593,7 +923,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_cameras"
                         name: "Camera"
                         variables:
@@ -624,7 +954,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_door_class_binary_sensors"
                         name: "Doors"
                         variables:
@@ -656,7 +986,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_occupancy_state"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_occupancy_class_binary_sensors"
                         name: "Motion"
                         variables:
@@ -710,13 +1040,21 @@ views:
                   styles:
                     grid:
                       - grid-template-areas: >
-                          'item1 item2 item3 item4 item5'
-                          'item6 item7 item8 item9 item10'
-                          'weather1 weather1 weather1 weather1 weather1'
-                          'weather2 weather2 weather2 weather2 weather2'
-                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
+                          'item1 item1 item1 item2 item2 item2 item3 item3 item3 item4 item4 item4 item5 item5 item5'
+                          'floorplan1 floorplan1 floorplan1 floorplan1 floorplan1 floorplan2 floorplan2 floorplan2 floorplan2 floorplan2 floorplan3 floorplan3 floorplan3 floorplan3 floorplan3'
+                      - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
+
+                    # grid:
+                    #   - grid-template-areas: >
+                    #       'item1 item2 item3 item4 item5'
+                    #       'item6 item7 item8 item9 item10'
+                    #       'weather1 weather1 weather1 weather1 weather1'
+                    #       'weather2 weather2 weather2 weather2 weather2'
+                    #   - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
+                    #   - grid-template-rows: "min-content"
+                    #   - justify-items: "center"
                     card:
                       - padding: "10px"
                       - overflow: "visible"
@@ -734,15 +1072,20 @@ views:
                       item8: *widget_icon_binary_sensor_custom_styling
                       item9: *widget_icon_binary_sensor_custom_styling
                       item10: *widget_icon_binary_sensor_custom_styling
-                      weather1: &widget_weather_styling
+                      floorplan1: &floorplan_styling
                         - border-radius: "none"
                         - box-shadow: "none"
-                        - padding: "4px"
-                        - margin-bottom: "0px"
-                        - cursor: "default"
-                        # - width: "86%"
-                        - justify-items: "center"
-                      weather2: *widget_weather_styling
+                      floorplan2: *floorplan_styling
+                      floorplan3: *floorplan_styling
+                      # weather1: &widget_weather_styling
+                      #   - border-radius: "none"
+                      #   - box-shadow: "none"
+                      #   - padding: "4px"
+                      #   - margin-bottom: "0px"
+                      #   - cursor: "default"
+                      #   # - width: "86%"
+                      #   - justify-items: "center"
+                      # weather2: *widget_weather_styling
                   custom_fields:
                     item1:
                       card:
@@ -750,7 +1093,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_occupancy_state"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_occupancy_class_binary_sensors"
                         name: "Motion"
                         variables:
@@ -773,7 +1116,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_remotes_and_tv_class_media_player"
                         name: "Video"
                         variables:
@@ -803,7 +1146,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_audio_class_media_player"
                         name: "Audio"
                         variables:
@@ -830,17 +1173,13 @@ views:
                                 sort_method: "last_changed"
                                 exclude_unavailable_state: true
 
-# Motion
-# Video
-# Audio
-# ARCADE-WIN10
                     item4:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                         entity: "group.all_audio_class_media_player"
-                        name: "Arcade"
+                        name: "Repairs"
                         variables:
                           ulm_card_kepath_binary_sensor_count_notifications:
                             unavailable:
@@ -865,14 +1204,14 @@ views:
                               auto_entities:
                                 sort_method: "last_changed"
                                 exclude_unavailable_state: true
-# BIG-PC-WIN11
+
                     item5:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                         entity: "group.all_audio_class_media_player"
-                        name: "Big-PC"
+                        name: "Watchman"
                         variables:
                           ulm_card_kepath_binary_sensor_count_notifications:
                             unavailable:
@@ -883,11 +1222,11 @@ views:
                             use_theme_colors: true
                             default_theme:
                               default_state:
-                                icon: "mdi:desktop-tower"
+                                icon: "mdi:controller-off"
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
-                                icon: "mdi:desktop-tower"
+                                icon: "mdi:controller"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
                           ulm_card_kepath_binary_sensor_count_tap_action:
@@ -898,167 +1237,23 @@ views:
                                 sort_method: "last_changed"
                                 exclude_unavailable_state: true
 
-# Dishwasher
-                    item6:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
-                        name: "W.Machine"
-                        variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
-                          ulm_card_kepath_extra_templates_icon_appearance:
-                            use_theme_colors: true
-                            default_theme:
-                              default_state:
-                                icon: "mdi:washing-machine-off"
-                                icon_color: "rgba(var(--color-blue), 1)"
-                                background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                icon: "mdi:washing-machine"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-# Washing Machine
-                    item7:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
-                        name: "Tumble Dryer"
-                        variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
-                          ulm_card_kepath_extra_templates_icon_appearance:
-                            use_theme_colors: true
-                            default_theme:
-                              default_state:
-                                icon: "mdi:tumble-dryer-off"
-                                icon_color: "rgba(var(--color-blue), 1)"
-                                background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                icon: "mdi:tumble-dryer"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-# Tumble Dryer
-                    item8:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
-                        name: "Dishwasher"
-                        variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
-                          ulm_card_kepath_extra_templates_icon_appearance:
-                            use_theme_colors: true
-                            default_theme:
-                              default_state:
-                                icon: "mdi:dishwasher-off"
-                                icon_color: "rgba(var(--color-blue), 1)"
-                                background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                icon: "mdi:dishwasher"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-# Drinks Fridge
-                    item9:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
-                        name: "Drinks Fridge"
-                        variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
-                          ulm_card_kepath_extra_templates_icon_appearance:
-                            use_theme_colors: true
-                            default_theme:
-                              default_state:
-                                icon: "mdi:fridge-industrial-off"
-                                icon_color: "rgba(var(--color-blue), 1)"
-                                background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                icon: "mdi:fridge-industrial"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-# Ups
-                    item10:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
-                        name: "UPS"
-                        variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
-                          ulm_card_kepath_extra_templates_icon_appearance:
-                            use_theme_colors: true
-                            default_theme:
-                              default_state:
-                                icon: "mdi:power-plug-battery-outline"
-                                icon_color: "rgba(var(--color-blue), 1)"
-                                background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                icon: "mdi:power-plug-battery"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
+                    floorplan1:
+                      card: !include "floorplan_pictures/floor-ground.yaml"
+                    floorplan2:
+                      card: !include "floorplan_pictures/floor-first.yaml"
+                    floorplan3:
+                      card: !include "floorplan_pictures/floor-second.yaml"
 
+# # Motion
+# # Video
+# # Audio
+# # ARCADE-WIN10
+# # BIG-PC-WIN11
+# # Dishwasher
+# # Washing Machine
+# # Tumble Dryer
+# # Drinks Fridge
+# # Ups
 
 # Microwave
 # Kettle
@@ -1080,77 +1275,77 @@ views:
 # Electricity Import
 # thorn-home QR Code
 
-                    weather1:
-                      card:
-                        type: "custom:simple-weather-card"
-                        entity: "weather.met_office_banbury_daily"
-                        card_mod:
-                          style: |
-                            ha-card{
-                              margin: 0px !important;
-                              border-radius: 5px !important;
-                              box-shadow: none !important;
-                              font-weight: var(--swc-font-weight, 400) !important;
-                              font-size: 13px !important;
-                            }
-                        name: "Banbury"
-                        # backdrop: true
-                        primary_info:
-                          - "wind_bearing"
-                          - "wind_speed"
-                        secondary_info:
-                          - "humidity"
-                          - "precipitation"
-                        custom:
-                          - wind_bearing: "sensor.banbury_wind_direction"
-                          - wind_speed: "sensor.banbury_wind_speed"
-                        backdrop:
-                          day: "rgba(var(--color-blue), 0.2)"
-                          night: "rgba(var(--color-blue), 0.2)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/lovelace-minimalist-climate/0"
-                    weather2:
-                      card:
-                        type: "custom:hourly-weather"
-                        entity: "weather.openweathermap"
-                        card_mod:
-                          style: |
-                            ha-card{
-                              margin: 0px !important;
-                              padding: 0px !important;
-                              box-shadow: none !important;
-                              --mdc-icon-size: 16px !important;
-                            }
-                            .card-content{
-                              padding: 0px !important;
-                            }
-                        forecast_type: "daily"
-                        name: null
-                        icons: true
-                        show_precipitation_probability: true
-                        show_date: "boundary"
-                        num_segments: 8
-                        offset: 0
-                        hold_action:
-                          action: "navigate"
-                          navigation_path: ""
-                        colors:
-                          clear-night: "rgba(0, 0, 0 , 1)"
-                          cloudy: "rgba(187, 187, 187, 1)"
-                          fog: "rgba(187, 187, 187,0.5)"
-                          hail: "rgba(255, 255, 255,0.9)"
-                          lightning: "rgba(255, 145, 1, 1)"
-                          lightning-rainy: "rgba(255, 145, 1, 0.8)"
-                          partlycloudy: "rgba(187, 187, 187,1)"
-                          pouring: "rgba(137, 179, 248, 0.3)"
-                          rainy: "rgba(137, 179, 248, 0.5)"
-                          snowy: "rgba(255, 255, 255, 1)"
-                          snowy-rainy: "rgba(255, 255, 255, 0.8)"
-                          sunny: "rgba(252, 214, 99,1)"
-                          windy: "rgba(252, 214, 99,0.8)"
-                          windy-variant: "rgba(252, 214, 99,0.8)"
-                          exceptional: "rgba(241, 139, 130, 1)"
+                    # weather1:
+                    #   card:
+                    #     type: "custom:simple-weather-card"
+                    #     entity: "weather.met_office_banbury_daily"
+                    #     card_mod:
+                    #       style: |
+                    #         ha-card{
+                    #           margin: 0px !important;
+                    #           border-radius: 5px !important;
+                    #           box-shadow: none !important;
+                    #           font-weight: var(--swc-font-weight, 400) !important;
+                    #           font-size: 13px !important;
+                    #         }
+                    #     name: "Banbury"
+                    #     # backdrop: true
+                    #     primary_info:
+                    #       - "wind_bearing"
+                    #       - "wind_speed"
+                    #     secondary_info:
+                    #       - "humidity"
+                    #       - "precipitation"
+                    #     custom:
+                    #       - wind_bearing: "sensor.banbury_wind_direction"
+                    #       - wind_speed: "sensor.banbury_wind_speed"
+                    #     backdrop:
+                    #       day: "rgba(var(--color-blue), 0.2)"
+                    #       night: "rgba(var(--color-blue), 0.2)"
+                    #     tap_action:
+                    #       action: "navigate"
+                    #       navigation_path: "/lovelace-minimalist-climate/0"
+                    # weather2:
+                    #   card:
+                    #     type: "custom:hourly-weather"
+                    #     entity: "weather.openweathermap"
+                    #     card_mod:
+                    #       style: |
+                    #         ha-card{
+                    #           margin: 0px !important;
+                    #           padding: 0px !important;
+                    #           box-shadow: none !important;
+                    #           --mdc-icon-size: 16px !important;
+                    #         }
+                    #         .card-content{
+                    #           padding: 0px !important;
+                    #         }
+                    #     forecast_type: "daily"
+                    #     name: null
+                    #     icons: true
+                    #     show_precipitation_probability: true
+                    #     show_date: "boundary"
+                    #     num_segments: 8
+                    #     offset: 0
+                    #     hold_action:
+                    #       action: "navigate"
+                    #       navigation_path: ""
+                    #     colors:
+                    #       clear-night: "rgba(0, 0, 0 , 1)"
+                    #       cloudy: "rgba(187, 187, 187, 1)"
+                    #       fog: "rgba(187, 187, 187,0.5)"
+                    #       hail: "rgba(255, 255, 255,0.9)"
+                    #       lightning: "rgba(255, 145, 1, 1)"
+                    #       lightning-rainy: "rgba(255, 145, 1, 0.8)"
+                    #       partlycloudy: "rgba(187, 187, 187,1)"
+                    #       pouring: "rgba(137, 179, 248, 0.3)"
+                    #       rainy: "rgba(137, 179, 248, 0.5)"
+                    #       snowy: "rgba(255, 255, 255, 1)"
+                    #       snowy-rainy: "rgba(255, 255, 255, 0.8)"
+                    #       sunny: "rgba(252, 214, 99,1)"
+                    #       windy: "rgba(252, 214, 99,0.8)"
+                    #       windy-variant: "rgba(252, 214, 99,0.8)"
+                    #       exceptional: "rgba(241, 139, 130, 1)"
 
               - type: "conditional"
                 conditions:
@@ -1188,7 +1383,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_device_trackers"
                         name: "Device"
                         variables:
@@ -1216,7 +1411,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_connectivity_class_binary_sensors"
                         name: "Connect"
                         variables:
@@ -1248,7 +1443,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_running_class_binary_sensors"
                         name: "Running"
                         variables:
@@ -1279,7 +1474,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_duration_class_and_min_unit_of_measurement_sensors"
                         name: "Runtime"
                         variables:
@@ -1309,7 +1504,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_power_class_sensors"
                         name: "Power"
                         variables:
@@ -1339,7 +1534,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_data_rate_state"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_data_rate_class_sensors"
                         name: "Data"
                         variables:
@@ -1363,7 +1558,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_battery_state"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_battery_class_sensors"
                         name: "Battery"
                         variables:
@@ -1389,7 +1584,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_signal_strength_state"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_signal_strength_class_sensors"
                         name: "Signal"
                         variables:
@@ -1413,7 +1608,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_monetary_class_sensors"
                         name: "Money"
                         variables:
@@ -1532,7 +1727,7 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "custom_card_kepath_binary_sensor_get_evaluated_object"
-                          - "custom_card_kepath_binary_sensor_popup"
+                          - "custom_card_kepath_binary_sensor_group_popup"
                         entity: "group.all_updates"
                         name: "Updates"
                         variables:

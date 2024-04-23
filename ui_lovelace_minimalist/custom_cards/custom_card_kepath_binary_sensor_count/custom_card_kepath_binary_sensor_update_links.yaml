@@ -22,7 +22,6 @@ custom_card_kepath_binary_sensor_update_links:
               }
             }
           }
-          //hass.callService('system_log', 'write', {level:'info',message:'usePicture ' + usePicture});
           return usePicture;
         ]]]
   show_icon: "[[[ return variables.ulm_card_kepath_binary_sensor_update_links.use_picture ? false : true ]]]"
@@ -33,8 +32,6 @@ custom_card_kepath_binary_sensor_update_links:
       if (states[variables.ulm_card_kepath_binary_sensor_update_links.evaluated_object]?.attributes?.entity_picture) {
         entityPicture = states[variables.ulm_card_kepath_binary_sensor_update_links.evaluated_object].attributes.entity_picture;
       }
-      //hass.callService('system_log', 'write', {level:'info',message:'variables.ulm_card_kepath_binary_sensor_update_links.evaluated_object ' + variables.ulm_card_kepath_binary_sensor_update_links.evaluated_object});
-      //hass.callService('system_log', 'write', {level:'info',message:'entityPicture ' + entityPicture});
       return entityPicture;
     ]]]
   hold_action:
