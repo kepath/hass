@@ -400,13 +400,14 @@ class CardConfigWrapper {
     checkInputSpeedUnit(inputSpeedUnit) {
         if (inputSpeedUnit) {
             if (inputSpeedUnit !== 'mps'
+                && inputSpeedUnit !== 'bft'
                 && inputSpeedUnit !== 'kph'
                 && inputSpeedUnit !== 'mph'
                 && inputSpeedUnit !== 'fps'
                 && inputSpeedUnit !== 'knots'
                 && inputSpeedUnit !== 'auto') {
                 throw new Error('Invalid windspeed unit configured: ' + inputSpeedUnit +
-                    '. Valid options: mps, fps, kph, mph, knots, auto');
+                    '. Valid options: mps, bft, fps, kph, mph, knots, auto');
             }
             return inputSpeedUnit;
         }
@@ -1031,7 +1032,24 @@ class WindSpeedConverter {
         this.rangeStep = rangeStep;
         this.rangeMax = rangeMax;
         this.speedRanges = speedRanges;
-        this.bft = new SpeedUnit('Beaufort', ['bft'], (speed) => speed, (speed) => speed, undefined, undefined);
+        this.bft = new SpeedUnit('Beaufort', ['bft', 'Beaufort'], (speed) => {
+            switch (speed) {
+                case 0: return 0;
+                case 1: return 1;
+                case 2: return 2.5;
+                case 3: return 4;
+                case 4: return 6.5;
+                case 5: return 9;
+                case 6: return 12;
+                case 7: return 15.5;
+                case 8: return 18.5;
+                case 9: return 22.5;
+                case 10: return 26.5;
+                case 11: return 30;
+                case 12: return 34;
+                default: return 0; //throw new Error("Incorrect Beaufort speed: " + speed);
+            }
+        }, (speed) => speed, undefined, undefined);
         this.mps = new SpeedUnit('m/s', ['mps', 'm/s'], (speed) => speed, (speed) => speed, 5, 30);
         this.kph = new SpeedUnit('km/h', ['kph', 'km/h'], (speed) => speed / 3.6, (speed) => speed * 3.6, 10, 100);
         this.mph = new SpeedUnit('m/h', ['mph', 'm/h'], (speed) => speed / 2.2369, (speed) => speed * 2.2369, 10, 70);
@@ -2098,7 +2116,7 @@ window.customCards.push({
     description: 'A card to show wind speed and direction in a windrose.',
 });
 /* eslint no-console: 0 */
-console.info(`%c  WINROSE-CARD  %c Version 1.4.0 `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
+console.info(`%c  WINROSE-CARD  %c Version 1.5.0 `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
 let WindRoseCard = class WindRoseCard extends s {
     static getStubConfig() {
         return CardConfigWrapper.exampleConfig();
