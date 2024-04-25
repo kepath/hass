@@ -560,29 +560,32 @@ views:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                          - "device_kepath_dishwasher_state"
                         entity: "switch.dishwasher_power"
                         name: "Dishwasher"
                         variables:
-                          ulm_card_kepath_extra_templates_icon_appearance:
-                            use_theme_colors: true
-                            default_theme:
-                              default_state:
-                                icon: "mdi:dishwasher-off"
-                                icon_color: "rgba(var(--color-blue), 1)"
-                                background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
-                                matching_type: "in"
-                                matching_state: ["unknown", "unavailable"]
-                                icon: "mdi:dishwasher"
-                                icon_color: "rgba(var(--color-green), 1)"
-                                background_color: "rgba(var(--color-green), 0.2)"
-                              triggered_alt_state:
-                                matching_type: "in"
-                                matching_state: ["unknown", "unavailable"]
-                                icon: "mdi:dishwasher-off"
-                                icon_color: "rgba(var(--color-red), 1)"
-                                background_color: "rgba(var(--color-red), 0.2)"
+                          device_kepath_dishwasher_state:
+                            device_status: "sensor.dishwasher_operation_state"
+                            device_progress: "sensor.dishwasher_program_progress"
+                          # ulm_card_kepath_extra_templates_icon_appearance:
+                          #   use_theme_colors: true
+                          #   default_theme:
+                          #     default_state:
+                          #       icon: "mdi:dishwasher-off"
+                          #       icon_color: "rgba(var(--color-blue), 1)"
+                          #       background_color: "rgba(var(--color-blue), 0.2)"
+                          #     triggered_state:
+                          #       matching_type: "in"
+                          #       matching_state: ["unknown", "unavailable"]
+                          #       icon: "mdi:dishwasher"
+                          #       icon_color: "rgba(var(--color-green), 1)"
+                          #       background_color: "rgba(var(--color-green), 0.2)"
+                          #     triggered_alt_state:
+                          #       matching_type: "in"
+                          #       matching_state: ["unknown", "unavailable"]
+                          #       icon: "mdi:dishwasher-off"
+                          #       icon_color: "rgba(var(--color-red), 1)"
+                          #       background_color: "rgba(var(--color-red), 0.2)"
                     item9:
                       card:
                         type: "custom:button-card"

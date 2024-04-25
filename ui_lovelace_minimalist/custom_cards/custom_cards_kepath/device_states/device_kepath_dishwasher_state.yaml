@@ -1,0 +1,62 @@
+---
+device_kepath_dishwasher_state:
+  variables:
+    device_status: >
+      [[[
+        var deviceStatus = "";
+        if (variables?.device_status) {
+          deviceStatus = variables.device_status;
+        }
+        return deviceStatus;
+      ]]]
+    device_progress: >
+      [[[
+        var deviceProgress = "";
+        if (variables?.device_status) {
+          deviceProgress = variables.device_status;
+        }
+        return deviceProgress;
+      ]]]
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          return (variables.device_status == 'run' || variables.device_status == 'finished')
+        ]]]
+      icon: >
+        [[[
+          var icon = "mdi:dishwasher";
+          var progress;
+          var progressInt;
+          if (variables?.device_progress) {
+            progressInt = parseInt(variables.device_progress);
+          }
+          if ((!isNaN(progressInt)) && (progressInt !== undefined)) {
+            progress = Math.round(100 - progressInt);
+            icon = "numeric-" + progress + "-circle-outline";
+          }
+          return icon;
+        ]]]
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
+    - operator: "template"
+      value: >
+        [[[
+          return (variables.device_status == 'unknown' || variables.device_status == 'unavailable')
+        ]]]
+      icon: "mdi:dishwasher"
+      styles:
+        icon:
+          - color: "rgba(var(--color-red),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-red), 0.2)"
+    - operator: "default"
+      icon: "mdi:dishwasher-off"
+      styles:
+        icon:
+          - color: "rgba(var(--color-blue),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-blue), 0.2)"
