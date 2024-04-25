@@ -124,6 +124,8 @@ async def async_setup(hass, config):
                await hass.services.async_call(domain, SERVICE_TURN_OFF, {ATTR_ENTITY_ID: f"{domain}.{entity}"})
             elif msg.payload == SERVICE_PRESS:
                 await hass.services.async_call(domain, SERVICE_PRESS, {ATTR_ENTITY_ID: f"{domain}.{entity}"})
+            elif domain == "script":
+                await hass.services.async_call(domain, entity)
             else:
                 _LOGGER.error(f'Invalid service for "set" - payload: {msg.payload} for {entity}')
         if element == "set_light":
@@ -248,15 +250,22 @@ async def async_setup(hass, config):
 
                 publish_config = True
 
-            elif ent_domain == "button":
+            elif ent_domain == "button" or ent_domain == "input_button":
                 config["pl_prs"] = SERVICE_PRESS
                 config["cmd_t"] = f"{mybase}set"
                 publish_config = True
 
+            elif ent_domain == "script":
+                config["pl_prs"] = entity_id
+                config["cmd_t"] = f"{mybase}set"
+                publish_config = True
+
             if publish_config:
+                entity_exists = False
                 for entry in ent_reg.entities.values():
                     if entry.entity_id != entity_id:
                         continue
+                    entity_exists = True
                     for device in dev_reg.devices.values():
                         if device.id != entry.device_id:
                             continue
@@ -284,6 +293,8 @@ async def async_setup(hass, config):
                         config["name"] = ent_id.replace("_", " ") .title()
                     else:
                         config["name"] = None
+                if not entity_exists:
+                    config["name"] = new_state.attributes.get("friendly_name", ent_id.replace("_", " ") .title())
 
                 encoded = json.dumps(config, cls=JSONEncoder)
                 entity_disc_topic = generate_discovery_topic(entity_id)
@@ -342,6 +353,10 @@ async def async_setup(hass, config):
         entity_parts = entity_id.split('.')
         if entity_parts[0] == "input_boolean":
             entity_parts[0] = "switch"
+        elif entity_parts[0] == "script":
+            entity_parts[0] = "button"
+        elif entity_parts[0] == "input_button":
+            entity_parts[0] = "button"
         return f"{discovery_topic}{'/'.join(entity_parts)}/config"
 
 
@@ -350,6 +365,8 @@ async def async_setup(hass, config):
         await async_subscribe(hass, f"{base_topic}light/+/set_light", message_received)
         await async_subscribe(hass, f"{base_topic}input_boolean/+/set", message_received)
         await async_subscribe(hass, f"{base_topic}button/+/set", message_received)
+        await async_subscribe(hass, f"{base_topic}script/+/set", message_received)
+        await async_subscribe(hass, f"{base_topic}input_button/+/set", message_received)
 
     if publish_discovery:
         async_when_setup(hass, "mqtt", my_async_subscribe_mqtt)
