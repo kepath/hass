@@ -369,6 +369,8 @@ generic_set_icon_and_color:
               if ((matchedStates !== undefined) && (evaluatedState !== undefined)) {
                 for (let i = 0; i < matchedStates.length; i++) {
                   if (evaluatedState == matchedStates[i]) {
+                    //hass.callService('system_log', 'write', {level:'info',message:'in:not_in matchedStates[i]: '+matchedStates[i]+', typeof: '+typeof(matchedStates)});
+                    //hass.callService('system_log', 'write', {level:'info',message:'in:not_in evaluatedState: '+evaluatedState+', typeof: '+typeof(evaluatedState)});
                     isMatched = true;
                     stateValue = true;
                   }
@@ -468,6 +470,7 @@ generic_set_icon_and_color:
           } else {
             evaluatedState = variables.ulm_card_kepath_generic_icon_appearance.evaluated_state;
           }
+          hass.callService('system_log', 'write', {level:'info',message:'evaluated_object: '+variables.ulm_card_kepath_generic_icon_appearance.evaluated_object});
           if (variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.matching_state !== undefined) {
             matchedStates = variables.ulm_card_kepath_generic_icon_appearance.triggered_alt.matching_state;
           }
@@ -512,12 +515,15 @@ generic_set_icon_and_color:
             }
             case matchType == "in": {
               if ((matchedStates !== undefined) && (evaluatedState !== undefined)) {
+                hass.callService('system_log', 'write', {level:'info',message:'in: matchedStates[i]: '+matchedStates+', typeof: '+typeof(matchedStates)});
+                hass.callService('system_log', 'write', {level:'info',message:'in: evaluatedState: '+evaluatedState+', typeof: '+typeof(evaluatedState)});
                 for (let i = 0; i < matchedStates.length; i++) {
                   if (evaluatedState == matchedStates[i]) {
                     stateValue = true;
                   }
                 }
               }
+              hass.callService('system_log', 'write', {level:'info',message:'(not_)in stateValue: '+stateValue});
               break;
             }
             default:

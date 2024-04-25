@@ -499,14 +499,12 @@ views:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
                         name: "Washer"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
+                          # ulm_card_kepath_source_entity_details:
+                          #   entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
@@ -515,62 +513,57 @@ views:
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
+                                matching_type: "gt"
+                                matching_state: 10
                                 icon: "mdi:washing-machine"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:washing-machine-off"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
+                        # tap_action:
+                        #   action: "navigate"
+                        #   navigation_path: "/config/devices/device/{{device_id('sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand')}}"
                     item7:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "sensor.samsung_tumble_dryer_dryer_job_state"
                         name: "Dryer"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
                               default_state:
-                                icon: "mdi:tumble-dryer-off"
-                                icon_color: "rgba(var(--color-blue), 1)"
-                                background_color: "rgba(var(--color-blue), 0.2)"
-                              triggered_state:
                                 icon: "mdi:tumble-dryer"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_state:
+                                matching_type: "eq"
+                                matching_state: "none"
+                                icon: "mdi:tumble-dryer-off"
+                                icon_color: "rgba(var(--color-blue), 1)"
+                                background_color: "rgba(var(--color-blue), 0.2)"
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:tumble-dryer-off"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                     item8:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "switch.dishwasher_power"
                         name: "Dishwasher"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
@@ -579,30 +572,26 @@ views:
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
                                 icon: "mdi:dishwasher"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:dishwasher-off"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                     item9:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "switch.drinks_fridge_plug_bed_c_unifi"
                         name: "Mini Fridge"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
@@ -611,62 +600,54 @@ views:
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
                                 icon: "mdi:fridge-industrial"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:fridge-industrial-off"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                     item10:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "group.all_audio_class_media_player"
                         name: "Spotify"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
                               default_state:
-                                icon: "mdi:controller-off"
+                                icon: "si:spotify"
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
-                                icon: "mdi:controller"
+                                icon: "si:spotify"
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "si:spotify"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                     item11:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "sensor.arcade_win10_cpuload"
                         name: "Arcade"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
@@ -675,30 +656,26 @@ views:
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
                                 icon: "mdi:controller"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:controller-off"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                     item12:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "sensor.big_pc_win11_big_pc_win11_cpuload"
                         name: "BigPC"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
@@ -707,30 +684,26 @@ views:
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
                                 icon: "mdi:desktop-tower"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:desktop-tower"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                     item13:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "sensor.mfc_j870dw_status"
                         name: "Printer"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
@@ -739,30 +712,26 @@ views:
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
                                 icon: "mdi:printer"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:printer-off-outline"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                     item14:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "sensor.diskstation_volume_1_status"
                         name: "NAS"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
@@ -772,29 +741,25 @@ views:
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
                                 icon: "mdi:nas"
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:nas"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
                     item15:
                       card:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                        entity: "group.all_audio_class_media_player"
+                          - "custom_card_kepath_binary_sensor_get_evaluated_device"
+                        entity: "sensor.ups_status"
                         name: "UPS"
                         variables:
-                          ulm_card_kepath_binary_sensor_count_notifications:
-                            unavailable:
-                              attribute_name: "media_player_audio_unavailable_count"
-                            amount:
-                              attribute_name: "media_player_audio_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
                             default_theme:
@@ -803,17 +768,17 @@ views:
                                 icon_color: "rgba(var(--color-blue), 1)"
                                 background_color: "rgba(var(--color-blue), 0.2)"
                               triggered_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
                                 icon: "mdi:power-plug-battery"
                                 icon_color: "rgba(var(--color-green), 1)"
                                 background_color: "rgba(var(--color-green), 0.2)"
-                          ulm_card_kepath_binary_sensor_count_tap_action:
-                            action: "popup"
-                            popup:
-                              title: "speaker entities"
-                              auto_entities:
-                                sort_method: "last_changed"
-                                exclude_unavailable_state: true
-
+                              triggered_alt_state:
+                                matching_type: "in"
+                                matching_state: ["unknown", "unavailable"]
+                                icon: "mdi:power-plug-battery-outline"
+                                icon_color: "rgba(var(--color-red), 1)"
+                                background_color: "rgba(var(--color-red), 0.2)"
               - type: "conditional"
                 conditions:
                   - entity: "input_boolean.minimalist_ui_binary_alert_sensors"

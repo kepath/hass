@@ -1,0 +1,400 @@
+---
+custom_card_kepath_binary_sensor_get_evaluated_device:
+  template:
+    - "generic_set_icon_and_color"
+  variables:
+    ulm_card_kepath_source_entity_details:
+      source_entity: >
+        [[[
+          var sourceEntity = "";
+          if (variables?.ulm_card_kepath_source_entity_details) {
+            if (variables?.ulm_card_kepath_source_entity_details?.entity) {
+              sourceEntity = variables.ulm_card_kepath_source_entity_details.entity;
+            }
+          }
+          return sourceEntity;
+        ]]]
+      is_attribute: >
+        [[[
+          var isValueAttribute = false;
+          if (variables?.ulm_card_kepath_source_entity_details) {
+            if (variables?.ulm_card_kepath_source_entity_details?.is_attribute) {
+              if (typeof variables.ulm_card_kepath_source_entity_details.is_attribute === "boolean") {
+                isValueAttribute = variables.ulm_card_kepath_source_entity_details.is_attribute;
+              }
+            }
+          }
+          return isValueAttribute;
+        ]]]
+      attribute_name: >
+        [[[
+          var attributeName = "";
+          if (variables?.ulm_card_kepath_source_entity_details) {
+            if (variables?.ulm_card_kepath_source_entity_details?.attribute_name) {
+              attributeName = variables.ulm_card_kepath_source_entity_details.attribute_name;
+            }
+          }
+          return attributeName;
+        ]]]
+    ulm_card_kepath_extra_templates_icon_appearance:
+      evaluated_object: >
+        [[[
+          var entity = entity.entity_id;
+          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.evaluated_object) {
+            entity = variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object;
+          }
+          return entity;
+        ]]]
+      evaluated_state: >
+        [[[
+          var evaluatedState = "";
+          if (variables?.ulm_card_kepath_source_entity_details) {
+            //if (variables?.ulm_card_kepath_source_entity_details) {
+            if (variables?.ulm_card_kepath_source_entity_details?.is_attribute) {
+              if (variables.ulm_card_kepath_source_entity_details.is_attribute) {
+                if (variables?.ulm_card_kepath_source_entity_details?.source_entity) {
+                  if (variables?.ulm_card_kepath_source_entity_details?.attribute_name) {
+                    evaluatedState = states[variables.ulm_card_kepath_source_entity_details.source_entity]?.attributes[variables.ulm_card_kepath_source_entity_details.attribute_name] ?
+                      states[variables.ulm_card_kepath_source_entity_details.source_entity].attributes[variables.ulm_card_kepath_source_entity_details.attribute_name] : "";
+                  }
+                }
+              } else {
+                if (variables?.ulm_card_kepath_source_entity_details?.source_entity) {
+                  evaluatedState = states[variables.ulm_card_kepath_source_entity_details.source_entity]?.state ?
+                    states[variables.ulm_card_kepath_source_entity_details.source_entity].state : "";
+                }
+              }
+            }
+            //}
+          }
+
+          return evaluatedState;
+        ]]]
+      use_theme_colors: >
+        [[[
+          var useThemeColors = false;
+          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.use_theme_colors) {
+            useThemeColors = variables.ulm_card_kepath_extra_templates_icon_appearance.use_theme_colors;
+          }
+          return useThemeColors;
+        ]]]
+      default_theme:
+        default_state:
+          icon: >
+            [[[
+              var defaultThemeDefaultStateIcon = "off";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.icon) {
+                    defaultThemeDefaultStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.default_state.icon;
+                  }
+                }
+              }
+              return defaultThemeDefaultStateIcon;
+            ]]]
+          icon_color: >
+            [[[
+              var defaultThemeDefaultStateIconColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.icon_color) {
+                    defaultThemeDefaultStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.default_state.icon_color;
+                  }
+                }
+              }
+              return defaultThemeDefaultStateIconColor;
+            ]]]
+          background_color: >
+            [[[
+              var defaultThemeDefaultStateBGColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.background_color) {
+                    defaultThemeDefaultStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.default_state.background_color;
+                  }
+                }
+              }
+              return defaultThemeDefaultStateBGColor;
+            ]]]
+        triggered_state:
+          matching_type: >
+            [[[
+              var defaultThemeTriggeredStateMatchingType = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.matching_type;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingType;
+            ]]]
+          matching_state: >
+            [[[
+              var defaultThemeTriggeredStateMatchingState = "on";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.matching_state;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingState;
+            ]]]
+          icon: >
+            [[[
+              var defaultThemeTriggeredStateIcon = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.icon) {
+                    defaultThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.icon;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateIcon;
+            ]]]
+          icon_color: >
+            [[[
+              var defaultThemeTriggeredStateIconColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.icon_color) {
+                    defaultThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.icon_color;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateIconColor;
+            ]]]
+          background_color: >
+            [[[
+              var defaultThemeTriggeredStateBGColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.background_color) {
+                    defaultThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.background_color;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateBGColor;
+            ]]]
+        triggered_alt_state:
+          matching_type: >
+            [[[
+              var defaultThemeTriggeredStateMatchingType = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.matching_type;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingType;
+            ]]]
+          matching_state: >
+            [[[
+              var defaultThemeTriggeredStateMatchingState = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.matching_state;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingState;
+            ]]]
+          icon: >
+            [[[
+              var defaultThemeTriggeredStateIcon = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.icon) {
+                    defaultThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.icon;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateIcon;
+            ]]]
+          icon_color: >
+            [[[
+              var defaultThemeTriggeredStateIconColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.icon_color) {
+                    defaultThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.icon_color;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateIconColor;
+            ]]]
+          background_color: >
+            [[[
+              var defaultThemeTriggeredStateBGColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.background_color) {
+                    defaultThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.background_color;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateBGColor;
+            ]]]
+      dark_theme:
+        default_state:
+          icon: >
+            [[[
+              var darkThemeDefaultStateIcon = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.icon) {
+                    darkThemeDefaultStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.icon;
+                  }
+                }
+              }
+              return darkThemeDefaultStateIcon;
+            ]]]
+          icon_color: >
+            [[[
+              var darkThemeDefaultStateIconColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.icon_color) {
+                    darkThemeDefaultStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.icon_color;
+                  }
+                }
+              }
+              return darkThemeDefaultStateIconColor;
+            ]]]
+          background_color: >
+            [[[
+              var darkThemeDefaultStateBGColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.background_color) {
+                    darkThemeDefaultStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.background_color;
+                  }
+                }
+              }
+              return darkThemeDefaultStateBGColor;
+            ]]]
+        triggered_state:
+          matching_type: >
+            [[[
+              var defaultThemeTriggeredStateMatchingType = "gt";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.matching_type;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingType;
+            ]]]
+          matching_state: >
+            [[[
+              var defaultThemeTriggeredStateMatchingState = "0";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.matching_state;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingState;
+            ]]]
+          icon: >
+            [[[
+              var darkThemeTriggeredStateIcon = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.icon) {
+                    darkThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.icon;
+                  }
+                }
+              }
+              return darkThemeTriggeredStateIcon;
+            ]]]
+          icon_color: >
+            [[[
+              var darkThemeTriggeredStateIconColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.icon_color) {
+                    darkThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.icon_color;
+                  }
+                }
+              }
+              return darkThemeTriggeredStateIconColor;
+            ]]]
+          background_color: >
+            [[[
+              var darkThemeTriggeredStateBGColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.background_color) {
+                    darkThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.background_color;
+                  }
+                }
+              }
+              return darkThemeTriggeredStateBGColor;
+            ]]]
+        triggered_alt_state:
+          matching_type: >
+            [[[
+              var defaultThemeTriggeredStateMatchingType = "gt";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.matching_type;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingType;
+            ]]]
+          matching_state: >
+            [[[
+              var defaultThemeTriggeredStateMatchingState = "0";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.matching_state;
+                  }
+                }
+              }
+              return defaultThemeTriggeredStateMatchingState;
+            ]]]
+          icon: >
+            [[[
+              var darkThemeTriggeredStateIcon = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.icon) {
+                    darkThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.icon;
+                  }
+                }
+              }
+              return darkThemeTriggeredStateIcon;
+            ]]]
+          icon_color: >
+            [[[
+              var darkThemeTriggeredStateIconColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.icon_color) {
+                    darkThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.icon_color;
+                  }
+                }
+              }
+              return darkThemeTriggeredStateIconColor;
+            ]]]
+          background_color: >
+            [[[
+              var darkThemeTriggeredStateBGColor = "";
+              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
+                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.background_color) {
+                    darkThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.background_color;
+                  }
+                }
+              }
+              return darkThemeTriggeredStateBGColor;
+            ]]]
