@@ -1,0 +1,177 @@
+---
+device_kepath_popup:
+  variables:
+    ulm_card_kepath_binary_sensor_count_tap_action:
+      action: >
+        [[[
+          var tapAction = "navigate";
+          const tap_actions = ['navigate', 'popup', 'more_info'];
+          if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.action) {
+            for (let i = 0; i < tap_actions.length; i++) {
+              if (tap_actions[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.action) {
+                tapAction = tap_actions[i];
+              }
+            }
+          }
+          return tapAction;
+        ]]]
+      popup:
+        title: "entity group"
+        auto_entities:
+          sort_method: >
+            [[[
+              var autoEntitiesSortMethod = "state";
+              const sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_method) {
+                for (let i = 0; i < sort_methods.length; i++) {
+                  if (sort_methods[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method) {
+                    autoEntitiesSortMethod = sort_methods[i];
+                  }
+                }
+              }
+              return autoEntitiesSortMethod;
+            ]]]
+          sort_reversed: >
+            [[[
+              var autoEntitiesSortReversed = false;
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_reversed) {
+                if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed === "boolean") {
+                  autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed;
+                }
+              }
+              return autoEntitiesSortReversed;
+            ]]]
+          sort_numeric: >
+            [[[
+              var autoEntitiesSortNumeric = false;
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_method) {
+                if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_changed" ||
+                    variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_updated" ||
+                    variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_triggered") {
+                  autoEntitiesSortNumeric = true;
+                }
+              }
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_numeric) {
+                if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric === "boolean") {
+                  autoEntitiesSortNumeric = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric;
+                }
+              }
+              return autoEntitiesSortNumeric;
+            ]]]
+          exclude_unknown_state: >
+            [[[
+              var autoEntitiesExcludeUnknownState = false;
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.exclude_unknown_state) {
+                if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unknown_state === "boolean") {
+                  autoEntitiesExcludeUnknownState = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unknown_state;
+                }
+              }
+              return autoEntitiesExcludeUnknownState;
+            ]]]
+          exclude_unavailable_state: >
+            [[[
+              var autoEntitiesExcludeUnavailableState = false;
+              if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.exclude_unavailable_state) {
+                if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unavailable_state === "boolean") {
+                  autoEntitiesExcludeUnavailableState = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unavailable_state;
+                }
+              }
+              return autoEntitiesExcludeUnavailableState;
+            ]]]
+  tap_action:
+    action: "fire-dom-event"
+    browser_mod:
+      service: >
+        [[[
+          var service = "";
+          switch(variables.ulm_card_kepath_binary_sensor_count_tap_action.action) {
+            case "navigate":
+              service = "browser_mod.navigate";
+              break;
+            case "more_info":
+              service = "browser_mod.more_info";
+              break;
+            default:
+              service = "browser_mod.popup";
+              break;
+          }
+          return service;
+        ]]]
+      data:
+        path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.action == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate.page : '/0' ]]]"
+        title: "[[[return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.title]]]"
+        autoclose: false
+        style:
+          $: >
+            [[[
+              if (hass.themes.theme.includes("desktop")){
+                var dialog = `
+                  .mdc-dialog__surface{
+                    border-radius: var(--border-radius) !important;
+                  }
+                `;
+              } else{
+                var dialog = "";
+              }
+              return `
+                *{
+                  --secondary-background-color: none !important;
+                }
+                ${dialog}
+              `;
+            ]]]
+          hui-vertical-stack-card:
+            $: >
+              div.main-title::first-letter {
+                text-transform:capitalize;
+              }
+              button-card {
+                align-self: center;
+                padding: 0.2em 0 2.3em 0;
+              }
+              hui-entities-card{
+                padding: 0.8em 1.4em;
+              }
+            $hui-entities-card$: >
+              ha-card{
+                box-shadow: none;
+              }
+        content:
+          type: "vertical-stack"
+          cards:
+            - type: "custom:auto-entities"
+              card:
+                type: "entities"
+                show_header_toggle: false
+                state_color: true
+              filter:
+                include:
+                  - group: "[[[ return entity.entity_id ]]]"
+                exclude:
+                  - state: >
+                      [[[
+                        var excludedState = "notavalidstate";
+                        if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unknown_state == true) {
+                          excludedState = "unknown";
+                        }
+                        return excludedState;
+                      ]]]
+                  - state: >
+                      [[[
+                        var excludedState = "notavalidstate";
+                        if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unavailable_state == true) {
+                          excludedState = "unavailable";
+                        }
+                        return excludedState;
+                      ]]]
+              sort:
+                method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method ]]]"
+                numeric: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric ]]]"
+                reverse: >
+                  [[[
+                    var sortReversed = true;
+                    if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed == true) {
+                      sortReversed = false;
+                    }
+                    return sortReversed;
+                  ]]]
