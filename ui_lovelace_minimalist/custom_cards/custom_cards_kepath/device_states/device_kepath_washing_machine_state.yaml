@@ -1,0 +1,63 @@
+---
+device_kepath_washing_machine_state:
+  variables:
+    ulm_device_kepath_washing_machine_state:
+      entity: >
+        [[[
+          var entity = entity?.entity_id;
+          if (variables?.ulm_device_kepath_washing_machine_state) {
+            if (variables?.ulm_device_kepath_washing_machine_state?.device_status) {
+              deviceStatus = variables?.ulm_device_kepath_washing_machine_state?.device_status;
+            }
+          }
+
+          return entity;
+        ]]]
+      # device_progress: >
+      #   [[[
+      #     var deviceProgress = "";
+      #     if (variables?.ulm_device_kepath_washing_machine_state) {
+      #       if (variables?.ulm_device_kepath_washing_machine_state?.device_progress) {
+      #         deviceProgress = variables?.ulm_device_kepath_washing_machine_state?.device_progress;
+      #       }
+      #     }
+
+      #     return deviceProgress;
+      #   ]]]
+  state:
+    - operator: ">"
+      value: 10
+      # value: >
+      #   [[[
+      #     var state = 0;
+      #     var returnValue = parseInt(states[variables.ulm_device_kepath_washing_machine_state.entity].state);
+      #     if (!isNaN(returnValue)) {
+      #       state = returnValue;
+      #     }
+
+      #     return state;
+      #   ]]]
+      icon: "mdi:washing-machine"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
+    - operator: "template"
+      value: >
+        [[[
+          return (states[variables.ulm_device_kepath_washing_machine_state.entity].state.toLowerCase() == 'unknown' || states[variables.ulm_device_kepath_washing_machine_state.entity].state.toLowerCase() == 'unavailable')
+        ]]]
+      icon: "mdi:washing-machine-off"
+      styles:
+        icon:
+          - color: "rgba(var(--color-red),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-red), 0.2)"
+    - operator: "default"
+      icon: "mdi:washing-machine"
+      styles:
+        icon:
+          - color: "rgba(var(--color-blue),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-blue), 0.2)"

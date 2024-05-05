@@ -1,0 +1,76 @@
+---
+device_kepath_printer_state:
+  variables:
+    # ulm_device_kepath_printer_state:
+    #   entity: >
+    #     [[[
+    #       var entity = "";
+    #       if (entity?.entity_id) {
+    #         entity = entity?.entity_id;
+    #       }
+    #       if (variables?.ulm_device_kepath_printer_state) {
+    #         if (variables?.ulm_device_kepath_printer_state?.device_status) {
+    #           entity = variables?.ulm_device_kepath_printer_state?.device_status;
+    #         }
+    #       }
+    #       if (state[entity]?.state === undefined) {
+    #         entity = "input_boolean.placeholder";
+    #       }
+
+    #       return entity;
+    #     ]]]
+  # variables:
+  #   ulm_device_kepath_printer_state:
+  #     entity: >
+  #       [[[
+  #         var entity = entity?.entity_id;
+  #         if (variables?.ulm_device_kepath_printer_state) {
+  #           if (variables?.ulm_device_kepath_printer_state?.device_status) {
+  #             deviceStatus = variables?.ulm_device_kepath_printer_state?.device_status;
+  #           }
+  #         }
+
+  #         return entity;
+  #       ]]]
+  icon: "mdi:printer-off-outline"
+  styles:
+    icon:
+      - color: "rgba(var(--color-red),1)"
+    img_cell:
+      - background-color: "rgba(var(--color-red), 0.2)"
+  state:
+    # - operator: "template"
+    - value: "ink low"
+      # value: >
+  # [[[
+  #   return (states[entity].state == 'ink low')
+  # ]]]
+  # [[[
+  #   return (states[variables.ulm_device_kepath_printer_state.entity].state.toLowerCase() == 'ink low'
+  #           || states[variables.ulm_device_kepath_printer_state.entity].state.toLowerCase() == 'ink low'
+  #           || states[variables.ulm_device_kepath_printer_state.entity].state.toLowerCase() == 'ink low')
+  # ]]]
+      icon: "mdi:printer"
+      styles:
+        icon:
+          - color: "rgba(var(--color-blue),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-blue), 0.2)"
+    # - operator: "template"
+    #   value: >
+    #     [[[
+    #       return (states[variables.ulm_device_kepath_printer_state.entity].state.toLowerCase() == 'unknown' || states[variables.ulm_device_kepath_printer_state.entity].state.toLowerCase() == 'unavailable')
+    #     ]]]
+    #   icon: "mdi:printer-off-outline"
+    #   styles:
+    #     icon:
+    #       - color: "rgba(var(--color-red),1)"
+    #     img_cell:
+    #       - background-color: "rgba(var(--color-red), 0.2)"
+    - operator: "default"
+      icon: "mdi:printer"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"

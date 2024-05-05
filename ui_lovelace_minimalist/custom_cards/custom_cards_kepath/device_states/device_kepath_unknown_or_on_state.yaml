@@ -1,0 +1,53 @@
+---
+device_kepath_unknown_or_on_state:
+  # variables:
+  #   ulm_device_kepath_unknown_or_on_state:
+  #     entity: >
+  #       [[[
+  #         var entity = "";
+  #         if (entity?.entity_id) {
+  #           entity = entity?.entity_id;
+  #         }
+  #         if (variables?.ulm_device_kepath_unknown_or_on_state) {
+  #           if (variables?.ulm_device_kepath_unknown_or_on_state?.device_status) {
+  #             entity = variables?.ulm_device_kepath_unknown_or_on_state?.device_status;
+  #           }
+  #         }
+  #         if (state[entity]?.state === undefined
+  #             || state[entity]?.state == "unknown"
+  #             || state[entity]?.state == "unavailable") {
+  #           alert('hello!');
+  #         }
+
+  #         return entity;
+  #       ]]]
+  styles:
+    icon:
+      - color: "rgba(var(--color-blue),1)"
+    img_cell:
+      - background-color: "rgba(var(--color-blue), 0.2)"
+  state:
+
+    # # - operator: "=="
+    # - value: "unknown"
+    #   icon: "mdi:fridge-industrial"
+    #   styles:
+    #     icon:
+    #       - color: "rgba(var(--color-blue),1)"
+    #     img_cell:
+    #       - background-color: "rgba(var(--color-blue), 0.2)"
+    # # - operator: "=="
+    # - value: "unavailable"
+    #   icon: "mdi:fridge-industrial"
+    #   styles:
+    #     icon:
+    #       - color: "rgba(var(--color-blue),1)"
+    #     img_cell:
+    #       - background-color: "rgba(var(--color-blue), 0.2)"
+    - operator: "default"
+      icon: "mdi:fridge-industrial"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
