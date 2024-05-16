@@ -42,6 +42,7 @@ CONF_HTTP_ENDPOINT = "http_api_endpoint"
 CONF_WORKING_MODE = "working_mode"
 CONF_WORKING_MODE_CLOUD_MODE = "cloud_mode"
 CONF_WORKING_MODE_LOCAL_MODE = "local_mode"
+CONF_MFA_CODE = "mfa_code"
 
 UNKNOWN_ERROR = "unknown_error"
 MULTIPLE_BROKERS_FOUND = "multiple_brokers_found"
@@ -62,7 +63,7 @@ ATTR_API_CALLS_PER_SECOND = "api_calls_per_second"
 ATTR_DELAYED_API_CALLS_PER_SECOND = "delayed_api_calls_per_second"
 ATTR_DROPPED_API_CALLS_PER_SECOND = "dropped_api_calls_per_second"
 
-HTTP_API_RE = re.compile("(http:\/\/|https:\/\/)?([^:]+)(:([0-9]+))?")
+HTTP_API_RE = re.compile("(http://|https://)?([^:]+)(:([0-9]+))?")
 
 DEFAULT_USER_AGENT = f"MerossHA/{version.MEROSS_INTEGRATION_VERSION}"
 
