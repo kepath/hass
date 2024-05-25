@@ -439,7 +439,7 @@
   action:
   - service: icloud3.action
     data:
-      command: locate
+      command: Locate Device(s) using iCloud FamShr
   mode: single
 - id: '1679478945282'
   alias: on_motion_detect_bed_e_sensor_set_input_datetime_timestamp
@@ -817,40 +817,6 @@
       entity_id: scene.night_shutdown
     metadata: {}
   mode: single
-- id: '1689408422077'
-  alias: on_arrive_home_ju_unlock_front_door
-  description: ''
-  trigger:
-  - platform: device
-    device_id: 3d081886a443a9db8dee6645f66a5ba2
-    domain: device_tracker
-    entity_id: cf61fa55112c4f3871fd7274ae71e6ed
-    type: enters
-    zone: zone.home
-  condition: []
-  action:
-  - device_id: c433a6de7503fff598e3b00eebd934b8
-    domain: lock
-    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
-    type: unlock
-  mode: single
-- id: '1689408865299'
-  alias: on_leave_home_ju_lock_front_door
-  description: ''
-  trigger:
-  - platform: device
-    device_id: 3d081886a443a9db8dee6645f66a5ba2
-    domain: device_tracker
-    entity_id: cf61fa55112c4f3871fd7274ae71e6ed
-    type: leaves
-    zone: zone.home
-  condition: []
-  action:
-  - device_id: c433a6de7503fff598e3b00eebd934b8
-    domain: lock
-    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
-    type: lock
-  mode: single
 - id: '1689409704381'
   alias: on_button_double_press_mini_switch_bed_a
   description: ''
@@ -1140,8 +1106,8 @@
   action:
   - type: turn_on
     device_id: 67879196ae31044a030a2b7e5d835867
-    entity_id: 425c765fe3225a803699446e1c87912b
-    domain: switch
+    entity_id: a9265bfb3efcb61f98fa0329dbb2ecf0
+    domain: light
   mode: single
 - id: '1696832281170'
   alias: On_sunset_offset_turn_off_fly_killer_lamp
@@ -1154,8 +1120,8 @@
   action:
   - type: turn_off
     device_id: 67879196ae31044a030a2b7e5d835867
-    entity_id: 425c765fe3225a803699446e1c87912b
-    domain: switch
+    entity_id: a9265bfb3efcb61f98fa0329dbb2ecf0
+    domain: light
   mode: single
 - id: '1702627536265'
   alias: on_start_create_group.all_lawn_mower_domain_entities
@@ -1493,3 +1459,18 @@
       device_id: db71d2fa24fc8e587b5861f0de011f0f
     data: {}
   mode: restart
+- id: '1716496776909'
+  alias: on_exit_home_zone_ju_lock_front_door
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.julia_thorn
+    zone: zone.home
+    event: leave
+  condition: []
+  action:
+  - device_id: c433a6de7503fff598e3b00eebd934b8
+    domain: lock
+    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
+    type: lock
+  mode: single
