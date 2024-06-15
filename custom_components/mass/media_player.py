@@ -48,6 +48,7 @@ from music_assistant.common.models.event import MassEvent
 from music_assistant.common.models.media_items import MediaItemType
 
 from .const import (
+    ATTR_ACTIVE_GROUP,
     ATTR_ACTIVE_QUEUE,
     ATTR_GROUP_LEADER,
     ATTR_GROUP_MEMBERS,
@@ -234,6 +235,7 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
             ATTR_GROUP_MEMBERS: player.group_childs,
             ATTR_GROUP_LEADER: player.synced_to,
             ATTR_ACTIVE_QUEUE: player.active_source,
+            ATTR_ACTIVE_GROUP: player.active_group,
             ATTR_QUEUE_ITEMS: queue.items if queue else None,
             ATTR_QUEUE_INDEX: queue.current_index if queue else None,
         }
@@ -498,7 +500,7 @@ class MassPlayer(MassBaseEntity, MediaPlayerEntity):
         # prefer (exact) lookup in the library by name
         for func in library_functions:
             result = await func(search=searchname)
-            for item in result.items:
+            for item in result:
                 # handle optional artist filter
                 if (
                     artist
