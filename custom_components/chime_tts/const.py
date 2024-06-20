@@ -20,9 +20,10 @@ if os.path.isfile(manifest_path):
 else:
     VERSION = None
 
+SERVICE_CLEAR_CACHE = "clear_cache"
+SERVICE_REPLAY = "replay"
 SERVICE_SAY = "say"
 SERVICE_SAY_URL = "say_url"
-SERVICE_CLEAR_CACHE = "clear_cache"
 
 OFFSET_KEY = "offset"
 DEFAULT_OFFSET_MS = 450
@@ -33,17 +34,18 @@ LOCAL_PATH_KEY = "local_path"
 PUBLIC_PATH_KEY = "public_path"
 AUDIO_DURATION_KEY = "audio_duration"
 
-PAUSE_RESUME_MEDIA_PLAYER_DICTS_KEY = "pause_media_player_dicts"
-SET_VOLUME_MEDIA_PLAYER_DICTS_KEY = "set_volume_media_player_dicts"
-FADE_TRANSITION_S = 0.4
-FADE_TRANSITION_STEPS = 5
+FADE_TRANSITION_KEY = "fade_transition_key"
+DEFAULT_FADE_TRANSITION_MS = 500
+TRANSITION_STEP_MS = 150
 
 ALEXA_MEDIA_PLAYER_PLATFORM = "alexa_media"
 SPOTIFY_PLATFORM = "spotify"
+SONOS_PLATFORM = "sonos"
 
 ROOT_PATH_KEY = "root_path_key"
 MEDIA_FOLDER_PATH = "/local/"
 PUBLIC_FOLDER_PATH = "/config/www/"
+CUSTOM_CHIMES_PATH_KEY = "custom_chimes_path"
 DEFAULT_TEMP_CHIMES_PATH_KEY = "default_temp_chimes_path"
 TEMP_CHIMES_PATH_KEY = "temp_chimes_path"
 TEMP_CHIMES_PATH_DEFAULT = "/media/sounds/temp/chime_tts/chimes/"
@@ -58,33 +60,33 @@ MEDIA_DIR_DEFAULT = "local"
 
 MP3_PRESET_PATH = "custom_components/chime_tts/mp3s/"
 MP3_PRESET_PATH_PLACEHOLDER = "mp3_path_placeholder-"  # DEPRECATED
-MP3_PRESETS = [
-    "ba_dum_tss",
-    "bells",
-    "bells_2",
-    "bright",
-    "chirp",
-    "choir",
-    "chord",
-    "classical",
-    "crickets",
-    "ding_dong",
-    "drumroll",
-    "dun_dun_dun",
-    "error",
-    "fanfare",
-    "glockenspiel",
-    "hail",
-    "knock",
-    "marimba",
-    "mario_coin",
-    "microphone_tap",
-    "tada",
-    "toast",
-    "twenty_four",
-    "sad_trombone",
-    "soft",
-    "whistle",
+DEFAULT_CHIME_OPTIONS = [
+    {"label": "Ba-Dum Tss!", "value": "ba_dum_tss"},
+    {"label": "Bells", "value": "bells"},
+    {"label": "Bells 2", "value": "bells_2"},
+    {"label": "Bright", "value": "bright"},
+    {"label": "Chirp", "value": "chirp"},
+    {"label": "Choir", "value": "choir"},
+    {"label": "Chord", "value": "chord"},
+    {"label": "Classical", "value": "classical"},
+    {"label": "Crickets", "value": "crickets"},
+    {"label": "Ding Dong", "value": "ding_dong"},
+    {"label": "Drum Roll", "value": "drumroll"},
+    {"label": "Dun dun DUUUN!", "value": "dun_dun_dun"},
+    {"label": "Error", "value": "error"},
+    {"label": "Fanfare", "value": "fanfare"},
+    {"label": "Glockenspiel", "value": "glockenspiel"},
+    {"label": "Hail", "value": "hail"},
+    {"label": "Knock", "value": "knock"},
+    {"label": "Marimba", "value": "marimba"},
+    {"label": "Mario Coin", "value": "mario_coin"},
+    {"label": "Microphone Tap", "value": "microphone_tap"},
+    {"label": "Ta-da!", "value": "tada"},
+    {"label": "Toast", "value": "toast"},
+    {"label": "Twenty Four", "value": "twenty_four"},
+    {"label": "Sad Trombone", "value": "sad_trombone"},
+    {"label": "Soft", "value": "soft"},
+    {"label": "Whistle", "value": "whistle"}
 ]
 MP3_PRESET_CUSTOM_PREFIX = "custom_chime_path_"
 MP3_PRESET_CUSTOM_KEY = "custom_paths"
@@ -119,3 +121,5 @@ PICOTTS = "picotts"
 PIPER = "tts.piper"
 VOICE_RSS = "voicerss"
 YANDEX_TTS = "yandextts"
+
+QUOTE_CHAR_SUBSTITUTE = "🁢"
