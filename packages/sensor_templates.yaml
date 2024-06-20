@@ -3,7 +3,7 @@ template:
   - sensor:
       - unique_id: "binary_sensor_state_counts_template_generated"
         name: "binary_sensor_state_counts"
-        state: "{{ expand('group.all_updates')|selectattr('state','eq', 'on')|list|count }}"
+        state: "{{ expand('group.all_updates')|selectattr('state', 'eq', 'on')|list|count }}"
         attributes:
           area_bottom_floor_security_sensors_triggered_count: "{{ expand('group.all_bottom_floor_area_security_device_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           area_bottom_floor_security_sensors_unavailable_count: "{{ expand('group.all_bottom_floor_area_security_device_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
@@ -392,6 +392,47 @@ template:
           ssid: "{{ states('sensor.study_light_ssid') }}"
           temperature: "{{ states('sensor.study_light_temperature') }}"
           firmware_installed: "{{ state_attr('update.study_light_firmware', 'installed_version') }}"
+
+      - unique_id: "widgy_widgets_images_template_generated"
+        name: "Widgy Widgets Images"
+        state: 0
+        attributes:
+          bottom_hallway_light: >
+            {{ "/local/widgy_widget_images/lights/bulb_1_on.png" if (states("light.shelly_1l_hallway_bottom_light_1") == "on") else "/local/widgy_widget_images/lights/bulb_1_off.png" }}
+          lounge_light: >
+            {{ "/local/widgy_widget_images/lights/chandelier_on.png" if (states("light.shelly_1l_lounge_light_1") == "on") else "/local/widgy_widget_images/lights/chandelier_off.png" }}
+          study_light: >
+            {{ "/local/widgy_widget_images/lights/light_1_on.png" if (states("light.shelly_1l_study_light_1") == "on") else "/local/widgy_widget_images/lights/light_1_off.png" }}
+          kitchen_main_light: >
+            {{ "/local/widgy_widget_images/lights/recessed_lights_on.png" if (states("light.shelly_1l_kitchen_main_light_1") == "on") else "/local/widgy_widget_images/lights/recessed_lights_off.png" }}
+          kitchen_utility_light: >
+            {{ "/local/widgy_widget_images/lights/light_1_on.png" if (states("light.shelly_1l_kitchen_utility_light_1") == "on") else "/local/widgy_widget_images/lights/light_1_off.png" }}
+          middle_hallway_light: >
+            {{ "/local/widgy_widget_images/lights/bulb_1_on.png" if (states("light.shelly_1l_hallway_bottom_light_1") == "on") else "/local/widgy_widget_images/lights/bulb_1_off.png" }}
+          bathroom_light: >
+            {{ "/local/widgy_widget_images/lights/recessed_lights_on.png" if (states("light.shelly_1l_bathroom_light_1") == "on") else "/local/widgy_widget_images/lights/recessed_lights_off.png" }}
+          bed_a_light: >
+            {{ "/local/widgy_widget_images/lights/light_2_on.png" if (states("light.shelly_1l_bed_a_light_1") == "on") else "/local/widgy_widget_images/lights/light_2_off.png" }}
+          bed_a_ensuite_light: >
+            {{ "/local/widgy_widget_images/lights/recessed_lights_on.png" if (states("light.shelly_1l_ensuite_light_1") == "on") else "/local/widgy_widget_images/lights/recessed_lights_off.png" }}
+          bed_b_light: >
+            {{ "/local/widgy_widget_images/lights/light_1_on.png" if (states("light.shelly_1l_bed_b_light_1") == "on") else "/local/widgy_widget_images/lights/light_1_off.png" }}
+          bed_c_light: >
+            {{ "/local/widgy_widget_images/lights/bulb_1_on.png" if (states("light.shelly_1l_bed_c_light_1") == "on") else "/local/widgy_widget_images/lights/bulb_1_off.png" }}
+          bed_e_light: >
+            {{ "/local/widgy_widget_images/lights/light_2_on.png" if (states("light.shelly_1l_bed_e_light_1") == "on") else "/local/widgy_widget_images/lights/light_2_off.png" }}
+          bed_e_lamp: >
+            {{ "/local/widgy_widget_images/lights/lamp_1_on.png" if (states("light.mss425e_6025_outlet_3") == "on") else "/local/widgy_widget_images/lights/lamp_1_off.png" }}
+          bed_c_fan: >
+            {{ "/local/widgy_widget_images/lights/fan_1_off.png"
+              if (states('fan.bed_c_fan') == "off")
+              else ("/local/widgy_widget_images/lights/fan_1_hlow.png"  if state_attr('fan.bed_c_fan', 'percentage') < 50
+              else "/local/widgy_widget_images/lights/fan_1_high.png"  ) }}
+          bed_e_fan: >
+            {{ "/local/widgy_widget_images/lights/fan_1_off.png"
+              if (states('fan.bed_e_fan') == "off")
+              else ("/local/widgy_widget_images/lights/fan_1_hlow.png"  if state_attr('fan.bed_e_fan', 'percentage') < 50
+              else "/local/widgy_widget_images/lights/fan_1_high.png"  ) }}
 
       - unique_id: "floorplan_dates_template_generated"
         name: "Floorplan dates template generated"
