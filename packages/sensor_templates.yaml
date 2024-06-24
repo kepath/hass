@@ -424,15 +424,36 @@ template:
           bed_e_lamp: >
             {{ "/local/widgy_widget_images/lights/lamp_1_on.png" if (states("light.mss425e_6025_outlet_3") == "on") else "/local/widgy_widget_images/lights/lamp_1_off.png" }}
           bed_c_fan: >
-            {{ "/local/widgy_widget_images/lights/fan_1_off.png"
+            {{ "/local/widgy_widget_images/fansfan/fan_1_off.png"
               if (states('fan.bed_c_fan') == "off")
-              else ("/local/widgy_widget_images/lights/fan_1_hlow.png"  if state_attr('fan.bed_c_fan', 'percentage') < 50
-              else "/local/widgy_widget_images/lights/fan_1_high.png"  ) }}
+              else ("/local/widgy_widget_images/fans/fan_1_low.png" if state_attr('fan.bed_c_fan', 'percentage') < 50
+              else "/local/widgy_widget_images/fans/fan_1_high.png"  ) }}
           bed_e_fan: >
-            {{ "/local/widgy_widget_images/lights/fan_1_off.png"
+            {{ "/local/widgy_widget_images/fans/fan_1_off.png"
               if (states('fan.bed_e_fan') == "off")
-              else ("/local/widgy_widget_images/lights/fan_1_hlow.png"  if state_attr('fan.bed_e_fan', 'percentage') < 50
-              else "/local/widgy_widget_images/lights/fan_1_high.png"  ) }}
+              else ("/local/widgy_widget_images/fans/fan_1_low.png" if state_attr('fan.bed_e_fan', 'percentage') < 50
+              else "/local/widgy_widget_images/fans/fan_1_high.png"  ) }}
+          front_door_lock: >
+            {{ "/local/widgy_widget_images/locks/lock_1_closed.png" if (states("lock.front_door_top_bolt") == "locked") else "/local/widgy_widget_images/locks/lock_1_open.png" }}
+          bottom_floor_nest_image: >
+            {{ "/local/widgy_widget_images/climate/temperature_up.png" if (state_attr('climate.nest_bottom_floor', 'hvac_action') == "heat") else "/local/widgy_widget_images/climate/temperature_down.png" }}
+          bottom_floor_nest_temperature: >
+            {{ state_attr('climate.nest_bottom_floor', 'current_temperature') }}
+          middle_floor_nest_image: >
+            {{ "/local/widgy_widget_images/climate/temperature_up.png" if (state_attr('climate.nest_middle_floor', 'hvac_action') == "heat") else "/local/widgy_widget_images/climate/temperature_down.png" }}
+          middle_floor_nest_temperature: >
+            {{ state_attr('climate.nest_middle_floor', 'current_temperature') }}
+          security_alert_count: >
+            {{ state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count') }}
+          persons_home_count: >
+            {{ state_attr('sensor.binary_sensor_state_counts', 'occupancy_persons_home_count') }}
+          nest_smoke_alert: >
+            {{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'smoke')|selectattr('state', 'eq', 'on')|list|count }}
+          nest_carbon_monoxide_alert: >
+            {{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'carbon_monoxide')|selectattr('state', 'eq', 'on')|list|count }}
+          nest_heat_alert: >
+            {{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'heat')|selectattr('state', 'eq', 'on')|list|count }}
+
 
       - unique_id: "floorplan_dates_template_generated"
         name: "Floorplan dates template generated"
