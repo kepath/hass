@@ -1,23 +1,34 @@
 """Miscellaneous support functions for watchman"""
-import fnmatch
+
+import aiofiles
 import glob
-import logging
-import os
 import re
+import fnmatch
 import time
+import logging
 from datetime import datetime
 from textwrap import wrap
+import os
 from typing import Any
-
 import pytz
-from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
 from prettytable import PrettyTable
+from homeassistant.exceptions import HomeAssistantError
+from homeassistant.core import HomeAssistant
 
-from .const import (BUNDLED_IGNORED_ITEMS, CONF_CHUNK_SIZE, CONF_COLUMNS_WIDTH,
-                    CONF_FRIENDLY_NAMES, CONF_HEADER, CONF_IGNORED_ITEMS,
-                    CONF_IGNORED_STATES, DEFAULT_CHUNK_SIZE, DEFAULT_HEADER,
-                    DEFAULT_REPORT_FILENAME, DOMAIN, DOMAIN_DATA)
+from .const import (
+    DOMAIN,
+    DOMAIN_DATA,
+    DEFAULT_HEADER,
+    DEFAULT_CHUNK_SIZE,
+    CONF_HEADER,
+    CONF_IGNORED_ITEMS,
+    CONF_IGNORED_STATES,
+    CONF_CHUNK_SIZE,
+    CONF_COLUMNS_WIDTH,
+    CONF_FRIENDLY_NAMES,
+    BUNDLED_IGNORED_ITEMS,
+    DEFAULT_REPORT_FILENAME,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +37,7 @@ async def read_file(hass: HomeAssistant, path: str) -> Any:
     """Read a file."""
 
     def read():
-        with open(hass.config.path(path), encoding="utf-8") as open_file:
+        with open(hass.config.path(path), "r", encoding="utf-8") as open_file:
             return open_file.read()
 
     return await hass.async_add_executor_job(read)
@@ -222,7 +233,7 @@ def check_entitites(hass):
     return entities_missing
 
 
-def parse(hass, folders, ignored_files, root=None):
+async def parse(hass, folders, ignored_files, root=None):
     """Parse a yaml or json file for entities/services"""
     files_parsed = 0
     entity_pattern = re.compile(
@@ -233,7 +244,7 @@ def parse(hass, folders, ignored_files, root=None):
         r"scene|script|select|sensor|sun|switch|timer|vacuum|weather|zone)\.[A-Za-z_*0-9]+)"
     )
     service_pattern = re.compile(r"service:\s*([A-Za-z_0-9]*\.[A-Za-z_0-9]+)")
-    comment_pattern = re.compile(r"\s*#.*")
+    comment_pattern = re.compile(r"#.*")
     entity_list = {}
     service_list = {}
     effectively_ignored = []
@@ -246,19 +257,22 @@ def parse(hass, folders, ignored_files, root=None):
             continue
 
         try:
-            for i, line in enumerate(open(yaml_file, encoding="utf-8")):
-                line = re.sub(comment_pattern, "", line)
-                for match in re.finditer(entity_pattern, line):
-                    typ, val = match.group(1), match.group(2)
-                    if (
-                        typ != "service:"
-                        and "*" not in val
-                        and not val.endswith(".yaml")
-                    ):
-                        add_entry(entity_list, val, short_path, i + 1)
-                for match in re.finditer(service_pattern, line):
-                    val = match.group(1)
-                    add_entry(service_list, val, short_path, i + 1)
+            lineno = 1
+            async with aiofiles.open(yaml_file, mode="r", encoding="utf-8") as f:
+                async for line in f:
+                    line = re.sub(comment_pattern, "", line)
+                    for match in re.finditer(entity_pattern, line):
+                        typ, val = match.group(1), match.group(2)
+                        if (
+                            typ != "service:"
+                            and "*" not in val
+                            and not val.endswith(".yaml")
+                        ):
+                            add_entry(entity_list, val, short_path, lineno)
+                    for match in re.finditer(service_pattern, line):
+                        val = match.group(1)
+                        add_entry(service_list, val, short_path, lineno)
+                    lineno += 1
             files_parsed += 1
             _LOGGER.debug("%s parsed", yaml_file)
         except OSError as exception:
@@ -303,7 +317,7 @@ def fill(data, width, extra=None):
     )
 
 
-def report(hass, render, chunk_size, test_mode=False):
+async def report(hass, render, chunk_size, test_mode=False):
     """generates watchman report either as a table or as a list"""
     if not DOMAIN in hass.data:
         raise HomeAssistantError("No data for report, refresh required.")
@@ -345,7 +359,11 @@ def report(hass, render, chunk_size, test_mode=False):
         rep += "your config are available!\n"
     else:
         rep += "\n-== No entities found in configuration files!\n"
-    timezone = pytz.timezone(hass.config.time_zone)
+
+    def get_timezone(hass):
+        return pytz.timezone(hass.config.time_zone)
+
+    timezone = await hass.async_add_executor_job(get_timezone, hass)
 
     if not test_mode:
         report_datetime = datetime.now(timezone).strftime("%d %b %Y %H:%M:%S")
