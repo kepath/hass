@@ -6,13 +6,14 @@ import os
 import pathlib
 import re
 
+from homeassistant.components.mqtt import async_subscribe, async_publish
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.light import DOMAIN as LIGHT_DOMAIN
 from homeassistant.components.number import DOMAIN as NUMBER_DOMAIN
 from homeassistant.components.switch import DOMAIN as SWITCH_DOMAIN
 from homeassistant.const import CONF_NAME, STATE_UNAVAILABLE, STATE_UNKNOWN
-from homeassistant.core import callback
+from homeassistant.core import callback, Context
 from homeassistant.exceptions import TemplateError
 from homeassistant.helpers import device_registry as dr, entity_registry
 import homeassistant.helpers.config_validation as cv
@@ -21,7 +22,7 @@ from homeassistant.helpers.event import TrackTemplate, async_track_template_resu
 from homeassistant.helpers.network import get_url
 from homeassistant.helpers.reload import async_integration_yaml_config
 from homeassistant.helpers.restore_state import RestoreEntity
-from homeassistant.helpers.service import async_call_from_config
+from homeassistant.helpers.script import Script
 from homeassistant.util import slugify
 import jsonschema
 import voluptuous as vol
@@ -102,7 +103,7 @@ def hasp_object(value):
 
 
 # Configuration YAML schemas
-EVENT_SCHEMA = cv.schema_with_slug_keys([cv.SERVICE_SCHEMA])
+EVENT_SCHEMA = cv.schema_with_slug_keys(cv.SCRIPT_SCHEMA)
 
 PROPERTY_SCHEMA = cv.schema_with_slug_keys(cv.template)
 
@@ -343,14 +344,14 @@ class SwitchPlate(RestoreEntity):
 
         self._subscriptions = []
 
-        with open(
-            pathlib.Path(__file__).parent.joinpath("pages_schema.json"), "r"
-        ) as schema_file:
-            self.json_schema = json.load(schema_file)
-
         self._attr_unique_id = entry.data[CONF_HWID]
         self._attr_name = entry.data[CONF_NAME]
         self._attr_icon = "mdi:gesture-tap-box"
+
+    def _read_file(self, path):
+        """Executor helper to read file."""
+        with open(path, "r") as src_file:
+            return src_file.read()
 
     @property
     def state(self):
@@ -376,6 +377,9 @@ class SwitchPlate(RestoreEntity):
         """Run when entity about to be added."""
         await super().async_added_to_hass()
 
+        schema_file_contents = await self.hass.async_add_executor_job(self._read_file, pathlib.Path(__file__).parent.joinpath("pages_schema.json"))
+        self.json_schema = json.loads(schema_file_contents)
+
         state = await self.async_get_last_state()
         if state and state.state not in [STATE_UNAVAILABLE, STATE_UNKNOWN, None]:
             self._page = int(state.state)
@@ -391,8 +395,8 @@ class SwitchPlate(RestoreEntity):
                 _LOGGER.error("%s in %s", err, msg.payload)
 
         self._subscriptions.append(
-            await self.hass.components.mqtt.async_subscribe(
-                f"{self._topic}/state/page", page_update_received
+            await async_subscribe(
+                self.hass, f"{self._topic}/state/page", page_update_received
             )
         )
 
@@ -433,11 +437,13 @@ class SwitchPlate(RestoreEntity):
                 _LOGGER.error("While processing status update: %s", err)
 
         self._subscriptions.append(
-            await self.hass.components.mqtt.async_subscribe(
-                f"{self._topic}/state/statusupdate", statusupdate_message_received
+            await async_subscribe(
+                self.hass,
+                f"{self._topic}/state/statusupdate",
+                statusupdate_message_received,
             )
         )
-        await self.hass.components.mqtt.async_publish(
+        await async_publish(
             self.hass, f"{self._topic}/command", "statusupdate", qos=0, retain=False
         )
 
@@ -451,8 +457,8 @@ class SwitchPlate(RestoreEntity):
                 _LOGGER.error("While processing idle message: %s", err)
 
         self._subscriptions.append(
-            await self.hass.components.mqtt.async_subscribe(
-                f"{self._topic}/state/idle", idle_message_received
+            await async_subscribe(
+                self.hass, f"{self._topic}/state/idle", idle_message_received
             )
         )
 
@@ -491,9 +497,7 @@ class SwitchPlate(RestoreEntity):
                 _LOGGER.error("While processing LWT: %s", err)
 
         self._subscriptions.append(
-            await self.hass.components.mqtt.async_subscribe(
-                f"{self._topic}/LWT", lwt_message_received
-            )
+            await async_subscribe(self.hass, f"{self._topic}/LWT", lwt_message_received)
         )
 
     @property
@@ -515,9 +519,7 @@ class SwitchPlate(RestoreEntity):
         """Wake up the display."""
         cmd_topic = f"{self._topic}/command"
         _LOGGER.warning("Wakeup will be deprecated in 0.8.0")  # remove in version 0.8.0
-        await self.hass.components.mqtt.async_publish(
-            self.hass, cmd_topic, "wakeup", qos=0, retain=False
-        )
+        await async_publish(self.hass, cmd_topic, "wakeup", qos=0, retain=False)
 
     async def async_change_page_next(self):
         """Change page to next one."""
@@ -526,9 +528,7 @@ class SwitchPlate(RestoreEntity):
             "page next service will be deprecated in 0.8.0"
         )  # remove in version 0.8.0
 
-        await self.hass.components.mqtt.async_publish(
-            self.hass, cmd_topic, "page next", qos=0, retain=False
-        )
+        await async_publish(self.hass, cmd_topic, "page next", qos=0, retain=False)
 
     async def async_change_page_prev(self):
         """Change page to previous one."""
@@ -537,22 +537,18 @@ class SwitchPlate(RestoreEntity):
             "page prev service will be deprecated in 0.8.0"
         )  # remove in version 0.8.0
 
-        await self.hass.components.mqtt.async_publish(
-            self.hass, cmd_topic, "page prev", qos=0, retain=False
-        )
+        await async_publish(self.hass, cmd_topic, "page prev", qos=0, retain=False)
 
     async def async_clearpage(self, page="all"):
         """Clear page."""
         cmd_topic = f"{self._topic}/command"
 
-        await self.hass.components.mqtt.async_publish(
+        await async_publish(
             self.hass, cmd_topic, f"clearpage {page}", qos=0, retain=False
         )
 
         if page == "all":
-            await self.hass.components.mqtt.async_publish(
-                self.hass, cmd_topic, "page 1", qos=0, retain=False
-            )
+            await async_publish(self.hass, cmd_topic, "page 1", qos=0, retain=False)
 
     async def async_change_page(self, page):
         """Change page to number."""
@@ -570,14 +566,12 @@ class SwitchPlate(RestoreEntity):
         self._page = page
 
         _LOGGER.debug("Change page %s", self._page)
-        await self.hass.components.mqtt.async_publish(
-            self.hass, cmd_topic, self._page, qos=0, retain=False
-        )
+        await async_publish(self.hass, cmd_topic, self._page, qos=0, retain=False)
         self.async_write_ha_state()
 
     async def async_command_service(self, keyword, parameters):
         """Send commands directly to the plate entity."""
-        await self.hass.components.mqtt.async_publish(
+        await async_publish(
             self.hass,
             f"{self._topic}/command",
             f"{keyword} {parameters}".strip(),
@@ -587,7 +581,7 @@ class SwitchPlate(RestoreEntity):
 
     async def async_config_service(self, submodule, parameters):
         """Send configuration commands to plate entity."""
-        await self.hass.components.mqtt.async_publish(
+        await async_publish(
             self.hass,
             f"{self._topic}/config/{submodule}",
             f"{parameters}".strip(),
@@ -616,9 +610,7 @@ class SwitchPlate(RestoreEntity):
 
         _LOGGER.debug("Push %s with %s", cmd_topic, rgb_image_url)
 
-        await self.hass.components.mqtt.async_publish(
-            self.hass, cmd_topic, rgb_image_url, qos=0, retain=False
-        )
+        await async_publish(self.hass, cmd_topic, rgb_image_url, qos=0, retain=False)
 
     async def refresh(self):
         """Refresh objects in the SwitchPlate."""
@@ -642,7 +634,7 @@ class SwitchPlate(RestoreEntity):
             mqtt_payload_buffer = ""
             for line in lines:
                 if len(mqtt_payload_buffer) + len(line) > 1000:
-                    await self.hass.components.mqtt.async_publish(
+                    await async_publish(
                         self.hass,
                         f"{cmd_topic}/jsonl",
                         mqtt_payload_buffer,
@@ -652,7 +644,7 @@ class SwitchPlate(RestoreEntity):
                     mqtt_payload_buffer = line
                 else:
                     mqtt_payload_buffer = mqtt_payload_buffer + line
-            await self.hass.components.mqtt.async_publish(
+            await async_publish(
                 self.hass,
                 f"{cmd_topic}/jsonl",
                 mqtt_payload_buffer,
@@ -661,17 +653,17 @@ class SwitchPlate(RestoreEntity):
             )
 
         try:
-            with open(path, "r") as pages_file:
-                if path.endswith(".json"):
-                    json_data = json.load(pages_file)
-                    jsonschema.validate(instance=json_data, schema=self.json_schema)
-                    lines = []
-                    for item in json_data:
-                        if isinstance(item, dict):
-                            lines.append(json.dumps(item) + "\n")
-                    await send_lines(lines)
-                else:
-                    await send_lines(pages_file)
+            pages_file = await self.hass.async_add_executor_job(self._read_file, path)
+            if path.endswith(".json"):
+                json_data = json.load(pages_file)
+                jsonschema.validate(instance=json_data, schema=self.json_schema)
+                lines = []
+                for item in json_data:
+                    if isinstance(item, dict):
+                        lines.append(json.dumps(item) + "\n")
+                await send_lines(lines)
+            else:
+                await send_lines(pages_file)
             await self.refresh()
 
         except (IndexError, FileNotFoundError, IsADirectoryError, UnboundLocalError):
@@ -708,7 +700,10 @@ class HASPObject:
         self.cached_properties = {}
 
         self.properties = config.get(CONF_PROPERTIES)
-        self.event_services = config.get(CONF_EVENT)
+        self.event_services = {
+            event: Script(hass, script, plate_topic, DOMAIN)
+            for (event, script) in config[CONF_EVENT].items()
+        }
         self._tracked_property_templates = []
         self._freeze_properties = []
         self._subscriptions = []
@@ -770,9 +765,7 @@ class HASPObject:
                 result,
             )
 
-            await self.hass.components.mqtt.async_publish(
-                self.hass, self.command_topic + _property, result
-            )
+            await async_publish(self.hass, self.command_topic + _property, result)
 
         property_template = async_track_template_result(
             self.hass,
@@ -787,9 +780,7 @@ class HASPObject:
         """Refresh based on cached values."""
         for _property, result in self.cached_properties.items():
             _LOGGER.debug("Refresh object %s.%s = %s", self.obj_id, _property, result)
-            await self.hass.components.mqtt.async_publish(
-                self.hass, self.command_topic + _property, result
-            )
+            await async_publish(self.hass, self.command_topic + _property, result)
 
     async def async_listen_hasp_events(self):
         """Listen to messages on MQTT for HASP events."""
@@ -806,7 +797,7 @@ class HASPObject:
                 elif message[HASP_EVENT] in [HASP_EVENT_UP, HASP_EVENT_RELEASE]:
                     self._freeze_properties = []
 
-                for event in self.event_services:
+                for event, script in self.event_services.items():
                     if event in message[HASP_EVENT]:
                         _LOGGER.debug(
                             "Service call for '%s' triggered by '%s' on '%s' with variables %s",
@@ -815,13 +806,10 @@ class HASPObject:
                             msg.topic,
                             message,
                         )
-                        for service in self.event_services[event]:
-                            await async_call_from_config(
-                                self.hass,
-                                service,
-                                validate_config=False,
-                                variables=message,
-                            )
+                        await script.async_run(
+                            run_variables=message,
+                            context=Context(),
+                        )
             except vol.error.Invalid:
                 _LOGGER.debug(
                     "Could not handle openHASP event: '%s' on '%s'",
@@ -834,6 +822,4 @@ class HASPObject:
                 )
 
         _LOGGER.debug("Subscribe to '%s' events on '%s'", self.obj_id, self.state_topic)
-        return await self.hass.components.mqtt.async_subscribe(
-            self.state_topic, message_received
-        )
+        return await async_subscribe(self.hass, self.state_topic, message_received)

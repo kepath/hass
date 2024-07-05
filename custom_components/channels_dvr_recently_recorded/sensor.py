@@ -16,7 +16,6 @@ from dateutil.parser import parse
 from urllib.parse import urlparse
 from datetime import timedelta
 
-
 SCAN_INTERVAL = timedelta(seconds=30)
 _LOGGER = logging.getLogger(__name__)
 
@@ -93,14 +92,13 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
 
     @property
     def device_info(self):
-        """Device info."""
+        """ Device info."""
         _LOGGER.debug(f"Version: {self.version}")
         return {
             "identifiers": {(DOMAIN, self.verification)},
             "name": "Channels DVR Recordings",
             "manufacturer": "Channels",
             "model": "DVR Server",
-            "default_name": "Channels DVR Recordings",
             "entry_type": DeviceEntryType.SERVICE,
             "sw_version": self.version,
         }
@@ -112,7 +110,8 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
 
     async def async_update(self):
         """Called to update the entity state & attributes."""
-        import os
+        import aiofiles.os as os
+        import aiofiles
         import re
 
         try:
@@ -131,12 +130,12 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
 
         if self.dl_images:
             directory = self.conf_dir + "www" + self._dir
-            if not os.path.exists(directory):
-                os.makedirs(directory, mode=0o777)
+            if not await os.path.exists(directory):
+                await os.makedirs(directory, mode=0o777)
 
             """Make list of images in dir that use our naming scheme"""
             dir_re = re.compile(r"p.+\.jpg")
-            dir_images = list(filter(dir_re.search, os.listdir(directory)))
+            dir_images = list(filter(dir_re.search, await os.listdir(directory)))
             remove_images = dir_images.copy()
 
         self._attrs = []
@@ -175,7 +174,7 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
                 RUNTIME: episode["Raw"].get("duration", 0),
                 GENRES: episode.get("Genres", ""),
                 RATING: ""
-                if not episode["Raw"]["ratings"]
+                if "ratings" not in episode["Raw"] or not episode["Raw"]["ratings"]
                 else episode["Raw"]["ratings"][0]["code"],
                 POSTER: episode["Raw"]["program"]["preferredImage"].get("uri", ""),
             }
@@ -195,7 +194,8 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
 
                     if poster_image is not None:
                         image_file = directory + filename
-                        open(image_file, "wb").write(poster_image)
+                        async with aiofiles.open(image_file, "wb") as file:
+                            await file.write(poster_image)
                 elif filename in remove_images:
                     remove_images.remove(filename)
                 attr[POSTER] = "/local" + self._dir + filename
@@ -205,6 +205,6 @@ class ChannelsDVRRecentlyRecordedSensor(Entity):
         if self.dl_images:
             """Remove items no longer in the list"""
             _LOGGER.debug(f"Removing {remove_images}")
-            [os.remove(directory + x) for x in remove_images]
+            [await os.remove(directory + x) for x in remove_images]
 
         _LOGGER.debug(f"Finished updating")
