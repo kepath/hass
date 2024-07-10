@@ -4,7 +4,7 @@ const LitElement = customElements.get("ha-panel-lovelace")
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
-const CARD_VERSION = "v0.50.2";
+const CARD_VERSION = "v0.50.4";
 
 console.info(
   `%c  ASTROWEATHER-CARD  \n%c Version ${CARD_VERSION}  `,
@@ -599,7 +599,16 @@ class AstroWeatherCard extends LitElement {
               </li>
               <li>
                 <ha-icon icon="mdi:image-text"></ha-icon>
-                <b>${stateObj.attributes.deepsky_forecast_today_desc}</b>
+                <b
+                  >${stateObj.attributes.deepsky_forecast_today_desc}
+                  ${stateObj.attributes
+                    .deepsky_forecast_today_precipitation_amount6 > 0
+                    ? html`, Precip:
+                      ${stateObj.attributes
+                        .deepsky_forecast_today_precipitation_amount6}
+                      ${this.getUnit("precipitation")}`
+                    : ""}
+                </b>
               </li>
             `
           : ""}
@@ -612,7 +621,16 @@ class AstroWeatherCard extends LitElement {
               </li>
               <li>
                 <ha-icon icon="mdi:image-text"></ha-icon>
-                <b>${stateObj.attributes.deepsky_forecast_tomorrow_desc}</b>
+                <b
+                  >${stateObj.attributes.deepsky_forecast_tomorrow_desc}
+                  ${stateObj.attributes
+                    .deepsky_forecast_tomorrow_precipitation_amount6 > 0
+                    ? html`, Precip:
+                      ${stateObj.attributes
+                        .deepsky_forecast_tomorrow_precipitation_amount6}
+                      ${this.getUnit("precipitation")}`
+                    : ""}
+                </b>
               </li>
             `
           : ""}
@@ -811,6 +829,7 @@ class AstroWeatherCard extends LitElement {
     var calm = [];
     var li = [];
     var precip = [];
+    var precipMax = 0;
 
     for (i = 0; i < forecast.length; i++) {
       var d = forecast[i];
@@ -838,6 +857,9 @@ class AstroWeatherCard extends LitElement {
       }
       if (graphPrecip != undefined ? graphPrecip : true) {
         precip.push(d.precipitation_amount);
+        if (d.precipitation_amount > precipMax) {
+          precipMax = d.precipitation_amount
+        }
       }
     }
 
@@ -890,6 +912,7 @@ class AstroWeatherCard extends LitElement {
             data: condition,
             yAxisID: "PercentageAxis",
             backgroundColor: colorConditionGradient,
+            borderDash: [2, 4],
             fill: fillLine,
             borderWidth: 4,
             borderColor: colorCondition,
@@ -1123,7 +1146,7 @@ class AstroWeatherCard extends LitElement {
             position: "right",
             beginAtZero: true,
             min: 0,
-            max: 10,
+            max: Math.ceil(precipMax * 1.2),
             grid: {
               display: false,
               drawBorder: false,
