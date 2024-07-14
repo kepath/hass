@@ -43,6 +43,9 @@ template:
           media_player_audio_unavailable_count: "{{ expand('group.all_audio_class_media_player')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           media_player_tv_and_remote_on_count: "{{ expand('group.all_remotes_and_tv_class_media_player')|rejectattr('state','in', ['unavailable','unknown','standby','idle','off'])|list|count }}"
           media_player_tv_and_remote_unavailable_count: "{{ expand('group.all_remotes_and_tv_class_media_player')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
+          nest_smoke_alert_on_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'smoke')|selectattr('state', 'eq', 'on')|list|count }}"
+          nest_carbon_monoxide_alert_on_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'carbon_monoxide')|selectattr('state', 'eq', 'on')|list|count }}"
+          nest_heat_alert_on_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'heat')|selectattr('state', 'eq', 'on')|list|count }}"
           occupancy_persons_home_count: "{{ expand(states.person)|selectattr('state','eq','home')|map(attribute='entity_id')|list|count }}"
           occupancy_sensors_triggered_count: "{{ expand('group.all_occupancy_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
@@ -182,6 +185,20 @@ template:
           bottom_floor_entities: "{{area_entities('Kitchen')+area_entities('Lounge')+area_entities('Garage')+area_entities('Hallway, Bottom')+area_entities('Study')+area_entities('External: Back')+area_entities('External: Front')|sort}}"
           middle_floor_entities: "{{area_entities('Bed A')+area_entities('Bed B')+area_entities('Bed C')+area_entities('Hallway, Middle')+area_entities('Bathroom')|sort}}"
           top_floor_entities: "{{area_entities('Bed D')+area_entities('Bed E')+area_entities('Loft')+area_entities('Hallway, Top')|sort}}"
+
+      - unique_id: "calculated_non_count_entities_template_generated"
+        name: "Calculated Non Count Entities"
+        state: "0"
+        attributes:
+          middle_floor_nest_temperature: "{{ state_attr('climate.nest_middle_floor', 'current_temperature') }}"
+          apple_maps_url_kev_location: >
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.kevs_iphone_icloud', 'latitude') | string) + "," + (state_attr('device_tracker.kevs_iphone_icloud', 'longitude') | string)}}
+          apple_maps_url_ju_location: >
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.julia_s_iphone_8', 'latitude') | string) + "," + (state_attr('device_tracker.julia_s_iphone_8', 'longitude') | string)}}
+          apple_maps_url_dan_location: >
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_2', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_2', 'longitude') | string)}}
+          apple_maps_url_emily_location: >
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.patrice_2', 'latitude') | string) + "," + (state_attr('device_tracker.patrice_2', 'longitude') | string)}}
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"
@@ -393,8 +410,8 @@ template:
           temperature: "{{ states('sensor.study_light_temperature') }}"
           firmware_installed: "{{ state_attr('update.study_light_firmware', 'installed_version') }}"
 
-      - unique_id: "widgy_widgets_images_template_generated"
-        name: "Widgy Widgets Images"
+      - unique_id: "widgy_widgets_json_template_generated"
+        name: "Widgy Widgets JSON"
         state: 0
         attributes:
           bottom_hallway_light: >
@@ -441,8 +458,6 @@ template:
             {{ state_attr('climate.nest_bottom_floor', 'current_temperature') }}
           middle_floor_nest_image: >
             {{ "/local/widgy_widget_images/climate/temperature_up.png" if (state_attr('climate.nest_middle_floor', 'hvac_action') == "heat") else "/local/widgy_widget_images/climate/temperature_down.png" }}
-          middle_floor_nest_temperature: >
-            {{ state_attr('climate.nest_middle_floor', 'current_temperature') }}
           security_alert_count: >
             {{ state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count') }}
           persons_home_count: >
@@ -453,7 +468,6 @@ template:
             {{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'carbon_monoxide')|selectattr('state', 'eq', 'on')|list|count }}
           nest_heat_alert: >
             {{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'heat')|selectattr('state', 'eq', 'on')|list|count }}
-
 
       - unique_id: "floorplan_dates_template_generated"
         name: "Floorplan dates template generated"
