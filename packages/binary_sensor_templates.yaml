@@ -17,59 +17,59 @@ template:
 
       - unique_id: "binary_state_back_g3_flex_occupancy"
         name: "Back G3 Flex Occupancy"
-        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.back_g3_flex_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round < 20 }}"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.back_g3_flex_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
           icon: "mdi:cctv"
           device_class: "occupancy"
-          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.back_g3_flex_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round }}"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.back_g3_flex_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
       - unique_id: "binary_state_front_g3_flex_occupancy"
         name: "Front G3 Flex Occupancy"
-        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.front_g3_flex_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round < 20 }}"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.front_g3_flex_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
           icon: "mdi:cctv"
           device_class: "occupancy"
-          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.front_g3_flex_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round }}"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.front_g3_flex_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
       - unique_id: "binary_state_middle_hallway_g3_flex_occupancy"
         name: "Middle Hallway G3 Flex Occupancy"
-        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.middle_hallway_g3_flex_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round < 20 }}"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.middle_hallway_g3_flex_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
           icon: "mdi:cctv"
           device_class: "occupancy"
-          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.middle_hallway_g3_flex_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round }}"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.middle_hallway_g3_flex_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
       - unique_id: "binary_state_bed_c_g3_instant_occupancy"
         name: "Bed C G3 Instant Occupancy"
-        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bed_c_g3_instant_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round < 20 }}"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bed_c_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
           icon: "phu:mini-camera"
           device_class: "occupancy"
-          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bed_c_g3_instant_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round }}"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bed_c_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
       - unique_id: "binary_state_bottom_hallway_g3_instant_occupancy"
         name: "Bottom Hallway G3 Instant Occupancy"
-        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bottom_hallway_g3_instant_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round < 20 }}"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bottom_hallway_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
           icon: "phu:mini-camera"
           device_class: "occupancy"
-          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bottom_hallway_g3_instant_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round }}"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bottom_hallway_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
       - unique_id: "binary_state_kitchen_g3_instant_occupancy"
         name: "Kitchen G3 Instant Occupancy"
-        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.kitchen_g3_instant_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round < 20 }}"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.kitchen_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
           icon: "phu:mini-camera"
           device_class: "occupancy"
-          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.kitchen_g3_instant_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round }}"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.kitchen_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
       - unique_id: "binary_state_doorbell_g4_occupancy"
         name: "Doorbell G4 Occupancy"
-        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.doorbell_g4_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round < 20 }}"
+        state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.doorbell_g4_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
           icon: "mdi:doorbell-video"
           device_class: "occupancy"
-          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.doorbell_g4_last_motion_detected') | int(1440)) | round) / 60)) | int(1440) | round }}"
+          minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.doorbell_g4_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
       - unique_id: "binary_state_apple_tv_bed_c"
         name: "Apple TV Bed C State"
