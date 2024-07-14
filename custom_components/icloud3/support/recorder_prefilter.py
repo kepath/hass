@@ -45,6 +45,7 @@ _LOGGER = logging.getLogger(__name__)
 VERSION = 1.0
 
 def add_filter(hass: HomeAssistant, entities=None):
+    return False
     '''
     Inject the entity prefilter into the Recorder, remove Recorder listeners,
     reinitialize the Recorder
@@ -79,13 +80,14 @@ def add_filter(hass: HomeAssistant, entities=None):
 
         rp_data['legacy'] = False
 
-        if _inject_filter(hass) is False:
-            return
+        # if _inject_filter(hass) is False:
+        #    return
 
     _update_filter(hass, entities)
 
 
 def remove_filter(hass: HomeAssistant, entities):
+    return True
     if hass.data['recorder_prefilter']['legacy']:
         try:
             ha_recorder = hass.data['recorder_instance']
@@ -98,6 +100,7 @@ def remove_filter(hass: HomeAssistant, entities):
 
 
 def _inject_filter(hass: HomeAssistant):
+    return False
     ha_recorder = hass.data['recorder_instance']
     rp_data = hass.data['recorder_prefilter']
     recorder_entity_filter   = ha_recorder.entity_filter
@@ -116,8 +119,11 @@ def _inject_filter(hass: HomeAssistant):
             Run the original HA recorder_entity_filter function -
                 The entity is not in the filter list.
         """
-        if (entity_id
-                and entity_id in hass.data['recorder_prefilter']['exclude_entities']):
+        if entity_id is None:
+            return False
+        if entity_id in hass.data['recorder_prefilter']['exclude_entities']:
+            return False
+        if recorder_entity_filter is None: 
             return False
 
         return recorder_entity_filter(entity_id)
@@ -145,6 +151,7 @@ def _inject_filter(hass: HomeAssistant):
 
 
 def _update_filter(hass: HomeAssistant, entities=None, remove=False):
+    return
     """ Update the filtered entity list """
 
     mode = 'Removed' if remove else 'Added'
