@@ -57,7 +57,7 @@ class SolarOptimizerSensorEntity(CoordinatorEntity, SensorEntity):
         if (
             not self.coordinator
             or not self.coordinator.data
-            or not (value := self.coordinator.data.get(self.idx))
+            or (value := self.coordinator.data.get(self.idx)) == None
         ):
             _LOGGER.debug("No coordinator found or no data...")
             return
@@ -92,7 +92,10 @@ class SolarOptimizerSensorEntity(CoordinatorEntity, SensorEntity):
 
     @property
     def state_class(self) -> SensorStateClass | None:
-        return SensorStateClass.TOTAL
+        if self.idx == "best_objective":
+            return SensorStateClass.TOTAL
+        else:
+            return SensorStateClass.MEASUREMENT
 
     @property
     def native_unit_of_measurement(self) -> str | None:
