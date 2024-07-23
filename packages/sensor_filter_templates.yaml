@@ -1,0 +1,10 @@
+---
+sensor:
+  - platform: "filter"
+    unique_id: "_unique_washing_machine_average_demand_template_sensor"
+    name: "Washing Machine Average Demand"
+    entity_id: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
+    filters:
+      - filter: "lowpass"
+        time_constant: 10
+        precision: 2
