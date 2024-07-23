@@ -399,6 +399,9 @@ custom_popup_kepath_person:
                       - type: "custom:button-card"
                         template:
                           - "find_my_phone_button_kepath"
+                        # styles:
+                        #   card:
+                        #     - padding: "0 5px 0 5px"
                         variables:
                           findmy_device: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
                       - type: "custom:button-card"
@@ -406,7 +409,7 @@ custom_popup_kepath_person:
                           - "about_my_phone_button_kepath"
                         # styles:
                         #   card:
-                        #     - align-items: "right"
+                        #     - padding: "0 5px 0 5px"
                         variables:
                           device_id: >
                             [[[
@@ -418,6 +421,14 @@ custom_popup_kepath_person:
                               }
                               return deviceId;
                             ]]]
+                    style:
+                      $: >
+                        root {
+                          justify-content: space-evenly;
+                        }
+                    # styles:
+                    #   card:
+                    #     - justify-content: "center"
                   - type: "map"
                     auto_fit: true
                     aspect_ratio: "12x10"
@@ -474,7 +485,7 @@ popup_button_layout_kepath:
       - grid-column-gap: "0.3em"
     card:
       - color: "rgba(var(--color-blue),1)"
-      - background: "rgba(var(--color-blue),0.2"
+      # - background-color: "rgba(var(--color-blue),0.2"
       - border-radius: "0.6em"
       - padding: "1em 1.4em"
       - width: "max-content"
