@@ -136,7 +136,6 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_action_sensors"
                       variables:
@@ -170,7 +169,6 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_alert_sensors"
                       variables:
@@ -205,7 +203,6 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_information_sensors"
                       variables:
@@ -238,7 +235,6 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
                       variables:
@@ -272,7 +268,6 @@ views:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_sensor_display"
-                        # - "custom_card_kepath_binary_sensor_get_evaluated_object"
                         - "custom_card_kepath_binary_sensor_tab_selector"
                       entity: "input_boolean.minimalist_ui_binary_update_sensors"
                       variables:
@@ -349,11 +344,6 @@ views:
                       item13: *widget_icon_binary_sensor_custom_styling
                       item14: *widget_icon_binary_sensor_custom_styling
                       item15: *widget_icon_binary_sensor_custom_styling
-                      # floorplan1: &floorplan_styling
-                      #   - border-radius: "none"
-                      #   - box-shadow: "none"
-                      # floorplan2: *floorplan_styling
-                      # floorplan3: *floorplan_styling
                   custom_fields:
                     item1:
                       card:
@@ -369,7 +359,6 @@ views:
                             amount:
                               attribute_name: "lights_on_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
-                            # use_theme_colors: true
                             default_theme:
                               default_state:
                                 icon: "mdi:lightbulb-multiple-off-outline"
@@ -400,7 +389,6 @@ views:
                               attribute_name: "plugs_off_count"
                               count_tooltip: "Plugs off"
                           ulm_card_kepath_extra_templates_icon_appearance:
-                            # use_theme_colors: true
                             default_theme:
                               default_state:
                                 icon: "mdi:power-plug"
@@ -431,7 +419,6 @@ views:
                               attribute_name: "fans_on_count"
                               count_tooltip: "Fans on"
                           ulm_card_kepath_extra_templates_icon_appearance:
-                            # use_theme_colors: true
                             default_theme:
                               default_state:
                                 icon: "mdi:fan-off"
@@ -500,32 +487,8 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "device_kepath_washing_machine_state"
-                          # - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "sensor.washing_machine_average_demand"
                         name: "Washer"
-                        # variables:
-                          # ulm_card_kepath_source_entity_details:
-                          #   entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
-                          # ulm_device_kepath_washing_machine_state:
-                          # ulm_card_kepath_extra_templates_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon: "mdi:washing-machine-off"
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          #     triggered_state:
-                          #       matching_type: "gt"
-                          #       matching_state: 10
-                          #       icon: "mdi:washing-machine"
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:washing-machine-off"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -542,24 +505,6 @@ views:
                         variables:
                           ulm_device_kepath_tumble_dryer_state:
                             device_progress: "sensor.samsung_tumble_dryer_dryer_completion_time"
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon: "mdi:tumble-dryer"
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_state:
-                          #       matching_type: "eq"
-                          #       matching_state: "none"
-                          #       icon: "mdi:tumble-dryer-off"
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:tumble-dryer-off"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -576,25 +521,6 @@ views:
                         variables:
                           ulm_device_kepath_dishwasher_state:
                             device_progress: "sensor.dishwasher_remaining_program_time"
-                          # ulm_card_kepath_extra_templates_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon: "mdi:dishwasher-off"
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          #     triggered_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:dishwasher"
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:dishwasher-off"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -606,29 +532,8 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "device_kepath_switch_state"
-                          # - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "switch.tuya_wi_fi_socket_socket_1"
                         name: "Mini Fridge"
-                        # variables:
-                          # ulm_card_kepath_extra_templates_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon: "mdi:fridge-industrial-off"
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          #     triggered_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:fridge-industrial"
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:fridge-industrial-off"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -639,29 +544,8 @@ views:
                         type: "custom:button-card"
                         template:
                           - "custom_card_kepath_binary_sensor_display"
-                          # - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "media_player.spotify_kevin_thorn"
                         name: "Spotify"
-                        # variables:
-                          # ulm_card_kepath_extra_templates_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon: "si:spotify"
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          #     triggered_state:
-                          #       icon: "si:spotify"
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "si:spotify"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -673,7 +557,6 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "device_kepath_unknown_or_on_state"
-                          # - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "sensor.arcade_win10_cpuload"
                         name: "Arcade"
                         variables:
@@ -684,18 +567,6 @@ views:
                                 icon: "mdi:controller-off"
                                 icon_color: "blue"
                                 background_color: "blue"
-                          #     triggered_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:controller"
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:controller-off"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -707,7 +578,6 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "device_kepath_unknown_or_on_state"
-                          # - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "sensor.big_pc_win11_cpuload"
                         name: "BigPC"
                         variables:
@@ -718,18 +588,6 @@ views:
                                 icon: "mdi:desktop-tower"
                                 icon_color: "blue"
                                 background_color: "blue"
-                          #     triggered_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:desktop-tower"
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:desktop-tower"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -741,29 +599,8 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "device_kepath_printer_state"
-                          # - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "sensor.mfc_j870dw_status"
                         name: "Printer"
-                        # variables:
-                          # ulm_card_kepath_extra_templates_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon: "mdi:printer-off-outline"
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          #     triggered_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:printer"
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:printer-off-outline"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -775,29 +612,8 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "device_kepath_nas_state"
-                          # - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "binary_sensor.diskstation_security_status"
                         name: "NAS"
-                        # variables:
-                          # ulm_card_kepath_extra_templates_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon: "mdi:nas"
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          #     triggered_state:
-                          #       icon: "mdi:nas"
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:nas"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -809,29 +625,8 @@ views:
                         template:
                           - "custom_card_kepath_binary_sensor_display"
                           - "device_kepath_ups_state"
-                          # - "custom_card_kepath_binary_sensor_get_evaluated_device"
                         entity: "sensor.ups_status"
                         name: "UPS"
-                        # variables:
-                          # ulm_card_kepath_extra_templates_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon: "mdi:power-plug-battery-outline"
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          #     triggered_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:power-plug-battery"
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_alt_state:
-                          #       matching_type: "in"
-                          #       matching_state: ["unknown", "unavailable"]
-                          #       icon: "mdi:power-plug-battery-outline"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                         tap_action:
                           action: "more-info"
                         hold_action:
@@ -906,7 +701,6 @@ views:
                             amount:
                               attribute_name: "safety_sensors_triggered_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
-                            # trigger_on_reversed: true
                             use_theme_colors: true
                             default_theme:
                               default_state:
@@ -955,7 +749,6 @@ views:
                               attribute_name: "cameras_off_count"
                           ulm_card_kepath_extra_templates_icon_appearance:
                             use_theme_colors: true
-                            # trigger_on_reversed: true
                             default_theme:
                               default_state:
                                 icon_color: "green"
@@ -1068,16 +861,6 @@ views:
                       - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
-
-                    # grid:
-                    #   - grid-template-areas: >
-                    #       'item1 item2 item3 item4 item5'
-                    #       'item6 item7 item8 item9 item10'
-                    #       'weather1 weather1 weather1 weather1 weather1'
-                    #       'weather2 weather2 weather2 weather2 weather2'
-                    #   - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
-                    #   - grid-template-rows: "min-content"
-                    #   - justify-items: "center"
                     card:
                       - padding: "10px"
                       - overflow: "visible"
@@ -1100,15 +883,6 @@ views:
                         - box-shadow: "none"
                       floorplan2: *floorplan_styling
                       floorplan3: *floorplan_styling
-                      # weather1: &widget_weather_styling
-                      #   - border-radius: "none"
-                      #   - box-shadow: "none"
-                      #   - padding: "4px"
-                      #   - margin-bottom: "0px"
-                      #   - cursor: "default"
-                      #   # - width: "86%"
-                      #   - justify-items: "center"
-                      # weather2: *widget_weather_styling
                   custom_fields:
                     item1:
                       card:
@@ -1266,110 +1040,6 @@ views:
                       card: !include "floorplan_pictures/floor-first.yaml"
                     floorplan3:
                       card: !include "floorplan_pictures/floor-second.yaml"
-
-# # Motion
-# # Video
-# # Audio
-# # ARCADE-WIN10
-# # BIG-PC-WIN11
-# # Dishwasher
-# # Washing Machine
-# # Tumble Dryer
-# # Drinks Fridge
-# # Ups
-
-# Microwave
-# Kettle
-
-# Tineco Hoover:Unifi
-# Nespresso
-# Air to Water Heat Pump
-# Amazon Echo Show 8:Bed E
-# Brother MFC-J870DW
-# MFC-J870DW
-# DiskStation
-# Glow Smart Meter:Unifi
-# Harmony Hub
-# Spotify Kevin Thorn
-
-# Repairs
-# Watchman
-
-# Electricity Import
-# thorn-home QR Code
-
-                    # weather1:
-                    #   card:
-                    #     type: "custom:simple-weather-card"
-                    #     entity: "weather.met_office_banbury_daily"
-                    #     card_mod:
-                    #       style: |
-                    #         ha-card{
-                    #           margin: 0px !important;
-                    #           border-radius: 5px !important;
-                    #           box-shadow: none !important;
-                    #           font-weight: var(--swc-font-weight, 400) !important;
-                    #           font-size: 13px !important;
-                    #         }
-                    #     name: "Banbury"
-                    #     # backdrop: true
-                    #     primary_info:
-                    #       - "wind_bearing"
-                    #       - "wind_speed"
-                    #     secondary_info:
-                    #       - "humidity"
-                    #       - "precipitation"
-                    #     custom:
-                    #       - wind_bearing: "sensor.banbury_wind_direction"
-                    #       - wind_speed: "sensor.banbury_wind_speed"
-                    #     backdrop:
-                    #       day: "rgba(var(--color-blue"
-                    #       night: "rgba(var(--color-blue"
-                    #     tap_action:
-                    #       action: "navigate"
-                    #       navigation_path: "/lovelace-minimalist-climate/0"
-                    # weather2:
-                    #   card:
-                    #     type: "custom:hourly-weather"
-                    #     entity: "weather.openweathermap"
-                    #     card_mod:
-                    #       style: |
-                    #         ha-card{
-                    #           margin: 0px !important;
-                    #           padding: 0px !important;
-                    #           box-shadow: none !important;
-                    #           --mdc-icon-size: 16px !important;
-                    #         }
-                    #         .card-content{
-                    #           padding: 0px !important;
-                    #         }
-                    #     forecast_type: "daily"
-                    #     name: null
-                    #     icons: true
-                    #     show_precipitation_probability: true
-                    #     show_date: "boundary"
-                    #     num_segments: 8
-                    #     offset: 0
-                    #     hold_action:
-                    #       action: "navigate"
-                    #       navigation_path: ""
-                    #     colors:
-                    #       clear-night: "rgba(0, 0, 0 , 1)"
-                    #       cloudy: "rgba(187, 187, 187, 1)"
-                    #       fog: "rgba(187, 187, 187,0.5)"
-                    #       hail: "rgba(255, 255, 255,0.9)"
-                    #       lightning: "rgba(255, 145, 1, 1)"
-                    #       lightning-rainy: "rgba(255, 145, 1, 0.8)"
-                    #       partlycloudy: "rgba(187, 187, 187,1)"
-                    #       pouring: "rgba(137, 179, 248, 0.3)"
-                    #       rainy: "rgba(137, 179, 248, 0.5)"
-                    #       snowy: "rgba(255, 255, 255, 1)"
-                    #       snowy-rainy: "rgba(255, 255, 255, 0.8)"
-                    #       sunny: "rgba(252, 214, 99,1)"
-                    #       windy: "rgba(252, 214, 99,0.8)"
-                    #       windy-variant: "rgba(252, 214, 99,0.8)"
-                    #       exceptional: "rgba(241, 139, 130, 1)"
-
               - type: "conditional"
                 conditions:
                   - entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
