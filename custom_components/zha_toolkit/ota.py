@@ -74,7 +74,7 @@ async def download_koenkk_ota(listener, ota_dir):
             try:
                 out_filename = os.path.join(ota_dir, filename)
 
-                LOGGER.info("Download '%s' to '%s'", url, out_filename)
+                LOGGER.debug("Download '%s' to '%s'", url, out_filename)
                 async with req.get(url) as rsp:
                     data = await rsp.read()
 
@@ -145,7 +145,7 @@ async def download_sonoff_ota(listener, ota_dir):
             try:
                 out_filename = os.path.join(ota_dir, filename)
 
-                LOGGER.info("Download '%s' to '%s'", url, out_filename)
+                LOGGER.debug("Download '%s' to '%s'", url, out_filename)
                 async with req.get(url) as rsp:
                     data = await rsp.read()
 
