@@ -4,39 +4,30 @@ device_kepath_washing_machine_state:
     ulm_device_kepath_washing_machine_state:
       entity: >
         [[[
-          var entity = entity?.entity_id;
+          var deviceStatus = entity?.entity_id;
           if (variables?.ulm_device_kepath_washing_machine_state) {
             if (variables?.ulm_device_kepath_washing_machine_state?.device_status) {
               deviceStatus = variables?.ulm_device_kepath_washing_machine_state?.device_status;
             }
           }
 
-          return entity;
+          return deviceStatus;
         ]]]
-      # device_progress: >
-      #   [[[
-      #     var deviceProgress = "";
-      #     if (variables?.ulm_device_kepath_washing_machine_state) {
-      #       if (variables?.ulm_device_kepath_washing_machine_state?.device_progress) {
-      #         deviceProgress = variables?.ulm_device_kepath_washing_machine_state?.device_progress;
-      #       }
-      #     }
-
-      #     return deviceProgress;
-      #   ]]]
   state:
-    - operator: ">"
-      value: 10
-      # value: >
-      #   [[[
-      #     var state = 0;
-      #     var returnValue = parseInt(states[variables.ulm_device_kepath_washing_machine_state.entity].state);
-      #     if (!isNaN(returnValue)) {
-      #       state = returnValue;
-      #     }
-
-      #     return state;
-      #   ]]]
+    - operator: "template"
+      value: >
+        [[[
+          var returnVar = false;
+          if (variables?.ulm_device_kepath_washing_machine_state?.entity) {
+            stateValue = states[variables.ulm_device_kepath_washing_machine_state.entity].state;
+          }
+          if (!isNaN(stateValue) && stateValue !== undefined){
+            if (stateValue > 10) {
+              returnVar = true;
+            }
+          }
+          return returnVar;
+        ]]]
       icon: "mdi:washing-machine"
       styles:
         icon:
@@ -46,7 +37,16 @@ device_kepath_washing_machine_state:
     - operator: "template"
       value: >
         [[[
-          return (states[variables.ulm_device_kepath_washing_machine_state.entity].state.toLowerCase() == 'unknown' || states[variables.ulm_device_kepath_washing_machine_state.entity].state.toLowerCase() == 'unavailable')
+          var returnVar = false;
+          if (variables?.ulm_device_kepath_washing_machine_state?.entity) {
+            stateValue = states[variables.ulm_device_kepath_washing_machine_state.entity].state;
+          }
+          if (isNaN(stateValue) && stateValue !== undefined){
+            if (stateValue.toLowerCase() == 'unknown' || stateValue.toLowerCase() == 'unavailable') {
+              returnVar = true;
+            }
+          }
+          return returnVar;
         ]]]
       icon: "mdi:washing-machine-off"
       styles:
