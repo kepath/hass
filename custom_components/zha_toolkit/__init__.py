@@ -1,6 +1,6 @@
 import importlib
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -657,12 +657,12 @@ async def async_setup(hass, config):
         return True
 
     LOGGER.debug("Setup services from async_setup")
-    await hass.async_add_executor_job(register_services, hass)
+    await register_services(hass)
 
     return True
 
 
-def register_services(hass):  # noqa: C901
+async def register_services(hass):  # noqa: C901
     global LOADED_VERSION  # pylint: disable=global-statement
     hass_ref = hass
 
@@ -677,11 +677,8 @@ def register_services(hass):  # noqa: C901
         global LOADED_VERSION  # pylint: disable=global-variable-not-assigned
 
         zha = hass_ref.data["zha"]
-        zha_gw: Optional[ZHAGateway] = None
-        if isinstance(zha, dict):
-            zha_gw = zha.get("zha_gateway", None)
-        else:
-            zha_gw = zha.gateway
+        zha_gw: Optional[ZHAGateway] = u.get_zha_gateway(hass)
+        zha_gw_hass: Any = u.get_zha_gateway_hass(hass)
 
         if zha_gw is None:
             LOGGER.error(
@@ -710,7 +707,7 @@ def register_services(hass):  # noqa: C901
         LOGGER.debug("module is %s", module)
         importlib.reload(u)
 
-        currentVersion = hass.async_add_executor_job(u.getVersion)
+        currentVersion = await u.getVersion()
         if currentVersion != LOADED_VERSION:
             LOGGER.debug(
                 "Reload services because VERSION changed from %s to %s",
@@ -728,7 +725,7 @@ def register_services(hass):  # noqa: C901
 
         app = zha_gw.application_controller  # type: ignore
 
-        ieee = await u.get_ieee(app, zha_gw, ieee_str)
+        ieee = await u.get_ieee(app, zha_gw_hass, ieee_str)
 
         slickParams = params.copy()
         for k in params:
@@ -786,7 +783,7 @@ def register_services(hass):  # noqa: C901
         try:
             handler_result = await handler(
                 zha_gw.application_controller,  # type: ignore
-                zha_gw,
+                zha_gw_hass,
                 ieee,
                 cmd,
                 cmd_data,
@@ -865,7 +862,7 @@ def register_services(hass):  # noqa: C901
                 schema=value,
             )
 
-    LOADED_VERSION = u.getVersion()
+    LOADED_VERSION = await u.getVersion()
 
 
 async def command_handler_default(

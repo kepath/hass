@@ -264,11 +264,8 @@ async def async_setup_entry(hass, entry) -> bool:
     await component.async_add_entities([plate_entity])
     hass.data[DOMAIN][CONF_PLATE][plate] = plate_entity
 
-    for domain in PLATFORMS:
-        hass.async_create_task(
-            hass.config_entries.async_forward_entry_setup(entry, domain)
-        )
-
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    
     listener = entry.add_update_listener(async_update_options)
     entry.async_on_unload(listener)
 
@@ -655,7 +652,7 @@ class SwitchPlate(RestoreEntity):
         try:
             pages_file = await self.hass.async_add_executor_job(self._read_file, path)
             if path.endswith(".json"):
-                json_data = json.load(pages_file)
+                json_data = json.loads(pages_file)
                 jsonschema.validate(instance=json_data, schema=self.json_schema)
                 lines = []
                 for item in json_data:
@@ -663,7 +660,7 @@ class SwitchPlate(RestoreEntity):
                         lines.append(json.dumps(item) + "\n")
                 await send_lines(lines)
             else:
-                await send_lines(pages_file)
+                await send_lines(pages_file.splitlines(keepends=True))
             await self.refresh()
 
         except (IndexError, FileNotFoundError, IsADirectoryError, UnboundLocalError):
