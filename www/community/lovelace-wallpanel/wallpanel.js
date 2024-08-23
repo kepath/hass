@@ -107,7 +107,7 @@ class ScreenWakeLock {
 	}
 }
 
-const version = "4.25.7";
+const version = "4.26.0";
 const defaultConfig = {
 	enabled: false,
 	enabled_on_tabs: [],
@@ -1131,12 +1131,21 @@ class WallpanelView extends HuiView {
 			div.style.justifyContent = 'center';
 			div.style.gap = '8px';
 			div.style.margin = '0px';
+			div.style.minWidth = '200px'
 			config.badges.forEach(badge => {
-				let badgeConfig = structuredClone(badge);
+				let badgeConfig = JSON.parse(JSON.stringify(badge));
 				logger.debug("Creating badge:", badgeConfig);
+				let style = {};
+				if (badgeConfig.wp_style) {
+					style = badgeConfig.wp_style;
+					delete badgeConfig.wp_style;
+				}
 				const createBadgeElement = this._createBadgeElement ? this._createBadgeElement : this.createBadgeElement;
 				const badgeElement = createBadgeElement.bind(this)(badgeConfig);
 				badgeElement.hass = this.hass;
+				for (const attr in style) {
+					badgeElement.style.setProperty(attr, style[attr]);
+				}
 				this.__badges.push(badgeElement);
 				div.append(badgeElement);
 			});
@@ -1145,7 +1154,7 @@ class WallpanelView extends HuiView {
 		if (config.cards) {
 			config.cards.forEach(card => {
 				// Copy object
-				let cardConfig = structuredClone(card);
+				let cardConfig = JSON.parse(JSON.stringify(card));
 				logger.debug("Creating card:", cardConfig);
 				let style = {};
 				if (cardConfig.wp_style) {
