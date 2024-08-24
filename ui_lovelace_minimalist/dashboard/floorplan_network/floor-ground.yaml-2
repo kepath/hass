@@ -1,0 +1,247 @@
+---
+type: "picture-elements"
+image: "local/floorplan/ground/dark.png"
+elements:
+  ############## COMMON ELEMENTS ###############################
+
+  #### IMAGES ####
+  # STUDY
+  - type: "image"
+    entity: "light.shelly_1l_study_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/study_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  # BOTTOM HALLWAY
+  - type: "image"
+    entity: "light.shelly_1l_hallway_bottom_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/hallway_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  # LOUNGE
+  - type: "image"
+    entity: "light.shelly_1l_lounge_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/lounge_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  # KITCHEN
+  - type: "image"
+    entity: "light.shelly_1l_kitchen_main_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/kitchen_2_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  - type: "image"
+    entity: "light.shelly_1l_kitchen_utility_light_1"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/kitchen_1_on.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  # FRONT DOOR
+  - type: "image"
+    entity: "binary_sensor.lock_45f7_door"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/front_door.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+  # BACK DOOR
+  - type: "image"
+    entity: "binary_sensor.zigbee_door_sensor_back_contact"
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+    state_image:
+      "on": "local/floorplan/ground/back_door.png"
+      "off": "local/floorplan/transparent.png"
+      "unavailable": "local/floorplan/transparent.png"
+      "unknown": "local/floorplan/transparent.png"
+    tap_action:
+      action: "none"
+    hold_action:
+      action: "none"
+
+  #### LIGHTS ####
+  # STUDY
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.shelly_1l_study_light_1"
+    style:
+      left: "76%"
+      top: "66%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # BOTTOM HALLWAY
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.shelly_1l_hallway_bottom_light_1"
+    style:
+      left: "52%"
+      top: "73%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # LOUNGE
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.shelly_1l_lounge_light_1"
+    style:
+      left: "30%"
+      top: "50%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # KITCHEN
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.shelly_1l_kitchen_main_light_1"
+    style:
+      left: "70%"
+      top: "38%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.shelly_1l_kitchen_utility_light_1"
+    style:
+      left: "50%"
+      top: "27%"
+      color: "rgba(100, 100, 100, 0.0)"
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.fly_killer_lamp_kitchen"
+    style:
+      left: "82%"
+      top: "38%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # BACK DOOR
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.back_door_smartbulb"
+    style:
+      left: "49%"
+      top: "16%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # FRONT DOOR
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.front_door_smartbulb"
+    style:
+      left: "43%"
+      top: "86%"
+      color: "rgba(100, 100, 100, 0.0)"
+  # GARAGE
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_binary_item_light"
+    entity: "light.zigbee_bulb_garage_light"
+    style:
+      left: "89%"
+      top: "10%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  #### FLOOR NAVIGATION #####
+  - type: "custom:button-card"
+    template: "card_kepath_service_buttons"
+    style:
+      left: "5%"
+      top: "15%"
+
+  ############## COMMON ELEMENTS END ###########################
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.apple_tv_4k_unifi_data_rate"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "si:appletv"
+      ulm_card_kepath_floorplan_network_device_color: ""
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "19%"
+      top: "73%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.amazon_firestick_kitchen_wifi_unifi_data_rate"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "si:amazonfiretv"
+      ulm_card_kepath_floorplan_network_device_color: "#FC4C02"
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "61%"
+      top: "49%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.apple_imac_2011_unifi_data_rate"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "mdi:monitor"
+      ulm_card_kepath_floorplan_network_device_color: ""
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "72%"
+      top: "77%"
+      color: "rgba(100, 100, 100, 0.0)"
+
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_network_item"
+    entity: "sensor.samsung_tv_lounge_unifi_data_rate"
+    variables:
+      ulm_card_kepath_floorplan_network_device_icon: "si:samsung"
+      ulm_card_kepath_floorplan_network_device_color: "#1428A0"
+      ulm_card_kepath_floorplan_network_device_poe:
+    style:
+      left: "15%"
+      top: "70%"
+      color: "rgba(100, 100, 100, 0.0)"

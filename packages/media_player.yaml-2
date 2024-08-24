@@ -1,0 +1,368 @@
+---
+media_player:
+  - platform: "yamaha"
+    name: "Yamaha RX-V777 Reciever Integration"
+    host: !secret "yamaha_rx_v777_rj45_ip"
+    zone_ignore:
+      - "Zone_2"
+    zone_names:
+      Main_Zone: "Bed C"
+    source_ignore:
+      - "AUDIO1"
+      - "AUDIO2"
+      - "AV2"
+      - "AV3"
+      - "AV4"
+      - "AV5"
+      - "AV6"
+      - "Napster"
+      - "PHONO"
+      - "SERVER"
+      - "TUNER"
+      - "USB"
+      - "iPod (USB)"
+    source_names:
+      AV1: "Nintendo Wii"
+      HDMI1: "Humax YouView"
+      HDMI2: "NVIDIA Shield"
+      HDMI3: "Xbox One"
+      HDMI4: "PlayStation 3"
+      HDMI5: "Nintendo Switch"
+
+homekit:
+  filter:
+    include_domains:
+      - "climate"
+      - "fan"
+      - "input_select"
+      - "lawn_mower"
+      - "light"
+      - "lock"
+      - "person"
+      - "scene"
+      - "sun"
+      - "vacuum"
+      - "water_heater"
+      - "weather"
+    include_entity_globs:
+      - "binary_sensor.nest*"
+      - "binary_sensor.*plug_homekitadd*"
+      - "binary_sensor.diskstation*"
+      - "binary_sensor.zigbee_door*"
+      - "binary_sensor.zigbee_vibration*"
+      - "binary_sensor.*_occupancy"
+      - "binary_sensor.*_doorbell"
+      - "sensor.zigbee_door*"
+      - "sensor.lock*door"
+      - "sensor.zigbee_motion*"
+      - "sensor.zigbee_vibration*"
+      - "sensor.*humidity"
+      - "sensor.bed*fan*"
+      - "switch.zigbee*"
+      - "switch.*plug_homekitadd*"
+      - "switch.mss425e*"
+      - "switch.bed*fan*"
+    include_entities:
+      - "sensor.mfc_j870dw_status"
+      - "sensor.ups_status"
+      - "sensor.banbury_temperature"
+      - "sensor.banbury_humidity"
+      - "sensor.dishwasher_operation_state"
+      - "switch.dishwasher_power"
+      - "switch.samsung_tumble_dryer"
+    exclude_entities:
+      - "binary_sensor.nest_protect_bottom_floor_buzzer_test"
+      - "binary_sensor.nest_protect_bottom_floor_co_test"
+      # - "binary_sensor.nest_protect_bottom_floor_heat_test"
+      - "binary_sensor.nest_protect_bottom_floor_humidity_test"
+      - "binary_sensor.nest_protect_bottom_floor_led_test"
+      - "binary_sensor.nest_protect_bottom_floor_line_power"
+      - "binary_sensor.nest_protect_bottom_floor_pir_test"
+      - "binary_sensor.nest_protect_bottom_floor_smoke_test"
+      - "binary_sensor.nest_protect_bottom_floor_speaker_test"
+      - "binary_sensor.nest_protect_bottom_floor_online"
+      - "sensor.nest_protect_bottom_floor_battery_level"
+      - "binary_sensor.nest_protect_middle_floor_buzzer_test"
+      - "binary_sensor.nest_protect_middle_floor_co_test"
+      # - "binary_sensor.nest_protect_middle_floor_heat_test"
+      - "binary_sensor.nest_protect_middle_floor_humidity_test"
+      - "binary_sensor.nest_protect_middle_floor_led_test"
+      - "binary_sensor.nest_protect_middle_floor_line_power"
+      - "binary_sensor.nest_protect_middle_floor_pir_test"
+      - "binary_sensor.nest_protect_middle_floor_smoke_test"
+      - "binary_sensor.nest_protect_middle_floor_speaker_test"
+      - "binary_sensor.nest_protect_middle_floor_online"
+      - "sensor.nest_protect_middle_floor_battery_level"
+      - "binary_sensor.nest_protect_top_floor_buzzer_test"
+      - "binary_sensor.nest_protect_top_floor_co_test"
+      # - "binary_sensor.nest_protect_top_floor_heat_test"
+      - "binary_sensor.nest_protect_top_floor_humidity_test"
+      - "binary_sensor.nest_protect_top_floor_led_test"
+      - "binary_sensor.nest_protect_top_floor_line_power"
+      - "binary_sensor.nest_protect_top_floor_pir_test"
+      - "binary_sensor.nest_protect_top_floor_smoke_test"
+      - "binary_sensor.nest_protect_top_floor_speaker_test"
+      - "binary_sensor.nest_protect_top_floor_online"
+      - "sensor.zigbee_motion_sensor_bed_e_illuminance"
+      - "sensor.zigbee_motion_sensor_middle_hallway_illuminance"
+      - "input_select.floorplan_floor"
+      - "input_select.bed_c_fan_mode"
+      - "input_select.bed_e_fan_mode"
+      - "switch.bed_c_fan_display_auto_off"
+      - "switch.bed_c_fan_panel_sound"
+      - "switch.bed_e_fan_adaptive_brightness"
+      - "switch.bed_e_fan_panel_sound"
+      - "light.shelly_1l_hallway_bottom_light_2"
+      - "light.shelly_1l_kitchen_utility_light_2"
+      - "person.tablet"
+      - "sensor.nest_protect_top_floor_battery_level"
+      # - "switch.lounge_lamp"
+      - "switch.mss425e_6025_outlet_1"
+      - "switch.mss425e_6025_outlet_3"
+      - "switch.mss425e_6025_usb"
+      # - "switch.lamp_plug_lounge"
+      # - "switch.udm_pro_plug_bed_c"
+      # - "binary_sensor.fridge_plug_kitchen_overheat"
+      # - "binary_sensor.kettle_plug_kitchen_overheat"
+      # - "binary_sensor.microwave_plug_kitchen_overheat"
+      # - "binary_sensor.chest_freezer_plug_garage_overheat"
+      # - "binary_sensor.fridge_freezer_plug_garage_overheat"
+      # - "binary_sensor.drinks_fridge_plug_bed_c_overheat"
+      # - "binary_sensor.lamp_plug_lounge_overheat"
+      # - "binary_sensor.udm_pro_plug_bed_c_overheat"
+      - "light.fly_killer_lamp_kitchen"
+      - "light.lumi_lumi_router_light"
+      - "binary_sensor.diskstation_security_status"
+      - "binary_sensor.diskstation_drive_1_below_min_remaining_life"
+      - "binary_sensor.diskstation_drive_2_below_min_remaining_life"
+      - "binary_sensor.diskstation_drive_3_below_min_remaining_life"
+      - "binary_sensor.diskstation_drive_4_below_min_remaining_life"
+      - "binary_sensor.diskstation_drive_1_exceeded_max_bad_sectors"
+      - "binary_sensor.diskstation_drive_2_exceeded_max_bad_sectors"
+      - "binary_sensor.diskstation_drive_3_exceeded_max_bad_sectors"
+      - "binary_sensor.diskstation_drive_4_exceeded_max_bad_sectors"
+      # - "switch.fridge_plug_kitchen"
+      # - "switch.kettle_plug_kitchen"
+      # - "switch.microwave_plug_kitchen"
+      # - "switch.chest_freezer_plug_garage"
+      # - "switch.fridge_freezer_plug_garage"
+      - "switch.samsung_tumble_dryer"
+      - "switch.zigbee_energy_monitor_outlet_switch_dishwasher_switch"
+      - "switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch"
+      - "switch.mss425e_6025_outlet_2"
+      - "binary_sensor.nest_protect_bottom_floor_battery_health"
+      - "binary_sensor.nest_protect_bottom_floor_heat_status"
+      - "binary_sensor.nest_protect_middle_floor_battery_health"
+      - "binary_sensor.nest_protect_middle_floor_heat_status"
+      - "binary_sensor.nest_protect_top_floor_battery_health"
+      - "binary_sensor.nest_protect_top_floor_heat_status"
+      - "sensor.openweathermap_humidity"
+      - "binary_sensor.doorbell_g4_doorbell"
+    exclude_entity_globs:
+      - "light.*_screen"
+      # - "binary_sensor.chest_freezer_*"
+      # - "sensor.chest_freezer_*"
+      # - "switch.chest_freezer_*"
+      # - "binary_sensor.fridge_*"
+      # - "sensor.fridge_*"
+      # - "switch.fridge_*"
+      # - "binary_sensor.kettle_plug_*"
+      # - "sensor.kettle_plug_*"
+      # - "switch.kettle_plug_*"
+      # - "binary_sensor.microwave_plug_*"
+      # - "sensor.microwave_plug_*"
+      # - "switch.microwave_plug_*"
+      # - "binary_sensor.udm_pro_plug_*"
+      # - "sensor.udm_pro_plug_*"
+      # - "switch.udm_pro_plug_*"
+
+  entity_config:
+    # outlets
+    switch.zigbee_outlet_switch_arcade_pc_switch:
+      name: "Bed C Arcade Power"
+      type: "outlet"
+    switch.zigbee_outlet_switch_amazon_firestick_bed_a_switch:
+      name: "Bed A Firestick Power"
+      type: "outlet"
+    switch.zigbee_outlet_switch_amazon_firestick_kitchen_switch:
+      name: "Kitchen Firestick Power"
+      type: "outlet"
+    switch.drinks_fridge_plug_bed_c:
+      name: "Bed C Fridge Power"
+      type: "outlet"
+    switch.zigbee_outlet_switch_unifi_g4_doorbell_switch:
+      name: "Hallway - Bottom Doorbell Power"
+      type: "outlet"
+    switch.zigbee_outlet_switch_smart_meter_switch:
+      name: "Kitchen Smart Meter"
+      type: "outlet"
+    switch.tuya_wi_fi_plug_homekitadd_drinks_fridge:
+      name: "Bed C Drinks Fridge"
+      type: "outlet"
+    switch.dishwasher_power:
+      name: "Kitchen Dishwasher Status"
+      type: "outlet"
+    switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch:
+      name: "Kitchen Washing Machine Status"
+      type: "outlet"
+    switch.samsung_tumble_dryer:
+      name: "Kitchen Tumble Dryer Status"
+      type: "outlet"
+
+    # lights
+    light.back_door_smartbulb:
+      name: "External Back Light"
+    light.shelly_1l_bathroom_light_1:
+      name: "Bathroom Light"
+    light.shelly_1l_bed_a_light_1:
+      name: "Bed A Light"
+    light.shelly_1l_bed_b_light_1:
+      name: "Bed B Light"
+    light.shelly_1l_bed_c_light_1:
+      name: "Bed C Light"
+    light.shelly_1l_bed_e_light_1:
+      name: "Bed E Light"
+    light.shelly_1l_ensuite_light_1:
+      name: "Bed A Ensuite Light"
+    light.front_door_smartbulb:
+      name: "External Front Light"
+    light.shelly_1l_hallway_bottom_light_1:
+      name: "Hallway - Bottom Light"
+    light.shelly_1l_kitchen_main_light_1:
+      name: "Kitchen Main Light"
+    light.shelly_1l_kitchen_utility_light_1:
+      name: "Kitchen Utility Light"
+    light.fly_killer_kitchen_unifi:
+      name: "Kitchen Fly Lamp"
+    light.shelly_1l_lounge_light_1:
+      name: "Lounge Light"
+    light.mss425e_6025_outlet_3:
+      name: "Bed E Lamp"
+    light.shelly_1l_study_light_1:
+      name: "Study Light"
+    light.zigbee_bulb_garage_light:
+      name: "Garage Light"
+
+    # smoke and CO sensors
+    binary_sensor.nest_protect_bottom_floor_co_status:
+      name: "Hallway - Bottom CO Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+    binary_sensor.nest_protect_bottom_floor_smoke_status:
+      name: "Hallway - Bottom Smoke Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+    binary_sensor.nest_protect_middle_floor_co_status:
+      name: "Hallway - Middle CO Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+    binary_sensor.nest_protect_middle_floor_smoke_status:
+      name: "Hallway - Middle Smoke Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+    binary_sensor.nest_protect_top_floor_co_status:
+      name: "Hallway - Top CO Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+    binary_sensor.nest_protect_top_floor_smoke_status:
+      name: "Hallway - Top Smoke Nest Protect"
+      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+
+    sensor.nest_bottom_floor_humidity:
+      name: "Hallway - Bottom Humidity Nest"
+    sensor.nest_middle_floor_humidity:
+      name: "Hallway - Middle Humidity Nest"
+    sensor.banbury_humidity:
+      name: "House Banbury Humidity"
+    sensor.banbury_temperature:
+      name: "House Banbury Temperature"
+
+    climate.air_to_water_heat_pump:
+      name: "External Back Air to Water Heat Pump"
+    climate.nest_bottom_floor:
+      name: "Hallway - Bottom Nest"
+    climate.nest_middle_floor:
+      name: "Hallway - Middle Nest"
+    water_heater.air_to_water_heat_pump_water_heater:
+      name: "Hallway - Middle Air to Water Heat Pump Water Heater"
+
+    # occupancy sensors
+    binary_sensor.back_g3_flex_occupancy:
+      name: "External Back G3 Flex Occupancy"
+    binary_sensor.bed_c_g3_instant_occupancy:
+      name: "Bed C G3 Instant Occupancy"
+    binary_sensor.bottom_hallway_g3_instant_occupancy:
+      name: "Hallway - Bottom G3 Instant Occupancy"
+    binary_sensor.doorbell_g4_occupancy:
+      name: "External Front G4 Doorbell Occupancy"
+    binary_sensor.front_g3_flex_occupancy:
+      name: "External Front G3 Flex Occupancy"
+    binary_sensor.kitchen_g3_instant_occupancy:
+      name: "Kitchen G3 Instant Occupancy"
+    binary_sensor.middle_hallway_g3_flex_occupancy:
+      name: "Hallway - Middle G3 Flex Occupancy"
+    binary_sensor.nest_protect_bottom_floor_occupancy:
+      name: "Hallway - Bottom Nest Protect Occupancy"
+      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+    binary_sensor.nest_protect_middle_floor_occupancy:
+      name: "Hallway - Middle Nest Protect Occupancy"
+      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+    binary_sensor.nest_protect_top_floor_occupancy:
+      name: "Hallway - Top Nest Protect Occupancy"
+      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+    binary_sensor.zigbee_motion_sensor_bed_e_occupancy:
+      name: "Bed E Aqara Occupancy"
+      linked_battery_sensor: "sensor.zigbee_motion_sensor_bed_e_battery"
+    binary_sensor.zigbee_motion_sensor_middle_hallway_occupancy:
+      name: "Hallway - Middle Aqara Occupancy"
+      linked_battery_sensor: "sensor.zigbee_motion_sensor_middle_hallway_battery"
+
+    lawn_mower.moe:
+      name: "External Back Worx Landroid Moe"
+
+    # contact
+    binary_sensor.zigbee_door_sensor_back_contact:
+      name: "External Back Door"
+    binary_sensor.zigbee_door_sensor_bed_c_contact:
+      name: "Bed C Door"
+    binary_sensor.lock_45f7_door:
+      name: "External Front Door"
+    binary_sensor.zigbee_door_sensor_garage_contact:
+      name: "Garage Door"
+    binary_sensor.zigbee_door_sensor_loft_contact:
+      name: "Loft Contact"
+    binary_sensor.zigbee_door_sensor_patio_1_contact:
+      name: "External Back Patio 1"
+    binary_sensor.zigbee_door_sensor_patio_2_contact:
+      name: "External Back Patio 2"
+    binary_sensor.zigbee_vibration_sensor_patio_door_vibration:
+      name: "External Back Patio Vibration"
+
+    # temperature
+    sensor.zigbee_door_sensor_bed_c_temperature:
+      name: "Bed C Temperature"
+    sensor.zigbee_door_sensor_back_temperature:
+      name: "Kitchen Temperature"
+    sensor.zigbee_door_sensor_garage_temperature:
+      name: "Garage Temperature"
+    sensor.zigbee_door_sensor_loft_temperature:
+      name: "Hallway - Top Temperature"
+    sensor.zigbee_door_sensor_patio_1_temperature:
+      name: "Lounge Temperature"
+    sensor.zigbee_door_sensor_patio_2_temperature:
+      name: "Lounge Temperature"
+    sensor.bed_c_fan_temperature:
+      name: "Bed C Fan Temperature"
+    sensor.bed_e_fan_temperature:
+      name: "Bed E Fan Temperature"
+    sensor.zigbee_vibration_sensor_patio_door_temperature:
+      name: "Lounge Vibration Sensor Temperature"
+    sensor.zigbee_motion_sensor_bed_e_temperature:
+      name: "Bed E Motion Sensor Temperature"
+    sensor.zigbee_motion_sensor_middle_hallway_occupancy_temperature:
+      name: "Hallway - Middle Motion Sensor Temperature"
+
+
+    lock.front_door_top_bolt:
+      name: "External Front Door Lock"
+
+    # fan.bed_e_fan:
+    # switch.bed_e_fan_adaptive_brightness:
+    # switch.bed_e_fan_panel_sound:
+
+# fans - normal, natural, sleep, auto

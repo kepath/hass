@@ -1,0 +1,498 @@
+---
+button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
+views:
+  - title: "Media"
+    icon: "mdi:remote-tv"
+    theme: "minimalist-mobile"
+    cards:
+      # - type: "horizontal-stack"
+      #   cards:
+          # - type: "custom:button-card"
+          #   template: "chip_back"
+          #   variables:
+          #     ulm_chip_back_path: "/lovelace-minimalist-home"
+          # - type: "custom:button-card"
+          #   template:
+          #     - "chip_navigate"
+          #   variables:
+          #     ulm_chip_navigate_path: "/lovelace-minimalist-home"
+          #     ulm_chip_navigate_icon: "mdi:home"
+          #     ulm_chip_navigate_icon_color: "rgba(var(--color-blue),1)"
+          #     ulm_chip_navigate_label_color: "rgba(var(--color-blue),0.2)"
+          # - type: "custom:button-card"
+          #   template:
+          #     - "chip_navigate"
+          #   variables:
+          #     ulm_chip_navigate_path: "/lovelace-minimalist-rooms"
+          #     ulm_chip_navigate_icon: "mdi:floor-plan"
+          #     ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+          #     ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          # - type: "custom:button-card"
+          #   template:
+          #     - "chip_navigate"
+          #   variables:
+          #     ulm_chip_navigate_path: "/lovelace-minimalist-network"
+          #     ulm_chip_navigate_icon: "mdi:lan"
+          #     ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+          #     ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          # - type: "custom:button-card"
+          #   template:
+          #     - "chip_navigate"
+          #   variables:
+          #     ulm_chip_navigate_path: "/lovelace-minimalist-media"
+          #     ulm_chip_navigate_icon: "mdi:remote-tv"
+          #     ulm_chip_navigate_icon_color: "rgba(var(--color-red),1)"
+          #     ulm_chip_navigate_label_color: "rgba(var(--color-red),0.2)"
+          # - type: "custom:button-card"
+          #   template:
+          #     - "chip_navigate"
+          #   variables:
+          #     ulm_chip_navigate_path: "/lovelace-minimalist-devices/9"
+          #     ulm_chip_navigate_icon: "mdi:alpha-k-box"
+          #     ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
+          #     ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
+
+      - type: "custom:auto-entities"
+        card_param: "cards"
+        card:
+          type: "vertical-stack"
+          title: "Playing Video Media"
+        filter:
+          include:
+            - group: "group.all_tv_class_media_player"
+              attributes:
+                entity_picture: "*"
+              options:
+                card: []
+                type: "custom:button-card"
+                template: "card_media_player"
+                entity: "this.entity_id"
+                variables:
+                  ulm_card_media_player_enable_art: true
+                  ulm_card_media_player_enable_controls: true
+                  ulm_card_media_player_enable_volume_slider: true
+                  ulm_card_media_player_enable_volume_buttons: true
+                  ulm_card_media_player_collapsible: true
+                  ulm_card_media_player_more_info: true
+                  ulm_card_media_player_power_button: true
+          exclude:
+            - entity_id: "*cast*"
+
+      - type: "custom:auto-entities"
+        card_param: "cards"
+        card:
+          type: "vertical-stack"
+          title: "Playing Audio Media"
+        filter:
+          include:
+            - group: "group.all_audio_class_media_player"
+              options:
+                card: []
+                type: "custom:button-card"
+                template: "card_media_player"
+                entity: "this.entity_id"
+                variables:
+                  ulm_card_media_player_enable_art: true
+                  ulm_card_media_player_enable_controls: true
+                  ulm_card_media_player_enable_volume_slider: true
+                  ulm_card_media_player_enable_volume_buttons: true
+                  ulm_card_media_player_collapsible: true
+                  ulm_card_media_player_more_info: true
+                  ulm_card_media_player_power_button: true
+        sort:
+          method: "state"
+
+      - type: "custom:spotify-card"
+        account: "kevin"  # <optional> which account to use for spotcast. Defaults to "default"
+
+  - title: "minimalist ui home"
+    icon: "si:homeassistant"
+    theme: "minimalist-mobile"
+    path: "../lovelace-minimalist-home"
+
+  - title: "Lounge"
+    icon: "mdi:television"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "vertical-stack"
+        cards:
+          # - type: "horizontal-stack"
+          #   cards:
+          #     - type: "custom:button-card"
+          #       template: "chip_back"
+          #       variables:
+          #         ulm_chip_back_path: "/lovelace-minimalist-media/0"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_media_player"
+                  - "vars_remotecontrol_constants"
+                name: "Nvidia Shield Lounge"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_nvidiashield_group_power"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_nvidiashield_group_home"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_nvidiashield_group_arrows_and_volume"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_nvidiashield_group_play"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_nvidiashield_group_apps"
+
+  - title: "Bed A"
+    icon: "mdi:bed-king"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "vertical-stack"
+        cards:
+          # - type: "horizontal-stack"
+          #   cards:
+          #     - type: "custom:button-card"
+          #       template: "chip_back"
+          #       variables:
+          #         ulm_chip_back_path: "/lovelace-minimalist-media/0"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_media_player"
+                  - "vars_remotecontrol_constants"
+                entity: "media_player.amazon_firestick_bed_a_unifi"
+                name: "Firestick Bed A"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_firestick_group_power"
+                  - "card_remotecontrol_group_power"
+                variables:
+                  entity_id: "media_player.amazon_firestick_bed_a_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_firestick_group_home"
+                  - "card_remotecontrol_group_home"
+                variables:
+                  entity_id: "media_player.amazon_firestick_bed_a_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_firestick_group_arrow_select"
+                  - "vars_remotecontrol_firestick_group_volume"
+                  - "card_remotecontrol_group_arrows_and_volume"
+                variables:
+                  entity_id: "media_player.amazon_firestick_bed_a_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_firestick_group_play"
+                  - "card_remotecontrol_group_play"
+                variables:
+                  entity_id: "media_player.amazon_firestick_bed_a_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_firestick_group_channel_selector"
+                  - "vars_remotecontrol_firestick_group_numbers"
+                  - "card_remotecontrol_group_channel_and_numbers"
+                variables:
+                  entity_id: "media_player.amazon_firestick_bed_a_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_firestick_group_apps"
+                  - "card_remotecontrol_group_apps"
+                variables:
+                  entity_id: "media_player.amazon_firestick_bed_a_unifi"
+  - title: "Bed C"
+    icon: "mdi:remote-tv"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "vertical-stack"
+        cards:
+          # - type: "horizontal-stack"
+          #   cards:
+          #     - type: "custom:button-card"
+          #       template: "chip_back"
+          #       variables:
+          #         ulm_chip_back_path: "/lovelace-minimalist-media/0"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_media_player"
+                  - "vars_remotecontrol_constants"
+                entity: "remote.harmony_hub"
+                name: "Harmony"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_logitechharmony_group_power"
+                entity: "remote.harmony_hub"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_harmony_remote_group_actions"
+                  - "variable_definitions_harmony_remote_group_actions"
+                entity: "remote.harmony_hub"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_logitechharmony_group_home"
+                variables:
+                  ulm_card_harmony_remote_group_home_entity: "remote.harmony_hub"
+                ulm_card_harmony_remote_group_current_activity: >
+                  [[[
+                    var currentActivity = 'PowerOff';
+                    if (typeof states[variables.ulm_card_remote_group_home_entity].attributes.current_activity !== 'undefined'){
+                      currentActivity = states[variables.ulm_card_remote_group_home_entity].attributes.current_activity
+                    }
+                    return currentActivity;
+                  ]]]
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_logitechharmony_group_arrows_and_volume"
+                variables:
+                  ulm_card_harmony_remote_group_volume_entity: "media_player.rx_v777_reciever_yamaha_integration_bed_c"
+                  ulm_card_harmony_remote_group_arrow_select_entity: "remote.harmony_hub"
+                ulm_card_harmony_remote_group_current_activity: >
+                  [[[
+                    var currentActivity = 'PowerOff';
+                    if (typeof states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity !== 'undefined'){
+                      currentActivity = states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity
+                    }
+                    return currentActivity;
+                  ]]]
+
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_logitechharmony_group_play"
+                variables:
+                  ulm_card_harmony_remote_group_play_entity: "remote.harmony_hub"
+                ulm_card_harmony_remote_group_current_activity: >
+                  [[[
+                    var currentActivity = 'PowerOff';
+                    if (typeof states[variables.ulm_remotecontrol_group_play_entity].attributes.current_activity !== 'undefined'){
+                      currentActivity = states[variables.ulm_remotecontrol_group_play_entity].attributes.current_activity
+                    }
+                    return currentActivity;
+                  ]]]
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_logitechharmony_group_numbers"
+                variables:
+                  ulm_card_harmony_remote_group_numbers_entity: "remote.harmony_hub"
+                ulm_card_harmony_remote_group_current_activity: >
+                  [[[
+                    var currentActivity = 'PowerOff';
+                    if (typeof states[variables.ulm_card_remote_group_numbers_entity].attributes.current_activity !== 'undefined'){
+                      currentActivity = states[variables.ulm_card_remote_group_numbers_entity].attributes.current_activity
+                    }
+                    return currentActivity;
+                  ]]]
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_logitechharmony_group_colors"
+                variables:
+                  ulm_card_harmony_remote_group_colors_entity: "remote.harmony_hub"
+                ulm_card_harmony_remote_group_current_activity: >
+                  [[[
+                    var currentActivity = 'PowerOff';
+                    if (typeof states[variables.ulm_card_remote_group_colors_entity].attributes.current_activity !== 'undefined'){
+                      currentActivity = states[variables.ulm_card_remote_group_colors_entity].attributes.current_activity
+                    }
+                    return currentActivity;
+                  ]]]
+
+  - title: "Bed E"
+    icon: "mdi:television-classic"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "vertical-stack"
+        cards:
+          # - type: "horizontal-stack"
+          #   cards:
+          #     - type: "custom:button-card"
+          #       template: "chip_back"
+          #       variables:
+          #         ulm_chip_back_path: "/lovelace-minimalist-media/0"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_media_player"
+                  - "ulm_custom_card_kepath_remotecontrol_language_variables"
+                  - "vars_adb_androidtv_nvidia_constants"
+                entity: "media_player.nvidia_shield_bed_e"
+                name: "Nvidia Shield Bed E"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_remotecontrol_group_power"
+                  - "vars_remotecontrol_nvidiashield_group_power"
+                variables:
+                  entity_id: "media_player.nvidia_shield_bed_e"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_nvidiashield_group_home"
+                  - "card_remotecontrol_group_home"
+                variables:
+                  entity_id: "media_player.nvidia_shield_bed_e"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_nvidiashield_group_arrow_select"
+                  - "vars_remotecontrol_nvidiashield_group_volume"
+                  - "card_remotecontrol_group_arrows_and_volume"
+                variables:
+                  entity_id: "media_player.nvidia_shield_bed_e"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_nvidiashield_group_play"
+                  - "card_remotecontrol_group_play"
+                variables:
+                  entity_id: "media_player.nvidia_shield_bed_e"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "vars_remotecontrol_nvidiashield_group_apps"
+                  - "card_remotecontrol_group_apps"
+                variables:
+                  entity_id: "media_player.nvidia_shield_bed_e"
+  - title: "Kitchen"
+    icon: "mdi:fridge-outline"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "vertical-stack"
+        cards:
+          # - type: "horizontal-stack"
+          #   cards:
+          #     - type: "custom:button-card"
+          #       template: "chip_back"
+          #       variables:
+          #         ulm_chip_back_path: "/lovelace-minimalist-media/0"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_media_player"
+                  - "vars_remotecontrol_constants"
+                entity: "media_player.amazon_firestick_kitchen_unifi"
+                name: "Firestick Kitchen"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_firestick_group_power"
+                variables:
+                  entity_id: "media_player.amazon_firestick_kitchen_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_firestick_group_home"
+                variables:
+                  entity_id: "media_player.amazon_firestick_kitchen_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_firestick_group_arrows_and_volume"
+                variables:
+                  entity_id: "media_player.amazon_firestick_kitchen_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_firestick_group_play"
+                variables:
+                  entity_id: "media_player.amazon_firestick_kitchen_unifi"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_firestick_group_apps"
+                variables:
+                  entity_id: "media_player.amazon_firestick_kitchen_unifi"
+  - title: "Apple TV"
+    icon: "mdi:cast-variant"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "vertical-stack"
+        cards:
+          # - type: "horizontal-stack"
+          #   cards:
+          #     - type: "custom:button-card"
+          #       template: "chip_back"
+          #       variables:
+          #         ulm_chip_back_path: "/lovelace-minimalist-media/0"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template:
+                  - "card_media_player"
+                  - "vars_remotecontrol_constants"
+                entity: "media_player.lounge_apple_tv"
+                name: "Apple TV"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_appletv_group_power"
+                variables:
+                  entity_id: "media_player.lounge_apple_tv"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_appletv_group_home"
+                variables:
+                  entity_id: "media_player.lounge_apple_tv"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_appletv_group_arrows_and_volume"
+                variables:
+                  entity_id: "media_player.lounge_apple_tv"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_appletv_group_play"
+                variables:
+                  entity_id: "media_player.lounge_apple_tv"
+          - type: "horizontal-stack"
+            cards:
+              - type: "custom:button-card"
+                template: "card_remotecontrol_appletv_group_apps"
+                variables:
+                  entity_id: "media_player.lounge_apple_tv"
