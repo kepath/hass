@@ -150,10 +150,12 @@ template:
         name: "Integration Entity Attributes"
         state: "0"
         attributes:
-          domain_list: "{{ states|map(attribute='domain')|unique|list|sort}}"
+          domain_list: "{{ states|map(attribute='domain')|reject('undefined')|unique|list|sort}}"
           device_class_list: "{{ states|rejectattr('attributes.device_class', 'undefined')|map(attribute='attributes.device_class')|unique|list|sort }}"
           unit_of_measurement_list: "{{ states|rejectattr('attributes.unit_of_measurement', 'undefined')|map(attribute='attributes.unit_of_measurement')|unique|list|sort }}"
           integrations_installed_list: "{{ states|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
+          integrations_with_unavailable_entities: "{{ states|selectattr('state','eq', 'unavailable')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
+          integrations_with_unknown_entities: "{{ states|selectattr('state','eq', 'unknown')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
 
       - unique_id: "areas_and_entities_template_generated"
         name: "Areas Entity Attributes"
