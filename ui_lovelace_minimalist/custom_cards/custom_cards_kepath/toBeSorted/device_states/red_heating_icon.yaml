@@ -1,15 +1,15 @@
 ---
 red_heating_icon:
   variables:
-    ulm_card_kepath_binary_sensor_count_notifications:
+    var_kepath_generic_get_group_notification_objects:
       amount:
         entity: "sensor.binary_sensor_state_counts"
         is_attribute: >
           [[[
             var isValueAttribute = true;
-            if (variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.is_attribute) {
-              if (typeof variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute === "boolean") {
-                isValueAttribute = variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute;
+            if (variables?.var_kepath_generic_get_group_notification_objects?.amount?.is_attribute) {
+              if (typeof variables.var_kepath_generic_get_group_notification_objects.amount.is_attribute === "boolean") {
+                isValueAttribute = variables.var_kepath_generic_get_group_notification_objects.amount.is_attribute;
               }
             }
             return isValueAttribute;
@@ -21,12 +21,12 @@ red_heating_icon:
         [[[
           var isEntityOn = true;
           var amountValue = 0;
-          if (variables.ulm_card_kepath_binary_sensor_count_notifications.amount.is_attribute) {
-            amountValue = states[variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity]?.attributes[variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.attribute_name] ?
-            states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.entity].attributes[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.attribute_name] : 0;
+          if (variables.var_kepath_generic_get_group_notification_objects.amount.is_attribute) {
+            amountValue = states[variables?.var_kepath_generic_get_group_notification_objects?.amount?.entity]?.attributes[variables?.var_kepath_generic_get_group_notification_objects?.amount?.attribute_name] ?
+            states[variables.var_kepath_generic_get_group_notification_objects.amount.entity].attributes[variables.var_kepath_generic_get_group_notification_objects.amount.attribute_name] : 0;
           } else {
-            amountValue = states[variables?.ulm_card_kepath_binary_sensor_count_notifications?.amount?.entity]?.state ?
-            states[variables.ulm_card_kepath_binary_sensor_count_notifications.amount.entity].state : 0;
+            amountValue = states[variables?.var_kepath_generic_get_group_notification_objects?.amount?.entity]?.state ?
+            states[variables.var_kepath_generic_get_group_notification_objects.amount.entity].state : 0;
           }
           if (!isNaN(amountValue) && amountValue == 0 && amountValue !== undefined) {
             isEntityOn = false;

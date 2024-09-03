@@ -1,0 +1,87 @@
+---
+device_kepath_entity_tumble_dryer_state:
+  variables:
+    var_device_kepath_entity_tumble_dryer_state:
+      entity: >
+        [[[
+          //var entity_id = funckepathGetVariableState(undefined, entity, entity_id);
+          //var entity = funckepathGetVariableState(entity_id, variables, var_device_kepath_entity_tumble_dryer_state, device_status);
+          var entity = entity?.entity_id;
+          if (variables?.var_device_kepath_entity_tumble_dryer_state) {
+            if (variables?.var_device_kepath_entity_tumble_dryer_state?.device_status) {
+              deviceStatus = variables?.var_device_kepath_entity_tumble_dryer_state?.device_status;
+            }
+          }
+          //funckepathTestResource();
+
+          return entity;
+        ]]]
+      device_progress: >
+        [[[
+          var deviceProgress = "";
+          if (variables?.var_device_kepath_entity_tumble_dryer_state) {
+            if (variables?.var_device_kepath_entity_tumble_dryer_state?.device_progress) {
+              deviceProgress = variables?.var_device_kepath_entity_tumble_dryer_state?.device_progress;
+            }
+          }
+
+          return deviceProgress;
+        ]]]
+  # icon: "mdi:tumble-dryer-off"
+  # styles:
+  #   icon:
+  #     - color: "rgba(var(--color-red),1)"
+  #   img_cell:
+  #     - background-color: "rgba(var(--color-red), 0.2)"
+  # state:
+  #   - operator: "template"
+  #     value: >
+  #       [[[
+  #         return (states[variables.var_device_kepath_entity_tumble_dryer_state.entity].state.toLowerCase() == 'run')
+  #       ]]]
+  #     icon: >
+  #       [[[
+  #         var icon = "mdi:tumble-dryer";
+  #         var finishDate = states[variables?.var_device_kepath_entity_tumble_dryer_state?.device_progress].state;
+  #         var hours = 0;
+  #         if (finishDate !== undefined) {
+  #           if (!isNaN(Date.parse(finishDate))) {
+  #             var milliseconds = Date.parse(finishDate) - Date.now();
+  #             //hass.callService('system_log', 'write', {level:'info',message:'milliseconds: '+milliseconds});
+  #             if(!isNaN(parseInt(milliseconds))) {
+  #               hours = (milliseconds / (1000 * 60 * 60)).toFixed();
+  #               //hass.callService('system_log', 'write', {level:'info',message:'hours: '+hours});
+  #               if (hours >= 0) {
+  #                 icon = "mdi:numeric-" + hours + "-circle-outline";
+  #               }
+  #             }
+  #           }
+  #         }
+
+  #         return icon;
+  #       ]]]
+  #     styles:
+  #       icon:
+  #         - color: "rgba(var(--color-green),1)"
+  #       img_cell:
+  #         - background-color: "rgba(var(--color-green), 0.2)"
+  #   - operator: "template"
+  #     value: >
+  #       [[[
+  #         return (states[variables.var_device_kepath_entity_tumble_dryer_state.entity].state.toLowerCase() == 'unknown'
+  #                 || states[variables.var_device_kepath_entity_tumble_dryer_state.entity].state.toLowerCase() == 'unavailable'
+  #                 || states[variables.var_device_kepath_entity_tumble_dryer_state.entity].state.toLowerCase() == 'pause')
+  #       ]]]
+  #     icon: "mdi:tumble-dryer-off"
+  #     styles:
+  #       icon:
+  #         - color: "rgba(var(--color-red),1)"
+  #       img_cell:
+  #         - background-color: "rgba(var(--color-red), 0.2)"
+  #   - operator: "default"
+  #     icon: "mdi:tumble-dryer"
+  #     styles:
+  #       icon:
+  #         - color: "rgba(var(--color-blue),1)"
+  #       img_cell:
+  #         - background-color: "rgba(var(--color-blue), 0.2)"

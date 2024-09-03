@@ -1,0 +1,98 @@
+---
+device_kepath_entity_data_rate_state:
+  variables:
+    var_kepath_generic_get_group_notification_objects:
+      data_rate_value:
+        entity: "sensor.binary_sensor_state_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.var_kepath_generic_get_group_notification_objects?.data_rate_value?.is_attribute) {
+              if (typeof variables.var_kepath_generic_get_group_notification_objects.data_rate_value.is_attribute === "boolean") {
+                isValueAttribute = variables.var_kepath_generic_get_group_notification_objects.data_rate_value.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "unknown_value"
+  # icon: >
+  #   [[[
+  #     var icon = "mdi:numeric-off";
+  #     var attributeValue = "unknown";
+  #     if (variables?.var_kepath_generic_get_group_notification_objects?.data_rate_value?.attribute_name) {
+  #       attributeValue = states[variables.var_kepath_generic_get_group_notification_objects.data_rate_value.entity].attributes[variables.var_kepath_generic_get_group_notification_objects.data_rate_value.attribute_name];
+  #     }
+  #     if (!isNaN(attributeValue) && attributeValue !== undefined){
+  #       icon = "mdi:numeric-0";
+  #       if (attributeValue > 9) {
+  #         var attributeValue = "9-plus";
+  #       }
+  #       icon = icon.replace("0",attributeValue);
+  #     }
+  #     return icon;
+  #   ]]]
+  # styles:
+  #   icon:
+  #     - width: "150%"
+  #     - height: "150%"
+  #     - color: >
+  #         [[[
+  #           var color = "rgba(var(--color-grey),1)";
+  #           var attributeValue = "unknown";
+  #           if (variables?.var_kepath_generic_get_group_notification_objects?.data_rate_value?.attribute_name) {
+  #             attributeValue = states[variables.var_kepath_generic_get_group_notification_objects.data_rate_value.entity].attributes[variables.var_kepath_generic_get_group_notification_objects.data_rate_value.attribute_name];
+  #           }
+  #           if (!isNaN(attributeValue) && attributeValue !== undefined){
+  #             switch(attributeValue) {
+  #               case 0:
+  #               case 1:
+  #               case 2:
+  #               case 3:
+  #                 color = "rgba(var(--color-green),1)";
+  #                 break;
+  #               case 4:
+  #               case 5:
+  #               case 6:
+  #                 color = "rgba(var(--color-yellow),1)";
+  #                 break;
+  #               case 7:
+  #               case 8:
+  #               case 9:
+  #               default:
+  #                 color = "rgba(var(--color-red),1)";
+  #                 break;
+  #             }
+  #           }
+  #           return color;
+  #         ]]]
+  #   img_cell:
+  #     - background-color: >
+  #         [[[
+  #           var color = "rgba(var(--color-grey),0.2)";
+  #           var attributeValue = "unknown";
+  #           if (variables?.var_kepath_generic_get_group_notification_objects?.data_rate_value?.attribute_name) {
+  #             attributeValue = states[variables.var_kepath_generic_get_group_notification_objects.data_rate_value.entity].attributes[variables.var_kepath_generic_get_group_notification_objects.data_rate_value.attribute_name];
+  #           }
+  #           if (!isNaN(attributeValue) && attributeValue !== undefined){
+  #             switch(attributeValue) {
+  #               case 0:
+  #               case 1:
+  #               case 2:
+  #               case 3:
+  #                 color = "rgba(var(--color-green),0.2)";
+  #                 break;
+  #               case 4:
+  #               case 5:
+  #               case 6:
+  #                 color = "rgba(var(--color-yellow),0.2)";
+  #                 break;
+  #               case 7:
+  #               case 8:
+  #               case 9:
+  #               default:
+  #                 color = "rgba(var(--color-red),0.2)";
+  #                 break;
+  #             }
+  #           }
+  #           return color;
+  #         ]]]

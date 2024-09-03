@@ -1,29 +1,29 @@
 ---
-device_kepath_dishwasher_state:
-  variables:
-    ulm_device_kepath_dishwasher_state:
-      entity: >
-        [[[
-          var entity = entity?.entity_id;
-          if (variables?.ulm_device_kepath_dishwasher_state) {
-            if (variables?.ulm_device_kepath_dishwasher_state?.device_status) {
-              entity = variables?.ulm_device_kepath_dishwasher_state?.device_status;
-            }
-          }
+device_kepath_style_dishwasher_state:
+  # variables:
+  #   var_device_kepath_entity_dishwasher_state:
+  #     entity: >
+  #       [[[
+  #         var entity = entity?.entity_id;
+  #         if (variables?.var_device_kepath_entity_dishwasher_state) {
+  #           if (variables?.var_device_kepath_entity_dishwasher_state?.device_status) {
+  #             entity = variables?.var_device_kepath_entity_dishwasher_state?.device_status;
+  #           }
+  #         }
 
-          return entity;
-        ]]]
-      device_progress: >
-        [[[
-          var deviceProgress = "";
-          if (variables?.ulm_device_kepath_dishwasher_state) {
-            if (variables?.ulm_device_kepath_dishwasher_state?.device_progress) {
-              deviceProgress = variables?.ulm_device_kepath_dishwasher_state?.device_progress;
-            }
-          }
+  #         return entity;
+  #       ]]]
+  #     device_progress: >
+  #       [[[
+  #         var deviceProgress = "";
+  #         if (variables?.var_device_kepath_entity_dishwasher_state) {
+  #           if (variables?.var_device_kepath_entity_dishwasher_state?.device_progress) {
+  #             deviceProgress = variables?.var_device_kepath_entity_dishwasher_state?.device_progress;
+  #           }
+  #         }
 
-          return deviceProgress;
-        ]]]
+  #         return deviceProgress;
+  #       ]]]
   icon: "mdi:dishwasher-off"
   styles:
     icon:
@@ -34,12 +34,12 @@ device_kepath_dishwasher_state:
     - operator: "template"
       value: >
         [[[
-          return (states[variables.ulm_device_kepath_dishwasher_state.entity].state.toLowerCase() == 'run' || states[variables.ulm_device_kepath_dishwasher_state.entity].state.toLowerCase() == 'finished')
+          return (states[variables.var_device_kepath_entity_dishwasher_state.entity].state.toLowerCase() == 'run' || states[variables.var_device_kepath_entity_dishwasher_state.entity].state.toLowerCase() == 'finished')
         ]]]
       icon: >
         [[[
           var icon = "mdi:dishwasher";
-          var finishDate = states[variables?.ulm_device_kepath_dishwasher_state?.device_progress].state;
+          var finishDate = states[variables?.var_device_kepath_entity_dishwasher_state?.device_progress].state;
           var hours = 0;
           if (finishDate !== undefined) {
             if (!isNaN(Date.parse(finishDate))) {
@@ -65,7 +65,7 @@ device_kepath_dishwasher_state:
     - operator: "template"
       value: >
         [[[
-          return (states[variables.ulm_device_kepath_dishwasher_state.entity].state.toLowerCase() == 'unknown' || states[variables.ulm_device_kepath_dishwasher_state.entity].state.toLowerCase() == 'unavailable')
+          return (states[variables.var_device_kepath_entity_dishwasher_state.entity].state.toLowerCase() == 'unknown' || states[variables.var_device_kepath_entity_dishwasher_state.entity].state.toLowerCase() == 'unavailable')
         ]]]
       icon: "mdi:dishwasher-off"
       styles:

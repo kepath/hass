@@ -1,7 +1,7 @@
 ---
 custom_card_kepath_binary_sensor_get_evaluated_device:
   template:
-    - "generic_set_icon_and_color"
+    - "custom_card_kepath_generic_set_icon_and_color"
   variables:
     ulm_card_kepath_source_entity_details:
       source_entity: >
@@ -36,12 +36,12 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           }
           return attributeName;
         ]]]
-    ulm_card_kepath_extra_templates_icon_appearance:
+    var_card_kepath_generic_evaluated_device_appearance:
       evaluated_object: >
         [[[
           var entity = entity.entity_id;
-          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.evaluated_object) {
-            entity = variables.ulm_card_kepath_extra_templates_icon_appearance.evaluated_object;
+          if (variables?.var_card_kepath_generic_evaluated_device_appearance?.evaluated_object) {
+            entity = variables.var_card_kepath_generic_evaluated_device_appearance.evaluated_object;
           }
           return entity;
         ]]]
@@ -73,8 +73,8 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
       use_theme_colors: >
         [[[
           var useThemeColors = true;
-          if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.use_theme_colors) {
-            useThemeColors = variables.ulm_card_kepath_extra_templates_icon_appearance.use_theme_colors;
+          if (variables?.var_card_kepath_generic_evaluated_device_appearance?.use_theme_colors) {
+            useThemeColors = variables.var_card_kepath_generic_evaluated_device_appearance.use_theme_colors;
           }
           return useThemeColors;
         ]]]
@@ -83,10 +83,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon: >
             [[[
               var defaultThemeDefaultStateIcon = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.icon) {
-                    defaultThemeDefaultStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.default_state.icon;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.default_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.default_state?.icon) {
+                    defaultThemeDefaultStateIcon = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.default_state.icon;
                   }
                 }
               }
@@ -95,10 +95,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon_color: >
             [[[
               var defaultThemeDefaultStateIconColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.icon_color) {
-                    defaultThemeDefaultStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.default_state.icon_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.default_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.default_state?.icon_color) {
+                    defaultThemeDefaultStateIconColor = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.default_state.icon_color;
                   }
                 }
               }
@@ -107,10 +107,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           background_color: >
             [[[
               var defaultThemeDefaultStateBGColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.default_state?.background_color) {
-                    defaultThemeDefaultStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.default_state.background_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.default_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.default_state?.background_color) {
+                    defaultThemeDefaultStateBGColor = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.default_state.background_color;
                   }
                 }
               }
@@ -120,10 +120,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           matching_type: >
             [[[
               var defaultThemeTriggeredStateMatchingType = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.matching_type) {
-                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.matching_type;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_state.matching_type;
                   }
                 }
               }
@@ -132,10 +132,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           matching_state: >
             [[[
               var defaultThemeTriggeredStateMatchingState = "on";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.matching_state) {
-                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.matching_state;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_state.matching_state;
                   }
                 }
               }
@@ -144,10 +144,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon: >
             [[[
               var defaultThemeTriggeredStateIcon = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.icon) {
-                    defaultThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.icon;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state?.icon) {
+                    defaultThemeTriggeredStateIcon = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_state.icon;
                   }
                 }
               }
@@ -156,10 +156,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon_color: >
             [[[
               var defaultThemeTriggeredStateIconColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.icon_color) {
-                    defaultThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.icon_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state?.icon_color) {
+                    defaultThemeTriggeredStateIconColor = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_state.icon_color;
                   }
                 }
               }
@@ -168,10 +168,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           background_color: >
             [[[
               var defaultThemeTriggeredStateBGColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_state?.background_color) {
-                    defaultThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_state.background_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_state?.background_color) {
+                    defaultThemeTriggeredStateBGColor = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_state.background_color;
                   }
                 }
               }
@@ -181,10 +181,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           matching_type: >
             [[[
               var defaultThemeTriggeredStateMatchingType = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.matching_type) {
-                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.matching_type;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_alt_state.matching_type;
                   }
                 }
               }
@@ -193,10 +193,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           matching_state: >
             [[[
               var defaultThemeTriggeredStateMatchingState = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.matching_state) {
-                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.matching_state;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_alt_state.matching_state;
                   }
                 }
               }
@@ -205,10 +205,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon: >
             [[[
               var defaultThemeTriggeredStateIcon = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.icon) {
-                    defaultThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.icon;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state?.icon) {
+                    defaultThemeTriggeredStateIcon = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_alt_state.icon;
                   }
                 }
               }
@@ -217,10 +217,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon_color: >
             [[[
               var defaultThemeTriggeredStateIconColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.icon_color) {
-                    defaultThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.icon_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state?.icon_color) {
+                    defaultThemeTriggeredStateIconColor = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_alt_state.icon_color;
                   }
                 }
               }
@@ -229,10 +229,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           background_color: >
             [[[
               var defaultThemeTriggeredStateBGColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.default_theme?.triggered_alt_state?.background_color) {
-                    defaultThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.default_theme.triggered_alt_state.background_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.default_theme?.triggered_alt_state?.background_color) {
+                    defaultThemeTriggeredStateBGColor = variables.var_card_kepath_generic_evaluated_device_appearance.default_theme.triggered_alt_state.background_color;
                   }
                 }
               }
@@ -243,10 +243,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon: >
             [[[
               var darkThemeDefaultStateIcon = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.icon) {
-                    darkThemeDefaultStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.icon;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.default_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.default_state?.icon) {
+                    darkThemeDefaultStateIcon = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.default_state.icon;
                   }
                 }
               }
@@ -255,10 +255,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon_color: >
             [[[
               var darkThemeDefaultStateIconColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.icon_color) {
-                    darkThemeDefaultStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.icon_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.default_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.default_state?.icon_color) {
+                    darkThemeDefaultStateIconColor = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.default_state.icon_color;
                   }
                 }
               }
@@ -267,10 +267,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           background_color: >
             [[[
               var darkThemeDefaultStateBGColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.default_state?.background_color) {
-                    darkThemeDefaultStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.default_state.background_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.default_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.default_state?.background_color) {
+                    darkThemeDefaultStateBGColor = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.default_state.background_color;
                   }
                 }
               }
@@ -280,10 +280,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           matching_type: >
             [[[
               var defaultThemeTriggeredStateMatchingType = "gt";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.matching_type) {
-                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.matching_type;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_state.matching_type;
                   }
                 }
               }
@@ -292,10 +292,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           matching_state: >
             [[[
               var defaultThemeTriggeredStateMatchingState = "0";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.matching_state) {
-                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.matching_state;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_state.matching_state;
                   }
                 }
               }
@@ -304,10 +304,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon: >
             [[[
               var darkThemeTriggeredStateIcon = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.icon) {
-                    darkThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.icon;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state?.icon) {
+                    darkThemeTriggeredStateIcon = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_state.icon;
                   }
                 }
               }
@@ -316,10 +316,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon_color: >
             [[[
               var darkThemeTriggeredStateIconColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.icon_color) {
-                    darkThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.icon_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state?.icon_color) {
+                    darkThemeTriggeredStateIconColor = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_state.icon_color;
                   }
                 }
               }
@@ -328,10 +328,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           background_color: >
             [[[
               var darkThemeTriggeredStateBGColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_state?.background_color) {
-                    darkThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_state.background_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_state?.background_color) {
+                    darkThemeTriggeredStateBGColor = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_state.background_color;
                   }
                 }
               }
@@ -341,10 +341,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           matching_type: >
             [[[
               var defaultThemeTriggeredStateMatchingType = "gt";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.matching_type) {
-                    defaultThemeTriggeredStateMatchingType = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.matching_type;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state?.matching_type) {
+                    defaultThemeTriggeredStateMatchingType = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_alt_state.matching_type;
                   }
                 }
               }
@@ -353,10 +353,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           matching_state: >
             [[[
               var defaultThemeTriggeredStateMatchingState = "0";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.matching_state) {
-                    defaultThemeTriggeredStateMatchingState = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.matching_state;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state?.matching_state) {
+                    defaultThemeTriggeredStateMatchingState = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_alt_state.matching_state;
                   }
                 }
               }
@@ -365,10 +365,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon: >
             [[[
               var darkThemeTriggeredStateIcon = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.icon) {
-                    darkThemeTriggeredStateIcon = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.icon;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state?.icon) {
+                    darkThemeTriggeredStateIcon = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_alt_state.icon;
                   }
                 }
               }
@@ -377,10 +377,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           icon_color: >
             [[[
               var darkThemeTriggeredStateIconColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.icon_color) {
-                    darkThemeTriggeredStateIconColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.icon_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state?.icon_color) {
+                    darkThemeTriggeredStateIconColor = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_alt_state.icon_color;
                   }
                 }
               }
@@ -389,10 +389,10 @@ custom_card_kepath_binary_sensor_get_evaluated_device:
           background_color: >
             [[[
               var darkThemeTriggeredStateBGColor = "";
-              if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme) {
-                if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state) {
-                  if (variables?.ulm_card_kepath_extra_templates_icon_appearance?.dark_theme?.triggered_alt_state?.background_color) {
-                    darkThemeTriggeredStateBGColor = variables.ulm_card_kepath_extra_templates_icon_appearance.dark_theme.triggered_alt_state.background_color;
+              if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme) {
+                if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state) {
+                  if (variables?.var_card_kepath_generic_evaluated_device_appearance?.dark_theme?.triggered_alt_state?.background_color) {
+                    darkThemeTriggeredStateBGColor = variables.var_card_kepath_generic_evaluated_device_appearance.dark_theme.triggered_alt_state.background_color;
                   }
                 }
               }

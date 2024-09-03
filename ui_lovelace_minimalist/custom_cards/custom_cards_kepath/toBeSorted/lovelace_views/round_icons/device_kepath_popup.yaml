@@ -1,14 +1,14 @@
 # ---
 # device_kepath_popup:
 #   variables:
-#     ulm_card_kepath_binary_sensor_count_tap_action:
+#     var_kepath_generic_group_popup:
 #       action: >
 #         [[[
 #           var tapAction = "navigate";
 #           const tap_actions = ['navigate', 'popup', 'more_info'];
-#           if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.action) {
+#           if (variables?.var_kepath_generic_group_popup?.action) {
 #             for (let i = 0; i < tap_actions.length; i++) {
-#               if (tap_actions[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.action) {
+#               if (tap_actions[i] == variables.var_kepath_generic_group_popup.action) {
 #                 tapAction = tap_actions[i];
 #               }
 #             }
@@ -22,9 +22,9 @@
 #             [[[
 #               var autoEntitiesSortMethod = "state";
 #               const sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
-#               if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_method) {
+#               if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_method) {
 #                 for (let i = 0; i < sort_methods.length; i++) {
-#                   if (sort_methods[i] == variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method) {
+#                   if (sort_methods[i] == variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method) {
 #                     autoEntitiesSortMethod = sort_methods[i];
 #                   }
 #                 }
@@ -34,9 +34,9 @@
 #           sort_reversed: >
 #             [[[
 #               var autoEntitiesSortReversed = false;
-#               if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_reversed) {
-#                 if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed === "boolean") {
-#                   autoEntitiesSortReversed = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed;
+#               if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_reversed) {
+#                 if (typeof variables.var_kepath_generic_group_popup.popup.auto_entities.sort_reversed === "boolean") {
+#                   autoEntitiesSortReversed = variables.var_kepath_generic_group_popup.popup.auto_entities.sort_reversed;
 #                 }
 #               }
 #               return autoEntitiesSortReversed;
@@ -44,16 +44,16 @@
 #           sort_numeric: >
 #             [[[
 #               var autoEntitiesSortNumeric = false;
-#               if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_method) {
-#                 if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_changed" ||
-#                     variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_updated" ||
-#                     variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method == "last_triggered") {
+#               if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_method) {
+#                 if (variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method == "last_changed" ||
+#                     variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method == "last_updated" ||
+#                     variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method == "last_triggered") {
 #                   autoEntitiesSortNumeric = true;
 #                 }
 #               }
-#               if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.sort_numeric) {
-#                 if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric === "boolean") {
-#                   autoEntitiesSortNumeric = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric;
+#               if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_numeric) {
+#                 if (typeof variables.var_kepath_generic_group_popup.popup.auto_entities.sort_numeric === "boolean") {
+#                   autoEntitiesSortNumeric = variables.var_kepath_generic_group_popup.popup.auto_entities.sort_numeric;
 #                 }
 #               }
 #               return autoEntitiesSortNumeric;
@@ -61,9 +61,9 @@
 #           exclude_unknown_state: >
 #             [[[
 #               var autoEntitiesExcludeUnknownState = false;
-#               if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.exclude_unknown_state) {
-#                 if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unknown_state === "boolean") {
-#                   autoEntitiesExcludeUnknownState = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unknown_state;
+#               if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.exclude_unknown_state) {
+#                 if (typeof variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unknown_state === "boolean") {
+#                   autoEntitiesExcludeUnknownState = variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unknown_state;
 #                 }
 #               }
 #               return autoEntitiesExcludeUnknownState;
@@ -71,9 +71,9 @@
 #           exclude_unavailable_state: >
 #             [[[
 #               var autoEntitiesExcludeUnavailableState = false;
-#               if (variables?.ulm_card_kepath_binary_sensor_count_tap_action?.popup?.auto_entities?.exclude_unavailable_state) {
-#                 if (typeof variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unavailable_state === "boolean") {
-#                   autoEntitiesExcludeUnavailableState = variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unavailable_state;
+#               if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.exclude_unavailable_state) {
+#                 if (typeof variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unavailable_state === "boolean") {
+#                   autoEntitiesExcludeUnavailableState = variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unavailable_state;
 #                 }
 #               }
 #               return autoEntitiesExcludeUnavailableState;
@@ -84,7 +84,7 @@
 #       service: >
 #         [[[
 #           var service = "";
-#           switch(variables.ulm_card_kepath_binary_sensor_count_tap_action.action) {
+#           switch(variables.var_kepath_generic_group_popup.action) {
 #             case "navigate":
 #               service = "browser_mod.navigate";
 #               break;
@@ -98,8 +98,8 @@
 #           return service;
 #         ]]]
 #       data:
-#         path: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.action == 'navigate' ? variables.ulm_card_kepath_binary_sensor_count_tap_action.navigate.page : '/0' ]]]"
-#         title: "[[[return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.title]]]"
+#         path: "[[[ return variables.var_kepath_generic_group_popup.action == 'navigate' ? variables.var_kepath_generic_group_popup.navigate.page : '/0' ]]]"
+#         title: "[[[return variables.var_kepath_generic_group_popup.popup.title]]]"
 #         autoclose: false
 #         style:
 #           $: >
@@ -151,7 +151,7 @@
 #                   - state: >
 #                       [[[
 #                         var excludedState = "notavalidstate";
-#                         if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unknown_state == true) {
+#                         if (variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unknown_state == true) {
 #                           excludedState = "unknown";
 #                         }
 #                         return excludedState;
@@ -159,18 +159,18 @@
 #                   - state: >
 #                       [[[
 #                         var excludedState = "notavalidstate";
-#                         if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.exclude_unavailable_state == true) {
+#                         if (variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unavailable_state == true) {
 #                           excludedState = "unavailable";
 #                         }
 #                         return excludedState;
 #                       ]]]
 #               sort:
-#                 method: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_method ]]]"
-#                 numeric: "[[[ return variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_numeric ]]]"
+#                 method: "[[[ return variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method ]]]"
+#                 numeric: "[[[ return variables.var_kepath_generic_group_popup.popup.auto_entities.sort_numeric ]]]"
 #                 reverse: >
 #                   [[[
 #                     var sortReversed = true;
-#                     if (variables.ulm_card_kepath_binary_sensor_count_tap_action.popup.auto_entities.sort_reversed == true) {
+#                     if (variables.var_kepath_generic_group_popup.popup.auto_entities.sort_reversed == true) {
 #                       sortReversed = false;
 #                     }
 #                     return sortReversed;
