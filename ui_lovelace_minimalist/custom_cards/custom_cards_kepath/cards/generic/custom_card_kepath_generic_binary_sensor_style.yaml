@@ -1,22 +1,26 @@
 ---
 custom_card_kepath_generic_binary_sensor_style:
+  template:
+    - "ulm_card_kepath_constants"
+    - "icon_info_bg"
+    - "ulm_translation_engine"
   variables:
-    ulm_card_kepath_position_overrides:
+    var_kepath_constant_position_overrides:
       evaluated_position_entity: >
         [[[
           var entity = entity?.entity_id;
-          if (variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity) {
-            entity = variables.ulm_card_kepath_position_overrides.evaluated_position_entity;
+          if (variables?.var_kepath_constant_position_overrides?.evaluated_position_entity) {
+            entity = variables.var_kepath_constant_position_overrides.evaluated_position_entity;
           }
           return entity;
         ]]]
       is_compact_mode: >
         [[[
           var isCompactMode = false;
-          if (variables?.ulm_card_kepath_position_overrides) {
-            if (variables?.ulm_card_kepath_position_overrides?.is_compact_mode) {
-              if (typeof variables.ulm_card_kepath_position_overrides.is_compact_mode === "boolean") {
-                isCompactMode = variables.ulm_card_kepath_position_overrides.is_compact_mode;
+          if (variables?.var_kepath_constant_position_overrides) {
+            if (variables?.var_kepath_constant_position_overrides?.is_compact_mode) {
+              if (typeof variables.var_kepath_constant_position_overrides.is_compact_mode === "boolean") {
+                isCompactMode = variables.var_kepath_constant_position_overrides.is_compact_mode;
               }
             }
           }
@@ -25,10 +29,10 @@ custom_card_kepath_generic_binary_sensor_style:
       off_state_only: >
         [[[
           var offStateOnly = false;
-          if (variables?.ulm_card_kepath_position_overrides) {
-            if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-              if (typeof variables?.ulm_card_kepath_position_overrides?.off_state_only === "boolean") {
-                offStateOnly = variables?.ulm_card_kepath_position_overrides?.off_state_only;
+          if (variables?.var_kepath_constant_position_overrides) {
+            if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+              if (typeof variables?.var_kepath_constant_position_overrides?.off_state_only === "boolean") {
+                offStateOnly = variables?.var_kepath_constant_position_overrides?.off_state_only;
               }
             }
           }
@@ -38,61 +42,61 @@ custom_card_kepath_generic_binary_sensor_style:
         [[[
           var returnedPositionType = "popup";
           const positionTypes = ["popup", "floorplan", "tab"];
-          if (variables?.ulm_card_kepath_position_overrides) {
-            if (variables?.ulm_card_kepath_position_overrides?.position_type) {
+          if (variables?.var_kepath_constant_position_overrides) {
+            if (variables?.var_kepath_constant_position_overrides?.position_type) {
               for (let i = 0; i < positionTypes.length; i++) {
-                if (variables?.ulm_card_kepath_position_overrides?.position_type.includes(positionTypes[i])) {
-                  returnedPositionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+                if (variables?.var_kepath_constant_position_overrides?.position_type.includes(positionTypes[i])) {
+                  returnedPositionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 }
               }
             }
           }
           return returnedPositionType;
         ]]]
-      popup:
-        unavailable:
-          left: "60%"
-          top: "0px"
-          width: "20px"
-          height: "20px"
-        amount:
-          left: "60%"
-          top: "32px"
-          width: "20px"
-          height: "20px"
-      floorplan:
-        unavailable:
-          left: "81%"
-          top: "5px"
-          width: "14px"
-          height: "14px"
-        amount:
-          left: "15px"
-          top: "5px"
-          width: "14px"
-          height: "14px"
-      tab:
-        unavailable:
-          left: "60%"
-          top: "6px"
-          width: "20px"
-          height: "20px"
-        amount:
-          left: "60%"
-          top: "38px"
-          width: "20px"
-          height: "20px"
-      tab-alternative:
-        unavailable:
-          left: "64%"
-          top: "9px"
-          width: "14px"
-          height: "14px"
-        amount:
-          left: "64%"
-          top: "41px"
-          width: "14px"
-          height: "14px"
+      # popup:
+      #   unavailable:
+      #     left: "60%"
+      #     top: "0px"
+      #     width: "20px"
+      #     height: "20px"
+      #   amount:
+      #     left: "60%"
+      #     top: "32px"
+      #     width: "20px"
+      #     height: "20px"
+      # floorplan:
+      #   unavailable:
+      #     left: "81%"
+      #     top: "5px"
+      #     width: "14px"
+      #     height: "14px"
+      #   amount:
+      #     left: "15px"
+      #     top: "5px"
+      #     width: "14px"
+      #     height: "14px"
+      # tab:
+      #   unavailable:
+      #     left: "60%"
+      #     top: "6px"
+      #     width: "20px"
+      #     height: "20px"
+      #   amount:
+      #     left: "60%"
+      #     top: "38px"
+      #     width: "20px"
+      #     height: "20px"
+      # tab-alternative:
+      #   unavailable:
+      #     left: "64%"
+      #     top: "9px"
+      #     width: "14px"
+      #     height: "14px"
+      #   amount:
+      #     left: "64%"
+      #     top: "41px"
+      #     width: "14px"
+      #     height: "14px"
 
     var_kepath_generic_get_group_notification_objects:
       unavailable:
@@ -123,9 +127,6 @@ custom_card_kepath_generic_binary_sensor_style:
           ]]]
         attribute_name: "zero_value"
         count_tooltip: ""
-  template:
-    - "icon_info_bg"
-    - "ulm_translation_engine"
   icon: "mdi:lightbulb"
   show_icon: true
   show_label: false
@@ -161,11 +162,11 @@ custom_card_kepath_generic_binary_sensor_style:
         - left: >
             [[[
               var positionType = "popup";
-              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
-                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+              if (variables?.var_kepath_constant_position_overrides?.position_type) {
+                positionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 if (positionType == "tab") {
-                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                    if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                       if (!hass.themes.darkMode) {
                         positionType = "tab-alternative"
                       }
@@ -173,16 +174,16 @@ custom_card_kepath_generic_binary_sensor_style:
                   }
                 }
               }
-              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.unavailable?.left
+              return variables?.var_kepath_constant_position_overrides?.[positionType]?.unavailable?.left
             ]]]
         - top: >
             [[[
               var positionType = "popup";
-              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
-                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+              if (variables?.var_kepath_constant_position_overrides?.position_type) {
+                positionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 if (positionType == "tab") {
-                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                    if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                       if (!hass.themes.darkMode) {
                         positionType = "tab-alternative"
                       }
@@ -190,16 +191,16 @@ custom_card_kepath_generic_binary_sensor_style:
                   }
                 }
               }
-              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.unavailable?.top
+              return variables?.var_kepath_constant_position_overrides?.[positionType]?.unavailable?.top
             ]]]
         - width: >
             [[[
               var positionType = "popup";
-              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
-                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+              if (variables?.var_kepath_constant_position_overrides?.position_type) {
+                positionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 if (positionType == "tab") {
-                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                    if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                       if (!hass.themes.darkMode) {
                         positionType = "tab-alternative"
                       }
@@ -207,16 +208,16 @@ custom_card_kepath_generic_binary_sensor_style:
                   }
                 }
               }
-              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.unavailable?.width
+              return variables?.var_kepath_constant_position_overridesidesides?.[positionType]?.unavailable?.width
             ]]]
         - height: >
             [[[
               var positionType = "popup";
-              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
-                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+              if (variables?.var_kepath_constant_position_overrides?.position_type) {
+                positionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 if (positionType == "tab") {
-                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                    if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                       if (!hass.themes.darkMode) {
                         positionType = "tab-alternative"
                       }
@@ -224,18 +225,18 @@ custom_card_kepath_generic_binary_sensor_style:
                   }
                 }
               }
-              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.unavailable?.height
+              return variables?.var_kepath_constant_position_overrides?.[positionType]?.unavailable?.height
             ]]]
       amount:
         - position: "absolute"
         - left: >
             [[[
               var positionType = "popup";
-              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
-                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+              if (variables?.var_kepath_constant_position_overrides?.position_type) {
+                positionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 if (positionType == "tab") {
-                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                    if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                       if (!hass.themes.darkMode) {
                         positionType = "tab-alternative"
                       }
@@ -243,16 +244,16 @@ custom_card_kepath_generic_binary_sensor_style:
                   }
                 }
               }
-              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.amount?.left
+              return variables?.var_kepath_constant_position_overrides?.[positionType]?.amount?.left
             ]]]
         - top: >
             [[[
               var positionType = "popup";
-              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
-                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+              if (variables?.var_kepath_constant_position_overrides?.position_type) {
+                positionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 if (positionType == "tab") {
-                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                    if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                       if (!hass.themes.darkMode) {
                         positionType = "tab-alternative"
                       }
@@ -260,16 +261,16 @@ custom_card_kepath_generic_binary_sensor_style:
                   }
                 }
               }
-              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.amount?.top
+              return variables?.var_kepath_constant_position_overrides?.[positionType]?.amount?.top
             ]]]
         - width: >
             [[[
               var positionType = "popup";
-              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
-                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+              if (variables?.var_kepath_constant_position_overrides?.position_type) {
+                positionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 if (positionType == "tab") {
-                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                    if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                       if (!hass.themes.darkMode) {
                         positionType = "tab-alternative"
                       }
@@ -277,16 +278,16 @@ custom_card_kepath_generic_binary_sensor_style:
                   }
                 }
               }
-              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.amount?.width
+              return variables?.var_kepath_constant_position_overrides?.[positionType]?.amount?.width
             ]]]
         - height: >
             [[[
               var positionType = "popup";
-              if (variables?.ulm_card_kepath_position_overrides?.position_type) {
-                positionType = variables?.ulm_card_kepath_position_overrides?.position_type;
+              if (variables?.var_kepath_constant_position_overrides?.position_type) {
+                positionType = variables?.var_kepath_constant_position_overrides?.position_type;
                 if (positionType == "tab") {
-                  if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                    if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+                  if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                    if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                       if (!hass.themes.darkMode) {
                         positionType = "tab-alternative"
                       }
@@ -294,7 +295,7 @@ custom_card_kepath_generic_binary_sensor_style:
                   }
                 }
               }
-              return variables?.ulm_card_kepath_position_overrides?.[positionType]?.amount?.height
+              return variables?.var_kepath_constant_position_overrides?.[positionType]?.amount?.height
             ]]]
       notification:
         - visibility: "hidden"
@@ -307,9 +308,9 @@ custom_card_kepath_generic_binary_sensor_style:
           [[[
             let styleTemplate = [ "widget_count_mdi_number_indicator" ];
             var extraTemplate = "widget_count_mdi_number_indicator_default_style"
-            if (variables?.ulm_card_kepath_position_overrides?.is_compact_mode) {
-              if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+            if (variables?.var_kepath_constant_position_overrides?.is_compact_mode) {
+              if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                   extraTemplate = "widget_count_mdi_number_indicator_compact_style"
                 }
               } else {
@@ -330,9 +331,9 @@ custom_card_kepath_generic_binary_sensor_style:
           [[[
             let styleTemplate = [ "widget_count_mdi_number_indicator" ];
             var extraTemplate = "widget_count_mdi_number_indicator_default_style"
-            if (variables?.ulm_card_kepath_position_overrides?.is_compact_mode) {
-              if (variables?.ulm_card_kepath_position_overrides?.off_state_only) {
-                if (states[variables?.ulm_card_kepath_position_overrides?.evaluated_position_entity]?.state == "off") {
+            if (variables?.var_kepath_constant_position_overrides?.is_compact_mode) {
+              if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+                if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
                   extraTemplate = "widget_count_mdi_number_indicator_compact_style"
                 }
               } else {
