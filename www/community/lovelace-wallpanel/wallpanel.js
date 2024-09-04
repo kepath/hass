@@ -107,11 +107,12 @@ class ScreenWakeLock {
 	}
 }
 
-const version = "4.27.1";
+const version = "4.28.0";
 const defaultConfig = {
 	enabled: false,
 	enabled_on_tabs: [],
 	debug: false,
+	log_level_console: "info",
 	hide_toolbar: false,
 	hide_toolbar_action_icons: false,
 	hide_sidebar: false,
@@ -291,19 +292,27 @@ const logger = {
 		logger.addMessage("info", arguments);
 	},
 	debug: function (text) {
-		//console.debug.apply(this, arguments);
+		if (["debug"].includes(config.log_level_console)) {
+			console.debug.apply(this, arguments);
+		}
 		logger.addMessage("debug", arguments);
 	},
 	info: function (text) {
-		console.info.apply(this, arguments);
+		if (["debug", "info"].includes(config.log_level_console)) {
+			console.info.apply(this, arguments);
+		}
 		logger.addMessage("info", arguments);
 	},
 	warn: function (text) {
-		console.warn.apply(this, arguments);
+		if (["debug", "info", "warn"].includes(config.log_level_console)) {
+			console.warn.apply(this, arguments);
+		}
 		logger.addMessage("warn", arguments);
 	},
 	error: function (text) {
-		console.error.apply(this, arguments);
+		if (["debug", "info", "warn", "error"].includes(config.log_level_console)) {
+			console.error.apply(this, arguments);
+		}
 		logger.addMessage("error", arguments);
 	}
 };
@@ -832,6 +841,7 @@ class WallpanelView extends HuiView {
 		this.imageOneContainer.style.left = 0;
 		this.imageOneContainer.style.width = '100%';
 		this.imageOneContainer.style.height = '100%';
+		this.imageOneContainer.style.border = 'none';
 
 		this.imageOneBackground.style.position = 'absolute';
 		this.imageOneBackground.style.pointerEvents = 'none';
@@ -839,6 +849,7 @@ class WallpanelView extends HuiView {
 		this.imageOneBackground.style.left = 0;
 		this.imageOneBackground.style.width = '100%';
 		this.imageOneBackground.style.height = '100%';
+		this.imageOneBackground.style.border = 'none';
 
 		if (!this.screensaverRunning()) {
 			this.imageOne.removeAttribute('style');
@@ -848,6 +859,7 @@ class WallpanelView extends HuiView {
 		this.imageOne.style.width = '100%';
 		this.imageOne.style.height = '100%';
 		this.imageOne.style.objectFit = 'contain';
+		this.imageOne.style.border = 'none';
 
 		this.imageOneInfoContainer.removeAttribute('style');
 		this.imageOneInfoContainer.style.position = 'absolute';
@@ -856,6 +868,7 @@ class WallpanelView extends HuiView {
 		this.imageOneInfoContainer.style.left = 0;
 		this.imageOneInfoContainer.style.width = '100%';
 		this.imageOneInfoContainer.style.height = '100%';
+		this.imageOneInfoContainer.style.border = 'none';
 
 		if (!this.screensaverRunning()) {
 			this.imageTwoContainer.removeAttribute('style');
@@ -867,6 +880,7 @@ class WallpanelView extends HuiView {
 		this.imageTwoContainer.style.left = 0;
 		this.imageTwoContainer.style.width = '100%';
 		this.imageTwoContainer.style.height = '100%';
+		this.imageTwoContainer.style.border = 'none';
 
 		this.imageTwoBackground.style.position = 'absolute';
 		this.imageTwoBackground.style.pointerEvents = 'none';
@@ -874,6 +888,7 @@ class WallpanelView extends HuiView {
 		this.imageTwoBackground.style.left = 0;
 		this.imageTwoBackground.style.width = '100%';
 		this.imageTwoBackground.style.height = '100%';
+		this.imageTwoBackground.style.border = 'none';
 
 		if (!this.screensaverRunning()) {
 			this.imageTwo.removeAttribute('style');
@@ -883,6 +898,7 @@ class WallpanelView extends HuiView {
 		this.imageTwo.style.width = '100%';
 		this.imageTwo.style.height = '100%';
 		this.imageTwo.style.objectFit = 'contain';
+		this.imageTwo.style.border = 'none';
 
 		this.imageTwoInfoContainer.removeAttribute('style');
 		this.imageTwoInfoContainer.style.position = 'absolute';
@@ -891,6 +907,7 @@ class WallpanelView extends HuiView {
 		this.imageTwoInfoContainer.style.left = 0;
 		this.imageTwoInfoContainer.style.width = '100%';
 		this.imageTwoInfoContainer.style.height = '100%';
+		this.imageTwoInfoContainer.style.border = 'none';
 
 		this.screensaverImageOverlay.removeAttribute('style');
 		this.screensaverImageOverlay.style.position = 'absolute';
@@ -1580,30 +1597,32 @@ class WallpanelView extends HuiView {
 		if (!imageInfo) {
 			imageInfo = {};
 		}
+		if (!imageInfo.image) {
+			imageInfo.image = {};
+		}
+		if (!imageInfo.image.url) {
+			imageInfo.image.url = img.imageUrl;
+		}
+		if (!imageInfo.image.path) {
+			imageInfo.image.path = img.imageUrl.replace(/^[^:]+:\/\/[^/]+/, "");
+		}
+		if (!imageInfo.image.relativePath) {
+			imageInfo.image.relativePath = img.imageUrl.replace(config.image_url, "").replace(/^\/+/, "");
+		}
+		if (!imageInfo.image.filename) {
+			imageInfo.image.filename =  img.imageUrl.replace(/^.*[\\/]/, "");
+		}
+		if (!imageInfo.image.folderName) {
+			imageInfo.image.folderName = "";
+			const parts = img.imageUrl.split("/");
+			if (parts.length >= 2) {
+				imageInfo.image.folderName = parts[parts.length - 2];
+			}
+		}
+		logger.debug("Image info:", imageInfo)
+
 		let html = config.image_info_template;
 		html = html.replace(/\${([^}]+)}/g, (match, tags, offset, string) => {
-			if (!imageInfo.image) {
-				imageInfo.image = {};
-			}
-			if (!imageInfo.image.url) {
-				imageInfo.image.url = img.imageUrl;
-			}
-			if (!imageInfo.image.path) {
-				imageInfo.image.path = img.imageUrl.replace(/^[^:]+:\/\/[^/]+/, "");
-			}
-			if (!imageInfo.image.relativePath) {
-				imageInfo.image.relativePath = img.imageUrl.replace(config.image_url, "").replace(/^\/+/, "");
-			}
-			if (!imageInfo.image.filename) {
-				imageInfo.image.filename =  img.imageUrl.replace(/^.*[\\/]/, "");
-			}
-			if (!imageInfo.image.folderName) {
-				imageInfo.image.folderName = "";
-				const parts = img.imageUrl.split("/");
-				if (parts.length >= 2) {
-					imageInfo.image.folderName = parts[parts.length - 2];
-				}
-			}
 			let prefix = "";
 			let suffix = "";
 			let options = null;
@@ -1650,7 +1669,7 @@ class WallpanelView extends HuiView {
 			if (!val) {
 				return "";
 			}
-			if (/DateTime/.test(tag)) {
+			if (/DateTime/i.test(tag)) {
 				let date = new Date(val.replace(/(\d\d\d\d):(\d\d):(\d\d) (\d\d):(\d\d):(\d\d)/, '$1-$2-$3T$4:$5:$6'));
 				if (isNaN(date)) {
 					// Invalid date
@@ -1810,7 +1829,7 @@ class WallpanelView extends HuiView {
 					const url = entry.urls.raw + "&w=${width}&h=${height}&auto=format";
 					urls.push(url);
 					data[url] = entry;
-					data[url]["unsplash"] = entry;
+					data[url]["unsplash"] = JSON.parse(JSON.stringify(entry));
 				});
 			} else {
 				logger.warn("Unsplash API error, get random images", http);
@@ -1832,6 +1851,9 @@ class WallpanelView extends HuiView {
 	}
 
 	updateImageListFromImmichAPI(preload, preloadCallback = null) {
+		if (!config.immich_api_key) {
+			throw "immich_api_key not configured";
+		}
 		let wp = this;
 		wp.updatingImageList = true;
 		wp.imageList = [];
@@ -1872,7 +1894,7 @@ class WallpanelView extends HuiView {
 									if (asset.type == "IMAGE") {
 										const url = `${api_url}/assets/${asset.id}/original`;
 										data[url] = asset.exifInfo;
-										data[url]["immich"] = asset;
+										data[url]["immich"] = JSON.parse(JSON.stringify(asset));
 										data[url]["image"] = {
 											"filename": asset.originalFileName,
 											"folderName": http2.response.albumName
@@ -1932,7 +1954,7 @@ class WallpanelView extends HuiView {
 		}
 		img.imageUrl = realUrl;
 		logger.debug(`Updating image '${img.id}' from '${realUrl}'`);
-		if (imageSourceType() == "media-entity") {
+		if (["media-entity", "immich-api"].includes(imageSourceType())) {
 			this.updateImageUrlWithHttpFetch(img, realUrl, headers);
 		} else {
 			img.src = realUrl;
@@ -1940,12 +1962,7 @@ class WallpanelView extends HuiView {
 	}
 
 	updateImageUrlWithHttpFetch(img, url, headers) {
-		var http = new XMLHttpRequest();
-		if (headers) {
-			for (const header in headers) {
-				http.setRequestHeader(header, headers[header]);
-			}
-		}
+		let http = new XMLHttpRequest();
 		http.onload = function() {
 			if (this.status == 200 || this.status === 0) {
 				img.src = "data:image/jpeg;base64," + arrayBufferToBase64(http.response);
@@ -1953,6 +1970,11 @@ class WallpanelView extends HuiView {
 			http = null;
 		};
 		http.open("GET", url, true);
+		if (headers) {
+			for (const header in headers) {
+				http.setRequestHeader(header, headers[header]);
+			}
+		}
 		http.responseType = "arraybuffer";
 		http.send(null);
 	}
@@ -2359,18 +2381,22 @@ class WallpanelView extends HuiView {
 			}
 
 			html += '<a id="download_log" href="">Download log</a><br />';
-			html += `Version: ${version}<br/>`;
-			html += `Config: ${JSON.stringify(conf)}<br/>`;
-			html += `Fullscreen: ${fullscreen}<br/>`;
-			html += `Screensaver started at: ${wallpanel.screensaverStartedAt}<br/>`;
-			html += `Screen wake lock: enabled=${screenWakeLock.enabled} native=${screenWakeLock.nativeWakeLockSupported} lock=${screenWakeLock._lock} player=${screenWakeLock._player} error=${screenWakeLock.error}<br/>`;
+			html += `<b>Version:</b> ${version}<br/>`;
+			html += `<b>Config:</b> ${JSON.stringify(conf)}<br/>`;
+			html += `<b>Fullscreen:</b> ${fullscreen}<br/>`;
+			html += `<b>Screensaver started at:</b> ${wallpanel.screensaverStartedAt}<br/>`;
+			html += `<b>Screen wake lock:</b> enabled=${screenWakeLock.enabled} native=${screenWakeLock.nativeWakeLockSupported} lock=${screenWakeLock._lock} player=${screenWakeLock._player} error=${screenWakeLock.error}<br/>`;
 			if (screenWakeLock._player) {
 				let p = screenWakeLock._player;
-				html += `Screen wake lock video: readyState=${p.readyState} currentTime=${p.currentTime} paused=${p.paused} ended=${p.ended}<br/>`;
+				html += `<b>Screen wake lock video</b>: readyState=${p.readyState} currentTime=${p.currentTime} paused=${p.paused} ended=${p.ended}<br/>`;
 			}
 			const activeImage = this.getActiveImageElement();
 			if (activeImage) {
-				html += `Current image: ${activeImage.imageUrl}`;
+				html += `<b>Current image:</b> ${activeImage.imageUrl}<br/>`;
+				const imgInfo = imageInfoCache[activeImage.imageUrl];
+				if (imgInfo) {
+					html += `<b>Image info:</b> ${JSON.stringify(imgInfo)}<br/>`;
+				}
 			}
 			this.debugBox.innerHTML = html;
 			this.debugBox.querySelector("#download_log").addEventListener(
@@ -2595,7 +2621,7 @@ function startup() {
 		setTimeout(startup, 1000);
 		return;
 	}
-	logger.info(`%c🖼️ Wallpanel version ${version}`, "color: #34b6f9; font-weight: bold;");
+	console.info(`%c🖼️ Wallpanel version ${version}`, "color: #34b6f9; font-weight: bold;");
 	updateConfig();
 	customElements.define("wallpanel-view", WallpanelView);
 	wallpanel = document.createElement("wallpanel-view");
