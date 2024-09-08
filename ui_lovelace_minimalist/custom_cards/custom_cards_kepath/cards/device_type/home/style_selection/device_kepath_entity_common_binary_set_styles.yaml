@@ -1,0 +1,208 @@
+---
+device_kepath_entity_common_binary_set_styles:
+  variables:
+    var_kepath_generic_set_group_notification_styles:
+      use_themes: true
+      triggered_state:
+  #       icon: >
+  #         [[[ return "mdi:lightbulb-multiple"; ]]]
+  #       icon_color: >
+  #         [[[ return "yellow"; ]]]
+  #       background_color: >
+  #         [[[ return "yellow"; ]]]
+  #       trigger_value: >
+  #         [[[ return "on"; ]]]
+      default_state:
+  #       icon: >
+  #         [[[ return "mdi:lightbulb-multiple-off-outline"; ]]]
+  #       icon_color: >
+  #         [[[ return "grey"; ]]]
+  #       background_color: >
+  #         [[[ return "grey"; ]]]
+      error_state:
+  #       icon: >
+  #         [[[ return "mdi:lightbulb-group-off-outline"; ]]]
+  #       icon_color: >
+  #         [[[ return "red"; ]]]
+  #       background_color: >
+  #         [[[ return "red"; ]]]
+  icon: >
+    [[[
+      var errorIcon = "mdi:close-circle";
+      if (variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon) {
+        errorIcon = variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon;
+      }
+      //hass.callService('system_log', 'write', {level:'warning',message:'errorIcon: '+errorIcon});
+
+      return errorIcon;
+      //var errorIcon = "mdi:close-circle";
+      //if (variables?.var_kepath_generic_set_group_notification_styles) {
+      //  if (variables?.var_kepath_generic_set_group_notification_styles?.use_themes) {
+      //    if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes === "boolean") {
+
+      //        entityValue = states[variables?.var_kepath_generic_get_group_notification_objects?.trigger?.entity].attributes[variables?.var_kepath_generic_get_group_notification_objects?.trigger?.attribute_name];
+      //      }
+      //    }
+      //  }
+      //}
+    ]]]
+  styles:
+    icon:
+      - color: >
+          [[[
+            var errorIconColor = "red";
+            if (variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon_color) {
+              errorIconColor = variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon_color;
+            }
+            if (variables?.var_kepath_generic_set_group_notification_styles?.use_themes) {
+              errorIconColor = "rgba(var(--color-" + errorIconColor + "),1)";
+            }
+            //hass.callService('system_log', 'write', {level:'warning',message:'errorIconColor: '+errorIconColor});
+
+            return errorIconColor;
+          ]]]
+    img_cell:
+      - background-color: >
+          [[[
+            var errorIconBackground = "red";
+            if (variables?.var_kepath_generic_set_group_notification_styles?.error_state?.background_color) {
+              errorIconBackground = variables?.var_kepath_generic_set_group_notification_styles?.error_state?.background_color;
+            }
+            if (variables?.var_kepath_generic_set_group_notification_styles?.use_themes) {
+              errorIconBackground = "rgba(var(--color-" + errorIconBackground + "),0.2)";
+            }
+            //hass.callService('system_log', 'write', {level:'warning',message:'errorIconBackground: '+errorIconBackground});
+
+            return errorIconBackground;
+          ]]]
+  state:
+    - operator: "template"
+      value: >
+        [[[
+            var isTriggered = false;
+            var triggerValue = "triggerValue";
+            var entityValue = "entityValue";
+            if (variables?.var_kepath_generic_get_group_notification_objects) {
+              if (variables?.var_kepath_generic_get_group_notification_objects?.trigger) {
+                if (variables?.var_kepath_generic_get_group_notification_objects?.trigger?.entity) {
+                  if (variables?.var_kepath_generic_get_group_notification_objects?.trigger?.attribute_name) {
+                    entityValue = states[variables?.var_kepath_generic_get_group_notification_objects?.trigger?.entity].attributes[variables?.var_kepath_generic_get_group_notification_objects?.trigger?.attribute_name];
+                  }
+                }
+              }
+            }
+            hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_group_notification_objects: '+variables?.var_kepath_generic_get_group_notification_objects});
+            hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_group_notification_objects?.trigger: '+variables?.var_kepath_generic_get_group_notification_objects?.trigger});
+            hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_group_notification_objects?.trigger?.entity: '+variables?.var_kepath_generic_get_group_notification_objects?.trigger?.entity});
+            hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_group_notification_objects?.trigger?.attribute_name: '+variables?.var_kepath_generic_get_group_notification_objects?.trigger?.attribute_name});
+            if (variables?.var_kepath_generic_get_group_notification_objects) {
+              if (variables?.var_kepath_generic_get_group_notification_objects?.trigger) {
+                if (variables?.var_kepath_generic_get_group_notification_objects?.trigger?.trigger_value) {
+                  triggerValue = variables?.var_kepath_generic_get_group_notification_objects?.trigger?.trigger_value;
+                }
+              }
+            }
+            hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_group_notification_objects: '+variables?.var_kepath_generic_get_group_notification_objects});
+            hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_group_notification_objects?.trigger: '+variables?.var_kepath_generic_get_group_notification_objects?.trigger});
+            hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_group_notification_objects?.trigger?.trigger_value: '+variables?.var_kepath_generic_get_group_notification_objects?.trigger?.trigger_value});
+            if (entityValue == triggerValue) {
+              isTriggered = true;
+            }
+
+            return isTriggered;
+        ]]]
+      icon: >
+        [[[
+          var triggerIcon = "mdi:close-circle";
+          if (variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon) {
+            triggerIcon = variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon;
+          }
+          //hass.callService('system_log', 'write', {level:'warning',message:'triggerIcon: '+triggerIcon});
+
+          return triggerIcon;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var triggerIconColor = "green";
+                if (variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon_color) {
+                  triggerIconColor = variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon_color;
+                }
+                if (variables?.var_kepath_generic_set_group_notification_styles?.use_themes) {
+                  triggerIconColor = "rgba(var(--color-" + triggerIconColor + "),1)";
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'triggerIconColor: '+triggerIconColor});
+
+                return triggerIconColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var triggerIconBackground = "green";
+                if (variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.background_color) {
+                  triggerIconBackground = variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.background_color;
+                }
+                if (variables?.var_kepath_generic_set_group_notification_styles?.use_themes) {
+                  triggerIconBackground = "rgba(var(--color-" + triggerIconBackground + "),0.2)";
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'triggerIconBackground: '+triggerIconBackground});
+
+                return triggerIconBackground;
+              ]]]
+    - operator: "default"
+      icon: >
+        [[[
+          var defaultIcon = "mdi:close-circle";
+          if (variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon) {
+            defaultIcon = variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon;
+          }
+          //hass.callService('system_log', 'write', {level:'warning',message:'defaultIcon: '+defaultIcon});
+
+          return defaultIcon;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var defaultIconColor = "yellow";
+                //if (variables) {
+                //  if (variables?.var_kepath_generic_set_group_notification_styles) {
+                //    if (variables?.var_kepath_generic_set_group_notification_styles?.default_state) {
+                      if (variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon_color) {
+                        defaultIconColor = variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon_color;
+                      }
+                //    }
+                //  }
+                //}
+                if (variables?.var_kepath_generic_set_group_notification_styles?.use_themes) {
+                  defaultIconColor = "rgba(var(--color-" + defaultIconColor + "),1)";
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'defaultIconColor: '+defaultIconColor});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables: '+ variables});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_set_group_notification_styles: '+ variables?.var_kepath_generic_set_group_notification_styles});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_set_group_notification_styles?.default_state: '+ variables?.var_kepath_generic_set_group_notification_styles?.default_state});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon_color: '+ variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon_color});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_set_group_notification_styles?.use_themes: '+ variables?.var_kepath_generic_set_group_notification_styles?.use_themes});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables.var_kepath_generic_set_group_notification_styles.default_state.icon_color: '+ variables.var_kepath_generic_set_group_notification_styles.default_state.icon_color});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables.var_kepath_generic_set_group_notification_styles.use_themes: '+ variables.var_kepath_generic_set_group_notification_styles.use_themes});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables: '+ String(variables)});
+                //hass.callService('system_log', 'write', {level:'warning',message:'defaultIconColor: '+defaultIconColor});
+
+                return defaultIconColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var defaultIconBackground = "yellow";
+                if (variables?.var_kepath_generic_set_group_notification_styles?.default_state?.background_color) {
+                  defaultIconBackground = variables?.var_kepath_generic_set_group_notification_styles?.default_state?.background_color;
+                }
+                if (variables?.var_kepath_generic_set_group_notification_styles?.use_themes) {
+                  defaultIconBackground = "rgba(var(--color-" + defaultIconBackground + "),0.2)";
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'defaultIconBackground: '+defaultIconBackground});
+                //hass.callService('system_log', 'write', {level:'warning',message:'variables: '+ String(variables)});
+
+                return defaultIconBackground;
+              ]]]

@@ -355,24 +355,32 @@ views:
                         template:
                           - "custom_card_kepath_binary_button_common_styles"
                           - "custom_card_kepath_binary_button_device_style"
-                          #       - "custom_card_kepath_generic_get_trigger_object"
+                          - "device_kepath_entity_common_binary_get_states"
+                          - "device_kepath_entity_common_binary_set_styles"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_lights"
                         name: "Lights"
                         variables:
                           var_kepath_generic_get_group_notification_objects:
+                            trigger:
+                              attribute_name: "lights_on_count"
                             amount:
                               attribute_name: "lights_on_count"
-                          var_kepath_generic_icon_appearance:
-                            default_theme:
-                              default_state:
-                                icon: "mdi:lightbulb-multiple-off-outline"
-                                icon_color: "grey"
-                                background_color: "grey"
-                              triggered_state:
-                                icon: "mdi:lightbulb-multiple"
-                                icon_color: "yellow"
-                                background_color: "yellow"
+                          var_kepath_generic_set_group_notification_styles:
+                            # use_themes: false
+                            triggered_state:
+                              icon: "mdi:lightbulb-multiple"
+                              icon_color: "yellow"
+                              background_color: "yellow"
+                              trigger_value: "on"
+                            default_state:
+                              icon: "mdi:lightbulb-multiple-off-outline"
+                              icon_color: "grey"
+                              background_color: "grey"
+                            error_state:
+                              icon: "mdi:lightbulb-group-off-outline"
+                              icon_color: "red"
+                              background_color: "red"
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
@@ -385,7 +393,6 @@ views:
                         template:
                           - "custom_card_kepath_binary_button_common_styles"
                           - "custom_card_kepath_binary_button_device_style"
-                          #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_outlet_class_switch"
                         name: "Plugs"
@@ -493,7 +500,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          # - "custom_card_kepath_binary_button_common_styles"
                           # - "device_kepath_entity_washing_machine_state"
                           # - "device_kepath_style_washing_machine_state"
                         entity: "sensor.washing_machine_average_demand"

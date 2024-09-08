@@ -229,6 +229,19 @@ widget_count_mdi_number_indicator:
       }
       return icon;
     ]]]
+  styles:
+    icon:
+      - width: "14px"
+      - height: "14px"
+      - line-height: "0"
+      - color: >
+          [[[
+            var iconColor = "rgba(var(--color-red),1)";
+            if(hass.themes.darkMode) {
+              iconColor = "rgba(var(--color-yellow),1)";
+            }
+            return iconColor;
+          ]]]
   state:
     - operator: "template"
       value: >
@@ -263,18 +276,6 @@ widget_count_mdi_number_indicator:
 
 widget_count_mdi_number_indicator_default_style:
   styles:
-    icon:
-      - width: "14px"
-      - height: "14px"
-      - line-height: "0"
-      - color: >
-          [[[
-            var iconColor = "rgba(var(--color-red),1)";
-            if(hass.themes.darkMode) {
-              iconColor = "rgba(var(--color-yellow),1)";
-            }
-            return iconColor;
-          ]]]
     img_cell:
       - border-radius: "50%"
       - background-color: "rgba(var(--color-theme),0)"
@@ -291,18 +292,6 @@ widget_count_mdi_number_indicator_default_style:
 
 widget_count_mdi_number_indicator_compact_style:
   styles:
-    icon:
-      - width: "14px"
-      - height: "14px"
-      - line-height: "0"
-      - color: >
-          [[[
-            var iconColor = "rgba(var(--color-red),1)";
-            if(hass.themes.darkMode) {
-              iconColor = "rgba(var(--color-yellow),1)";
-            }
-            return iconColor;
-          ]]]
     img_cell:
       - border-radius: "50%"
       - background-color: "rgba(var(--color-theme),0)"
