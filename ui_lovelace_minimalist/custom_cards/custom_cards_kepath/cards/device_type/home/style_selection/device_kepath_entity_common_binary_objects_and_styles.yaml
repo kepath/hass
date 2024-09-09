@@ -1,0 +1,336 @@
+---
+device_kepath_entity_common_binary_objects_and_styles:
+  variables:
+    # SETUP DEFAULT VALUES
+    # var_kepath_generic_get_group_notification_objects:
+    #   trigger:
+    #     entity: "sensor.binary_sensor_state_counts"
+    #     is_attribute: true
+    #     attribute_name: "zero_value"
+    #     trigger_value: "on"
+    #   unavailable:
+    #     entity: "sensor.binary_sensor_state_counts"
+    #     is_attribute: true
+    #     attribute_name: "zero_value"
+    #   amount:
+    #     entity: "sensor.binary_sensor_state_counts"
+    #     is_attribute: true
+    #     attribute_name: "zero_value"
+    # var_kepath_generic_set_group_notification_styles:
+    #   use_themes: true
+    #   triggered_state:
+    #     icon: "mdi:checkbox-marked-circle"
+    #     icon_color: "green"
+    #     background_color: "green"
+    #   default_state:
+    #     icon: "mdi:checkbox-blank-circle-outline"
+    #     icon_color: "yellow"
+    #     background_color: "yellow"
+    #   error_state:
+    #     icon: "mdi:close-circle"
+    #     icon_color: "red"
+    #     background_color: "red"
+  icon: >
+    [[[
+      var backupIcon = "mdi:close-circle";
+      var returnedIcon;
+      if (typeof variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon !== 'undefined') {
+        if (variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon.includes('mdi:')) {
+          returnedIcon = variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon;
+        }
+      }
+      if (typeof returnedIcon !== 'undefined') {
+        return returnedIcon;
+      } else {
+        return backupIcon;
+      }
+    ]]]
+  styles:
+    icon:
+      - color: >
+          [[[
+            var returnedColorDefault = "red";
+            var returnedColor;
+            var useThemesDefault = true;
+            var useThemes;
+            const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+            if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes !== 'undefined') {
+              if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes === 'boolean') {
+                useThemes = variables?.var_kepath_generic_set_group_notification_styles?.use_themes;
+              } else {
+                useThemes = useThemesDefault;
+              }
+            } else {
+              useThemes = useThemesDefault;
+            }
+            if (typeof variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon_color !== 'undefined') {
+              returnedColor = variables?.var_kepath_generic_set_group_notification_styles?.error_state?.icon_color;
+            } else {
+              returnedColor = returnedColorDefault;
+            }
+            if (useThemes) {
+              for (let i = 0; i < colorOptions.length; i++) {
+                if (returnedColor.includes(colorOptions[i])){
+                  returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                }
+              }
+            }
+
+            return returnedColor;
+          ]]]
+    img_cell:
+      - background-color: >
+          [[[
+            var returnedColorDefault = "red";
+            var returnedColor;
+            var useThemesDefault = true;
+            var useThemes;
+            const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+            if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes !== 'undefined') {
+              if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes === 'boolean') {
+                useThemes = variables?.var_kepath_generic_set_group_notification_styles?.use_themes;
+              } else {
+                useThemes = useThemesDefault;
+              }
+            } else {
+              useThemes = useThemesDefault;
+            }
+            if (typeof variables?.var_kepath_generic_set_group_notification_styles?.error_state?.background_color !== 'undefined') {
+              returnedColor = variables?.var_kepath_generic_set_group_notification_styles?.error_state?.background_color;
+            } else {
+              returnedColor = returnedColorDefault;
+            }
+            if (useThemes) {
+              for (let i = 0; i < colorOptions.length; i++) {
+                if (returnedColor.includes(colorOptions[i])){
+                  returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                }
+              }
+            }
+
+            return returnedColor;
+          ]]]
+  state:
+    - operator: "template"
+      value: >
+        [[[
+            var triggerEntityDefault = "sensor.binary_sensor_state_counts";
+            var triggerEntity;
+            var triggerIsAttributeDefault = true;
+            var triggerIsAttribute;
+            var triggerAttributeDefault = "zero_value";
+            var triggerAttribute;
+            var triggerStateDefault = "on";
+            var triggerState;
+            var triggerEntityValue;
+            var isTriggered = false;
+
+            if (typeof variables?.var_kepath_generic_get_group_notification_objects?.trigger?.entity !== 'undefined') {
+              triggerEntity = variables?.var_kepath_generic_get_group_notification_objects?.trigger?.entity;
+            } else {
+              triggerEntity = triggerEntityDefault;
+            }
+            if (typeof variables?.var_kepath_generic_get_group_notification_objects?.trigger?.is_attribute !== 'undefined') {
+              if (typeof variables?.var_kepath_generic_set_group_notification_styles?.trigger?.is_attribute === 'boolean') {
+                triggerIsAttribute = variables?.var_kepath_generic_set_group_notification_styles?.trigger?.is_attribute;
+              } else {
+                triggerIsAttribute = triggerIsAttributeDefault;
+              }
+            } else {
+              triggerIsAttribute = triggerIsAttributeDefault;
+            }
+            if (typeof variables?.var_kepath_generic_get_group_notification_objects?.trigger?.attribute_name !== 'undefined') {
+              triggerAttribute = variables?.var_kepath_generic_get_group_notification_objects?.trigger?.attribute_name;
+            } else {
+              triggerAttribute = triggerAttributeDefault;
+            }
+            if (typeof variables?.var_kepath_generic_get_group_notification_objects?.trigger?.trigger_value !== 'undefined') {
+              triggerState = variables?.var_kepath_generic_get_group_notification_objects?.trigger?.trigger_value;
+            } else {
+              triggerState = triggerStateDefault;
+            }
+
+            if (triggerIsAttribute) {
+              if (typeof states[triggerEntity].attributes[triggerAttribute] !== 'undefined') {
+                triggerEntityValue = states[triggerEntity].attributes[triggerAttribute];
+              }
+            } else {
+              if (typeof states[triggerEntity].state !== 'undefined') {
+                triggerEntityValue = states[triggerEntity].state;
+              }
+            }
+
+            if (typeof triggerEntityValue !== 'undefined') {
+              if (triggerEntityValue == triggerState) {
+                isTriggered = true;
+              }
+            }
+
+            //hass.callService('system_log', 'write', {level:'warning',message:'triggerEntity: ' + triggerEntity});
+            //hass.callService('system_log', 'write', {level:'warning',message:'triggerAttribute: ' + triggerAttribute});
+            //hass.callService('system_log', 'write', {level:'warning',message:'triggerState: ' + triggerState});
+            //hass.callService('system_log', 'write', {level:'warning',message:'triggerEntityValue: ' + triggerEntityValue});
+
+            return isTriggered;
+        ]]]
+      icon: >
+        [[[
+          var backupIcon = "mdi:checkbox-marked-circle";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon.includes('mdi:')) {
+              returnedIcon = variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColorDefault = "green";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_generic_set_group_notification_styles?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "green";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_generic_set_group_notification_styles?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_generic_set_group_notification_styles?.triggered_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+
+                return returnedColor;
+              ]]]
+    - operator: "default"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:checkbox-blank-circle-outline";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon.includes('mdi:')) {
+              returnedIcon = variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_generic_set_group_notification_styles?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_generic_set_group_notification_styles?.default_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_generic_set_group_notification_styles?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_generic_set_group_notification_styles?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_generic_set_group_notification_styles?.default_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_generic_set_group_notification_styles?.default_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+
+                return returnedColor;
+              ]]]
