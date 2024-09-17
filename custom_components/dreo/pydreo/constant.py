@@ -95,9 +95,9 @@ DREO_APIS = {
     }
 }
 
-class DREO_DEVICE_SETTING(StrEnum):
+class DreoDeviceSetting(StrEnum):
     """Dreo device settings"""
-    FanTempOffset = "kHafFanTempOffsetKey"
+    FAN_TEMP_OFFSET = "kHafFanTempOffsetKey"
 
 DREO_AUTH_REGION_NA = "NA"
 DREO_AUTH_REGION_EU = "EU"
@@ -163,6 +163,8 @@ OSCILLATION_ANGLE_KEY = "oscangle"
 
 WIND_MODE_KEY = "mode"
 
+HORIZONTAL_ANGLE_RANGE = "horizontal_angle_range"
+VERTICAL_ANGLE_RANGE = "vertical_angle_range"
 SPEED_RANGE = "speed_range"
 HEAT_RANGE = "heat_range"
 ECOLEVEL_RANGE = "ecolevel_range"
