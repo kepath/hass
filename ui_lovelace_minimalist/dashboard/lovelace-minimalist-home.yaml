@@ -135,8 +135,8 @@ views:
                     card:
                       type: "custom:button-card"
                       template:
-                        - "custom_card_kepath_binary_button_common_styles"
-                        - "custom_card_kepath_binary_button_tab_style"
+                        - "custom_card_kepath_binary_notifications_common_styles"
+                        - "custom_card_kepath_binary_notifications_tab_style"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_action_sensors"
                       variables:
@@ -145,7 +145,7 @@ views:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           # position_type: "tab"
-                        var_kepath_generic_get_group_notification_objects:
+                        var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_action_sensors_unavailable_count"
                           amount:
@@ -169,8 +169,8 @@ views:
                     card:
                       type: "custom:button-card"
                       template:
-                        - "custom_card_kepath_binary_button_common_styles"
-                        - "custom_card_kepath_binary_button_tab_style"
+                        - "custom_card_kepath_binary_notifications_common_styles"
+                        - "custom_card_kepath_binary_notifications_tab_style"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_alert_sensors"
                       variables:
@@ -179,7 +179,7 @@ views:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           # position_type: "tab"
-                        var_kepath_generic_get_group_notification_objects:
+                        var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_alert_sensors_unavailable_count"
                           amount:
@@ -203,8 +203,8 @@ views:
                     card:
                       type: "custom:button-card"
                       template:
-                        - "custom_card_kepath_binary_button_common_styles"
-                        - "custom_card_kepath_binary_button_tab_style"
+                        - "custom_card_kepath_binary_notifications_common_styles"
+                        - "custom_card_kepath_binary_notifications_tab_style"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_information_sensors"
                       variables:
@@ -213,7 +213,7 @@ views:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           # position_type: "tab"
-                        var_kepath_generic_get_group_notification_objects:
+                        var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_information_sensors_unavailable_count"
                           amount:
@@ -236,8 +236,8 @@ views:
                     card:
                       type: "custom:button-card"
                       template:
-                        - "custom_card_kepath_binary_button_common_styles"
-                        - "custom_card_kepath_binary_button_tab_style"
+                        - "custom_card_kepath_binary_notifications_common_styles"
+                        - "custom_card_kepath_binary_notifications_tab_style"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
                       variables:
@@ -246,7 +246,7 @@ views:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           # # position_type: "tab"
-                        var_kepath_generic_get_group_notification_objects:
+                        var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_diagnostic_sensors_unavailable_count"
                           amount:
@@ -270,8 +270,8 @@ views:
                     card:
                       type: "custom:button-card"
                       template:
-                        - "custom_card_kepath_binary_button_common_styles"
-                        - "custom_card_kepath_binary_button_tab_style"
+                        - "custom_card_kepath_binary_notifications_common_styles"
+                        - "custom_card_kepath_binary_notifications_tab_style"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_update_sensors"
                       variables:
@@ -280,7 +280,7 @@ views:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           # position_type: "tab"
-                        var_kepath_generic_get_group_notification_objects:
+                        var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_update_sensors_unavailable_count"
                           amount:
@@ -353,26 +353,45 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
-                          - "custom_card_kepath_binary_button_device_style"
-                          # - "device_kepath_entity_common_binary_get_states"
+                          # - "custom_card_kepath_binary_notifications_common_styles"
+                          # - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "custom_card_kepath_generic_group_popup"
+                          # - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_lights"
                         name: "Lights"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
-                            trigger:
-                              attribute_name: "lights_on_count"
+                          var_kepath_generic_get_set_group_common_objects:
+                            templates: []
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "lights_on_count"
-                          var_kepath_generic_set_group_notification_styles:
+                          var_kepath_generic_get_set_group_button_objects:
                             # use_themes: false
-                            triggered_state:
-                              icon: "mdi:lightbulb-multiple"
-                              icon_color: "yellow"
-                              background_color: "yellow"
-                              # trigger_value: "on"
+                            triggered_states:
+                              trigger_0:
+                                unique_id: "trigger_0"
+                                trigger_template: "device_kepath_entity_state_isequal"
+                                trigger:
+                                  # source_entity:
+                                  # is_attribute:
+                                  attribute_name: "lights_on_count"
+                                  trigger_value: "0"
+                                style:
+                                  icon: "mdi:lightbulb-multiple"
+                                  icon_color: "yellow"
+                                  background_color: "yellow"
+                              trigger_1:
+                                unique_id: "trigger_1"
+                                trigger_template: "device_kepath_entity_state_something"
+                                trigger:
+                                  source_entity: "group.all_lights"
+                                  is_attribute: false
+                                  # attribute_name: "plugs_off_count"
+                                  trigger_value: "on"
+                                style:
+                                  icon: "mdi:lightbulb-multiple"
+                                  icon_color: "yellow"
+                                  background_color: "yellow"
                             default_state:
                               icon: "mdi:lightbulb-multiple-off-outline"
                               icon_color: "grey"
@@ -391,13 +410,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
-                          - "custom_card_kepath_binary_button_device_style"
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_outlet_class_switch"
                         name: "Plugs"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "plugs_off_count"
                               count_tooltip: "Plugs off"
@@ -419,14 +438,14 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
-                          - "custom_card_kepath_binary_button_device_style"
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_fans"
                         name: "Fans"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "fans_unavailable_count"
                             amount:
@@ -451,15 +470,15 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
-                          - "custom_card_kepath_binary_button_device_style"
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_climate"
                         icon: "mdi:thermometer"
                         name: "Heating"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "climate_devices_on_count"
                           var_kepath_generic_icon_appearance:
@@ -482,14 +501,14 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
-                          - "custom_card_kepath_binary_button_device_style"
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
                           - "card_room_mower_state"
                         entity: "lawn_mower.moe"
                         icon: "mdi:robot-mower"
                         name: "Mower"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "lawn_mower_error_count"
                             amount:
@@ -500,7 +519,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          # - "custom_card_kepath_binary_button_common_styles"
+                          # - "custom_card_kepath_binary_notifications_common_styles"
                           # - "device_kepath_entity_washing_machine_state"
                           # - "device_kepath_style_washing_machine_state"
                         entity: "sensor.washing_machine_average_demand"
@@ -514,7 +533,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_entity_tumble_dryer_state"
                           - "device_kepath_style_tumble_dryer_state"
                         entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
@@ -531,7 +550,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_entity_dishwasher_state"
                           - "device_kepath_style_dishwasher_state"
                         entity: "sensor.dishwasher_operation_state"
@@ -548,7 +567,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_style_switch_state"
                         entity: "switch.wifi_socket_socket_1"
                         name: "Mini Fridge"
@@ -561,7 +580,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                         entity: "media_player.spotify_kevin_thorn"
                         name: "Spotify"
                         tap_action:
@@ -573,7 +592,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_style_unknown_or_on_state"
                         entity: "sensor.arcade_win10_cpuload"
                         name: "Arcade"
@@ -594,7 +613,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_style_unknown_or_on_state"
                         entity: "sensor.big_pc_win11_cpuload"
                         name: "BigPC"
@@ -615,7 +634,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_style_printer_state"
                         entity: "sensor.mfc_j870dw_status"
                         name: "Printer"
@@ -628,7 +647,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_style_nas_state"
                         entity: "binary_sensor.diskstation_security_status"
                         name: "NAS"
@@ -641,7 +660,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_style_ups_state"
                         entity: "sensor.ups_status"
                         name: "UPS"
@@ -707,13 +726,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_safety_class_binary_sensors"
                         name: "Alerts"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "safety_sensors_unavailable_count"
                             amount:
@@ -738,13 +757,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_style_lock_state"
                         entity: "lock.front_door_top_bolt"
                         icon: "mdi:lock"
                         name: "Lock"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "locks_unavailable_count"
                             amount:
@@ -756,13 +775,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_cameras"
                         name: "Camera"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "cameras_off_count"
                           var_kepath_generic_icon_appearance:
@@ -786,13 +805,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_door_class_binary_sensors"
                         name: "Doors"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "door_sensors_unavailable_count"
                             amount:
@@ -818,14 +837,14 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_entity_occupancy_state"
                           - "device_kepath_style_occupancy_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_occupancy_class_binary_sensors"
                         name: "Away Motion"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "occupancy_sensors_unavailable_count"
                             amount:
@@ -907,14 +926,14 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_entity_occupancy_state"
                           - "device_kepath_style_occupancy_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_occupancy_class_binary_sensors"
                         name: "Home Motion"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "occupancy_sensors_unavailable_count"
                             amount:
@@ -931,13 +950,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_remotes_and_tv_class_media_player"
                         name: "Video"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "media_player_tv_and_remote_on_count"
                           var_kepath_generic_icon_appearance:
@@ -961,13 +980,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_audio_class_media_player"
                         name: "Audio"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "media_player_audio_unavailable_count"
                             amount:
@@ -994,11 +1013,11 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                         entity: "group.all_audio_class_media_player"
                         name: "Repairs"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "media_player_audio_unavailable_count"
                             amount:
@@ -1026,11 +1045,11 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                         entity: "group.all_audio_class_media_player"
                         name: "Watchman"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "media_player_audio_unavailable_count"
                             amount:
@@ -1094,13 +1113,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_device_trackers"
                         name: "Device"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "device_trackers_unavailable_count"
                             amount:
@@ -1122,13 +1141,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_connectivity_class_binary_sensors"
                         name: "Connect"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "connectivity_unavailable_count"
                             amount:
@@ -1154,13 +1173,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_running_class_binary_sensors"
                         name: "Running"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "running_unavailable_count"
                             amount:
@@ -1185,13 +1204,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_duration_class_and_min_unit_of_measurement_sensors"
                         name: "Runtime"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             data_rate_value:
                               attribute_name: "zero_value"
                             unavailable:
@@ -1215,13 +1234,13 @@ views:
                     #   card:
                     #     type: "custom:button-card"
                     #     template:
-                    #       - "custom_card_kepath_binary_button_common_styles"
+                    #       - "custom_card_kepath_binary_notifications_common_styles"
                     #       - "custom_card_kepath_generic_get_trigger_object"
                     #       - "custom_card_kepath_generic_group_popup"
                     #     entity: "group.all_power_class_sensors"
                     #     name: "Power"
                     #     variables:
-                    #       var_kepath_generic_get_group_notification_objects:
+                    #       var_kepath_generic_get_set_group_notification_objects:
                     #         data_rate_value:
                     #           attribute_name: "zero_value"
                     #         unavailable:
@@ -1245,14 +1264,14 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_entity_data_rate_state"
                           - "device_kepath_style_data_rate_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_data_rate_class_sensors"
                         name: "Data"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             data_rate_value:
                               attribute_name: "data_rate_total_value"
                             unavailable:
@@ -1270,14 +1289,14 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_entity_battery_state"
                           - "device_kepath_style_battery_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_battery_class_sensors"
                         name: "Battery"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             battery_value:
                               attribute_name: "batteries_average_value"
                             unavailable:
@@ -1297,14 +1316,14 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "device_kepath_entity_signal_strength_state"
                           - "device_kepath_style_signal_strength_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_signal_strength_class_sensors"
                         name: "Signal"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             signal_value:
                               attribute_name: "signal_sensors_average_value"
                             unavailable:
@@ -1322,13 +1341,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_monetary_class_sensors"
                         name: "Money"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             data_rate_value:
                               attribute_name: "zero_value"
                             unavailable:
@@ -1441,13 +1460,13 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           #       - "custom_card_kepath_generic_get_trigger_object"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_updates"
                         name: "Updates"
                         variables:
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "tab_update_sensors_triggered_count"
                           var_kepath_generic_icon_appearance:
@@ -1470,7 +1489,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           # - "custom_card_kepath_generic_use_entity_picture" use mdi icon for hacs
                         entity: "update.hacs_update"
@@ -1482,7 +1501,7 @@ views:
                                 icon: "mdi:store"
                                 icon_color: "#41bdf5"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "hacs_updates_available"
                         tap_action:
@@ -1494,7 +1513,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.adguard_home_update"
@@ -1506,7 +1525,7 @@ views:
                                 icon: "si:adguard"
                                 icon_color: "#68BC71"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.adguard_home_update"
                               is_attribute: false
@@ -1517,7 +1536,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.plex_media_server_update"
@@ -1533,7 +1552,7 @@ views:
                               default_state:
                                 icon: "si:plex"
                                 icon_color: "#EBAF00"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.plex_media_server_update"
                               is_attribute: false
@@ -1544,7 +1563,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.guacamole_client_update"
@@ -1556,7 +1575,7 @@ views:
                                 icon: "mdi:lan-connect"
                                 icon_color: "#578B34"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.guacamole_client_update"
                               is_attribute: false
@@ -1567,7 +1586,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.esphome_update"
@@ -1582,7 +1601,7 @@ views:
                             dark_theme:
                               default_state:
                                 icon_color: "white"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.esphome_update"
                               is_attribute: false
@@ -1593,7 +1612,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.portainer_update"
@@ -1605,7 +1624,7 @@ views:
                                 icon: "si:docker"
                                 icon_color: "#13BEF9"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.portainer_update"
                         tap_action:
@@ -1615,7 +1634,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.emqx_update"
@@ -1627,7 +1646,7 @@ views:
                                 icon: "mdi:pipe"
                                 icon_color: "#16A560"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.emqx_update"
                               is_attribute: false
@@ -1638,7 +1657,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.uptime_kuma_update"
@@ -1653,7 +1672,7 @@ views:
                             dark_theme:
                               default_state:
                                 icon_color: "#69E084"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.uptime_kuma_update"
                               is_attribute: false
@@ -1664,7 +1683,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.netdata_update"
@@ -1676,7 +1695,7 @@ views:
                                 icon: "mdi:chart-bar"
                                 icon_color: "#E9568E"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.netdata_update"
                               is_attribute: false
@@ -1688,7 +1707,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.scrutiny_full_access_update"
@@ -1700,7 +1719,7 @@ views:
                                 icon: "mdi:glasses"
                                 icon_color: "#4422CB"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.scrutiny_full_access_update"
                               is_attribute: false
@@ -1711,7 +1730,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.studio_code_server_update"
@@ -1723,7 +1742,7 @@ views:
                                 icon: "si:visualstudiocode"
                                 icon_color: "#007ACC"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.studio_code_server_update"
                               is_attribute: false
@@ -1734,7 +1753,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.nginx_proxy_manager_update"
@@ -1746,7 +1765,7 @@ views:
                                 icon: "si:nginx"
                                 icon_color: "#009639"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.nginx_proxy_manager_update"
                               is_attribute: false
@@ -1757,7 +1776,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.music_assistant_update"
@@ -1772,7 +1791,7 @@ views:
                             dark_theme:
                               default_state:
                                 icon_color: "white"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.music_assistant_update"
                               is_attribute: false
@@ -1783,7 +1802,7 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_button_common_styles"
+                          - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_generic_set_icon_and_color"
                           - "custom_card_kepath_generic_use_entity_picture"
                         entity: "update.phpmyadmin_update"
@@ -1795,7 +1814,7 @@ views:
                                 icon: "si:phpmyadmin"
                                 icon_color: "#6C78AF"
                                 background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_get_group_notification_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
                             amount:
                               entity: "update.phpmyadmin_update"
                               is_attribute: false
