@@ -1,15 +1,15 @@
 ---
 custom_card_kepath_door_state:
   variables:
-    var_kepath_generic_get_group_notification_objects:
+    var_kepath_generic_get_set_group_notification_objects:
       locked:
         entity: "sensor.binary_sensor_state_counts"
         is_attribute: >
           [[[
             var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_group_notification_objects?.locked?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_group_notification_objects.locked.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_group_notification_objects.locked.is_attribute;
+            if (variables?.var_kepath_generic_get_set_group_notification_objects?.locked?.is_attribute) {
+              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.locked.is_attribute === "boolean") {
+                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.locked.is_attribute;
               }
             }
             return isValueAttribute;
@@ -30,7 +30,7 @@ custom_card_kepath_door_state:
       icon: >
         [[[
           var icon = "mdi:door-closed";
-          if (states[variables.var_kepath_generic_get_group_notification_objects.locked.entity].attributes[variables.var_kepath_generic_get_group_notification_objects.locked.attribute_name] != "0") {
+          if (states[variables.var_kepath_generic_get_set_group_notification_objects.locked.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.locked.attribute_name] != "0") {
             icon = "mdi:door-closed-lock";
           }
           return icon;

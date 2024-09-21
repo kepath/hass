@@ -5,8 +5,8 @@ device_kepath_style_occupancy_state:
       value: >
         [[[
             var show_detected_home_color = false;
-            var known_home = states[variables.var_kepath_generic_get_group_notification_objects.person.entity].attributes[variables.var_kepath_generic_get_group_notification_objects.person.attribute_name];
-            if (!variables.var_kepath_generic_get_group_notification_objects.person.ignore_on_known_occupancy) {
+            var known_home = states[variables.var_kepath_generic_get_set_group_notification_objects.person.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.person.attribute_name];
+            if (!variables.var_kepath_generic_get_set_group_notification_objects.person.ignore_on_known_occupancy) {
               if (!isNaN(known_home) && known_home !== undefined && known_home != 0){
                 show_detected_home_color = true;
               }
@@ -23,8 +23,8 @@ device_kepath_style_occupancy_state:
       value: >
         [[[
             var show_detected_away_color = false;
-            var known_home = states[variables.var_kepath_generic_get_group_notification_objects.person.entity].attributes[variables.var_kepath_generic_get_group_notification_objects.person.attribute_name];
-            var person_detected = states[variables.var_kepath_generic_get_group_notification_objects.amount.entity].attributes[variables.var_kepath_generic_get_group_notification_objects.amount.attribute_name];
+            var known_home = states[variables.var_kepath_generic_get_set_group_notification_objects.person.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.person.attribute_name];
+            var person_detected = states[variables.var_kepath_generic_get_set_group_notification_objects.amount.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.amount.attribute_name];
             if (!isNaN(known_home) && known_home !== undefined && known_home == 0) {
               if (!isNaN(person_detected) && person_detected !== undefined && person_detected != 0){
                 show_detected_away_color = true;
