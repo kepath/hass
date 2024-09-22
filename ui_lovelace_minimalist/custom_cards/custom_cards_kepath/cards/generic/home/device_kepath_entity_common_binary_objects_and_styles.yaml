@@ -1,0 +1,192 @@
+---
+device_kepath_entity_common_binary_objects_and_styles:
+  show_icon: true
+  show_label: false
+  show_name: true
+  group_expand: true
+  triggers_update: "all"
+  styles:
+    card:
+      - box-shadow: "none"
+      - border-radius: "none"
+      - padding: "12px"
+      - background-color: "rgba(var(--color-theme),0)"
+    grid:
+      - grid-template-areas: "'i' 'n'"
+      - grid-template-rows: "1fr min-content"
+      - grid-template-columns: "1fr"
+      - justify-items: "center"
+    name:
+      - place-self: "center"
+      - font-weight: "bold"
+      - font-size: "10px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - padding-top: "10px"
+      - margin: "0"
+      - min-width: "20px"
+      - color: "var(--primary-text-color)"
+    icon:
+      - color: >
+          [[[
+            var returnedColorDefault = "red";
+            var returnedColor;
+            var useThemesDefault = true;
+            var useThemes;
+            const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
+              if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
+                useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
+              } else {
+                useThemes = useThemesDefault;
+              }
+            } else {
+              useThemes = useThemesDefault;
+            }
+            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon_color !== 'undefined') {
+              returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon_color;
+            } else {
+              returnedColor = returnedColorDefault;
+            }
+            if (useThemes) {
+              for (let i = 0; i < colorOptions.length; i++) {
+                if (returnedColor.includes(colorOptions[i])){
+                  returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                }
+              }
+            }
+
+            return returnedColor;
+          ]]]
+    img_cell:
+      - background-color: >
+          [[[
+            var returnedColorDefault = "red";
+            var returnedColor;
+            var useThemesDefault = true;
+            var useThemes;
+            const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
+              if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
+                useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
+              } else {
+                useThemes = useThemesDefault;
+              }
+            } else {
+              useThemes = useThemesDefault;
+            }
+            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.background_color !== 'undefined') {
+              returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.background_color;
+            } else {
+              returnedColor = returnedColorDefault;
+            }
+            if (useThemes) {
+              for (let i = 0; i < colorOptions.length; i++) {
+                if (returnedColor.includes(colorOptions[i])){
+                  returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                }
+              }
+            }
+
+            return returnedColor;
+          ]]]
+  icon: >
+    [[[
+      var backupIcon = "mdi:close-circle";
+      var returnedIcon;
+      if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon !== 'undefined') {
+        if (variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon.includes('mdi:')) {
+          returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon;
+        }
+      }
+      if (typeof returnedIcon !== 'undefined') {
+        return returnedIcon;
+      } else {
+        return backupIcon;
+      }
+    ]]]
+  state:
+    - operator: "default"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:checkbox-blank-circle-outline";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon.includes('mdi:')) {
+              returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
