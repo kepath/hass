@@ -1,13 +1,19 @@
 ---
 device_kepath_entity_common_binary_objects_and_styles:
-  show_icon: false
+  show_icon: true
   show_label: false
-  show_name: true
+  show_name: false
+  group_expand: true
+  triggers_update: "all"
   styles:
     card:
-      - padding: "0"
+      - box-shadow: "none"
+      - border-radius: "none"
+      - padding: "12px"
+      - background-color: "rgba(var(--color-theme),0)"
+      # - padding: "0"
     grid:
-      - grid-template-areas: "'button' 'n'"
+      - grid-template-areas: "'i' 'n'"
       - grid-template-rows: "1fr min-content"
       - grid-template-columns: "1fr"
       - justify-items: "center"
@@ -21,277 +27,277 @@ device_kepath_entity_common_binary_objects_and_styles:
       - margin: "0"
       - min-width: "20px"
       - color: "var(--primary-text-color)"
-  tap_action:
-    action: "none"
-  custom_fields:
-    button:
-      card:
-        type: "custom:button-card"
-        # template:
-        #   - "device_kepath_entity_state_isequal"
-        # card:
-        # type: "custom:button-card"
-        show_icon: true
-        show_label: false
-        show_name: false
-        group_expand: true
-        triggers_update: "all"
-        styles:
+  # tap_action:
+  #   action: "none"
+  # custom_fields:
+  #   button:
+  #     card:
+  #       type: "custom:button-card"
+  #       # template:
+  #       #   - "device_kepath_entity_state_isequal"
+  #       # card:
+  #       # type: "custom:button-card"
+  #       show_icon: true
+  #       show_label: false
+  #       show_name: false
+  #       group_expand: true
+  #       triggers_update: "all"
+  #       styles:
           # grid:
           #   - grid-template-areas: "'i' 'n'"
           #   - grid-template-rows: "1fr min-content"
           #   - grid-template-columns: "1fr"
           #   - justify-items: "center"
-          icon:
-            - width: "20px"
-            - color: >
-                [[[
-                  var returnedColorDefault = "red";
-                  var returnedColor;
-                  var useThemesDefault = true;
-                  var useThemes;
-                  const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                  if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
-                    if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
-                      useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
-                    } else {
-                      useThemes = useThemesDefault;
-                    }
-                  } else {
-                    useThemes = useThemesDefault;
-                  }
-                  if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon_color !== 'undefined') {
-                    returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon_color;
-                  } else {
-                    returnedColor = returnedColorDefault;
-                  }
-                  if (useThemes) {
-                    for (let i = 0; i < colorOptions.length; i++) {
-                      if (returnedColor.includes(colorOptions[i])){
-                        returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
-                      }
-                    }
-                  }
-
-                  return returnedColor;
-                ]]]
-          img_cell:
-            - background-color: >
-                [[[
-                  var returnedColorDefault = "red";
-                  var returnedColor;
-                  var useThemesDefault = true;
-                  var useThemes;
-                  const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                  if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
-                    if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
-                      useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
-                    } else {
-                      useThemes = useThemesDefault;
-                    }
-                  } else {
-                    useThemes = useThemesDefault;
-                  }
-                  if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.background_color !== 'undefined') {
-                    returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.background_color;
-                  } else {
-                    returnedColor = returnedColorDefault;
-                  }
-                  if (useThemes) {
-                    for (let i = 0; i < colorOptions.length; i++) {
-                      if (returnedColor.includes(colorOptions[i])){
-                        returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
-                      }
-                    }
-                  }
-
-                  return returnedColor;
-                ]]]
-          card:
-            - box-shadow: "none"
-            - border-radius: "none"
-            - padding: "12px"
-            - background-color: "rgba(var(--color-theme),0)"
-        icon: >
+    icon:
+      # - width: "20px"
+      - color: >
           [[[
-            var backupIcon = "mdi:close-circle";
-            var returnedIcon;
-            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon !== 'undefined') {
-              if (variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon.includes('mdi:')) {
-                returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon;
+            var returnedColorDefault = "red";
+            var returnedColor;
+            var useThemesDefault = true;
+            var useThemes;
+            const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
+              if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
+                useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
+              } else {
+                useThemes = useThemesDefault;
               }
-            }
-            if (typeof returnedIcon !== 'undefined') {
-              return returnedIcon;
             } else {
-              return backupIcon;
+              useThemes = useThemesDefault;
             }
-          ]]]
-        template: >
-          [[[
-            let styleTemplate = [
-              "icon_info_bg",
-              "device_kepath_entity_state_isequal",
-              "custom_card_kepath_binary_notifications_common_styles",
-              "custom_card_kepath_binary_notifications_device_style",
-              "custom_card_kepath_generic_group_popup"
-            ];
-            //var extraTemplate = "widget_count_mdi_number_indicator_default_style"
-            //styleTemplate.push(extraTemplate);
-            //hass.callService('system_log', 'write', {level:'warning',message:'styleTemplate: ' + styleTemplate});
-
-            return styleTemplate;
-          ]]]
-        entity: "group.all_lights"
-        variables:
-          unique_id: >
-            [[[
-              var triggerArray = variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states;
-              //var triggerArrayLength = 0;
-              var triggerKeys = [];
-              for(var key in triggerArray) {
-                if(triggerArray.hasOwnProperty(key)){
-                  triggerKeys.push(key);
-                  //hass.callService('system_log', 'write', {level:'warning',message:'key: ' + key});
-                  //triggerArrayLength++;
+            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon_color !== 'undefined') {
+              returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon_color;
+            } else {
+              returnedColor = returnedColorDefault;
+            }
+            if (useThemes) {
+              for (let i = 0; i < colorOptions.length; i++) {
+                if (returnedColor.includes(colorOptions[i])){
+                  returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
                 }
               }
+            }
 
-              hass.callService('system_log', 'write', {level:'warning',message:'triggerKeys: ' + triggerKeys});
-              //hass.callService('system_log', 'write', {level:'warning',message:'triggerArray.keys(data).length: ' + triggerArray.keys(data).length});
+            return returnedColor;
+          ]]]
+    img_cell:
+      - background-color: >
+          [[[
+            var returnedColorDefault = "red";
+            var returnedColor;
+            var useThemesDefault = true;
+            var useThemes;
+            const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
+              if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
+                useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
+              } else {
+                useThemes = useThemesDefault;
+              }
+            } else {
+              useThemes = useThemesDefault;
+            }
+            if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.background_color !== 'undefined') {
+              returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.background_color;
+            } else {
+              returnedColor = returnedColorDefault;
+            }
+            if (useThemes) {
+              for (let i = 0; i < colorOptions.length; i++) {
+                if (returnedColor.includes(colorOptions[i])){
+                  returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                }
+              }
+            }
 
-              //hass.callService('system_log', 'write', {level:'warning',message:'triggerArray.keys(data).length: ' + variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.keys(data).length});
-              //for (let i=0; i<variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.length; i++) {
-              //  hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i]?.unique_id: ' + variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i]?.unique_id});
-              //}
-              //triggerArray.forEach((element) => {
-              //  hass.callService('system_log', 'write', {level:'warning',message:'element?.unique_id: ' + element?.unique_id});
-              //});
-              //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states: ' + variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states});
-              //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.length: ' + variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.length});
-              //variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states
+            return returnedColor;
+          ]]]
+    # card:
+    #   - box-shadow: "none"
+    #   - border-radius: "none"
+    #   - padding: "12px"
+    #   - background-color: "rgba(var(--color-theme),0)"
+  icon: >
+    [[[
+      var backupIcon = "mdi:close-circle";
+      var returnedIcon;
+      if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon !== 'undefined') {
+        if (variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon.includes('mdi:')) {
+          returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon;
+        }
+      }
+      if (typeof returnedIcon !== 'undefined') {
+        return returnedIcon;
+      } else {
+        return backupIcon;
+      }
+    ]]]
+  # template: >
+  #   [[[
+  #     let styleTemplate = [
+  #       "icon_info_bg",
+  #       "device_kepath_entity_state_isequal",
+  #       "custom_card_kepath_binary_notifications_common_styles",
+  #       "custom_card_kepath_binary_notifications_device_style",
+  #       "custom_card_kepath_generic_group_popup"
+  #     ];
+  #     //var extraTemplate = "widget_count_mdi_number_indicator_default_style"
+  #     //styleTemplate.push(extraTemplate);
+  #     //hass.callService('system_log', 'write', {level:'warning',message:'styleTemplate: ' + styleTemplate});
 
-              return "trigger_0";
-            ]]]
-        #   notification_counts: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable; ]]]"
-        # entity: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.entity; ]]]"
+  #     return styleTemplate;
+  #   ]]]
+  # entity: "group.all_lights"
+  # variables:
+  #   unique_id: >
+  #     [[[
+  #       var triggerArray = variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states;
+  #       //var triggerArrayLength = 0;
+  #       var triggerKeys = [];
+  #       for(var key in triggerArray) {
+  #         if(triggerArray.hasOwnProperty(key)){
+  #           triggerKeys.push(key);
+  #           //hass.callService('system_log', 'write', {level:'warning',message:'key: ' + key});
+  #           //triggerArrayLength++;
+  #         }
+  #       }
+
+  #       hass.callService('system_log', 'write', {level:'warning',message:'triggerKeys: ' + triggerKeys});
+  #       //hass.callService('system_log', 'write', {level:'warning',message:'triggerArray.keys(data).length: ' + triggerArray.keys(data).length});
+
+  #       //hass.callService('system_log', 'write', {level:'warning',message:'triggerArray.keys(data).length: ' + variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.keys(data).length});
+  #       //for (let i=0; i<variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.length; i++) {
+  #       //  hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i]?.unique_id: ' + variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i]?.unique_id});
+  #       //}
+  #       //triggerArray.forEach((element) => {
+  #       //  hass.callService('system_log', 'write', {level:'warning',message:'element?.unique_id: ' + element?.unique_id});
+  #       //});
+  #       //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states: ' + variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states});
+  #       //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.length: ' + variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.length});
+  #       //variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states
+
+  #       return "trigger_0";
+  #     ]]]
+  #   notification_counts: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable; ]]]"
+  # entity: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.entity; ]]]"
 
 
-        # type: "custom:button-card"
-        # template: >
-        #     [[[
-        #       let styleTemplate = [ "device_kepath_entity_state_isequal" ];
-        #       hass.callService('system_log', 'write', {level:'warning',message:'styleTemplate: ' + styleTemplate});
+  # type: "custom:button-card"
+  # template: >
+  #     [[[
+  #       let styleTemplate = [ "device_kepath_entity_state_isequal" ];
+  #       hass.callService('system_log', 'write', {level:'warning',message:'styleTemplate: ' + styleTemplate});
 
-        #       return styleTemplate;
-        #     ]]]
-        #
-        #     //var extraTemplate = "icon_info_bg";
-        #     hass.callService('system_log', 'write', {level:'warning',message:'0: '});
-        #     if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states !== 'undefined') {
-        #       hass.callService('system_log', 'write', {level:'warning',message:'1: '});
-        #       if (Array.isArray(variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states)) {
-        #         hass.callService('system_log', 'write', {level:'warning',message:'2: '});
-        #         for (let i = 0; i < variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.length; i++) {
-        #           hass.callService('system_log', 'write', {level:'warning',message:'3: '});
-        #           if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i] !== 'undefined') {
-        #             hass.callService('system_log', 'write', {level:'warning',message:'4: '});
-        #             if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i]?.trigger_template !== 'undefined') {
-        #               hass.callService('system_log', 'write', {level:'warning',message:'5: '});
-        #               styleTemplate.push(variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i]?.trigger_template);
-        #             }
-        #           }
-        #         }
-        #       }
-        #     }
-        #     styleTemplate.push(extraTemplate);
-        #     hass.callService('system_log', 'write', {level:'warning',message:'styleTemplate: ' + styleTemplate});
+  #       return styleTemplate;
+  #     ]]]
+  #
+  #     //var extraTemplate = "icon_info_bg";
+  #     hass.callService('system_log', 'write', {level:'warning',message:'0: '});
+  #     if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states !== 'undefined') {
+  #       hass.callService('system_log', 'write', {level:'warning',message:'1: '});
+  #       if (Array.isArray(variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states)) {
+  #         hass.callService('system_log', 'write', {level:'warning',message:'2: '});
+  #         for (let i = 0; i < variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states.length; i++) {
+  #           hass.callService('system_log', 'write', {level:'warning',message:'3: '});
+  #           if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i] !== 'undefined') {
+  #             hass.callService('system_log', 'write', {level:'warning',message:'4: '});
+  #             if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i]?.trigger_template !== 'undefined') {
+  #               hass.callService('system_log', 'write', {level:'warning',message:'5: '});
+  #               styleTemplate.push(variables?.var_kepath_generic_get_set_group_button_objects?.triggered_states[i]?.trigger_template);
+  #             }
+  #           }
+  #         }
+  #       }
+  #     }
+  #     styleTemplate.push(extraTemplate);
+  #     hass.callService('system_log', 'write', {level:'warning',message:'styleTemplate: ' + styleTemplate});
 
-        #     return styleTemplate;
-        #   ]]]
+  #     return styleTemplate;
+  #   ]]]
 
-        state:
-          - operator: "default"
-            icon: >
+  state:
+    - operator: "default"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:checkbox-blank-circle-outline";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon.includes('mdi:')) {
+              returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
               [[[
-                var backupIcon =  "mdi:checkbox-blank-circle-outline";
-                var returnedIcon;
-                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon !== 'undefined') {
-                  if (variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon.includes('mdi:')) {
-                    returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon;
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
                   }
                 }
-                if (typeof returnedIcon !== 'undefined') {
-                  //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
-                  return returnedIcon;
-                } else {
-                  return backupIcon;
-                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
               ]]]
-            styles:
-              icon:
-                - color: >
-                    [[[
-                      var returnedColorDefault = "yellow";
-                      var returnedColor;
-                      var useThemesDefault = true;
-                      var useThemes;
-                      const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                      if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
-                        if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
-                          useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
-                        } else {
-                          useThemes = useThemesDefault;
-                        }
-                      } else {
-                        useThemes = useThemesDefault;
-                      }
-                      if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon_color !== 'undefined') {
-                        returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.icon_color;
-                      } else {
-                        returnedColor = returnedColorDefault;
-                      }
-                      if (useThemes) {
-                        for (let i = 0; i < colorOptions.length; i++) {
-                          if (returnedColor.includes(colorOptions[i])){
-                            returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
-                          }
-                        }
-                      }
-                      //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
 
-                      return returnedColor;
-                    ]]]
-              img_cell:
-                - background-color: >
-                    [[[
-                      var returnedColorDefault = "yellow";
-                      var returnedColor;
-                      var useThemesDefault = true;
-                      var useThemes;
-                      const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                      if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes !== 'undefined') {
-                        if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.use_themes === 'boolean') {
-                          useThemes = variables?.var_kepath_generic_get_set_group_button_objects?.use_themes;
-                        } else {
-                          useThemes = useThemesDefault;
-                        }
-                      } else {
-                        useThemes = useThemesDefault;
-                      }
-                      if (typeof variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.background_color !== 'undefined') {
-                        returnedColor = variables?.var_kepath_generic_get_set_group_button_objects?.default_state?.background_color;
-                      } else {
-                        returnedColor = returnedColorDefault;
-                      }
-                      if (useThemes) {
-                        for (let i = 0; i < colorOptions.length; i++) {
-                          if (returnedColor.includes(colorOptions[i])){
-                            returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
-                          }
-                        }
-                      }
-                      //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
-
-                      return returnedColor;
-                    ]]]
+                return returnedColor;
+              ]]]
