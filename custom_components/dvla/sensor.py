@@ -10,7 +10,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfMass
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -108,7 +108,8 @@ class DVLASensor(CoordinatorEntity[DVLACoordinator], SensorEntity):
         super().__init__(coordinator)
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{name}")},
-            manufacturer=coordinator.data.get("make"),
+            manufacturer=DOMAIN.upper(),
+            model=coordinator.data.get("make"),
             name=name.upper(),
             configuration_url="https://github.com/jampez77/DVLA-Vehicle-Checker/",
         )
@@ -116,6 +117,35 @@ class DVLASensor(CoordinatorEntity[DVLACoordinator], SensorEntity):
         self.entity_id = f"sensor.{DOMAIN}_{name}_{description.key}".lower()
         self.attrs: dict[str, Any] = {}
         self.entity_description = description
+        self._state = None
+
+    def update_from_coordinator(self):
+        """Update sensor state and attributes from coordinator data."""
+
+        self._state = self.coordinator.data.get(self.entity_description.key)
+
+        if self._state is not None:
+            if (
+                self._state
+                and self.entity_description.device_class == SensorDeviceClass.DATE
+            ):
+                self._state = date.fromisoformat(self._state)
+
+            for key in self.coordinator.data:
+                self.attrs[key] = self.coordinator.data[key]
+        else:
+            self.hass.async_add_job(self.async_remove())
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self.update_from_coordinator()
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self) -> None:
+        """Handle adding to Home Assistant."""
+        await super().async_added_to_hass()
+        await self.async_update()
 
     @property
     def available(self) -> bool:
@@ -125,14 +155,9 @@ class DVLASensor(CoordinatorEntity[DVLACoordinator], SensorEntity):
     @property
     def native_value(self) -> str | date | None:
         """Native value."""
-        value = self.coordinator.data.get(self.entity_description.key)
-        if value and self.entity_description.device_class == SensorDeviceClass.DATE:
-            return date.fromisoformat(value)
-        return value
+        return self._state
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Define entity attributes."""
-        for key in self.coordinator.data:
-            self.attrs[key] = self.coordinator.data[key]
         return self.attrs
