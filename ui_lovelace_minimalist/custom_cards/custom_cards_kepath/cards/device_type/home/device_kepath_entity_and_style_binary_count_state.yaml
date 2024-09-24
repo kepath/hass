@@ -1,19 +1,19 @@
 ---
 device_kepath_entity_and_style_binary_count_state:
-  variables:
-    var_kepath_device_entity_and_style_binary_count_state:
-      entity:
-        evaluated_entity: "sensor.binary_sensor_state_counts"
-        isattribute: true
-        evaluated_attribute: "zero_value"
-      value:
-        math_expresion_used: "gt"
-        trigger_value: 0
-      style:
-        use_themes: true
-        icon: "mdi:checkbox-blank-circle-outline"
-        icon_color: "green"
-        background_color: "green"
+  # variables:
+  #   var_kepath_device_entity_and_style_binary_count_state:
+  #     entity:
+  #       evaluated_entity: "sensor.binary_sensor_state_counts"
+  #       isattribute: true
+  #       evaluated_attribute: "zero_value"
+  #     value:
+  #       math_expresion_used: "gt"
+  #       trigger_value: 0
+  #     style:
+  #       use_themes: true
+  #       icon: "mdi:checkbox-blank-circle-outline"
+  #       icon_color: "green"
+  #       background_color: "green"
   state:
     - operator: "template"
       value: >
@@ -93,6 +93,7 @@ device_kepath_entity_and_style_binary_count_state:
                   returnValue = true;
                 }
               default:
+                returnValue = false;
             }
           }
 

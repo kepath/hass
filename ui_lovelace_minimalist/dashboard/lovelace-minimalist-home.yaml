@@ -137,6 +137,8 @@ views:
                       template:
                         - "custom_card_kepath_binary_notifications_common_styles"
                         - "custom_card_kepath_binary_notifications_tab_style"
+                        - "device_kepath_entity_common_binary_objects_and_styles"
+                        - "device_kepath_entity_and_style_simple_binary_switch_state"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_action_sensors"
                       variables:
@@ -151,19 +153,34 @@ views:
                           amount:
                             attribute_name: "tab_action_sensors_triggered_count"
                             count_tooltip: "Action Sum"
-                        var_kepath_generic_icon_appearance:
-                          evaluated_object: "input_boolean.minimalist_ui_binary_action_sensors"
-                          use_theme_colors: true
-                          default_theme:
-                            default_state:
-                              icon_color: "theme"
-                              background_color: "theme"
-                            triggered_state:
-                              matching_type: "eq"
-                              matching_state: "on"
-                              icon: "mdi:tune-variant"
-                              icon_color: "blue"
-                              background_color: "blue"
+                        var_kepath_generic_get_set_group_button_objects:
+                          use_themes: false
+                          default_state:
+                            icon: "mdi:tune-variant"
+                            icon_color: "rgba(var(--color-theme),0.2)"
+                            background_color: "rgba(var(--color-theme),0.05)"
+                          error_state:
+                            icon: "mdi:folder-alert-outline"
+                            icon_color: "rgba(var(--color-red),0.2)"
+                            background_color: "rgba(var(--color-red),0.05)"
+                        var_kepath_device_entity_and_style_simple_binary_switch_state:
+                          on_state:
+                            icon: "mdi:tune"
+                            icon_color: "blue"
+                            background_color: "blue"
+                        # var_kepath_generic_icon_appearance:
+                        #   evaluated_object: "input_boolean.minimalist_ui_binary_action_sensors"
+                        #   use_theme_colors: true
+                        #   default_theme:
+                        #     default_state:
+                        #       icon_color: "theme"
+                        #       background_color: "theme"
+                        #     triggered_state:
+                        #       matching_type: "eq"
+                        #       matching_state: "on"
+                        #       icon: "mdi:tune-variant"
+                        #       icon_color: "blue"
+                        #       background_color: "blue"
 
                   item2:
                     card:
@@ -171,6 +188,8 @@ views:
                       template:
                         - "custom_card_kepath_binary_notifications_common_styles"
                         - "custom_card_kepath_binary_notifications_tab_style"
+                        - "device_kepath_entity_common_binary_objects_and_styles"
+                        - "device_kepath_entity_and_style_simple_binary_switch_state"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_alert_sensors"
                       variables:
@@ -185,19 +204,34 @@ views:
                           amount:
                             attribute_name: "tab_alert_sensors_triggered_count"
                             count_tooltip: "Alert on"
-                        var_kepath_generic_icon_appearance:
-                          evaluated_object: "input_boolean.minimalist_ui_binary_alert_sensors"
-                          use_theme_colors: true
-                          default_theme:
-                            default_state:
-                              icon_color: "theme"
-                              background_color: "theme"
-                            triggered_state:
-                              matching_type: "eq"
-                              matching_state: "on"
-                              icon: "mdi:bell-alert"
-                              icon_color: "red"
-                              background_color: "red"
+                        var_kepath_generic_get_set_group_button_objects:
+                          use_themes: false
+                          default_state:
+                            icon: "mdi:bell-alert-outline"
+                            icon_color: "rgba(var(--color-theme),0.2)"
+                            background_color: "rgba(var(--color-theme),0.05)"
+                          error_state:
+                            icon: "mdi:folder-alert-outline"
+                            icon_color: "rgba(var(--color-red),0.2)"
+                            background_color: "rgba(var(--color-red),0.05)"
+                        var_kepath_device_entity_and_style_simple_binary_switch_state:
+                          on_state:
+                            icon: "mdi:bell-alert"
+                            icon_color: "red"
+                            background_color: "red"
+                        # var_kepath_generic_icon_appearance:
+                        #   evaluated_object: "input_boolean.minimalist_ui_binary_alert_sensors"
+                        #   use_theme_colors: true
+                        #   default_theme:
+                        #     default_state:
+                        #       icon_color: "theme"
+                        #       background_color: "theme"
+                        #     triggered_state:
+                        #       matching_type: "eq"
+                        #       matching_state: "on"
+                        #       icon: "mdi:bell-alert"
+                        #       icon_color: "red"
+                        #       background_color: "red"
 
                   item3:
                     card:
@@ -205,6 +239,8 @@ views:
                       template:
                         - "custom_card_kepath_binary_notifications_common_styles"
                         - "custom_card_kepath_binary_notifications_tab_style"
+                        - "device_kepath_entity_common_binary_objects_and_styles"
+                        - "device_kepath_entity_and_style_simple_binary_switch_state"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_information_sensors"
                       variables:
@@ -219,25 +255,42 @@ views:
                           amount:
                             attribute_name: "tab_information_sensors_triggered_count"
                             count_tooltip: "Info Sum"
-                        var_kepath_generic_icon_appearance:
-                          evaluated_object: "input_boolean.minimalist_ui_binary_information_sensors"
-                          use_theme_colors: true
-                          default_theme:
-                            default_state:
-                              icon_color: "theme"
-                              background_color: "theme"
-                            triggered_state:
-                              matching_type: "eq"
-                              matching_state: "on"
-                              icon: "mdi:information-variant-circle"
-                              icon_color: "green"
-                              background_color: "green"
+                        var_kepath_generic_get_set_group_button_objects:
+                          use_themes: false
+                          default_state:
+                            icon: "mdi:information-variant-circle-outline"
+                            icon_color: "rgba(var(--color-theme),0.2)"
+                            background_color: "rgba(var(--color-theme),0.05)"
+                          error_state:
+                            icon: "mdi:folder-alert-outline"
+                            icon_color: "rgba(var(--color-red),0.2)"
+                            background_color: "rgba(var(--color-red),0.05)"
+                        var_kepath_device_entity_and_style_simple_binary_switch_state:
+                          on_state:
+                            icon: "mdi:information-variant-circle"
+                            icon_color: "green"
+                            background_color: "green"
+                        # var_kepath_generic_icon_appearance:
+                        #   evaluated_object: "input_boolean.minimalist_ui_binary_information_sensors"
+                        #   use_theme_colors: true
+                        #   default_theme:
+                        #     default_state:
+                        #       icon_color: "theme"
+                        #       background_color: "theme"
+                        #     triggered_state:
+                        #       matching_type: "eq"
+                        #       matching_state: "on"
+                        #       icon: "mdi:information-variant-circle"
+                        #       icon_color: "green"
+                        #       background_color: "green"
                   item4:
                     card:
                       type: "custom:button-card"
                       template:
                         - "custom_card_kepath_binary_notifications_common_styles"
                         - "custom_card_kepath_binary_notifications_tab_style"
+                        - "device_kepath_entity_common_binary_objects_and_styles"
+                        - "device_kepath_entity_and_style_simple_binary_switch_state"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
                       variables:
@@ -252,19 +305,34 @@ views:
                           amount:
                             attribute_name: "tab_diagnostic_sensors_triggered_count"
                             count_tooltip: "Diag on"
-                        var_kepath_generic_icon_appearance:
-                          evaluated_object: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
-                          use_theme_colors: true
-                          default_theme:
-                            default_state:
-                              icon_color: "theme"
-                              background_color: "theme"
-                            triggered_state:
-                              matching_type: "eq"
-                              matching_state: "on"
-                              icon: "mdi:cog"
-                              icon_color: "yellow"
-                              background_color: "yellow"
+                        var_kepath_generic_get_set_group_button_objects:
+                          use_themes: false
+                          default_state:
+                            icon: "mdi:cog-outline"
+                            icon_color: "rgba(var(--color-theme),0.2)"
+                            background_color: "rgba(var(--color-theme),0.05)"
+                          error_state:
+                            icon: "mdi:folder-alert-outline"
+                            icon_color: "rgba(var(--color-red),0.2)"
+                            background_color: "rgba(var(--color-red),0.05)"
+                        var_kepath_device_entity_and_style_simple_binary_switch_state:
+                          on_state:
+                            icon: "mdi:cog"
+                            icon_color: "yellow"
+                            background_color: "yellow"
+                        # var_kepath_generic_icon_appearance:
+                        #   evaluated_object: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
+                        #   use_theme_colors: true
+                        #   default_theme:
+                        #     default_state:
+                        #       icon_color: "theme"
+                        #       background_color: "theme"
+                        #     triggered_state:
+                        #       matching_type: "eq"
+                        #       matching_state: "on"
+                        #       icon: "mdi:cog"
+                        #       icon_color: "yellow"
+                        #       background_color: "yellow"
 
                   item5:
                     card:
@@ -272,6 +340,8 @@ views:
                       template:
                         - "custom_card_kepath_binary_notifications_common_styles"
                         - "custom_card_kepath_binary_notifications_tab_style"
+                        - "device_kepath_entity_common_binary_objects_and_styles"
+                        - "device_kepath_entity_and_style_simple_binary_switch_state"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_update_sensors"
                       variables:
@@ -286,19 +356,34 @@ views:
                           amount:
                             attribute_name: "tab_update_sensors_triggered_count"
                             count_tooltip: "Update on"
-                        var_kepath_generic_icon_appearance:
-                          evaluated_object: "input_boolean.minimalist_ui_binary_update_sensors"
-                          use_theme_colors: true
-                          default_theme:
-                            default_state:
-                              icon_color: "theme"
-                              background_color: "theme"
-                            triggered_state:
-                              matching_type: "eq"
-                              matching_state: "on"
-                              icon: "mdi:refresh-circle"
-                              icon_color: "yellow"
-                              background_color: "yellow"
+                        var_kepath_generic_get_set_group_button_objects:
+                          use_themes: false
+                          default_state:
+                            icon: "mdi:refresh"
+                            icon_color: "rgba(var(--color-theme),0.2)"
+                            background_color: "rgba(var(--color-theme),0.05)"
+                          error_state:
+                            icon: "mdi:folder-alert-outline"
+                            icon_color: "rgba(var(--color-red),0.2)"
+                            background_color: "rgba(var(--color-red),0.05)"
+                        var_kepath_device_entity_and_style_simple_binary_switch_state:
+                          on_state:
+                            icon: "mdi:refresh-circle"
+                            icon_color: "yellow"
+                            background_color: "yellow"
+                        # var_kepath_generic_icon_appearance:
+                        #   evaluated_object: "input_boolean.minimalist_ui_binary_update_sensors"
+                        #   use_theme_colors: true
+                        #   default_theme:
+                        #     default_state:
+                        #       icon_color: "theme"
+                        #       background_color: "theme"
+                        #     triggered_state:
+                        #       matching_type: "eq"
+                        #       matching_state: "on"
+                        #       icon: "mdi:refresh-circle"
+                        #       icon_color: "yellow"
+                        #       background_color: "yellow"
 
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
@@ -522,11 +607,11 @@ views:
                         template:
                           # - "custom_card_kepath_binary_notifications_common_styles"
                           # - "custom_card_kepath_binary_notifications_device_style"
-                          # - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "custom_card_kepath_binary_notifications_common_styles"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
                           # - "device_kepath_entity_washing_machine_state"
                           # - "device_kepath_style_washing_machine_state"
-                        entity: "sensor.washing_machine_average_demand"
+                        entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
+                        # entity: "sensor.washing_machine_average_demand"
                         name: "Washer"
                         variables:
                           var_kepath_generic_get_set_group_button_objects:
