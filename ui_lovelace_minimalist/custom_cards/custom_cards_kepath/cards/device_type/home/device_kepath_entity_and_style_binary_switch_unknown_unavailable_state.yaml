@@ -1,14 +1,11 @@
 ---
-device_kepath_entity_and_style_binary_count_state:
+device_kepath_entity_and_style_binary_switch_unknown_unavailable_state:
   # variables:
   #   var_kepath_device_entity_and_style_binary_count_state:
   #     entity:
   #       evaluated_entity: "sensor.binary_sensor_state_counts"
-  #       isattribute: true
+  #       isattribute: false
   #       evaluated_attribute: "zero_value"
-  #     value:
-  #       math_expresion_used: "gt"
-  #       trigger_value: 0
   #     style:
   #       use_themes: true
   #       icon: "mdi:checkbox-blank-circle-outline"
@@ -20,18 +17,12 @@ device_kepath_entity_and_style_binary_count_state:
         [[[
           var evaluatedEntityDefault = "sensor.binary_sensor_state_counts";
           var evaluatedEntity;
-          var isAttributeDefault = true;
+          var isAttributeDefault = false;
           var isAttribute;
           var evaluatedAttributeDefault = "zero_value";
           var evaluatedAttribute;
-          var mathExpressionDefault = "gt";
-          var mathExpression;
-          var triggerValueDefault = 0;
-          var triggerValue;
 
-          const mathExpressionList = ['eq', 'lt', 'gt', 'ne'];
           var resolvedState;
-          var isValidExpression = false;
           var returnValue = false;
 
           if (typeof variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity !== 'undefined') {
@@ -60,61 +51,13 @@ device_kepath_entity_and_style_binary_count_state:
             resolvedState = states[evaluatedEntity].state;
           }
 
-          if (typeof variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.math_expresion_used !== 'undefined') {
-            mathExpression = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.math_expresion_used;
-          } else {
-            mathExpression = mathExpressionDefault;
+          if (resolvedState == "on" || resolvedState == "unknown" || resolvedState == "unavailable") {
+            returnValue = true;
           }
-          for (let i = 0; i < mathExpressionList.length; i++) {
-            if (mathExpression.includes(mathExpressionList[i])){
-              isValidExpression = true;
-            }
-          }
-          if (!isValidExpression) {
-            mathExpression = mathExpressionDefault;
-          }
-          if (typeof variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.trigger_value !== 'undefined') {
-            triggerValue = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.trigger_value;
-          } else {
-            triggerValue = triggerValueDefault;
-          }
-          if (!isNaN(resolvedState) && !isNaN(triggerValue)) {
-            switch(mathExpression) {
-              case "eq":
-                if (resolvedState == triggerValue) {
-                  returnValue = true;
-                }
-                //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: eq'});
-                break;
-              case "lt":
-                if (resolvedState < triggerValue) {
-                  returnValue = true;
-                }
-                //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: lt'});
-                break;
-              case "gt":
-                if (resolvedState > triggerValue) {
-                  returnValue = true;
-                }
-                //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: gt'});
-                break;
-              case "ne":
-                if (resolvedState != triggerValue) {
-                  returnValue = true;
-                }
-                //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: ne'});
-                break;
-              default:
-                //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: default'});
-                returnValue = false;
-                break;
-            }
-          }
+
           //hass.callService('system_log', 'write', {level:'warning',message:'evaluatedEntity: ' + evaluatedEntity});
           //hass.callService('system_log', 'write', {level:'warning',message:'evaluatedAttribute: ' + evaluatedAttribute});
-          //hass.callService('system_log', 'write', {level:'warning',message:'mathExpression: ' + mathExpression});
           //hass.callService('system_log', 'write', {level:'warning',message:'resolvedState: ' + resolvedState});
-          //hass.callService('system_log', 'write', {level:'warning',message:'triggerValue: ' + triggerValue});
           //hass.callService('system_log', 'write', {level:'warning',message:'returnValue: ' + returnValue});
 
           return returnValue;

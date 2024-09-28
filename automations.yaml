@@ -177,15 +177,17 @@
     event: start
   condition: []
   action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  - data:
       domain: camera
       group_name: all_cameras
       icon: mdi:camera
       friendly_name: All camera domain entities
       filter_by_device_class: false
+      excluded_entities:
+      - camera.camera_indoor
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1629812616259'
   alias: on_start_create_group.all_media_player_domain_entities
@@ -1494,4 +1496,3 @@
       - media_player.amazon_echo_spot_bed_a
       - sensor.amazon_echo_spot_bed_a_next_alarm
   mode: single
-
