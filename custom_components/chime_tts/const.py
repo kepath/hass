@@ -37,10 +37,11 @@ AUDIO_DURATION_KEY = "audio_duration"
 FADE_TRANSITION_KEY = "fade_transition_key"
 DEFAULT_FADE_TRANSITION_MS = 500
 TRANSITION_STEP_MS = 150
+ADD_COVER_ART_KEY = "add_cover_art"
 
 ALEXA_MEDIA_PLAYER_PLATFORM = "alexa_media"
-SPOTIFY_PLATFORM = "spotify"
 SONOS_PLATFORM = "sonos"
+SPOTIFY_PLATFORM = "spotify"
 
 ROOT_PATH_KEY = "root_path_key"
 MEDIA_FOLDER_PATH = "/local/"
@@ -98,7 +99,14 @@ QUEUE_CURRENT_ID_KEY = "QUEUE_CURRENT_ID"
 QUEUE_LAST_ID = "QUEUE_LAST_ID"
 QUEUE_TIMEOUT_KEY = "queue_timeout"
 QUEUE_TIMEOUT_DEFAULT = 60
+MAX_CONCURRENT_TASKS = 10
+MAX_TIMEOUT = 600
+QUEUE_PROCESSOR_SLEEP_TIME = 0.2
+
 TTS_PLATFORM_KEY = "tts_platform_key"
+DEFAULT_LANGUAGE_KEY = "default_language_key"
+DEFAULT_VOICE_KEY = "default_voice_key"
+DEFAULT_TLD_KEY = "default_tld_key"
 
 # FFmpeg Arguments
 FFMPEG_ARGS_ALEXA = "-y -ac 2 -codec:a libmp3lame -b:a 48k -ar 24000 -write_xing 0"
