@@ -24,17 +24,19 @@ template:
           connectivity_disconnected_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           connectivity_unavailable_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           data_rate_unavailable_count: "{{ expand('group.all_data_rate_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
+          data_rate_total_count: "{{expand('group.all_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|list|count}}"
           data_rate_total_value: "{{expand('group.all_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|sum|round()}}"
-          data_rate_total_10_value: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|slice(2)|first|first}}"
-          data_rate_total_1_value: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|slice(2)|list|last|first}}"
-          data_rate_total_digit_count: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|list|count}}"
+          data_rate_total_value_10_times_smaller: "{{(state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / 10)|round()}}"
+          data_rate_total_average: "{{ (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count'))|round(2) }}"
+          data_rate_total_average_10_times_larger: "{{(state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_average') * 10)|round()}}"
+          # data_rate_total_10_value: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|slice(2)|first|first}}"
+          # data_rate_total_1_value: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|slice(2)|list|last|first}}"
+          # data_rate_total_digit_count: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|list|count}}"
           device_trackers_away_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['away','not_home'])|list|count }}"
           device_trackers_unavailable_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           hacs_updates_available: "{{ expand('group.all_updates')|selectattr('state','eq', 'on')|map(attribute='entity_id')|map('device_attr', 'identifiers')|map('first')|map('first')|select('eq', 'hacs')|list|count }}"
-          # is_arcade_pc_on: "{{ has_value('sensor.arcade_win10_cpuload') }}"
-          # is_big_pc_on: "{{ has_value('sensor.big_pc_win11_big_pc_win11_cpuload') }}"
           fans_on_count: "{{ expand('group.all_fans')|selectattr('state','eq', 'on')|list|count }}"
           fans_unavailable_count: "{{ expand('group.all_fans')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           lawn_mower_busy_count: "{{ expand('group.all_lawn_mowers')|selectattr('state','in', ['on','mowing','edgecut'])|list|count }}"
@@ -204,6 +206,8 @@ template:
             {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_2', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_2', 'longitude') | string)}}
           apple_maps_url_emily_location: >
             {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.patrice_2', 'latitude') | string) + "," + (state_attr('device_tracker.patrice_2', 'longitude') | string)}}
+          is_arcade_pc_on: "{{ has_value('sensor.arcade_win10_cpuload') }}"
+          is_big_pc_on: "{{ has_value('sensor.big_pc_win11_big_pc_win11_cpuload') }}"
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"

@@ -136,9 +136,19 @@ custom_card_kepath_binary_notifications_common_styles:
 
             return styleTemplate;
           ]]]
+        tap_action:
+          action: "none"
         variables:
           notification_counts: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable; ]]]"
         entity: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.entity; ]]]"
+        styles:
+          tooltip:
+            - font-weight: "bold"
+            - font-size: "10px"
+            - margin: "0"
+            - border: "0"
+            - border-radius: "0"
+            - transform: "translate(-75%,-25%)"
     amount:
       card:
         type: "custom:button-card"
@@ -159,21 +169,25 @@ custom_card_kepath_binary_notifications_common_styles:
 
             return styleTemplate;
           ]]]
+        tap_action:
+          action: "none"
         variables:
           notification_counts: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.amount; ]]]"
         entity: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.entity; ]]]"
-
+        styles:
+          tooltip:
+            - font-weight: "bold"
+            - font-size: "10px"
+            - margin: "0"
+            - border: "0"
+            - border-radius: "0"
+            - transform: "translate(-75%,-75%)"
 
 widget_count_mdi_number_indicator:
   show_icon: true
   show_label: false
   show_name: false
   group_expand: true
-  style:
-    $: >
-      .tooltip .tooltiptext {
-        display:none;
-      }
   icon: >
     [[[
       var amountValue = 0;
@@ -241,7 +255,6 @@ widget_count_mdi_number_indicator:
       return tooltipValue;
     ]]]
 
-
 widget_count_mdi_number_indicator_default_style:
   styles:
     img_cell:
@@ -256,7 +269,6 @@ widget_count_mdi_number_indicator_default_style:
       - box-shadow: "none"
       - padding: "0"
       - border-radius: "50%"
-
 
 widget_count_mdi_number_indicator_compact_style:
   styles:

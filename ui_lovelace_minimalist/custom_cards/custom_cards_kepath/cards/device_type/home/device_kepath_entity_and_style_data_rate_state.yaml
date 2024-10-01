@@ -1,98 +1,125 @@
 ---
 device_kepath_entity_and_style_data_rate_state:
-  variables:
-    var_kepath_generic_get_set_group_notification_objects:
-      data_rate_value:
-        entity: "sensor.binary_sensor_state_counts"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.data_rate_value?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.data_rate_value.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.data_rate_value.is_attribute;
-              }
+  # variables:
+  #   var_kepath_device_entity_and_style_binary_count_state:
+  #     entity:
+  #       evaluated_entity: "sensor.binary_sensor_state_counts"
+  #       isattribute: true
+  #       evaluated_attribute: "data_rate_total_value_10_times_smaller"
+  #     style:
+  #       use_themes: true
+  #       icon: "mdi:numeric-off"
+  #       icon_color: "blue"
+  #       background_color: "blue"
+
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedDataValueEntity = "sensor.binary_sensor_state_counts";
+          var evaluatedDataValueAttribute = "data_rate_total_value_10_times_smaller";
+
+          var resolvedDataValueStateDefault = 0;
+          var resolvedDataValueState;
+          var returnValue = false;
+
+          resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
+          if (isNaN(resolvedDataValueState) || typeof resolvedDataValueState === 'undefined') {
+              resolvedDataValueState = resolvedDataValueStateDefault;
+          }
+          if (resolvedDataValueState > 0) {
+            returnValue = true;
+          }
+
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedDataValueState: ' + resolvedDataValueState});
+
+          return returnValue;
+        ]]]
+      icon: >
+        [[[
+          var returnedIcon = "mdi:numeric-off";
+          var evaluatedDataValueEntity = "sensor.binary_sensor_state_counts";
+          var evaluatedDataValueAttribute = "data_rate_total_value_10_times_smaller";
+
+          var resolvedDataValueState;
+
+          resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
+          if (!isNaN(resolvedDataValueState) && typeof resolvedDataValueState !== 'undefined') {
+            returnedIcon = "mdi:numeric-0";
+            if (resolvedDataValueState > 9) {
+              resolvedDataValueState = "9-plus";
             }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "unknown_value"
-  icon: >
-    [[[
-      var icon = "mdi:numeric-off";
-      var attributeValue = "unknown";
-      if (variables?.var_kepath_generic_get_set_group_notification_objects?.data_rate_value?.attribute_name) {
-        attributeValue = states[variables.var_kepath_generic_get_set_group_notification_objects.data_rate_value.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.data_rate_value.attribute_name];
-      }
-      if (!isNaN(attributeValue) && attributeValue !== undefined){
-        icon = "mdi:numeric-0";
-        if (attributeValue > 9) {
-          var attributeValue = "9-plus";
-        }
-        icon = icon.replace("0",attributeValue);
-      }
-      return icon;
-    ]]]
-  styles:
-    icon:
-      - width: "150%"
-      - height: "150%"
-      - color: >
-          [[[
-            var color = "rgba(var(--color-grey),1)";
-            var attributeValue = "unknown";
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.data_rate_value?.attribute_name) {
-              attributeValue = states[variables.var_kepath_generic_get_set_group_notification_objects.data_rate_value.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.data_rate_value.attribute_name];
-            }
-            if (!isNaN(attributeValue) && attributeValue !== undefined){
-              switch(attributeValue) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                  color = "rgba(var(--color-green),1)";
-                  break;
-                case 4:
-                case 5:
-                case 6:
-                  color = "rgba(var(--color-yellow),1)";
-                  break;
-                case 7:
-                case 8:
-                case 9:
-                default:
-                  color = "rgba(var(--color-red),1)";
-                  break;
-              }
-            }
-            return color;
-          ]]]
-    img_cell:
-      - background-color: >
-          [[[
-            var color = "rgba(var(--color-grey),0.2)";
-            var attributeValue = "unknown";
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.data_rate_value?.attribute_name) {
-              attributeValue = states[variables.var_kepath_generic_get_set_group_notification_objects.data_rate_value.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.data_rate_value.attribute_name];
-            }
-            if (!isNaN(attributeValue) && attributeValue !== undefined){
-              switch(attributeValue) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                  color = "rgba(var(--color-green),0.2)";
-                  break;
-                case 4:
-                case 5:
-                case 6:
-                  color = "rgba(var(--color-yellow),0.2)";
-                  break;
-                case 7:
-                case 8:
-                case 9:
-                default:
-                  color = "rgba(var(--color-red),0.2)";
-                  break;
-              }
-            }
-            return color;
-          ]]]
+            returnedIcon = returnedIcon.replace("0",resolvedDataValueState);
+          }
+
+          return returnedIcon;
+        ]]]
+      styles:
+        icon:
+          - width: "150%"
+          - height: "150%"
+          - color: >
+              [[[
+                var returnedColor = "rgba(var(--color-blue),1)";
+                var evaluatedDataValueEntity = "sensor.binary_sensor_state_counts";
+                var evaluatedDataValueAttribute = "data_rate_total_value_10_times_smaller";
+
+                var resolvedDataValueState;
+
+                resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
+                if (!isNaN(resolvedDataValueState) && typeof resolvedDataValueState !== 'undefined') {
+                  switch(resolvedDataValueState) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                      returnedColor = "rgba(var(--color-green),1)";
+                      break;
+                    case 4:
+                    case 5:
+                    case 6:
+                      returnedColor = "rgba(var(--color-yellow),1)";
+                      break;
+                    case 7:
+                    case 8:
+                    case 9:
+                    default:
+                      returnedColor = "rgba(var(--color-red),1)";
+                      break;
+                  }
+                }
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColor = "rgba(var(--color-blue),0.2)";
+                var evaluatedDataValueEntity = "sensor.binary_sensor_state_counts";
+                var evaluatedDataValueAttribute = "data_rate_total_value_10_times_smaller";
+
+                var resolvedDataValueState;
+
+                resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
+                if (!isNaN(resolvedDataValueState) && typeof resolvedDataValueState !== 'undefined') {
+                  switch(resolvedDataValueState) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                      returnedColor = "rgba(var(--color-green),0.2)";
+                      break;
+                    case 4:
+                    case 5:
+                    case 6:
+                      returnedColor = "rgba(var(--color-yellow),0.2)";
+                      break;
+                    case 7:
+                    case 8:
+                    case 9:
+                    default:
+                      returnedColor = "rgba(var(--color-red),0.2)";
+                      break;
+                  }
+                }
+                return returnedColor;
+              ]]]
