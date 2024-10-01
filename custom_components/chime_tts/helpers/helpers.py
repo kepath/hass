@@ -8,21 +8,23 @@ import shutil
 import yaml
 import aiofiles
 import aiofiles.os
-from homeassistant.core import HomeAssistant, SupportsResponse
-from homeassistant.components.media_player.const import (
-    ATTR_MEDIA_VOLUME_LEVEL,
-)
-import voluptuous as vol
-from pydub import AudioSegment
+from .media_player_helper import MediaPlayerHelper
+from .media_player import ChimeTTSMediaPlayer
+from .filesystem import FilesystemHelper
 from ..const import (
     DOMAIN,
     SERVICE_SAY,
     SERVICE_SAY_URL,
     DEFAULT_CHIME_OPTIONS,
     OFFSET_KEY,
+    TTS_PLATFORM_KEY,
+    DEFAULT_LANGUAGE_KEY,
+    DEFAULT_VOICE_KEY,
+    DEFAULT_TLD_KEY,
     DEFAULT_OFFSET_MS,
     FFMPEG_ARGS_ALEXA,
     FFMPEG_ARGS_VOLUME,
+    ALEXA_MEDIA_PLAYER_PLATFORM,
     AMAZON_POLLY,
     BAIDU,
     ELEVENLABS_TTS,
@@ -41,9 +43,10 @@ from ..const import (
     YANDEX_TTS,
     QUOTE_CHAR_SUBSTITUTE
 )
-from .media_player_helper import MediaPlayerHelper
-from .media_player import ChimeTTSMediaPlayer
-from .filesystem import FilesystemHelper
+from homeassistant.core import HomeAssistant, SupportsResponse
+from homeassistant.components.media_player.const import ATTR_MEDIA_VOLUME_LEVEL
+import voluptuous as vol
+from pydub import AudioSegment
 
 filesystem_helper = FilesystemHelper()
 
@@ -58,7 +61,7 @@ class ChimeTTSHelper:
         services_file_path = os.path.join(os.path.dirname(__file__), '../services.yaml')
 
         try:
-            async with aiofiles.open(services_file_path, mode='r') as file:
+            async with aiofiles.open(services_file_path) as file:
                 services_yaml = yaml.safe_load(await file.read())
                 return services_yaml
         except FileNotFoundError:
@@ -93,7 +96,7 @@ class ChimeTTSHelper:
 
         try:
             # List of chime options from chimes folder
-            custom_chime_options = filesystem_helper.get_chime_options_from_path(chimes_dir)
+            custom_chime_options = await filesystem_helper.async_get_chime_options_from_path(chimes_dir)
 
             # Chime Paths
             final_options: list = DEFAULT_CHIME_OPTIONS + custom_chime_options
@@ -162,7 +165,6 @@ class ChimeTTSHelper:
         hass.services.async_remove(DOMAIN, SERVICE_SAY)
         hass.services.async_register(DOMAIN, SERVICE_SAY, say_service_func)
         hass.services.async_remove(DOMAIN, SERVICE_SAY_URL)
-        hass.services.async_register(DOMAIN, SERVICE_SAY_URL, say_url_service_func)
         hass.services.async_register(DOMAIN,
                                     SERVICE_SAY_URL,
                                     say_url_service_func,
@@ -175,19 +177,19 @@ class ChimeTTSHelper:
         entity_ids = media_player_helper.parse_entity_ids(data, hass) if is_say_url is False else []
         chime_path =str(data.get("chime_path", ""))
         end_chime_path = str(data.get("end_chime_path", ""))
-        offset = float(data.get("delay", data.get(OFFSET_KEY, DEFAULT_OFFSET_MS)))
-        final_delay = float(data.get("final_delay", 0))
+        offset = float(data.get("delay", data.get(OFFSET_KEY, DEFAULT_OFFSET_MS)) or 0)
+        final_delay = float(data.get("final_delay", 0) or 0)
         message = str(data.get("message", ""))
         tts_platform = str(data.get("tts_platform", ""))
-        tts_speed = float(data.get("tts_playback_speed", data.get("tts_speed", 100)))
-        tts_pitch = data.get("tts_pitch", 0)
-        volume_level = data.get(ATTR_MEDIA_VOLUME_LEVEL, -1)
-        join_players = data.get("join_players", False)
-        unjoin_players = data.get("unjoin_players", False)
+        tts_speed = float(data.get("tts_playback_speed", data.get("tts_speed", 100)) or 100)
+        tts_pitch = data.get("tts_pitch", 0) or 0
+        volume_level = data.get(ATTR_MEDIA_VOLUME_LEVEL, -1) or -1
+        join_players = data.get("join_players", False) or False
+        unjoin_players = data.get("unjoin_players", False) or False
         language = data.get("language", None)
-        cache = data.get("cache", False)
-        announce = data.get("announce", False)
-        fade_audio = data.get("fade_audio", False)
+        cache = data.get("cache", False) or False
+        announce = data.get("announce", False) or False
+        fade_audio = data.get("fade_audio", False) or False
         media_players_array = await media_player_helper.async_initialize_media_players(
             hass, entity_ids, volume_level, join_players, unjoin_players, announce, fade_audio
         ) if is_say_url is False else []
@@ -201,7 +203,7 @@ class ChimeTTSHelper:
 
         # Force "Alexa" conversion if any Alexa media_player entities included
         alexa_conversion_forced = False
-        if ffmpeg_args is None and media_player_helper.get_alexa_media_player_count(hass, entity_ids) > 0:
+        if ffmpeg_args is None and len(media_player_helper.get_media_players_of_platform(entity_ids, ALEXA_MEDIA_PLAYER_PLATFORM)) > 0:
             ffmpeg_args = FFMPEG_ARGS_ALEXA
             alexa_conversion_forced = True
 
@@ -227,7 +229,7 @@ class ChimeTTSHelper:
             "media_players_array": media_players_array,
         }
 
-        _LOGGER.debug("----- General Parameters -----")
+        self.debug_subtitle("General Parameters")
         for key, value in params.items():
             if value is not None and value != "" and key not in ["hass"]:
                 p_key = "audio_conversion" if key == "ffmpeg_args" else key
@@ -237,7 +239,7 @@ class ChimeTTSHelper:
                     _LOGGER.debug(" * %s:", p_key)
                     for i in range(0, len(value)):
                         if isinstance(value[i], ChimeTTSMediaPlayer):
-                            media_player_i = value[i]
+                            media_player_i: ChimeTTSMediaPlayer = value[i]
                             _LOGGER.debug("   - %s: entity_id: %s", str(i), str(media_player_i.entity_id))
                             _LOGGER.debug("     platform: %s", str(media_player_i.platform))
                             _LOGGER.debug("     initial volume: %s", str(media_player_i.initial_volume_level))
@@ -254,14 +256,13 @@ class ChimeTTSHelper:
             _LOGGER.debug(" --- Audio will be converted to Alexa-friendly format as Alexa speaker/s detected ---")
         return params
 
-    def parse_options_yaml(self, data: dict = {}):
+    def parse_options_yaml(self, data: dict, default_data: dict):
         """Parse TTS service options YAML into dict object."""
+        data = data or {}
         options = {}
         try:
             options_string = data.get("options", "")
-            options = self.convert_yaml_str(options_string)
-            if options is None:
-                options = {}
+            options = self.convert_yaml_str(options_string) or {}
         except yaml.YAMLError as error:
             _LOGGER.error("Error parsing options YAML: %s", error)
             return {}
@@ -275,10 +276,49 @@ class ChimeTTSHelper:
                 if value is not None:
                     options[key] = value
 
-        if len(options) > 0:
-            _LOGGER.debug("----- TTS-Specific Params -----")
+        is_default_values = []
+
+
+        # Apply default values if not already set, and TTS Platform is the default
+        default_tts_platform = default_data.get(TTS_PLATFORM_KEY, None)
+        selected_tts_platform = data.get("tts_platform", default_tts_platform)
+
+        # Language
+        language = data.get("language", None) or options.get("language", None)
+        tts_platform_is_default = default_tts_platform == selected_tts_platform
+        if (not language
+            and default_data.get(DEFAULT_LANGUAGE_KEY, None)
+            and tts_platform_is_default):
+            options["language"] = default_data.get(DEFAULT_LANGUAGE_KEY, None)
+            is_default_values.append("language")
+
+        # Voice
+        voice = data.get("voice", None) or options.get("voice", None)
+        # Apply default voice if not already set, and TTS Platform is the default
+        tts_platform_is_default = default_tts_platform == selected_tts_platform
+        if (not voice
+            and default_data.get(DEFAULT_VOICE_KEY, None)
+            and tts_platform_is_default):
+            options["voice"] = default_data.get(DEFAULT_VOICE_KEY, None)
+            is_default_values.append("voice")
+
+        # TLD
+        tld = data.get("tld", None) or options.get("tld", None)
+        # Apply default TLD if not already set, and TTS Platform is the default
+        tts_platform_is_default = default_tts_platform == selected_tts_platform
+        if (not tld
+            and default_data.get(DEFAULT_TLD_KEY, None)
+            and tts_platform_is_default):
+            options["tld"] = default_data.get(DEFAULT_TLD_KEY, None)
+            is_default_values.append("tld")
+
+        if options:
+            self.debug_subtitle("TTS-Specific Params")
             for key, value in options.items():
-                _LOGGER.debug(" * %s = %s", key, str(value))
+                if key in is_default_values:
+                    _LOGGER.debug(" * %s = %s (default value entered in configuration)", key, str(value))
+                else:
+                    _LOGGER.debug(" * %s = %s", key, str(value))
 
         return options
 
@@ -304,7 +344,7 @@ class ChimeTTSHelper:
             message_yaml = self.convert_yaml_str(message_string)
 
             # Verify objects in YAML are valid chime/tts/delay segements
-            if isinstance(message_yaml, list):
+            if message_yaml and isinstance(message_yaml, list):
                 is_valid = True
                 for elem in message_yaml:
                     if isinstance(elem, dict):
@@ -383,15 +423,16 @@ class ChimeTTSHelper:
             return yaml_object
         except yaml.YAMLError as exc:
             if hasattr(exc, 'problem_mark'):
-                _LOGGER.error("Message YAML parsing error at line %s, column %s: %s",
+                _LOGGER.debug("YAML string parsing error at line %s, column %s: %s",
                                 str(exc.problem_mark.line + 1),
                                 str(exc.problem_mark.column + 1),
                                 str(exc))
             else:
-                _LOGGER.error("Message YAML error: %s", str(exc))
+                _LOGGER.debug("YAML string parsing error: %s", str(exc))
         except Exception as error:
-            _LOGGER.error("An unexpected error occurred while parsing message YAML: %s",
+            _LOGGER.debug("An unexpected error occurred while parsing YAML string: %s",
                             str(error))
+        return None
 
 
     def parse_ffmpeg_args(self, ffmpeg_args_str: str):
@@ -497,10 +538,20 @@ class ChimeTTSHelper:
             if str(entity.entity_id).startswith("tts."):
                 tts_entities.append(str(entity.entity_id))
 
-        # TTS Platforms
-        installed_tts_platforms: list[str] = tts_providers + tts_entities
+        # Installed TTS Components
+        tts_components = []
+        for key, _value in dict(hass.data["components"]).items():
+            if isinstance(key, str) and key.endswith(".tts"):
+                tts_components.append(key[0:len(key)-4])
 
-        return installed_tts_platforms
+        # Unique TTS Platforms
+        all_tts_platforms_found: list[str] = tts_providers + tts_components + tts_entities
+        final_tts_platforms: list[str] = []
+        for tts_platform in all_tts_platforms_found:
+            if tts_platform not in final_tts_platforms:
+                final_tts_platforms.append(tts_platform)
+        final_tts_platforms.sort()
+        return final_tts_platforms
 
 
     def get_default_tts_platform(self, hass, default_tts_platform: str = ""):
@@ -616,7 +667,7 @@ class ChimeTTSHelper:
 
             # Convert the audio file
             ffmpeg_cmd_string = " ".join(ffmpeg_cmd)
-            _LOGGER.debug("Converting audio: \"%s\"", ffmpeg_cmd_string)
+            _LOGGER.debug("Running FFMpeg operation: \"%s\"", ffmpeg_cmd_string)
             ffmpeg_process = subprocess.Popen(ffmpeg_cmd,
                                               stdin=subprocess.PIPE,
                                               stdout=subprocess.PIPE,
@@ -626,7 +677,7 @@ class ChimeTTSHelper:
 
             if ffmpeg_process.returncode != 0:
                 error_message = error_output.decode('utf-8')
-                _LOGGER.error(("FFmpeg conversion failed.\n\nArguments string: \"%s\"\n\nError code: %s\n\nError output:\n%s"),
+                _LOGGER.error(("FFmpeg operation failed.\n\nArguments string: \"%s\"\n\nError code: %s\n\nError output:\n%s"),
                                str(ffmpeg_process.returncode),
                                str(error_message),
                                ffmpeg_cmd_string)
@@ -754,3 +805,27 @@ class ChimeTTSHelper:
         if len(audio_2) > overlay:
             crossover_audio += audio_2[overlay:]
         return crossover_audio
+
+    def debug_title(self, title: str = ""):
+        """Debug log a title string."""
+        if len(title) == 0:
+            return
+        _LOGGER.debug(f"╔{"═"*(int(len(title) + 2))}╗")
+        _LOGGER.debug(f"║ {title} ║")
+        _LOGGER.debug(f"╚{"═"*(int(len(title) + 2))}╝")
+
+    def debug_subtitle(self, title: str = ""):
+        """Debug log a subtitle string."""
+        if len(title) == 0:
+            return
+        _LOGGER.debug(f"╭{"─"*(int(len(title) + 2))}╮")
+        _LOGGER.debug(f"│ {title} │")
+        _LOGGER.debug(f"╰{"─"*(int(len(title) + 2))}╯")
+
+    def debug_finish(self, title: str = ""):
+        """Debug log a subtitle string."""
+        if len(title) == 0:
+            return
+        _LOGGER.debug(f"╭{"─"*(int(len(title) + 5))}─────╮")
+        _LOGGER.debug(f"│──── {title} ────│")
+        _LOGGER.debug(f"╰{"─"*(int(len(title) + 5))}─────╯")

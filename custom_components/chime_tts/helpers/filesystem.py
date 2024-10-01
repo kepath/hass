@@ -7,9 +7,11 @@ import hashlib
 import shutil
 from io import BytesIO
 import re
-import requests
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from pydub import AudioSegment
+import requests
+
 from homeassistant.helpers.network import get_url
 from homeassistant.core import HomeAssistant
 from ..const import (
@@ -86,15 +88,13 @@ class FilesystemHelper:
                     return final_chime_path
 
         # Custom chime from chimes folder?
-        custom_chimes_folder_options = self.get_chime_options_from_path(data.get(CUSTOM_CHIMES_PATH_KEY, ""))
-        _LOGGER.debug("```custom_chimes_folder_options = %s", str(custom_chimes_folder_options))
+        custom_chimes_folder_options = await self.async_get_chime_options_from_path(data.get(CUSTOM_CHIMES_PATH_KEY, ""))
         for option_dict in custom_chimes_folder_options:
             p_chime_name = str(option_dict.get("label", "")).lower()
             p_chime_path = option_dict.get("value")
             chime_path_clean = chime_path.lower()
             for ext in _AUDIO_EXTENSIONS:
                 chime_path_clean = chime_path_clean.replace(ext, "")
-            _LOGGER.debug("```chime_path_clean = %s", chime_path_clean)
             if (p_chime_name and p_chime_path and chime_path_clean == p_chime_name):
                 return option_dict.get("value")
 
@@ -258,6 +258,10 @@ class FilesystemHelper:
 
     def copy_file(self, source_file, destination_folder):
         """Copy a file to a folder."""
+        if not destination_folder:
+            _LOGGER.warning("Unable to copy file: No destination folder path provided")
+            return None
+
         if self.create_folder(destination_folder):
             try:
                 copied_file_path = shutil.copy(source_file, destination_folder)
@@ -269,10 +273,20 @@ class FilesystemHelper:
             except Exception as e:
                 if str(e).find("are the same file") != -1:
                     return source_file
-                _LOGGER.warning(f"Unable to copy file: An error occurred: {e}")
+                _LOGGER.warning("Unable to copy file: An error occurred: %s", str(e))
         return None
 
-    def file_exists_in_directory(self, file_path, directory):
+    async def async_file_exists_in_directory(self, file_path, directory):
+        """Determine whether a file path exists within a given directory asynchronously."""
+        loop = asyncio.get_running_loop()
+        with ThreadPoolExecutor() as pool:
+            return await loop.run_in_executor(
+                pool,
+                self._file_exists_in_directory,
+                file_path,
+                directory)
+
+    def _file_exists_in_directory(self, file_path, directory):
         """Determine whether a file path exists within a given directory."""
         for root, _, files in os.walk(directory):
             for filename in files:
@@ -280,10 +294,23 @@ class FilesystemHelper:
                     return True
         return False
 
-    def get_external_url(self, hass: HomeAssistant, file_path):
-        """Convert local public path to external URL or local path to media-source."""
+    def get_external_address(self, hass: HomeAssistant):
+        """External address of the Home Assistant instance."""
+        instance_url = hass.config.external_url
+        if instance_url is None:
+            instance_url = str(get_url(hass))
+        if instance_url and instance_url.endswith("/"):
+            instance_url = instance_url[:-1]
+        return instance_url
+
+    async def async_get_external_url(self, hass: HomeAssistant, file_path: str):
+        """Convert file system path of public file to external URL."""
         if file_path is None:
             return None
+
+        # File is already external URL
+        if file_path.startswith(self.get_external_address(hass)):
+            return file_path
 
         # Return local path if file not in www folder
         public_dir = hass.config.path('www')
@@ -291,19 +318,35 @@ class FilesystemHelper:
             _LOGGER.warning("Unable to locate public 'www' folder. Please check that the folder: /config/www exists.")
             return None
 
-        if self.file_exists_in_directory(file_path, public_dir) is False:
+        if await self.async_file_exists_in_directory(file_path, public_dir) is False:
+            return None
+
+        instance_url = self.get_external_address(hass)
+
+        return (
+            (instance_url + "/" + file_path)
+            .replace("/config", "")
+            .replace("www/", "local/")
+            .replace(instance_url + "//", instance_url + "/")
+        )
+
+    async def async_get_local_url(self, hass: HomeAssistant, external_url):
+        """Convert external URL back to file system public file path."""
+        if not external_url:
             return None
 
         instance_url = hass.config.external_url
         if instance_url is None:
             instance_url = str(get_url(hass))
 
-        return (
-            (instance_url + "/" + file_path)
-            .replace(instance_url + "//", instance_url + "/")
-            .replace("/config", "")
-            .replace("www/", "local/")
+        local_filepath = (
+            external_url
+            .replace(f"{instance_url}/", "")
+            .replace(f"{instance_url}", "")
+            .replace("/local/", "/config/www/")
+            .replace("//", "/")
         )
+        self.delete_file(local_filepath)
 
     def get_local_path(self, hass: HomeAssistant, file_path):
         """Convert external URL to local public path."""
@@ -315,8 +358,13 @@ class FilesystemHelper:
 
     def delete_file(self, file_path):
         """Safely delete a file."""
+        if not file_path:
+            return
         if os.path.exists(file_path):
+            _LOGGER.debug("Deleting file %s", file_path)
             os.remove(file_path)
+        else:
+            _LOGGER.debug("No file at path %s - unable to delete", file_path)
 
     def get_hash_for_string(self, string):
         """Generate a has for a given string."""
@@ -333,7 +381,7 @@ class FilesystemHelper:
             path = f"/{path}"
         if not f"{path}".endswith("/"):
             path = f"{path}/"
-        path = path.replace("//", "/")
+        path = path.replace("//", "/").strip()
         return path
 
     ### Offloading to asyncio.to_thread ####
@@ -346,7 +394,16 @@ class FilesystemHelper:
         """Load AudioSegment from a filepath."""
         return await asyncio.to_thread(AudioSegment.from_file, file_path)
 
-    def get_chime_options_from_path(self, directory):
+    async def async_get_chime_options_from_path(self, directory):
+        """Walk through a directory of chime audio files and return a formatted dictionary."""
+        loop = asyncio.get_running_loop()
+        with ThreadPoolExecutor() as pool:
+            return await loop.run_in_executor(
+                pool,
+                self._get_chime_options_from_path,
+                directory)
+
+    def _get_chime_options_from_path(self, directory):
         """Walk through a directory of chime audio files and return a formatted dictionary."""
         chime_options = []
 

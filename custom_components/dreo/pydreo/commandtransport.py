@@ -4,7 +4,6 @@
 # from .pydreo import PyDreo
 import logging
 import threading
-import sys
 
 import asyncio
 import json
@@ -13,9 +12,9 @@ from collections.abc import Callable
 
 import websockets
 
-from .constant import *
+from .constant import * # pylint: disable=W0401,W0614
 from .helpers import Helpers
-from .models import *
+from .models import * # pylint: disable=W0401,W0614
 
 _LOGGER = logging.getLogger(LOGGER_NAME)
 
@@ -69,7 +68,7 @@ class CommandTransport:
         self._event_thread = threading.Thread(
             name="DreoWebSocketStream", target=start_ws_wrapper, args=()
         )
-        self._event_thread.setDaemon(True)
+        self._event_thread.daemon = True
         self._event_thread.start()
 
     def stop_transport(self) -> None:
@@ -170,7 +169,7 @@ class CommandTransport:
         """Send a command to Dreo servers via the WebSocket."""
         if not self._transport_enabled:
             _LOGGER.error("Command transport disabled. Run start_transport first.")
-            raise Exception("Command transport disabled. Run start_transport first.")
+            raise RuntimeError("Command transport disabled. Run start_transport first.")
         
         async def send_internal() -> None:
             MAX_RETRY_COUNT = 3
@@ -181,9 +180,11 @@ class CommandTransport:
                     with self._ws_send_lock: 
                         await self._ws.send(content)
                     break
-                except:
+                except: # pylint: disable=bare-except
                     retry_count += 1
-                    _LOGGER.error("Error sending command. Retrying in %s seconds. Retry count: %s", RETRY_DELAY, retry_count)
+                    _LOGGER.error("Error sending command. Retrying in %s seconds. Retry count: %s", 
+                                  RETRY_DELAY, 
+                                  retry_count)
                     await asyncio.sleep(RETRY_DELAY)
 
         asyncio.run(send_internal())

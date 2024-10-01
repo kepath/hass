@@ -1,0 +1,96 @@
+# ---
+# device_kepath_entity_common_binary_get_states:
+#   variables:
+#     var_kepath_generic_get_set_group_notification_objects:
+#       trigger:
+#         entity: "sensor.binary_sensor_state_counts"
+#         is_attribute: >
+#           [[[
+#             var isValueAttribute = true;
+#             if (variables?.var_kepath_generic_get_set_group_notification_objects?.trigger_entity?.is_attribute) {
+#               if (typeof variables.var_kepath_generic_get_set_group_notification_objects.trigger_entity.is_attribute === "boolean") {
+#                 isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.trigger_entity.is_attribute;
+#               }
+#             }
+#             return isValueAttribute;
+#           ]]]
+#         attribute_name: "unknown_value"
+#       unavailable:
+#         entity: "sensor.binary_sensor_state_counts"
+#         is_attribute: >
+#           [[[
+#             var isValueAttribute = true;
+#             if (variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.is_attribute) {
+#               if (typeof variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute === "boolean") {
+#                 isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute;
+#               }
+#             }
+#             return isValueAttribute;
+#           ]]]
+#         attribute_name: "unknown_value"
+#       amount:
+#         entity: "sensor.binary_sensor_state_counts"
+#         is_attribute: >
+#           [[[
+#             var isValueAttribute = true;
+#             if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.is_attribute) {
+#               if (typeof variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute === "boolean") {
+#                 isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute;
+#               }
+#             }
+#             return isValueAttribute;
+#           ]]]
+#         attribute_name: "unknown_value"
+#       # trigger:
+#       #   entity: >
+#       #     [[[
+#       #       var triggerEntity = "sensor.binary_sensor_state_counts";
+#       #       var isEntitySet = false;
+#       #       if (variables?.var_kepath_generic_get_set_group_notification_objects?.trigger?.entity) {
+#       #         triggerEntity = variables.var_kepath_generic_get_set_group_notification_objects.trigger.entity;
+#       #         isEntitySet = true;
+#       #       }
+#       #       if (!isEntitySet) {
+#       #         if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.entity) {
+#       #           triggerEntity = variables.var_kepath_generic_get_set_group_notification_objects.amount.entity;
+#       #         }
+#       #       }
+
+#       #       return triggerEntity;
+#       #     ]]]
+#       #   is_attribute: >
+#       #     [[[
+#       #       var isValueAttribute = true;
+#       #       var isValueAttributeSet = false;
+#       #       if (variables?.var_kepath_generic_get_set_group_notification_objects?.trigger?.is_attribute) {
+#       #         if (typeof variables.var_kepath_generic_get_set_group_notification_objects.trigger.is_attribute === "boolean") {
+#       #           isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.trigger.is_attribute;
+#       #           isValueAttributeSet = true;
+#       #         }
+#       #       }
+#       #       if (!isValueAttributeSet) {
+#       #         if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.is_attribute) {
+#       #           if (typeof variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute === "boolean") {
+#       #             isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute;
+#       #           }
+#       #         }
+#       #       }
+
+#       #       return isValueAttribute;
+#       #     ]]]
+#       #   attribute_name: >
+#       #     [[[
+#       #       var triggerAttribute = "unknown_value";
+#       #       var isAttributeSet = false;
+#       #       if (variables?.var_kepath_generic_get_set_group_notification_objects?.trigger?.attribute_name) {
+#       #         triggerAttribute = variables.var_kepath_generic_get_set_group_notification_objects.trigger.attribute_name;
+#       #         isAttributeSet = true;
+#       #       }
+#       #       if (!isAttributeSet) {
+#       #         if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.attribute_name) {
+#       #           triggerAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.attribute_name;
+#       #         }
+#       #       }
+
+#       #       return triggerAttribute;
+#       #     ]]]

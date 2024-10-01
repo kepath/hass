@@ -13,47 +13,45 @@ from .pydreo import PyDreo
 from .haimports import * # pylint: disable=W0401,W0614
 from .const import (
     DOMAIN,
-    DREO_MANAGER,
+    PYDREO_MANAGER,
     LOGGER
 )
 
 KEYS_TO_REDACT = {
-    "sn", 
-    "_sn", 
-    "wifi_ssid", 
+    "sn",
+    "_sn",
+    "wifi_ssid",
     "module_hardware_mac",
     "password",
     "_password",
     "username",
     "_username",
     "token",
-    "_token"
+    "_token",
+    "productId"
 }
 
 _LOGGER = logging.getLogger(LOGGER)
+
 
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: ConfigEntry
 ) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
-    manager: PyDreo = hass.data[DOMAIN][DREO_MANAGER]
+    pydreo_manager: PyDreo = hass.data[DOMAIN][PYDREO_MANAGER]
 
+    return _get_diagnostics(pydreo_manager)
+
+def _get_diagnostics(pydreo_manager: PyDreo) -> dict[str, Any]:
     data = {
         DOMAIN: {
-            "fan_count": len(manager.fans),
-            "heater_count": len(manager.heaters),
-            "acs_count": len(manager.acs),
-            "raw_devicelist": _redact_values(manager.raw_response),
+            "device_count": len(pydreo_manager.devices),
+            "raw_devicelist": _redact_values(pydreo_manager.raw_response),
         },
-        "devices": {
-            "fans": [_redact_values(device.__dict__) for device in manager.fans],
-            "heaters": [_redact_values(device.__dict__) for device in manager.heaters],
-            "acs": [_redact_values(device.__dict__) for device in manager.acs]
-        },
+        "devices": [_redact_values(device.__dict__) for device in pydreo_manager.devices],
     }
 
     return data
-
 
 def _redact_values(data: dict) -> dict:
     """Rebuild and redact values of a dictionary, recursively"""
@@ -64,6 +62,10 @@ def _redact_values(data: dict) -> dict:
         if key not in KEYS_TO_REDACT:
             if isinstance(item, dict):
                 new_data[key] = _redact_values(item)
+            elif isinstance(item, list):
+                for listitem in item:
+                    if isinstance(listitem, dict):
+                        new_data[key] = [_redact_values(listitem)]
             else:
                 new_data[key] = item
         else:

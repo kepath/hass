@@ -1,0 +1,98 @@
+---
+device_kepath_entity_and_style_occupancy_state:
+  variables:
+    var_kepath_generic_get_set_group_notification_objects:
+      unavailable:
+        entity: "sensor.binary_sensor_state_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.is_attribute) {
+              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute === "boolean") {
+                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
+      amount:
+        entity: "sensor.binary_sensor_state_counts"
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.is_attribute) {
+              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute === "boolean") {
+                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
+      person:
+        entity: "sensor.binary_sensor_state_counts"
+        ignore_on_known_occupancy: >
+          [[[
+            var ignoreOnKnownOccupancy = false;
+            if (variables?.var_kepath_generic_get_set_group_notification_objects?.person?.ignore_on_known_occupancy) {
+              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.person.ignore_on_known_occupancy === "boolean") {
+                ignoreOnKnownOccupancy = variables.var_kepath_generic_get_set_group_notification_objects.person.ignore_on_known_occupancy;
+              }
+            }
+            return ignoreOnKnownOccupancy;
+          ]]]
+        is_attribute: >
+          [[[
+            var isValueAttribute = true;
+            if (variables?.var_kepath_generic_get_set_group_notification_objects?.person?.is_attribute) {
+              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.person.is_attribute === "boolean") {
+                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.person.is_attribute;
+              }
+            }
+            return isValueAttribute;
+          ]]]
+        attribute_name: "zero_value"
+  state:
+    - operator: "template"
+      value: >
+        [[[
+            var show_detected_home_color = false;
+            var known_home = states[variables.var_kepath_generic_get_set_group_notification_objects.person.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.person.attribute_name];
+            if (!variables.var_kepath_generic_get_set_group_notification_objects.person.ignore_on_known_occupancy) {
+              if (!isNaN(known_home) && known_home !== undefined && known_home != 0){
+                show_detected_home_color = true;
+              }
+            }
+            return show_detected_home_color;
+        ]]]
+      icon: "mdi:human-greeting"
+      styles:
+        icon:
+          - color: "rgba(var(--color-blue),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-blue), 0.2)"
+    - operator: "template"
+      value: >
+        [[[
+            var show_detected_away_color = false;
+            var known_home = states[variables.var_kepath_generic_get_set_group_notification_objects.person.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.person.attribute_name];
+            var person_detected = states[variables.var_kepath_generic_get_set_group_notification_objects.amount.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.amount.attribute_name];
+            if (!isNaN(known_home) && known_home !== undefined && known_home == 0) {
+              if (!isNaN(person_detected) && person_detected !== undefined && person_detected != 0){
+                show_detected_away_color = true;
+              }
+            }
+            return show_detected_away_color;
+        ]]]
+      icon: "mdi:motion-sensor"
+      styles:
+        icon:
+          - color: "rgba(var(--color-red),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-red), 0.2)"
+    - operator: "default"
+      icon: "mdi:cctv"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green),1)"
+        img_cell:
+          - background-color: "rgba(var(--color-green), 0.2)"
