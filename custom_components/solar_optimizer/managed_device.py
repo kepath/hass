@@ -124,9 +124,14 @@ class ManagedDevice:
     _convert_power_divide_factor: int
     _battery_soc: float
     _battery_soc_threshold: float
+    _max_on_time_per_day_sec: int
+    _on_time_sec: int
 
     def __init__(self, hass: HomeAssistant, device_config):
         """Initialize a manageable device"""
+        self._now = None  # For testing purpose only
+        self._current_tz = get_tz(hass)
+
         self._hass = hass
         self._name = device_config.get("name")
         self._unique_id = name_to_unique_id(self._name)
@@ -167,9 +172,7 @@ class ManagedDevice:
                 "{{ is_state('" + self._entity_id + "', '" + STATE_ON + "') }}"
             )
             self._check_active_template = Template(template_string, hass)
-        self._next_date_available_power = self._next_date_available = datetime.now(
-            get_tz(hass)
-        )
+        self._next_date_available_power = self._next_date_available = self.now
         self._action_mode = device_config.get("action_mode")
         self._activation_service = device_config.get("activation_service")
         self._deactivation_service = device_config.get("deactivation_service")
@@ -177,6 +180,11 @@ class ManagedDevice:
 
         self._battery_soc = None
         self._battery_soc_threshold = float(device_config.get("battery_soc_threshold") or 0)
+
+        self._max_on_time_per_day_sec = (
+            int(device_config.get("max_on_time_per_day_min") or 60 * 24) * 60
+        )
+        self._on_time_sec = 0
 
         if self.is_active:
             self._requested_power = self._current_power = (
@@ -257,11 +265,9 @@ class ManagedDevice:
     def reset_next_date_available(self, action_type):
         """Incremente the next availability date to now + _duration_sec"""
         if action_type == ACTION_ACTIVATE:
-            self._next_date_available = datetime.now(get_tz(self._hass)) + timedelta(
-                seconds=self._duration_sec
-            )
+            self._next_date_available = self.now + timedelta(seconds=self._duration_sec)
         else:
-            self._next_date_available = datetime.now(get_tz(self._hass)) + timedelta(
+            self._next_date_available = self.now + timedelta(
                 seconds=self._duration_stop_sec
             )
 
@@ -271,7 +277,7 @@ class ManagedDevice:
 
     def reset_next_date_available_power(self):
         """Incremente the next availability date for power change to now + _duration_power_sec"""
-        self._next_date_available_power = datetime.now(get_tz(self._hass)) + timedelta(
+        self._next_date_available_power = self.now + timedelta(
             seconds=self._duration_power_sec
         )
         _LOGGER.debug(
@@ -279,13 +285,6 @@ class ManagedDevice:
             self._name,
             self._next_date_available_power,
         )
-
-    # def init_power(self, power: int):
-    #     """Initialise current_power and requested_power to the given value"""
-    #     _LOGGER.debug(
-    #         "Initializing power for entity '%s' with %s value", self._name, power
-    #     )
-    #     self._requested_power = self._current_power = power
 
     def set_current_power_with_device_state(self):
         """Set the current power according to the real device state"""
@@ -332,6 +331,11 @@ class ManagedDevice:
         self._enable = enable
         self.publish_enable_state_change()
 
+    def set_on_time(self, on_time_sec: int):
+        """Set the time the underlying device was on per day"""
+        _LOGGER.info("%s - Set on_time=%s", self.name, on_time_sec)
+        self._on_time_sec = on_time_sec
+
     @property
     def is_enabled(self) -> bool:
         """return true if the managed device is enabled for solar optimisation"""
@@ -349,29 +353,47 @@ class ManagedDevice:
     @property
     def is_usable(self) -> bool:
         """A device is usable for optimisation if the check_usable_template returns true and
-        if the device is not waiting for the end of its cycle and if the battery_soc_threshold is >= battery_soc"""
+        if the device is not waiting for the end of its cycle and if the battery_soc_threshold is >= battery_soc
+        and the _max_on_time_per_day_sec is not exceeded"""
 
-        context = {}
-        now = datetime.now(get_tz(self._hass))
-        result = self._check_usable_template.async_render(context) and (
-            now >= self._next_date_available
-            or (self._can_change_power and now >= self._next_date_available_power)
-        )
-        if not result:
-            _LOGGER.debug("%s is not usable", self._name)
+        if self._on_time_sec >= self._max_on_time_per_day_sec:
+            _LOGGER.debug(
+                "%s is not usable due to max_on_time_per_day_min exceeded %d >= %d",
+                self._name,
+                self._on_time_sec,
+                self._max_on_time_per_day_sec,
+            )
+            result = False
+        else:
+            context = {}
+            now = self.now
+            result = self._check_usable_template.async_render(context) and (
+                now >= self._next_date_available
+                or (self._can_change_power and now >= self._next_date_available_power)
+            )
+            if not result:
+                _LOGGER.debug("%s is not usable", self._name)
 
-        if result and self._battery_soc is not None and self._battery_soc_threshold is not None:
-            if self._battery_soc < self._battery_soc_threshold:
-                result = False
-                _LOGGER.debug("%s is not usable due to battery soc threshold (%s < %s)", self._name, self._battery_soc, self._battery_soc_threshold)
+            if (
+                result
+                and self._battery_soc is not None
+                and self._battery_soc_threshold is not None
+            ):
+                if self._battery_soc < self._battery_soc_threshold:
+                    result = False
+                    _LOGGER.debug(
+                        "%s is not usable due to battery soc threshold (%s < %s)",
+                        self._name,
+                        self._battery_soc,
+                        self._battery_soc_threshold,
+                    )
 
         return result
 
     @property
     def is_waiting(self):
         """A device is waiting if the device is waiting for the end of its cycle"""
-        now = datetime.now(get_tz(self._hass))
-        result = now < self._next_date_available
+        result = self.now < self._next_date_available
 
         if result:
             _LOGGER.debug("%s is waiting", self._name)
@@ -458,11 +480,25 @@ class ManagedDevice:
         """return"""
         return self._convert_power_divide_factor
 
+    @property
+    def max_on_time_per_day_sec(self) -> int:
+        """The max_on_time_per_day_sec configured"""
+        return self._max_on_time_per_day_sec
+
+    @property
+    def battery_soc(self) -> int:
+        """The battery soc"""
+        return self._battery_soc
+
+    @property
+    def battery_soc_threshold(self) -> int:
+        """The battery soc"""
+        return self._battery_soc_threshold
+
     def set_battery_soc(self, battery_soc):
         """Define the battery soc. This is used with is_usable
         to determine if the device is usable"""
         self._battery_soc = battery_soc
-
 
     def publish_enable_state_change(self) -> None:
         """Publish an event when the state is changed"""
@@ -477,3 +513,13 @@ class ManagedDevice:
                 "is_waiting": self.is_waiting,
             },
         )
+
+    # For testing purpose only
+    def _set_now(self, now: datetime):
+        """Set the now timestamp. This is only for tests purpose"""
+        self._now = now
+
+    @property
+    def now(self) -> datetime:
+        """Get now. The local datetime or the overloaded _set_now date"""
+        return self._now if self._now is not None else datetime.now(self._current_tz)

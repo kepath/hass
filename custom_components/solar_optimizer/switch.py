@@ -7,9 +7,8 @@ from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN, STATE_ON
 from homeassistant.core import callback, HomeAssistant, State, Event
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.restore_state import RestoreEntity
-from homeassistant.components.switch import (
-    SwitchEntity,
-)
+from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.components.switch import SwitchEntity, DOMAIN as SWITCH_DOMAIN
 
 from homeassistant.helpers.entity_platform import (
     AddEntitiesCallback,
@@ -24,6 +23,9 @@ from .const import (
     name_to_unique_id,
     get_tz,
     EVENT_TYPE_SOLAR_OPTIMIZER_ENABLE_STATE_CHANGE,
+    DEVICE_MANUFACTURER,
+    DEVICE_MODEL,
+    overrides,
 )
 from .coordinator import SolarOptimizerCoordinator
 from .managed_device import ManagedDevice
@@ -44,9 +46,7 @@ async def async_setup_entry(
         entity = ManagedDeviceSwitch(
             coordinator,
             hass,
-            device.name,
-            name_to_unique_id(device.name),
-            device.entity_id,
+            device,
         )
         if entity is not None:
             entities.append(entity)
@@ -83,21 +83,26 @@ class ManagedDeviceSwitch(CoordinatorEntity, SwitchEntity):
         )
     )
 
-    def __init__(self, coordinator, hass, name, idx, entity_id):
-        _LOGGER.debug("Adding ManagedDeviceSwitch for %s", name)
+    def __init__(self, coordinator, hass, device):
+        _LOGGER.debug("Adding ManagedDeviceSwitch for %s", device.name)
+        idx = name_to_unique_id(device.name)
         super().__init__(coordinator, context=idx)
         self._hass: HomeAssistant = hass
+        self._device = device
         self.idx = idx
-        self._attr_name = "Solar Optimizer " + name
-        self._attr_unique_id = "solar_optimizer_" + idx
-        self._entity_id = entity_id
+        self._attr_has_entity_name = True
+        self.entity_id = f"{SWITCH_DOMAIN}.solar_optimizer_{idx}"
+        self._attr_name = "Active"
+        self._attr_unique_id = "solar_optimizer_active_" + idx
+        self._entity_id = device.entity_id
+        self._attr_is_on = device.is_active
 
         # Try to get the state if it exists
-        device: ManagedDevice = None
-        if (device := coordinator.get_device_by_unique_id(self.idx)) is not None:
-            self._attr_is_on = device.is_active
-        else:
-            self._attr_is_on = None
+        # device: ManagedDevice = None
+        # if (device := coordinator.get_device_by_unique_id(idx)) is not None:
+        #    self._device = device
+        # else:
+        #    self._attr_is_on = None
 
     async def async_added_to_hass(self) -> None:
         """The entity have been added to hass, listen to state change of the underlying entity"""
@@ -198,8 +203,9 @@ class ManagedDeviceSwitch(CoordinatorEntity, SwitchEntity):
             "next_date_available_power": device.next_date_available_power.astimezone(
                 current_tz
             ).isoformat(),
-            "battery_soc_threshold": device._battery_soc_threshold,
-            "battery_soc": device._battery_soc,
+            "battery_soc_threshold": device.battery_soc_threshold,
+            "battery_soc": device.battery_soc,
+            "device_name": device.name,
         }
 
     @callback
@@ -258,18 +264,27 @@ class ManagedDeviceSwitch(CoordinatorEntity, SwitchEntity):
             self.async_write_ha_state()
 
     @property
-    def device_info(self):
+    def device_info(self) -> DeviceInfo | None:
         # Retournez des informations sur le périphérique associé à votre entité
         return {
-            "identifiers": {(DOMAIN, "solar_optimizer_device")},
-            "name": "Solar Optimizer",
-            # Autres attributs du périphérique ici
+            "model": DEVICE_MODEL,
+            "manufacturer": DEVICE_MANUFACTURER,
+            "identifiers": {(DOMAIN, self._device.name)},
+            "name": "Solar Optimizer-" + self._device.name,
         }
 
     @property
     def get_attr_extra_state_attributes(self):
         """Get the extra state attributes for the entity"""
         return self._attr_extra_state_attributes
+
+    @overrides
+    def turn_off(self, **kwargs: Any):
+        """Not used"""
+
+    @overrides
+    def turn_on(self, **kwargs: Any):
+        """Not used"""
 
 
 class ManagedDeviceEnable(SwitchEntity, RestoreEntity):
@@ -278,21 +293,23 @@ class ManagedDeviceEnable(SwitchEntity, RestoreEntity):
     _device: ManagedDevice
 
     def __init__(self, hass: HomeAssistant, device: ManagedDevice):
+        name = name_to_unique_id(device.name)
         self._hass: HomeAssistant = hass
         self._device = device
-        self._attr_name = "Enable Solar Optimizer " + device.name
-        self._attr_unique_id = "solar_optimizer_enable_" + name_to_unique_id(
-            device.name
-        )
+        self._attr_has_entity_name = True
+        self.entity_id = f"{SWITCH_DOMAIN}.enable_solar_optimizer_{name}"
+        self._attr_name = "Enable"
+        self._attr_unique_id = "solar_optimizer_enable_" + name
         self._attr_is_on = True
 
     @property
-    def device_info(self):
+    def device_info(self) -> DeviceInfo | None:
         # Retournez des informations sur le périphérique associé à votre entité
         return {
-            "identifiers": {(DOMAIN, "solar_optimizer_device")},
-            "name": "Solar Optimizer",
-            # Autres attributs du périphérique ici
+            "model": DEVICE_MODEL,
+            "manufacturer": DEVICE_MANUFACTURER,
+            "identifiers": {(DOMAIN, self._device.name)},
+            "name": "Solar Optimizer-" + self._device.name,
         }
 
     @property
@@ -318,16 +335,12 @@ class ManagedDeviceEnable(SwitchEntity, RestoreEntity):
     @callback
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the entity on."""
-        self._attr_is_on = True
-        self.async_write_ha_state()
-        self.update_device_enabled()
+        self.turn_on()
 
     @callback
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the entity off."""
-        self._attr_is_on = False
-        self.async_write_ha_state()
-        self.update_device_enabled()
+        self.turn_off()
 
     def update_device_enabled(self) -> None:
         """Update the device is enabled flag"""
@@ -335,3 +348,15 @@ class ManagedDeviceEnable(SwitchEntity, RestoreEntity):
             return
 
         self._device.set_enable(self._attr_is_on)
+
+    @overrides
+    def turn_off(self, **kwargs: Any):
+        self._attr_is_on = False
+        self.async_write_ha_state()
+        self.update_device_enabled()
+
+    @overrides
+    def turn_on(self, **kwargs: Any):
+        self._attr_is_on = True
+        self.async_write_ha_state()
+        self.update_device_enabled()
