@@ -567,11 +567,12 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           # - "device_kepath_entity_dishwasher_state"
                           # - "device_kepath_style_dishwasher_state"
+                          - "device_kepath_entity_and_style_dishwasher_state"
                         entity: "sensor.dishwasher_operation_state"
                         name: "Dishwasher"
                         variables:
-                          var_device_kepath_entity_and_style_dishwasher_state:
-                            device_progress: "sensor.dishwasher_remaining_program_time"
+                          # var_device_kepath_entity_and_style_dishwasher_state:
+                          #   device_progress: "sensor.dishwasher_remaining_program_time"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
                               icon: "mdi:dishwasher-off"
@@ -1500,6 +1501,7 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_battery_state"
                           # - "device_kepath_entity_battery_state"
                           # - "device_kepath_style_battery_state"
                           - "custom_card_kepath_generic_group_popup"
@@ -1518,7 +1520,7 @@ views:
                               count_tooltip: "num batteries under 20%"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
-                              icon: "mdi:battery-20"
+                              icon: "mdi:battery-unknown"
                               icon_color: "blue"
                               background_color: "blue"
                             error_state:
@@ -1540,14 +1542,15 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           # - "device_kepath_entity_signal_strength_state"
                           # - "device_kepath_style_signal_strength_state"
+                          - "device_kepath_entity_and_style_signal_strength_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_signal_strength_class_sensors"
                         name: "Signal"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
-                            signal_value:
-                              attribute_name: "signal_sensors_average_value"
-                              count_tooltip: "signals average value (%n0)"
+                            # signal_value:
+                            #   attribute_name: "signal_sensors_average_value"
+                            #   count_tooltip: "signals average value (%n0)"
                             unavailable:
                               attribute_name: "signal_sensors_unavailable_count"
                               count_tooltip: "num signals away"
@@ -1556,9 +1559,9 @@ views:
                               count_tooltip: "num signals under -80dBm"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
-                              icon: "mdi:wifi-off"
-                              icon_color: "blue"
-                              background_color: "blue"
+                              icon: "mdi:signal-off"
+                              icon_color: "grey"
+                              background_color: "grey"
                             error_state:
                               icon: "mdi:wifi-alert"
                           var_kepath_generic_group_popup:

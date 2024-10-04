@@ -1,23 +1,25 @@
 ---
 device_kepath_entity_and_style_data_rate_state:
-  # variables:
-  #   var_kepath_device_entity_and_style_binary_count_state:
-  #     entity:
-  #       evaluated_entity: "sensor.binary_sensor_state_counts"
-  #       isattribute: true
-  #       evaluated_attribute: "data_rate_total_value_10_times_smaller"
-  #     style:
-  #       use_themes: true
-  #       icon: "mdi:numeric-off"
-  #       icon_color: "blue"
-  #       background_color: "blue"
+  variables:
+    var_kepath_device_entity_and_style_binary_count_state:
+      entity:
+        evaluated_entity: "sensor.binary_sensor_state_counts"
+        isattribute: true
+        evaluated_attribute: "data_rate_total_value_10_times_smaller"
+      style:
+        use_themes: true
+        icon: "mdi:numeric-off"
+        icon_color: "blue"
+        background_color: "blue"
 
+  # template:
+  #   - "javascript_function_if_variable_undefined_use_default"
   state:
     - operator: "template"
       value: >
         [[[
-          var evaluatedDataValueEntity = "sensor.binary_sensor_state_counts";
-          var evaluatedDataValueAttribute = "data_rate_total_value_10_times_smaller";
+          var evaluatedDataValueEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+          var evaluatedDataValueAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
 
           var resolvedDataValueStateDefault = 0;
           var resolvedDataValueState;
@@ -37,9 +39,9 @@ device_kepath_entity_and_style_data_rate_state:
         ]]]
       icon: >
         [[[
-          var returnedIcon = "mdi:numeric-off";
-          var evaluatedDataValueEntity = "sensor.binary_sensor_state_counts";
-          var evaluatedDataValueAttribute = "data_rate_total_value_10_times_smaller";
+          var returnedIcon = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;
+          var evaluatedDataValueEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+          var evaluatedDataValueAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
 
           var resolvedDataValueState;
 
@@ -60,9 +62,9 @@ device_kepath_entity_and_style_data_rate_state:
           - height: "150%"
           - color: >
               [[[
-                var returnedColor = "rgba(var(--color-blue),1)";
-                var evaluatedDataValueEntity = "sensor.binary_sensor_state_counts";
-                var evaluatedDataValueAttribute = "data_rate_total_value_10_times_smaller";
+                var returnedColor = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon_color;
+                var evaluatedDataValueEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+                var evaluatedDataValueAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
 
                 var resolvedDataValueState;
 
@@ -73,29 +75,30 @@ device_kepath_entity_and_style_data_rate_state:
                     case 1:
                     case 2:
                     case 3:
-                      returnedColor = "rgba(var(--color-green),1)";
+                      returnedColor = "green";
                       break;
                     case 4:
                     case 5:
                     case 6:
-                      returnedColor = "rgba(var(--color-yellow),1)";
+                      returnedColor = "yellow";
                       break;
                     case 7:
                     case 8:
                     case 9:
                     default:
-                      returnedColor = "rgba(var(--color-red),1)";
+                      returnedColor = "red";
                       break;
                   }
                 }
-                return returnedColor;
+                //return returnedColor;
+                return `rgba(var(--color-${returnedColor}),1)`;
               ]]]
         img_cell:
           - background-color: >
               [[[
-                var returnedColor = "rgba(var(--color-blue),0.2)";
-                var evaluatedDataValueEntity = "sensor.binary_sensor_state_counts";
-                var evaluatedDataValueAttribute = "data_rate_total_value_10_times_smaller";
+                var returnedColor = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color;
+                var evaluatedDataValueEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+                var evaluatedDataValueAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
 
                 var resolvedDataValueState;
 
@@ -106,20 +109,21 @@ device_kepath_entity_and_style_data_rate_state:
                     case 1:
                     case 2:
                     case 3:
-                      returnedColor = "rgba(var(--color-green),0.2)";
+                      returnedColor = "green";
                       break;
                     case 4:
                     case 5:
                     case 6:
-                      returnedColor = "rgba(var(--color-yellow),0.2)";
+                      returnedColor = "yellow";
                       break;
                     case 7:
                     case 8:
                     case 9:
                     default:
-                      returnedColor = "rgba(var(--color-red),0.2)";
+                      returnedColor = "red";
                       break;
                   }
                 }
-                return returnedColor;
+                //return returnedColor;
+                return `rgba(var(--color-${returnedColor}),0.2)`;
               ]]]
