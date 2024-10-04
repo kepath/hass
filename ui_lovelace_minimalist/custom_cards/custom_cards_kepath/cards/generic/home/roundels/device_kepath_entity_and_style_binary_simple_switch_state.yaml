@@ -1,5 +1,8 @@
 ---
 device_kepath_entity_and_style_binary_simple_switch_state:
+  # template:
+  #   - "javascript_function_if_variable_undefined_use_default"
+  #   - "javascript_function_is_typeof_variable_boolean"
   state:
     - operator: "=="
       value: "on"
@@ -37,6 +40,7 @@ device_kepath_entity_and_style_binary_simple_switch_state:
                 } else {
                   useThemes = useThemesDefault;
                 }
+                //returnedColor = if_variable_undefined_use_default(variables?.var_kepath_device_entity_and_style_simple_binary_switch_state?.on_state?.icon_color,returnedColorDefault)
                 if (typeof variables?.var_kepath_device_entity_and_style_simple_binary_switch_state?.on_state?.icon_color !== 'undefined') {
                   returnedColor = variables?.var_kepath_device_entity_and_style_simple_binary_switch_state?.on_state?.icon_color;
                 } else {
