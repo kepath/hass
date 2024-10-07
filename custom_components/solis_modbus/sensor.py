@@ -851,7 +851,6 @@ class SolisDerivedSensor(RestoreSensor, SensorEntity):
                 self.schedule_update_ha_state()
 
         except ValueError as e:
-            _LOGGER.error(e)
             self._state = None
             self._attr_available = False
 
@@ -935,8 +934,6 @@ class SolisSensor(RestoreSensor, SensorEntity):
                 self.schedule_update_ha_state()
 
         except ValueError as e:
-            _LOGGER.error(e)
-            # Handle communication or reading errors
             self._state = None
             self._attr_available = False
 
