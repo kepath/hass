@@ -36,20 +36,27 @@ device_kepath_entity_and_style_dishwasher_state:
           var returnedIcon = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;
 
           var resolvedProgressState;
-
           resolvedProgressState = states[evaluatedProgressEntity].state;
-          if (!isNaN(resolvedProgressState) || typeof resolvedProgressState !== 'undefined') {
+          hass.callService('system_log', 'write', {level:'warning',message:'resolvedProgressState: ' + resolvedProgressState});
+
+
+          if (!isNaN(resolvedProgressState) && typeof resolvedProgressState !== 'undefined') {
+            hass.callService('system_log', 'write', {level:'warning',message:'1: '});
             if (!isNaN(Date.parse(resolvedProgressState))) {
+              hass.callService('system_log', 'write', {level:'warning',message:'2: '});
               var progressMilliseconds = Date.parse(resolvedProgressState) - Date.now();
               if(!isNaN(parseInt(progressMilliseconds))) {
+                hass.callService('system_log', 'write', {level:'warning',message:'3: '});
                 var progressHours = (progressMilliseconds / (1000 * 60 * 60)).toFixed();
                 if(!isNaN(parseInt(progressHours))) {
+                  hass.callService('system_log', 'write', {level:'warning',message:'4: '});
                   returnedIcon = "mdi:numeric-" + progressHours + "-circle-outline";
                 }
             }
             }
           }
 
+          hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
           return returnedIcon;
         ]]]
       styles:

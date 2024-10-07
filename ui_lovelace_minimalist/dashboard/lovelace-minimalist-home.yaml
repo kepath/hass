@@ -487,6 +487,7 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_navigate_action"
                           # - "card_room_mower_state"
                         entity: "lawn_mower.moe"
                         name: "Mower"
@@ -506,6 +507,11 @@ views:
                             error_state:
                               icon: "mdi:robot-mower-outline"
                         tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/devices/device/f6aa7f03c61ef3c5ce1edb4277d23148"
+                          # navigation_path: >
+                          #   "{{'/config/devices/device/' + device_id('lawn_mower.moe')}}"
+                        hold_action:
                           action: "more-info"
                     item6:
                       card:
@@ -528,10 +534,10 @@ views:
                             error_state:
                               icon: "mdi:washing-machine-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/952c87755c2c0da9627644b62b5fa2c7"
+                        hold_action:
+                          action: "more-info"
                     item7:
                       card:
                         type: "custom:button-card"
@@ -541,6 +547,7 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           # - "device_kepath_entity_tumble_dryer_state"
                           # - "device_kepath_style_tumble_dryer_state"
+                          - "device_kepath_entity_and_style_tumble_dryer_state"
                         entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
                         name: "Dryer"
                         variables:
@@ -554,10 +561,10 @@ views:
                             error_state:
                               icon: "mdi:tumble-dryer-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/248a57d4d33903ec84b8022b8d465f88"
+                        hold_action:
+                          action: "more-info"
                     item8:
                       card:
                         type: "custom:button-card"
@@ -581,10 +588,10 @@ views:
                             error_state:
                               icon: "mdi:dishwasher-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/bb485d5d222b2f3d78e640bbd1e2ac6b"
+                        hold_action:
+                          action: "more-info"
                     item9:
                       card:
                         type: "custom:button-card"
@@ -609,11 +616,11 @@ views:
                               icon: "mdi:fridge-industrial"
                               icon_color: "green"
                               background_color: "green"
-                        tap_action:
-                          action: "more-info"
+                        # tap_action:
+                        #   action: "navigate"
+                        #   navigation_path: "/config/devices/device/e43877911bcde38af54a242c2b2b8197"
                         hold_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/e43877911bcde38af54a242c2b2b8197"
+                          action: "more-info"
                     item10:
                       card:
                         type: "custom:button-card"
@@ -621,21 +628,27 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_simple_switch_state"
                         entity: "media_player.spotify_kevin_thorn"
-                        name: "Spotify"
+                        name: "Yamaha"
                         variables:
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
-                              icon: "si:spotify"
+                              icon: "mdi:audio-video"
                               icon_color: "blue"
                               background_color: "blue"
                             error_state:
-                              icon: "si:spotify"
+                              icon: "mdi:audio-video-off"
+                          var_kepath_device_entity_and_style_simple_binary_switch_state:
+                            on_state:
+                              icon: "mdi:audio-video"
+                              icon_color: "green"
+                              background_color: "green"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
-                          navigation_path: "/config/devices/device/bb485d5d222b2f3d78e640bbd1e2ac6b"
+                          navigation_path: "/config/devices/device/f2efb18594267a3671604e3457b13c2e"
+                        hold_action:
+                          action: "more-info"
                     item11:
                       card:
                         type: "custom:button-card"
@@ -661,10 +674,10 @@ views:
                               icon_color: "green"
                               background_color: "green"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/19a23f4948601ca818e597bbee0b74dd"
+                        hold_action:
+                          action: "more-info"
                     item12:
                       card:
                         type: "custom:button-card"
@@ -690,10 +703,10 @@ views:
                               icon_color: "green"
                               background_color: "green"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/b3340dea79cbcdb7367587e052835769"
+                        hold_action:
+                          action: "more-info"
                     item13:
                       card:
                         type: "custom:button-card"
@@ -713,10 +726,10 @@ views:
                             error_state:
                               icon: "mdi:printer-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/4ea9393d18c94c2fa038251f45d71858"
+                        hold_action:
+                          action: "more-info"
                     item14:
                       card:
                         type: "custom:button-card"
@@ -728,6 +741,13 @@ views:
                         entity: "binary_sensor.diskstation_security_status"
                         name: "NAS"
                         variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_synology_dsm_unavailable_unavailable_count"
+                              count_tooltip: "DSM entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
                               icon: "mdi:nas"
@@ -736,10 +756,10 @@ views:
                             error_state:
                               icon: "mdi:nas"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/59f488dc105211eb978c4d56fd4be963"
+                        hold_action:
+                          action: "more-info"
                     item15:
                       card:
                         type: "custom:button-card"
@@ -759,10 +779,10 @@ views:
                             error_state:
                               icon: "mdi:battery-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/0579ddfc72a49d4e19eafecce2e364a6"
+                        hold_action:
+                          action: "more-info"
               - type: "conditional"
                 conditions:
                   - entity: "input_boolean.minimalist_ui_binary_alert_sensors"
@@ -1203,6 +1223,11 @@ views:
                           #     auto_entities:
                           #       sort_method: "last_changed"
                           #       exclude_unavailable_state: true
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/lovelace-minimalist-downloads/3"
+                        hold_action:
+                          action: "more-info"
 
                     item5:
                       card:
@@ -1233,6 +1258,11 @@ views:
                           #     auto_entities:
                           #       sort_method: "last_changed"
                           #       exclude_unavailable_state: true
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/repairs"
+                        hold_action:
+                          action: "more-info"
 
                     floorplan1:
                       card: !include "floorplan_pictures/floor-ground.yaml"
@@ -1248,7 +1278,7 @@ views:
                   type: "custom:button-card"
                   styles:
                     grid:
-                      - grid-template-areas: "'item1 item2 item3 item4 item5' 'item6 item7 item8 item9 item10'"
+                      - grid-template-areas: "'item1 item2 item3 item4 item5' 'item6 item7 item8 item9 item10' 'item11 item12 item13 item14 item15'"
                       - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
@@ -1269,6 +1299,11 @@ views:
                       item8: *widget_icon_binary_sensor_custom_styling
                       item9: *widget_icon_binary_sensor_custom_styling
                       item10: *widget_icon_binary_sensor_custom_styling
+                      item11: *widget_icon_binary_sensor_custom_styling
+                      item12: *widget_icon_binary_sensor_custom_styling
+                      item13: *widget_icon_binary_sensor_custom_styling
+                      item14: *widget_icon_binary_sensor_custom_styling
+                      item15: *widget_icon_binary_sensor_custom_styling
                   custom_fields:
                     item1:
                       card:
@@ -1391,47 +1426,6 @@ views:
                         template:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
-                          - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_binary_switch_unknown_unavailable_state"
-                          - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_duration_class_and_min_unit_of_measurement_sensors"
-                        name: "Runtime"
-                        variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            unavailable:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                          var_kepath_device_entity_and_style_binary_count_state:
-                            entity:
-                              evaluated_entity: "group.all_duration_class_and_min_unit_of_measurement_sensors"
-                            style:
-                              icon: "mdi:sort-clock-descending"
-                              icon_color: "blue"
-                              background_color: "blue"
-                          var_kepath_generic_get_set_group_button_objects:
-                            default_state:
-                              icon: "mdi:sort-clock-ascending"
-                              icon_color: "green"
-                              background_color: "green"
-                            error_state:
-                              icon: "mdi:clock-alert"
-                          var_kepath_generic_group_popup:
-                            action: "popup"
-                            popup:
-                              title: "runtime entities"
-                              auto_entities:
-                                sort_method: "state"
-                                sort_numeric: true
-                                exclude_unknown_state: false
-                    item5:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
                           # - "device_kepath_entity_common_binary_objects_and_styles"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_power_class_sensors"
@@ -1460,6 +1454,37 @@ views:
                                 sort_numeric: true
                                 exclude_unknown_state: true
                                 exclude_unavailable_state: true
+                    item5:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          # - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "card_notification_script_trigger"
+                          # - "green_icon_off"
+                        entity: "input_boolean.away_script_active"
+                        icon: "mdi:home-lock-open"
+                        name: "Passive"
+                        variables:
+                          var_kepath_generic_get_set_group_button_objects:
+                            default_state:
+                              icon: "mdi:lock-open-variant"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "mdi:lock-alert"
+                          script_activate:
+                            icon:
+                              mdi: "mdi:home-lock"
+                              color: "red"
+                            name: "Active"
+                            script:
+                              name: "script.lockdown_mode_on"
+                              confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
+                          script_deactivate:
+                            script:
+                              name: "script.lockdown_mode_off"
+                              confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
                     item6:
                       card:
                         type: "custom:button-card"
@@ -1577,70 +1602,202 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_monetary_class_sensors"
-                        name: "Money"
+                        name: "MASS"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
+                              attribute_name: "integration_mass_unavailable_count"
+                              count_tooltip: "MASS entities away"
                             amount:
                               attribute_name: "zero_value"
                               count_tooltip: "not set"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
-                              icon: "mdi:currency-gbp"
-                              icon_color: "green"
-                              background_color: "green"
+                              icon: "mdi:playlist-music"
+                              icon_color: "blue"
+                              background_color: "blue"
                             error_state:
-                              icon: "mdi:currency-usd-off"
-                          # var_kepath_generic_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          var_kepath_generic_group_popup:
-                            action: "popup"
-                            popup:
-                              title: "money entities"
-                              auto_entities:
-                                sort_method: "state"
-                                sort_numeric: true
-                                exclude_unknown_state: true
-                                exclude_unavailable_state: true
+                              icon: "mdi:playlist-music"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/mass"
+                        hold_action:
+                          action: "more-info"
                     item10:
                       card:
                         type: "custom:button-card"
                         template:
-                          # - "custom_card_kepath_binary_notifications_device_style"
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "card_notification_script_trigger"
-                          # - "green_icon_off"
-                        entity: "input_boolean.away_script_active"
-                        icon: "mdi:home-lock-open"
-                        name: "Passive"
+                        entity: "group.all_monetary_class_sensors"
+                        name: "Spook"
                         variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_spook_unavailable_count"
+                              count_tooltip: "spook entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
-                              icon: "mdi:lock-open-variant"
-                              icon_color: "green"
-                              background_color: "green"
+                              icon: "mdi:ghost"
+                              icon_color: "blue"
+                              background_color: "blue"
                             error_state:
-                              icon: "mdi:lock-alert"
-                          script_activate:
-                            icon:
-                              mdi: "mdi:home-lock"
-                              color: "red"
-                            name: "Active"
-                            script:
-                              name: "script.lockdown_mode_on"
-                              confirmation_text: "This will ACTIVATE lockdown mode. Are you sure you want to proceed?"
-                          script_deactivate:
-                            script:
-                              name: "script.lockdown_mode_off"
-                              confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
+                              icon: "mdi:ghost"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/spook"
+                        hold_action:
+                          action: "more-info"
+                    item11:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                        entity: "group.all_monetary_class_sensors"
+                        name: "Protect"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_unifiprotect_unavailable_count"
+                              count_tooltip: "protect entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_get_set_group_button_objects:
+                            default_state:
+                              icon: "mdi:cctv"
+                              icon_color: "blue"
+                              background_color: "blue"
+                            error_state:
+                              icon: "mdi:cctv"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/unifiprotect"
+                        hold_action:
+                          action: "more-info"
+                    item12:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                        entity: "group.all_monetary_class_sensors"
+                        name: "Unifi"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_unifi_unavailable_count"
+                              count_tooltip: "unifi entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_get_set_group_button_objects:
+                            default_state:
+                              icon: "si:ubiquiti"
+                              icon_color: "blue"
+                              background_color: "blue"
+                            error_state:
+                              icon: "si:ubiquiti"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/unifi"
+                        hold_action:
+                          action: "more-info"
+                    item13:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                        entity: "group.all_monetary_class_sensors"
+                        name: "iCloud3"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_icloud3_unavailable_count"
+                              count_tooltip: "iCloud3 entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_get_set_group_button_objects:
+                            default_state:
+                              icon: "si:icloud"
+                              icon_color: "blue"
+                              background_color: "blue"
+                            error_state:
+                              icon: "si:icloud"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/icloud3"
+                        hold_action:
+                          action: "more-info"
+                    item14:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                        entity: "group.all_monetary_class_sensors"
+                        name: "Nest"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_nest_protect_unavailable_count"
+                              count_tooltip: "nest entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_get_set_group_button_objects:
+                            default_state:
+                              icon: "si:google"
+                              icon_color: "blue"
+                              background_color: "blue"
+                            error_state:
+                              icon: "si:google"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/nest_protect"
+                        hold_action:
+                          action: "more-info"
+                    item15:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                        entity: "group.all_monetary_class_sensors"
+                        name: "ZHA"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_zha_unavailable_count"
+                              count_tooltip: "ZHA entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_get_set_group_button_objects:
+                            default_state:
+                              icon: "si:zigbee"
+                              icon_color: "blue"
+                              background_color: "blue"
+                            error_state:
+                              icon: "si:zigbee"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/zha"
+                        hold_action:
+                          action: "more-info"
 
               - type: "conditional"
                 conditions:
@@ -1772,7 +1929,8 @@ views:
                           action: "navigate"
                           navigation_path: "/hacs"
                         double_tap_action:
-                          action: "more-info"
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/hacs"
                     item3:
                       card:
                         type: "custom:button-card"
