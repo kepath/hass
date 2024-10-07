@@ -1,0 +1,89 @@
+---
+custom_card_kepath_generic_navigate_action:
+  variables:
+    var_kepath_generic_navigation:
+      tap_action:
+        action: "navigate"
+        entity:
+        target:
+        navigation_path:
+        url_path:
+        haptic: "none"
+      hold_action:
+        action: "more-info"
+        entity:
+        target:
+        navigation_path:
+        url_path:
+        haptic: "none"
+
+  tap_action:
+    action: >
+      [[[
+        var tapNavigationActionDefault = "navigate";
+        var tapNavigationAction;
+        var isValidNavigationAction = false;
+        const navigationActions = ['more-info', 'toggle', 'call-service', 'none', 'navigate', 'url', 'assist'];
+        if (typeof variables?.var_kepath_generic_navigation?.tap_action?.action !== 'undefined') {
+          tapNavigationAction = variables?.var_kepath_generic_navigation?.tap_action?.action;
+        } else {
+          tapNavigationAction = tapNavigationActionDefault;
+        }
+        for (let i = 0; i < navigationActions.length; i++) {
+          if (tapNavigationAction.includes(navigationActions[i])){
+            isValidNavigationAction = true;
+          }
+        }
+        if (!isValidNavigationAction) {
+          tapNavigationAction = tapNavigationActionDefault;
+        }
+
+        return tapNavigationAction;
+      ]]]
+    entity:
+    target:
+    navigation_path: >
+      [[[
+        var tapNavigationActionDefault = "none";
+        var tapNavigationAction;
+        if (typeof variables?.var_kepath_generic_navigation?.tap_action?.action !== 'undefined') {
+          tapNavigationAction = variables?.var_kepath_generic_navigation?.tap_action?.action;
+        } else {
+          tapNavigationAction = tapNavigationActionDefault;
+        }
+
+        if (tapNavigationAction == 'navigate') {
+          var tapNavigationPath;
+          var tapNavigationPathDefault = "lovelace-minimalist-home/0";
+          if (typeof variables?.var_kepath_generic_navigation?.tap_action?.navigation_path !== 'undefined') {
+            tapNavigationPath = variables?.var_kepath_generic_navigation?.tap_action?.navigation_path;
+          } else {
+            tapNavigationPath = tapNavigationPathDefault;
+          }
+        }
+
+        return tapNavigationPath;
+      ]]]
+    url_path:
+    haptic: >
+      [[[
+        var tapNavigationHapticDefault = "none";
+        var tapNavigationHaptic;
+        var isValidNavigationHaptic = false;
+        const navigationHaptics = ['none', 'success', 'warning', 'failure', 'light', 'medium', 'heavy', 'selection'];
+        if (typeof variables?.var_kepath_generic_navigation?.tap_action?.haptic !== 'undefined') {
+          tapNavigationHaptic = variables?.var_kepath_generic_navigation?.tap_action?.haptic;
+        } else {
+          tapNavigationHaptic = tapNavigationHapticDefault;
+        }
+        for (let i = 0; i < navigationHaptics.length; i++) {
+          if (tapNavigationHaptic.includes(navigationHaptics[i])){
+            isValidNavigationHaptic = true;
+          }
+        }
+        if (!isValidNavigationHaptic) {
+          tapNavigationHaptic = tapNavigationHapticDefault;
+        }
+
+        return tapNavigationHaptic;
+      ]]]
