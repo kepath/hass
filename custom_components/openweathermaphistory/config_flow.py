@@ -1,54 +1,57 @@
-""" Config flow """
+"""Config flow."""
 
 from __future__ import annotations
 
-import logging
-import jinja2
-import uuid
-import json
 #from pyowm import OWM
-from datetime import datetime, date
-from .data import RestData
+from datetime import date, datetime
+import json
+import logging
+import uuid
+
+import jinja2
 from pyowm.commons.exceptions import APIRequestError, UnauthorizedError
 import voluptuous as vol
+
 from homeassistant import config_entries
-from homeassistant.util import location
-from homeassistant.core import HomeAssistant,callback
-from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers import selector as sel
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_LATITUDE,
-    CONF_LONGITUDE,
     CONF_LOCATION,
+    CONF_LONGITUDE,
     CONF_NAME,
-    CONF_RESOURCES
-    )
+    CONF_RESOURCES,
+)
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers import config_validation as cv, selector as sel
+from homeassistant.util import location
+
 from .const import (
-    CONF_FORMULA,
     CONF_ATTRIBUTES,
-    CONF_MAX_DAYS,
+    CONF_FORMULA,
     CONF_INTIAL_DAYS,
     CONF_MAX_CALLS,
-    CONF_STATECLASS,
+    CONF_MAX_DAYS,
     CONF_SENSORCLASS,
-    DOMAIN,
-    CONST_PROXIMITY,
+    CONF_STATECLASS,
     CONF_UID,
-    CONST_API_CALL
-    )
+    CONST_API_CALL,
+    CONST_PROXIMITY,
+    DOMAIN,
+)
+from .data import RestData
+
 DEFAULT_NAME = 'Home'
 _LOGGER = logging.getLogger(__name__)
 
 @config_entries.HANDLERS.register(DOMAIN)
 
 class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
-    """FLow handler"""
+    """FLow handler."""
 
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
-    VERSION = 1
+    VERSION = 2
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # noqa: D107
         self._errors = {}
         self._data = {}
         self.selected = {}
@@ -56,7 +59,8 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
     async def async_step_user(
         self, user_input=None
     ):
-        """Invoked when a user initiates a flow via the user interface."""
+        """Initiate flow via the user interface."""
+
         errors: dict[str, str] = {}
         if user_input is not None:
             await self.async_set_unique_id(str(uuid.uuid4()))
@@ -108,7 +112,7 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
                         ),
             ): sel.LocationSelector(),
             vol.Required(CONF_MAX_DAYS,default=default_input.get(CONF_MAX_DAYS,5)): sel.NumberSelector({"min":1,"max":30}),
-            vol.Required(CONF_INTIAL_DAYS,default=default_input.get(CONF_INTIAL_DAYS,5)): sel.NumberSelector({"min":1,"max":30}),
+            vol.Required(CONF_INTIAL_DAYS,default=default_input.get(CONF_INTIAL_DAYS,5)): sel.NumberSelector({"min":1,"max":5}),
             vol.Required(CONF_MAX_CALLS,default=default_input.get(CONF_MAX_CALLS,500)): sel.NumberSelector({"min":500,"max":5000,"step":500}),
             }
         )
@@ -117,7 +121,7 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
         )
 
     async def async_step_add(self, user_input=None):
-        '''add sensor'''
+        '''Add sensor.'''
         errors = {}
         newdata = {}
         measurement = False
@@ -188,7 +192,7 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
         )
 
     async def async_step_delete(self, user_input=None):
-        '''delete'''
+        '''Delete.'''
         errors = {}
         sensors = []
         newdata = {}
@@ -204,9 +208,9 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
             self._data = newdata
             return await self.async_step_menu()
         # build the list
-        selection = 0
-        for sensor in self._data.get(CONF_RESOURCES):
-            selection += 1
+        #selection = 0
+        for selection, sensor in enumerate(self._data.get(CONF_RESOURCES)):
+            #selection += 1
             sensors.append(str(selection) + '.' + sensor.get(CONF_NAME))
         list_schema = vol.Schema({vol.Optional(CONF_NAME): vol.In(sensors)})
 
@@ -215,7 +219,7 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
         )
 
     async def async_step_list_modify(self, user_input=None):
-        '''update zone'''
+        '''Update zone.'''
         errors = {}
         items = []
 
@@ -227,9 +231,9 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
             self.selected = int(user_input.get(CONF_NAME).split(".")[0]) - 1
             return await self.async_step_modify()
         #build the list for display
-        selection = 0
-        for sensor in self._data.get(CONF_RESOURCES):
-            selection += 1
+        #selection = 0
+        for selection, sensor in enumerate(self._data.get(CONF_RESOURCES)):
+            #selection += 1
             items.append(str(selection) + '.' + sensor.get(CONF_NAME))
         list_schema = vol.Schema({vol.Optional(CONF_NAME): vol.In(items)})
 
@@ -238,7 +242,7 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
         )
 
     async def async_step_modify(self, user_input=None):
-        '''update zone'''
+        '''Update zone.'''
         errors = {}
         newdata = {}
         measurement = False
@@ -304,7 +308,7 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
         )
 
     async def async_step_menu(self, user_input=None):
-        '''Add a group or finalise the flow'''
+        '''Add a group or finalise the flow.'''
         menu_options = ["list_modify"]
         if len(self._data.get(CONF_RESOURCES)) > 1:
             menu_options.extend(["delete"])
@@ -324,13 +328,14 @@ class WeatherHistoryFlowHandler(config_entries.ConfigFlow):
 #--- Options Flow ----------------------------------------------
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry):
+    def async_get_options_flow(config_entry):  # noqa: D102
         return OptionsFlowHandler(config_entry)
 
 class OptionsFlowHandler(config_entries.OptionsFlow):
-    ''' option flow'''
-    VERSION = 1
-    def __init__(self, config_entry) -> None:
+    '''Option flow.'''
+
+    VERSION = 2
+    def __init__(self, config_entry) -> None:  # noqa: D107
 
         self.config_entry = config_entry
         self._name = self.config_entry.data.get(CONF_NAME)
@@ -340,8 +345,12 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         else:
             self._data = self.config_entry.options
 
+    async def async_step_user(self, user_input=None):
+        '''Work around from HA v23 11.'''
+        return
+
     async def async_step_init(self, user_input=None):
-        '''initial step'''
+        '''Initialise.'''
         if self.config_entry.options == {}:
             data = self.config_entry.data
         else:
@@ -358,7 +367,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_finalise(self, user_input=None):
-        """create the program config"""
+        """Create the program config."""
         newdata = {}
         newdata.update(self._data)
 
@@ -374,7 +383,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_update(self, user_input=None):
-        """Invoked when a user initiates a flow via the user interface."""
+        """Invoke when a user initiates a flow via the user interface."""
         errors = {}
         newdata = {}
         newdata.update(self._data)
@@ -417,7 +426,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_delete(self, user_input=None):
-        '''delete'''
+        '''Delete.'''
         errors = {}
         sensors = []
         newdata = {}
@@ -433,9 +442,9 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             self._data = newdata
             return await self.async_step_init()
         # build the list
-        selection = 0
-        for sensor in self._data.get(CONF_RESOURCES):
-            selection += 1
+        #selection = 0
+        for selection,sensor in enumerate(self._data.get(CONF_RESOURCES)):
+            #selection += 1
             sensors.append(str(selection) + '.' + sensor.get(CONF_NAME))
         list_schema = vol.Schema({vol.Optional(CONF_NAME): vol.In(sensors)})
 
@@ -444,7 +453,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_list_modify(self, user_input=None):
-        '''update zone'''
+        '''Update zone.'''
         errors = {}
         items = []
 
@@ -456,9 +465,9 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             self.selected = int(user_input.get(CONF_NAME).split(".")[0]) - 1
             return await self.async_step_modify()
         #build the list for display
-        selection = 0
-        for sensor in self._data.get(CONF_RESOURCES):
-            selection += 1
+        #selection = 0
+        for selection,sensor in enumerate(self._data.get(CONF_RESOURCES)):
+            #selection += 1
             items.append(str(selection) + '.' + sensor.get(CONF_NAME))
         list_schema = vol.Schema({vol.Optional(CONF_NAME): vol.In(items)})
 
@@ -467,7 +476,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_modify(self, user_input=None):
-        '''update zone'''
+        '''Update zone.'''
         errors = {}
         newdata = {}
         measurement = False
@@ -533,7 +542,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_add(self, user_input=None):
-        '''add zone'''
+        '''Add zone.'''
         errors = {}
         newdata = {}
         measurement = False
@@ -605,7 +614,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 #---- Helpers ----
 
 def evaluate_custom_formula(formula, max_days):
-    """evaluate the formula/template"""
+    """Evaluate the formula/template."""
     wvars = {}
     #default to initial days variable
     for i in range(int(max_days)):
@@ -614,7 +623,7 @@ def evaluate_custom_formula(formula, max_days):
         wvars[f"day{i}max"]         = 0
         wvars[f"day{i}min"]         = 0
     #forecast provides 7 days of data
-    for i in range(0,6):
+    for i in range(6):
         wvars[f"forecast{i}pop"]      = 0
         wvars[f"forecast{i}rain"]     = 0
         wvars[f"forecast{i}snow"]     = 0
@@ -650,14 +659,15 @@ def evaluate_custom_formula(formula, max_days):
 
     try:
         templatevalue = float(templatevalue)
-        return 'measurement'
+
     except ValueError:
         #not a number
         return 'string'
+    else:
+        return 'measurement'
 
 async def _is_owm_api_online(hass:HomeAssistant, api_key, lat, lon):
-
-    """call the api and show the result"""
+    """Call the api and show the result."""
     hour = datetime(date.today().year, date.today().month, date.today().day,datetime.now().hour)
     thishour = int(datetime.timestamp(hour))
     url =  CONST_API_CALL % (lat,lon, thishour, api_key)
@@ -669,8 +679,9 @@ async def _is_owm_api_online(hass:HomeAssistant, api_key, lat, lon):
         code    = data["cod"]
         message = data["message"]
         _LOGGER.error('OpenWeatherMap call failed code: %s message: %s', code, message)
-        return False
     except TypeError:
         return True
     except KeyError:
         return True
+    else:
+        return False
