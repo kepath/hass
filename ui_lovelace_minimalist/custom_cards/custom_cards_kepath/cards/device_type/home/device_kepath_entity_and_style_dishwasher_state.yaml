@@ -37,26 +37,30 @@ device_kepath_entity_and_style_dishwasher_state:
 
           var resolvedProgressState;
           resolvedProgressState = states[evaluatedProgressEntity].state;
-          hass.callService('system_log', 'write', {level:'warning',message:'resolvedProgressState: ' + resolvedProgressState});
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedProgressState: ' + resolvedProgressState});
 
 
-          if (!isNaN(resolvedProgressState) && typeof resolvedProgressState !== 'undefined') {
-            hass.callService('system_log', 'write', {level:'warning',message:'1: '});
+          //if (!isNaN(resolvedProgressState) && typeof resolvedProgressState !== 'undefined') {
+          if (typeof resolvedProgressState !== 'undefined') {
+            //hass.callService('system_log', 'write', {level:'warning',message:'1: '});
             if (!isNaN(Date.parse(resolvedProgressState))) {
-              hass.callService('system_log', 'write', {level:'warning',message:'2: '});
+              //hass.callService('system_log', 'write', {level:'warning',message:'2: '});
               var progressMilliseconds = Date.parse(resolvedProgressState) - Date.now();
               if(!isNaN(parseInt(progressMilliseconds))) {
-                hass.callService('system_log', 'write', {level:'warning',message:'3: '});
-                var progressHours = (progressMilliseconds / (1000 * 60 * 60)).toFixed();
+                //hass.callService('system_log', 'write', {level:'warning',message:'3: '});
+                var progressHours = parseInt((progressMilliseconds / (1000 * 60 * 60)).toFixed());
                 if(!isNaN(parseInt(progressHours))) {
-                  hass.callService('system_log', 'write', {level:'warning',message:'4: '});
-                  returnedIcon = "mdi:numeric-" + progressHours + "-circle-outline";
+                  //hass.callService('system_log', 'write', {level:'warning',message:'4: '});
+                  if (progressHours >= 0 && progressHours <= 9 ) {
+                    //hass.callService('system_log', 'write', {level:'warning',message:'5: '});
+                    returnedIcon = "mdi:numeric-" + progressHours + "-circle-outline";
+                  }
                 }
             }
             }
           }
 
-          hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+          //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
           return returnedIcon;
         ]]]
       styles:
