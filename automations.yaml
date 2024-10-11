@@ -116,13 +116,12 @@
   alias: on_start_create_group.all_lights_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: light
       group_name: all_lights
       icon: mdi:lightbulb-multiple-off
@@ -133,6 +132,8 @@
       excluded_entities:
       - light.shelly_1l_hallway_bottom_light_2
       - light.shelly_1l_kitchen_utility_light_2
+      - light.91148c10_aec180ca_screen
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1666812616338'
   alias: on_start_create_group.all_zones_domain_entities
@@ -801,38 +802,6 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
   mode: single
-# - id: '1689276692289'
-#   alias: on_button_short_press_mini_switch_bed_a
-#   description: ''
-#   trigger:
-#   - device_id: 3ec7d3713bb2e67b7b459b5f570921a2
-#     domain: zha
-#     platform: device
-#     type: remote_button_short_press
-#     subtype: remote_button_short_press
-#   condition: []
-#   action:
-#   - service: scene.turn_on
-#     target:
-#       entity_id: scene.night_shutdown
-#     metadata: {}
-#   mode: single
-# - id: '1689409704381'
-#   alias: on_button_double_press_mini_switch_bed_a
-#   description: ''
-#   trigger:
-#   - device_id: 3ec7d3713bb2e67b7b459b5f570921a2
-#     domain: zha
-#     platform: device
-#     type: remote_button_double_press
-#     subtype: remote_button_double_press
-#   condition: []
-#   action:
-#   - service: scene.turn_on
-#     target:
-#       entity_id: scene.unlock_front_door
-#     metadata: {}
-#   mode: single
 - id: '1689426384566'
   alias: on_start_create_group.all_locks_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
@@ -1495,4 +1464,77 @@
       entity_id:
       - media_player.amazon_echo_spot_bed_a
       - sensor.amazon_echo_spot_bed_a_next_alarm
+  mode: single
+- id: '1728474306244'
+  alias: on_start_create_group.all_away_occupancy_class_binary_sensors
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
+      domain: binary_sensor
+      group_name: all_away_occupancy_class_binary_sensors
+      icon: mdi:cctv
+      friendly_name: All binary_sensor away occupancy motion device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - occupancy
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+      excluded_entities:
+      - binary_sensor.front_g3_flex_occupancy
+      - binary_sensor.doorbell_g4_doorbell
+      - binary_sensor.doorbell_g4_occupancy
+      - binary_sensor.back_g3_flex_occupancy
+    action: python_script.create_entity_device_class_group
+  mode: single
+- id: '1728474975114'
+  alias: on_start_create_group.all_measured_data_rate_class_sensors
+  description: Uses python script create_entity_device_class_group to create an entity
+    group
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
+      domain: sensor
+      group_name: all_measured_data_rate_class_sensors
+      icon: mdi:speedometer
+      friendly_name: All sensor measured data rate device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - data_rate
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+      excluded_entities:
+      - sensor.download_iperf_he_net
+      - sensor.upload_iperf_he_net
+      - sensor.influxdb_unifi_rx
+      - sensor.kitchen_g3_instant_disk_write_rate
+      - sensor.bed_c_g3_instant_disk_write_rate
+      - sensor.bottom_hallway_g3_instant_disk_write_rate
+      - sensor.middle_hallway_g3_flex_disk_write_rate
+      - sensor.doorbell_g4_disk_write_rate
+      - sensor.front_g3_flex_disk_write_rate
+      - sensor.back_g3_flex_disk_write_rate
+      - sensor.diskstation_upload_throughput
+      - sensor.diskstation_download_throughput
+      - sensor.speedtest_download
+      - sensor.speedtest_upload
+      - sensor.download_speedtest_london_its_tg_net
+      - sensor.upload_speedtest_london_its_tg_net
+      - sensor.udmpro_internet_uplink_data_rate
+      - sensor.udmpro_usw_pro_24_poe_backup_downlink_data_rate
+      - sensor.udmpro_usw_pro_24_poe_sfp_downlink_data_rate
+      - sensor.back_g3_flex_data_rate
+      - sensor.doorbell_g4_flex_data_rate
+      - sensor.front_g3_flex_data_rate
+      - sensor.middle_hallway_g3_flex_data_rate
+      - sensor.bottom_hallway_g3_flex_data_rate
+      - sensor.kitchen_g3_instant_data_rate
+    action: python_script.create_entity_device_class_group
   mode: single
