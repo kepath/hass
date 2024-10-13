@@ -3,6 +3,7 @@
 DOMAIN                  = 'openweathermaphistory'
 CONST_API_CALL          = 'https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=%s&lon=%s&dt=%s&appid=%s&units=metric'
 CONST_API_FORECAST      = 'https://api.openweathermap.org/data/3.0/onecall?lat=%s&lon=%s&exclude=minutely,alerts&appid=%s&units=metric'
+CONF_CREATE_SENSORS     = 'create_sensors'
 CONF_FORMULA            = "formula"
 CONF_DATA               = "data"
 CONF_ATTRIBUTES         = "attributes"
@@ -22,3 +23,8 @@ CONST_INITIAL           = 'initial'
 CONF_MAX_CALLS          = "max_calls"
 
 ATTRIBUTION             = "Data provided by OpenWeatherMap"
+
+OPTIONS_SENSOR_CLASS=["none","humidity","precipitation","precipitation_intensity","temperature","pressure"]
+OPTIONS_BULK=['current_obs','hist_rain','hist_snow', 'hist_max','hist_min',
+            'forecast_rain', 'forecast_snow','forecast_max',
+            'forecast_min', 'forecast_humidity','forecast_pop']
