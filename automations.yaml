@@ -951,13 +951,12 @@
   alias: on_start_create_group.all_battery_class_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_battery_class_sensors
       icon: mdi:battery-20
@@ -970,6 +969,9 @@
       - group.globally_excluded_entities
       excluded_entities:
       - sensor.kevins_macbook_pro_2018_internal_battery_state
+      - sensor.airpods_emily_icloud3_battery
+      - sensor.airpods2pro_kev_icloud3_battery
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1693774604091'
   alias: on_start_create_group.all_data_rate_class_sensors
