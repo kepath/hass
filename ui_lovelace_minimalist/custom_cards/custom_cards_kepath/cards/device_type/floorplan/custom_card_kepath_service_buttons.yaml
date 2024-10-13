@@ -1,5 +1,5 @@
 ---
-card_kepath_service_buttons:
+card_kepath_floorplan_selector_buttons:
   styles:
     grid:
       - grid-template-areas: "'floor_ground' 'floor_first' 'floor_second'"
@@ -22,34 +22,34 @@ card_kepath_service_buttons:
     floor_ground:
       card:
         type: "custom:button-card"
-        template: "card_kepath_service_button"
+        template: "card_kepath_floorplan_selector_button"
         entity: "input_select.floorplan_floor"
         variables:
-          ulm_card_kepath_service_button_icon: "mdi:home-floor-g"
-          ulm_card_kepath_service_button_service: "input_select.select_option"
-          ulm_card_kepath_service_button_option: "G"
+          ulm_card_kepath_floorplan_selector_button_icon: "mdi:home-floor-g"
+          ulm_card_kepath_floorplan_selector_button_service: "input_select.select_option"
+          ulm_card_kepath_floorplan_selector_button_option: "G"
     floor_first:
       card:
         type: "custom:button-card"
-        template: "card_kepath_service_button"
+        template: "card_kepath_floorplan_selector_button"
         entity: "input_select.floorplan_floor"
         variables:
-          ulm_card_kepath_service_button_icon: "mdi:home-floor-1"
-          ulm_card_kepath_service_button_service: "input_select.select_option"
-          ulm_card_kepath_service_button_option: "1"
+          ulm_card_kepath_floorplan_selector_button_icon: "mdi:home-floor-1"
+          ulm_card_kepath_floorplan_selector_button_service: "input_select.select_option"
+          ulm_card_kepath_floorplan_selector_button_option: "1"
     floor_second:
       card:
         type: "custom:button-card"
-        template: "card_kepath_service_button"
+        template: "card_kepath_floorplan_selector_button"
         entity: "input_select.floorplan_floor"
         variables:
-          ulm_card_kepath_service_button_icon: "mdi:home-floor-2"
-          ulm_card_kepath_service_button_service: "input_select.select_option"
-          ulm_card_kepath_service_button_option: "2"
+          ulm_card_kepath_floorplan_selector_button_icon: "mdi:home-floor-2"
+          ulm_card_kepath_floorplan_selector_button_service: "input_select.select_option"
+          ulm_card_kepath_floorplan_selector_button_option: "2"
 
 
-card_kepath_service_button:
-  icon: "[[[ return variables.ulm_card_kepath_service_button_icon ]]]"
+card_kepath_floorplan_selector_button:
+  icon: "[[[ return variables.ulm_card_kepath_floorplan_selector_button_icon ]]]"
   show_icon: true
   show_label: false
   show_name: false
@@ -58,18 +58,76 @@ card_kepath_service_button:
       - width: "20px"
       - color: >
           [[[
-            if (states[entity.entity_id].state == variables.ulm_card_kepath_service_button_option) {
-              return "rgba(var(--color-yellow),1)";
-            } else {
-              return "var(--primary-text-color)";
+            var returnedColour = "var(--primary-text-color)";
+            if (states[entity.entity_id].state == variables.ulm_card_kepath_floorplan_selector_button_option) {
+              returnedColour = "rgba(var(--color-yellow),1)";
             }
+
+            return returnedColour;
           ]]]
     card:
       - background-color: "var(--card-background-color)"
       - box-shadow: "none"
   tap_action:
     action: "call-service"
-    service: "[[[ return variables.ulm_card_kepath_service_button_service ]]]"
+    service: "[[[ return variables.ulm_card_kepath_floorplan_selector_button_service ]]]"
     service_data:
-      option: "[[[ return variables.ulm_card_kepath_service_button_option ]]]"
+      option: "[[[ return variables.ulm_card_kepath_floorplan_selector_button_option ]]]"
       entity_id: "[[[ return entity.entity_id ]]]"
+
+
+card_kepath_call_floorplan_selector:
+  show_icon: false
+  show_label: false
+  show_name: false
+  styles:
+    grid:
+      - grid-template-rows: "1fr"
+    card:
+      - box-shadow: "none"
+      - border-radius: "none"
+      - height: "100%"
+      - background-color: "rgba(0,0,0, 0)"
+    tooltip:
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0"
+      - border: "0"
+      - border-radius: "0"
+      # - transform: "translate(-75%,-75%)"
+  variables:
+    var_kepath_call_floorplan_selector:
+      tap_action:
+        navigate_floor: "G"
+        navigate_path: "/lovelace-minimalist-security/2"
+      hold_action:
+        navigate_floor: "G"
+        navigate_path: "/lovelace-minimalist-energy/3"
+
+  tooltip: "tap: view security  hold: view energy"
+  tap_action:
+    action: "fire-dom-event"
+    browser_mod:
+      service: "browser_mod.sequence"
+      data:
+        sequence:
+          - service: "input_select.select_option"
+            data:
+              option: "[[[return variables.var_kepath_call_floorplan_selector.tap_action.navigate_floor;]]]"
+              entity_id: "input_select.floorplan_floor"
+          - service: "browser_mod.navigate"
+            data:
+              path: "[[[return variables.var_kepath_call_floorplan_selector.tap_action.navigate_path;]]]"
+  hold_action:
+    action: "fire-dom-event"
+    browser_mod:
+      service: "browser_mod.sequence"
+      data:
+        sequence:
+          - service: "input_select.select_option"
+            data:
+              option: "[[[return variables.var_kepath_call_floorplan_selector.hold_action.navigate_floor;]]]"
+              entity_id: "input_select.floorplan_floor"
+          - service: "browser_mod.navigate"
+            data:
+              path: "[[[return variables.var_kepath_call_floorplan_selector.hold_action.navigate_path;]]]"
