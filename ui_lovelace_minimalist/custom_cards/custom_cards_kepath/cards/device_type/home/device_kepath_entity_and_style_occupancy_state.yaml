@@ -1,98 +1,88 @@
 ---
 device_kepath_entity_and_style_occupancy_state:
   variables:
-    var_kepath_generic_get_set_group_notification_objects:
-      unavailable:
-        entity: "sensor.binary_sensor_state_counts"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "zero_value"
-      amount:
-        entity: "sensor.binary_sensor_state_counts"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "zero_value"
-      person:
-        entity: "sensor.binary_sensor_state_counts"
-        ignore_on_known_occupancy: >
-          [[[
-            var ignoreOnKnownOccupancy = false;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.person?.ignore_on_known_occupancy) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.person.ignore_on_known_occupancy === "boolean") {
-                ignoreOnKnownOccupancy = variables.var_kepath_generic_get_set_group_notification_objects.person.ignore_on_known_occupancy;
-              }
-            }
-            return ignoreOnKnownOccupancy;
-          ]]]
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.person?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.person.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.person.is_attribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "zero_value"
+    var_kepath_device_entity_and_style_binary_count_state:
+      entity:
+        evaluated_entity: "sensor.binary_sensor_state_counts"
+        evaluated_attribute: "occupancy_sensors_triggered_count"
+        person_count_attribute: "occupancy_persons_home_count"
+      style:
+        use_themes: true
+        icon: "mdi:human-greeting"
+        icon_color: "blue"
+        background_color: "blue"
+      style2:
+        use_themes: true
+        icon: "mdi:motion-sensor"
+        icon_color: "red"
+        background_color: "red"
+
   state:
     - operator: "template"
       value: >
         [[[
-            var show_detected_home_color = false;
-            var known_home = states[variables.var_kepath_generic_get_set_group_notification_objects.person.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.person.attribute_name];
-            if (!variables.var_kepath_generic_get_set_group_notification_objects.person.ignore_on_known_occupancy) {
-              if (!isNaN(known_home) && known_home !== undefined && known_home != 0){
-                show_detected_home_color = true;
-              }
-            }
-            return show_detected_home_color;
+          var evaluatedEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+          var evaluatedOccupancyAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+          var evaluatedPersonAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.person_count_attribute;
+          var returnValue = false;
+
+          var resolvedOccupancyStateDefault = 0;
+          var resolvedOccupancyState;
+          resolvedOccupancyState = states[evaluatedEntity].attributes[evaluatedOccupancyAttribute];
+          if (isNaN(resolvedOccupancyState) || typeof resolvedOccupancyState === 'undefined') {
+              resolvedOccupancyState = resolvedOccupancyStateDefault;
+          }
+
+          var resolvedPersonStateDefault = 0;
+          var resolvedPersonState;
+          resolvedPersonState = states[evaluatedEntity].attributes[evaluatedPersonAttribute];
+          if (isNaN(resolvedPersonState) || typeof resolvedPersonState === 'undefined') {
+              resolvedPersonState = resolvedPersonStateDefault;
+          }
+
+          if (resolvedPersonState > 0 && resolvedOccupancyState > 0) {
+            returnValue = true;
+          }
+
+          return returnValue;
         ]]]
-      icon: "mdi:human-greeting"
+      icon: "[[[return variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;]]]"
       styles:
         icon:
-          - color: "rgba(var(--color-blue),1)"
+          - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon_color}),1)`; ]]]"
         img_cell:
-          - background-color: "rgba(var(--color-blue), 0.2)"
+          - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color}),0.2)`; ]]]"
     - operator: "template"
       value: >
         [[[
-            var show_detected_away_color = false;
-            var known_home = states[variables.var_kepath_generic_get_set_group_notification_objects.person.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.person.attribute_name];
-            var person_detected = states[variables.var_kepath_generic_get_set_group_notification_objects.amount.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.amount.attribute_name];
-            if (!isNaN(known_home) && known_home !== undefined && known_home == 0) {
-              if (!isNaN(person_detected) && person_detected !== undefined && person_detected != 0){
-                show_detected_away_color = true;
-              }
-            }
-            return show_detected_away_color;
+          var evaluatedEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+          var evaluatedOccupancyAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+          var evaluatedPersonAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.person_count_attribute;
+          var returnValue = false;
+
+          var resolvedOccupancyStateDefault = 0;
+          var resolvedOccupancyState;
+          resolvedOccupancyState = states[evaluatedEntity].attributes[evaluatedOccupancyAttribute];
+          if (isNaN(resolvedOccupancyState) || typeof resolvedOccupancyState === 'undefined') {
+              resolvedOccupancyState = resolvedOccupancyStateDefault;
+          }
+
+          var resolvedPersonStateDefault = 0;
+          var resolvedPersonState;
+          resolvedPersonState = states[evaluatedEntity].attributes[evaluatedPersonAttribute];
+          if (isNaN(resolvedPersonState) || typeof resolvedPersonState === 'undefined') {
+              resolvedPersonState = resolvedPersonStateDefault;
+          }
+
+          if (resolvedPersonState == 0 && resolvedOccupancyState > 0) {
+            returnValue = true;
+          }
+
+          return returnValue;
         ]]]
-      icon: "mdi:motion-sensor"
+      icon: "[[[return variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.icon;]]]"
       styles:
         icon:
-          - color: "rgba(var(--color-red),1)"
+          - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.icon_color}),1)`; ]]]"
         img_cell:
-          - background-color: "rgba(var(--color-red), 0.2)"
-    - operator: "default"
-      icon: "mdi:cctv"
-      styles:
-        icon:
-          - color: "rgba(var(--color-green),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-green), 0.2)"
+          - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.background_color}),0.2)`; ]]]"

@@ -38,9 +38,9 @@ views:
                 triggers_update: "input_boolean.welcome_toggle"
                 variables:
                   ulm_card_kepath_welcome_collapse: "input_boolean.welcome_toggle"
-                  ulm_chip_temperature_inside:
-                  ulm_chip_temperature_outside: "sensor.openweathermap_temperature"
-                  ulm_chip_temperature_weather: "weather.openweathermap"
+                  ulm_chip_temperature_inside: "sensor.nest_bottom_floor_temperature"
+                  ulm_chip_temperature_outside: "sensor.banbury_feels_like_temperature"
+                  ulm_chip_temperature_weather: "weather.met_office_banbury_daily"
                   entity_1:
                     nav: "/lovelace-minimalist-rooms"
                     icon: "mdi:floor-plan"
@@ -978,34 +978,36 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_occupancy_state"
-                          # - "device_kepath_style_occupancy_state"
+                          - "device_kepath_entity_and_style_occupancy_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_away_occupancy_class_binary_sensors"
-                        name: "Away Motion"
+                        name: "Internal Motion"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "occupancy_sensors_unavailable_away_count"
                               count_tooltip: "num occupancy sensors away"
                             amount:
-                              attribute_name: "occupancy_no_persons_home_triggered_count"
+                              attribute_name: "occupancy_sensors_triggered_away_count"
                               count_tooltip: "num occupancy sensors on"
-                            person:
-                              attribute_name: "occupancy_persons_home_count"
-                              count_tooltip: "num persons home"
-                              ignore_on_known_occupancy: true
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              evaluated_attribute: "occupancy_sensors_triggered_away_count"
+                            style:
+                              icon: "mdi:motion-sensor-off"
+                              icon_color: "green"
+                              background_color: "green"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
-                              icon: "mdi:cctv"
-                              icon_color: "grey"
-                              background_color: "grey"
+                              icon: "mdi:motion-sensor-off"
+                              icon_color: "green"
+                              background_color: "green"
                             error_state:
                               icon: "mdi:cctv-off"
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "occupancy entities"
+                              title: "selected occupancy entities"
                               auto_entities:
                                 sort_method: "last_changed"
                     cameras1:
@@ -1079,11 +1081,10 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_occupancy_state"
-                          # - "device_kepath_style_occupancy_state"
+                          - "device_kepath_entity_and_style_occupancy_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_occupancy_class_binary_sensors"
-                        name: "Home Motion"
+                        name: "All Motion"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
@@ -1092,14 +1093,11 @@ views:
                             amount:
                               attribute_name: "occupancy_sensors_triggered_count"
                               count_tooltip: "num occupancy sensors on"
-                            person:
-                              attribute_name: "occupancy_persons_home_count"
-                              count_tooltip: "num persons home"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
                               icon: "mdi:cctv"
-                              icon_color: "grey"
-                              background_color: "grey"
+                              icon_color: "green"
+                              background_color: "green"
                             error_state:
                               icon: "mdi:cctv-off"
                           var_kepath_generic_group_popup:
@@ -1488,7 +1486,7 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "data entities"
+                              title: "selected data entities"
                               auto_entities:
                                 sort_method: "state"
                                 sort_numeric: true
