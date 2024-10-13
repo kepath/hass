@@ -118,11 +118,26 @@ elements:
       "unknown": "local/floorplan/transparent.png"
   # BINARY SENSORS
   - type: "custom:button-card"
+    # show_icon: false
+    # show_label: false
+    # show_name: false
     style:
       left: "50%"
       top: "50%"
       width: "100%"
       height: "100%"
+    # name: "tap: view security"
+    template:
+      - "card_kepath_call_floorplan_selector"
+    entity: "group.all_bottom_floor_area_security_device_class_binary_sensors"
+    variables:
+      var_kepath_call_floorplan_selector:
+        tap_action:
+          navigate_floor: "G"
+        hold_action:
+          navigate_floor: "G"
+
+
   #   template:
   #     - "custom_card_kepath_binary_notifications_common_styles"
   #     - "custom_card_kepath_binary_sensor_floorplan"

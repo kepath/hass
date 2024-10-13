@@ -42,6 +42,26 @@ elements:
     hold_action:
       action: "none"
   # BINARY SENSORS
+  - type: "custom:button-card"
+    # show_icon: false
+    # show_label: false
+    # show_name: false
+    style:
+      left: "50%"
+      top: "50%"
+      width: "100%"
+      height: "100%"
+    # name: "hold: view energy"
+    template:
+      - "card_kepath_call_floorplan_selector"
+    entity: "group.all_top_floor_area_security_device_class_binary_sensors"
+    variables:
+      var_kepath_call_floorplan_selector:
+        tap_action:
+          navigate_floor: "2"
+        hold_action:
+          navigate_floor: "2"
+
   # - type: "custom:button-card"
   #   style:
   #     left: "50%"
