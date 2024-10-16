@@ -155,12 +155,12 @@ views:
                           use_themes: false
                           default_state:
                             icon: "mdi:tune-variant"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
                             icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:tune"
@@ -191,12 +191,12 @@ views:
                           use_themes: false
                           default_state:
                             icon: "mdi:bell-alert-outline"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
                             icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:bell-alert"
@@ -227,12 +227,12 @@ views:
                           use_themes: false
                           default_state:
                             icon: "mdi:information-variant-circle-outline"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
                             icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:information-variant-circle"
@@ -263,12 +263,12 @@ views:
                           use_themes: false
                           default_state:
                             icon: "mdi:cog-outline"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
                             icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:cog"
@@ -299,12 +299,12 @@ views:
                           use_themes: false
                           default_state:
                             icon: "mdi:refresh"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
                             icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:refresh-circle"
@@ -537,10 +537,8 @@ views:
                         type: "custom:button-card"
                         template:
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_washing_machine_state"
-                          # - "device_kepath_style_washing_machine_state"
-                        entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
-                        # entity: "sensor.washing_machine_average_demand"
+                          - "device_kepath_entity_and_style_washing_machine_state"
+                        entity: "input_boolean.washing_machine_detected_state"
                         name: "Washer"
                         variables:
                           var_kepath_generic_get_set_group_button_objects:
@@ -922,6 +920,9 @@ views:
                         name: "Camera"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "cameras_unavailable_count"
+                              count_tooltip: "num cameras away"
                             amount:
                               attribute_name: "cameras_off_count"
                               count_tooltip: "num cameras off"
@@ -1399,19 +1400,20 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
+                          # - "custom_card_kepath_binary_notifications_common_styles"
+                          # - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
                           - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_power_class_sensors"
+                        entity: "group.all_power_class_binary_sensors"
                         name: "Power"
                         variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            unavailable:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
+                          # var_kepath_generic_get_set_group_notification_objects:
+                          #   unavailable:
+                          #     attribute_name: "zero_value"
+                          #     count_tooltip: "not set"
+                          #   amount:
+                          #     attribute_name: "zero_value"
+                          #     count_tooltip: "not set"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
                               icon: "mdi:home-lightning-bolt"
@@ -1504,9 +1506,9 @@ views:
                         name: "Battery"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
-                            battery_value:
-                              attribute_name: "batteries_average_value"
-                              count_tooltip: "battery average value (%n0)"
+                            # battery_value:
+                            #   attribute_name: "batteries_average_value"
+                            #   count_tooltip: "battery average value (%n0)"
                             unavailable:
                               attribute_name: "batteries_unavailable_count"
                               count_tooltip: "num batteries away"
@@ -1650,9 +1652,10 @@ views:
                             unavailable:
                               attribute_name: "integration_spook_unavailable_count"
                               count_tooltip: "spook entities away"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
+                            # amount:
+                            #   entity: "sensor.active_issues"
+                            #   is_attribute: false
+                            #   count_tooltip: "active issues"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
                               icon: "mdi:ghost"
@@ -1684,6 +1687,11 @@ views:
                         entity: "sensor.watchman_missing_entities"
                         name: "Watchman"
                         variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "sensor.watchman_missing_entities"
+                              is_attribute: false
+                              count_tooltip: "watchmen missing entities"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
                               icon: "mdi:cog-stop"
@@ -1715,6 +1723,11 @@ views:
                         entity: "sensor.active_issues"
                         name: "Repairs"
                         variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "sensor.active_issues"
+                              is_attribute: false
+                              count_tooltip: "active issues"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
                               icon: "mdi:wrench-check"
@@ -1750,9 +1763,6 @@ views:
                             unavailable:
                               attribute_name: "integration_icloud3_unavailable_count"
                               count_tooltip: "iCloud3 entities away"
-                            # amount:
-                            #   attribute_name: "zero_value"
-                            #   count_tooltip: "not set"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
                               icon: "si:icloud"
