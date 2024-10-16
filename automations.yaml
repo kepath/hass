@@ -1069,15 +1069,24 @@
 - id: '1696689232940'
   alias: on_sunset_offset_turn_on_fly_killer_lamp
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
+  triggers:
+  - event: sunset
     offset: -02:00:00
-  condition: []
-  action:
+    trigger: sun
+  conditions: []
+  actions:
   - type: turn_on
-    device_id: 67879196ae31044a030a2b7e5d835867
-    entity_id: a9265bfb3efcb61f98fa0329dbb2ecf0
+    device_id: bbf437ec8b6d27f7e77867efc9691239
+    entity_id: fa9ebab8e7f832ddb25c15229bb0b015
+    domain: light
+  - delay:
+      hours: 4
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: bbf437ec8b6d27f7e77867efc9691239
+    entity_id: fa9ebab8e7f832ddb25c15229bb0b015
     domain: light
   mode: single
 - id: '1696832281170'
@@ -1540,3 +1549,36 @@
       - sensor.kitchen_g3_instant_data_rate
     action: python_script.create_entity_device_class_group
   mode: single
+- id: '1729003859419'
+  alias: on_detect_power_change_washing_machine
+  description: ''
+  use_blueprint:
+    path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
+    input:
+      power_sensor: sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand
+      starting_threshold: 5
+      finishing_threshold: 5
+      actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id:
+          - input_boolean.washing_machine_detected_state
+        data: {}
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+        target:
+          entity_id: input_datetime.washing_machine_detected_finish_time
+      pre_actions:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.washing_machine_detected_state
+      - action: input_datetime.set_datetime
+        metadata: {}
+        data:
+          datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+        target:
+          entity_id: input_datetime.washing_machine_detected_start_time
