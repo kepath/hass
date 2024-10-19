@@ -282,10 +282,10 @@ class ChimeTTSHelper:
         # Apply default values if not already set, and TTS Platform is the default
         default_tts_platform = default_data.get(TTS_PLATFORM_KEY, None)
         selected_tts_platform = data.get("tts_platform", default_tts_platform)
+        tts_platform_is_default = default_tts_platform == selected_tts_platform
 
         # Language
         language = data.get("language", None) or options.get("language", None)
-        tts_platform_is_default = default_tts_platform == selected_tts_platform
         if (not language
             and default_data.get(DEFAULT_LANGUAGE_KEY, None)
             and tts_platform_is_default):
@@ -295,7 +295,6 @@ class ChimeTTSHelper:
         # Voice
         voice = data.get("voice", None) or options.get("voice", None)
         # Apply default voice if not already set, and TTS Platform is the default
-        tts_platform_is_default = default_tts_platform == selected_tts_platform
         if (not voice
             and default_data.get(DEFAULT_VOICE_KEY, None)
             and tts_platform_is_default):
@@ -304,11 +303,10 @@ class ChimeTTSHelper:
 
         # TLD
         tld = data.get("tld", None) or options.get("tld", None)
-        # Apply default TLD if not already set, and TTS Platform is the default
-        tts_platform_is_default = default_tts_platform == selected_tts_platform
+        # Apply default TLD if not already set, and TTS Platform is Google Translate
         if (not tld
             and default_data.get(DEFAULT_TLD_KEY, None)
-            and tts_platform_is_default):
+            and selected_tts_platform == GOOGLE_TRANSLATE):
             options["tld"] = default_data.get(DEFAULT_TLD_KEY, None)
             is_default_values.append("tld")
 
@@ -459,32 +457,34 @@ class ChimeTTSHelper:
 
         installed_tts_platforms: list[str] = self.get_installed_tts_platforms(hass)
 
+        # No TTS platform provided
+        if not tts_platform:
+            tts_platform = default_tts_platform
+            
         # Match for deprecated Nabu Casa platform string
         if tts_platform.lower() == NABU_CASA_CLOUD_TTS_OLD:
-            return NABU_CASA_CLOUD_TTS
+            tts_platform = NABU_CASA_CLOUD_TTS
 
         # Match for installed tts platform
-        for tts_provider_n in installed_tts_platforms:
-            if tts_platform == tts_provider_n:
-                return tts_provider_n
+        if tts_platform.lower() in installed_tts_platforms:
+            return tts_platform.lower()
 
         # Contains "google" - return alternate Google platform, if available
         if tts_platform.find("google") != -1:
             # Return alternate Google Translate entity, eg: "tts.google_en_com"
             if tts_platform.startswith("tts."):
-                for tts_provider_n in installed_tts_platforms:
-                    if (tts_provider_n.lower().find("google") != -1
-                        and tts_provider_n.startswith("tts.")):
-                        _LOGGER.warning("The TTS entity '%s' was not found. Using '%s' instead.", tts_platform, tts_provider_n)
-                        return tts_provider_n
+                for installed_tts_platform in installed_tts_platforms:
+                    if (installed_tts_platform.lower().find("google") != -1
+                        and installed_tts_platform.startswith("tts.")):
+                        _LOGGER.warning("The TTS entity '%s' was not found. Using '%s' instead.", tts_platform, installed_tts_platform)
+                        return installed_tts_platform
             # Return Google Translate, if installed
-            for tts_provider_n in installed_tts_platforms:
-                if tts_provider_n.lower() == GOOGLE_TRANSLATE:
-                    _LOGGER.warning("The TTS platform '%s' was not found. Using '%s' instead.", tts_platform, GOOGLE_TRANSLATE)
-                    return GOOGLE_TRANSLATE
+            if GOOGLE_TRANSLATE in installed_tts_platforms:
+                _LOGGER.warning("The TTS platform '%s' was not found. Using '%s' instead.", tts_platform, GOOGLE_TRANSLATE)
+                return GOOGLE_TRANSLATE
 
-        # Return default
-        return self.get_default_tts_platform(hass, default_tts_platform)
+        _LOGGER.warning("Unable to select a TTS platform")
+        return None
 
 
     def get_stripped_tts_platform(self, tts_provider = ""):
@@ -554,42 +554,24 @@ class ChimeTTSHelper:
         return final_tts_platforms
 
 
-    def get_default_tts_platform(self, hass, default_tts_platform: str = ""):
-        """User's default TTS platform name."""
-        installed_tts = list((hass.data["tts_manager"].providers).keys())
-
-        # No TTS platforms available
-        if len(installed_tts) == 0:
-            _LOGGER.error("Chime TTS could not find any TTS platforms installed. Please add at least 1 TTS integration: https://www.home-assistant.io/integrations/#text-to-speech")
-            return False
-
-        # No default configured
-        if default_tts_platform is None or len(default_tts_platform) == 0:
-            tts_platform = installed_tts[0]
-            _LOGGER.debug(" - No `tts_platform` parameter was provided and no default TTS platform/entity has been set in the configuration configuration. Using '%s'", tts_platform)
-            return tts_platform
-
-        # Default TTS platform / TTS entity found
-        if (default_tts_platform in installed_tts
-            or hass.states.get(default_tts_platform)):
-            _LOGGER.debug(" - Using default TTS platform: '%s'", default_tts_platform)
-            return default_tts_platform
-        else:
-            tts_platform = installed_tts[0]
-            _LOGGER.warning(
-                "The TTS %s '%s' was not found. Using '%s' instead",
-                "entity" if default_tts_platform.startswith("tts.") else "platform",
-                default_tts_platform,
-                tts_platform)
-            return tts_platform
-
     async def async_ffmpeg_convert_from_audio_segment(self,
                                           audio_segment: AudioSegment = None,
                                           ffmpeg_args: str = "",
                                           folder: str = ""):
         """Convert pydub AudioSegment with FFmpeg and provided arguments."""
         ret_val = audio_segment
-        if not audio_segment or not ffmpeg_args or ffmpeg_args == "" or not folder or folder == "":
+
+        if not ffmpeg_args or len(ffmpeg_args) == 0:
+            return ret_val
+
+        # Validate parameters
+        error_string = ""
+        if not audio_segment:
+            error_string = "No audio segment provided. "
+        if not folder or folder == "":
+            error_string += "No temporary folder path provided."
+        if len(error_string) > 0:
+            _LOGGER.warning("Skipping FFmpeg conversion: %s", error_string)
             return ret_val
 
         # Save to temp file

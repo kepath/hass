@@ -1,6 +1,7 @@
 """Adds config flow for Chime TTS."""
 import logging
 import requests
+import os
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import selector
@@ -20,8 +21,6 @@ from .const import (
     FADE_TRANSITION_KEY,
     DEFAULT_FADE_TRANSITION_MS,
     ADD_COVER_ART_KEY,
-    MEDIA_DIR_KEY,
-    MEDIA_DIR_DEFAULT,
     CUSTOM_CHIMES_PATH_KEY,
     TEMP_CHIMES_PATH_KEY,
     TEMP_CHIMES_PATH_DEFAULT,
@@ -85,7 +84,6 @@ class ChimeTTSOptionsFlowHandler(config_entries.OptionsFlow):
         """Initialize the options flow."""
         # Default TTS Platform
         stripped_tts_platforms = self.get_installed_tts()
-        default_tts = stripped_tts_platforms[0] if len(stripped_tts_platforms) > 0 else ""
         if self.hass is not None:
             root_path = self.hass.config.path("").replace("/config/", "")
         else:
@@ -95,27 +93,17 @@ class ChimeTTSOptionsFlowHandler(config_entries.OptionsFlow):
         # Installed TTS platforms
         tts_platforms = sorted(helpers.get_installed_tts_platforms(self.hass))
 
-        # Media Folders
-        media_dirs = self.hass.config.media_dirs or {}
-        default_media_dir = MEDIA_DIR_DEFAULT if (MEDIA_DIR_DEFAULT in media_dirs) else (next(iter(media_dirs)) if media_dirs else "local")
-        selected_media_dir = self.get_data_key_value(MEDIA_DIR_KEY, user_input, default_media_dir)
-        media_dirs_labels = ["local" if default_media_dir else "No media directories available"]
-        for key, _value in media_dirs.items():
-            if key not in media_dirs_labels:
-                media_dirs_labels.append(key)
-
         # TLD Options
         tld_options = ["", "com", "co.uk", "com.au", "ca", "co.in", "ie", "co.za", "fr", "com.br", "pt", "es"]
 
         self.data = {
             QUEUE_TIMEOUT_KEY: self.get_data_key_value(QUEUE_TIMEOUT_KEY, user_input, QUEUE_TIMEOUT_DEFAULT),
-            TTS_PLATFORM_KEY: self.get_data_key_value(TTS_PLATFORM_KEY, user_input, default_tts),
+            TTS_PLATFORM_KEY: self.get_data_key_value(TTS_PLATFORM_KEY, user_input, ""),
             DEFAULT_LANGUAGE_KEY: self.get_data_key_value(DEFAULT_LANGUAGE_KEY, user_input, ""),
             DEFAULT_VOICE_KEY: self.get_data_key_value(DEFAULT_VOICE_KEY, user_input, ""),
             DEFAULT_TLD_KEY: self.get_data_key_value(DEFAULT_TLD_KEY, user_input, ""),
             OFFSET_KEY: self.get_data_key_value(OFFSET_KEY, user_input, DEFAULT_OFFSET_MS),
             FADE_TRANSITION_KEY: self.get_data_key_value(FADE_TRANSITION_KEY, user_input, DEFAULT_FADE_TRANSITION_MS),
-            MEDIA_DIR_KEY: selected_media_dir,
             CUSTOM_CHIMES_PATH_KEY: self.get_data_key_value(CUSTOM_CHIMES_PATH_KEY, user_input, ""),
             TEMP_CHIMES_PATH_KEY: self.get_data_key_value(TEMP_CHIMES_PATH_KEY, user_input, f"{root_path}{TEMP_CHIMES_PATH_DEFAULT}"),
             TEMP_PATH_KEY: self.get_data_key_value(TEMP_PATH_KEY, user_input, f"{root_path}{TEMP_PATH_DEFAULT}"),
@@ -133,21 +121,14 @@ class ChimeTTSOptionsFlowHandler(config_entries.OptionsFlow):
                         custom_value=True)),
                 vol.Optional(DEFAULT_LANGUAGE_KEY, description={"suggested_value": self.data[DEFAULT_LANGUAGE_KEY]}): str,
                 vol.Optional(DEFAULT_VOICE_KEY, description={"suggested_value": self.data[DEFAULT_VOICE_KEY]}): str,
-
                 vol.Optional(DEFAULT_TLD_KEY, description={"suggested_value": self.data[DEFAULT_TLD_KEY]}):selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=tld_options,
                         mode=selector.SelectSelectorMode.DROPDOWN,
                         custom_value=False)),
-
-                vol.Optional(OFFSET_KEY, default=self.data[OFFSET_KEY]): int,
-                vol.Optional(FADE_TRANSITION_KEY, default=self.data[FADE_TRANSITION_KEY]): int,
+                vol.Optional(OFFSET_KEY, description={"suggested_value": self.data.get(OFFSET_KEY, DEFAULT_OFFSET_MS)}): int,
+                vol.Optional(FADE_TRANSITION_KEY, description={"suggested_value": self.data[FADE_TRANSITION_KEY]}): int,
                 vol.Optional(CUSTOM_CHIMES_PATH_KEY, description={"suggested_value": self.data[CUSTOM_CHIMES_PATH_KEY]}): str,
-                vol.Required(MEDIA_DIR_KEY, default=selected_media_dir):selector.SelectSelector(
-                    selector.SelectSelectorConfig(
-                        options=media_dirs_labels,
-                        mode=selector.SelectSelectorMode.DROPDOWN,
-                        custom_value=True)),
                 vol.Required(TEMP_CHIMES_PATH_KEY,default=self.data[TEMP_CHIMES_PATH_KEY]): str,
                 vol.Required(TEMP_PATH_KEY,default=self.data[TEMP_PATH_KEY]): str,
                 vol.Required(WWW_PATH_KEY,default=self.data[WWW_PATH_KEY]): str,
@@ -197,6 +178,20 @@ class ChimeTTSOptionsFlowHandler(config_entries.OptionsFlow):
                 www_path.startswith(f"{root_path}/config/www/") != -1):
             _errors["www_path"] = "www_path"
 
+        # Temp folder must be a subfolder of a media directory
+        temp_folder_in_media_dir = False
+        # Get absolute paths of both directories
+        sub_dir = os.path.abspath(self.data[TEMP_PATH_KEY])
+        # Verify the subdirectory starts with the parent directory path
+        media_dirs_dict = self.hass.config.media_dirs or {}
+        for _key, value in media_dirs_dict.items():
+            parent_dir = os.path.abspath(value)
+            if os.path.commonpath([parent_dir]) == os.path.commonpath([parent_dir, sub_dir]):
+                temp_folder_in_media_dir = True
+        if not temp_folder_in_media_dir:
+            _errors[TEMP_PATH_KEY] = TEMP_PATH_KEY
+        ###
+
         if _errors:
             return self.async_show_form(
                 step_id="init", data_schema=options_schema, errors=_errors
@@ -232,9 +227,13 @@ class ChimeTTSOptionsFlowHandler(config_entries.OptionsFlow):
         if user_input:
             return user_input.get(key, default)
         dicts = [dict(self.config_entry.options), dict(self.config_entry.data)]
+        value = None
         for p_dict in dicts:
-            if key in p_dict:
-                return p_dict[key]
+            if key in p_dict and not value:
+                value = p_dict[key]
+        if not value:
+            value = default
+        return value
 
     async def ping_url(self, url: str):
         """Ping a URL and receive a boolean result."""
