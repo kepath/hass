@@ -15,7 +15,7 @@ template:
           batteries_unavailable_count: "{{ expand('group.all_battery_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           batteries_average_value: "{{expand('group.all_battery_class_sensors')|map(attribute='state')|reject('undefined')|map('int',50)|list|average|round(-1)|int(0)}}"
           cameras_off_count: "{{ expand('group.all_cameras')|rejectattr('state','in', ['recording','idle'])|list|count }}"
-          cameras_unavailable_count: "{{ expand('group.all_cameras')|rejectattr('state','in', ['unavailable','unknown'])|list|count }}"
+          cameras_unavailable_count: "{{ expand('group.all_cameras')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           climate_devices_on_count: >
             {{
               [(expand('group.all_climate')|map(attribute='entity_id')|select('is_state_attr', 'hvac_action', 'heating')|list|count),
@@ -165,9 +165,10 @@ template:
           tab_information_sensors_triggered_count: >
             {{
               [
-                state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_triggered_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'media_player_audio_on_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'media_player_tv_and_remote_on_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count'),
               0]|sum
             }}
           tab_information_sensors_unavailable_count: >
@@ -175,7 +176,6 @@ template:
               [
                 state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_unavailable_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'integration_unifiprotect_unavailable_count'),
-                state_attr('sensor.binary_sensor_state_counts', 'media_player_tv_and_remote_unavailable_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'media_player_audio_unavailable_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'integration_mass_unavailable_count'),
               0]|sum

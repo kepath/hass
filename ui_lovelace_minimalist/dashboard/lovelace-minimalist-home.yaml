@@ -145,9 +145,10 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_action_sensors_unavailable_count"
+                            count_tooltip: "sum of away notification sensors"
                           amount:
                             attribute_name: "tab_action_sensors_triggered_count"
-                            count_tooltip: "Action Sum"
+                            count_tooltip: "sum of on notification sensors"
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -180,10 +181,10 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_alert_sensors_unavailable_count"
-                            count_tooltip: "sum of on alert sensors"
+                            count_tooltip: "sum of away alert sensors"
                           amount:
                             attribute_name: "tab_alert_sensors_triggered_count"
-                            count_tooltip: "sum of away alert sensors"
+                            count_tooltip: "sum of on alert sensors"
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -216,10 +217,10 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_information_sensors_unavailable_count"
-                            count_tooltip: "sum of on info sensors"
+                            count_tooltip: "sum of away info sensors"
                           amount:
                             attribute_name: "tab_information_sensors_triggered_count"
-                            count_tooltip: "sum of away info sensors"
+                            count_tooltip: "sum of on info sensors"
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -252,10 +253,10 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_diagnostic_sensors_unavailable_count"
-                            count_tooltip: "sum of on diag sensors"
+                            count_tooltip: "sum of away diag sensors"
                           amount:
                             attribute_name: "tab_diagnostic_sensors_triggered_count"
-                            count_tooltip: "sum of away diag sensors"
+                            count_tooltip: "sum of on diag sensors"
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -288,10 +289,10 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_update_sensors_unavailable_count"
-                            count_tooltip: "sum of on update sensors"
+                            count_tooltip: "sum of away update sensors"
                           amount:
                             attribute_name: "tab_update_sensors_triggered_count"
-                            count_tooltip: "sum of away update sensors"
+                            count_tooltip: "sum of on update sensors"
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -609,7 +610,7 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
-                        entity: "switch.wifi_socket_socket_1"
+                        entity: "switch.drinks_fridge_plug_bed_c"
                         name: "Mini Fridge"
                         variables:
                           var_kepath_generic_get_set_group_button_objects:
@@ -887,6 +888,7 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           # - "device_kepath_style_lock_state"
+                          - "device_kepath_entity_and_style_lock_state"
                         entity: "lock.front_door_top_bolt"
                         icon: "mdi:lock"
                         name: "Lock"
@@ -900,11 +902,11 @@ views:
                               count_tooltip: "num locks unlocked"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
-                              icon: "mdi:lock"
-                              icon_color: "grey"
-                              background_color: "grey"
+                              icon: "mdi:lock-open-variant"
+                              icon_color: "red"
+                              background_color: "red"
                             error_state:
-                              icon: "mdi:lock-alert"
+                              icon: "mdi:lock-alert-outline"
                         tap_action:
                           action: "more-info"
 
@@ -1126,11 +1128,11 @@ views:
                               count_tooltip: "not set"
                           var_kepath_generic_get_set_group_button_objects:
                             default_state:
-                              icon: "si:ubiquiti"
+                              icon: "phu:unifi-protect"
                               icon_color: "blue"
                               background_color: "blue"
                             error_state:
-                              icon: "si:ubiquiti"
+                              icon: "phu:unifi-protect"
                         tap_action:
                           action: "navigate"
                           navigation_path: "/config/integrations/integration/unifiprotect"
