@@ -10,10 +10,10 @@ back_light_toggle:
 lockdown_mode_on:
   alias: Lockdown Mode On
   sequence:
-  - service: notify.pushover
-    data:
+  - data:
       title: Lockdown
       message: Lockdown mode is being activated
+    action: notify.pushover
   - delay:
       hours: 0
       minutes: 0
@@ -75,20 +75,20 @@ lockdown_mode_on:
     device_id: fdfca529947f2de73d16ee2ecf6d2d7d
     entity_id: 90131e8c488eb2eb6c8af71888a51e2b
     domain: light
-  - service: automation.turn_on
-    data: {}
+  - data: {}
     target:
       entity_id:
       - automation.on_sunset_turn_on_bathroom_bottom_hallway_lights
       - automation.on_sunset_turn_on_bed_a_ensuite_lights
       - automation.on_sunset_turn_off_all_lights
+    action: automation.turn_on
   - type: turn_off
     device_id: db6d9610517a530c78a4ee8058d02d98
     entity_id: d19b72acb92424ae0beeb1f75b4bec76
     domain: switch
   - type: turn_off
-    device_id: 1b0e616a939f2bd8c84fb334c0c9d1b5
-    entity_id: switch.microwave_plug_kitchen
+    device_id: 6c8092538be0b4fd61e2731116882584
+    entity_id: 8e452e82afb789d1f36bfbaab18b8c7f
     domain: switch
   - type: turn_off
     device_id: 6efc3aa52385cc963c113b5153d4f99a
@@ -122,8 +122,7 @@ lockdown_mode_on:
     device_id: 4acdfe2a06ea6a452ea7ccca7ad734c7
     entity_id: e52a476520aa229269b7c2ccfb09cf04
     domain: switch
-  - service: media_player.turn_off
-    data: {}
+  - data: {}
     target:
       device_id:
       - 018bdae579512d72e6e638854af574de
@@ -137,6 +136,7 @@ lockdown_mode_on:
       - ec299e34be324488ab4b20c9c6aa60ba
       - c8a3bb332da34ea3ae2ee28d2d03d4af
       - 0ec1ec7144724e3784d8d5af27f5b27d
+    action: media_player.turn_off
   - device_id: 9ef41eac3dc4c1f0e380eb5d3f75db93
     domain: climate
     entity_id: 6bdafae70c47a3c5b09fc243fdfbd235
@@ -168,12 +168,12 @@ lockdown_mode_on:
     device_id: 165257ed8b17d25099ebfb129c31ddcd
     entity_id: 77017daf8905ec3315936aa49ecc855b
     domain: remote
-  - service: landroid_cloud.config
-    data:
+  - data:
       timeextension: 100
     target:
       device_id: f6aa7f03c61ef3c5ce1edb4277d23148
     enabled: true
+    action: landroid_cloud.config
   - type: turn_off
     device_id: 609e4fca0c9f0d8bc19967be587d3d0d
     entity_id: 180902bc9963fc77b4c8cdce7a2a5190
@@ -203,23 +203,23 @@ lockdown_mode_on:
     domain: lock
     entity_id: 2aa351b0b7bdb31860450ecf842ca28b
     type: lock
-  - service: input_boolean.turn_on
-    data: {}
+  - data: {}
     target:
       entity_id: input_boolean.away_script_active
-  - service: notify.pushover
-    data:
+    action: input_boolean.turn_on
+  - data:
       title: Lockdown On
       message: Lockdown mode has been activated
+    action: notify.pushover
   mode: single
   icon: mdi:lock
 lockdown_mode_off:
   alias: Lockdown Mode Off
   sequence:
-  - service: notify.pushover
-    data:
+  - data:
       title: Lockdown
       message: Lockdown mode is being deactivated
+    action: notify.pushover
   - delay:
       hours: 0
       minutes: 0
@@ -237,14 +237,14 @@ lockdown_mode_off:
     device_id: d4a495cd869d1d3bbdda640523c97628
     entity_id: switch.bed_c_g3_instant_detections_motion
     domain: switch
-  - service: automation.turn_off
-    data:
+  - data:
       stop_actions: true
     target:
       entity_id:
       - automation.on_sunset_turn_off_all_lights
       - automation.on_sunset_turn_on_bathroom_bottom_hallway_lights
       - automation.on_sunset_turn_on_bed_a_ensuite_lights
+    action: automation.turn_off
   - device_id: d4a495cd869d1d3bbdda640523c97628
     domain: select
     entity_id: select.bed_c_g3_instant_recording_mode
@@ -265,26 +265,14 @@ lockdown_mode_off:
     entity_id: climate.nest_middle_floor
     type: set_hvac_mode
     hvac_mode: heat
-  - type: turn_on
-    device_id: fc2e8158e443b2238884592a9e069ff3
-    entity_id: switch.drinks_fridge_plug_bed_c
-    domain: switch
-  - type: turn_on
-    device_id: c7d3a72d40436d1265d0e62e2deb9960
-    entity_id: switch.kettle_plug_kitchen
-    domain: switch
-  - type: turn_on
-    device_id: 1b0e616a939f2bd8c84fb334c0c9d1b5
-    entity_id: switch.microwave_plug_kitchen
-    domain: switch
-  - service: input_boolean.turn_off
-    data: {}
+  - data: {}
     target:
       entity_id: input_boolean.away_script_active
-  - service: notify.pushover
-    data:
+    action: input_boolean.turn_off
+  - data:
       title: Lockdown Off
       message: Lockdown mode has been deactivated
+    action: notify.pushover
   mode: single
   icon: mdi:lock-open-variant
 night_mode_on:
