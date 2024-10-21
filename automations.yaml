@@ -304,13 +304,12 @@
   alias: on_start_create_group.all_occupancy_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_occupancy_class_binary_sensors
       icon: mdi:cctv
@@ -320,9 +319,7 @@
       - occupancy
       excluded_entity_groups:
       - group.globally_excluded_entities
-      excluded_entities:
-      - binary_sensor.front_g3_flex_occupancy
-      - binary_sensor.doorbell_g4_doorbell
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1673133921800'
   alias: on_start_create_group.all_safety_class_binary_sensors
