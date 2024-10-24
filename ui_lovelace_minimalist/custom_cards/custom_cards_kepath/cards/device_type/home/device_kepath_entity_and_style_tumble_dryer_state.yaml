@@ -42,28 +42,28 @@ device_kepath_entity_and_style_tumble_dryer_state:
 
           var resolvedCompletionState = states[evaluatedCompletionEntity].state;
 
-          hass.callService('system_log', 'write', {level:'warning',message:'resolvedCompletionState: ' + resolvedCompletionState});
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedCompletionState: ' + resolvedCompletionState});
 
           if (typeof resolvedCompletionState !== 'undefined') {
-            hass.callService('system_log', 'write', {level:'warning',message:'1: '});
+            //hass.callService('system_log', 'write', {level:'warning',message:'1: '});
             var resolvedCompletionDate = new Date(resolvedCompletionState);
             if (Object.prototype.toString.call(resolvedCompletionDate) === "[object Date]") {
-              hass.callService('system_log', 'write', {level:'warning',message:'2: '});
+              //hass.callService('system_log', 'write', {level:'warning',message:'2: '});
               if (!isNaN(resolvedCompletionDate)) {
-                hass.callService('system_log', 'write', {level:'warning',message:'3: '});
+                //hass.callService('system_log', 'write', {level:'warning',message:'3: '});
                 var completionMilliseconds = Date.parse(resolvedCompletionDate) - Date.now();
                 if(!isNaN(parseInt(completionMilliseconds))) {
-                  hass.callService('system_log', 'write', {level:'warning',message:'4: '});
+                  //hass.callService('system_log', 'write', {level:'warning',message:'4: '});
                   var completionHours = (completionMilliseconds / (1000 * 60 * 60)).toFixed();
                   if(!isNaN(parseInt(completionHours))) {
-                    hass.callService('system_log', 'write', {level:'warning',message:'5: '});
+                    //hass.callService('system_log', 'write', {level:'warning',message:'5: '});
                     returnedIcon = "mdi:numeric-" + completionHours + "-circle-outline";
                   }
                 }
               }
             }
           }
-          hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+          //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
 
           return returnedIcon;
         ]]]
