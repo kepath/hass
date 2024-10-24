@@ -1,6 +1,11 @@
 ---
 device_kepath_entity_and_style_lock_state:
   variables:
+    var_kepath_generic_button_icon_styles:
+      default_state:
+        icon: "mdi:lock-open-variant"
+        icon_color: "red"
+        background_color: "red"
     var_kepath_device_entity_and_style_binary_count_state:
       entity:
         evaluated_entity: "sensor.binary_sensor_state_counts"
@@ -51,7 +56,7 @@ device_kepath_entity_and_style_lock_state:
               returnValue = true;
             }
           }
-          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedState: ' + resolvedState});
+          hass.callService('system_log', 'write', {level:'warning',message:'resolvedState: ' + resolvedState});
 
           return returnValue;
         ]]]
@@ -85,6 +90,31 @@ device_kepath_entity_and_style_lock_state:
           - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style3?.icon_color}),1)`; ]]]"
         img_cell:
           - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style3?.background_color}),0.2)`; ]]]"
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_lock_entity;
+
+          var resolvedState;
+          var returnValue = false;
+
+          resolvedState = states[evaluatedStateEntity].state.toLowerCase();
+          if (typeof resolvedState !== 'undefined') {
+            if (resolvedState == 'unknown' || resolvedState == 'unavailable') {
+              returnValue = true;
+            }
+          }
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedState: ' + resolvedState});
+
+          return returnValue;
+        ]]]
+      icon: "[[[return variables?.var_kepath_generic_button_icon_styles?.default_state?.icon;]]]"
+      styles:
+        icon:
+          - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_generic_button_icon_styles?.default_state?.icon_color}),1)`; ]]]"
+        img_cell:
+          - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_generic_button_icon_styles?.default_state?.background_color}),0.2)`; ]]]"
+
     - operator: "template"
       value: >
         [[[
