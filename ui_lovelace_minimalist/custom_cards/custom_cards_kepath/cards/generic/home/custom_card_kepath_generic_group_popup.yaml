@@ -107,23 +107,30 @@ custom_card_kepath_generic_group_popup:
         autoclose: false
         style:
           $: >
-            [[[
-              if (hass.themes.theme.includes("desktop")){
-                var dialog = `
-                  .mdc-dialog__surface{
-                    border-radius: var(--border-radius) !important;
-                  }
-                `;
-              } else{
-                var dialog = "";
-              }
-              return `
-                *{
-                  --secondary-background-color: none !important;
-                }
-                ${dialog}
-              `;
-            ]]]
+            .mdc-dialog__surface{
+              border-radius: var(--border-radius) !important;
+            }
+            *{
+              --secondary-background-color: none !important;
+            }
+
+          # [[[
+          #   if (hass.themes.theme.includes("desktop")){
+          #     var dialog = `
+          #       .mdc-dialog__surface{
+          #         border-radius: var(--border-radius) !important;
+          #       }
+          #     `;
+          #   } else{
+          #     var dialog = "";
+          #   }
+          #   return `
+          #     *{
+          #       --secondary-background-color: none !important;
+          #     }
+          #     ${dialog}
+          #   `;
+          # ]]]
           hui-vertical-stack-card:
             $: >
               div.main-title::first-letter {
@@ -133,7 +140,7 @@ custom_card_kepath_generic_group_popup:
                 align-self: center;
                 padding: 0.2em 0 2.3em 0;
               }
-              hui-entities-card{
+              hui-entities-card {
                 padding: 0.8em 1.4em;
               }
             $hui-entities-card$: >
