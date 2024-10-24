@@ -427,17 +427,17 @@
 - id: '1679477945469'
   alias: on_open_front_door_trigger_icloud3_service
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: c433a6de7503fff598e3b00eebd934b8
     entity_id: 728aecc504877295ccda5a9c04e5f2fa
     domain: binary_sensor
-  condition: []
-  action:
-  - service: icloud3.action
+    trigger: device
+  conditions: []
+  actions:
+  - action: icloud3.action
     data:
-      command: Locate Device(s) using iCloud FamShr
+      command: locate 5 mins
   mode: single
 - id: '1679478945282'
   alias: on_motion_detect_bed_e_sensor_set_input_datetime_timestamp
@@ -1530,6 +1530,7 @@
       - sensor.middle_hallway_g3_flex_data_rate
       - sensor.bottom_hallway_g3_flex_data_rate
       - sensor.kitchen_g3_instant_data_rate
+      - sensor.bed_c_g3_instant_data_rate
     action: python_script.create_entity_device_class_group
   mode: single
 - id: '1729003859419'
