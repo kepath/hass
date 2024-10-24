@@ -1,12 +1,29 @@
 """Stateful Scenes for Home Assistant."""
 
+import asyncio
 import logging
 
 import yaml
 import os
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, Event, EventStateChangedData
+from homeassistant.helpers.template import area_id, area_name
+from .helpers import (
+    get_name_from_entity_id,
+    get_icon_from_entity_id,
+    get_id_from_entity_id,
+)
 
-from .const import ATTRIBUTES_TO_CHECK
+from .const import (
+    ATTRIBUTES_TO_CHECK,
+    CONF_SCENE_NAME,
+    CONF_SCENE_LEARN,
+    CONF_SCENE_NUMBER_TOLERANCE,
+    CONF_SCENE_ENTITY_ID,
+    CONF_SCENE_ID,
+    CONF_SCENE_AREA,
+    CONF_SCENE_ENTITIES,
+    CONF_SCENE_ICON,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,7 +41,7 @@ def get_entity_id_from_id(hass: HomeAssistant, id: str) -> str:
     entity_ids = hass.states.async_entity_ids("scene")
     for entity_id in entity_ids:
         state = hass.states.get(entity_id)
-        if state.attributes["id"] == id:
+        if state.attributes.get("id", None) == id:
             return entity_id
     return None
 
@@ -33,13 +50,17 @@ class Hub:
     """State scene class."""
 
     def __init__(
-        self, hass: HomeAssistant, scene_path: str, number_tolerance:int=1
+        self,
+        hass: HomeAssistant,
+        scene_path: str,
+        number_tolerance: int = 1,
     ) -> None:
         """Initialize the Hub class.
 
         Args:
             hass (HomeAssistant): Home Assistant instance
             scene_path (str): Path to the yaml file containing the scenes
+            external_scenes (list): List of external scenes
             number_tolerance (int): Tolerance for comparing numbers
 
         Raises:
@@ -51,18 +72,23 @@ class Hub:
         self.number_tolerance = number_tolerance
         self.hass = hass
         self.scenes = []
+        self.scene_confs = []
 
-        scene_confs = self.load_scenes()
-        for scene_conf in scene_confs:
-            if not self.validate_scene(scene_conf):
-                continue
-            self.scenes.append(
-                Scene(
-                    self.hass,
-                    self.extract_scene_configuration(scene_conf),
-                    self.number_tolerance,
+        if self.scene_path:
+            scene_confs = self.load_scenes()
+            for scene_conf in scene_confs:
+                if not self.validate_scene(scene_conf):
+                    continue
+                self.scenes.append(
+                    Scene(
+                        self.hass,
+                        self.extract_scene_configuration(scene_conf),
+                    )
                 )
-            )
+                self.scene_confs.append(self.extract_scene_configuration(scene_conf))
+
+        else:
+            raise StatefulScenesYamlNotFound("No scenes file specified.")
 
     def load_scenes(self) -> list:
         """Load scenes from yaml file."""
@@ -100,12 +126,21 @@ class Hub:
         """
 
         if "entities" not in scene_conf:
-            raise StatefulScenesYamlInvalid("Scene is missing entities: " + scene_conf)
+            raise StatefulScenesYamlInvalid(
+                "Scene is missing entities: " + scene_conf["name"]
+            )
+
+        if "id" not in scene_conf:
+            raise StatefulScenesYamlInvalid(
+                "Scene is missing id: " + scene_conf["name"]
+            )
 
         for entity_id, scene_attributes in scene_conf["entities"].items():
             if "state" not in scene_attributes:
                 raise StatefulScenesYamlInvalid(
-                    "Scene is missing state for entity " + entity_id + scene_conf
+                    "Scene is missing state for entity "
+                    + entity_id
+                    + scene_conf["name"]
                 )
 
         return True
@@ -132,13 +167,34 @@ class Hub:
 
             entities[entity_id] = attributes
 
-        entity_id = get_entity_id_from_id(self.hass, scene_conf["id"])
+        entity_id = scene_conf.get("entity_id", None)
+        if entity_id is None:
+            entity_id = get_entity_id_from_id(self.hass, scene_conf.get("id"))
 
         return {
             "name": scene_conf["name"],
-            "id": scene_conf["id"],
-            "icon": scene_conf.get("icon", None),
+            "id": scene_conf.get("id", entity_id),
+            "icon": scene_conf.get(
+                "icon", get_icon_from_entity_id(self.hass, entity_id)
+            ),
             "entity_id": entity_id,
+            "area": area_name(self.hass, area_id(self.hass, entity_id)),
+            "learn": scene_conf.get("learn", False),
+            "entities": entities,
+            "number_tolerance": scene_conf.get(
+                "number_tolerance", self.number_tolerance
+            ),
+        }
+
+    def prepare_external_scene(self, entity_id, entities) -> dict:
+        """Prepare external scene configuration."""
+        return {
+            "name": get_name_from_entity_id(self.hass, entity_id),
+            "id": get_id_from_entity_id(self.hass, entity_id),
+            "icon": get_icon_from_entity_id(self.hass, entity_id),
+            "entity_id": entity_id,
+            "area": area_name(self.hass, area_id(self.hass, entity_id)),
+            "learn": True,
             "entities": entities,
         }
 
@@ -146,25 +202,33 @@ class Hub:
 class Scene:
     """State scene class."""
 
-    def __init__(
-        self, hass: HomeAssistant, scene_conf: dict, number_tolerance=1
-    ) -> None:
+    def __init__(self, hass: HomeAssistant, scene_conf: dict) -> None:
         """Initialize."""
         self.hass = hass
-        self.number_tolerance = number_tolerance
-        self.name = scene_conf["name"]
-        self._entity_id = scene_conf["entity_id"]
-        self._id = scene_conf["id"]
-        self.entities = scene_conf["entities"]
-        self.icon = scene_conf["icon"]
+        self.name = scene_conf[CONF_SCENE_NAME]
+        self._entity_id = scene_conf[CONF_SCENE_ENTITY_ID]
+        self.number_tolerance = scene_conf[CONF_SCENE_NUMBER_TOLERANCE]
+        self._id = scene_conf[CONF_SCENE_ID]
+        self.area_id = scene_conf[CONF_SCENE_AREA]
+        self.learn = scene_conf[CONF_SCENE_LEARN]
+        self.entities = scene_conf[CONF_SCENE_ENTITIES]
+        self.icon = scene_conf[CONF_SCENE_ICON]
         self._is_on = None
-        self._transition_time = None
+        self._transition_time = 0.0
         self._restore_on_deactivate = True
+        self._debounce_time: float = 0
 
         self.callback = None
+        self.callback_funcs = {}
         self.schedule_update = None
         self.states = {entity_id: False for entity_id in self.entities}
         self.restore_states = {entity_id: None for entity_id in self.entities}
+
+        if self.learn:
+            self.learned = False
+
+        if self._entity_id is None:
+            self._entity_id = get_entity_id_from_id(self.hass, self._id)
 
     @property
     def is_on(self):
@@ -174,15 +238,16 @@ class Scene:
     @property
     def id(self):
         """Return the id of the scene."""
+        if self.learn:
+            return self._id + "_learned"  # avoids non-unique id during testing
         return self._id
 
     def turn_on(self):
         """Turn on the scene."""
         if self._entity_id is None:
-            self._entity_id = get_entity_id_from_id(self.hass, self._id)
-
-        if self._entity_id is None:
-            raise StatefulScenesYamlInvalid("Cannot find entity_id for: " + self.name)
+            raise StatefulScenesYamlInvalid(
+                "Cannot find entity_id for: " + self.name + self._entity_id
+            )
 
         self.hass.services.call(
             domain="scene",
@@ -214,6 +279,15 @@ class Scene:
         self._transition_time = transition_time
 
     @property
+    def debounce_time(self) -> float:
+        """Get the debounce time."""
+        return self._debounce_time
+
+    def set_debounce_time(self, debounce_time: float):
+        """Set the debounce time."""
+        self._debounce_time = debounce_time or 0.0
+
+    @property
     def restore_on_deactivate(self) -> bool:
         """Get the restore on deactivate flag."""
         return self._restore_on_deactivate
@@ -222,8 +296,12 @@ class Scene:
         """Set the restore on deactivate flag."""
         self._restore_on_deactivate = restore_on_deactivate
 
-    def register_callback(self, state_change_func, schedule_update_func):
+    def register_callback(self):
         """Register callback."""
+        schedule_update_func = self.callback_funcs.get("schedule_update_func", None)
+        state_change_func = self.callback_funcs.get("state_change_func", None)
+        if schedule_update_func is None or state_change_func is None:
+            raise ValueError("No callback functions provided for scene.")
         self.schedule_update = schedule_update_func
         self.callback = state_change_func(
             self.hass, self.entities.keys(), self.update_callback
@@ -235,30 +313,53 @@ class Scene:
             self.callback()
             self.callback = None
 
-    def update_callback(self, entity_id, old_state, new_state):
+    async def update_callback(self, event: Event[EventStateChangedData]):
         """Update the scene when a tracked entity changes state."""
-        self.check_state(entity_id, new_state)
+        entity_id = event.data.get("entity_id")
+        new_state = event.data.get("new_state")
+        old_state = event.data.get("old_state")
+
         self.store_entity_state(entity_id, old_state)
-        self._is_on = all(self.states.values())
-        self.schedule_update(True)
+        if self.is_interesting_update(old_state, new_state):
+            await asyncio.sleep(self.debounce_time)
+            self.schedule_update(True)
+
+    def is_interesting_update(self, old_state, new_state):
+        """Check if the state change is interesting."""
+        if old_state is None:
+            return True
+        if not self.compare_values(old_state.state, new_state.state):
+            return True
+
+        if new_state.domain in ATTRIBUTES_TO_CHECK:
+            entity_attrs = new_state.attributes
+            old_entity_attrs = old_state.attributes
+            for attribute in ATTRIBUTES_TO_CHECK.get(new_state.domain):
+                if attribute not in old_entity_attrs or attribute not in entity_attrs:
+                    continue
+
+                if not self.compare_values(
+                    old_entity_attrs[attribute], entity_attrs[attribute]
+                ):
+                    return True
+        return False
 
     def check_state(self, entity_id, new_state):
         """Check the state of the scene."""
         if new_state is None:
-            _LOGGER.warning("Entity not found: %(entity_id)s", entity_id=entity_id)
-            self.states[entity_id] = False
+            _LOGGER.warning(f"Entity not found: {entity_id}")
+            return False
 
         # Check state
         if not self.compare_values(self.entities[entity_id]["state"], new_state.state):
             _LOGGER.debug(
-                "[%s] state not matching: %s: %s != %s.",
+                "[%s] state not matching: %s: wanted=%s got=%s.",
                 self.name,
                 entity_id,
                 self.entities[entity_id]["state"],
                 new_state.state,
             )
-            self.states[entity_id] = False
-            return
+            return False
 
         # Check attributes
         if new_state.domain in ATTRIBUTES_TO_CHECK:
@@ -273,23 +374,27 @@ class Scene:
                     self.entities[entity_id][attribute], entity_attrs[attribute]
                 ):
                     _LOGGER.debug(
-                        "[%s] attribute not matching: %s %s: %s %s.",
+                        "[%s] attribute not matching: %s %s: wanted=%s got=%s.",
                         self.name,
                         entity_id,
                         attribute,
                         self.entities[entity_id][attribute],
                         entity_attrs[attribute],
                     )
-                    self.states[entity_id] = False
-                    return
-
-        self.states[entity_id] = True
+                    return False
+        _LOGGER.debug(
+            "[%s] Found match after %s updated",
+            self.name,
+            entity_id,
+        )
+        return True
 
     def check_all_states(self):
         """Check the state of the scene."""
         for entity_id in self.entities:
             state = self.hass.states.get(entity_id)
-            self.check_state(entity_id, state)
+            self.states[entity_id] = self.check_state(entity_id, state)
+        self._is_on = all(self.states.values())
 
     def store_entity_state(self, entity_id, state):
         """Store the state of an entity."""
@@ -352,3 +457,13 @@ class Scene:
     def compare_numbers(self, number1, number2):
         """Compare two numbers."""
         return abs(number1 - number2) <= self.number_tolerance
+
+    @staticmethod
+    def learn_scene_states(hass: HomeAssistant, entities: list) -> dict:
+        """Learn the state of the scene."""
+        conf = {}
+        for entity in entities:
+            state = hass.states.get(entity)
+            conf[entity] = {"state": state.state}
+            conf[entity].update(state.attributes)
+        return conf

@@ -8,3 +8,17 @@ sensor:
       - filter: "lowpass"
         time_constant: 10
         precision: 0
+
+  - platform: "filter"
+    unique_id: "jgfdrioobcxwbjopfc"
+    name: "Washing Machine Test Filter 1"
+    entity_id: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
+    filters:
+      - filter: "outlier"
+        window_size: 4
+        radius: 2.0
+      - filter: "lowpass"
+        time_constant: 10
+      - filter: "time_simple_moving_average"
+        window_size: "00:05"
+        precision: 2

@@ -1,5 +1,27 @@
 {
     "title": "OWM History",
+    "services":{
+		"api_call":{
+			"name": "API call",
+			"description": "Test the api call, check the log for results.",
+			"fields": {
+				"entity_id": {
+					"name": "Entity ID",
+					"description": "the OWM history instance"
+				}
+			}
+		},
+		"list_vars":{
+			"name": "List Variable",
+			"description": "List available variables, check the log for results.",
+			"fields": {
+				"entity_id": {
+					"name": "Entity ID",
+					"description": "the OWM history instance"
+				}
+			}
+		}
+    },
     "config": {
         "abort": {
             "already_configured": "Location is already configured"
@@ -8,7 +30,7 @@
             "invalid_api_key": "Cannot connect, possible invalid api_key or you have not subscribed to One Call API 3.0, check the log for details",
             "formula": "Invalid formula, check the log for details",
             "formula_variable": "A variable used is undefined, check the log for details",
-            "duplicate_name": "This name has already been used",
+            "duplicate_name": "This name has already been used to define a sensor",
             "close_proximity": "A location is already configured with 1km",
             "cannot_connect": "Could not connect to OpenWeatherMap"
         },
@@ -22,17 +44,24 @@
                     "location": "Location",
                     "max_days": "Days to keep data",
                     "initial_days": "Days to backload",
-                    "max_calls": "Max API calls per day"
-                    }
+                    "max_calls": "Max API calls per day",
+                    "create_sensors": "Auto create sensors"                    }
             },
             "menu": {
                 "title": "",
                 "menu_options": {
                     "user":"Location",
+                    "bulk":"Bulk Sensors",
                     "add":"Add Sensor",
                     "list_modify":"Modify Sensor",
                     "delete":"Delete Sensor",
                     "finalise":"Save changes"
+                }
+            },
+            "bulk": {
+                "title": "Bulk Sensors",
+                "data": {
+                    "create_sensors": "Select or deselect sensor groups"
                 }
             },
             "add": {
@@ -65,9 +94,9 @@
     "options": {
        "error": {
             "invalid_api_key": "Cannot connect, possible invalid api_key or you have not subscribed to One Call API 3.0, check the log for details",
-            "formula": "Cannot connect, possible invalid api_key, check the log for details",
+            "formula": "Invalid formula, check the log for details",
             "formula_variable": "A variable used is undefined, check the log for details",
-            "duplicate_name": "This name has already been used",
+            "duplicate_name": "This name has already been used to define a sensor",
             "close_proximity": "A location is already configured with 1km",
             "cannot_connect": "Could not connect to OpenWeatherMap"
         },
@@ -75,6 +104,7 @@
             "user": {
             "menu_options": {
                 "update":"Update API",
+                "bulk":"Bulk Sensors ",
                 "add":"Add Sensor",
                 "list_modify":"Modify Sensor",
                 "delete":"Delete Sensor",
@@ -87,10 +117,17 @@
                     "api_key": "API key",
                     "max_days": "Days to keep data",
                     "initial_days": "Days to backload",
-                    "max_calls": "Max API calls per day"
+                    "max_calls": "Max API calls per day",
+                    "create_sensors": "Auto create sensors"
                 }
                 },
-            "add": {
+                "bulk": {
+                    "title": "Bulk Sensors",
+                    "data": {
+                        "create_sensors": "Select or deselect sensor groups"
+                    }
+                },
+                "add": {
                 "title": "Add Sensor",
                 "data": {
                     "name": "Sensor name",
@@ -125,6 +162,21 @@
                 "temperature": "Temperature",
                 "pressure": "Pressure",
                 "none": "None"
+            }
+        },
+        "create_sensors": {
+            "options": {
+                "hist_rain": "Historical rain",
+                "hist_snow": "Historical snow",
+                "hist_max": "Historical max temperature",
+                "hist_min": "Historical min temperature",
+                "current_obs": "Current observations",
+                "forecast_rain": "Forecast rain",
+                "forecast_snow": "Forecast snow",
+                "forecast_max": "Forecast max temperature",
+                "forecast_min": "Forecast min temperature",
+                "forecast_humidity": "Forecast humidity",
+                "forecast_pop": "Forecast probability"
             }
         }
     }

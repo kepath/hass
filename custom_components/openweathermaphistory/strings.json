@@ -1,5 +1,27 @@
 {
     "title": "OWM History",
+    "services":{
+		"api_call":{
+			"name": "API call",
+			"description": "Test the api call, check the log for results.",
+			"fields": {
+				"entity_id": {
+					"name": "Entity ID",
+					"description": "the OWM history instance"
+				}
+			}
+		},
+		"list_vars":{
+			"name": "List Variable",
+			"description": "List available variables, check the log for results.",
+			"fields": {
+				"entity_id": {
+					"name": "Entity ID",
+					"description": "the OWM history instance"
+				}
+			}
+		}
+    },
     "config": {
         "abort": {
             "already_configured": "Location is already configured"
@@ -22,14 +44,15 @@
                     "location": "Location",
                     "max_days": "Days to keep data",
                     "initial_days": "Days to backload",
-                    "max_calls": "Max API calls per day"
-                    }
+                    "max_calls": "Max API calls per day",
+                    "create_sensors": "Auto create sensors"                    }
             },
             "menu": {
                 "title": "",
                 "menu_options": {
                     "user":"Location",
                     "add":"Add Sensor",
+                    "bulk":"Bulk add of sensors",
                     "list_modify":"Modify Sensor",
                     "delete":"Delete Sensor",
                     "finalise":"Save changes"
@@ -75,6 +98,7 @@
             "user": {
             "menu_options": {
                 "update":"Update API",
+                "bulk":"Bulk add of sensors",
                 "add":"Add Sensor",
                 "list_modify":"Modify Sensor",
                 "delete":"Delete Sensor",
@@ -87,7 +111,8 @@
                     "api_key": "API key",
                     "max_days": "Days to keep data",
                     "initial_days": "Days to backload",
-                    "max_calls": "Max API calls per day"
+                    "max_calls": "Max API calls per day",
+                    "create_sensors": "Auto create sensors"
                 }
                 },
             "add": {
@@ -125,6 +150,21 @@
                 "temperature": "Temperature",
                 "pressure": "Pressure",
                 "none": "None"
+            }
+        },
+        "create_sensors": {
+            "options": {
+                "hist_rain": "Historical rain",
+                "hist_snow": "Historical snow",
+                "hist_max": "Historical max temperature",
+                "hist_min": "Historical min temperature",
+                "current_obs": "Current observations",
+                "forecast_rain": "Forecast rain",
+                "forecast_snow": "Forecast snow",
+                "forecast_max": "Forecast max temperature",
+                "forecast_min": "Forecast min temperature",
+                "forecast_humidity": "Forecast humidity",
+                "forecast_pop": "Forecast probability"
             }
         }
     }

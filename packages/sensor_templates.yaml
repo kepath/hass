@@ -15,6 +15,7 @@ template:
           batteries_unavailable_count: "{{ expand('group.all_battery_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           batteries_average_value: "{{expand('group.all_battery_class_sensors')|map(attribute='state')|reject('undefined')|map('int',50)|list|average|round(-1)|int(0)}}"
           cameras_off_count: "{{ expand('group.all_cameras')|rejectattr('state','in', ['recording','idle'])|list|count }}"
+          cameras_unavailable_count: "{{ expand('group.all_cameras')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           climate_devices_on_count: >
             {{
               [(expand('group.all_climate')|map(attribute='entity_id')|select('is_state_attr', 'hvac_action', 'heating')|list|count),
@@ -24,8 +25,8 @@ template:
           connectivity_disconnected_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           connectivity_unavailable_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           data_rate_unavailable_count: "{{ expand('group.all_data_rate_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          data_rate_total_count: "{{expand('group.all_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|list|count}}"
-          data_rate_total_value: "{{expand('group.all_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|sum|round()}}"
+          data_rate_total_count: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|list|count}}"
+          data_rate_total_value: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|sum|round()}}"
           data_rate_total_value_10_times_smaller: "{{(state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / 10)|round()}}"
           data_rate_total_average: "{{ (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count'))|round(2) }}"
           data_rate_total_average_10_times_larger: "{{(state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_average') * 10)|round()}}"
@@ -36,7 +37,63 @@ template:
           device_trackers_unavailable_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          hacs_updates_available: "{{ expand('group.all_updates')|selectattr('state','eq', 'on')|map(attribute='entity_id')|map('device_attr', 'identifiers')|map('first')|map('first')|select('eq', 'hacs')|list|count }}"
+          hacs_updates_available: "{{ expand('group.all_updates')|selectattr('state','eq', 'on')|map(attribute='entity_id')|map('device_attr', 'identifiers')|map('first')|select('defined')|map('first')|select('eq', 'hacs')|list|count }}"
+          integration_icloud3_unavailable_count: >
+            {{
+              states|selectattr('state','in',['unavailable','unknown'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'icloud3')|list|count
+            }}
+          integration_nest_protect_unavailable_count: >
+            {{
+              states|selectattr('state','in',['unavailable','unknown'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'nest_protect')|list|count
+            }}
+          integration_mass_unavailable_count: >
+            {{
+              states|selectattr('state','in',['unavailable','unknown'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'mass')|list|count
+            }}
+          integration_spook_unavailable_count: >
+            {{
+              states|selectattr('state','in',['unavailable','unknown'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'spook')|list|count
+            }}
+          integration_synology_dsm_unavailable_count: >
+            {{
+              states|selectattr('state','in',['unavailable','unknown'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'synology_dsm')|list|count
+            }}
+          integration_unifi_unavailable_count: >
+            {{
+              states|selectattr('state','in',['unavailable','unknown'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'unifi')|list|count
+            }}
+          integration_unifiprotect_unavailable_count: >
+            {{
+              states|selectattr('state','in',['unavailable','unknown'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'unifiprotect')|list|count
+            }}
+          integration_zha_unavailable_count: >
+            {{
+              states|selectattr('state','in',['unavailable','unknown'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'zha')|list|count
+            }}
           fans_on_count: "{{ expand('group.all_fans')|selectattr('state','eq', 'on')|list|count }}"
           fans_unavailable_count: "{{ expand('group.all_fans')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           lawn_mower_busy_count: "{{ expand('group.all_lawn_mowers')|selectattr('state','in', ['on','mowing','edgecut'])|list|count }}"
@@ -54,7 +111,9 @@ template:
           occupancy_persons_home_count: "{{ expand(states.person)|selectattr('state','eq','home')|map(attribute='entity_id')|list|count }}"
           occupancy_sensors_triggered_count: "{{ expand('group.all_occupancy_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          occupancy_no_persons_home_triggered_count: "{{ 0 if (state_attr('sensor.binary_sensor_state_counts', 'occupancy_persons_home_count') > 0) else state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_triggered_count') }}"
+          occupancy_sensors_triggered_away_count: "{{ expand('group.all_away_occupancy_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
+          occupancy_sensors_unavailable_away_count: "{{ expand('group.all_away_occupancy_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
+          occupancy_no_persons_home_triggered_count: "{{ 0 if (state_attr('sensor.binary_sensor_state_counts', 'occupancy_persons_home_count') > 0) else state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_triggered_away_count') }}"
           plugs_off_count: "{{ expand('group.all_outlet_class_switch')|selectattr('state','eq', 'off')|list|count }}"
           running_stopped_count: "{{ expand('group.all_running_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           running_unavailable_count: "{{ expand('group.all_running_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
@@ -63,6 +122,7 @@ template:
           signal_sensors_low_count: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|map('int',0)|select('lt',-80)|list|count}}"
           signal_sensors_unavailable_count: "{{ expand('group.all_signal_strength_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           signal_sensors_average_value: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|reject('undefined')|reject('in',['unavailable','unknown'])|map('int',0)|list|average|int(0)}}"
+          single_sensor_ups_state: "{{ 0 if (states('sensor.ups_status')|lower == 'online') or (states('sensor.ups_status')|lower == 'online battery charging') else 1 }}"
           tab_action_sensors_triggered_count: >
             {{
               [
@@ -70,6 +130,7 @@ template:
                 state_attr('sensor.binary_sensor_state_counts', 'fans_on_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'single_sensor_ups_state'),
               0]|sum
             }}
           tab_action_sensors_unavailable_count: >
@@ -77,20 +138,46 @@ template:
               [
                 state_attr('sensor.binary_sensor_state_counts', 'fans_unavailable_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_error_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'integration_synology_dsm_unavailable_count'),
               0]|sum
             }}
+          tab_alert_sensors_triggered_count: >
+            {{
+              [
+                state_attr('sensor.binary_sensor_state_counts', 'safety_sensors_triggered_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'locks_unlocked_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'cameras_off_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'door_sensors_triggered_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count'),
+              0]|sum
+            }}
+          tab_alert_sensors_unavailable_count: >
+            {{
+              [
+                state_attr('sensor.binary_sensor_state_counts', 'safety_sensors_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'locks_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'cameras_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'door_sensors_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_unavailable_count'),
+              0]|sum
+            }}
+
           tab_information_sensors_triggered_count: >
             {{
               [
-                state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_triggered_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'media_player_audio_on_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'media_player_tv_and_remote_on_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count'),
               0]|sum
             }}
           tab_information_sensors_unavailable_count: >
             {{
               [
                 state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'integration_unifiprotect_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'media_player_audio_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'integration_mass_unavailable_count'),
               0]|sum
             }}
           tab_diagnostic_sensors_triggered_count: >
@@ -112,27 +199,14 @@ template:
                 state_attr('sensor.binary_sensor_state_counts', 'batteries_unavailable_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'signal_sensors_unavailable_count'),
                 state_attr('sensor.binary_sensor_state_counts', 'data_rate_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'integration_unifi_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'integration_zha_unavailable_count'),
+                state_attr('sensor.binary_sensor_state_counts', 'integration_spook_unavailable_count'),
+                states('sensor.watchman_missing_entities')|int(0),
+                states('sensor.active_issues')|int(0),
               0]|sum
             }}
-          tab_alert_sensors_triggered_count: >
-            {{
-              [
-                state_attr('sensor.binary_sensor_state_counts', 'safety_sensors_triggered_count'),
-                state_attr('sensor.binary_sensor_state_counts', 'locks_unlocked_count'),
-                state_attr('sensor.binary_sensor_state_counts', 'cameras_off_count'),
-                state_attr('sensor.binary_sensor_state_counts', 'door_sensors_triggered_count'),
-                state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count'),
-              0]|sum
-            }}
-          tab_alert_sensors_unavailable_count: >
-            {{
-              [
-                state_attr('sensor.binary_sensor_state_counts', 'safety_sensors_unavailable_count'),
-                state_attr('sensor.binary_sensor_state_counts', 'locks_unavailable_count'),
-                state_attr('sensor.binary_sensor_state_counts', 'door_sensors_unavailable_count'),
-                state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_unavailable_count'),
-              0]|sum
-            }}
+
           tab_update_sensors_triggered_count: >
             {{
               [

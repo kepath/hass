@@ -1,30 +1,65 @@
 ---
 device_kepath_entity_and_style_ups_state:
-  icon: "mdi:power-plug-battery-outline"
-  styles:
-    icon:
-      - color: "rgba(var(--color-red),1)"
-    img_cell:
-      - background-color: "rgba(var(--color-red), 0.2)"
+  variables:
+    var_kepath_device_entity_and_style_binary_count_state:
+      entity:
+        evaluated_entity: "sensor.ups_status"
+      style:
+        use_themes: true
+        icon: "mdi:power-plug-battery"
+        icon_color: "green"
+        background_color: "green"
+      style2:
+        use_themes: true
+        icon: "mdi:power-plug-battery"
+        icon_color: "blue"
+        background_color: "blue"
+
   state:
-    - value: "Online"
-      icon: "mdi:power-plug-battery"
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+
+          var resolvedState;
+          var returnValue = false;
+
+          resolvedState = states[evaluatedStateEntity].state.toLowerCase();
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedState: ' + resolvedState});
+          if (typeof resolvedState !== 'undefined') {
+            if (resolvedState == 'online') {
+              returnValue = true;
+            }
+          }
+
+          return returnValue;
+        ]]]
+      icon: "[[[return variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;]]]"
       styles:
         icon:
-          - color: "rgba(var(--color-green),1)"
+          - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon_color}),1)`; ]]]"
         img_cell:
-          - background-color: "rgba(var(--color-green), 0.2)"
-    - value: "Online Battery Charging"
-      icon: "mdi:power-plug-battery"
+          - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color}),0.2)`; ]]]"
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+
+          var resolvedState;
+          var returnValue = false;
+
+          resolvedState = states[evaluatedStateEntity].state.toLowerCase();
+          if (typeof resolvedState !== 'undefined') {
+            if (resolvedState == 'online battery charging') {
+              returnValue = true;
+            }
+          }
+
+          return returnValue;
+        ]]]
+      icon: "[[[return variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.icon;]]]"
       styles:
         icon:
-          - color: "rgba(var(--color-blue),1)"
+          - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.icon_color}),1)`; ]]]"
         img_cell:
-          - background-color: "rgba(var(--color-blue), 0.2)"
-    - operator: "default"
-      icon: "mdi:power-plug-battery-outline"
-      styles:
-        icon:
-          - color: "rgba(var(--color-red),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-red), 0.2)"
+          - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.background_color}),0.2)`; ]]]"

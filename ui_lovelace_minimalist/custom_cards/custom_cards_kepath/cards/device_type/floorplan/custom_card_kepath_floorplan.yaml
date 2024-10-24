@@ -1,42 +1,54 @@
 ---
-card_kepath_floorplan_binary_item_light:
-  show_icon: true
-  show_label: false
-  show_name: false
-  icon: "mdi:lightbulb-outline"
-  styles:
-    icon:
-      - width: "18px"
-      - height: "18px"
-      - line-height: "0"
-      - color: "rgba(221, 221, 221, 1.0)"
-    img_cell:
-      - border-radius: "50%"
-      - height: "32px"
-      - width: "32px"
-      - background-color: "rgba(130, 130, 130, 0.3)"
-      - backdrop-filter: "blur(8px)"
-    card:
-      - background-color: "rgba(100, 100, 100, 0.0)"
-  state:
-    - value: "on"
-      icon: "mdi:lightbulb-on"
-      styles:
-        icon:
-          - color: "rgba(var(--color-yellow),1)"
-    - template:
-      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
-      styles:
-        icon:
-          - color: "rgba(var(--color-red), 0.6)"
-        img_cell:
-          - background-color: "rgba(130, 130, 130, 0.5)"
-      tap_action:
-        action: "more-info"
-  tap_action:
-    action: "toggle"
-  hold_action:
-    action: "more-info"
+# card_kepath_floorplan_binary_item_light:
+#   show_icon: true
+#   show_label: false
+#   show_name: false
+#   icon: "mdi:lightbulb-outline"
+#   styles:
+#     icon:
+#       - width: "18px"
+#       - height: "18px"
+#       - line-height: "0"
+#       - color: "rgba(221, 221, 221, 1.0)"
+#     img_cell:
+#       - border-radius: "50%"
+#       - height: "32px"
+#       - width: "32px"
+#       - background-color: "rgba(130, 130, 130, 0.3)"
+#       - backdrop-filter: "blur(8px)"
+#     card:
+#       - background-color: "rgba(100, 100, 100, 0.0)"
+#     tooltip:
+#       - font-weight: "bold"
+#       - font-size: "12px"
+#       - margin: "0"
+#       - border: "0"
+#       - border-radius: "0"
+#   state:
+#     - value: "on"
+#       icon: "mdi:lightbulb-on"
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-yellow),1)"
+#     - template:
+#       value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-red), 0.6)"
+#         img_cell:
+#           - background-color: "rgba(130, 130, 130, 0.5)"
+#   tooltip: >
+#     [[[
+#       var toolTipText = "unknown light";
+#       if ( typeof variables?.ulm_card_kepath_floorplan_item_tooltip !== "undefined" ) {
+#         toolTipText = variables?.ulm_card_kepath_floorplan_item_tooltip;
+#       }
+#       return toolTipText;
+#     ]]]
+#   tap_action:
+#     action: "toggle"
+#   hold_action:
+#     action: "more-info"
 
 
 card_kepath_floorplan_binary_item_plug:
@@ -58,6 +70,12 @@ card_kepath_floorplan_binary_item_plug:
       - backdrop-filter: "blur(8px)"
     card:
       - background-color: "rgba(100, 100, 100, 0.0)"
+    tooltip:
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0"
+      - border: "0"
+      - border-radius: "0"
   state:
 
     - operator: "template"
@@ -141,6 +159,21 @@ card_kepath_floorplan_binary_item_plug:
         img_cell:
           - background-color: "rgba(130, 130, 130, 0.5)"
 
+    - operator: "default"
+      styles:
+        icon:
+          - color: "rgba(var(--color-green), 0.6)"
+        img_cell:
+          - background-color: "rgba(130, 130, 130, 0.5)"
+
+  tooltip: >
+    [[[
+      var toolTipText = "unknown plug";
+      if ( typeof variables?.ulm_card_kepath_floorplan_item_tooltip !== "undefined" ) {
+        toolTipText = variables?.ulm_card_kepath_floorplan_item_tooltip;
+      }
+      return toolTipText;
+    ]]]
   tap_action:
     action: "more-info"
     entity: >
@@ -193,6 +226,67 @@ card_kepath_floorplan_binary_item_heater:
     action: "toggle"
   hold_action:
     action: "more-info"
+
+
+# card_kepath_floorplan_item_fan:
+#   show_icon: true
+#   show_label: false
+#   show_name: false
+#   icon: "mdi:fan-off"
+#   styles:
+#     icon:
+#       - width: "18px"
+#       - height: "18px"
+#       - line-height: "0"
+#       - color: "rgba(var(--color-green),1)"
+#     img_cell:
+#       - border-radius: "50%"
+#       - height: "32px"
+#       - width: "32px"
+#       - background-color: "rgba(130, 130, 130, 0.3)"
+#       - backdrop-filter: "blur(8px)"
+#     card:
+#       - background-color: "rgba(100, 100, 100, 0.0)"
+#     tooltip:
+#       - font-weight: "bold"
+#       - font-size: "12px"
+#       - margin: "0"
+#       - border: "0"
+#       - border-radius: "0"
+#   state:
+#     - value: "on"
+#       icon: "mdi:fan"
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-blue),1)"
+#     - template:
+#       value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
+#       icon: "mdi:fan-alert"
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-red), 0.6)"
+#         img_cell:
+#           - background-color: "rgba(130, 130, 130, 0.5)"
+#     - template:
+#       value: "default"
+#       icon: "mdi:fan-off"
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-green), 0.6)"
+#         img_cell:
+#           - background-color: "rgba(130, 130, 130, 0.5)"
+#   tooltip: >
+#     [[[
+#       var toolTipText = "unknown fan";
+#       if ( typeof variables?.ulm_card_kepath_floorplan_item_tooltip !== "undefined" ) {
+#         toolTipText = variables?.ulm_card_kepath_floorplan_item_tooltip;
+#       }
+#       return toolTipText;
+#     ]]]
+#   tap_action:
+#     action: "more-info"
+#   hold_action:
+#     action: "toggle"
 
 
 card_kepath_floorplan_camera:
@@ -935,3 +1029,69 @@ card_kepath_floorplan_lock:
           - color: "rgba(var(--color-red), 0.6)"
         img_cell:
           - background-color: "rgba(130, 130, 130, 0.5)"
+
+
+card_kepath_floorplan_binary_item:
+  template:
+    - "custom_card_kepath_generic_button_icon_styles"
+    - "device_kepath_entity_and_style_binary_simple_switch_state"
+  variables:
+    var_kepath_generic_button_icon_styles:
+      use_themes: false
+      default_state:
+        icon: "mdi:lightbulb-outline"
+        icon_color: "rgba(221, 221, 221, 1.0)"
+        background_color: "rgba(130, 130, 130, 0.3)"
+      error_state:
+        icon: "mdi:lightbulb-outline"
+        icon_color: "rgba(var(--color-red), 0.6)"
+        background_color: "rgba(130, 130, 130, 0.5)"
+    var_kepath_device_entity_and_style_simple_binary_switch_state:
+      use_themes: false
+      on_state:
+        icon: "mdi:lightbulb-on"
+        icon_color: "rgba(var(--color-yellow),1)"
+        background_color: "rgba(130, 130, 130, 0.3)"
+    ulm_card_kepath_floorplan_item_tooltip: "unknown item"
+  show_icon: true
+  show_label: false
+  show_name: false
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+    img_cell:
+      - border-radius: "50%"
+      - height: "32px"
+      - width: "32px"
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+    tooltip:
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0"
+      - border: "0"
+      - border-radius: "0"
+  state:
+    - template:
+      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
+      icon: "[[[return variables?.var_kepath_generic_button_icon_styles?.error_state?.icon;]]]"
+      styles:
+        icon:
+          - color: "[[[return variables?.var_kepath_generic_button_icon_styles?.error_state?.icon_color;]]]"
+        img_cell:
+          - background-color: "[[[return variables?.var_kepath_generic_button_icon_styles?.error_state?.background_color;]]]"
+  tooltip: >
+    [[[
+      var toolTipText = "unknown item";
+      if ( typeof variables?.ulm_card_kepath_floorplan_item_tooltip !== "undefined" ) {
+        toolTipText = variables?.ulm_card_kepath_floorplan_item_tooltip;
+      }
+      return toolTipText;
+    ]]]
+  tap_action:
+    action: "toggle"
+  hold_action:
+    action: "more-info"

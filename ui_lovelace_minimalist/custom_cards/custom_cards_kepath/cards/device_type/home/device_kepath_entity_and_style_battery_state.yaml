@@ -1,86 +1,104 @@
 ---
 device_kepath_entity_and_style_battery_state:
   variables:
-    var_kepath_generic_get_set_group_notification_objects:
-      battery_value:
-        entity: "sensor.binary_sensor_state_counts"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.battery_value?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.battery_value.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.battery_value.is_attribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "unknown_value"
+    var_kepath_device_entity_and_style_binary_count_state:
+      entity:
+        evaluated_entity: "sensor.binary_sensor_state_counts"
+        isattribute: true
+        evaluated_attribute: "batteries_average_value"
+      style:
+        use_themes: true
+        icon: "mdi:battery-alert"
+        icon_color: "red"
+        background_color: "red"
+
   template:
     - "ulm_gradient_green_yellow_red_battery_10step"
   state:
     - operator: "template"
       value: >
         [[[
-            var attributeValue = "unknown";
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.battery_value?.attribute_name) {
-              attributeValue = states[variables.var_kepath_generic_get_set_group_notification_objects.battery_value.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.battery_value.attribute_name];
-            }
-            if(attributeValue == "unknown") {
-              return true;
-            }
-            return false;
-        ]]]
-      icon: "mdi:battery-unknown"
-      styles:
-        icon:
-          - color: "rgba(var(--color-grey),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-grey), 0.2)"
+          var evaluatedBatteryEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+          var evaluatedBatteryAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
 
-    - operator: "default"
+          var resolvedBatteryState;
+          var returnValue = false;
+
+          resolvedBatteryState = states[evaluatedBatteryEntity].attributes[evaluatedBatteryAttribute];
+          if (typeof resolvedBatteryState !== 'undefined') {
+              returnValue = true;
+          }
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedBatteryState: ' + resolvedBatteryState});
+
+          return returnValue;
+        ]]]
       icon: >
         [[[
-            var attributeValue = "-alert";
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.battery_value?.attribute_name) {
-              attributeValue = "-" + states[variables.var_kepath_generic_get_set_group_notification_objects.battery_value.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.battery_value.attribute_name];
+          var returnedIcon = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;
+          var iconSuffix;
+          var evaluatedBatteryEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+          var evaluatedBatteryAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+
+          var resolvedBatteryState;
+
+          resolvedBatteryState = states[evaluatedBatteryEntity].attributes[evaluatedBatteryAttribute];
+          if (!isNaN(resolvedBatteryState) && typeof resolvedBatteryState !== 'undefined') {
+            switch(resolvedBatteryState) {
+              case "0":
+                iconSuffix = "-outline";
+                break;
+              case "100":
+                iconSuffix = "";
+                break;
+              default:
+                iconSuffix = "-" + resolvedBatteryState;
+                break;
             }
-            if (attributeValue == "-0") {
-              attributeValue = "-outline";
-            }
-            if (attributeValue == "-100") {
-              attributeValue = "";
-            }
-            if (attributeValue == undefined) {
-              attributeValue = "-alert";
-            }
-            return "mdi:battery" + attributeValue;
+            returnedIcon = "mdi:battery" + iconSuffix;
+          }
+
+          return returnedIcon;
         ]]]
       styles:
         icon:
           - color: >
               [[[
-                  var color = "grey";
-                  var attributeValue = "0";
-                  if (variables?.var_kepath_generic_get_set_group_notification_objects?.battery_value?.attribute_name) {
-                    attributeValue = states[variables.var_kepath_generic_get_set_group_notification_objects.battery_value.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.battery_value.attribute_name];
-                  }
-                  var gradient = "gradient_" + attributeValue;
+                var returnedColor = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon_color;
+                var evaluatedBatteryEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+                var evaluatedBatteryAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+
+                var gradient = "gradient_";
+                var resolvedBatteryState;
+
+                resolvedBatteryState = states[evaluatedBatteryEntity].attributes[evaluatedBatteryAttribute];
+
+                if (!isNaN(resolvedBatteryState) && typeof resolvedBatteryState !== 'undefined') {
+                  gradient = gradient + resolvedBatteryState;
                   if (variables?.green_yellow_red_battery_10step?.[gradient]) {
-                    color = variables?.green_yellow_red_battery_10step?.[gradient];
+                    returnedColor = variables?.green_yellow_red_battery_10step?.[gradient];
                   }
-                  return "rgba(var(--color-"+color+"),1)";
+                }
+
+                return "rgba(var(--color-"+returnedColor+"),1)";
               ]]]
         img_cell:
           - background-color: >
               [[[
-                  var color = "grey";
-                  var attributeValue = "0";
-                  if (variables?.var_kepath_generic_get_set_group_notification_objects?.battery_value?.attribute_name) {
-                    attributeValue = states[variables.var_kepath_generic_get_set_group_notification_objects.battery_value.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.battery_value.attribute_name];
-                  }
-                  var gradient = "gradient_" + attributeValue;
+                var returnedColor = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color;
+                var evaluatedBatteryEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+                var evaluatedBatteryAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+
+                var gradient = "gradient_";
+                var resolvedBatteryState;
+
+                resolvedBatteryState = states[evaluatedBatteryEntity].attributes[evaluatedBatteryAttribute];
+
+                if (!isNaN(resolvedBatteryState) && typeof resolvedBatteryState !== 'undefined') {
+                  gradient = gradient + resolvedBatteryState;
                   if (variables?.green_yellow_red_battery_10step?.[gradient]) {
-                    color = variables?.green_yellow_red_battery_10step?.[gradient];
+                    returnedColor = variables?.green_yellow_red_battery_10step?.[gradient];
                   }
-                  return "rgba(var(--color-"+color+"),0.2)";
+                }
+
+                return "rgba(var(--color-"+returnedColor+"),0.2)";
               ]]]

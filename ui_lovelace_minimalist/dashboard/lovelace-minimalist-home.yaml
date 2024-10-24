@@ -38,9 +38,9 @@ views:
                 triggers_update: "input_boolean.welcome_toggle"
                 variables:
                   ulm_card_kepath_welcome_collapse: "input_boolean.welcome_toggle"
-                  ulm_chip_temperature_inside:
-                  ulm_chip_temperature_outside: "sensor.openweathermap_temperature"
-                  ulm_chip_temperature_weather: "weather.openweathermap"
+                  ulm_chip_temperature_inside: "sensor.nest_bottom_floor_temperature"
+                  ulm_chip_temperature_outside: "sensor.banbury_feels_like_temperature"
+                  ulm_chip_temperature_weather: "weather.met_office_banbury_daily"
                   entity_1:
                     nav: "/lovelace-minimalist-rooms"
                     icon: "mdi:floor-plan"
@@ -145,22 +145,26 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_action_sensors_unavailable_count"
+                            count_tooltip: "sum of away notification sensors"
                           amount:
                             attribute_name: "tab_action_sensors_triggered_count"
-                            count_tooltip: "Action Sum"
-                        var_kepath_generic_get_set_group_button_objects:
+                            count_tooltip: "sum of on notification sensors"
+                        var_kepath_constant_position_overrides:
+                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          off_state_only: true
+                        var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
-                            icon: "mdi:tune-variant"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon: "mdi:wrench-outline"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
-                            icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon: "mdi:dock-window"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
-                            icon: "mdi:tune"
+                            icon: "mdi:wrench"
                             icon_color: "blue"
                             background_color: "blue"
                   item2:
@@ -177,24 +181,28 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_alert_sensors_unavailable_count"
+                            count_tooltip: "sum of away alert sensors"
                           amount:
                             attribute_name: "tab_alert_sensors_triggered_count"
-                            count_tooltip: "Alert on"
-                        var_kepath_generic_get_set_group_button_objects:
+                            count_tooltip: "sum of on alert sensors"
+                        var_kepath_constant_position_overrides:
+                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          off_state_only: true
+                        var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
                             icon: "mdi:bell-alert-outline"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
-                            icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon: "mdi:dock-window"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:bell-alert"
-                            icon_color: "red"
-                            background_color: "red"
+                            icon_color: "purple"
+                            background_color: "purple"
                   item3:
                     card:
                       type: "custom:button-card"
@@ -209,19 +217,23 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_information_sensors_unavailable_count"
+                            count_tooltip: "sum of away info sensors"
                           amount:
                             attribute_name: "tab_information_sensors_triggered_count"
-                            count_tooltip: "Info Sum"
-                        var_kepath_generic_get_set_group_button_objects:
+                            count_tooltip: "sum of on info sensors"
+                        var_kepath_constant_position_overrides:
+                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          off_state_only: true
+                        var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
                             icon: "mdi:information-variant-circle-outline"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
-                            icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon: "mdi:dock-window"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:information-variant-circle"
@@ -241,19 +253,23 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_diagnostic_sensors_unavailable_count"
+                            count_tooltip: "sum of away diag sensors"
                           amount:
                             attribute_name: "tab_diagnostic_sensors_triggered_count"
-                            count_tooltip: "Diag on"
-                        var_kepath_generic_get_set_group_button_objects:
+                            count_tooltip: "sum of on diag sensors"
+                        var_kepath_constant_position_overrides:
+                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          off_state_only: true
+                        var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
                             icon: "mdi:cog-outline"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
-                            icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon: "mdi:dock-window"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:cog"
@@ -273,24 +289,28 @@ views:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
                             attribute_name: "tab_update_sensors_unavailable_count"
+                            count_tooltip: "sum of away update sensors"
                           amount:
                             attribute_name: "tab_update_sensors_triggered_count"
-                            count_tooltip: "Update on"
-                        var_kepath_generic_get_set_group_button_objects:
+                            count_tooltip: "sum of on update sensors"
+                        var_kepath_constant_position_overrides:
+                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          off_state_only: true
+                        var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
                             icon: "mdi:refresh"
-                            icon_color: "rgba(var(--color-theme),0.2)"
+                            icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
                           error_state:
-                            icon: "mdi:folder-alert-outline"
-                            icon_color: "rgba(var(--color-red),0.2)"
-                            background_color: "rgba(var(--color-red),0.05)"
+                            icon: "mdi:dock-window"
+                            icon_color: "rgba(var(--color-red),0.5)"
+                            background_color: "rgba(var(--color-red),0.1)"
                         var_kepath_device_entity_and_style_simple_binary_switch_state:
                           on_state:
                             icon: "mdi:refresh-circle"
-                            icon_color: "yellow"
-                            background_color: "yellow"
+                            icon_color: "red"
+                            background_color: "red"
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
             layout:
@@ -356,7 +376,7 @@ views:
                             amount:
                               attribute_name: "lights_on_count"
                               count_tooltip: "num lights on"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:lightbulb-multiple-off-outline"
                               icon_color: "grey"
@@ -371,7 +391,7 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "light entities"
+                              title: "light entities ↓ state"
                               auto_entities:
                                 exclude_unavailable_state: true
                     item2:
@@ -390,7 +410,7 @@ views:
                             amount:
                               attribute_name: "plugs_off_count"
                               count_tooltip: "num plugs off"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:power-plug-off"
                               icon_color: "grey"
@@ -405,7 +425,7 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "plug entities"
+                              title: "plug entities ↑ state"
                               auto_entities:
                                 sort_reversed: true
                     item3:
@@ -427,7 +447,7 @@ views:
                             amount:
                               attribute_name: "fans_on_count"
                               count_tooltip: "num fans on"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:fan-off"
                               icon_color: "blue"
@@ -442,7 +462,7 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "fan entities"
+                              title: "fan entities ↓ state"
 
                     item4:
                       card:
@@ -460,7 +480,7 @@ views:
                             amount:
                               attribute_name: "climate_devices_on_count"
                               count_tooltip: "num climate devices on"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:thermometer-low"
                               icon_color: "grey"
@@ -477,7 +497,7 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "climate entities"
+                              title: "climate entities ↑ state"
                               auto_entities:
                                 sort_reversed: true
                     item5:
@@ -487,6 +507,7 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_navigate_action"
                           # - "card_room_mower_state"
                         entity: "lawn_mower.moe"
                         name: "Mower"
@@ -498,7 +519,7 @@ views:
                             amount:
                               attribute_name: "lawn_mower_busy_count"
                               count_tooltip: "num mowers active"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:robot-mower"
                               icon_color: "red"
@@ -506,21 +527,22 @@ views:
                             error_state:
                               icon: "mdi:robot-mower-outline"
                         tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/devices/device/f6aa7f03c61ef3c5ce1edb4277d23148"
+                          # navigation_path: >
+                          #   "{{'/config/devices/device/' + device_id('lawn_mower.moe')}}"
+                        hold_action:
                           action: "more-info"
                     item6:
                       card:
                         type: "custom:button-card"
                         template:
-                          # - "custom_card_kepath_binary_notifications_common_styles"
-                          # - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_washing_machine_state"
-                          # - "device_kepath_style_washing_machine_state"
-                        entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
-                        # entity: "sensor.washing_machine_average_demand"
+                          - "device_kepath_entity_and_style_washing_machine_state"
+                        entity: "input_boolean.washing_machine_detected_state"
                         name: "Washer"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:washing-machine-off"
                               icon_color: "blue"
@@ -528,10 +550,10 @@ views:
                             error_state:
                               icon: "mdi:washing-machine-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/952c87755c2c0da9627644b62b5fa2c7"
+                        hold_action:
+                          action: "more-info"
                     item7:
                       card:
                         type: "custom:button-card"
@@ -539,14 +561,13 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_tumble_dryer_state"
-                          # - "device_kepath_style_tumble_dryer_state"
+                          - "device_kepath_entity_and_style_tumble_dryer_state"
                         entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
                         name: "Dryer"
                         variables:
                           var_device_kepath_entity_and_style_tumble_dryer_state:
                             device_progress: "sensor.samsung_tumble_dryer_dryer_completion_time"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:tumble-dryer-off"
                               icon_color: "blue"
@@ -554,10 +575,10 @@ views:
                             error_state:
                               icon: "mdi:tumble-dryer-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/248a57d4d33903ec84b8022b8d465f88"
+                        hold_action:
+                          action: "more-info"
                     item8:
                       card:
                         type: "custom:button-card"
@@ -565,14 +586,11 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_dishwasher_state"
-                          # - "device_kepath_style_dishwasher_state"
+                          - "device_kepath_entity_and_style_dishwasher_state"
                         entity: "sensor.dishwasher_operation_state"
                         name: "Dishwasher"
                         variables:
-                          var_device_kepath_entity_and_style_dishwasher_state:
-                            device_progress: "sensor.dishwasher_remaining_program_time"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:dishwasher-off"
                               icon_color: "blue"
@@ -580,10 +598,10 @@ views:
                             error_state:
                               icon: "mdi:dishwasher-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/bb485d5d222b2f3d78e640bbd1e2ac6b"
+                        hold_action:
+                          action: "more-info"
                     item9:
                       card:
                         type: "custom:button-card"
@@ -592,11 +610,10 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
-                          # - "device_kepath_style_switch_state"
-                        entity: "switch.wifi_socket_socket_1"
+                        entity: "switch.drinks_fridge_plug_bed_c"
                         name: "Mini Fridge"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:fridge-industrial-off"
                               icon_color: "red"
@@ -608,11 +625,11 @@ views:
                               icon: "mdi:fridge-industrial"
                               icon_color: "green"
                               background_color: "green"
-                        tap_action:
-                          action: "more-info"
+                        # tap_action:
+                        #   action: "navigate"
+                        #   navigation_path: "/config/devices/device/e43877911bcde38af54a242c2b2b8197"
                         hold_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/e43877911bcde38af54a242c2b2b8197"
+                          action: "more-info"
                     item10:
                       card:
                         type: "custom:button-card"
@@ -620,21 +637,27 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                        entity: "media_player.spotify_kevin_thorn"
-                        name: "Spotify"
+                          - "device_kepath_entity_and_style_binary_simple_switch_state"
+                        entity: "binary_sensor.yamaha_reciever_state"
+                        name: "Yamaha"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "si:spotify"
+                              icon: "mdi:audio-video"
                               icon_color: "blue"
                               background_color: "blue"
                             error_state:
-                              icon: "si:spotify"
+                              icon: "mdi:audio-video-off"
+                          var_kepath_device_entity_and_style_simple_binary_switch_state:
+                            on_state:
+                              icon: "mdi:audio-video"
+                              icon_color: "green"
+                              background_color: "green"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
-                          navigation_path: "/config/devices/device/bb485d5d222b2f3d78e640bbd1e2ac6b"
+                          navigation_path: "/config/devices/device/f2efb18594267a3671604e3457b13c2e"
+                        hold_action:
+                          action: "more-info"
                     item11:
                       card:
                         type: "custom:button-card"
@@ -643,11 +666,10 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
-                          # - "device_kepath_style_unknown_or_on_state"
-                        entity: "sensor.arcade_win10_cpuload"
+                        entity: "device_tracker.arcade_machine_unifi"
                         name: "Arcade"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:controller-off"
                               icon_color: "red"
@@ -660,10 +682,10 @@ views:
                               icon_color: "green"
                               background_color: "green"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/19a23f4948601ca818e597bbee0b74dd"
+                        hold_action:
+                          action: "more-info"
                     item12:
                       card:
                         type: "custom:button-card"
@@ -672,11 +694,10 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
-                          # - "device_kepath_style_unknown_or_on_state"
                         entity: "device_tracker.big_pc_unifi"
                         name: "BigPC"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:desktop-tower"
                               icon_color: "red"
@@ -689,10 +710,10 @@ views:
                               icon_color: "green"
                               background_color: "green"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/b3340dea79cbcdb7367587e052835769"
+                        hold_action:
+                          action: "more-info"
                     item13:
                       card:
                         type: "custom:button-card"
@@ -700,22 +721,22 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_style_printer_state"
+                          - "device_kepath_entity_and_style_printer_state"
                         entity: "sensor.mfc_j870dw_status"
                         name: "Printer"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "mdi:printer-off"
-                              icon_color: "blue"
-                              background_color: "blue"
+                              icon: "mdi:printer"
+                              icon_color: "green"
+                              background_color: "green"
                             error_state:
                               icon: "mdi:printer-alert"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/4ea9393d18c94c2fa038251f45d71858"
+                        hold_action:
+                          action: "more-info"
                     item14:
                       card:
                         type: "custom:button-card"
@@ -723,22 +744,29 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_style_nas_state"
-                        entity: "binary_sensor.diskstation_security_status"
+                          - "device_kepath_entity_and_style_nas_state"
+                        entity: "sensor.diskstation_volume_1_status"
                         name: "NAS"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_synology_dsm_unavailable_count"
+                              count_tooltip: "DSM entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "mdi:nas"
-                              icon_color: "green"
-                              background_color: "green"
+                              icon: "mdi:database-cog"
+                              icon_color: "blue"
+                              background_color: "blue"
                             error_state:
-                              icon: "mdi:nas"
+                              icon: "mdi:database-alert-outline"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/59f488dc105211eb978c4d56fd4be963"
+                        hold_action:
+                          action: "more-info"
                     item15:
                       card:
                         type: "custom:button-card"
@@ -746,22 +774,22 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_style_ups_state"
+                          - "device_kepath_entity_and_style_ups_state"
                         entity: "sensor.ups_status"
                         name: "UPS"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "mdi:battery-plus-variant"
-                              icon_color: "green"
-                              background_color: "green"
-                            error_state:
                               icon: "mdi:battery-alert"
+                              icon_color: "red"
+                              background_color: "red"
+                            error_state:
+                              icon: "mdi:power-plug-battery-outline"
                         tap_action:
-                          action: "more-info"
-                        hold_action:
                           action: "navigate"
                           navigation_path: "/config/devices/device/0579ddfc72a49d4e19eafecce2e364a6"
+                        hold_action:
+                          action: "more-info"
               - type: "conditional"
                 conditions:
                   - entity: "input_boolean.minimalist_ui_binary_alert_sensors"
@@ -774,14 +802,21 @@ views:
                         .container {
                           position: relative !important;
                         }
+                        .container .thumbs {
+                          overflow-y: clip !important;
+                        }
                         .container .thumbs .thumb {
                           padding: 0px !important;
                         }
                         .container .thumbs .thumb img {
                           border-color: var(--primary-background-color) !important;
+                          border-radius: 6px !important;
                         }
                         .container .thumbs .thumb.motion img {
                           border-color: rgba(var(--color-red),1) !important;
+                        }
+                        .container .mainImage img {
+                          border-radius: 10px !important;
                         }
                   styles:
                     grid:
@@ -834,7 +869,7 @@ views:
                             amount:
                               attribute_name: "safety_sensors_triggered_count"
                               count_tooltip: "num safety sensors triggered"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:alarm-light-off"
                               icon_color: "green"
@@ -849,7 +884,7 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "safety entities"
+                              title: "safety entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
                     item2:
@@ -859,7 +894,7 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_style_lock_state"
+                          - "device_kepath_entity_and_style_lock_state"
                         entity: "lock.front_door_top_bolt"
                         icon: "mdi:lock"
                         name: "Lock"
@@ -871,13 +906,13 @@ views:
                             amount:
                               attribute_name: "locks_unlocked_count"
                               count_tooltip: "num locks unlocked"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "mdi:lock"
-                              icon_color: "grey"
-                              background_color: "grey"
+                              icon: "mdi:lock-open-variant"
+                              icon_color: "red"
+                              background_color: "red"
                             error_state:
-                              icon: "mdi:lock-alert"
+                              icon: "mdi:lock-alert-outline"
                         tap_action:
                           action: "more-info"
 
@@ -893,32 +928,26 @@ views:
                         name: "Camera"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "cameras_unavailable_count"
+                              count_tooltip: "num cameras away"
                             amount:
                               attribute_name: "cameras_off_count"
                               count_tooltip: "num cameras off"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:camera"
                               icon_color: "green"
                               background_color: "green"
                             error_state:
                               icon: "mdi:camera-off-outline"
-                          # var_kepath_generic_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_state:
-                          #       icon: "mdi:camera-off"
-                          #       icon_color: "red"
-                          #       background_color: "red"
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "camera entities"
+                              title: "camera entities ↑ name"
                               auto_entities:
                                 sort_method: "name"
+                                sort_reversed: true
 
                     item4:
                       card:
@@ -927,6 +956,7 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_simple_switch_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_door_class_binary_sensors"
                         name: "Doors"
@@ -938,27 +968,23 @@ views:
                             amount:
                               attribute_name: "door_sensors_triggered_count"
                               count_tooltip: "num doors open"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:door"
                               icon_color: "green"
                               background_color: "green"
                             error_state:
                               icon: "mdi:door-closed-cancel"
-                          # var_kepath_generic_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon_color: "green"
-                          #       background_color: "green"
-                          #     triggered_state:
-                          #       icon: "mdi:door-open"
-                          #       icon_color: "red"
-                          #       background_color: "red"
+                          var_kepath_device_entity_and_style_simple_binary_switch_state:
+                            # door is open
+                            on_state:
+                              icon: "mdi:door-open"
+                              icon_color: "red"
+                              background_color: "red"
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "door entities"
+                              title: "door entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
 
@@ -969,34 +995,36 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_occupancy_state"
-                          # - "device_kepath_style_occupancy_state"
+                          - "device_kepath_entity_and_style_occupancy_state"
                           - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_occupancy_class_binary_sensors"
-                        name: "Away Motion"
+                        entity: "group.all_away_occupancy_class_binary_sensors"
+                        name: "Internal"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
-                              attribute_name: "occupancy_sensors_unavailable_count"
+                              attribute_name: "occupancy_sensors_unavailable_away_count"
                               count_tooltip: "num occupancy sensors away"
                             amount:
-                              attribute_name: "occupancy_no_persons_home_triggered_count"
+                              attribute_name: "occupancy_sensors_triggered_away_count"
                               count_tooltip: "num occupancy sensors on"
-                            person:
-                              attribute_name: "occupancy_persons_home_count"
-                              count_tooltip: "num persons home"
-                              ignore_on_known_occupancy: true
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              evaluated_attribute: "occupancy_sensors_triggered_away_count"
+                            style:
+                              icon: "mdi:motion-sensor-off"
+                              icon_color: "green"
+                              background_color: "green"
+                          var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "mdi:cctv"
-                              icon_color: "grey"
-                              background_color: "grey"
+                              icon: "mdi:motion-sensor-off"
+                              icon_color: "green"
+                              background_color: "green"
                             error_state:
                               icon: "mdi:cctv-off"
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "occupancy entities"
+                              title: "internal occupancy entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
                     cameras1:
@@ -1070,11 +1098,10 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_occupancy_state"
-                          # - "device_kepath_style_occupancy_state"
+                          - "device_kepath_entity_and_style_occupancy_state"
                           - "custom_card_kepath_generic_group_popup"
                         entity: "group.all_occupancy_class_binary_sensors"
-                        name: "Home Motion"
+                        name: "All Motion"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
@@ -1083,23 +1110,49 @@ views:
                             amount:
                               attribute_name: "occupancy_sensors_triggered_count"
                               count_tooltip: "num occupancy sensors on"
-                            person:
-                              attribute_name: "occupancy_persons_home_count"
-                              count_tooltip: "num persons home"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:cctv"
-                              icon_color: "grey"
-                              background_color: "grey"
+                              icon_color: "green"
+                              background_color: "green"
                             error_state:
                               icon: "mdi:cctv-off"
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "occupancy entities"
+                              title: "all occupancy entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
                     item2:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                        entity: "binary_sensor.udmpro_disk_0_health"
+                        name: "Protect"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_unifiprotect_unavailable_count"
+                              count_tooltip: "protect entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "phu:unifi-protect"
+                              icon_color: "blue"
+                              background_color: "blue"
+                            error_state:
+                              icon: "phu:unifi-protect"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/unifiprotect"
+                        hold_action:
+                          action: "more-info"
+                    item3:
                       card:
                         type: "custom:button-card"
                         template:
@@ -1115,7 +1168,7 @@ views:
                             amount:
                               attribute_name: "media_player_tv_and_remote_on_count"
                               count_tooltip: "num video players on"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:television"
                               icon_color: "blue"
@@ -1130,11 +1183,11 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "tv entities"
+                              title: "tv entities ↓ name"
                               auto_entities:
                                 sort_method: "name"
                                 sort_reversed: true
-                    item3:
+                    item4:
                       card:
                         type: "custom:button-card"
                         template:
@@ -1153,7 +1206,7 @@ views:
                             amount:
                               attribute_name: "media_player_audio_on_count"
                               count_tooltip: "num audio players on"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:volume-low"
                               icon_color: "blue"
@@ -1168,41 +1221,10 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "speaker entities"
+                              title: "speaker entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
                                 exclude_unavailable_state: true
-
-                    item4:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
-                          - "device_kepath_entity_common_binary_objects_and_styles"
-                        entity: "group.all_audio_class_media_player"
-                        name: "Repairs"
-                        variables:
-                          # var_kepath_generic_get_set_group_notification_objects:
-                          #   unavailable:
-                          #     attribute_name: "media_player_audio_unavailable_count"
-                          #   amount:
-                          #     attribute_name: "media_player_audio_on_count"
-                          var_kepath_generic_get_set_group_button_objects:
-                            default_state:
-                              icon: "mdi:wrench-check"
-                              icon_color: "green"
-                              background_color: "green"
-                            error_state:
-                              icon: "mdi:wrench-outline"
-                          # var_kepath_generic_group_popup:
-                          #   action: "popup"
-                          #   popup:
-                          #     title: "speaker entities"
-                          #     auto_entities:
-                          #       sort_method: "last_changed"
-                          #       exclude_unavailable_state: true
-
                     item5:
                       card:
                         type: "custom:button-card"
@@ -1210,28 +1232,29 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                        entity: "group.all_audio_class_media_player"
-                        name: "Watchman"
+                        entity: "sensor.docker_addon_d5369777_music_assistant_state"
+                        name: "MASS"
                         variables:
-                          # var_kepath_generic_get_set_group_notification_objects:
-                          #   unavailable:
-                          #     attribute_name: "media_player_audio_unavailable_count"
-                          #   amount:
-                          #     attribute_name: "media_player_audio_on_count"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_mass_unavailable_count"
+                              count_tooltip: "MASS entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "mdi:cog-stop"
-                              icon_color: "green"
-                              background_color: "green"
+                              icon: "mdi:playlist-music"
+                              icon_color: "blue"
+                              background_color: "blue"
                             error_state:
-                              icon: "mdi:cog-off-outline"
-                          # var_kepath_generic_group_popup:
-                          #   action: "popup"
-                          #   popup:
-                          #     title: "speaker entities"
-                          #     auto_entities:
-                          #       sort_method: "last_changed"
-                          #       exclude_unavailable_state: true
+                              icon: "mdi:playlist-music"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/mass"
+                        hold_action:
+                          action: "more-info"
+
 
                     floorplan1:
                       card: !include "floorplan_pictures/floor-ground.yaml"
@@ -1247,7 +1270,7 @@ views:
                   type: "custom:button-card"
                   styles:
                     grid:
-                      - grid-template-areas: "'item1 item2 item3 item4 item5' 'item6 item7 item8 item9 item10'"
+                      - grid-template-areas: "'item1 item2 item3 item4 item5' 'item6 item7 item8 item9 item10' 'item11 item12 item13 item14 item15'"
                       - grid-template-columns: "1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
@@ -1268,6 +1291,11 @@ views:
                       item8: *widget_icon_binary_sensor_custom_styling
                       item9: *widget_icon_binary_sensor_custom_styling
                       item10: *widget_icon_binary_sensor_custom_styling
+                      item11: *widget_icon_binary_sensor_custom_styling
+                      item12: *widget_icon_binary_sensor_custom_styling
+                      item13: *widget_icon_binary_sensor_custom_styling
+                      item14: *widget_icon_binary_sensor_custom_styling
+                      item15: *widget_icon_binary_sensor_custom_styling
                   custom_fields:
                     item1:
                       card:
@@ -1288,7 +1316,7 @@ views:
                             amount:
                               attribute_name: "device_trackers_away_count"
                               count_tooltip: "device trackers not home"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:devices"
                               icon_color: "grey"
@@ -1305,7 +1333,7 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "device tracker entities"
+                              title: "device tracker entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
                     item2:
@@ -1327,7 +1355,7 @@ views:
                             amount:
                               attribute_name: "connectivity_disconnected_count"
                               count_tooltip: "num devices not home"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:lan"
                               icon_color: "green"
@@ -1344,7 +1372,7 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "connectivity entities"
+                              title: "connectivity entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
                     item3:
@@ -1366,7 +1394,7 @@ views:
                             amount:
                               attribute_name: "running_stopped_count"
                               count_tooltip: "num containers stopped"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:lan"
                               icon_color: "green"
@@ -1383,67 +1411,26 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "running entities"
+                              title: "running entities ↓ state"
                     item4:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
+                          # - "custom_card_kepath_binary_notifications_common_styles"
+                          # - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_binary_switch_unknown_unavailable_state"
                           - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_duration_class_and_min_unit_of_measurement_sensors"
-                        name: "Runtime"
-                        variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            unavailable:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                          var_kepath_device_entity_and_style_binary_count_state:
-                            entity:
-                              evaluated_entity: "group.all_duration_class_and_min_unit_of_measurement_sensors"
-                            style:
-                              icon: "mdi:sort-clock-descending"
-                              icon_color: "blue"
-                              background_color: "blue"
-                          var_kepath_generic_get_set_group_button_objects:
-                            default_state:
-                              icon: "mdi:sort-clock-ascending"
-                              icon_color: "green"
-                              background_color: "green"
-                            error_state:
-                              icon: "mdi:clock-alert"
-                          var_kepath_generic_group_popup:
-                            action: "popup"
-                            popup:
-                              title: "runtime entities"
-                              auto_entities:
-                                sort_method: "state"
-                                sort_numeric: true
-                                exclude_unknown_state: false
-                    item5:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
-                          # - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_power_class_sensors"
+                        entity: "group.all_power_class_binary_sensors"
                         name: "Power"
                         variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            unavailable:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                          var_kepath_generic_get_set_group_button_objects:
+                          # var_kepath_generic_get_set_group_notification_objects:
+                          #   unavailable:
+                          #     attribute_name: "zero_value"
+                          #     count_tooltip: "not set"
+                          #   amount:
+                          #     attribute_name: "zero_value"
+                          #     count_tooltip: "not set"
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:home-lightning-bolt"
                               icon_color: "green"
@@ -1453,173 +1440,23 @@ views:
                           var_kepath_generic_group_popup:
                             action: "popup"
                             popup:
-                              title: "power entities"
+                              title: "power entities № state"
                               auto_entities:
                                 sort_method: "state"
                                 sort_numeric: true
                                 exclude_unknown_state: true
                                 exclude_unavailable_state: true
-                    item6:
+                    item5:
                       card:
                         type: "custom:button-card"
                         template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
-                          - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_data_rate_state"
-                          - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_data_rate_class_sensors"
-                        name: "Data"
-                        variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            amount:
-                              attribute_name: "data_rate_total_average_10_times_larger"
-                              count_tooltip: "average network data rate (100's kb/s)"
-                            unavailable:
-                              attribute_name: "data_rate_unavailable_count"
-                              count_tooltip: "num data rate sensors away"
-                          var_kepath_generic_get_set_group_button_objects:
-                            default_state:
-                              icon: "mdi:speedometer"
-                              icon_color: "green"
-                              background_color: "green"
-                            error_state:
-                              icon: "mdi:lan-disconnect"
-                          var_kepath_generic_group_popup:
-                            action: "popup"
-                            popup:
-                              title: "data entities"
-                              auto_entities:
-                                sort_method: "state"
-                                sort_numeric: true
-                                exclude_unknown_state: true
-                    item7:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
-                          - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_battery_state"
-                          # - "device_kepath_style_battery_state"
-                          - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_battery_class_sensors"
-                        name: "Battery"
-                        variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            battery_value:
-                              attribute_name: "batteries_average_value"
-                              count_tooltip: "battery average value (%n0)"
-                            unavailable:
-                              attribute_name: "batteries_unavailable_count"
-                              count_tooltip: "num batteries away"
-                            amount:
-                              attribute_name: "batteries_below20_count"
-                              count_tooltip: "num batteries under 20%"
-                          var_kepath_generic_get_set_group_button_objects:
-                            default_state:
-                              icon: "mdi:battery-20"
-                              icon_color: "blue"
-                              background_color: "blue"
-                            error_state:
-                              icon: "mdi:battery-alert"
-                          var_kepath_generic_group_popup:
-                            action: "popup"
-                            popup:
-                              title: "battery entities"
-                              auto_entities:
-                                sort_method: "state"
-                                sort_numeric: true
-                                exclude_unavailable_state: true
-                    item8:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
-                          - "device_kepath_entity_common_binary_objects_and_styles"
-                          # - "device_kepath_entity_signal_strength_state"
-                          # - "device_kepath_style_signal_strength_state"
-                          - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_signal_strength_class_sensors"
-                        name: "Signal"
-                        variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            signal_value:
-                              attribute_name: "signal_sensors_average_value"
-                              count_tooltip: "signals average value (%n0)"
-                            unavailable:
-                              attribute_name: "signal_sensors_unavailable_count"
-                              count_tooltip: "num signals away"
-                            amount:
-                              attribute_name: "signal_sensors_low_count"
-                              count_tooltip: "num signals under -80dBm"
-                          var_kepath_generic_get_set_group_button_objects:
-                            default_state:
-                              icon: "mdi:wifi-off"
-                              icon_color: "blue"
-                              background_color: "blue"
-                            error_state:
-                              icon: "mdi:wifi-alert"
-                          var_kepath_generic_group_popup:
-                            action: "popup"
-                            popup:
-                              title: "signal entities"
-                              auto_entities:
-                                exclude_unavailable_state: true
-                    item9:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
-                          - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_monetary_class_sensors"
-                        name: "Money"
-                        variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            unavailable:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
-                          var_kepath_generic_get_set_group_button_objects:
-                            default_state:
-                              icon: "mdi:currency-gbp"
-                              icon_color: "green"
-                              background_color: "green"
-                            error_state:
-                              icon: "mdi:currency-usd-off"
-                          # var_kepath_generic_icon_appearance:
-                          #   use_theme_colors: true
-                          #   default_theme:
-                          #     default_state:
-                          #       icon_color: "blue"
-                          #       background_color: "blue"
-                          var_kepath_generic_group_popup:
-                            action: "popup"
-                            popup:
-                              title: "money entities"
-                              auto_entities:
-                                sort_method: "state"
-                                sort_numeric: true
-                                exclude_unknown_state: true
-                                exclude_unavailable_state: true
-                    item10:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          # - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "card_notification_script_trigger"
-                          # - "green_icon_off"
                         entity: "input_boolean.away_script_active"
                         icon: "mdi:home-lock-open"
                         name: "Passive"
                         variables:
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:lock-open-variant"
                               icon_color: "green"
@@ -1638,6 +1475,359 @@ views:
                             script:
                               name: "script.lockdown_mode_off"
                               confirmation_text: "This will return to home mode. Are you sure you want to proceed?"
+                    item6:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_data_rate_state"
+                          - "custom_card_kepath_generic_group_popup"
+                        entity: "group.all_measured_data_rate_class_sensors"
+                        name: "Data"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              attribute_name: "data_rate_total_average_10_times_larger"
+                              count_tooltip: "average network data rate (100's kb/s)"
+                            unavailable:
+                              attribute_name: "data_rate_unavailable_count"
+                              count_tooltip: "num data rate sensors away"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:speedometer"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "mdi:lan-disconnect"
+                          var_kepath_generic_group_popup:
+                            action: "popup"
+                            popup:
+                              title: "selected data entities ↓ state"
+                              auto_entities:
+                                sort_method: "state"
+                                sort_numeric: true
+                                exclude_unknown_state: true
+                    item7:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_battery_state"
+                          - "custom_card_kepath_generic_group_popup"
+                        entity: "group.all_battery_class_sensors"
+                        name: "Battery"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            # battery_value:
+                            #   attribute_name: "batteries_average_value"
+                            #   count_tooltip: "battery average value (%n0)"
+                            unavailable:
+                              attribute_name: "batteries_unavailable_count"
+                              count_tooltip: "num batteries away"
+                            amount:
+                              attribute_name: "batteries_below20_count"
+                              count_tooltip: "num batteries under 20%"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:battery-unknown"
+                              icon_color: "blue"
+                              background_color: "blue"
+                            error_state:
+                              icon: "mdi:battery-alert"
+                          var_kepath_generic_group_popup:
+                            action: "popup"
+                            popup:
+                              title: "battery entities ↓ state"
+                              auto_entities:
+                                sort_method: "state"
+                                sort_numeric: true
+                                exclude_unavailable_state: true
+                    item8:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_signal_strength_state"
+                          - "custom_card_kepath_generic_group_popup"
+                        entity: "group.all_signal_strength_class_sensors"
+                        name: "Signal"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "signal_sensors_unavailable_count"
+                              count_tooltip: "num signals away"
+                            amount:
+                              attribute_name: "signal_sensors_low_count"
+                              count_tooltip: "num signals under -80dBm"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:signal-off"
+                              icon_color: "grey"
+                              background_color: "grey"
+                            error_state:
+                              icon: "mdi:wifi-alert"
+                          var_kepath_generic_group_popup:
+                            action: "popup"
+                            popup:
+                              title: "signal entities ↓ strength"
+                              auto_entities:
+                                exclude_unavailable_state: true
+                    item9:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_count_state"
+                          # - "custom_card_kepath_generic_group_popup"
+                        entity: "sensor.udmpro_state"
+                        name: "Unifi"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_unifi_unavailable_count"
+                              count_tooltip: "unifi entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "si:ubiquiti"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "si:ubiquiti"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              evaluated_attribute: "integration_unifi_unavailable_count"
+                            style:
+                              icon: "si:ubiquiti"
+                              icon_color: "red"
+                              background_color: "red"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/unifi"
+                        hold_action:
+                          action: "more-info"
+                    item10:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_count_state"
+                        entity: "sensor.lumi_lumi_router_lqi"
+                        name: "ZHA"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_zha_unavailable_count"
+                              count_tooltip: "ZHA entities away"
+                            amount:
+                              attribute_name: "zero_value"
+                              count_tooltip: "not set"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "si:zigbee"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "si:zigbee"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              evaluated_attribute: "integration_zha_unavailable_count"
+                            style:
+                              icon: "si:zigbee"
+                              icon_color: "red"
+                              background_color: "red"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/zha"
+                        hold_action:
+                          action: "more-info"
+                    item11:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_count_state"
+                        entity: "sensor.active_issues"
+                        name: "Spook"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_spook_unavailable_count"
+                              count_tooltip: "spook entities away"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:ghost"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "mdi:ghost"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              isattribute: false
+                              evaluated_entity: "sensor.active_issues"
+                            style:
+                              icon: "mdi:ghost-outline"
+                              icon_color: "red"
+                              background_color: "red"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/spook"
+                        hold_action:
+                          action: "more-info"
+                    item12:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_count_state"
+                        entity: "sensor.watchman_missing_entities"
+                        name: "Watchman"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "sensor.watchman_missing_entities"
+                              is_attribute: false
+                              count_tooltip: "watchmen missing entities"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:cog-stop"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "mdi:cog-off-outline"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              isattribute: false
+                              evaluated_entity: "sensor.watchman_missing_entities"
+                            style:
+                              icon: "mdi:cog-off-outline"
+                              icon_color: "red"
+                              background_color: "red"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/lovelace-minimalist-downloads/3"
+                        hold_action:
+                          action: "more-info"
+                    item13:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_count_state"
+                        entity: "sensor.active_issues"
+                        name: "Repairs"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "sensor.active_issues"
+                              is_attribute: false
+                              count_tooltip: "active issues"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:wrench-check"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "mdi:wrench-outline"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              isattribute: false
+                              evaluated_entity: "sensor.active_issues"
+                            style:
+                              icon: "mdi:wrench-outline"
+                              icon_color: "red"
+                              background_color: "red"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/repairs"
+                        hold_action:
+                          action: "more-info"
+                    item14:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_count_state"
+                        entity: "sensor.icloud3_event_log"
+                        name: "iCloud3"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_icloud3_unavailable_count"
+                              count_tooltip: "iCloud3 entities away"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "si:icloud"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "si:icloud"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              evaluated_attribute: "integration_icloud3_unavailable_count"
+                            style:
+                              icon: "si:icloud"
+                              icon_color: "red"
+                              background_color: "red"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/icloud3"
+                        hold_action:
+                          action: "more-info"
+                    item15:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_count_state"
+                        entity: "binary_sensor.nest_protect_bottom_floor_smoke_status"
+                        name: "Nest"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            unavailable:
+                              attribute_name: "integration_nest_protect_unavailable_count"
+                              count_tooltip: "nest entities away"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:smoke-detector-variant"
+                              icon_color: "green"
+                              background_color: "green"
+                            error_state:
+                              icon: "mdi:smoke-detector-variant-alert"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              evaluated_attribute: "integration_nest_protect_unavailable_count"
+                            style:
+                              icon: "mdi:smoke-detector-variant-off"
+                              icon_color: "red"
+                              background_color: "red"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/nest_protect"
+                        hold_action:
+                          action: "more-info"
 
               - type: "conditional"
                 conditions:
@@ -1721,7 +1911,7 @@ views:
                             amount:
                               attribute_name: "tab_update_sensors_triggered_count"
                               count_tooltip: "num updates available"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:refresh"
                               icon_color: "green"
@@ -1755,7 +1945,7 @@ views:
                             amount:
                               attribute_name: "hacs_updates_available"
                               count_tooltip: "num hacs updates available"
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "mdi:store"
@@ -1769,7 +1959,8 @@ views:
                           action: "navigate"
                           navigation_path: "/hacs"
                         double_tap_action:
-                          action: "more-info"
+                          action: "navigate"
+                          navigation_path: "/config/integrations/integration/hacs"
                     item3:
                       card:
                         type: "custom:button-card"
@@ -1786,7 +1977,7 @@ views:
                               entity: "update.adguard_home_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "si:adguard"
@@ -1815,7 +2006,7 @@ views:
                               entity: "update.plex_media_server_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "si:plex"
@@ -1844,7 +2035,7 @@ views:
                               entity: "update.guacamole_client_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "mdi:lan-connect"
@@ -1873,7 +2064,7 @@ views:
                               entity: "update.esphome_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "si:esphome"
@@ -1902,7 +2093,7 @@ views:
                               entity: "update.portainer_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "si:docker"
@@ -1931,7 +2122,7 @@ views:
                               entity: "update.emqx_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "mdi:pipe"
@@ -1960,7 +2151,7 @@ views:
                               entity: "update.uptime_kuma_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "si:uptimekuma"
@@ -1989,7 +2180,7 @@ views:
                               entity: "update.netdata_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "mdi:chart-bar"
@@ -2019,7 +2210,7 @@ views:
                               entity: "update.scrutiny_full_access_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "mdi:glasses"
@@ -2048,7 +2239,7 @@ views:
                               entity: "update.studio_code_server_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "si:visualstudiocode"
@@ -2077,7 +2268,7 @@ views:
                               entity: "update.nginx_proxy_manager_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "si:nginx"
@@ -2106,7 +2297,7 @@ views:
                               entity: "update.music_assistant_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "mdi:music-circle"
@@ -2135,7 +2326,7 @@ views:
                               entity: "update.phpmyadmin_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          var_kepath_generic_get_set_group_button_objects:
+                          var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
                               icon: "si:phpmyadmin"

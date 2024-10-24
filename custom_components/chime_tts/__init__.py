@@ -65,8 +65,6 @@ from .const import (
     WWW_PATH_KEY,
     WWW_PATH_DEFAULT,
 
-    MEDIA_DIR_KEY,
-    MEDIA_DIR_DEFAULT,
     ALEXA_MEDIA_PLAYER_PLATFORM,
     SONOS_PLATFORM,
     MP3_PRESET_CUSTOM_PREFIX,
@@ -319,11 +317,8 @@ async def async_prepare_media(hass: HomeAssistant, params, options, media_player
             # Remove temporary local generated mp3
             if not params.get("cache", False):
                 _LOGGER.debug("Removing temporary file%s:", "s" if local_path and public_path else "")
-                if local_path is not None:
-                    filesystem_helper.delete_file(local_path)
-                if public_path is not None:
-                    local_public_path = await filesystem_helper.async_get_local_url(hass, public_path)
-                    filesystem_helper.delete_file(local_public_path)
+                filesystem_helper.delete_file(hass, local_path)
+                filesystem_helper.delete_file(hass, public_path)
 
 
     end_time = datetime.now()
@@ -416,9 +411,6 @@ async def async_update_configuration(config_entry: ConfigEntry, hass: HomeAssist
     # Add cover art to generated MP3 files
     _data[ADD_COVER_ART_KEY] = options.get(ADD_COVER_ART_KEY, False)
 
-    # Media folder (default: 'local')
-    _data[MEDIA_DIR_KEY] = options.get(MEDIA_DIR_KEY, MEDIA_DIR_DEFAULT)
-
     # www / local folder path
     _data[WWW_PATH_KEY] = filesystem_helper.make_folder_path_safe(
         hass.config.path(
@@ -470,7 +462,6 @@ async def async_update_configuration(config_entry: ConfigEntry, hass: HomeAssist
         TEMP_CHIMES_PATH_KEY,
         TEMP_PATH_KEY,
         WWW_PATH_KEY,
-        MEDIA_DIR_KEY,
         CUSTOM_CHIMES_PATH_KEY,
         MP3_PRESET_CUSTOM_KEY,
     ]:
@@ -807,9 +798,8 @@ async def async_get_playback_audio_path(params: dict, options: dict):
         duration = len(new_audio_segment) / 1000.0
         audio_dict[AUDIO_DURATION_KEY] = duration
         audio_dict[LOCAL_PATH_KEY if is_local else PUBLIC_PATH_KEY] = new_audio_file
-        audio_dict[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(audio_dict.get(LOCAL_PATH_KEY, None)
-                                                                                     or audio_dict.get(PUBLIC_PATH_KEY, None),
-                                                                                     _data.get(MEDIA_DIR_KEY, None))
+        file_path: str = audio_dict.get(LOCAL_PATH_KEY, None) or audio_dict.get(PUBLIC_PATH_KEY, None)
+        audio_dict[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(file_path)
 
         # Save audio to local and/or public folders
         for folder_key in [(LOCAL_PATH_KEY if is_local else None), (PUBLIC_PATH_KEY if is_public else None)]:
@@ -875,8 +865,7 @@ async def async_verify_cached_audio(hass, filepath_hash, params, options, is_loc
 
         audio_dict[PUBLIC_PATH_KEY] = await filesystem_helper.async_get_external_url(hass, audio_dict.get(PUBLIC_PATH_KEY, None))
         audio_dict[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(audio_dict.get(LOCAL_PATH_KEY, None) or
-                                                                                        audio_dict.get(PUBLIC_PATH_KEY, None),
-                                                                                        _data.get(MEDIA_DIR_KEY, None))
+                                                                                        audio_dict.get(PUBLIC_PATH_KEY, None))
 
         if (is_local is False or audio_dict.get(LOCAL_PATH_KEY, None)) and (is_public is False or audio_dict.get(PUBLIC_PATH_KEY, None)):
             _LOGGER.debug("   Cached audio found:")
@@ -926,7 +915,7 @@ async def async_process_segments(hass, message, output_audio=None, params={}, op
 
     for index, segment in enumerate(segments):
         segment_cache: bool = segment.get("cache", params.get("cache", False))
-        segment_audio_conversion: str = segment.get("audio_conversion", "")
+        segment_audio_conversion: str = helpers.parse_ffmpeg_args(segment.get("audio_conversion", ""))
         segment_offset: float = get_segment_offset(output_audio, segment, params)
         segment_type =  segment.get("type", None)
         if not segment_type:
@@ -1098,13 +1087,18 @@ async def async_get_audio_from_path(
         _LOGGER.debug(' - Retrieving audio from path: "%s"...', filepath)
         try:
             audio_from_path: AudioSegment = await filesystem_helper.async_load_audio(filepath)
+
+            # Apply audio conversion
             if audio_conversion is not None and len(audio_conversion) > 0:
-                _LOGGER.debug("  - Performing FFmpeg audio conversion of audio file...")
-                audio_from_path = await helpers.async_ffmpeg_convert_from_audio_segment(audio_from_path)
+                _LOGGER.debug("  - Performing FFmpeg audio conversion of audio file: \"%s\"...", audio_conversion)
+                temp_folder: str = _data.get(TEMP_PATH_KEY, None)
+                audio_from_path = await helpers.async_ffmpeg_convert_from_audio_segment(audio_from_path,
+                                                                                        ffmpeg_args=audio_conversion,
+                                                                                        folder=temp_folder)
 
             # Remove downloaded file when cache=false
             if cache is False and file_hash is not None:
-                filesystem_helper.delete_file(filepath)
+                filesystem_helper.delete_file(hass, filepath)
 
             if audio_from_path is not None:
                 duration = float(len(audio_from_path) / 1000.0)
@@ -1163,11 +1157,8 @@ async def async_play_media(
     service_data[CONF_ENTITY_ID] = entity_ids
     service_data[ATTR_MEDIA_ANNOUNCE] = announce
     service_data[ATTR_MEDIA_CONTENT_TYPE] = MEDIA_TYPE_MUSIC
-    service_data[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(
-        audio_dict.get(LOCAL_PATH_KEY, None)
-        or audio_dict.get(PUBLIC_PATH_KEY, None),
-        _data.get(MEDIA_DIR_KEY)
-    )
+    file_path = audio_dict.get(LOCAL_PATH_KEY, None) or audio_dict.get(PUBLIC_PATH_KEY, None)
+    service_data[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(file_path)
 
     # Play Chime TTS notification
     media_service_calls = prepare_media_service_calls(hass, entity_ids, service_data, audio_dict)
@@ -1495,15 +1486,15 @@ async def async_remove_cached_audio_data(hass: HomeAssistant,
         if key == LOCAL_PATH_KEY and audio_dict.get(LOCAL_PATH_KEY, None) is not None:
             if clear_chimes_cache and await filesystem_helper.async_file_exists_in_directory(value, temp_chimes_path):
                 _LOGGER.debug("...removing chime file %s", value)
-                filesystem_helper.delete_file(audio_dict.get(LOCAL_PATH_KEY, None))
+                filesystem_helper.delete_file(hass, audio_dict.get(LOCAL_PATH_KEY, None))
                 audio_dict[LOCAL_PATH_KEY] = None
             elif clear_temp_tts_cache and await filesystem_helper.async_file_exists_in_directory(value, temp_path):
                 _LOGGER.debug("...removing TTS file %s", value)
-                filesystem_helper.delete_file(audio_dict.get(LOCAL_PATH_KEY, None))
+                filesystem_helper.delete_file(hass, audio_dict.get(LOCAL_PATH_KEY, None))
                 audio_dict[LOCAL_PATH_KEY] = None
         elif key == PUBLIC_PATH_KEY and value is not None and clear_www_tts_cache:
             _LOGGER.debug("...removing public file %s", value)
-            filesystem_helper.delete_file(audio_dict.get(PUBLIC_PATH_KEY, None))
+            filesystem_helper.delete_file(hass, audio_dict.get(PUBLIC_PATH_KEY, None))
             audio_dict[PUBLIC_PATH_KEY] = None
 
     # Remove key/value from integration storage if no paths remain

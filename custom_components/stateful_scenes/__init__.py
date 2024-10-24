@@ -6,8 +6,14 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .StatefulScenes import Hub
-from .const import DOMAIN, CONF_SCENE_PATH, CONF_NUMBER_TOLERANCE
+from .StatefulScenes import Hub, Scene
+from .const import (
+    DOMAIN,
+    CONF_SCENE_PATH,
+    CONF_NUMBER_TOLERANCE,
+    CONF_ENABLE_DISCOVERY,
+)
+from .discovery import DiscoveryManager
 
 PLATFORMS: list[Platform] = [
     Platform.SWITCH,
@@ -19,16 +25,24 @@ PLATFORMS: list[Platform] = [
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up this integration using UI."""
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = Hub(
-        hass=hass,
-        scene_path=entry.data[CONF_SCENE_PATH],
-        number_tolerance=entry.data[CONF_NUMBER_TOLERANCE],
-    )
-
-    for platform in PLATFORMS:
-        hass.async_create_task(
-            hass.config_entries.async_forward_entry_setup(entry, platform)
+    is_hub = entry.data.get("hub", None)
+    if is_hub is None:
+        is_hub = CONF_SCENE_PATH in entry.data
+    if is_hub:
+        hass.data[DOMAIN][entry.entry_id] = Hub(
+            hass=hass,
+            scene_path=entry.data[CONF_SCENE_PATH],
+            number_tolerance=entry.data[CONF_NUMBER_TOLERANCE],
         )
+
+    else:
+        hass.data[DOMAIN][entry.entry_id] = Scene(hass, entry.data)
+
+    if is_hub and entry.data.get(CONF_ENABLE_DISCOVERY, False):
+        discovery_manager = DiscoveryManager(hass, entry)
+        await discovery_manager.start_discovery()
+
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
 

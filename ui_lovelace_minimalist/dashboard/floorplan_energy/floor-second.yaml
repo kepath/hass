@@ -41,26 +41,58 @@ elements:
   #### LIGHTS ####
   # BED E
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item_light"
+    template: "card_kepath_floorplan_binary_item"
     entity: "light.shelly_1l_bed_e_light_1"
+    variables:
+      ulm_card_kepath_floorplan_item_tooltip: "bed e light"
     style:
       left: "75%"
       top: "35%"
       color: "rgba(100, 100, 100, 0.0)"
   # BED E LAMP
   - type: "custom:button-card"
-    template: "card_kepath_floorplan_binary_item_light"
+    template: "card_kepath_floorplan_binary_item"
     entity: "light.mss425e_6025_outlet_3"
+    variables:
+      ulm_card_kepath_floorplan_item_tooltip: "bed e lamp"
     style:
       left: "62%"
       top: "67%"
       color: "rgba(100, 100, 100, 0.0)"
+  # CALDIGIT DOCK
+  # DOWNLOAD PC
+  # BED E LAMP
+  # BED E LAMP
 
   #### FLOOR NAVIGATION #####
   - type: "custom:button-card"
-    template: "card_kepath_service_buttons"
+    template: "card_kepath_floorplan_selector_buttons"
     style:
       left: "5%"
       top: "15%"
 
   ############## COMMON ELEMENTS END ###########################
+
+  #### FANS ####
+  # BED E
+  - type: "custom:button-card"
+    template: "card_kepath_floorplan_item"
+    entity: "fan.bed_e_fan"
+    variables:
+      var_kepath_generic_button_icon_styles:
+        use_themes: false
+        default_state:
+          icon: "mdi:fan-off"
+          icon_color: "rgba(var(--color-green),1)"
+        error_state:
+          icon: "mdi:fan-alert"
+      var_kepath_device_entity_and_style_simple_binary_switch_state:
+        use_themes: false
+        on_state:
+          icon: "mdi:fan"
+          icon_color: "rgba(var(--color-blue),1)"
+      ulm_card_kepath_floorplan_item_tooltip: "bed e fan"
+    style:
+      left: "87%"
+      top: "60%"
+      color: "rgba(100, 100, 100, 0.0)"

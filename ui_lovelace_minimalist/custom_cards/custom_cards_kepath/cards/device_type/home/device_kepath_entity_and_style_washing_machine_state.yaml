@@ -1,63 +1,118 @@
 ---
 device_kepath_entity_and_style_washing_machine_state:
   variables:
-    ulm_device_kepath_washing_machine_state:
-      entity: >
-        [[[
-          var deviceStatus = entity?.entity_id;
-          if (variables?.ulm_device_kepath_washing_machine_state) {
-            if (variables?.ulm_device_kepath_washing_machine_state?.device_status) {
-              deviceStatus = variables?.ulm_device_kepath_washing_machine_state?.device_status;
-            }
-          }
+    var_kepath_device_entity_and_style_binary_count_state:
+      entity:
+        evaluated_entity: "input_boolean.washing_machine_detected_state"
+        start_entity: "input_datetime.washing_machine_detected_start_time"
+      style:
+        use_themes: true
+        icon: "mdi:washing-machine"
+        icon_color: "green"
+        background_color: "green"
+    var_kepath_generic_get_set_group_button_objects:
+      error_state:
+        icon: "mdi:washing-machine-alert"
+        icon_color: "red"
+        background_color: "red"
 
-          return deviceStatus;
-        ]]]
   state:
     - operator: "template"
       value: >
         [[[
-          var returnVar = false;
-          if (variables?.ulm_device_kepath_washing_machine_state?.entity) {
-            stateValue = states[variables.ulm_device_kepath_washing_machine_state.entity].state;
-          }
-          if (!isNaN(stateValue) && stateValue !== undefined){
-            if (stateValue > 10) {
-              returnVar = true;
+          var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+
+          var resolvedState;
+          var returnValue = false;
+
+          resolvedState = states[evaluatedStateEntity].state.toLowerCase();
+          if (typeof resolvedState !== 'undefined') {
+            if (resolvedState == 'on') {
+              returnValue = true;
             }
           }
-          return returnVar;
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedBatteryState: ' + resolvedBatteryState});
+
+          return returnValue;
         ]]]
-      icon: "mdi:washing-machine"
+      icon: >
+        [[[
+          var evaluatedStartEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.start_entity;
+          var returnedIcon = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;
+
+          var resolvedStartState = states[evaluatedStartEntity].state;
+          var estimatedLengthHours = 2;
+
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedStartState: ' + resolvedStartState});
+
+
+          if (typeof resolvedStartState !== 'undefined') {
+            var resolvedStartDate = new Date(resolvedStartState);
+            if (Object.prototype.toString.call(resolvedStartDate) === "[object Date]") {
+              if (!isNaN(resolvedStartDate)) {
+                var estimatedLengthMilliseconds = (estimatedLengthHours * 60 * 60 * 1000);
+                //hass.callService('system_log', 'write', {level:'warning',message:'estimatedLengthMilliseconds: ' + estimatedLengthMilliseconds});
+                var estimatedEndDate = Date.parse(resolvedStartDate) + estimatedLengthMilliseconds;
+                //hass.callService('system_log', 'write', {level:'warning',message:'estimatedEndDate: ' + estimatedEndDate});
+                if(!isNaN(parseInt(estimatedEndDate))) {
+                  var estimatedLengthMilliseconds = estimatedEndDate - Date.now()
+                  var estimatedLengthHours = (estimatedLengthMilliseconds / (1000 * 60 * 60)).toFixed();
+                  //hass.callService('system_log', 'write', {level:'warning',message:'estimatedLengthHours: ' + estimatedLengthHours});
+                  if(!isNaN(parseInt(estimatedLengthHours))) {
+                    if (estimatedLengthHours >= 0 && estimatedLengthHours <= 9) {
+                      returnedIcon = "mdi:numeric-" + estimatedLengthHours + "-circle-outline";
+                    }
+                  }
+                }
+              }
+            }
+          }
+          //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+
+          return returnedIcon;
+        ]]]
       styles:
         icon:
-          - color: "rgba(var(--color-green),1)"
+          - color: >
+              [[[
+                return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon_color}),1)`;
+              ]]]
         img_cell:
-          - background-color: "rgba(var(--color-green), 0.2)"
+          - background-color: >
+              [[[
+                return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color}),0.2)`;
+              ]]]
     - operator: "template"
       value: >
         [[[
-          var returnVar = false;
-          if (variables?.ulm_device_kepath_washing_machine_state?.entity) {
-            stateValue = states[variables.ulm_device_kepath_washing_machine_state.entity].state;
-          }
-          if (isNaN(stateValue) && stateValue !== undefined){
-            if (stateValue.toLowerCase() == 'unknown' || stateValue.toLowerCase() == 'unavailable') {
-              returnVar = true;
+          var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+
+          var resolvedState;
+          var returnValue = false;
+
+          resolvedState = states[evaluatedStateEntity].state.toLowerCase();
+          if (typeof resolvedState !== 'undefined') {
+            if (resolvedState == 'unknown' || resolvedState == 'unavailable') {
+              returnValue = true;
             }
           }
-          return returnVar;
+
+          return returnValue;
         ]]]
-      icon: "mdi:washing-machine-off"
+      icon: >
+        [[[
+          var returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon;
+
+          return returnedIcon;
+        ]]]
       styles:
         icon:
-          - color: "rgba(var(--color-red),1)"
+          - color: >
+              [[[
+                return `rgba(var(--color-${variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon_color}),1)`;
+              ]]]
         img_cell:
-          - background-color: "rgba(var(--color-red), 0.2)"
-    - operator: "default"
-      icon: "mdi:washing-machine"
-      styles:
-        icon:
-          - color: "rgba(var(--color-blue),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-blue), 0.2)"
+          - background-color: >
+              [[[
+                return `rgba(var(--color-${variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.background_color}),0.2)`;
+              ]]]
