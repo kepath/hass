@@ -32,6 +32,34 @@ sensor:
         measurement: >
           "unifi"."autogen"."clients"
 
+  - platform: "uk_transport"
+    app_id: "734a3e4d"
+    app_key: "7392c794ad863f41991ceda8166b279b"
+    queries:
+      - mode: "train"
+        origin: "BAN"
+        destination: "GLD"
+      - mode: "train"
+        origin: "GLD"
+        destination: "BAN"
+
+  - platform: "london_underground"
+    line:
+      - "Bakerloo"
+      - "Central"
+      - "Circle"
+      - "District"
+      - "DLR"
+      - "Elizabeth line"
+      - "Hammersmith & City"
+      - "Jubilee"
+      - "London Overground"
+      - "Metropolitan"
+      - "Northern"
+      - "Piccadilly"
+      - "Victoria"
+      - "Waterloo & City"
+
 binary_sensor:
   - platform: "tod"
     name: "nighttime"
@@ -75,6 +103,8 @@ spotcast:   #default is home account
       sp_dc: !secret "spotcast_emily_sp_dc"
       sp_key: !secret "spotcast_emily_sp_key"
 
+ffmpeg:
+
 iperf3:
   hosts:
     - host: "iperf.he.net"
@@ -92,6 +122,15 @@ influxdb:
       - "event"
       - "group"
       - "update"
+
+air_quality:
+  - platform: "opensensemap"
+    station_id: "5faeb5589b2df8001b980304"
+
+emulated_roku:
+  servers:
+    - name: "Home Assistant"
+      listen_port: 8060
 
       # - automation, binary_sensor, button, calendar, camera, climate, device_tracker,
       # event,
