@@ -30,9 +30,6 @@ template:
           data_rate_total_value_10_times_smaller: "{{(state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / 10)|round()}}"
           data_rate_total_average: "{{ (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count'))|round(2) }}"
           data_rate_total_average_10_times_larger: "{{(state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_average') * 10)|round()}}"
-          # data_rate_total_10_value: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|slice(2)|first|first}}"
-          # data_rate_total_1_value: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|slice(2)|list|last|first}}"
-          # data_rate_total_digit_count: "{{ state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value')|string|list|count}}"
           device_trackers_away_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['away','not_home'])|list|count }}"
           device_trackers_unavailable_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
@@ -259,13 +256,34 @@ template:
           study_entities: "{{area_entities('Study')}}"
           unknown_device_entities: "{{area_entities('Unknown Device')}}"
 
+      # - unique_id: "floors_and_areas_and_entities_template_generated"
+      #   name: "Floors Areas Entity Attributes"
+      #   state: >-
+      #     {%- for floor in floors() -%}
+      #       {%- if floor!='house_and_mobile' -%}
+      #         {%- for area in floor_areas(floor) -%}
+      #           {%- for entity in area_entities(area) -%}
+      #             {{{
+      #               'floor': floor,
+      #               'area': area,
+      #               'entity': entity,
+      #             }}},
+      #           {%- endfor -%}
+      #         {%- endfor -%}
+      #       {%- endif -%}
+      #     {%- endfor %}
+
       - unique_id: "floor_grouped_areas_and_entities_template_generated"
         name: "Floor Grouped Areas Entity Attributes"
         state: "0"
         attributes:
-          bottom_floor_entities: "{{area_entities('Kitchen')+area_entities('Lounge')+area_entities('Garage')+area_entities('Hallway, Bottom')+area_entities('Study')+area_entities('External: Back')+area_entities('External: Front')|sort}}"
+          bottom_floor_entities: "{{area_entities('Kitchen')+area_entities('Lounge')+area_entities('Hallway, Bottom')+area_entities('Study')|sort}}"
           middle_floor_entities: "{{area_entities('Bed A')+area_entities('Bed B')+area_entities('Bed C')+area_entities('Hallway, Middle')+area_entities('Bathroom')|sort}}"
-          top_floor_entities: "{{area_entities('Bed D')+area_entities('Bed E')+area_entities('Loft')+area_entities('Hallway, Top')|sort}}"
+          top_floor_entities: "{{area_entities('Bed D')+area_entities('Bed E')+area_entities('Hallway, Top')|sort}}"
+          loft_entities: "{{area_entities('Loft')|sort}}"
+          external_entities: "{{area_entities('Garage')+area_entities('External: Back')+area_entities('External: Front')|sort}}"
+          house_entities: "{{area_entities('All')+area_entities('HASS Internal')|sort}}"
+          mobile_entities: "{{area_entities('Mobile')|sort}}"
 
       - unique_id: "calculated_non_count_entities_template_generated"
         name: "Calculated Non Count Entities"
@@ -280,8 +298,8 @@ template:
             {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_2', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_2', 'longitude') | string)}}
           apple_maps_url_emily_location: >
             {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.patrice_2', 'latitude') | string) + "," + (state_attr('device_tracker.patrice_2', 'longitude') | string)}}
-          is_arcade_pc_on: "{{ has_value('sensor.arcade_win10_cpuload') }}"
-          is_big_pc_on: "{{ has_value('sensor.big_pc_win11_big_pc_win11_cpuload') }}"
+          # is_arcade_pc_on: "{{ has_value('sensor.arcade_win10_cpuload') }}"
+          # is_big_pc_on: "{{ has_value('sensor.arcade_win10_cpuload') }}"
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"
@@ -495,7 +513,7 @@ template:
 
       - unique_id: "widgy_widgets_json_template_generated"
         name: "Widgy Widgets JSON"
-        state: 0
+        state: "0"
         attributes:
           bottom_hallway_light: >
             {{ "/local/widgy_widget_images/lights/bulb_1_on.png" if (states("light.shelly_1l_hallway_bottom_light_1") == "on") else "/local/widgy_widget_images/lights/bulb_1_off.png" }}
@@ -618,3 +636,20 @@ template:
           middle_hallway_g3_flex_last_motion_detected: >
             {% from 'easy_time.jinja' import easy_relative_time %}
             {{ 'Unknown' if has_value(easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected')) else easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected') }}
+          clock_icon_color: >
+            {% from 'easy_time.jinja' import clock_icon %}
+            {% if clock_icon()=='mdi:clock-time-six' or  clock_icon()=='mdi:clock-time-twelve'%}
+              red
+            {% elif clock_icon()=='mdi:clock-time-seven' or  clock_icon()=='mdi:clock-time-one'%}
+              pink
+            {% elif clock_icon()=='mdi:clock-time-eight' or  clock_icon()=='mdi:clock-time-two'%}
+              yellow
+            {% elif clock_icon()=='mdi:clock-time-nine' or  clock_icon()=='mdi:clock-time-three'%}
+              green
+            {% elif clock_icon()=='mdi:clock-time-ten' or  clock_icon()=='mdi:clock-time-four'%}
+              blue
+            {% elif clock_icon()=='mdi:clock-time-eleven' or  clock_icon()=='mdi:clock-time-five'%}
+              purple
+            {% else %}
+              theme
+            {% endif %}
