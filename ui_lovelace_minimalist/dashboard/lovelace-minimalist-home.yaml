@@ -13,7 +13,6 @@ card_mod:
       }
 
 views:
-
   - title: "Main"
     icon: "mdi:cellphone-text"
     theme: "minimalist-mobile"
@@ -113,13 +112,13 @@ views:
                     - border-bottom-left-radius: "0px"
                     - border-bottom-right-radius: "0px"
                     - background-color: >
-                          [[[
-                            var BGColor = "rgba(var(--color-theme),0.05)";
-                            if(hass.themes.darkMode) {
-                              BGColor = "rgba(var(--color-theme),0.1)";
-                            }
-                            return BGColor;
-                          ]]]
+                        [[[
+                          var BGColor = "rgba(var(--color-theme),0.05)";
+                          if(hass.themes.darkMode) {
+                            BGColor = "rgba(var(--color-theme),0.1)";
+                          }
+                          return BGColor;
+                        ]]]
                   custom_fields:
                     item1: &widget_icon_binary_sensor_tab_header_styling
                       - border-radius: "none"
@@ -666,7 +665,7 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
-                        entity: "device_tracker.arcade_machine_unifi"
+                        entity: "binary_sensor.is_arcade_pc_on"
                         name: "Arcade"
                         variables:
                           var_kepath_generic_button_icon_styles:
@@ -694,7 +693,8 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
-                        entity: "device_tracker.big_pc_unifi"
+                          # - "device_kepath_entity_and_style_binary_switch_unknown_unavailable_state"
+                        entity: "binary_sensor.is_big_pc_on"
                         name: "BigPC"
                         variables:
                           var_kepath_generic_button_icon_styles:
@@ -1254,7 +1254,6 @@ views:
                           navigation_path: "/config/integrations/integration/mass"
                         hold_action:
                           action: "more-info"
-
 
                     floorplan1:
                       card: !include "floorplan_pictures/floor-ground.yaml"
@@ -1938,6 +1937,7 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_binary_count_state"
                           # - "custom_card_kepath_generic_use_entity_picture" use mdi icon for hacs
                         entity: "update.hacs_update"
                         name: "HACS"
@@ -1956,6 +1956,14 @@ views:
                               icon: "mdi:store-alert"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            entity:
+                              evaluated_attribute: "hacs_updates_available"
+                            style:
+                              use_themes: false
+                              icon: "mdi:store"
+                              icon_color: "#41F595FF"
+                              background_color: "rgba(var(--color-theme),0.05)"
                         tap_action:
                           action: "navigate"
                           navigation_path: "/hacs"
