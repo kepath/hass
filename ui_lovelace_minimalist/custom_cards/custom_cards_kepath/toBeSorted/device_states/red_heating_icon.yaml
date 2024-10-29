@@ -1,46 +1,46 @@
----
-red_heating_icon:
-  variables:
-    var_kepath_generic_get_set_group_notification_objects:
-      amount:
-        entity: "sensor.binary_sensor_state_counts"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "zero_value"
-  state:
-    - operator: "template"
-      value: >
-        [[[
-          var isEntityOn = true;
-          var amountValue = 0;
-          if (variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute) {
-            amountValue = states[variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.entity]?.attributes[variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.attribute_name] ?
-            states[variables.var_kepath_generic_get_set_group_notification_objects.amount.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.amount.attribute_name] : 0;
-          } else {
-            amountValue = states[variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.entity]?.state ?
-            states[variables.var_kepath_generic_get_set_group_notification_objects.amount.entity].state : 0;
-          }
-          if (!isNaN(amountValue) && amountValue == 0 && amountValue !== undefined) {
-            isEntityOn = false;
-          }
-          return isEntityOn;
-        ]]]
-      styles:
-        icon:
-          - color: "rgba(var(--color-red),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-red), 0.2)"
-    - operator: "default"
-      styles:
-        icon:
-          - color: "rgba(var(--color-grey),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-grey), 0.2)"
+# ---
+# red_heating_icon:
+#   variables:
+#     var_kepath_generic_get_set_group_notification_objects:
+#       amount:
+#         entity: "sensor.binary_sensor_state_counts"
+#         is_attribute: >
+#           [[[
+#             var isValueAttribute = true;
+#             if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.is_attribute) {
+#               if (typeof variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute === "boolean") {
+#                 isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute;
+#               }
+#             }
+#             return isValueAttribute;
+#           ]]]
+#         attribute_name: "zero_value"
+#   state:
+#     - operator: "template"
+#       value: >
+#         [[[
+#           var isEntityOn = true;
+#           var amountValue = 0;
+#           if (variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute) {
+#             amountValue = states[variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.entity]?.attributes[variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.attribute_name] ?
+#             states[variables.var_kepath_generic_get_set_group_notification_objects.amount.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.amount.attribute_name] : 0;
+#           } else {
+#             amountValue = states[variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.entity]?.state ?
+#             states[variables.var_kepath_generic_get_set_group_notification_objects.amount.entity].state : 0;
+#           }
+#           if (!isNaN(amountValue) && amountValue == 0 && amountValue !== undefined) {
+#             isEntityOn = false;
+#           }
+#           return isEntityOn;
+#         ]]]
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-red),1)"
+#         img_cell:
+#           - background-color: "rgba(var(--color-red), 0.2)"
+#     - operator: "default"
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-grey),1)"
+#         img_cell:
+#           - background-color: "rgba(var(--color-grey), 0.2)"
