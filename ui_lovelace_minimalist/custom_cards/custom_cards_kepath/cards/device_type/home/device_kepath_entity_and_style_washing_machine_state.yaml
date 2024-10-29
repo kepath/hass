@@ -59,8 +59,10 @@ device_kepath_entity_and_style_washing_machine_state:
                   var estimatedLengthHours = (estimatedLengthMilliseconds / (1000 * 60 * 60)).toFixed();
                   //hass.callService('system_log', 'write', {level:'warning',message:'estimatedLengthHours: ' + estimatedLengthHours});
                   if(!isNaN(parseInt(estimatedLengthHours))) {
-                    if (estimatedLengthHours >= 0 && estimatedLengthHours <= 9) {
-                      returnedIcon = "mdi:numeric-" + estimatedLengthHours + "-circle-outline";
+                    if (!estimatedLengthHours.includes("-")) {
+                      if (estimatedLengthHours >= 0 && estimatedLengthHours <= 9) {
+                        returnedIcon = "mdi:numeric-" + estimatedLengthHours + "-circle-outline";
+                      }
                     }
                   }
                 }
