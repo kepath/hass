@@ -82,7 +82,7 @@ custom_card_kepath_generic_group_popup:
 
               return autoEntitiesExcludeUnavailableState;
             ]]]
-  tap_action:
+  tap_action: &default_popup_action
     action: "fire-dom-event"
     browser_mod:
       service: >
@@ -113,24 +113,6 @@ custom_card_kepath_generic_group_popup:
             *{
               --secondary-background-color: none !important;
             }
-
-          # [[[
-          #   if (hass.themes.theme.includes("desktop")){
-          #     var dialog = `
-          #       .mdc-dialog__surface{
-          #         border-radius: var(--border-radius) !important;
-          #       }
-          #     `;
-          #   } else{
-          #     var dialog = "";
-          #   }
-          #   return `
-          #     *{
-          #       --secondary-background-color: none !important;
-          #     }
-          #     ${dialog}
-          #   `;
-          # ]]]
           hui-vertical-stack-card:
             $: >
               div.main-title::first-letter {
@@ -186,3 +168,6 @@ custom_card_kepath_generic_group_popup:
                     }
                     return sortReversed;
                   ]]]
+
+  hold_action: *default_popup_action
+  double_tap_action: *default_popup_action
