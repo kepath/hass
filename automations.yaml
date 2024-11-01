@@ -1,16 +1,16 @@
 - id: '1609788406791'
   alias: on_turn_off_reciever_turn_on_bed_c_fridge
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - binary_sensor.yamaha_reciever_state
     from: 'on'
     to: 'off'
     id: dfsdfsdewwer21
-  condition: []
-  action:
-  - type: turn_on
+    trigger: state
+  conditions: []
+  actions:
+  - type: turn_off
     device_id: e43877911bcde38af54a242c2b2b8197
     entity_id: efb4ab3caf732c8a07e835c2fb8c9ab8
     domain: switch
@@ -18,15 +18,15 @@
 - id: '1609788662612'
   alias: on_turn_on_reciever_turn_off_bed_c_fridge_and_light
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - binary_sensor.yamaha_reciever_state
     from: 'off'
     to: 'on'
     id: 345343gges4
-  condition: []
-  action:
+    trigger: state
+  conditions: []
+  actions:
   - type: turn_off
     device_id: e43877911bcde38af54a242c2b2b8197
     entity_id: efb4ab3caf732c8a07e835c2fb8c9ab8
@@ -39,25 +39,25 @@
 - id: '1616842943101'
   alias: on_open_garage_door_turn_on_garage_light
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: e455b2eeea8937c7ad7cad0320940913
     entity_id: 7f001b9228a16c5e6a363d939dbfe37a
     domain: binary_sensor
-  condition: []
-  action:
+    trigger: device
+  conditions: []
+  actions:
   - type: turn_on
     device_id: fdfca529947f2de73d16ee2ecf6d2d7d
     entity_id: light.zigbee_bulb_garage_light
     domain: light
+    flash: short
   mode: single
 - id: '1617175491057'
   alias: on_close_garage_door_turn_off_garage_light_after_10_minutes
   description: ''
-  trigger:
+  triggers:
   - type: not_opened
-    platform: device
     device_id: e455b2eeea8937c7ad7cad0320940913
     entity_id: binary_sensor.zigbee_door_sensor_garage_contact
     domain: binary_sensor
@@ -65,8 +65,9 @@
       hours: 2
       minutes: 0
       seconds: 0
-  condition: []
-  action:
+    trigger: device
+  conditions: []
+  actions:
   - type: turn_off
     device_id: fdfca529947f2de73d16ee2ecf6d2d7d
     entity_id: 90131e8c488eb2eb6c8af71888a51e2b
@@ -75,19 +76,19 @@
 - id: '1624743776933'
   alias: on_open_front_door_turn_on_bottom_hallway_light
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: c433a6de7503fff598e3b00eebd934b8
     entity_id: 728aecc504877295ccda5a9c04e5f2fa
     domain: binary_sensor
-  condition:
+    trigger: device
+  conditions:
   - condition: state
     entity_id: binary_sensor.nighttime
     state: 'on'
   - condition: time
     before: '22:00:00'
-  action:
+  actions:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
     entity_id: light.hallway_bottom_light_1
@@ -97,13 +98,12 @@
   alias: on_start_create_group.all_fans_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: fan
       group_name: all_fans
       icon: mdi:fan-off
@@ -111,6 +111,7 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1666812617895'
   alias: on_start_create_group.all_lights_domain_entities
@@ -139,45 +140,45 @@
   alias: on_start_create_group.all_zones_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: zone
       group_name: all_zones
       icon: mdi:map-marker
       friendly_name: All zone domain entities
       filter_by_device_class: false
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1666812616938'
   alias: on_start_create_group.all_update_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: update
       group_name: all_updates
       icon: mdi:update
       friendly_name: All update domain entities
       filter_by_device_class: false
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1666812616259'
   alias: on_start_create_group.all_camera_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
   - data:
       domain: camera
       group_name: all_cameras
@@ -194,13 +195,12 @@
   alias: on_start_create_group.all_media_player_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: media_player
       group_name: all_media_players
       icon: mdi:play-network-outline
@@ -208,18 +208,18 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1622852616259'
   alias: on_start_create_group.all_remote_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: remote
       group_name: all_remotes
       icon: mdi:remote
@@ -233,18 +233,18 @@
       - remote.shield_bed_c
       - remote.tv_samsung_lounge
       - remote.lounge_apple_tv
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1666812633820'
   alias: on_start_create_group.all_binary_sensor_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_binary_sensors
       icon: mdi:toggle-switch
@@ -252,18 +252,18 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1666817726320'
   alias: on_start_create_group.all_switch_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: switch
       group_name: all_switches
       icon: mdi:light-switch
@@ -271,18 +271,18 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1672906062419'
   alias: on_start_create_group.all_door_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_door_class_binary_sensors
       icon: mdi:door
@@ -299,6 +299,7 @@
       excluded_entities:
       - binary_sensor.zigbee_door_sensor_bed_c_contact
       - binary_sensor.dishwasher_door
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1673133770721'
   alias: on_start_create_group.all_occupancy_class_binary_sensors
@@ -325,13 +326,12 @@
   alias: on_start_create_group.all_safety_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_safety_class_binary_sensors
       icon: mdi:alarm-light-off
@@ -349,18 +349,18 @@
       excluded_entities:
       - binary_sensor.diskstation_security_status
       - binary_sensor.climate_devices_on
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1673133328800'
   alias: on_start_create_group.all_battery_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_battery_class_binary_sensors
       icon: mdi:battery-charging-high
@@ -371,58 +371,59 @@
       - battery_charging
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1679331701346'
   alias: on_open_front_door_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: c433a6de7503fff598e3b00eebd934b8
     entity_id: 728aecc504877295ccda5a9c04e5f2fa
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.front_door_last_opened
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679336064408'
   alias: on_open_back_door_set_input_datetime_timestamp
   description: Sets a timestamp on an input_datetime that persists through reboots
     and ignores unknown and unavailable states
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: 2a98740d417848e05eff1765f30ebaf0
     entity_id: 56a14440427f37c45a0e46678b8917e4
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.back_door_last_opened
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679336123379'
   alias: on_open_garage_door_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: e455b2eeea8937c7ad7cad0320940913
     entity_id: 7f001b9228a16c5e6a363d939dbfe37a
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.garage_door_last_opened
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679477945469'
   alias: on_open_front_door_trigger_icloud3_service
@@ -442,149 +443,148 @@
 - id: '1679478945282'
   alias: on_motion_detect_bed_e_sensor_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: occupied
-    platform: device
     device_id: 1339055faacbf377e7a94560ac8f8e14
     entity_id: f6ecd0133210678842e8cdc6994af6d6
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.motion_sensor_bed_e_last_activity
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679479382853'
   alias: on_motion_detect_middle_hallway_sensor_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: occupied
-    platform: device
     device_id: 39891a458f21573058c114ca5677be2f
     entity_id: b5e79a8b515c4b4c6aef1adfafefe101
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.motion_sensor_front_door_stairs_last_activity
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679479488956'
   alias: on_motion_detect_nest_protect_bottom_occupancy_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: occupied
-    platform: device
     device_id: 2c2e9255799652086ba3713985659325
     entity_id: binary_sensor.nest_protect_bottom_floor_occupancy
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.nest_protect_bottom_floor_last_activity
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679479529157'
   alias: on_motion_detect_nest_protect_middle_occupancy_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: occupied
-    platform: device
     device_id: aa07ac37c5f02c8077dd28b92fe21c77
     entity_id: binary_sensor.nest_protect_middle_floor_occupancy
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.nest_protect_middle_floor_last_activity
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679479567960'
   alias: on_motion_detect_nest_protect_top_occupancy_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: occupied
-    platform: device
     device_id: 3e5a08167b4868eb6a925cbf4dbb2809
     entity_id: binary_sensor.nest_protect_top_floor_occupancy
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.nest_protect_top_floor_last_activity
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679694071157'
   alias: on_open_patio_door_1_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: 27f9fc9f148ec8f120e88e554dba0a91
     entity_id: 845b20ea5e2e023865c5a57881b0a35f
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.patio_door1_last_opened
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679694113832'
   alias: on_open_patio_door_2_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: 211dba1149287be886337cf500f2edd9
     entity_id: 954826e3d959cb95e1cc0dc512a41443
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.patio_door2_last_opened
+    action: input_datetime.set_datetime
   mode: single
 - id: '1679694166875'
   alias: on_open_loft_ladder_set_input_datetime_timestamp
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: b314e734c229fbad47815eead82dd9b8
     entity_id: efd5dfdaca447162cd600f01d40afbac
     domain: binary_sensor
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.loft_ladder_last_opened
+    action: input_datetime.set_datetime
   mode: single
 - id: '1681920827927'
   alias: on_start_create_group.all_outlet_class_switch
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: switch
       group_name: all_outlet_class_switch
       icon: mdi:power-plug
@@ -597,16 +597,17 @@
       excluded_entities:
       - switch.mss425e_6025_outlet_3
       - switch.udm_pro_plug_bed_c
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1682192675338'
   alias: on_sunset_turn_on_bathroom_bottom_hallway_lights
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: 00:18:00
-  condition: []
-  action:
+  triggers:
+  - event: sunset
+    offset: 00:19:00
+    trigger: sun
+  conditions: []
+  actions:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
     entity_id: light.hallway_bottom_light_1
@@ -619,12 +620,12 @@
 - id: '1682192916045'
   alias: on_sunset_turn_on_bed_a_ensuite_lights
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: 02:35:00
-  condition: []
-  action:
+  triggers:
+  - event: sunset
+    offset: 02:34:00
+    trigger: sun
+  conditions: []
+  actions:
   - type: turn_on
     device_id: 902d91d28754d1922b19d056054a6de2
     entity_id: light.bed_a_light_light_1
@@ -637,12 +638,12 @@
 - id: '1682193123450'
   alias: on_sunset_turn_off_bed_a_ensuite_lights
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: 04:04:00
-  condition: []
-  action:
+  triggers:
+  - event: sunset
+    offset: 04:03:00
+    trigger: sun
+  conditions: []
+  actions:
   - type: turn_off
     device_id: 902d91d28754d1922b19d056054a6de2
     entity_id: light.bed_a_light_light_1
@@ -655,13 +656,12 @@
 - id: '1682263797941'
   alias: on_start_create_group.all_tv_class_media_player
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: media_player
       group_name: all_tv_class_media_player
       icon: mdi:television
@@ -676,17 +676,17 @@
       - media_player.rx_v777_zone2
       - media_player.amazon_firestick_kitchen_alexa
       - media_player.amazon_firestick_bed_a_alexa
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1682264073944'
   alias: on_start_create_group.all_audio_class_media_player
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: media_player
       group_name: all_audio_class_media_player
       icon: mdi:volume-off
@@ -702,55 +702,55 @@
       - media_player.doorbell_g4_speaker
       - media_player.bed_c_g3_instant_speaker
       - media_player.rx_v777_zone2
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1683217570006'
   alias: on_shutdown_remove_group_remotes_tv_class_media_player
   description: ''
-  trigger:
-  - platform: homeassistant
-    event: shutdown
-  condition: []
-  action:
-  - service: group.remove
-    data:
+  triggers:
+  - event: shutdown
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       object_id: all_remotes
-  - service: group.remove
-    data:
+    action: group.remove
+  - data:
       object_id: all_tv_class_media_player
+    action: group.remove
   mode: single
 - id: '1683222828123'
   alias: on_start_merge_groups_remote_tv_class_media_player
   description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
   - delay:
       hours: 0
       minutes: 0
       seconds: 40
       milliseconds: 0
-  - service: python_script.merge_groups
-    data:
+  - data:
       groups:
       - group.all_remotes
       - group.all_tv_class_media_player
       new_group_name: all_remotes_and_tv_class_media_player
       icon: mdi:television-play
       friendly_name: All media_player tv device class and remotes group
+    action: python_script.merge_groups
   mode: single
 - id: '1685624731561'
   alias: on_start_create_group.all_climate_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: climate
       group_name: all_climate
       icon: mdi:home-thermometer
@@ -760,18 +760,18 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.climate_devices_on
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1685624861506'
   alias: on_start_create_group.all_person_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: person
       group_name: all_person
       icon: mdi:account
@@ -779,18 +779,18 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1685624899638'
   alias: on_start_create_group.all_vacuum_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: vacuum
       group_name: all_vacuum
       icon: mdi:robot-vacuum
@@ -798,18 +798,18 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1689426384566'
   alias: on_start_create_group.all_locks_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: lock
       group_name: all_locks
       icon: mdi:lock
@@ -817,16 +817,17 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1690825562134'
   alias: on_sunset_turn_off_bathroom_bottom_hallway_lights
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
+  triggers:
+  - event: sunset
     offset: 03:16:00
-  condition: []
-  action:
+    trigger: sun
+  conditions: []
+  actions:
   - type: turn_off
     device_id: 707639a037c05f21cb7ba1e119538bf0
     entity_id: d9527ab709d81e2de0a93bbccb128fdc
@@ -839,36 +840,35 @@
 - id: '1690839144197'
   alias: on_lock_or_unlock_front_door_set_input_datetime_timestamp
   description: ''
-  trigger:
-  - platform: device
-    device_id: c433a6de7503fff598e3b00eebd934b8
+  triggers:
+  - device_id: c433a6de7503fff598e3b00eebd934b8
     domain: lock
     entity_id: 2aa351b0b7bdb31860450ecf842ca28b
     type: locked
-  - platform: device
-    device_id: c433a6de7503fff598e3b00eebd934b8
+    trigger: device
+  - device_id: c433a6de7503fff598e3b00eebd934b8
     domain: lock
     entity_id: 2aa351b0b7bdb31860450ecf842ca28b
     type: unlocked
-  condition: []
-  action:
-  - service: input_datetime.set_datetime
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.front_door_last_locked
+    action: input_datetime.set_datetime
   mode: single
 - id: '1693773355910'
   alias: on_start_create_group.all_connectivity_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_connectivity_class_binary_sensors
       icon: mdi:connection
@@ -878,18 +878,18 @@
       - connectivity
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1693773833620'
   alias: on_start_create_group.all_plug_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_plug_class_binary_sensors
       icon: mdi:power-socket-uk
@@ -899,18 +899,18 @@
       - plug
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1693773913162'
   alias: on_start_create_group.all_power_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_power_class_binary_sensors
       icon: mdi:home-lightning-bolt
@@ -920,18 +920,18 @@
       - power
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1693774053685'
   alias: on_start_create_group.all_running_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_running_class_binary_sensors
       icon: mdi:server-network
@@ -943,6 +943,7 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.docker_containers_all_running
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1693774320732'
   alias: on_start_create_group.all_battery_class_sensors
@@ -974,13 +975,12 @@
   alias: on_start_create_group.all_data_rate_class_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_data_rate_class_sensors
       icon: mdi:speedometer
@@ -1007,18 +1007,18 @@
       - sensor.speedtest_upload
       - sensor.download_speedtest_london_its_tg_net
       - sensor.upload_speedtest_london_its_tg_net
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1693775484055'
   alias: on_start_create_group.all_signal_strength_class_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_signal_strength_class_sensors
       icon: mdi:wifi
@@ -1028,18 +1028,18 @@
       - signal_strength
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1693775926514'
   alias: on_start_create_group.all_device_tracker_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: device_tracker
       group_name: all_device_trackers
       icon: mdi:devices
@@ -1047,17 +1047,18 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1695218259279'
   alias: on_enter_home_zone_ju_unlock_front_door
   description: ''
-  trigger:
-  - platform: zone
-    entity_id: person.julia_thorn
+  triggers:
+  - entity_id: person.julia_thorn
     zone: zone.home
     event: enter
-  condition: []
-  action:
+    trigger: zone
+  conditions: []
+  actions:
   - device_id: c433a6de7503fff598e3b00eebd934b8
     domain: lock
     entity_id: 2aa351b0b7bdb31860450ecf842ca28b
@@ -1090,13 +1091,12 @@
   alias: on_start_create_group.all_lawn_mower_domain_entities
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: lawn_mower
       group_name: all_lawn_mowers
       icon: mdi:mower
@@ -1104,17 +1104,17 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1705495940138'
   alias: on_start_create_group.all_duration_class_and_min_unit_of_measurement_sensors
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_duration_class_and_min_unit_of_measurement_sensors
       icon: mdi:sort-clock-ascending-outline
@@ -1126,17 +1126,17 @@
       filtered_unit_of_measurement: min
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1705591084335'
   alias: on_start_create_group.all_data_size_device_class_measurement_state_class_and_min_unit_of_measurement_sensors
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_data_size_device_class_measurement_state_class_and_min_unit_of_measurement_sensors
       icon: mdi:sort-clock-ascending-outline
@@ -1151,18 +1151,18 @@
       filtered_unit_of_measurement: MB
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1706816168075'
   alias: on_start_create_group.all_moisture_class_binary_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_moisture_class_binary_sensors
       icon: mdi:water-alert-outline
@@ -1172,17 +1172,17 @@
       - moisture
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1706816937410'
   alias: on_start_create_group.all_duration_class_and_total_increasing_state_and_min_unit_of_measurement_sensors
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_duration_class_and_total_increasing_state_and_min_unit_of_measurement_sensors
       icon: mdi:sort-clock-ascending-outline
@@ -1197,17 +1197,17 @@
       filtered_unit_of_measurement: min
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1706817011614'
   alias: on_start_create_group.all_duration_class_and_measurement_state_class_and_min_unit_of_measurement_sensors
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_duration_class_and_measurement_state_class_and_min_unit_of_measurement_sensors
       icon: mdi:sort-clock-ascending-outline
@@ -1222,18 +1222,18 @@
       filtered_unit_of_measurement: min
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1707250998794'
   alias: on_start_create_group.all_power_class_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_power_class_sensors
       icon: mdi:home-lightning-bolt
@@ -1243,18 +1243,18 @@
       - power
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1707254937478'
   alias: on_start_create_group.all_monetary_class_sensors
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_monetary_class_sensors
       icon: mdi:currency-gbp
@@ -1264,18 +1264,18 @@
       - monetary
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1707345933326'
   alias: on_start_create_group.all_restart_class_buttons
   description: Uses python script create_entity_device_class_group to create an entity
     group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: button
       group_name: all_restart_class_buttons
       icon: mdi:restart
@@ -1285,17 +1285,17 @@
       - restart
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1707920066600'
   alias: on_start_create_group.all_area_bed_e_sensors
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: sensor
       group_name: all_area_bed_e_sensors
       icon: mdi:sort-clock-ascending-outline
@@ -1308,17 +1308,17 @@
       - External Front
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1707944939122'
   alias: on_start_create_group.all_bottom_floor_area_security_device_class_binary_sensors
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_bottom_floor_area_security_device_class_binary_sensors
       icon: mdi:home-floor-g
@@ -1339,17 +1339,17 @@
       - Bottom Floor
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1707946451163'
   alias: on_start_create_group.all_middle_floor_area_security_device_class_binary_sensors
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_middle_floor_area_security_device_class_binary_sensors
       icon: mdi:home-floor-1
@@ -1372,17 +1372,17 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.diskstation_security_status
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1707946473303'
   alias: on_start_create_group.all_top_floor_area_security_device_class_binary_sensors
   description: Uses python script create_entity_class_group to create an entity group
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
-  - service: python_script.create_entity_device_class_group
-    data:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
       domain: binary_sensor
       group_name: all_top_floor_area_security_device_class_binary_sensors
       icon: mdi:home-floor-2
@@ -1402,36 +1402,37 @@
       - Top Floor
       excluded_entity_groups:
       - group.globally_excluded_entities
+    action: python_script.create_entity_device_class_group
   mode: single
 - id: '1710616457500'
   alias: on_error_restart_octopus_energy
   description: Force restart of Octopus Integration if it becomes unavailable.
-  trigger:
+  triggers:
   - alias: Check Octopus Integration State every 15 minutes
-    platform: time_pattern
     minutes: /15
-  condition:
+    trigger: time_pattern
+  conditions:
   - alias: Check to see if Intelligent Dispatching is Unavailable
     condition: state
     state: unavailable
     entity_id: sensor.octopus_energy_electricity_17p0704368_1460000856420_current_rate
-  action:
+  actions:
   - alias: Reload Octopus Integration if Intelligent Dispatching is Unavailable
-    service: homeassistant.reload_config_entry
     target:
       device_id: db71d2fa24fc8e587b5861f0de011f0f
     data: {}
+    action: homeassistant.reload_config_entry
   mode: restart
 - id: '1716496776909'
   alias: on_exit_home_zone_ju_lock_front_door
   description: ''
-  trigger:
-  - platform: zone
-    entity_id: person.julia_thorn
+  triggers:
+  - entity_id: person.julia_thorn
     zone: zone.home
     event: leave
-  condition: []
-  action:
+    trigger: zone
+  conditions: []
+  actions:
   - device_id: c433a6de7503fff598e3b00eebd934b8
     domain: lock
     entity_id: 2aa351b0b7bdb31860450ecf842ca28b
@@ -1440,11 +1441,11 @@
 - id: '1724481360427'
   alias: on_error_restart_alexa_integration
   description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition: []
-  action:
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
   - delay:
       hours: 0
       minutes: 2
@@ -1540,8 +1541,8 @@
     path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
     input:
       power_sensor: sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand
-      starting_threshold: 5
-      finishing_threshold: 5
+      starting_threshold: 7
+      finishing_threshold: 7
       actions:
       - action: input_boolean.turn_off
         target:

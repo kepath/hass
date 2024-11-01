@@ -278,8 +278,7 @@ lockdown_mode_off:
 night_mode_on:
   alias: Night-mode On
   sequence:
-  - service: light.turn_off
-    data: {}
+  - data: {}
     target:
       device_id:
       - 2028999f2f7da1303c521c80b4711c16
@@ -293,66 +292,67 @@ night_mode_on:
       - 4af87793104d14b408c6c458e29fe6bf
       - 707639a037c05f21cb7ba1e119538bf0
       - ecdc93708d2afbf8f645e3eb84d0e39c
+    action: light.turn_off
   mode: single
   icon: mdi:home-lock
 navigate_to_house_security_view_ground_floor:
   alias: Navigate to House Security View Ground Floor
   sequence:
-  - service: input_select.select_option
-    metadata: {}
+  - metadata: {}
     data:
       option: G
     target:
       entity_id: input_select.floorplan_floor
-  - service: browser_mod.navigate
-    metadata: {}
+    action: input_select.select_option
+  - metadata: {}
     data:
       path: /lovelace-minimalist-security/1
+    action: browser_mod.navigate
   mode: single
   icon: mdi:home-floor-g
 navigate_to_house_security_view_first_floor:
   alias: Navigate to House Security View First Floor
   sequence:
-  - service: input_select.select_option
-    metadata: {}
+  - metadata: {}
     data:
       option: '1'
     target:
       entity_id: input_select.floorplan_floor
-  - service: browser_mod.navigate
-    metadata: {}
+    action: input_select.select_option
+  - metadata: {}
     data:
       path: /lovelace-minimalist-security/1
+    action: browser_mod.navigate
   mode: single
   icon: mdi:home-floor-1
 navigate_to_house_security_view_second_floor:
   alias: Navigate to House Security View Second Floor
   sequence:
-  - service: input_select.select_option
-    metadata: {}
+  - metadata: {}
     data:
       option: '2'
     target:
       entity_id: input_select.floorplan_floor
-  - service: browser_mod.navigate
-    metadata: {}
+    action: input_select.select_option
+  - metadata: {}
     data:
       path: /lovelace-minimalist-security/1
+    action: browser_mod.navigate
   mode: single
   icon: mdi:home-floor-1
 '1707508686436':
   alias: Navigate to House Security View Ground Floor
   sequence:
-  - service: input_select.select_option
-    metadata: {}
+  - metadata: {}
     data:
       option: G
     target:
       entity_id: input_select.floorplan_floor
-  - service: browser_mod.navigate
-    metadata: {}
+    action: input_select.select_option
+  - metadata: {}
     data:
       path: /lovelace-minimalist-security/1
+    action: browser_mod.navigate
   mode: single
   icon: mdi:home-floor-g
 turn_on_download_pc:

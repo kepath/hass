@@ -61,7 +61,7 @@ views:
     path: "../lovelace-minimalist-home"
 
   - title: "Sankey Rx"
-    icon: "mdi:trending-up"
+    icon: "mdi:chart-sankey-variant"
     badges: []
     type: "custom:layout-card"
     layout_type: "custom:masonry-layout"
@@ -132,10 +132,11 @@ views:
                   - "sensor.usw_pro_24_poe_study_poe_energy"
                   - "sensor.usw_lite_8port_bed_e_g3_flex_hall_poe_energy"
                   - "sensor.usw_pro_24_poe_loft_poe_energy"
-              # - entity_id: "bed_c"
-              #   type: "remaining_child_state"
-              #   name: "Bed C"
-              #   children:
+              - entity_id: "bed_c"
+                type: "remaining_child_state"
+                name: "Bed C"
+                children:
+                  - "sensor.udm_pro_plug_energy_bed_c"
               #     - "sensor.drinks_fridge_plug_energy_bed_c"
               - entity_id: "kitchen"
                 type: "remaining_child_state"
@@ -147,12 +148,13 @@ views:
                   - "sensor.dishwasher_plug_total_increasing_energy"
                   - "sensor.fridge_plug_energy_kitchen"
                   - "sensor.kettle_plug_energy_kitchen"
-                  - "sensor.microwave_plug_kitchen_today_energy"
+                  - "sensor.microwave_plug_energy_kitchen"
+                  - "sensor.fly_killer_plug_energy_kitchen"
               - entity_id: "garage"
                 type: "remaining_child_state"
                 name: "Garage"
                 children:
-                  - "sensor.chest_freezer_plug_garage_today_energy"
+                  - "sensor.chest_freezer_plug_energy_garage"
                   - "sensor.fridge_freezer_plug_energy_garage"
               - entity_id: "unknown"
                 color: "purple"
@@ -203,12 +205,12 @@ views:
               - entity_id: "sensor.usw_pro_24_poe_bed_b_poe_energy"
                 type: "entity"
                 color: "orange"
-                name: "Bed B Flex Router"
+                name: "Bed B"
                 children: []
               - entity_id: "sensor.usw_pro_24_poe_kitchen_poe_energy"
                 type: "entity"
                 color: "orange"
-                name: "Kitchen Router"
+                name: "Kitchen FlexHD"
                 children: []
               - entity_id: "sensor.usw_pro_24_poe_lounge_right_poe_energy"
                 type: "entity"
@@ -225,7 +227,10 @@ views:
                 color: "orange"
                 name: "G3 Flex Middle Hallway"
                 children: []
-
+              - entity_id: "sensor.udm_pro_plug_energy_bed_c"
+                type: "entity"
+                name: "Bed C UDMPro"
+                children: []
               # - entity_id: "sensor.drinks_fridge_plug_energy_bed_c"
               #   type: "entity"
               #   name: "Bed C Drinks Fridge"
@@ -256,12 +261,16 @@ views:
                 name: "Kettle"
                 color: "green"
                 children: []
-              - entity_id: "sensor.microwave_plug_kitchen_today_energy"
+              - entity_id: "sensor.microwave_plug_energy_kitchen"
                 type: "entity"
                 name: "Microwave"
                 color: "green"
+              - entity_id: "sensor.fly_killer_plug_energy_kitchen"
+                type: "entity"
+                name: "Fly Killer Lamp"
+                color: "green"
 
-              - entity_id: "sensor.chest_freezer_plug_garage_today_energy"
+              - entity_id: "sensor.chest_freezer_plug_energy_garage"
                 type: "entity"
                 name: "Chest Freezer Garage"
                 children: []
@@ -307,3 +316,33 @@ views:
               - entity: "sensor.air_to_water_heat_pump_in_water_temperature_2"
               - entity: "sensor.air_to_water_heat_pump_out_water_temperature"
               - entity: "sensor.air_to_water_heat_pump_room_temperature"
+
+  - title: "Power Flow Card Plus"
+    icon: "mdi:tournament"
+    type: "custom:masonry-layout"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "horizontal-stack"
+        cards:
+          - type: "custom:power-flow-card-plus"
+            entities:
+              grid:
+                name: "Octopus"
+                entity:
+                  consumption: "sensor.octopus_energy_electricity_17p0704368_1460000856420_previous_accumulative_consumption"
+                  production: "sensor.octopus_energy_electricity_17p0704368_1470001300326_export_previous_accumulative_consumption"
+                # display_state: "two_way"
+                color_circle: true
+              home:
+                entity: "sensor.smart_meter_electricity_import"
+                secondary_info:
+                  entity: "sensor.smart_meter_electricity_export"
+                  unit_of_measurement: "kW"
+              # individual:
+              #   - entity: ""
+                  # icon: mdi:car-electric
+                  # color: "#80b8ff"
+                  # name: Denim Flash
+                  # color_icon: false
+                # color_icon: solar
+            # watt_threshold: 10000

@@ -383,8 +383,8 @@ card_kepath_welcome_topbar:
   show_name: true
   styles:
     grid:
-      - grid-template-areas: "'item1 item2 item3 item4'"
-      - grid-template-columns: "3fr 3fr 1fr 1fr"
+      - grid-template-areas: "'item1 item2 item3 item4 item5'"
+      - grid-template-columns: "auto"
       - grid-template-rows: "min-content"
     card:
       - border-radius: "var(--border-radius)"
@@ -396,7 +396,7 @@ card_kepath_welcome_topbar:
     item1:
       card:
         type: "custom:button-card"
-        template: "chip_long_date_with_dayand_time"
+        template: "chip_short_date_with_day"
         tap_action:
           action: "navigate"
           navigation_path: "/logbook"
@@ -415,10 +415,51 @@ card_kepath_welcome_topbar:
     item2:
       card:
         type: "custom:button-card"
+        template: "chip_icon_label"
+        entity: "sensor.floorplan_dates_template_generated"
+        show_label: false
+        styles:
+          grid:
+            - grid-template-areas: "'i'"
+          card:
+            - align-self: "end"
+            - margin-right: "12px"
+            - padding-left: "6px"
+            - box-shadow: >
+                [[[
+                  if (hass.themes.darkMode){
+                    return "0px 2px 4px 0px rgba(0,0,0,0.80)";
+                  } else {
+                    return "var(--box-shadow)";
+                  }
+                ]]]
+            - "--mdc-ripple-press-opacity": 0.12    # allow click animation
+          img_cell:
+            - width: "24px"
+          icon:
+            - color: >
+                [[[
+                  var returnedColor;
+                  var iconOpacity = "0.4";
+                  var iconColor = states["sensor.floorplan_dates_template_generated"].attributes["clock_icon_color"];
+                  if (hass.themes.darkMode){
+                    iconOpacity = "1";
+                  }
+                  if (typeof iconColor !== "undefined") {
+                    returnedColor = "rgba(var(--color-"+iconColor+"),"+iconOpacity+")";
+                  } else {
+                    returnedColor = "rgba(var(--color-theme),"+iconOpacity+")";
+                  }
+
+                  return returnedColor;
+                ]]]
+    item3:
+      card:
+        type: "custom:button-card"
         template: "chip_temperature"
         variables:
           ulm_chip_temperature_outside: "[[[ return variables.ulm_chip_temperature_outside]]]"
-          ulm_chip_temperature_inside: "[[[ return variables.ulm_chip_temperature_inside]]]"
+          # ulm_chip_temperature_inside: "[[[ return variables.ulm_chip_temperature_inside]]]"
           ulm_chip_temperature_weather: "[[[ return variables.ulm_chip_temperature_weather]]]"
         tap_action:
           action: "more-info"
@@ -441,7 +482,7 @@ card_kepath_welcome_topbar:
                   }
                 ]]]
             - "--mdc-ripple-press-opacity": 0.12    # allow click animation
-    item3:
+    item4:
       card:
         type: "custom:button-card"
         template: "chip_mdi_icon_only"
@@ -463,7 +504,7 @@ card_kepath_welcome_topbar:
                   }
                 ]]]
             - "--mdc-ripple-press-opacity": 0.12    # allow click animation
-    item4:
+    item5:
       card:
         type: "custom:button-card"
         template: "chip_mdi_icon_only"

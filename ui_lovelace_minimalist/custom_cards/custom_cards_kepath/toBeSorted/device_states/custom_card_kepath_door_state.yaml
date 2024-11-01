@@ -1,42 +1,42 @@
----
-custom_card_kepath_door_state:
-  variables:
-    var_kepath_generic_get_set_group_notification_objects:
-      locked:
-        entity: "sensor.binary_sensor_state_counts"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.locked?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.locked.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.locked.is_attribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
-        attribute_name: "zero_value"
-  state:
-    - operator: "=="
-      value: "on"
-      id: "on"
-      icon: "mdi:door-open"
-      styles:
-        icon:
-          - color: "rgba(var(--color-red),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-red), 0.2)"
+# ---
+# custom_card_kepath_door_state:
+#   variables:
+#     var_kepath_generic_get_set_group_notification_objects:
+#       locked:
+#         entity: "sensor.binary_sensor_state_counts"
+#         is_attribute: >
+#           [[[
+#             var isValueAttribute = true;
+#             if (variables?.var_kepath_generic_get_set_group_notification_objects?.locked?.is_attribute) {
+#               if (typeof variables.var_kepath_generic_get_set_group_notification_objects.locked.is_attribute === "boolean") {
+#                 isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.locked.is_attribute;
+#               }
+#             }
+#             return isValueAttribute;
+#           ]]]
+#         attribute_name: "zero_value"
+#   state:
+#     - operator: "=="
+#       value: "on"
+#       id: "on"
+#       icon: "mdi:door-open"
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-red),1)"
+#         img_cell:
+#           - background-color: "rgba(var(--color-red), 0.2)"
 
-    - operator: "default"
-      icon: >
-        [[[
-          var icon = "mdi:door-closed";
-          if (states[variables.var_kepath_generic_get_set_group_notification_objects.locked.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.locked.attribute_name] != "0") {
-            icon = "mdi:door-closed-lock";
-          }
-          return icon;
-        ]]]
-      styles:
-        icon:
-          - color: "rgba(var(--color-green),1)"
-        img_cell:
-          - background-color: "rgba(var(--color-green), 0.2)"
+#     - operator: "default"
+#       icon: >
+#         [[[
+#           var icon = "mdi:door-closed";
+#           if (states[variables.var_kepath_generic_get_set_group_notification_objects.locked.entity].attributes[variables.var_kepath_generic_get_set_group_notification_objects.locked.attribute_name] != "0") {
+#             icon = "mdi:door-closed-lock";
+#           }
+#           return icon;
+#         ]]]
+#       styles:
+#         icon:
+#           - color: "rgba(var(--color-green),1)"
+#         img_cell:
+#           - background-color: "rgba(var(--color-green), 0.2)"
