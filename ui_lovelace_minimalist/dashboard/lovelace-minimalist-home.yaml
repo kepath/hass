@@ -138,6 +138,7 @@ views:
                         - "custom_card_kepath_binary_notifications_tab_style"
                         - "device_kepath_entity_common_binary_objects_and_styles"
                         - "device_kepath_entity_and_style_binary_simple_switch_state"
+                        - "custom_card_kepath_generic_group_popup"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_action_sensors"
                       variables:
@@ -148,6 +149,13 @@ views:
                           amount:
                             attribute_name: "tab_action_sensors_triggered_count"
                             count_tooltip: "sum of on notification sensors"
+                        var_kepath_generic_group_popup:
+                          evaluated_entity: "group.all_lights"
+                          action: "popup"
+                          popup:
+                            title: "light entities ↓ state"
+                            auto_entities:
+                              exclude_unavailable_state: true
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -174,6 +182,7 @@ views:
                         - "custom_card_kepath_binary_notifications_tab_style"
                         - "device_kepath_entity_common_binary_objects_and_styles"
                         - "device_kepath_entity_and_style_binary_simple_switch_state"
+                        - "custom_card_kepath_generic_group_popup"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_alert_sensors"
                       variables:
@@ -184,6 +193,14 @@ views:
                           amount:
                             attribute_name: "tab_alert_sensors_triggered_count"
                             count_tooltip: "sum of on alert sensors"
+
+                        var_kepath_generic_group_popup:
+                          evaluated_entity: "group.all_safety_class_binary_sensors"
+                          action: "popup"
+                          popup:
+                            title: "safety entities ↓ last changed"
+                            auto_entities:
+                              sort_method: "last_changed"
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -210,6 +227,7 @@ views:
                         - "custom_card_kepath_binary_notifications_tab_style"
                         - "device_kepath_entity_common_binary_objects_and_styles"
                         - "device_kepath_entity_and_style_binary_simple_switch_state"
+                        - "custom_card_kepath_generic_group_popup"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_information_sensors"
                       variables:
@@ -220,6 +238,14 @@ views:
                           amount:
                             attribute_name: "tab_information_sensors_triggered_count"
                             count_tooltip: "sum of on info sensors"
+
+                        var_kepath_generic_group_popup:
+                          evaluated_entity: "group.all_occupancy_class_binary_sensors"
+                          action: "popup"
+                          popup:
+                            title: "all occupancy entities ↓ last changed"
+                            auto_entities:
+                              sort_method: "last_changed"
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -246,6 +272,7 @@ views:
                         - "custom_card_kepath_binary_notifications_tab_style"
                         - "device_kepath_entity_common_binary_objects_and_styles"
                         - "device_kepath_entity_and_style_binary_simple_switch_state"
+                        - "custom_card_kepath_generic_group_popup"
                         - "custom_card_kepath_generic_tab_selectors"
                       entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
                       variables:
@@ -256,6 +283,16 @@ views:
                           amount:
                             attribute_name: "tab_diagnostic_sensors_triggered_count"
                             count_tooltip: "sum of on diag sensors"
+
+                        var_kepath_generic_group_popup:
+                          evaluated_entity: "group.all_measured_data_rate_class_sensors"
+                          action: "popup"
+                          popup:
+                            title: "selected data entities ↓ state"
+                            auto_entities:
+                              sort_method: "state"
+                              sort_numeric: true
+                              exclude_unknown_state: true
                         var_kepath_constant_position_overrides:
                           is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
                           off_state_only: true
@@ -310,6 +347,9 @@ views:
                             icon: "mdi:store-plus"
                             icon_color: "pink"
                             background_color: "pink"
+                      hold_action:
+                        action: "navigate"
+                        navigation_path: "/config/updates"
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
             layout:
