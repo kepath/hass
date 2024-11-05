@@ -144,8 +144,9 @@ views:
                       variables:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "tab_action_sensors_unavailable_count"
-                            count_tooltip: "sum of away notification sensors"
+                            attribute_name: "non_zero_value"
+                            count_tooltip: "double-tap to show lights"
+                            substitute_icon: "mdi:fire-circle"
                           amount:
                             attribute_name: "tab_action_sensors_triggered_count"
                             count_tooltip: "sum of on notification sensors"
@@ -188,8 +189,9 @@ views:
                       variables:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "tab_alert_sensors_unavailable_count"
-                            count_tooltip: "sum of away alert sensors"
+                            attribute_name: "non_zero_value"
+                            count_tooltip: "double-tap to show alerts"
+                            substitute_icon: "mdi:lightning-bolt-circle"
                           amount:
                             attribute_name: "tab_alert_sensors_triggered_count"
                             count_tooltip: "sum of on alert sensors"
@@ -233,8 +235,9 @@ views:
                       variables:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "tab_information_sensors_unavailable_count"
-                            count_tooltip: "sum of away info sensors"
+                            attribute_name: "non_zero_value"
+                            count_tooltip: "double-tap to show motion"
+                            substitute_icon: "mdi:account-circle"
                           amount:
                             attribute_name: "tab_information_sensors_triggered_count"
                             count_tooltip: "sum of on info sensors"
@@ -278,8 +281,9 @@ views:
                       variables:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "tab_diagnostic_sensors_unavailable_count"
-                            count_tooltip: "sum of away diag sensors"
+                            attribute_name: "non_zero_value"
+                            count_tooltip: "double-tap to show data"
+                            substitute_icon: "mdi:swap-vertical-circle"
                           amount:
                             attribute_name: "tab_diagnostic_sensors_triggered_count"
                             count_tooltip: "sum of on diag sensors"
@@ -324,8 +328,9 @@ views:
                       variables:
                         var_kepath_generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "tab_update_sensors_unavailable_count"
-                            count_tooltip: "sum of away update sensors"
+                            attribute_name: "non_zero_value"
+                            count_tooltip: "double-tap to show updates"
+                            substitute_icon: "mdi:refresh-circle"
                           amount:
                             attribute_name: "tab_update_sensors_triggered_count"
                             count_tooltip: "sum of on update sensors"
@@ -347,7 +352,7 @@ views:
                             icon: "mdi:store-plus"
                             icon_color: "pink"
                             background_color: "pink"
-                      hold_action:
+                      double_tap_action:
                         action: "navigate"
                         navigation_path: "/config/updates"
           - type: "custom:layout-card"
@@ -554,11 +559,14 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "custom_card_kepath_generic_navigate_action"
-                          # - "card_room_mower_state"
+                          # - "custom_card_kepath_generic_navigate_action"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "lawn_mower.moe"
                         name: "Mower"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "lawn_mower.moe"
+                            return_type: "device"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "lawn_mower_error_count"
@@ -573,11 +581,6 @@ views:
                               background_color: "red"
                             error_state:
                               icon: "mdi:robot-mower-outline"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/f6aa7f03c61ef3c5ce1edb4277d23148"
-                          # navigation_path: >
-                          #   "{{'/config/devices/device/' + device_id('lawn_mower.moe')}}"
                         hold_action:
                           action: "more-info"
                     item6:
@@ -586,9 +589,13 @@ views:
                         template:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_washing_machine_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "input_boolean.washing_machine_detected_state"
                         name: "Washer"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
+                            return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:washing-machine-off"
@@ -596,9 +603,6 @@ views:
                               background_color: "blue"
                             error_state:
                               icon: "mdi:washing-machine-alert"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/952c87755c2c0da9627644b62b5fa2c7"
                         hold_action:
                           action: "more-info"
                     item7:
@@ -609,9 +613,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_tumble_dryer_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
                         name: "Dryer"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
+                            return_type: "device"
                           var_device_kepath_entity_and_style_tumble_dryer_state:
                             device_progress: "sensor.samsung_tumble_dryer_dryer_completion_time"
                           var_kepath_generic_button_icon_styles:
@@ -621,9 +629,6 @@ views:
                               background_color: "blue"
                             error_state:
                               icon: "mdi:tumble-dryer-alert"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/248a57d4d33903ec84b8022b8d465f88"
                         hold_action:
                           action: "more-info"
                     item8:
@@ -634,9 +639,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_dishwasher_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.dishwasher_operation_state"
                         name: "Dishwasher"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.dishwasher_operation_state"
+                            return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:dishwasher-off"
@@ -644,9 +653,6 @@ views:
                               background_color: "blue"
                             error_state:
                               icon: "mdi:dishwasher-alert"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/bb485d5d222b2f3d78e640bbd1e2ac6b"
                         hold_action:
                           action: "more-info"
                     item9:
@@ -684,9 +690,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "binary_sensor.yamaha_reciever_state"
                         name: "Yamaha"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "media_player.rx_v777_reciever_yamaha_integration_bed_c"
+                            return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:audio-video"
@@ -699,9 +709,6 @@ views:
                               icon: "mdi:audio-video"
                               icon_color: "green"
                               background_color: "green"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/f2efb18594267a3671604e3457b13c2e"
                         hold_action:
                           action: "more-info"
                     item11:
@@ -712,9 +719,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "binary_sensor.is_arcade_pc_on"
                         name: "Arcade"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "button.arcade_win10_restart"
+                            return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:controller-off"
@@ -727,9 +738,6 @@ views:
                               icon: "mdi:controller"
                               icon_color: "green"
                               background_color: "green"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/19a23f4948601ca818e597bbee0b74dd"
                         hold_action:
                           action: "more-info"
                     item12:
@@ -740,9 +748,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "binary_sensor.is_big_pc_on"
                         name: "BigPC"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "button.big_pc_win11_big_pc_win11_restart"
+                            return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:desktop-tower"
@@ -755,9 +767,6 @@ views:
                               icon: "mdi:desktop-tower"
                               icon_color: "green"
                               background_color: "green"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/b3340dea79cbcdb7367587e052835769"
                         hold_action:
                           action: "more-info"
                     item13:
@@ -768,9 +777,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_printer_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.mfc_j870dw_status"
                         name: "Printer"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.mfc_j870dw_last_restart"
+                            return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:printer"
@@ -778,9 +791,6 @@ views:
                               background_color: "green"
                             error_state:
                               icon: "mdi:printer-alert"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/4ea9393d18c94c2fa038251f45d71858"
                         hold_action:
                           action: "more-info"
                     item14:
@@ -791,9 +801,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_nas_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.diskstation_volume_1_status"
                         name: "NAS"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.diskstation_cpu_utilization_total"
+                            return_type: "device"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_synology_dsm_unavailable_count"
@@ -808,9 +822,6 @@ views:
                               background_color: "blue"
                             error_state:
                               icon: "mdi:database-alert-outline"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/59f488dc105211eb978c4d56fd4be963"
                         hold_action:
                           action: "more-info"
                     item15:
@@ -821,9 +832,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_ups_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.ups_status"
                         name: "UPS"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.ups_battery_charge"
+                            return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:battery-alert"
@@ -831,9 +846,6 @@ views:
                               background_color: "red"
                             error_state:
                               icon: "mdi:power-plug-battery-outline"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/0579ddfc72a49d4e19eafecce2e364a6"
                         hold_action:
                           action: "more-info"
               - type: "conditional"
@@ -932,6 +944,8 @@ views:
                             popup:
                               title: "safety entities ↓ last changed"
                               auto_entities:
+                                exclude_unknown_state: false
+                                exclude_unavailable_state: false
                                 sort_method: "last_changed"
                         hold_action:
                           action: "more-info"
@@ -943,10 +957,14 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_lock_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "lock.front_door_top_bolt"
                         icon: "mdi:lock"
                         name: "Lock"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "binary_sensor.lock_45f7_door"
+                            return_type: "device"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "locks_unavailable_count"
@@ -961,9 +979,6 @@ views:
                               background_color: "red"
                             error_state:
                               icon: "mdi:lock-alert-outline"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/devices/device/c433a6de7503fff598e3b00eebd934b8"
                         hold_action:
                           action: "more-info"
 
@@ -1189,9 +1204,13 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "binary_sensor.udmpro_disk_0_health"
                         name: "Protect"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.udmpro_recording_capacity"
+                            return_type: "integration"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_unifiprotect_unavailable_count"
@@ -1206,9 +1225,6 @@ views:
                               background_color: "blue"
                             error_state:
                               icon: "phu:unifi-protect"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/integrations/integration/unifiprotect"
                         hold_action:
                           action: "more-info"
                     item3:
@@ -1295,9 +1311,13 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.docker_addon_d5369777_music_assistant_state"
                         name: "MASS"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "media_player.bed_c_yamaha_reciever"
+                            return_type: "integration"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_mass_unavailable_count"
@@ -1312,9 +1332,6 @@ views:
                               background_color: "blue"
                             error_state:
                               icon: "mdi:playlist-music"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/integrations/integration/mass"
                         hold_action:
                           action: "more-info"
 
@@ -1659,10 +1676,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_count_state"
-                          # - "custom_card_kepath_generic_group_popup"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.udmpro_state"
                         name: "Unifi"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.udmpro_state"
+                            return_type: "integration"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_unifi_unavailable_count"
@@ -1684,9 +1704,6 @@ views:
                               icon: "si:ubiquiti"
                               icon_color: "red"
                               background_color: "red"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/integrations/integration/unifi"
                         hold_action:
                           action: "more-info"
                     item10:
@@ -1697,9 +1714,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_count_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.lumi_lumi_router_lqi"
                         name: "ZHA"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.lumi_lumi_router_lqi"
+                            return_type: "integration"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_zha_unavailable_count"
@@ -1721,9 +1742,6 @@ views:
                               icon: "si:zigbee"
                               icon_color: "red"
                               background_color: "red"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/integrations/integration/zha"
                         hold_action:
                           action: "more-info"
                     item11:
@@ -1734,9 +1752,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_count_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.active_issues"
                         name: "Spook"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.active_issues"
+                            return_type: "integration"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_spook_unavailable_count"
@@ -1756,9 +1778,6 @@ views:
                               icon: "mdi:ghost-outline"
                               icon_color: "red"
                               background_color: "red"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/integrations/integration/spook"
                         hold_action:
                           action: "more-info"
                     item12:
@@ -1841,9 +1860,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_count_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "sensor.icloud3_event_log"
                         name: "iCloud3"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.icloud3_event_log"
+                            return_type: "integration"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_icloud3_unavailable_count"
@@ -1862,9 +1885,6 @@ views:
                               icon: "si:icloud"
                               icon_color: "red"
                               background_color: "red"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/integrations/integration/icloud3"
                         hold_action:
                           action: "more-info"
                     item15:
@@ -1875,9 +1895,13 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_binary_count_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "binary_sensor.nest_protect_bottom_floor_smoke_status"
                         name: "Nest"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "binary_sensor.nest_protect_bottom_floor_smoke_status"
+                            return_type: "integration"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_nest_protect_unavailable_count"
@@ -1896,9 +1920,6 @@ views:
                               icon: "mdi:smoke-detector-variant-off"
                               icon_color: "red"
                               background_color: "red"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/integrations/integration/nest_protect"
                         hold_action:
                           action: "more-info"
 

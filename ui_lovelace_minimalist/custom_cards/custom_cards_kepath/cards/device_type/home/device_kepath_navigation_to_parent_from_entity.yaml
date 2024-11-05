@@ -1,0 +1,49 @@
+---
+custom_card_kepath_navigation_to_parent_from_entity:
+  variables:
+    var_kepath_navigation_to_parent_from_entity:
+      evaluated_entity: ""
+      return_type: ""
+  tap_action:
+    action: "navigate"
+    navigation_path: >
+      [[[
+        var parentPath = "/config/integrations/";
+        var parentId = "dashboard";
+        var entityId;
+        var returnType;
+        if (typeof variables?.var_kepath_navigation_to_parent_from_entity?.evaluated_entity !== 'undefined') {
+          if (variables?.var_kepath_navigation_to_parent_from_entity?.evaluated_entity != "") {
+            entityId = variables?.var_kepath_navigation_to_parent_from_entity?.evaluated_entity ;
+          }
+        }
+
+        if (typeof variables?.var_kepath_navigation_to_parent_from_entity?.return_type !== 'undefined') {
+          returnType = variables?.var_kepath_navigation_to_parent_from_entity?.return_type;
+        }
+
+        if (entityId) {
+          switch(returnType) {
+            case "device":
+              parentPath = "/config/devices/device/";
+              parentId = hass.entities[entityId].device_id;
+
+              //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: lt'});
+              break;
+
+            case "integration":
+              parentPath = "/config/integrations/integration/";
+              parentId = hass.entities[entityId].platform;
+
+              //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: gt'});
+              break;
+
+            default:
+              break;
+          }
+        }
+        hass.callService('system_log', 'write', {level:'warning',message:'parentPath + parentId:' + parentPath + parentId});
+
+
+        return parentPath + parentId;
+      ]]]
