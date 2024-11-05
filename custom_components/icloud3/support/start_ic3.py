@@ -9,7 +9,7 @@ from ..const            import (VERSION, VERSION_BETA, ICLOUD3, ICLOUD3_VERSION,
                                 EVLOG_ALERT, EVLOG_IC3_STARTING, EVLOG_NOTICE, EVLOG_IC3_STAGE_HDR,
                                 CIRCLE_LETTERS_DARK,
                                 EVENT_RECDS_MAX_CNT_BASE, EVENT_RECDS_MAX_CNT_ZONE,
-                                CRLF, CRLF_DOT, CRLF_CHK, CRLF_SP3_DOT, CRLF_SP5_DOT, CRLF_HDOT, LINK, LLINK, RLINK,
+                                CRLF, CRLF_DOT, CRLF_CHK, CRLF_SP3_DOT, HDOT, CRLF_SP5_DOT, CRLF_HDOT, LINK, LLINK, RLINK,
                                 CRLF_SP3_HDOT, CRLF_INDENT, CRLF_X, CRLF_TAB, DOT, CRLF_SP8_HDOT, CRLF_SP8_DOT,
                                 CRLF_RED_X, RED_X, CRLF_STAR, CRLF_YELLOW_ALERT, YELLOW_ALERT, UNKNOWN,
                                 RARROW, NBSP2, NBSP4, NBSP6, CIRCLE_STAR, INFO_SEPARATOR, DASH_20, CHECK_MARK,
@@ -64,6 +64,7 @@ from ..helpers              import entity_io
 from ..support              import config_file
 from ..support              import mobapp_interface
 from ..support              import mobapp_data_handler
+from ..support              import pyicloud_ic3_interface
 from ..support              import service_handler
 from ..support              import zone_handler
 from ..support              import stationary_zone as statzone
@@ -1134,6 +1135,9 @@ def create_Devices_object():
         Gb.icloud_dnames_by_devicename = {}
         Gb.conf_startup_errors_by_devicename = {}
 
+        if len(Gb.conf_apple_accounts) != len(Gb.username_valid_by_username):
+            pyicloud_ic3_interface.verify_all_apple_accounts()
+
         for conf_device in Gb.conf_devices:
             devicename   = conf_device[CONF_IC3_DEVICENAME]
             icloud_dname = conf_device[CONF_FAMSHR_DEVICENAME]
@@ -1180,14 +1184,17 @@ def create_Devices_object():
             if Device.conf_apple_acct_username in ['', 'None']:
                 apple_acct_msg = '✪ NONE'
 
-            elif Device.conf_apple_acct_username not in Gb.PyiCloud_by_username:
-                apple_acct_msg =(f"{YELLOW_ALERT}{Device.conf_apple_acct_username}, "
-                                f"{CRLF_INDENT} {NBSP6} {NBSP6} {NBSP6} {NBSP6} {NBSP6}{RARROW}"
-                                f"APPLE ACCT UNKNOWN OR NOT LOGGED INTO")
+            # elif Device.conf_apple_acct_username not in Gb.PyiCloud_by_username:
+            elif Device.conf_apple_acct_username not in Gb.username_valid_by_username:
+                apple_acct_msg =f"{RED_X}{Device.conf_apple_acct_username}, UNKNOWN APPLE ACCT"
+                                # f"{CRLF_INDENT} {NBSP6} {HDOT}"
+                                # f")
 
-            elif Device.conf_apple_acct_username in Gb.PyiCloud_by_username:
-                PyiCloud = Gb.PyiCloud_by_username[Device.conf_apple_acct_username]
-                apple_acct_msg = PyiCloud.account_owner
+            elif Gb.username_valid_by_username.get(Device.conf_apple_acct_username, False) is False:
+                apple_acct_msg = f"{RED_X}{Device.conf_apple_acct_username}, INVALID USERNAME/PW"
+            # elif Device.conf_apple_acct_username in Gb.PyiCloud_by_username:
+            #     PyiCloud = Gb.PyiCloud_by_username[Device.conf_apple_acct_username]
+            #     apple_acct_msg = PyiCloud.account_owner
             else:
                 apple_acct_msg = Device.conf_apple_acct_username
 
@@ -1238,7 +1245,6 @@ def create_Devices_object():
     Gb.startup_lists['Gb.icloud_dname_by_devicenames'] = Gb.icloud_dnames_by_devicename
 
     return
-
 
 #--------------------------------------------------------------------
 def update_devices_non_tracked_fields():
@@ -1291,8 +1297,7 @@ def setup_data_source_ICLOUD(retry=False):
 
     apple_acct_not_found_msg = ''
     for username, PyiCloud in Gb.PyiCloud_by_username.items():
-        if (Gb.username_valid_by_username[username]
-                and PyiCloud):
+        if PyiCloud and Gb.username_valid_by_username.get(username):
             setup_tracked_devices_for_icloud(PyiCloud)
             set_device_data_source(PyiCloud)
         else:
@@ -1344,12 +1349,12 @@ def setup_tracked_devices_for_icloud(PyiCloud):
     _check_duplicate_device_names(PyiCloud)
     _check_for_missing_find_devices(PyiCloud)
 
-    owner = "" if Gb.one_apple_account_flag else f"-{PyiCloud.account_owner}"
-    Gb.startup_lists[f'PyiCloud.device_id_by_icloud_dname{owner}'] = \
+    owner = PyiCloud.username_base
+    Gb.startup_lists[f"{owner}.PyiCloud.device_id_by_icloud_dname"] = \
                         {k: v[:10] for k, v in PyiCloud.device_id_by_icloud_dname.items()}
-    Gb.startup_lists[f'PyiCloud.icloud_dname_by_device_id{owner}'] = \
+    Gb.startup_lists[f"{owner}.PyiCloud.icloud_dname_by_device_id"] = \
                         {k[:10]: v for k, v in PyiCloud.icloud_dname_by_device_id.items()}
-    Gb.startup_lists[f'Gb.Devices_by_icloud_device_id{owner}']     = \
+    Gb.startup_lists[f"Gb.Devices_by_icloud_device_id"]     = \
                         {k[:10]: v for k, v in Gb.Devices_by_icloud_device_id.items()}
 
 #----------------------------------------------------------------------------
@@ -1495,11 +1500,11 @@ def _check_for_missing_find_devices(PyiCloud):
                     if (Device.conf_apple_acct_username == PyiCloud.username
                             and Device.PyiCloud is None)]
 
-    Gb.startup_lists[f'{PyiCloud.account_owner}-_.devices_conf_this_apple_acct']   = \
+    Gb.startup_lists[f'{PyiCloud.account_owner}.devices_conf_this_apple_acct']   = \
                     devices_conf_this_apple_acct
-    Gb.startup_lists[f'{PyiCloud.account_owner}-_.devices_tracked_apple_acct']     = \
+    Gb.startup_lists[f'{PyiCloud.account_owner}.devices_tracked_apple_acct']     = \
                     devices_tracked_apple_acct
-    Gb.startup_lists[f'{PyiCloud.account_owner}-_.devices_not_tracked_apple_acct'] = \
+    Gb.startup_lists[f'{PyiCloud.account_owner}.devices_not_tracked_apple_acct'] = \
                     devices_not_tracked_apple_acct
 
     if devices_not_tracked_apple_acct == []:
@@ -2448,7 +2453,9 @@ def display_inactive_devices():
     '''
 
     inactive_devices =[(f"{conf_device[CONF_IC3_DEVICENAME]} ("
-                        f"{conf_device[CONF_FNAME]}/{conf_device[CONF_DEVICE_TYPE]})")
+                        f"{conf_device[CONF_FNAME]}/"
+                        f"{DEVICE_TYPE_FNAME.get(
+                            conf_device[CONF_DEVICE_TYPE], conf_device[CONF_DEVICE_TYPE])})")
                                     for conf_device in Gb.conf_devices
                                     if conf_device[CONF_TRACKING_MODE] == INACTIVE_DEVICE]
 
@@ -2487,7 +2494,7 @@ def display_object_lists():
     post_monitor_msg(monitor_msg)
 
 #--------------------------------------------------------------------
-def write_debug_log(debug_log_title=None):
+def dump_startup_lists_to_log(debug_log_title=None):
     '''
     Cycle thru the Gb.startup_lists dictionary that contains internal lists and
     dictionaries. Write all items to the icloud3-0.log file

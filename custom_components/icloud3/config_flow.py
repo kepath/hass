@@ -1857,7 +1857,6 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
         user_input, action_item = self._action_text_to_item(user_input)
 
         if user_input is None or CONF_USERNAME in self.errors:
-            # if user_input: self.errors_user_input = user_input.copy()
             return self.async_show_form(step_id='update_apple_acct',
                         data_schema=form_update_apple_acct(self),
                         errors=self.errors)
@@ -2062,9 +2061,9 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 
         user_input['account_selected'] = self.aa_idx
         self._update_config_file_tracking(update_config_flag=True)
-
         self._build_apple_accounts_list()
-        self._build_device_items_list()
+        self._build_devices_list()
+        config_file.build_log_file_filters()
 
 #-------------------------------------------------------------------------------------------
     def tracked_untracked_form_msg(self, username):
@@ -2330,7 +2329,8 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             # iCloud setup screen. If it was changed, another account is being logged into
             # and it will be restarted when exiting the configurator.
             if valid_code:
-                post_event(f"{EVLOG_NOTICE}iCLOUD ALERT > Code accepted, Verification completed")
+                post_event(f"{EVLOG_NOTICE}Apple Acct > {caller_self.PyiCloud.account_owner}, "
+                           f"Code accepted, Verification completed")
 
                 await caller_self._build_icloud_device_selection_list()
 
@@ -2394,6 +2394,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 
         username = user_input[CONF_USERNAME].lower()
         password = user_input[CONF_PASSWORD]
+        list_add(Gb.log_file_filter, password)
         endpoint_suffix = user_input.get(CONF_ICLOUD_SERVER_ENDPOINT_SUFFIX,
                                         Gb.conf_tracking[CONF_ICLOUD_SERVER_ENDPOINT_SUFFIX])
 
@@ -2410,6 +2411,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 
             return True
 
+        # Validate the account before actually logging in
         username_password_valid = await self._async_validate_username_password(username, password)
         if username_password_valid is False:
             self.errors['base'] = 'icloud_acct_login_error_user_pw'
@@ -2437,6 +2439,11 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             self.endpoint_suffix = endpoint_suffix
             Gb.username_valid_by_username[username] = True
 
+            if PyiCloud.DeviceSvc:
+                PyiCloud.DeviceSvc.refresh_client()
+
+            start_ic3.dump_startup_lists_to_log()
+
             if PyiCloud.requires_2fa or called_from_step_id is None:
                 return True
 
@@ -2454,12 +2461,17 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             err = str(err)
             _CF_LOGGER.error(f"Error logging into Apple Acct: {err}")
 
-            if called_from_step_id == 'update_apple_acct':
+            # if called_from_step_id == 'update_apple_acct':
+            if True is True:
                 response_code = Gb.PyiCloudLoggingInto.response_code
                 if Gb.PyiCloudLoggingInto.response_code_pwsrp_err == 503:
                     list_add(Gb.username_pyicloud_503_connection_error, username)
-                    error_msg = 'icloud_acct_login_error_connection'
+                    error_msg = 'icloud_acct_login_error_503'
                 elif response_code == 400:
+                    error_msg = 'icloud_acct_login_error_user_pw'
+                elif response_code == 401 and instr(err, 'Python SRP'):
+                    error_msg = 'icloud_acct_login_error_srp_401'
+                elif response_code == 401:
                     error_msg = 'icloud_acct_login_error_user_pw'
                 else:
                     error_msg = 'icloud_acct_login_error_other'
@@ -2472,6 +2484,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             _CF_LOGGER.error(f"Error logging into Apple Account: {err}")
             self.errors['base'] = 'icloud_acct_login_error_other'
 
+        start_ic3.dump_startup_lists_to_log()
         return False
 
 
@@ -2512,6 +2525,8 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 
         log_debug_msg(  f"Apple Acct > {PyiCloud.account_owner}, Login Successful, "
                         f"Update Connfiguration")
+
+        start_ic3.dump_startup_lists_to_log()
         return PyiCloud
 
 #--------------------------------------------------------------------
@@ -2519,6 +2534,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
     def create_DeviceSvc_config_flow(PyiCloud):
 
         iCloud = PyiCloud.create_DeviceSvc_object(config_flow_login=True)
+        start_ic3.dump_startup_lists_to_log()
         return iCloud
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -2584,7 +2600,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             PyiCloudSession = Gb.PyiCloudSession_by_username.get(username)
             if PyiCloudSession and PyiCloudSession.response_code == 503:
                 list_add(Gb.username_pyicloud_503_connection_error, username)
-                self.errors['base'] = 'icloud_acct_login_error_connection'
+                self.errors['base'] = 'icloud_acct_login_error_503'
 
             if PyiCloudSession.response_code == 503:
                 post_event( f"{EVLOG_ERROR}Apple Acct > {username}, "
@@ -2698,7 +2714,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             await self._build_mobapp_entity_selection_list()
             self._set_inactive_devices_header_msg()
             self._set_header_msg()
-            self._build_device_items_list()
+            self._build_devices_list()
             self.conf_device_update_control = {}
 
             return self.async_show_form(step_id='device_list',
@@ -2768,7 +2784,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
         self._set_inactive_devices_header_msg()
         self._set_header_msg()
 
-        self._build_device_items_list()
+        self._build_devices_list()
         self.conf_device_update_control = {}
 
         return self.async_show_form(step_id='device_list',
@@ -2938,7 +2954,6 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 
             if user_input['mobapp'] is False:
                 self.conf_device[CONF_INZONE_INTERVAL] = DEFAULT_GENERAL_CONF[CONF_INZONE_INTERVALS][NO_MOBAPP]
-                # self.conf_device[CONF_MOBILE_APP_DEVICE] = 'None'
             else:
                 device_type = user_input[CONF_DEVICE_TYPE]
                 self.conf_device[CONF_INZONE_INTERVAL] = DEFAULT_GENERAL_CONF[CONF_INZONE_INTERVALS][device_type]
@@ -2985,6 +3000,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             ui_rarely_updated_parms = True
         else:
             ui_rarely_updated_parms = False
+        user_input.pop(RARELY_UPDATED_PARMS, None)
 
         if self.display_rarely_updated_parms is False:
             user_input[CONF_DEVICE_TYPE]          = self.conf_device[CONF_DEVICE_TYPE]
@@ -2993,10 +3009,8 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             user_input[CONF_LOG_ZONES]            = self.conf_device[CONF_LOG_ZONES]
             user_input[CONF_TRACK_FROM_ZONES]     = self.conf_device[CONF_TRACK_FROM_ZONES]
             user_input[CONF_TRACK_FROM_BASE_ZONE] = self.conf_device[CONF_TRACK_FROM_BASE_ZONE]
-        if ui_rarely_updated_parms != self.display_rarely_updated_parms:
-            self.display_rarely_updated_parms = ui_rarely_updated_parms
-
-        user_input.pop(RARELY_UPDATED_PARMS, None)
+        ui_rarely_used_parms_changed = (ui_rarely_updated_parms != self.display_rarely_updated_parms)
+        self.display_rarely_updated_parms = ui_rarely_updated_parms
 
         if 'add_device' not in self.conf_device_update_control:
             self.dev_page_item[self.dev_page_no] = self.conf_device[CONF_IC3_DEVICENAME]
@@ -3006,25 +3020,26 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
         elif action_item == 'cancel':
             return await self.async_step_menu()
 
-        _username_icloud_dname = [username_icloud_dname
-                                    for username_icloud_dname, v in self.icloud_list_text_by_fname.items()
+        # Get the dname_username key from the value description of FAMSHR_DEVICENAME field
+        _icloud_dname_username = [icloud_dname_username
+                                    for icloud_dname_username, v in self.icloud_list_text_by_fname.items()
                                     if (v == user_input[CONF_FAMSHR_DEVICENAME])]
 
-        # Reset if non-devicename entry selected
-        if _username_icloud_dname and _username_icloud_dname[0].startswith('.'):
-            self.errors[CONF_FAMSHR_DEVICENAME] = 'unknown_icloud'
-            user_input[CONF_FAMSHR_DEVICENAME] = (  f"{self.conf_device[CONF_APPLE_ACCOUNT]}{LINK}"
-                                                    f"{self.conf_device[CONF_FAMSHR_DEVICENAME]}")
+        _icloud_dname_username = _icloud_dname_username[0] if isnot_empty(_icloud_dname_username) else 'None'
 
-        user_input[CONF_FAMSHR_DEVICENAME] = _username_icloud_dname[0] if len(_username_icloud_dname) > 0 else 'None'
-        username_icloud_dname = user_input[CONF_FAMSHR_DEVICENAME]
+        # Reset if non-devicename entry selected (one that starts with a '.')
+        if _icloud_dname_username.startswith('.'):
+            self.errors[CONF_FAMSHR_DEVICENAME] = 'unknown_icloud'
+            user_input[CONF_FAMSHR_DEVICENAME] = (  f"{self.conf_device[CONF_FAMSHR_DEVICENAME]}"
+                                                    f"{LINK}{self.conf_device[CONF_APPLE_ACCOUNT]}")
+
         self.log_step_info(user_input, action_item)
 
-        if username_icloud_dname == 'None':
+        if _icloud_dname_username == 'None':
             user_input[CONF_APPLE_ACCOUNT]     = ''
             user_input[CONF_FAMSHR_DEVICENAME] = 'None'
-        elif instr( username_icloud_dname, LINK):
-            username_part, icloud_dname_part = username_icloud_dname.split(LINK)
+        elif instr( _icloud_dname_username, LINK):
+            icloud_dname_part, username_part  = _icloud_dname_username.split(LINK)
             user_input[CONF_APPLE_ACCOUNT]     = username_part
             user_input[CONF_FAMSHR_DEVICENAME] = icloud_dname_part
         else:
@@ -3054,7 +3069,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
                             last_step=True)
 
         if change_flag is False:
-            if self.display_rarely_updated_parms:
+            if ui_rarely_used_parms_changed and self.display_rarely_updated_parms:
                 return await self.async_step_update_device()
 
             return await self.async_step_device_list()
@@ -3097,6 +3112,12 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 
         await self._build_icloud_device_selection_list()
 
+        self.header_msg = 'conf_updated'
+        if only_non_tracked_field_updated:
+            list_add(self.config_parms_update_control, 'devices')
+        else:
+            list_add(self.config_parms_update_control, ['tracking', 'restart'])
+
         # Update the device_tracker & sensor entities now that the configuration has been updated
         if 'add_device' in self.conf_device_update_control:
             if Gb.async_add_entities_device_tracker is None:
@@ -3106,14 +3127,8 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
         else:
             self._update_changed_sensor_entities()
 
-        self.header_msg = 'conf_updated'
-        if only_non_tracked_field_updated:
-            list_add(self.config_parms_update_control, 'devices')
-        else:
-            list_add(self.config_parms_update_control, ['tracking', 'restart'])
-
-        if self.display_rarely_updated_parms:
-            return await self.async_step_update_device()
+            if ui_rarely_used_parms_changed:
+                return await self.async_step_update_device()
 
         return await self.async_step_device_list()
 
@@ -3206,14 +3221,14 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
         _conf_apple_acct      = conf_device[CONF_APPLE_ACCOUNT]
         _conf_icloud_dname    = conf_device[CONF_FAMSHR_DEVICENAME]
         _conf_mobile_app_name = conf_device[CONF_MOBILE_APP_DEVICE]
-        username_icloud_dname = f"{_conf_apple_acct}{LINK}{_conf_icloud_dname}"
+        icloud_dname_username = f"{_conf_icloud_dname}{LINK}{_conf_apple_acct}"
 
         if (_conf_apple_acct  == ''
                 and _conf_icloud_dname != 'None'):
             self.errors[CONF_FAMSHR_DEVICENAME] = 'unknown_apple_acct'
 
         elif (_conf_icloud_dname != 'None'
-                and username_icloud_dname not in self.icloud_list_text_by_fname
+                and icloud_dname_username not in self.icloud_list_text_by_fname
                 and instr(Gb.conf_tracking[CONF_DATA_SOURCE], ICLOUD)):
             self.errors[CONF_FAMSHR_DEVICENAME] = 'unknown_icloud'
 
@@ -3431,7 +3446,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             Gb.conf_devices = new_conf_devices
             config_file.set_conf_devices_index_by_devicename()
             self._update_config_file_tracking(update_config_flag=True)
-            self._build_device_items_list()
+            self._build_devices_list()
             list_add(self.config_parms_update_control, ['restart', 'profile'])
             self.errors['base'] = 'conf_updated'
             return await self.async_step_device_list()
@@ -3522,7 +3537,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 #-------------------------------------------------------------------------------------------
     def _build_log_level_devices_list(self):
 
-        self.log_level_devices_key_text = {'all': 'Add RawData received from iCloud for all devices to the `icloud-0.log` file'}
+        self.log_level_devices_key_text = {'all': 'All Devices - Add RawData for all devices to the `icloud-0.log` file'}
         self.log_level_devices_key_text.update(self._devices_selection_list())
 
 #-------------------------------------------------------------------------------------------
@@ -3582,7 +3597,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             self.apple_acct_items_by_username[username] = aa_text
 
 #-------------------------------------------------------------------------------------------
-    def _build_device_items_list(self):
+    def _build_devices_list(self):
         '''
         Rebuild the device list for displaying on the devices list form. This is necessary
         since the parameters displayed may have been changed. Update the default values for
@@ -3603,8 +3618,9 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 
 #-------------------------------------------------------------------------------------------
     def _format_device_list_item(self, conf_device):
-        """ Format the text that is displayed for the device on the device_list screen """
-
+        '''
+        Format the text that is displayed for the device on the device_list screen
+        '''
         device_text  = (f"{conf_device[CONF_FNAME]}"
                         f" ({conf_device[CONF_IC3_DEVICENAME]}){RARROW}")
 
@@ -3626,11 +3642,11 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
                 if PyiCloud.requires_2fa:
                     device_text += f" {YELLOW_ALERT}AUTH NEEDED, "
             elif apple_acct in ['', 'None']:
-                device_text += f"{icloud_dname}{LINK}{RED_X}None{RLINK}"
-                device_text += " (NO APPLE ACCT), "
+                device_text += f"{icloud_dname}{LINK}{RED_X}UNKNOWN{RLINK}, "
+                #device_text += " (NO APPLE ACCT), "
             else:
-                device_text += f"{icloud_dname}{LINK}{RED_X}{apple_acct}{RLINK}"
-                device_text += " (UNKNOWN APPLE ACCT), "
+                device_text += f"{icloud_dname}{LINK}{RED_X}UNKNOWN-{apple_acct}{RLINK}, "
+                #device_text += " (UNKNOWN APPLE ACCT), "
 
         if conf_device[CONF_MOBILE_APP_DEVICE] != 'None':
             mobapp_dname = conf_device[CONF_MOBILE_APP_DEVICE]
@@ -3638,7 +3654,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             if mobapp_dname in Gb.device_info_by_mobapp_dname:
                 device_text += f"{Gb.device_info_by_mobapp_dname[mobapp_dname][0]}, "
             else:
-                device_text += f"{RED_X}{mobapp_dname} (UNKNOWN ENTITY), "
+                device_text += f"{RED_X}UNKNOWN-{mobapp_dname}, "
 
         if conf_device[CONF_TRACK_FROM_BASE_ZONE] != HOME:
             tfhbz = conf_device[CONF_TRACK_FROM_BASE_ZONE]
@@ -3691,36 +3707,38 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
         all_devices_available = {}
         all_devices_used = {}
         all_devices_this_device = {}
+        all_devices_unknown_device = {}
         username_hdr_available = {}
-        selected_device_famshr_devicename = 'None' if is_empty(Gb.conf_devices) else ''
+        selected_device_icloud_dname = 'None' if is_empty(Gb.conf_devices) else ''
 
+        # Get the list of devices with unknown apple accts
         for conf_device in Gb.conf_devices:
-            if (conf_device[CONF_APPLE_ACCOUNT] == ''
-                    and conf_device[CONF_FAMSHR_DEVICENAME] != 'None'):
-                username_icloud_dname = f"Unspecified{LINK}{conf_device[CONF_IC3_DEVICENAME]}"
+            if conf_device[CONF_FAMSHR_DEVICENAME] == 'None':
+                continue
 
-                self.icloud_list_text_by_fname2[username_icloud_dname] = (
+            if Gb.username_valid_by_username.get(conf_device[CONF_APPLE_ACCOUNT], False) is False:
+                icloud_dname_username = f".{conf_device[CONF_IC3_DEVICENAME]}{LINK}UNKNOWN"
+                self.icloud_list_text_by_fname2[icloud_dname_username] = (
                         f"{RED_X}{conf_device[CONF_FNAME]} ({conf_device[CONF_IC3_DEVICENAME]})"
-                        f"{RARROW}APPLE ACCOUNT NOT SPECIFIED")
+                        f"{LINK}{conf_device[CONF_APPLE_ACCOUNT]}{RLINK}"
+                        f"{RARROW}UNKNOWN APPLE ACCOUNT")
 
             # Save the FamShr config parameter in case it is not found
             if conf_device[CONF_IC3_DEVICENAME] == selected_devicename:
-                selected_device_famshr_devicename = conf_device[CONF_FAMSHR_DEVICENAME]
+                selected_device_icloud_dname = conf_device[CONF_FAMSHR_DEVICENAME]
 
-        Gb.one_apple_account_flag = (len(Gb.conf_apple_accounts) <= 1)
-        Gb.multi_apple_accounts_flag = not Gb.one_apple_account_flag
-
+        # Get the list of devices with valid apple accounts
         aa_idx = 0
         for apple_account in Gb.conf_apple_accounts:
             username = apple_account[CONF_USERNAME]
             aa_idx += 1
 
-            if username == '':
+            if Gb.username_valid_by_username.get(username, False) is False:
                 continue
-            else:
-                PyiCloud = Gb.PyiCloud_by_username.get(username)
-                if PyiCloud is None:
-                    continue
+
+            PyiCloud = Gb.PyiCloud_by_username.get(username)
+            if PyiCloud is None:
+                continue
 
             if PyiCloud.DeviceSvc is None or PyiCloud.is_DeviceSvc_setup_complete is False:
                 _AppleDev = await Gb.hass.async_add_executor_job(
@@ -3730,32 +3748,37 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
             if PyiCloud:
                 self._check_finish_v2v3conversion_for_icloud_dname()
 
-                devices_available, devices_used, devices_this_device = \
+                devices_available, devices_used, this_device = \
                         self._get_icloud_devices_list_avail_used_this(aa_idx,
                                                             PyiCloud, PyiCloud.account_owner,
                                                             selected_devicename)
                 # Available devices
+                devices_cnt = len(devices_used) + len(devices_available) + len(this_device)
+                assigned_cnt = len(devices_used) + len(this_device)
                 aa_idx_dots = '.'*aa_idx
                 username_hdr_available = {f"{aa_idx_dots}hdr":
                     f"🍎 ~~~~ {PyiCloud.account_owner}, "
-                    f"APPLE ACCT #{aa_idx} OF {len(Gb.conf_apple_accounts)} ~~~~"}
+                    f"Apple Account #{aa_idx} of {len(Gb.conf_apple_accounts)} ~~~~ "
+                    f"{assigned_cnt} of {devices_cnt} Tracked ~~~~"}
                 if devices_available == {}:
                     devices_available = {f"{aa_idx_dots}nodev":
-                    f"All iCloud Devices Already Assigned to an iCloud3 Device"}
+                    f"⊗ All Apple account devices are assigned"}
 
                 all_devices_available.update(username_hdr_available)
                 all_devices_available.update(devices_available)
                 all_devices_used.update(devices_used)
-                all_devices_this_device.update(devices_this_device)
+                all_devices_this_device.update(this_device)
 
         if (is_empty(all_devices_this_device)
-                and selected_device_famshr_devicename != 'None'):
-            all_devices_this_device = {'.unknown':
-                    f"{RED_ALERT}{selected_device_famshr_devicename}{RARROW}UNKNOWN APPLE ACCOUNT DEVICE"}
+                and selected_device_icloud_dname != 'None'):
+            this_device = {f".{conf_device[CONF_IC3_DEVICENAME]}{LINK}UNKNOWN":
+                    f"{RED_X}{conf_device[CONF_FNAME]} ({conf_device[CONF_IC3_DEVICENAME]})"
+                    f"{LINK}{conf_device[CONF_APPLE_ACCOUNT]}{RLINK}"
+                    f"{RARROW}UNKNOWN APPLE ACCOUNT"}
 
         self.icloud_list_text_by_fname2.update(all_devices_this_device)
         self.icloud_list_text_by_fname2.update(all_devices_available)
-        self.icloud_list_text_by_fname2.update({f".assigned": f"⛔ ~~~~ ALREADY ASSIGNED TO AN ICLOUD3 DEVICE ~~~~"})
+        self.icloud_list_text_by_fname2.update({f".assigned": f"⛔ ~~~~ ASSIGNED TO ICLOUD3 DEVICES ~~~~"})
         self.icloud_list_text_by_fname2.update(sort_dict_by_values(all_devices_used))
 
         self.icloud_list_text_by_fname = self.icloud_list_text_by_fname2.copy()
@@ -3769,39 +3792,49 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
         Return:
             [devices_available, devices_used, devices_this_device]
         '''
-        devices_this_device = {}
+        this_device = {}
         devices_available = {}
         devices_used = {}
+        unknown_devices = {}
         famshr_available = {}
         owner_available = {}
-        aa_idx_msg = '' if Gb.one_apple_account_flag else f"#{aa_idx} - "
+        aa_idx_msg  = f"#{aa_idx} - "
         aa_idx_dots = '.'*aa_idx
 
         devices_assigned = {}
+        selected_device_icloud_dname = ''
         for _conf_device in Gb.conf_devices:
-            if (_conf_device[CONF_FAMSHR_DEVICENAME] != 'None'
-                    and _conf_device[CONF_APPLE_ACCOUNT] == PyiCloud.username):
+            if _conf_device[CONF_APPLE_ACCOUNT] != PyiCloud.username:
+                continue
+
+            if _conf_device[CONF_FAMSHR_DEVICENAME] != 'None':
                 devices_assigned[_conf_device[CONF_FAMSHR_DEVICENAME]] = _conf_device[CONF_IC3_DEVICENAME]
                 devices_assigned[_conf_device[CONF_IC3_DEVICENAME]]    = _conf_device[CONF_FAMSHR_DEVICENAME]
 
+            if _conf_device[CONF_FAMSHR_DEVICENAME] not in PyiCloud.device_id_by_icloud_dname:
+                icloud_dname_username = f"{_conf_device[CONF_FAMSHR_DEVICENAME]}{LINK}{PyiCloud.username}"
+                icloud_dname_owner    = f"{_conf_device[CONF_FAMSHR_DEVICENAME]}{LINK}{PyiCloud.account_owner}{RLINK}"
+                unknown_devices[icloud_dname_username] = (
+                                        f"{RED_X}{icloud_dname_owner} >"
+                                        f"{RARROW}UNKNOWN DEVICE")
+
         try:
             for icloud_dname, device_display_name in PyiCloud.device_model_name_by_icloud_dname.items():
-                username_icloud_dname = f"{PyiCloud.username}{LINK}{icloud_dname}"
+                icloud_dname_username = f"{icloud_dname}{LINK}{PyiCloud.username}"
                 icloud_dname_owner    = f"{icloud_dname}{LINK}{PyiCloud.account_owner}{RLINK}"
 
                 # If not assigned to an ic3 device
-                #if icloud_dname not in Gb.devicenames_by_icloud_dname:
                 if icloud_dname not in devices_assigned:
                     device_id = PyiCloud.device_id_by_icloud_dname[icloud_dname]
                     _RawData  = PyiCloud.RawData_by_device_id[device_id]
                     if _RawData.family_share_device:
-                        famshr_available[username_icloud_dname] = (
+                        famshr_available[icloud_dname_username] = (
                                         f"{icloud_dname_owner} > "
                                         f"{device_display_name}, "
                                         f"Family Share Device"
                                         f"{aa_idx_dots}")
                     else:
-                        owner_available[username_icloud_dname] = (
+                        owner_available[icloud_dname_username] = (
                                         f"{icloud_dname_owner} > "
                                         f"{device_display_name}"
                                         f"{aa_idx_dots}")
@@ -3810,7 +3843,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
                 # Is the icloud device name assigned to the current device being updated
                 devicename = devices_assigned[icloud_dname]
                 if devicename == selected_devicename:
-                    devices_this_device[username_icloud_dname] = (
+                    this_device[icloud_dname_username] = (
                                 f"{icloud_dname_owner} > "
                                 f"{device_display_name}")
                     continue
@@ -3818,7 +3851,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
                 # Assigned to another device
                 _assigned_to_fname = self._icloud_device_assigned_to(PyiCloud.username, icloud_dname)
                 if _assigned_to_fname:
-                    devices_used[username_icloud_dname] = (
+                    devices_used[icloud_dname_username] = (
                                 f"{icloud_dname_owner}{RARROW}"
                                 f"{_assigned_to_fname}, "
                                 f"{device_display_name}")
@@ -3826,10 +3859,11 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
         except Exception as err:
             log_exception(err)
 
+        devices_available.update(sort_dict_by_values(unknown_devices))
         devices_available.update(sort_dict_by_values(owner_available))
         devices_available.update(sort_dict_by_values(famshr_available))
 
-        return devices_available, devices_used, devices_this_device
+        return devices_available, devices_used, this_device
 
 #----------------------------------------------------------------------
     def _icloud_device_assigned_to(self, username, icloud_dname):
@@ -3910,14 +3944,14 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
                 and is_empty(devices_this_device)
                 and self.conf_device[CONF_MOBILE_APP_DEVICE] != 'None'):
             devices_this_device = {'.unknown':
-                    f"{RED_ALERT}{self.conf_device[CONF_MOBILE_APP_DEVICE]}{RARROW}UNKNOWN MOBILE APP DEVICE"}
+                    f"{RED_X}{self.conf_device[CONF_MOBILE_APP_DEVICE]}{RARROW}UNKNOWN MOBILE APP DEVICE"}
 
         self.mobapp_list_text_by_entity_id.update(devices_this_device)
-        self.mobapp_list_text_by_entity_id.update({'.available': f"✅ ~~~~ AVAILABLE DEVICES ~~~~"})
+        self.mobapp_list_text_by_entity_id.update({'.available': f"✅ ~~~~ AVAILABLE MOBILE APP DEVICES ~~~~"})
         self.mobapp_list_text_by_entity_id.update(sort_dict_by_values(devices_available))
-        self.mobapp_list_text_by_entity_id.update({'.assigned': f"⛔ ~~~~ ASSIGNED DEVICES ~~~~"})
+        self.mobapp_list_text_by_entity_id.update({'.assigned': f"⛔ ~~~~ ASSIGNED MOBILE APP DEVICES ~~~~"})
         self.mobapp_list_text_by_entity_id.update(sort_dict_by_values(devices_used))
-        self.mobapp_list_text_by_entity_id.update({'.scanfor': f"🔄 ~~~~ SCAN FOR DEVICE TRACKER ~~~~"})
+        self.mobapp_list_text_by_entity_id.update({'.scanfor': f"🔄 ~~~~ SCAN FOR DEVICE TRACKER ENTITY ~~~~"})
         self.mobapp_list_text_by_entity_id.update(sort_dict_by_values(scan_for_mobapp_devices))
 
         return
@@ -4771,7 +4805,7 @@ class iCloud3_OptionsFlowHandler(config_entries.OptionsFlow):
 #--------------------------------------------------------------------
     def log_step_info(self, user_input, action_item=None):
 
-        log_debug_msg(  f"{self.step_id.upper()} ({action_item}) > "
+        log_info_msg(  f"{self.step_id.upper()} ({action_item}) > "
                         f"UserInput-{user_input}, Errors-{self.errors}")
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
