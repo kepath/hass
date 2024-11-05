@@ -97,6 +97,7 @@ custom_card_kepath_binary_notifications_common_styles:
           ]]]
         attribute_name: "zero_value"
         count_tooltip: ""
+        substitute_icon: ""
       amount:
         entity: "sensor.binary_sensor_state_counts"
         is_attribute: >
@@ -111,6 +112,7 @@ custom_card_kepath_binary_notifications_common_styles:
           ]]]
         attribute_name: "zero_value"
         count_tooltip: ""
+        substitute_icon: ""
   styles:
     custom_fields:
       notification:
@@ -208,11 +210,16 @@ widget_count_mdi_number_indicator:
       if (amountValue == "on") {
         icon = "mdi:arrow-up-bold-circle";
       }
+      if (variables?.notification_counts?.substitute_icon != "") {
+        icon = variables.notification_counts.substitute_icon;
+      }
       if(hass.themes.darkMode) {
         icon = icon.replace("-circle","");
         //mdi:arrow-up-bold
         //mdi:numeric-0
       }
+
+
       return icon;
     ]]]
   styles:
