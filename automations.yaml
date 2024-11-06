@@ -1567,3 +1567,15 @@
           datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
         target:
           entity_id: input_datetime.washing_machine_detected_start_time
+- id: '1730882082134'
+  alias: on_time_reconnect_dreo_fan
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    minutes: '3'
+  conditions: []
+  actions:
+  - action: unifi.reconnect_client
+    data:
+      device_id: 564a5816318cc70f7c505544b87a1e19
+  mode: single
