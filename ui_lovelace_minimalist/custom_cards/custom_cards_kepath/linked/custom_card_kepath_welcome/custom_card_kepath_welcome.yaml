@@ -392,6 +392,15 @@ card_kepath_welcome_topbar:
       - padding: "12px"
       - cursor: "default"
       - "--mdc-ripple-press-opacity": 0   # prevent click animation
+    custom_fields:
+      item1: &topbar_styling
+        - align-content: "center"
+        - align-self: "center"
+        - justify-self: "center"
+      item2: *topbar_styling
+      item3: *topbar_styling
+      item4: *topbar_styling
+      item5: *topbar_styling
   custom_fields:
     item1:
       card:
@@ -402,7 +411,7 @@ card_kepath_welcome_topbar:
           navigation_path: "/logbook"
         styles:
           card:
-            - margin-right: "12px"
+            - align-self: "center"
             - box-shadow: >
                 [[[
                   if (hass.themes.darkMode){
@@ -422,8 +431,7 @@ card_kepath_welcome_topbar:
           grid:
             - grid-template-areas: "'i'"
           card:
-            - align-self: "end"
-            - margin-right: "12px"
+            - align-self: "center"
             - padding-left: "6px"
             - box-shadow: >
                 [[[
@@ -459,12 +467,15 @@ card_kepath_welcome_topbar:
         template: "chip_temperature"
         variables:
           ulm_chip_temperature_outside: "[[[ return variables.ulm_chip_temperature_outside]]]"
-          # ulm_chip_temperature_inside: "[[[ return variables.ulm_chip_temperature_inside]]]"
+          ulm_chip_temperature_inside: "[[[ return variables.ulm_chip_temperature_inside]]]"
           ulm_chip_temperature_weather: "[[[ return variables.ulm_chip_temperature_weather]]]"
         tap_action:
           action: "more-info"
           entity: "[[[ return variables.ulm_chip_temperature_weather]]]"
         hold_action:
+          action: "more-info"
+          entity: "climate.nest_bottom_floor"
+        double_tap_action:
           action: "call-service"
           service: "homeassistant.reload_config_entry"
           data: {}
@@ -472,7 +483,7 @@ card_kepath_welcome_topbar:
             entity_id: "weather.met_office_banbury_daily"
         styles:
           card:
-            - margin-right: "12px"
+            - align-self: "center"
             - box-shadow: >
                 [[[
                   if (hass.themes.darkMode){
@@ -493,8 +504,7 @@ card_kepath_welcome_topbar:
           navigation_path: "/developer-tools"
         styles:
           card:
-            - align-self: "end"
-            - margin-right: "12px"
+            - align-self: "center"
             - box-shadow: >
                 [[[
                   if (hass.themes.darkMode){
@@ -515,8 +525,7 @@ card_kepath_welcome_topbar:
           navigation_path: "/config"
         styles:
           card:
-            - align-self: "end"
-            - margin-right: "12px"
+            - align-self: "center"
             - box-shadow: >
                 [[[
                   if (hass.themes.darkMode){
@@ -526,24 +535,3 @@ card_kepath_welcome_topbar:
                   }
                 ]]]
             - "--mdc-ripple-press-opacity": 0.12    # allow click animation
-# item5:
-#   card:
-#     type: "custom:button-card"
-#     template: "chip_mdi_icon_only"
-#     variables:
-#       ulm_chip_mdi_icon_only_icon: "mdi:cog-outline"
-#     tap_action:
-#       action: "navigate"
-#       navigation_path: "/config/system"
-#     styles:
-#       card:
-#         - align-self: "end"
-#         - box-shadow: >
-#             [[[
-#               if (hass.themes.darkMode){
-#                 return "0px 2px 4px 0px rgba(0,0,0,0.80)";
-#               } else {
-#                 return "var(--box-shadow)";
-#               }
-#             ]]]
-#         - "--mdc-ripple-press-opacity": 0.12    # allow click animation
