@@ -1625,3 +1625,49 @@
     target:
       entity_id: input_datetime.washing_machine_instantaneous_demand_below_10w
   mode: single
+- id: '1731247149907'
+  alias: when_washing_machine_instaneous_demand_dropped_above_10w
+  description: ''
+  triggers:
+  - type: power
+    device_id: 952c87755c2c0da9627644b62b5fa2c7
+    entity_id: 2defb45565b54da3d8d58470b0ef87c7
+    domain: sensor
+    trigger: device
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    above: 10
+  conditions: []
+  actions:
+  - action: input_datetime.set_datetime
+    metadata: {}
+    data:
+      datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+    target:
+      entity_id: input_datetime.washing_machine_instantaneous_demand_above_10w
+  mode: single
+- id: '1731247268941'
+  alias: when_washing_machine_instaneous_demand_dropped_above_5w
+  description: ''
+  triggers:
+  - type: power
+    device_id: 952c87755c2c0da9627644b62b5fa2c7
+    entity_id: 2defb45565b54da3d8d58470b0ef87c7
+    domain: sensor
+    trigger: device
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    above: 5
+  conditions: []
+  actions:
+  - action: input_datetime.set_datetime
+    metadata: {}
+    data:
+      datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+    target:
+      entity_id: input_datetime.washing_machine_instantaneous_demand_above_5w
+  mode: single
