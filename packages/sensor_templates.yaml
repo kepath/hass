@@ -110,7 +110,7 @@ template:
           occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           occupancy_sensors_triggered_away_count: "{{ expand('group.all_away_occupancy_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           occupancy_sensors_unavailable_away_count: "{{ expand('group.all_away_occupancy_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          occupancy_no_persons_home_triggered_count: "{{ 0 if (state_attr('sensor.binary_sensor_state_counts', 'occupancy_persons_home_count') > 0) else state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_triggered_away_count') }}"
+          # occupancy_no_persons_home_triggered_count: "{{ 0 if (state_attr('sensor.binary_sensor_state_counts', 'occupancy_persons_home_count') > 0) else state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_triggered_away_count') }}"
           plugs_off_count: "{{ expand('group.all_outlet_class_switch')|selectattr('state','eq', 'off')|list|count }}"
           running_stopped_count: "{{ expand('group.all_running_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           running_unavailable_count: "{{ expand('group.all_running_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
@@ -126,9 +126,9 @@ template:
                 state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0),
                 state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0),
                 state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0),
-                1 if (states('input_boolean.washing_machine_detected_state')|lower == 'on') else 0,
-                1 if (states('sensor.samsung_tumble_dryer_dryer_machine_state')|lower == 'run') else 0,
-                1 if (states('sensor.dishwasher_operation_state')|lower == 'run') else 0,
+                1 if (states('binary_sensor.washing_machine_is_active')|lower == 'on') else 0,
+                1 if (states('binary_sensor.is_tumble_dryer_on')|lower == 'on') else 0,
+                1 if (states('binary_sensor.is_dishwasher_on')|lower == 'on') else 0,
                 1 if (states('switch.drinks_fridge_plug_bed_c')|lower == 'on') else 0,
                 1 if (states('binary_sensor.yamaha_reciever_state')|lower == 'on') else 0,
                 1 if (states('binary_sensor.is_arcade_pc_on')|lower == 'on') else 0,
@@ -284,6 +284,49 @@ template:
           icon: "mdi:lock-open-variant"
           state_class: "measurement"
 
+      - unique_id: "_unique_simple_state_all_occupancy_sensors"
+        name: "All Occupancy Sensors Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("sensor.binary_sensor_state_counts")
+            ) else (
+              'triggered_home' if (
+                state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0 and
+                state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count") > 0
+              ) else (
+                'triggered_away' if (
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") == 0 and
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count") > 0
+                ) else 'error'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:motion-sensor"
+          state_class: "measurement"
+
+      - unique_id: "_unique_simple_state_away_occupancy_sensors"
+        name: "Internal Occupancy Sensors Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("sensor.binary_sensor_state_counts")
+            ) else (
+              'triggered_home' if (
+                state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0 and
+                state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") > 0
+              ) else (
+                'triggered_away' if (
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") == 0 and
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") > 0
+                ) else 'error'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:motion-sensor"
+          state_class: "measurement"
 
       - unique_id: "areas_and_entities_template_generated"
         name: "Areas Entity Attributes"
@@ -612,8 +655,8 @@ template:
             {{ state_attr('climate.nest_bottom_floor', 'current_temperature') }}
           middle_floor_nest_image: >
             {{ "/local/widgy_widget_images/climate/temperature_up.png" if (state_attr('climate.nest_middle_floor', 'hvac_action') == "heat") else "/local/widgy_widget_images/climate/temperature_down.png" }}
-          security_alert_count: >
-            {{ state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count') }}
+          # security_alert_count: >
+          #   {{ state_attr('sensor.binary_sensor_state_counts', 'occupancy_no_persons_home_triggered_count') }}
           persons_home_count: >
             {{ state_attr('sensor.binary_sensor_state_counts', 'occupancy_persons_home_count') }}
           nest_smoke_alert: >

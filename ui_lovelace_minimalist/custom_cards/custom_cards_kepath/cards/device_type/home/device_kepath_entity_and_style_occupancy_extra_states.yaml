@@ -1,0 +1,277 @@
+---
+device_kepath_entity_and_style_occupancy_extra_states:
+  variables:
+    var_kepath_device_entity_and_style_occupancy_state:
+      use_themes: true
+      triggered_and_home_state:
+        icon: "mdi:human-greeting"
+        icon_color: "blue"
+        background_color: "blue"
+      triggered_and_away_state:
+        icon: "mdi:motion-sensor"
+        icon_color: "red"
+        background_color: "red"
+
+  state:
+    - value: "triggered_home"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:circle-outline";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.icon.includes('mdi:') ||
+                variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.icon.includes('phu:') ||
+                variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.icon.includes('si:')) {
+              returnedIcon = variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                //returnedColor = if_variable_undefined_use_default(variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.icon_color,returnedColorDefault)
+                if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_home_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+    - value: "triggered_away"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:help-circle";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.icon.includes('mdi:') ||
+                variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.icon.includes('phu:') ||
+                variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.icon.includes('si:')) {
+              returnedIcon = variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                //returnedColor = if_variable_undefined_use_default(variables?.var_kepath_device_entity_and_style_occupancy_state?.warning_state?.icon_color,returnedColorDefault)
+                if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_occupancy_state?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_occupancy_state?.triggered_and_away_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+
+
+  # variables:
+  #   var_kepath_device_entity_and_style_occupancy_state:
+  #   var_kepath_device_entity_and_style_binary_count_state:
+  #     entity:
+  #       evaluated_entity: "sensor.binary_sensor_state_counts"
+  #       evaluated_attribute: "occupancy_sensors_triggered_count"
+  #       person_count_attribute: "occupancy_persons_home_count"
+  #     style:
+  #       use_themes: true
+  #       icon: "mdi:human-greeting"
+  #       icon_color: "blue"
+  #       background_color: "blue"
+  #     style2:
+  #       use_themes: true
+  #       icon: "mdi:motion-sensor"
+  #       icon_color: "red"
+  #       background_color: "red"
+  # state:
+  #   - operator: "template"
+  #     value: >
+  #       [[[
+  #         var evaluatedEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+  #         var evaluatedOccupancyAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+  #         var evaluatedPersonAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.person_count_attribute;
+  #         var returnValue = false;
+
+  #         var resolvedOccupancyStateDefault = 0;
+  #         var resolvedOccupancyState;
+  #         resolvedOccupancyState = states[evaluatedEntity].attributes[evaluatedOccupancyAttribute];
+  #         if (isNaN(resolvedOccupancyState) || typeof resolvedOccupancyState === 'undefined') {
+  #             resolvedOccupancyState = resolvedOccupancyStateDefault;
+  #         }
+
+  #         var resolvedPersonStateDefault = 0;
+  #         var resolvedPersonState;
+  #         resolvedPersonState = states[evaluatedEntity].attributes[evaluatedPersonAttribute];
+  #         if (isNaN(resolvedPersonState) || typeof resolvedPersonState === 'undefined') {
+  #             resolvedPersonState = resolvedPersonStateDefault;
+  #         }
+
+  #         if (resolvedPersonState > 0 && resolvedOccupancyState > 0) {
+  #           returnValue = true;
+  #         }
+
+  #         return returnValue;
+  #       ]]]
+  #     icon: "[[[return variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;]]]"
+  #     styles:
+  #       icon:
+  #         - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon_color}),1)`; ]]]"
+  #       img_cell:
+  #         - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color}),0.2)`; ]]]"
+  #   - operator: "template"
+  #     value: >
+  #       [[[
+  #         var evaluatedEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+  #         var evaluatedOccupancyAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+  #         var evaluatedPersonAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.person_count_attribute;
+  #         var returnValue = false;
+
+  #         var resolvedOccupancyStateDefault = 0;
+  #         var resolvedOccupancyState;
+  #         resolvedOccupancyState = states[evaluatedEntity].attributes[evaluatedOccupancyAttribute];
+  #         if (isNaN(resolvedOccupancyState) || typeof resolvedOccupancyState === 'undefined') {
+  #             resolvedOccupancyState = resolvedOccupancyStateDefault;
+  #         }
+
+  #         var resolvedPersonStateDefault = 0;
+  #         var resolvedPersonState;
+  #         resolvedPersonState = states[evaluatedEntity].attributes[evaluatedPersonAttribute];
+  #         if (isNaN(resolvedPersonState) || typeof resolvedPersonState === 'undefined') {
+  #             resolvedPersonState = resolvedPersonStateDefault;
+  #         }
+
+  #         if (resolvedPersonState == 0 && resolvedOccupancyState > 0) {
+  #           returnValue = true;
+  #         }
+
+  #         return returnValue;
+  #       ]]]
+  #     icon: "[[[return variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.icon;]]]"
+  #     styles:
+  #       icon:
+  #         - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.icon_color}),1)`; ]]]"
+  #       img_cell:
+  #         - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.background_color}),0.2)`; ]]]"

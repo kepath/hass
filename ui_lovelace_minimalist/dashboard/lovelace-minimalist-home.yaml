@@ -1101,9 +1101,11 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_occupancy_state"
+                          # - "device_kepath_entity_and_style_occupancy_state"
+                          - "device_kepath_entity_and_style_simple_states"
+                          - "device_kepath_entity_and_style_occupancy_extra_states"
                           - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_away_occupancy_class_binary_sensors"
+                        entity: "sensor.internal_occupancy_sensors_simple_state"
                         name: "Internal"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
@@ -1113,21 +1115,20 @@ views:
                             amount:
                               attribute_name: "occupancy_sensors_triggered_away_count"
                               count_tooltip: "num occupancy sensors on"
-                          var_kepath_device_entity_and_style_binary_count_state:
-                            entity:
-                              evaluated_attribute: "occupancy_sensors_triggered_away_count"
-                            style:
+                          var_kepath_device_entity_and_style_simple_states:
+                            warning_state:
                               icon: "mdi:motion-sensor-off"
-                              icon_color: "green"
-                              background_color: "green"
+                            error_state:
+                              icon: "mdi:motion-sensor-off"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:motion-sensor-off"
-                              icon_color: "green"
-                              background_color: "green"
+                              icon_color: "yellow"
+                              background_color: "yellow"
                             unset_state:
                               icon: "mdi:cctv-off"
                           var_kepath_generic_group_popup:
+                            evaluated_entity: "group.all_away_occupancy_class_binary_sensors"
                             action: "popup"
                             popup:
                               title: "internal occupancy entities ↓ last changed"
@@ -1206,9 +1207,11 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_occupancy_state"
+                          # - "device_kepath_entity_and_style_occupancy_state"
+                          - "device_kepath_entity_and_style_simple_states"
+                          - "device_kepath_entity_and_style_occupancy_extra_states"
                           - "custom_card_kepath_generic_group_popup"
-                        entity: "group.all_occupancy_class_binary_sensors"
+                        entity: "sensor.all_occupancy_sensors_simple_state"
                         name: "All Motion"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
@@ -1218,14 +1221,25 @@ views:
                             amount:
                               attribute_name: "occupancy_sensors_triggered_count"
                               count_tooltip: "num occupancy sensors on"
+                          var_kepath_device_entity_and_style_simple_states:
+                            warning_state:
+                              icon: "mdi:motion-sensor-off"
+                            error_state:
+                              icon: "mdi:motion-sensor-off"
+                          var_kepath_device_entity_and_style_occupancy_state:
+                            triggered_and_home_state:
+                              icon: "mdi:motion-sensor-off"
+                              icon_color: "green"
+                              background_color: "green"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:cctv"
-                              icon_color: "green"
-                              background_color: "green"
+                              icon_color: "yellow"
+                              background_color: "yellow"
                             unset_state:
                               icon: "mdi:cctv-off"
                           var_kepath_generic_group_popup:
+                            evaluated_entity: "group.all_occupancy_class_binary_sensors"
                             action: "popup"
                             popup:
                               title: "all occupancy entities ↓ last changed"
