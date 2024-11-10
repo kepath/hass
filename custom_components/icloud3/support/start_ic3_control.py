@@ -1,7 +1,7 @@
 from ..global_variables     import GlobalVariables as Gb
 from ..const                import (VERSION, VERSION_BETA, ICLOUD3, ICLOUD3_VERSION, DOMAIN, ICLOUD3_VERSION_MSG,
                                     NOT_SET, IC3LOG_FILENAME,
-                                    CRLF, CRLF_DOT, CRLF_HDOT, CRLF_X, NL, NL_DOT, LINK,
+                                    CRLF, CRLF_DOT, CRLF_HDOT, CRLF_X, NL, NL_DOT, LINK, YELLOW_ALERT,
                                     EVLOG_ALERT, EVLOG_ERROR, EVLOG_IC3_STARTING, EVLOG_IC3_STAGE_HDR,
                                     SETTINGS_INTEGRATIONS_MSG, INTEGRATIONS_IC3_CONFIG_MSG,
                                     CONF_VERSION, ICLOUD, ZONE_DISTANCE,
@@ -20,7 +20,7 @@ from ..helpers.common       import (instr, is_empty, isnot_empty, list_to_str, l
 from ..helpers.messaging    import (broadcast_info_msg,
                                     post_event, post_error_msg, log_error_msg, post_startup_alert,
                                     post_monitor_msg, post_internal_error,
-                                    log_start_finish_update_banner,
+                                    write_ic3log_recd,
                                     log_debug_msg, log_warning_msg, log_info_msg, log_exception, log_rawdata,
                                     _evlog, _log, more_info, format_filename,
                                     write_config_file_to_ic3log,
@@ -37,6 +37,12 @@ def stage_1_setup_variables():
     stage_title = f'Stage 1 > Initial Preparations'
 
     open_ic3log_file()
+
+    # if Gb.prestartup_log:
+    #     _prestartup_log = Gb.prestartup_log
+    #     Gb.prestartup_log = ''
+    #     write_ic3log_recd(f"$$$$$\n#####\n{_prestartup_log}")
+
     log_info_msg(f"* > {EVLOG_IC3_STAGE_HDR}{stage_title}")
 
     broadcast_info_msg(stage_title)
@@ -205,8 +211,14 @@ def stage_4_setup_data_sources():
     post_event(f"Data Source > HA Mobile App used-{Gb.use_data_source_MOBAPP}")
 
     try:
-        if Gb.use_data_source_ICLOUD:
-            _log_into_apple_accounts()
+        # Get list of all unique Apple Acct usernames in config
+        Gb.conf_usernames = [apple_account[CONF_USERNAME]
+                                    for apple_account in Gb.conf_apple_accounts
+                                    if (apple_account[CONF_USERNAME] in Gb.username_valid_by_username
+                                            and apple_account[CONF_USERNAME] != '')]
+
+        if Gb.use_data_source_ICLOUD and isnot_empty(Gb.conf_usernames):
+            _log_into_apple_accounts(retry=True)
 
             start_ic3.setup_data_source_ICLOUD()
 
@@ -326,13 +338,13 @@ def _log_into_apple_accounts(retry=False):
     if Gb.initial_icloud3_loading_flag is False:
         return True
 
-    # When iCloud3 starts, an executor job is started at the beginning of __init__
-    # to connect to all Apple Accounts. Now, cycle through the PyiCloud object table
-    # and see if any are not set up that should be
-        # Get list of all unique Apple Acct usernames in config
-    Gb.conf_usernames = [apple_account[CONF_USERNAME]
-                                        for apple_account in Gb.conf_apple_accounts
-                                        if apple_account[CONF_USERNAME] in Gb.username_valid_by_username]
+    # # Get list of all unique Apple Acct usernames in config
+    # Gb.conf_usernames = [apple_account[CONF_USERNAME]
+    #                                     for apple_account in Gb.conf_apple_accounts
+    #                                     if (apple_account[CONF_USERNAME] in Gb.username_valid_by_username
+    #                                             and apple_account[CONF_USERNAME] != '')]
+    if is_empty(Gb.conf_usernames):
+        return False
 
     # Verify that all apple accts have been setup. Restart the setup process for any that
     # are not complete
@@ -346,16 +358,17 @@ def _log_into_apple_accounts(retry=False):
             PyiCloud = pyicloud_ic3_interface.log_into_apple_account(
                                         username,
                                         Gb.PyiCloud_password_by_username[username],
-                                        locate_all=conf_apple_acct[CONF_LOCATE_ALL])
+                                        locate_all_devices=conf_apple_acct[CONF_LOCATE_ALL])
 
             if PyiCloud:
                 Gb.PyiCloud_by_username[username] = PyiCloud
 
     if is_empty(Gb.devices_without_location_data):
-        post_event("Apple Acct > All Devices Located")
-    else:
-        post_event(f"Apple Acct > Devices not Located > {list_to_str(Gb.devices_without_location_data)}")
-    return False
+        post_event(f"Apple Acct > {PyiCloud.username_base}, All Devices Located")
+    # else:
+    #     post_event(f"{YELLOW_ALERT}Apple Acct > Devices not Located, {list_to_str(Gb.devices_without_location_data)}")
+
+    return True
 
 #------------------------------------------------------------------
 def _are_all_devices_verified(retry=False):
@@ -380,8 +393,8 @@ def _are_all_devices_verified(retry=False):
                             for devicename, Device in Gb.Devices_by_devicename.items()
                             if Device.verified_flag is False and Device.isnot_inactive]
 
-    Gb.usernames_setup_error_retry_list   = unverified_device_usernames
-    Gb.devicenames_setup_error_retry_list = unverified_devices
+    Gb.usernames_setup_error_retry_list   = list(set(unverified_device_usernames))
+    Gb.devicenames_setup_error_retry_list = list(set(unverified_devices))
 
     Gb.startup_lists['_.usernames_setup_error_retry_list']   = Gb.usernames_setup_error_retry_list
     Gb.startup_lists['_.devicenames_setup_error_retry_list'] = Gb.devicenames_setup_error_retry_list
