@@ -1,14 +1,18 @@
 ---
 device_kepath_entity_and_style_binary_simple_switch_state:
-  # template:
-  #   - "javascript_function_if_variable_undefined_use_default"
-  #   - "javascript_function_is_typeof_variable_boolean"
+  variables:
+    var_kepath_device_entity_and_style_simple_binary_switch_state:
+      use_themes: true
+      on_state:
+        icon: "mdi:circle-outline"
+        icon_color: "yellow"
+        background_color: "yellow"
+
   state:
-    - operator: "=="
-      value: "on"
+    - value: "on"
       icon: >
         [[[
-          var backupIcon =  "mdi:checkbox-blank-circle-outline";
+          var backupIcon =  "mdi:circle-outline";
           var returnedIcon;
           if (typeof variables?.var_kepath_device_entity_and_style_simple_binary_switch_state?.on_state?.icon !== 'undefined') {
             if (variables?.var_kepath_device_entity_and_style_simple_binary_switch_state?.on_state?.icon.includes('mdi:') ||
