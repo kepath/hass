@@ -1,0 +1,65 @@
+# ---
+# device_kepath_entity_and_style_nas_state:
+#   variables:
+#     var_kepath_device_entity_and_style_binary_count_state:
+#       entity:
+#         evaluated_entity: "sensor.diskstation_volume_1_status"
+#       style:
+#         use_themes: true
+#         icon: "mdi:nas"
+#         icon_color: "green"
+#         background_color: "green"
+#       style2:
+#         use_themes: true
+#         icon: "mdi:database-alert"
+#         icon_color: "red"
+#         background_color: "red"
+
+#   state:
+#     - operator: "template"
+#       value: >
+#         [[[
+#           var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+
+#           var resolvedState;
+#           var returnValue = false;
+
+#           resolvedState = states[evaluatedStateEntity].state.toLowerCase();
+#           //hass.callService('system_log', 'write', {level:'warning',message:'resolvedState: ' + resolvedState});
+#           if (typeof resolvedState !== 'undefined') {
+#             if (resolvedState == 'normal') {
+#               returnValue = true;
+#             }
+#           }
+
+#           return returnValue;
+#         ]]]
+#       icon: "[[[return variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;]]]"
+#       styles:
+#         icon:
+#           - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon_color}),1)`; ]]]"
+#         img_cell:
+#           - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color}),0.2)`; ]]]"
+#     - operator: "template"
+#       value: >
+#         [[[
+#           var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+
+#           var resolvedState;
+#           var returnValue = false;
+
+#           resolvedState = states[evaluatedStateEntity].state.toLowerCase();
+#           if (typeof resolvedState !== 'undefined') {
+#             if (resolvedState.includes('degrade')||resolvedState.includes('crash')) {
+#               returnValue = true;
+#             }
+#           }
+
+#           return returnValue;
+#         ]]]
+#       icon: "[[[return variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.icon;]]]"
+#       styles:
+#         icon:
+#           - color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.icon_color}),1)`; ]]]"
+#         img_cell:
+#           - background-color: "[[[ return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style2?.background_color}),0.2)`; ]]]"

@@ -2,8 +2,7 @@
 device_kepath_entity_and_style_washing_machine_state:
   variables:
     var_kepath_device_entity_and_style_binary_count_state:
-      entity:
-        evaluated_entity: "input_boolean.washing_machine_detected_state"
+      data_entities:
         start_entity: "input_datetime.washing_machine_detected_start_time"
       style:
         use_themes: true
@@ -11,33 +10,16 @@ device_kepath_entity_and_style_washing_machine_state:
         icon_color: "green"
         background_color: "green"
     var_kepath_generic_get_set_group_button_objects:
-      error_state:
+      unset_state:
         icon: "mdi:washing-machine-alert"
         icon_color: "red"
         background_color: "red"
 
   state:
-    - operator: "template"
-      value: >
-        [[[
-          var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-
-          var resolvedState;
-          var returnValue = false;
-
-          resolvedState = states[evaluatedStateEntity].state.toLowerCase();
-          if (typeof resolvedState !== 'undefined') {
-            if (resolvedState == 'on') {
-              returnValue = true;
-            }
-          }
-          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedBatteryState: ' + resolvedBatteryState});
-
-          return returnValue;
-        ]]]
+    - value: "on"
       icon: >
         [[[
-          var evaluatedStartEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.start_entity;
+          var evaluatedStartEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.data_entities?.start_entity;
           var returnedIcon = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;
 
           var resolvedStartState = states[evaluatedStartEntity].state;
@@ -83,38 +65,4 @@ device_kepath_entity_and_style_washing_machine_state:
           - background-color: >
               [[[
                 return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color}),0.2)`;
-              ]]]
-    - operator: "template"
-      value: >
-        [[[
-          var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-
-          var resolvedState;
-          var returnValue = false;
-
-          resolvedState = states[evaluatedStateEntity].state.toLowerCase();
-          if (typeof resolvedState !== 'undefined') {
-            if (resolvedState == 'unknown' || resolvedState == 'unavailable') {
-              returnValue = true;
-            }
-          }
-
-          return returnValue;
-        ]]]
-      icon: >
-        [[[
-          var returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon;
-
-          return returnedIcon;
-        ]]]
-      styles:
-        icon:
-          - color: >
-              [[[
-                return `rgba(var(--color-${variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.icon_color}),1)`;
-              ]]]
-        img_cell:
-          - background-color: >
-              [[[
-                return `rgba(var(--color-${variables?.var_kepath_generic_get_set_group_button_objects?.error_state?.background_color}),0.2)`;
               ]]]

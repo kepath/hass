@@ -173,22 +173,65 @@ template:
           icon: "mdi:server"
           device_class: "running"
 
+      # Device states
       - unique_id: "_unique_binary_sensor_climate_devices_on"
         name: "Climate Devices On"
         state: "{{ state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count') > 0 }}"
         attributes:
+          name: "Any Climate Devices Active"
           icon: "mdi:home-thermometer"
           device_class: "heat"
 
       - unique_id: "_unique_binary_sensor_is_big_pc_on"
-        name: "is_big_pc_on"
+        name: "Big PC is Active"
         state: "{{ has_value('sensor.big_pc_win11_cpuload') }}"
         attributes:
           icon: "mdi:desktop-tower"
           device_class: "power"
+
       - unique_id: "_unique_binary_sensor_is_arcade_pc_on"
-        name: "is_arcade_pc_on"
+        name: "Arcade PC is Active"
         state: "{{ has_value('sensor.arcade_win10_cpuload') }}"
         attributes:
           icon: "mdi:controller"
+          device_class: "power"
+
+      - unique_id: "_unique_binary_sensor_is_washing_machine_on"
+        name: "Washing Machine is Active"
+        state: >
+          {{
+            'off' if not has_value('input_boolean.washing_machine_detected_state') else
+            (
+              'on' if (states('input_boolean.washing_machine_detected_state')|lower == 'on') else
+              'off'
+            )
+          }}
+        attributes:
+          icon: "mdi:washing-machine-off"
+          device_class: "power"
+
+      - unique_id: "_unique_binary_sensor_is_dishwasher_on"
+        name: "Dishwasher is Active"
+        state: >
+          {{
+            'off' if not has_value('sensor.dishwasher_operation_state') else
+            (
+              'on' if (states('sensor.dishwasher_operation_state')|lower == 'run') or
+              (states('sensor.dishwasher_operation_state')|lower == 'finished') else
+              'off'
+            )
+          }}
+        attributes:
+          icon: "mdi:dishwasher-off"
+          device_class: "power"
+
+      - unique_id: "_unique_binary_sensor_is_tumble_dryer_on"
+        name: "Tumble-Dryer is Active"
+        state: >
+          {{
+            'off' if not has_value('sensor.samsung_tumble_dryer_dryer_machine_state') else
+            ('on' if states('sensor.samsung_tumble_dryer_dryer_machine_state')|lower == 'run' else 'off')
+          }}
+        attributes:
+          icon: "mdi:tumble-dryer-off"
           device_class: "power"
