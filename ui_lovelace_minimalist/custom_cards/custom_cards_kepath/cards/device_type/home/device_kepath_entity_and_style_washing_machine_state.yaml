@@ -3,7 +3,6 @@ device_kepath_entity_and_style_washing_machine_state:
   variables:
     var_kepath_device_entity_and_style_binary_count_state:
       data_entities:
-        # evaluated_entity: "input_boolean.washing_machine_detected_state"
         start_entity: "input_datetime.washing_machine_detected_start_time"
       style:
         use_themes: true
@@ -18,24 +17,6 @@ device_kepath_entity_and_style_washing_machine_state:
 
   state:
     - value: "on"
-    # - operator: "template"
-    #   value: >
-    #     [[[
-    #       var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.data_entities?.evaluated_entity;
-
-    #       var resolvedState;
-    #       var returnValue = false;
-
-    #       resolvedState = states[evaluatedStateEntity].state.toLowerCase();
-    #       if (typeof resolvedState !== 'undefined') {
-    #         if (resolvedState == 'on') {
-    #           returnValue = true;
-    #         }
-    #       }
-    #       //hass.callService('system_log', 'write', {level:'warning',message:'resolvedBatteryState: ' + resolvedBatteryState});
-
-    #       return returnValue;
-    #     ]]]
       icon: >
         [[[
           var evaluatedStartEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.data_entities?.start_entity;
@@ -85,37 +66,3 @@ device_kepath_entity_and_style_washing_machine_state:
               [[[
                 return `rgba(var(--color-${variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color}),0.2)`;
               ]]]
-    # - operator: "template"
-    #   value: >
-    #     [[[
-    #       var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.data_entities?.evaluated_entity;
-
-    #       var resolvedState;
-    #       var returnValue = false;
-
-    #       resolvedState = states[evaluatedStateEntity].state.toLowerCase();
-    #       if (typeof resolvedState !== 'undefined') {
-    #         if (resolvedState == 'unknown' || resolvedState == 'unavailable') {
-    #           returnValue = true;
-    #         }
-    #       }
-
-    #       return returnValue;
-    #     ]]]
-    #   icon: >
-    #     [[[
-    #       var returnedIcon = variables?.var_kepath_generic_get_set_group_button_objects?.unset_state?.icon;
-
-    #       return returnedIcon;
-    #     ]]]
-    #   styles:
-    #     icon:
-    #       - color: >
-    #           [[[
-    #             return `rgba(var(--color-${variables?.var_kepath_generic_get_set_group_button_objects?.unset_state?.icon_color}),1)`;
-    #           ]]]
-    #     img_cell:
-    #       - background-color: >
-    #           [[[
-    #             return `rgba(var(--color-${variables?.var_kepath_generic_get_set_group_button_objects?.unset_state?.background_color}),0.2)`;
-    #           ]]]
