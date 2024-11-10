@@ -166,7 +166,7 @@ views:
                             icon: "mdi:tune-vertical"
                             icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
-                          unset_state:
+                          error_state:
                             icon: "mdi:dock-window"
                             icon_color: "rgba(var(--color-red),0.5)"
                             background_color: "rgba(var(--color-red),0.1)"
@@ -212,7 +212,7 @@ views:
                             icon: "mdi:bell-ring-outline"
                             icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
-                          unset_state:
+                          error_state:
                             icon: "mdi:dock-window"
                             icon_color: "rgba(var(--color-red),0.5)"
                             background_color: "rgba(var(--color-red),0.1)"
@@ -258,7 +258,7 @@ views:
                             icon: "mdi:information-slab-circle-outline"
                             icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
-                          unset_state:
+                          error_state:
                             icon: "mdi:dock-window"
                             icon_color: "rgba(var(--color-red),0.5)"
                             background_color: "rgba(var(--color-red),0.1)"
@@ -306,7 +306,7 @@ views:
                             icon: "mdi:wrench-outline"
                             icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
-                          unset_state:
+                          error_state:
                             icon: "mdi:dock-window"
                             icon_color: "rgba(var(--color-red),0.5)"
                             background_color: "rgba(var(--color-red),0.1)"
@@ -343,7 +343,7 @@ views:
                             icon: "mdi:store-plus-outline"
                             icon_color: "rgba(var(--color-theme),0.4)"
                             background_color: "rgba(var(--color-theme),0.05)"
-                          unset_state:
+                          error_state:
                             icon: "mdi:dock-window"
                             icon_color: "rgba(var(--color-red),0.5)"
                             background_color: "rgba(var(--color-red),0.1)"
@@ -425,7 +425,7 @@ views:
                               icon: "mdi:lightbulb-multiple-off-outline"
                               icon_color: "grey"
                               background_color: "grey"
-                            unset_state:
+                            error_state:
                               icon: "mdi:lightbulb-group-off-outline"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -461,7 +461,7 @@ views:
                               icon: "mdi:power-plug-off"
                               icon_color: "grey"
                               background_color: "grey"
-                            unset_state:
+                            error_state:
                               icon: "mdi:power-plug-off-outline"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -500,7 +500,7 @@ views:
                               icon: "mdi:fan-off"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:fan-alert"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -535,7 +535,7 @@ views:
                               icon: "mdi:thermometer-low"
                               icon_color: "grey"
                               background_color: "grey"
-                            unset_state:
+                            error_state:
                               icon: "mdi:thermometer-alert"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -579,7 +579,7 @@ views:
                               icon: "mdi:robot-mower"
                               icon_color: "red"
                               background_color: "red"
-                            unset_state:
+                            error_state:
                               icon: "mdi:robot-mower-outline"
                         hold_action:
                           action: "more-info"
@@ -590,7 +590,7 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_washing_machine_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "binary_sensor.washing_machine_is_active"
+                        entity: "input_boolean.washing_machine_detected_state"
                         name: "Washer"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
@@ -601,7 +601,7 @@ views:
                               icon: "mdi:washing-machine-off"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:washing-machine-alert"
                         hold_action:
                           action: "more-info"
@@ -614,7 +614,7 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_tumble_dryer_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "binary_sensor.is_tumble_dryer_on"
+                        entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
                         name: "Dryer"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
@@ -627,7 +627,7 @@ views:
                               icon: "mdi:tumble-dryer-off"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:tumble-dryer-alert"
                         hold_action:
                           action: "more-info"
@@ -640,7 +640,7 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "device_kepath_entity_and_style_dishwasher_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "binary_sensor.is_dishwasher_on"
+                        entity: "sensor.dishwasher_operation_state"
                         name: "Dishwasher"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
@@ -651,7 +651,7 @@ views:
                               icon: "mdi:dishwasher-off"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:dishwasher-alert"
                         hold_action:
                           action: "more-info"
@@ -671,7 +671,7 @@ views:
                               icon: "mdi:fridge-industrial-off"
                               icon_color: "red"
                               background_color: "red"
-                            unset_state:
+                            error_state:
                               icon: "mdi:fridge-industrial-alert"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -702,7 +702,7 @@ views:
                               icon: "mdi:audio-video"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:audio-video-off"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -731,7 +731,7 @@ views:
                               icon: "mdi:controller-off"
                               icon_color: "red"
                               background_color: "red"
-                            unset_state:
+                            error_state:
                               icon: "mdi:controller-off"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -760,7 +760,7 @@ views:
                               icon: "mdi:desktop-tower"
                               icon_color: "red"
                               background_color: "red"
-                            unset_state:
+                            error_state:
                               icon: "mdi:desktop-tower"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -776,27 +776,20 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_simple_states"
+                          - "device_kepath_entity_and_style_printer_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "sensor.printer_simple_state"
+                        entity: "sensor.mfc_j870dw_status"
                         name: "Printer"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
                             evaluated_entity: "sensor.mfc_j870dw_last_restart"
                             return_type: "device"
-                          var_kepath_device_entity_and_style_simple_states:
-                            normal_state:
-                              icon: "mdi:printer"
-                            warning_state:
-                              icon: "mdi:printer-off"
-                            error_state:
-                              icon: "mdi:printer-alert"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:printer"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:printer-alert"
                         hold_action:
                           action: "more-info"
@@ -807,13 +800,13 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_simple_states"
+                          - "device_kepath_entity_and_style_nas_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "sensor.diskstation_simple_state"
+                        entity: "sensor.diskstation_volume_1_status"
                         name: "NAS"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
-                            evaluated_entity: "sensor.diskstation_volume_1_status"
+                            evaluated_entity: "sensor.diskstation_cpu_utilization_total"
                             return_type: "device"
                           var_kepath_generic_get_set_group_notification_objects:
                             unavailable:
@@ -822,19 +815,12 @@ views:
                             amount:
                               attribute_name: "zero_value"
                               count_tooltip: "not set"
-                          var_kepath_device_entity_and_style_simple_states:
-                            normal_state:
-                              icon: "mdi:nas"
-                            warning_state:
-                              icon: "mdi:database-cog"
-                            error_state:
-                              icon: "mdi:database-alert"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:database-cog"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:database-alert-outline"
                         hold_action:
                           action: "more-info"
@@ -845,27 +831,20 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_simple_states"
+                          - "device_kepath_entity_and_style_ups_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "sensor.ups_simple_state"
+                        entity: "sensor.ups_status"
                         name: "UPS"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
                             evaluated_entity: "sensor.ups_battery_charge"
                             return_type: "device"
-                          var_kepath_device_entity_and_style_simple_states:
-                            normal_state:
-                              icon: "mdi:power-plug-battery"
-                            warning_state:
-                              icon: "mdi:power-plug-battery"
-                            error_state:
-                              icon: "mdi:battery-alert"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:battery-alert"
                               icon_color: "red"
                               background_color: "red"
-                            unset_state:
+                            error_state:
                               icon: "mdi:power-plug-battery-outline"
                         hold_action:
                           action: "more-info"
@@ -953,7 +932,7 @@ views:
                               icon: "mdi:alarm-light-off"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:alarm-light-outline"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -977,10 +956,9 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_simple_states"
-                          - "device_kepath_entity_and_style_lock_extra_states"
+                          - "device_kepath_entity_and_style_lock_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "sensor.front_door_lock_simple_state"
+                        entity: "lock.front_door_top_bolt"
                         icon: "mdi:lock"
                         name: "Lock"
                         variables:
@@ -994,26 +972,12 @@ views:
                             amount:
                               attribute_name: "locks_unlocked_count"
                               count_tooltip: "num locks unlocked"
-                          var_kepath_device_entity_and_style_simple_states:
-                            normal_state:
-                              icon: "mdi:lock-open-variant"
-                            warning_state:
-                              icon: "mdi:lock-alert"
-                            error_state:
-                              icon: "mdi:lock-off"
-                          var_kepath_device_entity_and_style_lock_extra_states:
-                            locked_state:
-                              icon: "mdi:lock"
-                            jammed_state:
-                              icon: "mdi:lock-open-alert"
-                            door_open_state:
-                              icon: "mdi:door-open"
                           var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "mdi:lock-alert-outline"
+                              icon: "mdi:lock-open-variant"
                               icon_color: "red"
                               background_color: "red"
-                            unset_state:
+                            error_state:
                               icon: "mdi:lock-alert-outline"
                         hold_action:
                           action: "more-info"
@@ -1041,7 +1005,7 @@ views:
                               icon: "mdi:camera"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:camera-off-outline"
                           var_kepath_generic_group_popup:
                             action: "popup"
@@ -1077,7 +1041,7 @@ views:
                               icon: "mdi:door"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:door-closed-cancel"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             # door is open
@@ -1125,7 +1089,7 @@ views:
                               icon: "mdi:motion-sensor-off"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:cctv-off"
                           var_kepath_generic_group_popup:
                             action: "popup"
@@ -1223,7 +1187,7 @@ views:
                               icon: "mdi:cctv"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:cctv-off"
                           var_kepath_generic_group_popup:
                             action: "popup"
@@ -1259,7 +1223,7 @@ views:
                               icon: "phu:unifi-protect"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "phu:unifi-protect"
                         hold_action:
                           action: "more-info"
@@ -1284,7 +1248,7 @@ views:
                               icon: "mdi:television"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:television-off"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -1324,7 +1288,7 @@ views:
                               icon: "mdi:volume-low"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:volume-off"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -1366,7 +1330,7 @@ views:
                               icon: "mdi:playlist-music"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:playlist-music"
                         hold_action:
                           action: "more-info"
@@ -1436,7 +1400,7 @@ views:
                               icon: "mdi:devices"
                               icon_color: "grey"
                               background_color: "grey"
-                            unset_state:
+                            error_state:
                               icon: "mdi:cellphone-link-off"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1477,7 +1441,7 @@ views:
                               icon: "mdi:lan"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:lan-disconnect"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1518,7 +1482,7 @@ views:
                               icon: "mdi:lan"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:lan-disconnect"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1556,7 +1520,7 @@ views:
                               icon: "mdi:home-lightning-bolt"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:home-alert"
                           var_kepath_generic_group_popup:
                             action: "popup"
@@ -1584,7 +1548,7 @@ views:
                               icon: "mdi:lock-open-variant"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:lock-alert"
                           script_activate:
                             icon:
@@ -1622,7 +1586,7 @@ views:
                               icon: "mdi:speedometer"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:lan-disconnect"
                           var_kepath_generic_group_popup:
                             action: "popup"
@@ -1658,7 +1622,7 @@ views:
                               icon: "mdi:battery-unknown"
                               icon_color: "blue"
                               background_color: "blue"
-                            unset_state:
+                            error_state:
                               icon: "mdi:battery-alert"
                           var_kepath_generic_group_popup:
                             action: "popup"
@@ -1694,7 +1658,7 @@ views:
                               icon: "mdi:signal-off"
                               icon_color: "grey"
                               background_color: "grey"
-                            unset_state:
+                            error_state:
                               icon: "mdi:wifi-alert"
                           var_kepath_generic_group_popup:
                             action: "popup"
@@ -1731,7 +1695,7 @@ views:
                               icon: "si:ubiquiti"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "si:ubiquiti"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1769,7 +1733,7 @@ views:
                               icon: "si:zigbee"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "si:zigbee"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1804,7 +1768,7 @@ views:
                               icon: "mdi:ghost"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:ghost"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1837,7 +1801,7 @@ views:
                               icon: "mdi:shield-half-full"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:shield-off-outline"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1873,7 +1837,7 @@ views:
                               icon: "mdi:wrench-cog"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:wrench-cog-outline"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1912,7 +1876,7 @@ views:
                               icon: "si:icloud"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "si:icloud"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -1947,7 +1911,7 @@ views:
                               icon: "mdi:smoke-detector-variant"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:smoke-detector-variant-alert"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
@@ -2046,7 +2010,7 @@ views:
                               icon: "mdi:refresh"
                               icon_color: "green"
                               background_color: "green"
-                            unset_state:
+                            error_state:
                               icon: "mdi:reload-alert"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
@@ -2084,7 +2048,7 @@ views:
                               icon: "mdi:store"
                               icon_color: "#41bdf5"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "mdi:store-alert"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2123,7 +2087,7 @@ views:
                               icon: "si:adguard"
                               icon_color: "#68BC71"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "si:adguard"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2152,7 +2116,7 @@ views:
                               icon: "si:plex"
                               icon_color: "rgba(var(--color-yellow), 1)"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "si:plex"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2181,7 +2145,7 @@ views:
                               icon: "mdi:lan-connect"
                               icon_color: "#578B34"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "mdi:lan-connect"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2210,7 +2174,7 @@ views:
                               icon: "si:esphome"
                               icon_color: "#41bdf5"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "si:esphome"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2239,7 +2203,7 @@ views:
                               icon: "si:docker"
                               icon_color: "#13BEF9"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "si:docker"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2268,7 +2232,7 @@ views:
                               icon: "mdi:pipe"
                               icon_color: "#16A560"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "mdi:pipe"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2297,7 +2261,7 @@ views:
                               icon: "si:uptimekuma"
                               icon_color: "#5CDD8B"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "si:uptimekuma"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2326,7 +2290,7 @@ views:
                               icon: "mdi:chart-bar"
                               icon_color: "#E9568E"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "mdi:chart-bar"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2355,7 +2319,7 @@ views:
                               icon: "mdi:glasses"
                               icon_color: "#4422CB"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "mdi:glasses"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2384,7 +2348,7 @@ views:
                               icon: "si:visualstudiocode"
                               icon_color: "#007ACC"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "si:visualstudiocode"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2413,7 +2377,7 @@ views:
                               icon: "si:nginx"
                               icon_color: "#009639"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "si:nginx"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2442,7 +2406,7 @@ views:
                               icon: "mdi:music-circle"
                               icon_color: "rgba(var(--primary-text-color),1)"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "mdi:music-circle-outline"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
@@ -2471,7 +2435,7 @@ views:
                               icon: "si:phpmyadmin"
                               icon_color: "#6C78AF"
                               background_color: "rgba(var(--color-theme),0.05)"
-                            unset_state:
+                            error_state:
                               icon: "si:phpmyadmin"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"

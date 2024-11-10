@@ -1042,7 +1042,7 @@ card_kepath_floorplan_binary_item:
         icon: "mdi:lightbulb-outline"
         icon_color: "rgba(221, 221, 221, 1.0)"
         background_color: "rgba(130, 130, 130, 0.3)"
-      unset_state:
+      error_state:
         icon: "mdi:lightbulb-outline"
         icon_color: "rgba(var(--color-red), 0.6)"
         background_color: "rgba(130, 130, 130, 0.5)"
@@ -1077,12 +1077,12 @@ card_kepath_floorplan_binary_item:
   state:
     - template:
       value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
-      icon: "[[[return variables?.var_kepath_generic_button_icon_styles?.unset_state?.icon;]]]"
+      icon: "[[[return variables?.var_kepath_generic_button_icon_styles?.error_state?.icon;]]]"
       styles:
         icon:
-          - color: "[[[return variables?.var_kepath_generic_button_icon_styles?.unset_state?.icon_color;]]]"
+          - color: "[[[return variables?.var_kepath_generic_button_icon_styles?.error_state?.icon_color;]]]"
         img_cell:
-          - background-color: "[[[return variables?.var_kepath_generic_button_icon_styles?.unset_state?.background_color;]]]"
+          - background-color: "[[[return variables?.var_kepath_generic_button_icon_styles?.error_state?.background_color;]]]"
   tooltip: >
     [[[
       var toolTipText = "unknown item";

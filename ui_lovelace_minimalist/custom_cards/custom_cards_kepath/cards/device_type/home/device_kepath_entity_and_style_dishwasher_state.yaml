@@ -2,8 +2,8 @@
 device_kepath_entity_and_style_dishwasher_state:
   variables:
     var_kepath_device_entity_and_style_binary_count_state:
-      data_entities:
-        # evaluated_entity: "sensor.dishwasher_operation_state"
+      entity:
+        evaluated_entity: "sensor.dishwasher_operation_state"
         progress_entity: "sensor.dishwasher_remaining_program_time"
       style:
         use_themes: true
@@ -12,28 +12,27 @@ device_kepath_entity_and_style_dishwasher_state:
         background_color: "green"
 
   state:
-    - value: "on"
-    # - operator: "template"
-    #   value: >
-    #     [[[
-    #       var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.data_entities?.evaluated_entity;
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedStateEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
 
-    #       var resolvedState;
-    #       var returnValue = false;
+          var resolvedState;
+          var returnValue = false;
 
-    #       resolvedState = states[evaluatedStateEntity].state.toLowerCase();
-    #       if (typeof resolvedState !== 'undefined') {
-    #         if (resolvedState == 'run' || resolvedState == 'finished') {
-    #           returnValue = true;
-    #         }
-    #       }
-    #       //hass.callService('system_log', 'write', {level:'warning',message:'resolvedBatteryState: ' + resolvedBatteryState});
+          resolvedState = states[evaluatedStateEntity].state.toLowerCase();
+          if (typeof resolvedState !== 'undefined') {
+            if (resolvedState == 'run' || resolvedState == 'finished') {
+              returnValue = true;
+            }
+          }
+          //hass.callService('system_log', 'write', {level:'warning',message:'resolvedBatteryState: ' + resolvedBatteryState});
 
-    #       return returnValue;
-    #     ]]]
+          return returnValue;
+        ]]]
       icon: >
         [[[
-          var evaluatedProgressEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.data_entities?.progress_entity;
+          var evaluatedProgressEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.progress_entity;
           var returnedIcon = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;
 
           var resolvedProgressState;
