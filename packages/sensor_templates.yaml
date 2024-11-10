@@ -105,7 +105,7 @@ template:
           nest_smoke_alert_on_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'smoke')|selectattr('state', 'eq', 'on')|list|count }}"
           nest_carbon_monoxide_alert_on_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'carbon_monoxide')|selectattr('state', 'eq', 'on')|list|count }}"
           nest_heat_alert_on_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'heat')|selectattr('state', 'eq', 'on')|list|count }}"
-          occupancy_persons_home_count: "{{ expand(states.person)|selectattr('state','eq','home')|map(attribute='entity_id')|list|count }}"
+          occupancy_persons_home_count: "{{ expand(states.person)|selectattr('state','eq','home')|map(attribute='entity_id')|reject('eq','person.tablet')|list|count }}"
           occupancy_sensors_triggered_count: "{{ expand('group.all_occupancy_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           occupancy_sensors_triggered_away_count: "{{ expand('group.all_away_occupancy_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
@@ -119,7 +119,7 @@ template:
           signal_sensors_low_count: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|map('int',0)|select('lt',-80)|list|count}}"
           signal_sensors_unavailable_count: "{{ expand('group.all_signal_strength_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           signal_sensors_average_value: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|reject('undefined')|reject('in',['unavailable','unknown'])|map('int',0)|list|average|int(0)}}"
-          single_sensor_ups_state: "{{ 0 if (states('sensor.ups_status')|lower == 'online') or (states('sensor.ups_status')|lower == 'online battery charging') else 1 }}"
+          # single_sensor_ups_state: "{{ 0 if (states('sensor.ups_status')|lower == 'online') or (states('sensor.ups_status')|lower == 'online battery charging') else 1 }}"
           tab_action_sensors_triggered_count: >
             {{
               [
@@ -127,7 +127,6 @@ template:
                 state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0),
                 state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0),
                 state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0),
-                state_attr('sensor.binary_sensor_state_counts', 'single_sensor_ups_state')|int(0),
                 1 if (states('input_boolean.washing_machine_detected_state')|lower == 'on') else 0,
                 1 if (states('sensor.samsung_tumble_dryer_dryer_machine_state')|lower == 'run') else 0,
                 1 if (states('sensor.dishwasher_operation_state')|lower == 'run') else 0,
@@ -236,6 +235,106 @@ template:
           integrations_installed_list: "{{ states|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
           integrations_with_unavailable_entities: "{{ states|selectattr('state','eq', 'unavailable')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
           integrations_with_unknown_entities: "{{ states|selectattr('state','eq', 'unknown')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
+
+
+      # simple states
+      # - unique_id: "_unique_simple_state_"
+      #   name:
+      #   state:
+      #   attributes:
+      #     icon:
+      #     state_class: "measurement"
+
+      - unique_id: "_unique_simple_state_printer"
+        name: "Printer Simple State"
+        state: >
+          {{
+            'error' if (
+              states('sensor.mfc_j870dw_status')|lower|contains('jam') or
+              states('sensor.mfc_j870dw_status')|lower|contains('replace') or
+              states('sensor.mfc_j870dw_status')|lower|contains('cannot') or
+              states('sensor.mfc_j870dw_status')|lower|contains('cover') or
+              states('sensor.mfc_j870dw_status')|lower|contains('unable') or
+              states('sensor.mfc_j870dw_status')|lower|contains('unusable') or
+              states('sensor.mfc_j870dw_status')|lower|contains('wrong') or
+              states('sensor.mfc_j870dw_status')|lower|contains('full'))
+            else (
+              'warning' if (not has_value('sensor.mfc_j870dw_status') or
+              states('sensor.mfc_j870dw_status')|lower|contains('low'))
+            else 'normal'
+            )
+          }}
+        attributes:
+          icon: "mdi:printer"
+          state_class: "measurement"
+
+      - unique_id: "_unique_simple_state_nas"
+        name: "DiskStation Simple State"
+        state: >
+          {{
+            'error' if (
+              states('sensor.diskstation_volume_1_status')|lower|contains('degrade') or
+              states('sensor.diskstation_volume_1_status')|lower|contains('crash'))
+            else (
+              'normal' if (has_value('sensor.diskstation_volume_1_status') and
+              states('sensor.diskstation_volume_1_status')|lower|contains('normal'))
+            else 'warning'
+            )
+          }}
+        attributes:
+          icon: "mdi:nas"
+          state_class: "measurement"
+
+      - unique_id: "_unique_simple_state_ups"
+        name: "UPS Simple State"
+        state: >
+          {{
+            'warning' if (
+              states('sensor.ups_status')|lower == 'online battery charging' or
+              not has_value('sensor.ups_status'))
+            else (
+              'normal' if
+              states('sensor.ups_status')|lower == 'online'
+            else 'error'
+            )
+          }}
+        attributes:
+          icon: "mdi:power-plug-battery"
+          state_class: "measurement"
+
+      - unique_id: "_unique_simple_state_front_door_lock"
+        name: "Front Door Lock Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("lock.front_door_top_bolt") or
+              not has_value("binary_sensor.lock_45f7_door")
+            ) else (
+              'locked' if (
+                states('lock.front_door_top_bolt')|lower == 'locked'
+              ) else (
+                'jammed' if (
+                  states('lock.front_door_top_bolt')|lower == 'jammed'
+                ) else (
+                  'door_open' if (
+                    states("binary_sensor.lock_45f7_door") == 'on'
+                  ) else (
+                    'normal' if (
+                      states('lock.front_door_top_bolt')|lower == 'unlocked' and
+                      (
+                        now().hour < 21 or now().hour >= 7
+                      ) and
+                      state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0
+                    ) else 'error'
+                  )
+                )
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:lock-open-variant"
+          state_class: "measurement"
+
 
       - unique_id: "areas_and_entities_template_generated"
         name: "Areas Entity Attributes"
