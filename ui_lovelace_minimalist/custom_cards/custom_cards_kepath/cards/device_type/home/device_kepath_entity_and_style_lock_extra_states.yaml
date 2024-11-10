@@ -1,0 +1,281 @@
+---
+device_kepath_entity_and_style_lock_extra_states:
+  variables:
+    var_kepath_device_entity_and_style_lock_extra_states:
+      use_themes: true
+      locked_state:
+        icon: "mdi:circle-outline"
+        icon_color: "green"
+        background_color: "green"
+      jammed_state:
+        icon: "mdi:alert-circle"
+        icon_color: "purple"
+        background_color: "purple"
+      door_open_state:
+        icon: "mdi:alert-circle"
+        icon_color: "red"
+        background_color: "red"
+  state:
+    - value: "locked"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:circle-outline";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.icon.includes('mdi:') ||
+                variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.icon.includes('phu:') ||
+                variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.icon.includes('si:')) {
+              returnedIcon = variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_simple_states?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                //returnedColor = if_variable_undefined_use_default(variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.icon_color,returnedColorDefault)
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_simple_states?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_simple_states?.locked_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+
+    - value: "jammed"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:help-circle";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.icon.includes('mdi:') ||
+                variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.icon.includes('phu:') ||
+                variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.icon.includes('si:')) {
+              returnedIcon = variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_simple_states?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                //returnedColor = if_variable_undefined_use_default(variables?.var_kepath_device_entity_and_style_simple_states?.warning_state?.icon_color,returnedColorDefault)
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_simple_states?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_simple_states?.jammed_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+
+    - value: "door_open"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:alert-circle";
+          var returnedIcon;
+          if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.icon !== 'undefined') {
+            if (variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.icon.includes('mdi:') ||
+                variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.icon.includes('phu:') ||
+                variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.icon.includes('si:')) {
+              returnedIcon = variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_simple_states?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                //returnedColor = if_variable_undefined_use_default(variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.icon_color,returnedColorDefault)
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.icon_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.icon_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColorDefault = "yellow";
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes !== 'undefined') {
+                  if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.use_themes === 'boolean') {
+                    useThemes = variables?.var_kepath_device_entity_and_style_simple_states?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                if (typeof variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.background_color !== 'undefined') {
+                  returnedColor = variables?.var_kepath_device_entity_and_style_simple_states?.door_open_state?.background_color;
+                } else {
+                  returnedColor = returnedColorDefault;
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
+
+                return returnedColor;
+              ]]]
