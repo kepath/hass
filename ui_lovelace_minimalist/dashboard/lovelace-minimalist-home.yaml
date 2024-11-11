@@ -149,7 +149,7 @@ views:
                             substitute_icon: "mdi:fire-circle"
                           amount:
                             attribute_name: "tab_action_sensors_triggered_count"
-                            count_tooltip: "sum of on notification sensors"
+                            count_tooltip: "[[[ return states['sensor.minimalist_ui_binary_action_sensors_tooltip'].state ]]]"
                         var_kepath_generic_group_popup:
                           evaluated_entity: "group.all_lights"
                           action: "popup"
@@ -592,7 +592,7 @@ views:
                           - "device_kepath_entity_and_style_simple_states"
                           - "device_kepath_entity_and_style_washing_machine_extra_states"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "binary_sensor.washing_machine_is_active"
+                        entity: "sensor.washing_machine_sensor_simple_state"
                         name: "Washer"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
@@ -600,7 +600,7 @@ views:
                             return_type: "device"
                           var_kepath_device_entity_and_style_simple_states:
                             warning_state:
-                              icon: "mdi:washing-machine-off"
+                              icon: "mdi:washing-machine-alert"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:washing-machine-off"
@@ -1006,13 +1006,13 @@ views:
                               icon: "mdi:lock-alert"
                             error_state:
                               icon: "mdi:lock-off"
-                          var_kepath_device_entity_and_style_lock_extra_states:
-                            locked_state:
-                              icon: "mdi:lock"
-                            jammed_state:
-                              icon: "mdi:lock-open-alert"
-                            door_open_state:
-                              icon: "mdi:door-open"
+                          # var_kepath_device_entity_and_style_lock_extra_states:
+                          #   locked_state:
+                          #     icon: "mdi:lock"
+                          #   jammed_state:
+                          #     icon: "mdi:lock-open-alert"
+                          #   door_open_state:
+                          #     icon: "mdi:door-open"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:lock-alert-outline"
@@ -1236,6 +1236,10 @@ views:
                               icon: "mdi:motion-sensor"
                               icon_color: "green"
                               background_color: "green"
+                            triggered_and_away_state:
+                              icon: "mdi:motion-sensor"
+                              icon_color: "blue"
+                              background_color: "blue"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:cctv"
