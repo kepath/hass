@@ -200,14 +200,14 @@ template:
         name: "Washing Machine is Active"
         state: >
           {{
-            'off' if not has_value('input_boolean.washing_machine_detected_state') else
+            'off' if not has_value('sensor.washing_machine_sensor_simple_state') else
             (
-              'on' if (states('input_boolean.washing_machine_detected_state')|lower == 'on') else
+              'on' if (states('sensor.washing_machine_sensor_simple_state')|lower == 'active') else
               'off'
             )
           }}
         attributes:
-          icon: "mdi:washing-machine-off"
+          icon: "mdi:washing-machine"
           device_class: "power"
 
       - unique_id: "_unique_binary_sensor_is_dishwasher_on"
@@ -222,7 +222,7 @@ template:
             )
           }}
         attributes:
-          icon: "mdi:dishwasher-off"
+          icon: "mdi:dishwasher"
           device_class: "power"
 
       - unique_id: "_unique_binary_sensor_is_tumble_dryer_on"
@@ -233,5 +233,5 @@ template:
             ('on' if states('sensor.samsung_tumble_dryer_dryer_machine_state')|lower == 'run' else 'off')
           }}
         attributes:
-          icon: "mdi:tumble-dryer-off"
+          icon: "mdi:tumble-dryer"
           device_class: "power"
