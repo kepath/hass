@@ -214,7 +214,7 @@ template:
             )
           }}
         attributes:
-          icon: "mdi:printer"
+          icon: "mdi:printer-alert"
           state_class: "measurement"
 
       - unique_id: "_unique_simple_state_nas"
@@ -248,7 +248,7 @@ template:
             )
           }}
         attributes:
-          icon: "mdi:power-plug-battery"
+          icon: "mdi:battery-alert-variant"
           state_class: "measurement"
 
       - unique_id: "_unique_simple_state_front_door_lock"
@@ -281,7 +281,7 @@ template:
             )
           }}
         attributes:
-          icon: "mdi:lock-open-variant"
+          icon: "mdi:lock-open-variant-outline"
           state_class: "measurement"
 
       - unique_id: "_unique_simple_state_all_occupancy_sensors"
@@ -291,19 +291,23 @@ template:
             'warning' if (
               not has_value("sensor.binary_sensor_state_counts")
             ) else (
-              'triggered_home' if (
-                state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0 and
-                state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count") > 0
+              'not_triggered' if (
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count") == 0
               ) else (
-                'triggered_away' if (
-                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") == 0 and
+                'triggered_home' if (
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0 and
                   state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count") > 0
-                ) else 'error'
+                ) else (
+                  'triggered_away' if (
+                    state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") == 0 and
+                    state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count") > 0
+                  ) else 'error'
+                )
               )
             )
           }}
         attributes:
-          icon: "mdi:motion-sensor"
+          icon: "mdi:motion-sensor-off"
           state_class: "measurement"
 
       - unique_id: "_unique_simple_state_away_occupancy_sensors"
@@ -313,19 +317,48 @@ template:
             'warning' if (
               not has_value("sensor.binary_sensor_state_counts")
             ) else (
-              'triggered_home' if (
-                state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0 and
-                state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") > 0
+              'not_triggered' if (
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") == 0
               ) else (
-                'triggered_away' if (
-                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") == 0 and
+                'triggered_home' if (
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0 and
                   state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") > 0
-                ) else 'error'
+                ) else (
+                  'triggered_away' if (
+                    state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") == 0 and
+                    state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") > 0
+                  ) else 'error'
+                )
               )
             )
           }}
         attributes:
           icon: "mdi:motion-sensor"
+          state_class: "measurement"
+
+      - unique_id: "_unique_simple_state_away_occupancy_sensors"
+        name: "Washing Machine Sensor Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
+              not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w") or
+              not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
+              not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w")
+            ) else (
+              'active' if (
+                as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_10w", now())) >
+                as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_10w", now()))
+            ) else (
+                'standby' if (
+                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_5w", now())) >
+                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_5w", now()))
+                ) else 'off'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:washing-machine-alert"
           state_class: "measurement"
 
       - unique_id: "areas_and_entities_template_generated"

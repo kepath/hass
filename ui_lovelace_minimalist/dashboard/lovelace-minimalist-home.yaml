@@ -588,7 +588,9 @@ views:
                         type: "custom:button-card"
                         template:
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_washing_machine_state"
+                          # - "device_kepath_entity_and_style_washing_machine_state"
+                          - "device_kepath_entity_and_style_simple_states"
+                          - "device_kepath_entity_and_style_washing_machine_extra_states"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
                         entity: "binary_sensor.washing_machine_is_active"
                         name: "Washer"
@@ -596,11 +598,14 @@ views:
                           var_kepath_navigation_to_parent_from_entity:
                             evaluated_entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
                             return_type: "device"
+                          var_kepath_device_entity_and_style_simple_states:
+                            warning_state:
+                              icon: "mdi:washing-machine-off"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:washing-machine-off"
-                              icon_color: "blue"
-                              background_color: "blue"
+                              icon_color: "red"
+                              background_color: "red"
                             unset_state:
                               icon: "mdi:washing-machine-alert"
                         hold_action:
@@ -1117,9 +1122,9 @@ views:
                               count_tooltip: "num occupancy sensors on"
                           var_kepath_device_entity_and_style_simple_states:
                             warning_state:
-                              icon: "mdi:motion-sensor-off"
+                              icon: "mdi:cctv-off"
                             error_state:
-                              icon: "mdi:motion-sensor-off"
+                              icon: "mdi:cctv-off"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:motion-sensor-off"
@@ -1223,12 +1228,12 @@ views:
                               count_tooltip: "num occupancy sensors on"
                           var_kepath_device_entity_and_style_simple_states:
                             warning_state:
-                              icon: "mdi:motion-sensor-off"
+                              icon: "mdi:cctv-off"
                             error_state:
-                              icon: "mdi:motion-sensor-off"
+                              icon: "mdi:cctv-off"
                           var_kepath_device_entity_and_style_occupancy_state:
                             triggered_and_home_state:
-                              icon: "mdi:motion-sensor-off"
+                              icon: "mdi:motion-sensor"
                               icon_color: "green"
                               background_color: "green"
                           var_kepath_generic_button_icon_styles:
