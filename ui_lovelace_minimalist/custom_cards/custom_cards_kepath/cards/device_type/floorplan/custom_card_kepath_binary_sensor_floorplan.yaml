@@ -263,31 +263,3 @@ custom_card_kepath_binary_sensor_floorplan:
                 exclude_unknown_state: "[[[ return variables.ulm_card_kepath_binary_sensor_count_amount_tap_action.popup.auto_entities.exclude_unknown_state; ]]]"
                 exclude_unavailable_state: "[[[ return variables.ulm_card_kepath_binary_sensor_count_amount_tap_action.popup.auto_entities.exclude_unavailable_state; ]]]"
         entity: "[[[ return variables?.ulm_card_kepath_binary_sensor_count_amount_tap_action?.entity; ]]]"
-
-# custom_floor_selector:
-#   tap_action:
-#     action: "fire-dom-event"
-#     browser_mod:
-#       service: "browser_mod.sequence"
-#       data:
-#         sequence:
-#           - service: "input_select.select_option"
-#             data:
-#               option: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.tap_action.navigate_floor;]]]"
-#               entity_id: "input_select.floorplan_floor"
-#           - service: "browser_mod.navigate"
-#             data:
-#               path: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.tap_action.navigate_path;]]]"
-#   hold_action:
-#     action: "fire-dom-event"
-#     browser_mod:
-#       service: "browser_mod.sequence"
-#       data:
-#         sequence:
-#           - service: "input_select.select_option"
-#             data:
-#               option: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.hold_action.navigate_floor;]]]"
-#               entity_id: "input_select.floorplan_floor"
-#           - service: "browser_mod.navigate"
-#             data:
-#               path: "[[[return variables.ulm_card_kepath_binary_sensor_floorplan.hold_action.navigate_path;]]]"
