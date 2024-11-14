@@ -355,17 +355,22 @@ template:
       - unique_id: "_unique_minimalist_ui_binary_action_sensors_tooltip"
         name: "minimalist_ui Binary Action Sensors Tooltip"
         state: >
-          {{-state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string + ' lights on,' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 0-}}
-          {{-state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|string + ' fans on,' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 0-}}
-          {{-state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|string + ' heat on,' if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0-}}
-          {{-state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|string + ' mowers on,' if state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0) > 0-}}
-          {{-'washer on,' if states('binary_sensor.washing_machine_is_active')|lower == 'on'-}}
-          {{-'dryer on,' if states('binary_sensor.is_tumble_dryer_on')|lower == 'on'-}}
-          {{-'dishwasher on,' if states('binary_sensor.is_dishwasher_on')|lower == 'on'-}}
-          {{-'fridge on,' if states('switch.drinks_fridge_plug_bed_c')|lower == 'on'-}}
-          {{-'reciever on,' if states('binary_sensor.yamaha_reciever_state')|lower == 'on'-}}
-          {{-'arcade pc on,' if states('binary_sensor.is_arcade_pc_on')|lower == 'on'-}}
-          {{-'bigpc on,' if states('binary_sensor.is_big_pc_on')|lower == 'on'-}}
+          {{- state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 0 -}}
+          {{- ' light on,' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) == 1 -}}
+          {{- ' lights on,' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 1 -}}
+          {{- state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 0 -}}
+          {{- ' fan on,' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) == 1 -}}
+          {{- ' fans on,' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 1 -}}
+          {{- state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0 -}}
+          {{- ' heat on,' if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0 -}}
+          {{- 'mower on,' if state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0) > 0 -}}
+          {{- 'washer on,' if states('binary_sensor.washing_machine_is_active')|lower == 'on' -}}
+          {{- 'dryer on,' if states('binary_sensor.is_tumble_dryer_on')|lower == 'on' -}}
+          {{- 'dishwasher on,' if states('binary_sensor.is_dishwasher_on')|lower == 'on' -}}
+          {{- 'fridge on,' if states('switch.drinks_fridge_plug_bed_c')|lower == 'on' -}}
+          {{- 'reciever on,' if states('binary_sensor.yamaha_reciever_state')|lower == 'on' -}}
+          {{- 'arcade pc on,' if states('binary_sensor.is_arcade_pc_on')|lower == 'on' -}}
+          {{- 'bigpc on,' if states('binary_sensor.is_big_pc_on')|lower == 'on' -}}
         attributes:
           icon: "mdi:tooltip-question-outline"
           state_class: "measurement"
