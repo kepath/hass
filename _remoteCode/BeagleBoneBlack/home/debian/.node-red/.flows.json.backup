@@ -1,0 +1,5297 @@
+[
+    {
+        "id": "f813b19c4867973b",
+        "type": "tab",
+        "label": "Read Modbus",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5d347b322b2c72b7",
+        "type": "tab",
+        "label": "Write Modbus",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "059d2ad32172df09",
+        "type": "modbus-client",
+        "name": "R485",
+        "clienttype": "serial",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "127.0.0.1",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB0",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "19200",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "200",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": 1,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": 2000,
+        "parallelUnitIdsAllowed": false
+    },
+    {
+        "id": "550763e2fb21d159",
+        "type": "server",
+        "name": "Home Assistant",
+        "version": 5,
+        "addon": false,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": true,
+        "cacheJson": true,
+        "heartbeat": false,
+        "heartbeatInterval": "30",
+        "areaSelector": "friendlyName",
+        "deviceSelector": "friendlyName",
+        "entitySelector": "friendlyName",
+        "statusSeparator": ": ",
+        "statusYear": "hidden",
+        "statusMonth": "short",
+        "statusDay": "numeric",
+        "statusHourCycle": "default",
+        "statusTimeFormat": "h:m",
+        "enableGlobalContextStore": true
+    },
+    {
+        "id": "ed44c859cb9971d1",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "f896ccb651f81b3f",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "7886058ce6266012",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "ed44c859cb9971d1",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "77748280879cdaaf",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-apparent-power",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-apparent-power"
+            },
+            {
+                "property": "device_class",
+                "value": "apparent_power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "VoltAmps"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "07be4b7db2f22718",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-volts",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-volts"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "voltage"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "V"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "aef21f6d0e8bc072",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-current",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-current"
+            },
+            {
+                "property": "device_class",
+                "value": "current"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "A"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "2c8931ca526a98cb",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-active-power",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-active-power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "082255962fab75ab",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-reactive-power",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-reactive-power"
+            },
+            {
+                "property": "device_class",
+                "value": "reactive_power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "VAr"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "832ecc34c1e5dc69",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-power-factor",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-power-factor"
+            },
+            {
+                "property": "device_class",
+                "value": "power_factor"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "%"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "5830d8596f728044",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-phase-angle",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-phase-angle"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": "mdi:angle-acute"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "Degrees"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "d307095ca0288a39",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-frequency",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-frequency"
+            },
+            {
+                "property": "device_class",
+                "value": "frequency"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "Hz"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "4240a4ecedb4ac34",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-import-active-energy",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-import-active-energy"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total_increasing"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "fd3deaf4107d3378",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-export-active-energy",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-export-active-energy"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total_increasing"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "523f9ad06db3fdda",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-import-reactive-energy",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-import-reactive-energy"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kVArh"
+            },
+            {
+                "property": "state_class",
+                "value": "total_increasing"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "1eda0815a3f20fa1",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-export-reactive-energy",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-export-reactive-energy"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kVArh"
+            },
+            {
+                "property": "state_class",
+                "value": "total_increasing"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "cb8e9dadf3e11f27",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-total-active-energy",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-total-active-energy"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "38b5d42830347846",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-total-reactive-energy",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-total-reactive-energy"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kVArh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "c37a87911e3320bf",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-total-system-power-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-total-system-power-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "6c7339123c29a4e3",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-maximum-total-system-power-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-maximum-total-system-power-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "4e8b0a533e58c7a8",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-current-system-positive-power-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-current-system-positive-power-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "4361bf32ed5282f7",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-maximum-system-positive-power-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-maximum-system-positive-power-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "37c3e9dfa35f832e",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-current-system-reverse-power-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-current-system-reverse-power-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "572fdef27ca05885",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-maximum-system-reverse-power-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-maximum-system-reverse-power-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "5787410bab231884",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-current-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-current-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "current"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "A"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "2ca9eb886b934ce1",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-maximum-current-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-maximum-current-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "current"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "A"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "366f4cdf670937af",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-active-energy",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-active-energy"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "f0f5b22f4688cff4",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-total-system-energy-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-total-system-energy-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "b93e35f4eaad29b5",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-maximum-total-system-energy-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-maximum-total-system-energy-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "c3be3a54a3dd51c8",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-current-system-positive-energy-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-current-system-positive-energy-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "8aead7f6f231bde4",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-maximum-system-positive-energy-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-maximum-system-positive-energy-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "c530634c61808e89",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-current-system-reverse-energy-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-current-system-reverse-energy-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "21fa4bedc484b205",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-maximum-system-reverse-energy-demand",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-maximum-system-reverse-energy-demand"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "a55e2e47a26c78d1",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-total-active-energy-inverted",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-total-active-energy-inverted"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "ad5af7557c3d25ad",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-cumulative-total-active-energy",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-cumulative-total-active-energy"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "b7f42d99321a4cb0",
+        "type": "ha-entity-config",
+        "server": "550763e2fb21d159",
+        "deviceConfig": "",
+        "name": "sensor config for SDM220-modbus-cumulative-total-active-energy-inverted",
+        "version": 6,
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "SDM220-modbus-cumulative-total-active-energy-inverted"
+            },
+            {
+                "property": "device_class",
+                "value": "energy"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "kWh"
+            },
+            {
+                "property": "state_class",
+                "value": "total"
+            },
+            {
+                "property": "last_reset",
+                "value": ""
+            }
+        ],
+        "resend": true
+    },
+    {
+        "id": "725a6934b53cfaf0",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "volts",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 0, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 120,
+        "wires": [
+            [
+                "5a372a3fd9f57eb0",
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "ced1a70c4396528c",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "0",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-volts",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 120,
+        "wires": [
+            [
+                "725a6934b53cfaf0"
+            ]
+        ]
+    },
+    {
+        "id": "5a372a3fd9f57eb0",
+        "type": "debug",
+        "z": "f813b19c4867973b",
+        "name": "volts-function",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 300,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "9bed4afca7e8d25b",
+        "type": "debug",
+        "z": "f813b19c4867973b",
+        "name": "flex-getter",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "f0191cf563c95539",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "2 X Int16 > Int32 float",
+        "func": "let pay = msg.payload\nconst buf = Buffer.allocUnsafe(4); // (4) is ok\nbuf.writeUInt16BE(pay[0]); // high byte\nbuf.writeUInt16BE(pay[1], 2); // low byte\nmsg.responseBuffer.float = buf.readFloatBE(0);\nmsg.payload = (msg.responseBuffer.float).toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 480,
+        "wires": [
+            [
+                "681e0c3ccd589c22",
+                "8bb8ec072a66aa0b",
+                "8793bcaf61e2deb7"
+            ]
+        ]
+    },
+    {
+        "id": "681e0c3ccd589c22",
+        "type": "debug",
+        "z": "f813b19c4867973b",
+        "name": "Int32",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "8bb8ec072a66aa0b",
+        "type": "switch",
+        "z": "f813b19c4867973b",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-volts",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-current",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-active-power",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-apparent-power",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-reactive-power",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-power-factor",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-phase-angle",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-frequency",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-import-active-energy",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-export-active-energy",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-import-reactive-energy",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-export-reactive-energy",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-total-active-energy",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-total-reactive-energy",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-total-system-power-demand",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-maximum-total-system-power-demand",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-current-system-positive-power-demand",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-maximum-system-positive-power-demand",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-current-system-reverse-power-demand",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-maximum-system-reverse-power-demand",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-current-demand",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SDM220-modbus-maximum-current-demand",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 22,
+        "x": 650,
+        "y": 860,
+        "wires": [
+            [
+                "a1a92fb29c6c9254"
+            ],
+            [
+                "118fbab1906009f3"
+            ],
+            [
+                "0577945c428f27fb"
+            ],
+            [
+                "174dc90871381738"
+            ],
+            [
+                "f3a13d90eb7f9a41"
+            ],
+            [
+                "9af4615517d7c2b1"
+            ],
+            [
+                "4b5518e59156dd4b"
+            ],
+            [
+                "f9f2aa4c83aeb9da"
+            ],
+            [
+                "1fa358a7e15f0c29"
+            ],
+            [
+                "89ab1c3432c58171"
+            ],
+            [
+                "db09cd2b6e06e84d"
+            ],
+            [
+                "68801b5971ebd002"
+            ],
+            [
+                "cf99e8a7f80b5cba"
+            ],
+            [
+                "7b1b854004a17bd9"
+            ],
+            [
+                "750752957d40c28d"
+            ],
+            [
+                "443fb786e34d2f40"
+            ],
+            [
+                "3f8c31dc6912ac25"
+            ],
+            [
+                "c03e0521ee053743"
+            ],
+            [
+                "f43c09c698722e2c"
+            ],
+            [
+                "43f02221a6d61224"
+            ],
+            [
+                "be9a00ca90383908"
+            ],
+            [
+                "a7e5a4ea5b9bf4f0"
+            ]
+        ]
+    },
+    {
+        "id": "17cf46714f31feba",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "current",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 6, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 180,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "e98751ec75aecac2",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "active-power",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 12, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 240,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "3bceeecd4e055dd5",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "apparent-power",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 18, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 300,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "5d01d0ea07feb1dc",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "reactive-power",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 24, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 360,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "638f00c3d10a25a2",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "power-factor",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 30, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 420,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "9ac6eb586ef253d1",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "phase-angle",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 36, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 480,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "42da66d8675290da",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "frequency",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 70, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 540,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "f4c18155b1413911",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "import-active-energy",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 72, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 600,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "9b6086d85f7d4712",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "export-active-energy",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 74, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 660,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "17f3634e677f07e0",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "import-reactive-energy",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 76, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 720,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "d06ea3472a1e606a",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "export-reactive-energy",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 78, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 780,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "7d4ed72a1c78f240",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "total-active-energy",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 342, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 840,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "0cea72d418162b7c",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "total-reactive-energy",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 344, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 900,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "4afde566782f23fa",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "maximum-total-system-power-demand",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 86, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 1060,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "4d480e4eb0703efb",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "current-system-positive-power-demand",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 88, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 1120,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "e09b76e14250797b",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "maximum-system-positive-power-demand",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 90, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1180,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "3ca0af46941890f7",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "current-system-reverse-power-demand",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 92, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 1240,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "61e7cbbacc5cd614",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "maximum-system-reverse-power-demand",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 94, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1300,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "0ce44582366c85f3",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "current-demand",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 258, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 1400,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "aa9bf62e62d09efd",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "maximum-current-demand",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 264, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1460,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "162cbb7a9bf97026",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "6",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-current",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 180,
+        "wires": [
+            [
+                "17cf46714f31feba"
+            ]
+        ]
+    },
+    {
+        "id": "74cd8a3e8652c1ec",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "12",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-active-power",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 240,
+        "wires": [
+            [
+                "e98751ec75aecac2"
+            ]
+        ]
+    },
+    {
+        "id": "175e9b921846e2f7",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "18",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-apparent-power",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 300,
+        "wires": [
+            [
+                "3bceeecd4e055dd5"
+            ]
+        ]
+    },
+    {
+        "id": "5d02164fb59a29a4",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "24",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-reactive-power",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 360,
+        "wires": [
+            [
+                "5d01d0ea07feb1dc"
+            ]
+        ]
+    },
+    {
+        "id": "128d0b9c3c71e3bf",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "30",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-power-factor",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 420,
+        "wires": [
+            [
+                "638f00c3d10a25a2"
+            ]
+        ]
+    },
+    {
+        "id": "327e11fe31f55330",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "36",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-phase-angle",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 480,
+        "wires": [
+            [
+                "9ac6eb586ef253d1"
+            ]
+        ]
+    },
+    {
+        "id": "a627bb891d15768c",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "70",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-frequency",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 540,
+        "wires": [
+            [
+                "42da66d8675290da"
+            ]
+        ]
+    },
+    {
+        "id": "de2407b4710a2166",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "72",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-import-active-energy",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 600,
+        "wires": [
+            [
+                "f4c18155b1413911"
+            ]
+        ]
+    },
+    {
+        "id": "e5d2ae6ac3e1ba93",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "74",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-export-active-energy",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 660,
+        "wires": [
+            [
+                "9b6086d85f7d4712"
+            ]
+        ]
+    },
+    {
+        "id": "9e6cade3a192f263",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "76",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-import-reactive-energy",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 720,
+        "wires": [
+            [
+                "17f3634e677f07e0"
+            ]
+        ]
+    },
+    {
+        "id": "2421c7f4956300dc",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "78",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-export-reactive-energy",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 780,
+        "wires": [
+            [
+                "d06ea3472a1e606a"
+            ]
+        ]
+    },
+    {
+        "id": "2ae77cecc8eb7717",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "342",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-total-active-energy",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 840,
+        "wires": [
+            [
+                "7d4ed72a1c78f240"
+            ]
+        ]
+    },
+    {
+        "id": "3c20572d88eb9f71",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "344",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-total-reactive-energy",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 900,
+        "wires": [
+            [
+                "0cea72d418162b7c"
+            ]
+        ]
+    },
+    {
+        "id": "66e1da79bb44b068",
+        "type": "debug",
+        "z": "f813b19c4867973b",
+        "name": "volts-HA",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a1cec56390c646d1",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "84",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-total-system-power-demand",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1000,
+        "wires": [
+            [
+                "31dd11b3571b5c35"
+            ]
+        ]
+    },
+    {
+        "id": "acf85bbec2ed7373",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "86",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-maximum-total-system-power-demand",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1060,
+        "wires": [
+            [
+                "4afde566782f23fa"
+            ]
+        ]
+    },
+    {
+        "id": "08a4332193636958",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "88",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-current-system-positive-power-demand",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1120,
+        "wires": [
+            [
+                "4d480e4eb0703efb"
+            ]
+        ]
+    },
+    {
+        "id": "6622672e0b782d85",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "90",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-maximum-system-positive-power-demand",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1180,
+        "wires": [
+            [
+                "e09b76e14250797b"
+            ]
+        ]
+    },
+    {
+        "id": "b6aaa1c92a79dd7d",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "92",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-current-system-reverse-power-demand",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1240,
+        "wires": [
+            [
+                "3ca0af46941890f7"
+            ]
+        ]
+    },
+    {
+        "id": "fe8cd87dcf4113c1",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "94",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-maximum-system-reverse-power-demand",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1300,
+        "wires": [
+            [
+                "61e7cbbacc5cd614"
+            ]
+        ]
+    },
+    {
+        "id": "4fb3cb922dbebab9",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "258",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-current-demand",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1400,
+        "wires": [
+            [
+                "0ce44582366c85f3"
+            ]
+        ]
+    },
+    {
+        "id": "7b7983047c1e7909",
+        "type": "inject",
+        "z": "f813b19c4867973b",
+        "name": "264",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-modbus-maximum-current-demand",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1460,
+        "wires": [
+            [
+                "aa9bf62e62d09efd"
+            ]
+        ]
+    },
+    {
+        "id": "9000aae5762bdba6",
+        "type": "modbus-flex-getter",
+        "z": "f813b19c4867973b",
+        "name": "Get Read Registers",
+        "showStatusActivities": true,
+        "showErrors": true,
+        "logIOActivities": false,
+        "server": "059d2ad32172df09",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "x": 590,
+        "y": 400,
+        "wires": [
+            [
+                "9bed4afca7e8d25b",
+                "f0191cf563c95539"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "31dd11b3571b5c35",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "total-system-power-demand",
+        "func": "msg.payload = { value: msg.payload, 'fc': 4, 'unitid': 1, 'address': 84, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1000,
+        "wires": [
+            [
+                "9000aae5762bdba6"
+            ]
+        ]
+    },
+    {
+        "id": "37515b8273993907",
+        "type": "ui_chart",
+        "z": "f813b19c4867973b",
+        "name": "",
+        "group": "7886058ce6266012",
+        "order": 0,
+        "width": "0",
+        "height": "0",
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "auto",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 710,
+        "y": 1300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8793bcaf61e2deb7",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "d": true,
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "output",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "timestamp",
+                "pt": "msg",
+                "to": "modbusRequest.value",
+                "tot": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "messageId",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "modbusRequest",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "responseBuffer",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "output",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$number(payload)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 1220,
+        "wires": [
+            [
+                "1de864e7aa05a406",
+                "37515b8273993907"
+            ]
+        ]
+    },
+    {
+        "id": "1de864e7aa05a406",
+        "type": "debug",
+        "z": "f813b19c4867973b",
+        "name": "reset payload",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "4b5518e59156dd4b",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round float",
+        "rules": [
+            {
+                "t": "set",
+                "p": "output",
+                "pt": "msg",
+                "to": "$round($number(msg.output))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 630,
+        "y": 660,
+        "wires": [
+            [
+                "bd7bc5f1d07ea978"
+            ]
+        ]
+    },
+    {
+        "id": "9af4615517d7c2b1",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round float",
+        "rules": [
+            {
+                "t": "set",
+                "p": "output",
+                "pt": "msg",
+                "to": "$round($number(msg.output))",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 630,
+        "y": 620,
+        "wires": [
+            [
+                "7c7bab394127765b"
+            ]
+        ]
+    },
+    {
+        "id": "716deb3e28643f2a",
+        "type": "comment",
+        "z": "f813b19c4867973b",
+        "name": "battery",
+        "info": "Appears to be inverted (energy in is positive)",
+        "x": 1250,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "ea977b6cc1c6daf4",
+        "type": "watt2kwh",
+        "z": "f813b19c4867973b",
+        "format": "kwh",
+        "maximum": "60",
+        "maximumunit": "mins",
+        "name": "",
+        "x": 1520,
+        "y": 1300,
+        "wires": [
+            [
+                "f57f3306cd227f26"
+            ]
+        ]
+    },
+    {
+        "id": "aa09568d509b534d",
+        "type": "watt2kwh",
+        "z": "f813b19c4867973b",
+        "format": "kwh",
+        "maximum": "60",
+        "maximumunit": "mins",
+        "name": "",
+        "x": 1520,
+        "y": 1240,
+        "wires": [
+            [
+                "9804c23f63f37bf4"
+            ]
+        ]
+    },
+    {
+        "id": "40eb5812b2487cac",
+        "type": "watt2kwh",
+        "z": "f813b19c4867973b",
+        "format": "kwh",
+        "maximum": "60",
+        "maximumunit": "mins",
+        "name": "",
+        "x": 1520,
+        "y": 1180,
+        "wires": [
+            [
+                "2f86235e1884fac5"
+            ]
+        ]
+    },
+    {
+        "id": "3962e5af32aa05d1",
+        "type": "watt2kwh",
+        "z": "f813b19c4867973b",
+        "format": "kwh",
+        "maximum": "60",
+        "maximumunit": "mins",
+        "name": "",
+        "x": 1520,
+        "y": 1120,
+        "wires": [
+            [
+                "53d48ee7800d74ac"
+            ]
+        ]
+    },
+    {
+        "id": "16814877076d4b6e",
+        "type": "watt2kwh",
+        "z": "f813b19c4867973b",
+        "format": "kwh",
+        "maximum": "60",
+        "maximumunit": "mins",
+        "name": "",
+        "x": 1520,
+        "y": 1060,
+        "wires": [
+            [
+                "e75111c6926608e5"
+            ]
+        ]
+    },
+    {
+        "id": "7b1478b4e4d47472",
+        "type": "watt2kwh",
+        "z": "f813b19c4867973b",
+        "format": "kwh",
+        "maximum": "60",
+        "maximumunit": "mins",
+        "name": "",
+        "x": 1520,
+        "y": 1000,
+        "wires": [
+            [
+                "42701e5008dfc76a"
+            ]
+        ]
+    },
+    {
+        "id": "747743e0029ff37c",
+        "type": "watt2kwh",
+        "z": "f813b19c4867973b",
+        "format": "kwh",
+        "maximum": "60",
+        "maximumunit": "mins",
+        "name": "",
+        "x": 1520,
+        "y": 240,
+        "wires": [
+            [
+                "79ceddc011d2b2cb",
+                "dbdbccd7a81d5416"
+            ]
+        ]
+    },
+    {
+        "id": "79ceddc011d2b2cb",
+        "type": "debug",
+        "z": "f813b19c4867973b",
+        "name": "Watts2kWh",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1770,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "dbdbccd7a81d5416",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round output",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round($number(msg.payload), 4)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1540,
+        "y": 320,
+        "wires": [
+            [
+                "bab85d85448de36f",
+                "266bbb156bcf5957"
+            ]
+        ]
+    },
+    {
+        "id": "bab85d85448de36f",
+        "type": "debug",
+        "z": "f813b19c4867973b",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1760,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "42701e5008dfc76a",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round output",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round($number(msg.payload), 4)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1720,
+        "y": 1000,
+        "wires": [
+            [
+                "e7ace6c50487f91c"
+            ]
+        ]
+    },
+    {
+        "id": "9804c23f63f37bf4",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round output",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round($number(msg.payload), 4)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1720,
+        "y": 1240,
+        "wires": [
+            [
+                "080182b776c3e303"
+            ]
+        ]
+    },
+    {
+        "id": "2f86235e1884fac5",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round output",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round($number(msg.payload), 4)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1720,
+        "y": 1180,
+        "wires": [
+            [
+                "529debaa2dedde68"
+            ]
+        ]
+    },
+    {
+        "id": "f57f3306cd227f26",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round output",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round($number(msg.payload), 4)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1720,
+        "y": 1300,
+        "wires": [
+            [
+                "7f37520bb4cc7884"
+            ]
+        ]
+    },
+    {
+        "id": "e75111c6926608e5",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round output",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round($number(msg.payload), 4)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1720,
+        "y": 1060,
+        "wires": [
+            [
+                "cc86317a36df617e"
+            ]
+        ]
+    },
+    {
+        "id": "53d48ee7800d74ac",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Round output",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round($number(msg.payload), 4)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1720,
+        "y": 1120,
+        "wires": [
+            [
+                "c1616235449ec5c1"
+            ]
+        ]
+    },
+    {
+        "id": "c33a07ce68e345ad",
+        "type": "change",
+        "z": "f813b19c4867973b",
+        "name": "Invert Output",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "0 - $number(msg.payload)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1510,
+        "y": 840,
+        "wires": [
+            [
+                "bfcd602fc8acfba8"
+            ]
+        ]
+    },
+    {
+        "id": "1192b3d0e85c97ea",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "Set to Zero",
+        "func": "if(msg.payload < 0) {\n    msg.payload = 0\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1510,
+        "y": 780,
+        "wires": [
+            [
+                "23eb9523701617ea"
+            ]
+        ]
+    },
+    {
+        "id": "ae293ef7380e80d7",
+        "type": "function",
+        "z": "f813b19c4867973b",
+        "name": "Set to Zero",
+        "func": "if(msg.payload < 0) {\n    msg.payload = 0\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2170,
+        "y": 780,
+        "wires": [
+            [
+                "888d0d52710e6d0c"
+            ]
+        ]
+    },
+    {
+        "id": "174dc90871381738",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-apparent-power",
+        "entityConfig": "77748280879cdaaf",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1100,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1a92fb29c6c9254",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-volts",
+        "entityConfig": "07be4b7db2f22718",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1070,
+        "y": 120,
+        "wires": [
+            [
+                "66e1da79bb44b068"
+            ]
+        ]
+    },
+    {
+        "id": "118fbab1906009f3",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-current",
+        "entityConfig": "aef21f6d0e8bc072",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1070,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0577945c428f27fb",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-active-power",
+        "entityConfig": "2c8931ca526a98cb",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1090,
+        "y": 240,
+        "wires": [
+            [
+                "747743e0029ff37c"
+            ]
+        ]
+    },
+    {
+        "id": "f3a13d90eb7f9a41",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-reactive-power",
+        "entityConfig": "082255962fab75ab",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1100,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7c7bab394127765b",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-power-factor",
+        "entityConfig": "832ecc34c1e5dc69",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1090,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bd7bc5f1d07ea978",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-phase-angle",
+        "entityConfig": "5830d8596f728044",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1090,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f9f2aa4c83aeb9da",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-frequency",
+        "entityConfig": "d307095ca0288a39",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1080,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1fa358a7e15f0c29",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-import-active-energy",
+        "entityConfig": "4240a4ecedb4ac34",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1120,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "89ab1c3432c58171",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-export-active-energy",
+        "entityConfig": "fd3deaf4107d3378",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1120,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "db09cd2b6e06e84d",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-import-reactive-energy",
+        "entityConfig": "523f9ad06db3fdda",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1120,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "68801b5971ebd002",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-export-reactive-energy",
+        "entityConfig": "1eda0815a3f20fa1",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1120,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cf99e8a7f80b5cba",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-total-active-energy",
+        "entityConfig": "cb8e9dadf3e11f27",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1110,
+        "y": 840,
+        "wires": [
+            [
+                "c33a07ce68e345ad",
+                "1192b3d0e85c97ea"
+            ]
+        ]
+    },
+    {
+        "id": "7b1b854004a17bd9",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-total-reactive-energy",
+        "entityConfig": "38b5d42830347846",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1120,
+        "y": 900,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "750752957d40c28d",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-total-system-power-demand",
+        "entityConfig": "c37a87911e3320bf",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1140,
+        "y": 1000,
+        "wires": [
+            [
+                "7b1478b4e4d47472"
+            ]
+        ]
+    },
+    {
+        "id": "443fb786e34d2f40",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-maximum-total-system-power-demand",
+        "entityConfig": "6c7339123c29a4e3",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1170,
+        "y": 1060,
+        "wires": [
+            [
+                "16814877076d4b6e"
+            ]
+        ]
+    },
+    {
+        "id": "3f8c31dc6912ac25",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-current-system-positive-power-demand",
+        "entityConfig": "4e8b0a533e58c7a8",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1180,
+        "y": 1120,
+        "wires": [
+            [
+                "3962e5af32aa05d1"
+            ]
+        ]
+    },
+    {
+        "id": "c03e0521ee053743",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-maximum-system-positive-power-demand",
+        "entityConfig": "4361bf32ed5282f7",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1180,
+        "y": 1180,
+        "wires": [
+            [
+                "40eb5812b2487cac"
+            ]
+        ]
+    },
+    {
+        "id": "f43c09c698722e2c",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-current-system-reverse-power-demand",
+        "entityConfig": "37c3e9dfa35f832e",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1170,
+        "y": 1240,
+        "wires": [
+            [
+                "aa09568d509b534d"
+            ]
+        ]
+    },
+    {
+        "id": "43f02221a6d61224",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-maximum-system-reverse-power-demand",
+        "entityConfig": "572fdef27ca05885",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1180,
+        "y": 1300,
+        "wires": [
+            [
+                "ea977b6cc1c6daf4"
+            ]
+        ]
+    },
+    {
+        "id": "be9a00ca90383908",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-current-demand",
+        "entityConfig": "5787410bab231884",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1100,
+        "y": 1400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a7e5a4ea5b9bf4f0",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-maximum-current-demand",
+        "entityConfig": "2ca9eb886b934ce1",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1140,
+        "y": 1460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "266bbb156bcf5957",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-active-energy",
+        "entityConfig": "366f4cdf670937af",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1830,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e7ace6c50487f91c",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-total-system-energy-demand",
+        "entityConfig": "f0f5b22f4688cff4",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 2040,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cc86317a36df617e",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-maximum-total-system-energy-demand",
+        "entityConfig": "b93e35f4eaad29b5",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 2070,
+        "y": 1060,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c1616235449ec5c1",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-current-system-positive-energy-demand",
+        "entityConfig": "c3be3a54a3dd51c8",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 2070,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "529debaa2dedde68",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-maximum-system-positive-energy-demand",
+        "entityConfig": "8aead7f6f231bde4",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 2080,
+        "y": 1180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "080182b776c3e303",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-current-system-reverse-energy-demand",
+        "entityConfig": "c530634c61808e89",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 2070,
+        "y": 1240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7f37520bb4cc7884",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-maximum-system-reverse-energy-demand",
+        "entityConfig": "21fa4bedc484b205",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 2080,
+        "y": 1300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bfcd602fc8acfba8",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-total-active-energy-inverted",
+        "entityConfig": "a55e2e47a26c78d1",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1820,
+        "y": 840,
+        "wires": [
+            [
+                "ae293ef7380e80d7"
+            ]
+        ]
+    },
+    {
+        "id": "23eb9523701617ea",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-cumulative-total-active-energy",
+        "entityConfig": "ad5af7557c3d25ad",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1830,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "888d0d52710e6d0c",
+        "type": "ha-sensor",
+        "z": "f813b19c4867973b",
+        "name": "SDM220-modbus-cumulative-total-active-energy-inverted",
+        "entityConfig": "b7f42d99321a4cb0",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [
+            {
+                "property": "address",
+                "value": "modbusRequest.address",
+                "valueType": "msg"
+            },
+            {
+                "property": "quantity",
+                "value": "modbusRequest.quantity",
+                "valueType": "msg"
+            },
+            {
+                "property": "original-value",
+                "value": "responseBuffer.float",
+                "valueType": "msg"
+            },
+            {
+                "property": "data",
+                "value": "responseBuffer.data",
+                "valueType": "msg"
+            }
+        ],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 2490,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a0d3876b2c57419c",
+        "type": "modbus-flex-getter",
+        "z": "5d347b322b2c72b7",
+        "name": "Get Read/Write Registers",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "logIOActivities": false,
+        "server": "059d2ad32172df09",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "x": 630,
+        "y": 180,
+        "wires": [
+            [
+                "b4f9ba0255852c80",
+                "d67ff75afea8de5d"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "44db415de241de8f",
+        "type": "modbus-flex-write",
+        "z": "5d347b322b2c72b7",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "server": "059d2ad32172df09",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "x": 630,
+        "y": 480,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "b8f05572130909e0",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Pulse output 1 Width",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 12, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 60,
+        "wires": [
+            [
+                "a0d3876b2c57419c"
+            ]
+        ]
+    },
+    {
+        "id": "131ca69310782284",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "13",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-pulse-output-1-width",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 60,
+        "wires": [
+            [
+                "b8f05572130909e0"
+            ]
+        ]
+    },
+    {
+        "id": "b4f9ba0255852c80",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "flex getter",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "6cd96740d6a02f84",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "2 X Int16 > Int32 float",
+        "func": "let pay = msg.payload\nconst buf = Buffer.allocUnsafe(4); // (4) is ok\nbuf.writeUInt16BE(pay[0]); // high byte\nbuf.writeUInt16BE(pay[1], 2); // low byte\nmsg.responseBuffer.float = buf.readFloatBE(0);\nmsg.payload = (msg.responseBuffer.float).toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 260,
+        "wires": [
+            [
+                "42ca04dfaa534397"
+            ]
+        ]
+    },
+    {
+        "id": "42ca04dfaa534397",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "Int32",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "0cb688dc4a5f6fca",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Network Parity",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 18, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 120,
+        "wires": [
+            [
+                "a0d3876b2c57419c"
+            ]
+        ]
+    },
+    {
+        "id": "33d33aecee7f6dde",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Network port Node",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 20, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 180,
+        "wires": [
+            [
+                "a0d3876b2c57419c"
+            ]
+        ]
+    },
+    {
+        "id": "a51b1a22999d06f2",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "18",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-network-parity",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 120,
+        "wires": [
+            [
+                "0cb688dc4a5f6fca"
+            ]
+        ]
+    },
+    {
+        "id": "29c3068ac7a08bbd",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "20",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-network-port-node",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 180,
+        "wires": [
+            [
+                "33d33aecee7f6dde"
+            ]
+        ]
+    },
+    {
+        "id": "02b85d7b34933a77",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Network Baud Rate",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 28, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 240,
+        "wires": [
+            [
+                "a0d3876b2c57419c"
+            ]
+        ]
+    },
+    {
+        "id": "234f3cfd769266f9",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Pulse1 Energy Type",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 86, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 300,
+        "wires": [
+            [
+                "a0d3876b2c57419c"
+            ]
+        ]
+    },
+    {
+        "id": "c0eafbf332b69a37",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "BCD1",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 62721, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 360,
+        "wires": [
+            [
+                "a0d3876b2c57419c",
+                "fae5d4c24f7fae9e"
+            ]
+        ]
+    },
+    {
+        "id": "028ae8704c873fe6",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "28",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-network-baud-rate",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 240,
+        "wires": [
+            [
+                "02b85d7b34933a77"
+            ]
+        ]
+    },
+    {
+        "id": "b0256922cef7b66c",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "86",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-pulse-1-energy-type",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 300,
+        "wires": [
+            [
+                "234f3cfd769266f9"
+            ]
+        ]
+    },
+    {
+        "id": "10ed5ed26837bb5e",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Create Array from BCD",
+        "func": "var bcd2number = function (num) {\n    let loByte = (num & 0x00ff);\n    let hiByte = (num >> 8) & 0x00ff;\n    let n = 0;\n    n += (loByte & 0x0F) * 1;\n    n += ((loByte >> 4) & 0x0F) * 10;\n    n += (hiByte & 0x0F) * 100;\n    n += ((hiByte >> 4) & 0x0F) * 1000;\n    return n;\n}\n\n//all of them at once to BCD\nmsg.bcd = msg.payload.map(bcd2number);\n\n/* \n//individual cherry picking\nmsg.motorRuntimeBCD = bcd2number(msg.payload[0])\nmsg.motorSpeedDEC = msg.payload[1] \nmsg.luxLevelBCD = bcd2number(msg.payload[2])\n*/\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 100,
+        "wires": [
+            [
+                "1b20ab743a462523"
+            ]
+        ]
+    },
+    {
+        "id": "d67ff75afea8de5d",
+        "type": "switch",
+        "z": "5d347b322b2c72b7",
+        "name": "BCD filter",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "BCD",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "HEX",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 880,
+        "y": 180,
+        "wires": [
+            [
+                "10ed5ed26837bb5e",
+                "bd861a763f027930"
+            ],
+            [
+                "8e9c828620f163ca"
+            ],
+            [
+                "6cd96740d6a02f84",
+                "be78f03454cd4b55"
+            ]
+        ]
+    },
+    {
+        "id": "1b20ab743a462523",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "BCD",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a629556fccd76c74",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "62721",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "SDM220-BCD-1",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 360,
+        "wires": [
+            [
+                "c0eafbf332b69a37"
+            ]
+        ]
+    },
+    {
+        "id": "be78f03454cd4b55",
+        "type": "buffer-parser",
+        "z": "5d347b322b2c72b7",
+        "name": "",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "floatbe",
+                "name": "item1",
+                "offset": 0,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 1150,
+        "y": 260,
+        "wires": [
+            [
+                "6d9323b1c91869b7"
+            ]
+        ]
+    },
+    {
+        "id": "6d9323b1c91869b7",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1320,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "bd861a763f027930",
+        "type": "buffer-parser",
+        "z": "5d347b322b2c72b7",
+        "name": "",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "uint8",
+                "name": "demand interval ",
+                "offset": 0,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "slide time",
+                "offset": 1,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "scroll time",
+                "offset": 2,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "backlight time",
+                "offset": 3,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "value",
+        "resultTypeType": "return",
+        "multipleResult": true,
+        "fanOutMultipleResult": true,
+        "setTopic": true,
+        "outputs": 4,
+        "x": 1150,
+        "y": 100,
+        "wires": [
+            [
+                "3dca40e88e66b8b8"
+            ],
+            [
+                "c8d9ba658b22773d"
+            ],
+            [
+                "fb7ee03c70da9beb"
+            ],
+            [
+                "e43e5a7b7d7207c8"
+            ]
+        ]
+    },
+    {
+        "id": "3dca40e88e66b8b8",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1320,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c8d9ba658b22773d",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1320,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "fb7ee03c70da9beb",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1320,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "e43e5a7b7d7207c8",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1320,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "fae5d4c24f7fae9e",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "debug 7",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "8e9c828620f163ca",
+        "type": "buffer-parser",
+        "z": "5d347b322b2c72b7",
+        "name": "",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "hex",
+                "name": "item1",
+                "offset": 0,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "value",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 1150,
+        "y": 180,
+        "wires": [
+            [
+                "c8b97363ad97bebb"
+            ]
+        ]
+    },
+    {
+        "id": "c8b97363ad97bebb",
+        "type": "debug",
+        "z": "5d347b322b2c72b7",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1320,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "0b8b05a0050cc125",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Pulse 1 Constant",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 63760, 'quantity': 1 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 420,
+        "wires": [
+            [
+                "a0d3876b2c57419c"
+            ]
+        ]
+    },
+    {
+        "id": "1232baa7c5335db1",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Measurement mode",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 63775, 'quantity': 1 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 480,
+        "wires": [
+            [
+                "a0d3876b2c57419c"
+            ]
+        ]
+    },
+    {
+        "id": "a7ebc2dcd4465315",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "63761",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "Pulse-1-constant-HEX",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 420,
+        "wires": [
+            [
+                "0b8b05a0050cc125"
+            ]
+        ]
+    },
+    {
+        "id": "34b44a74977076f9",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "63776",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "measurement-mode-HEX",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 480,
+        "wires": [
+            [
+                "1232baa7c5335db1"
+            ]
+        ]
+    },
+    {
+        "id": "534c80803ae7f132",
+        "type": "inject",
+        "z": "5d347b322b2c72b7",
+        "name": "63792",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "running-time",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 540,
+        "wires": [
+            [
+                "33c9c1eb05cc9570"
+            ]
+        ]
+    },
+    {
+        "id": "33c9c1eb05cc9570",
+        "type": "function",
+        "z": "5d347b322b2c72b7",
+        "name": "Running time",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 63791, 'quantity': 2 }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 540,
+        "wires": [
+            [
+                "a0d3876b2c57419c"
+            ]
+        ]
+    }
+]
