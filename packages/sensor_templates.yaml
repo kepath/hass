@@ -110,7 +110,6 @@ template:
           occupancy_sensors_unavailable_count: "{{ expand('group.all_occupancy_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           occupancy_sensors_triggered_away_count: "{{ expand('group.all_away_occupancy_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           occupancy_sensors_unavailable_away_count: "{{ expand('group.all_away_occupancy_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          # occupancy_no_persons_home_triggered_count: "{{ 0 if (state_attr('sensor.binary_sensor_state_counts', 'occupancy_persons_home_count') > 0) else state_attr('sensor.binary_sensor_state_counts', 'occupancy_sensors_triggered_away_count') }}"
           plugs_off_count: "{{ expand('group.all_outlet_class_switch')|selectattr('state','eq', 'off')|list|count }}"
           running_stopped_count: "{{ expand('group.all_running_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           running_unavailable_count: "{{ expand('group.all_running_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
@@ -185,14 +184,6 @@ template:
           integrations_with_unavailable_entities: "{{ states|selectattr('state','eq', 'unavailable')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
           integrations_with_unknown_entities: "{{ states|selectattr('state','eq', 'unknown')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
 
-
-      # simple states
-      # - unique_id: "_unique_simple_state_"
-      #   name:
-      #   state:
-      #   attributes:
-      #     icon:
-      #     state_class: "measurement"
 
       - unique_id: "_unique_simple_state_printer"
         name: "Printer Simple State"
@@ -349,7 +340,7 @@ template:
               'active' if (
                 as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_10w", now())) >
                 as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_10w", now()))
-            ) else (
+              ) else (
                 'standby' if (
                   as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_5w", now())) >
                   as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_5w", now()))
@@ -364,17 +355,22 @@ template:
       - unique_id: "_unique_minimalist_ui_binary_action_sensors_tooltip"
         name: "minimalist_ui Binary Action Sensors Tooltip"
         state: >
-          {{-state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string + ' lights on,' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 0-}}
-          {{-state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|string + ' fans on,' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 0-}}
-          {{-state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|string + ' heat on,' if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0-}}
-          {{-state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|string + ' mowers on,' if state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0) > 0-}}
-          {{-'washer on,' if states('binary_sensor.washing_machine_is_active')|lower == 'on'-}}
-          {{-'dryer on,' if states('binary_sensor.is_tumble_dryer_on')|lower == 'on'-}}
-          {{-'dishwasher on,' if states('binary_sensor.is_dishwasher_on')|lower == 'on'-}}
-          {{-'fridge on,' if states('switch.drinks_fridge_plug_bed_c')|lower == 'on'-}}
-          {{-'reciever on,' if states('binary_sensor.yamaha_reciever_state')|lower == 'on'-}}
-          {{-'arcade pc on,' if states('binary_sensor.is_arcade_pc_on')|lower == 'on'-}}
-          {{-'bigpc on,' if states('binary_sensor.is_big_pc_on')|lower == 'on'-}}
+          {{- state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 0 -}}
+          {{- ' light on,' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) == 1 -}}
+          {{- ' lights on,' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 1 -}}
+          {{- state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 0 -}}
+          {{- ' fan on,' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) == 1 -}}
+          {{- ' fans on,' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 1 -}}
+          {{- state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0 -}}
+          {{- ' heat on,' if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0 -}}
+          {{- 'mower on,' if state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0) > 0 -}}
+          {{- 'washer on,' if states('binary_sensor.washing_machine_is_active')|lower == 'on' -}}
+          {{- 'dryer on,' if states('binary_sensor.is_tumble_dryer_on')|lower == 'on' -}}
+          {{- 'dishwasher on,' if states('binary_sensor.is_dishwasher_on')|lower == 'on' -}}
+          {{- 'fridge on,' if states('switch.drinks_fridge_plug_bed_c')|lower == 'on' -}}
+          {{- 'reciever on,' if states('binary_sensor.yamaha_reciever_state')|lower == 'on' -}}
+          {{- 'arcade pc on,' if states('binary_sensor.is_arcade_pc_on')|lower == 'on' -}}
+          {{- 'bigpc on,' if states('binary_sensor.is_big_pc_on')|lower == 'on' -}}
         attributes:
           icon: "mdi:tooltip-question-outline"
           state_class: "measurement"
@@ -405,22 +401,22 @@ template:
           study_entities: "{{area_entities('Study')}}"
           unknown_device_entities: "{{area_entities('Unknown Device')}}"
 
-      # - unique_id: "floors_and_areas_and_entities_template_generated"
-      #   name: "Floors Areas Entity Attributes"
-      #   state: >-
-      #     {%- for floor in floors() -%}
-      #       {%- if floor!='house_and_mobile' -%}
-      #         {%- for area in floor_areas(floor) -%}
-      #           {%- for entity in area_entities(area) -%}
-      #             {{{
-      #               'floor': floor,
-      #               'area': area,
-      #               'entity': entity,
-      #             }}},
-      #           {%- endfor -%}
-      #         {%- endfor -%}
-      #       {%- endif -%}
-      #     {%- endfor %}
+      - unique_id: "floors_and_areas_and_entities_template_generated"
+        name: "Floors Areas Entity Attributes"
+        state: >-
+          {%- for floor in floors() -%}
+            {%- if floor!='house_and_mobile' -%}
+              {%- for area in floor_areas(floor) -%}
+                {%- for entity in area_entities(area) -%}
+                  {{{
+                    'floor': floor,
+                    'area': area,
+                    'entity': entity,
+                  }}},
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor %}
 
       - unique_id: "floor_grouped_areas_and_entities_template_generated"
         name: "Floor Grouped Areas Entity Attributes"
@@ -454,18 +450,18 @@ template:
         state: "{{ states('light.shelly_1l_bathroom_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.shelly_1l_bathroom_light_1', 'icon') }}"
-          # connected: "{{ states('binary_sensor.bathroom_light_status') }}"
-          # switch_1: "{{ states('binary_sensor.bathroom_light_switch_1') }}"
-          # switch_2: "off"
+          connected: "{{ states('binary_sensor.bathroom_light_status') }}"
+          switch_1: "{{ states('binary_sensor.bathroom_light_switch_1') }}"
+          switch_2: "off"
           bssid: "{{ states('sensor.bathroom_light_bssid') }}"
           essid: "{{ state_attr('device_tracker.esphome_bathroom_light_unifi', 'essid') }}"
-          # esphome_version: "{{ states('sensor.bathroom_light_esphome_version') }}"
-          # ip: "{{ states('sensor.bathroom_light_ip') }}"
-          # mac: "{{ states('sensor.bathroom_light_mac') }}"
+          esphome_version: "{{ states('sensor.bathroom_light_esphome_version') }}"
+          ip: "{{ states('sensor.bathroom_light_ip') }}"
+          mac: "{{ states('sensor.bathroom_light_mac') }}"
           ap_mac: "{{ state_attr('device_tracker.esphome_bathroom_light_unifi', 'ap_mac') }}"
-          # rssi: "{{ states('sensor.bathroom_light_rssi') }}"
-          # ssid: "{{ states('sensor.bathroom_light_ssid') }}"
-          # temperature: "{{ states('sensor.bathroom_light_temperature') }}"
+          rssi: "{{ states('sensor.bathroom_light_rssi') }}"
+          ssid: "{{ states('sensor.bathroom_light_ssid') }}"
+          temperature: "{{ states('sensor.bathroom_light_temperature') }}"
           firmware_installed: "{{ state_attr('update.bathroom_light_firmware', 'installed_version') }}"
 
       - unique_id: "light_bed-a_shelly_diagnostics"
@@ -473,7 +469,7 @@ template:
         state: "{{ states('light.shelly_1l_bed_a_light_1') }}"
         attributes:
           icon: "{{ state_attr('light.shelly_1l_bed_a_light_1', 'icon') }}"
-          connected: "{{ states('binary_sensor.bed_a_light_status') }}"
+          connected: "{{ states('binary_sensor.shelly_1l_bed_a_status') }}"
           switch_1: "{{ states('binary_sensor.bed_a_light_switch_1') }}"
           switch_2: "off"
           bssid: "{{ states('sensor.bed_a_light_bssid') }}"
