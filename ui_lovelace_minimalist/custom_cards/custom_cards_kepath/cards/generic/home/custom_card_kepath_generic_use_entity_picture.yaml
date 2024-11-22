@@ -15,17 +15,31 @@ custom_card_kepath_generic_use_entity_picture:
       use_picture: >
         [[[
           var usePicture = true;
-          if (variables?.ulm_card_kepath_binary_sensor_update_links) {
-            if (variables?.ulm_card_kepath_binary_sensor_update_links?.use_picture) {
-              if (typeof variables.ulm_card_kepath_binary_sensor_update_links.use_picture === "boolean") {
-                usePicture = variables.ulm_card_kepath_binary_sensor_update_links.use_picture;
+          if (variables?.var_kepath_generic_set_entity_picture) {
+            if (variables?.var_kepath_generic_set_entity_picture?.use_picture) {
+              if (typeof variables.var_kepath_generic_set_entity_picture.use_picture === "boolean") {
+                usePicture = variables.var_kepath_generic_set_entity_picture.use_picture;
               }
             }
           }
           return usePicture;
         ]]]
-  show_icon: "[[[ return variables.ulm_card_kepath_binary_sensor_update_links.use_picture ? true : false ]]]"
-  show_entity_picture: "[[[ return variables.ulm_card_kepath_binary_sensor_update_links.use_picture ? false : true ]]]"
+      is_local_network_link: >
+        [[[
+          var isLocalNetworkLink = false;
+          if (variables?.var_kepath_generic_set_entity_picture) {
+            if (variables?.var_kepath_generic_set_entity_picture?.is_local_network_link) {
+              if (typeof variables.var_kepath_generic_set_entity_picture.is_local_network_link === "boolean") {
+                isLocalNetworkLink = variables.var_kepath_generic_set_entity_picture.is_local_network_link;
+                hass.callService('system_log', 'write', {level:'warning',message:'isLocalNetworkLink a: ' + isLocalNetworkLink});
+              }
+            }
+          }
+          //hass.callService('system_log', 'write', {level:'warning',message:'isLocalNetworkLink b: ' + isLocalNetworkLink});
+          return isLocalNetworkLink;
+        ]]]
+  show_icon: "[[[ return variables.var_kepath_generic_set_entity_picture.use_picture ? true : false ]]]"
+  show_entity_picture: "[[[ return variables.var_kepath_generic_set_entity_picture.use_picture ? false : true ]]]"
   entity_picture: >
     [[[
       var entityPicture = null;
@@ -34,6 +48,19 @@ custom_card_kepath_generic_use_entity_picture:
       }
       return entityPicture;
     ]]]
+  styles:
+    img_cell:
+      - border: >
+          [[[
+            var border = "1px solid rgba(var(--color-theme),0.01)";
+            if (variables?.var_kepath_generic_set_entity_picture) {
+              if (variables?.var_kepath_generic_set_entity_picture?.is_local_network_link) {
+                border = "1px solid rgba(var(--color-theme),0.3)";
+              }
+            }
+            //hass.callService('system_log', 'write', {level:'warning',message:'borderWidth: ' + borderWidth});
+            return border;
+          ]]]
   hold_action:
     action: >
       [[[
