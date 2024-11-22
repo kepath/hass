@@ -21,25 +21,45 @@ views:
             icon: "mdi:puzzle"
             name: "addons"
           - type: "weblink"
-            url: "/a0d7b954_ssh"
+            url: "/hassio/ingress/a0d7b954_ssh"
             icon: "mdi:console"
             name: "Terminal"
+            new_tab: true
           - type: "weblink"
-            url: "/a0d7b954_vscode"
+            url: "/hassio/ingress/db21ed7f_guacamole"
+            icon: "mdi:lan-connect"
+            name: "Guacamole"
+            new_tab: true
+          - type: "weblink"
+            url: "/hassio/ingress/a0d7b954_vscode"
             icon: "mdi:microsoft-visual-studio-code"
-            name: "VS Studio Code"
+            name: "VS Code"
+            new_tab: true
           - type: "weblink"
-            url: "/db21ed7f_portainer"
+            url: "/hassio/ingress/db21ed7f_portainer"
             icon: "si:portainer"
             name: "Portainer"
+            new_tab: true
           - type: "weblink"
-            url: "/a0d7b954_phpmyadmin"
+            url: "/hassio/ingress/a0d7b954_phpmyadmin"
             icon: "si:phpmyadmin"
             name: "phpMyAdmin"
+            new_tab: true
           - type: "weblink"
-            url: "/db21ed7f_scrutiny_fa"
+            url: "http://192.168.10.5:3001/"
+            icon: "si:uptimekuma"
+            name: "Uptime Kuma"
+            new_tab: true
+          - type: "weblink"
+            url: "http://192.168.10.5:81/"
+            icon: "si:nginx"
+            name: "Nginx"
+            new_tab: true
+          - type: "weblink"
+            url: "/hassio/ingress/db21ed7f_scrutiny_fa"
             icon: "mdi:glasses"
             name: "Scrutiny"
+            new_tab: true
       - type: "entities"
         title: "configuration"
         entities:
@@ -48,29 +68,123 @@ views:
             icon: "hacs:hacs"
             name: "HACS"
           - type: "weblink"
-            url: "/5c53de3b_esphome"
-            icon: "mdi:chip"
+            url: "/hassio/ingress/5c53de3b_esphome"
+            icon: "si:esphome"
             name: "ESP Home"
+            new_tab: true
           - type: "weblink"
-            url: "/a0d7b954_nodered"
-            icon: "si:nodered"
-            name: "Node Red"
+            url: "/hassio/ingress/a0d7b954_adguard"
+            icon: "si:adguard"
+            entity: "update.adguard_home_update"
+            show_icon: false
+            image: "/api/hassio/addons/a0d7b954_adguard/icon"
+            name: "AdGuard Home"
+            new_tab: true
           - type: "weblink"
-            url: "/a0d7b954_emqx"
-            icon: "mdi:pipe"
+            url: "/hassio/ingress/a0d7b954_emqx"
+            icon: "si:eclipsemosquitto"
             name: "EMQX"
+            new_tab: true
           - type: "weblink"
-            url: "/45df7312_zigbee2mqtt"
-            icon: "mdi:zigbee"
-            name: "Zigbee2MQTT"
-          - type: "weblink"
-            url: "/a0d7b954_influxdb"
-            icon: "si:influxdb"
-            name: "InfluxDB"
-          - type: "weblink"
-            url: "/a0d7b954_grafana"
+            url: "/hassio/ingress/a0d7b954_grafana"
             icon: "si:grafana"
             name: "Grafana"
+            new_tab: true
+          - type: "weblink"
+            url: "/hassio/ingress/a0d7b954_influxdb"
+            icon: "si:influxdb"
+            name: "InfluxDB"
+            new_tab: true
+          - type: "weblink"
+            url: "/hassio/ingress/47146a2b_netdata"
+            icon: "mdi:chart-line"
+            name: "Netdata"
+            new_tab: true
+          - type: "weblink"
+            url: "/hassio/ingress/00185a40_simplescheduler"
+            icon: "mdi:calendar-month"
+            name: "Simple Scheduler"
+            new_tab: true
+          - type: "weblink"
+            url: "http://192.168.10.5:5789/"
+            icon: "mdi:devices"
+            name: "IT-Tools"
+            new_tab: true
+      - type: "entities"
+        title: "configuration"
+        card_mod:
+          style: |
+            $ state-badge {
+              width: 30px !important;
+              height: 30px !important;
+              line-height: 30px !important;
+              flex-basis: 30px !important;
+            }
+        entities:
+          - entity: "update.hacs_update"
+            # card_mod:
+            #   style: |
+            #     :host {
+            #       width: 30px !important;
+            #       height: 30px !important;
+            #       line-height: 30px !important;
+            #       flex-basis: 30px !important;
+            #     }
+            show_icon: false
+            name: "HACS"
+            tap_action:
+              action: "navigation"
+              url_path: "/hacs"
+          - entity: "update.esphome_update"
+            show_icon: false
+            name: "ESP Home"
+            tap_action:
+              action: "url"
+              url_path: "/hassio/ingress/5c53de3b_esphome"
+          - entity: "update.adguard_home_update"
+            show_icon: false
+            name: "AdGuard Home"
+            tap_action:
+              action: "url"
+              url_path: "/hassio/ingress/a0d7b954_adguard"
+          - entity: "update.emqx_update"
+            show_icon: false
+            name: "EMQX"
+            tap_action:
+              action: "url"
+              url_path: "/hassio/ingress/a0d7b954_emqx"
+          - entity: "update.grafana_update"
+            show_icon: false
+            name: "Grafana"
+            tap_action:
+              action: "url"
+              url_path: "/hassio/ingress/a0d7b954_grafana"
+          - entity: "update.influxdb_update"
+            show_icon: false
+            name: "InfluxDB"
+            tap_action:
+              action: "url"
+              url_path: "/hassio/ingress/a0d7b954_influxdb"
+          - entity: "update.netdata_update"
+            show_icon: false
+            name: "Netdata"
+            tap_action:
+              action: "url"
+              url_path: "/hassio/ingress/47146a2b_netdata"
+            new_tab: true
+          - entity: "update.simple_scheduler_update"
+            show_icon: false
+            name: "Simple Scheduler"
+            tap_action:
+              action: "url"
+              url_path: "/hassio/ingress/00185a40_simplescheduler"
+          - entity: "update.it_tools_update"
+            show_icon: false
+            name: "IT-Tools"
+            tap_action:
+              action: "url"
+              url_path: "http://192.168.10.5:5789/"
+
       - type: "entities"
         title: "media"
         entities:
@@ -78,22 +192,52 @@ views:
             url: "http://ha.kevinthorn.com:32400/web"
             icon: "mdi:plex"
             name: "Plex"
+            new_tab: true
           - type: "weblink"
             url: "https://ha.kevinthorn.com:8181/"
             icon: "si:plex"
             name: "Tautulli"
+            new_tab: true
           - type: "weblink"
-            url: "/media-browser"
-            icon: "mdi:play-box-multiple"
-            name: "Media Browser"
-          - type: "weblink"
-            url: "/core_vlc"
-            icon: "mdi:vlc"
-            name: "VLC"
-          - type: "weblink"
-            url: "/music-assistant"
+            url: "/hassio/ingress/d5369777_music_assistant"
             icon: "mdi:play-circle"
             name: "Music Assistant"
+            new_tab: true
+          - type: "weblink"
+            url: "/media-browser/browser"
+            icon: "mdi:play-box-multiple"
+            name: "Media Browser"
+            new_tab: true
+          - type: "weblink"
+            url: "/hassio/ingress/2effc9b9_5etools"
+            icon: "mdi:numeric-5-box"
+            name: "5e Tools"
+            new_tab: true
+          - type: "weblink"
+            url: "/hassio/ingress/db21ed7f_mealie"
+            icon: "mdi:food"
+            name: "Mealie"
+            new_tab: true
+          - type: "weblink"
+            url: "http://192.168.10.5:5050/"
+            icon: "mdi:food"
+            name: "AppDaemon"
+            new_tab: true
+          - type: "weblink"
+            url: "http://192.168.10.5:8830/"
+            icon: "mdi:food"
+            name: "Calibre"
+            new_tab: true
+          - type: "weblink"
+            url: "http://192.168.10.5:8478/"
+            icon: "mdi:food"
+            name: "ConvertX"
+            new_tab: true
+          - type: "weblink"
+            url: "http://192.168.10.5:8458/"
+            icon: "mdi:food"
+            name: "Moodist"
+            new_tab: true
 
   - title: "Links"
     icon: "mdi:lan"
@@ -106,26 +250,32 @@ views:
             url: "https://gateway.kevinthorn.com/network/default/devices"
             icon: "phu:unifi"
             name: "Unifi Network"
+            new_tab: true
           - type: "weblink"
             url: "https://gateway.kevinthorn.com/protect/liveview"
             icon: "phu:unifi-protect"
             name: "Unifi Protect"
+            new_tab: true
           - type: "weblink"
-            url: "https://nas.kevinthorn.com:5001/"
+            url: "http://192.168.10.5:5001/"
             icon: "cil:synology-nas"
             name: "Synology NAS"
+            new_tab: true
           - type: "weblink"
-            url: "https://solar.kevinthorn.com:1881/"
-            icon: "mdi:solar-power-variant"
+            url: "http://192.168.20.15:1881/"
+            icon: "si:nodered"
             name: "Solar DRU Node Red"
+            new_tab: true
           - type: "weblink"
-            url: "http://printer.kevinthorn.com"
+            url: "http://192.168.20.5"
             icon: "mdi:printer"
             name: "Brother MFC Printer/Scanner"
+            new_tab: true
           - type: "weblink"
-            url: "http://receiver.kevinthorn.com"
+            url: "http://192.168.20.115"
             icon: "mdi:audio-video"
             name: "Yamaha RX-V777 Reciever"
+            new_tab: true
 
       - type: "entities"
         title: "lights"
