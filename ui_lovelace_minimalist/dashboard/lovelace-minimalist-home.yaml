@@ -1975,6 +1975,8 @@ views:
                           'item1 item1 item2 item2 item3 item3 item4 item4 item5 item5'
                           'item6 item6 item7 item7 item8 item8 item9 item9 item10 item10'
                           'item11 item11 item12 item12 item13 item13 item14 item14 item15 item15'
+                          'item16 item16 item17 item17 item18 item18 item19 item19 item20 item20'
+                          'item21 item21 item22 item22 item23 item23 item24 item24 item25 item25'
                       - grid-template-columns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
                       - grid-template-rows: "min-content"
                       - justify-items: "center"
@@ -2159,9 +2161,11 @@ views:
                               icon: "si:plex"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
+                          var_kepath_generic_set_entity_picture:
+                            is_local_network_link: true
                         tap_action:
                           action: "url"
-                          url_path: "http://192.168.10.5:3400/web"
+                          url_path: "http://192.168.10.5:32400/web"
                     item5:
                       card:
                         type: "custom:button-card"
@@ -2304,6 +2308,8 @@ views:
                               icon: "si:uptimekuma"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
+                          var_kepath_generic_set_entity_picture:
+                            is_local_network_link: true
                         tap_action:
                           action: "url"
                           url_path: "http://192.168.10.5:3001/"
@@ -2420,6 +2426,8 @@ views:
                               icon: "si:nginx"
                               icon_color: "rgba(var(--color-red), 1)"
                               background_color: "rgba(var(--color-red), 0.2)"
+                          var_kepath_generic_set_entity_picture:
+                            is_local_network_link: true
                         tap_action:
                           action: "url"
                           url_path: "http://192.168.10.5:81/"
@@ -2481,76 +2489,432 @@ views:
                         tap_action:
                           action: "navigate"
                           navigation_path: "/hassio/ingress/a0d7b954_phpmyadmin"
+                    item16:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.5etools_update"
+                        name: "5e tools"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.5etools_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "si:esphome"
+                          #     icon_color: "#41bdf5"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "si:esphome"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/hassio/ingress/2effc9b9_5etools"
+                    item17:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.advanced_ssh_web_terminal_update"
+                        name: "SSH Terminal"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.advanced_ssh_web_terminal_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "si:docker"
+                          #     icon_color: "#13BEF9"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "si:docker"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/hassio/ingress/a0d7b954_ssh"
+                    item18:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.appdaemon_update"
+                        name: "AppDaemon"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.appdaemon_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "mdi:pipe"
+                          #     icon_color: "#16A560"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "mdi:pipe"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                          var_kepath_generic_set_entity_picture:
+                            is_local_network_link: true
+                        tap_action:
+                          action: "url"
+                          url_path: "http://192.168.10.5:5050/"
+                    item19:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.calibre_update"
+                        name: "Calibre"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.calibre_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "si:uptimekuma"
+                          #     icon_color: "#5CDD8B"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "si:uptimekuma"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/hassio/ingress/db21ed7f_calibre"
+                    item20:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.convertx_update"
+                        name: "ConvertX"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.convertx_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "mdi:chart-bar"
+                          #     icon_color: "#E9568E"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "mdi:chart-bar"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                          var_kepath_generic_set_entity_picture:
+                            is_local_network_link: true
+                        tap_action:
+                          action: "url"
+                          url_path: "http://192.168.10.5:8478/"
+                    item21:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.grafana_update"
+                        name: "Grafana"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.grafana_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "mdi:glasses"
+                          #     icon_color: "#4422CB"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "mdi:glasses"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/hassio/ingress/a0d7b954_grafana"
+                    item22:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.influxdb_update"
+                        name: "InfluxDB"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.influxdb_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "si:visualstudiocode"
+                          #     icon_color: "#007ACC"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "si:visualstudiocode"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/hassio/ingress/a0d7b954_influxdb"
+                    item23:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.it_tools_update"
+                        name: "IT-Tools"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.it_tools_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "si:nginx"
+                          #     icon_color: "#009639"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "si:nginx"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                          var_kepath_generic_set_entity_picture:
+                            is_local_network_link: true
+                        tap_action:
+                          action: "url"
+                          url_path: "http://192.168.10.5:5789/"
+                    item24:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.mealie_update"
+                        name: "Mealie"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.mealie_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "mdi:music-circle"
+                          #     icon_color: "rgba(var(--primary-text-color),1)"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "mdi:music-circle-outline"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                        tap_action:
+                          action: "navigate"
+                          navigation_path: "/hassio/ingress/db21ed7f_mealie"
+                    item25:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                        entity: "update.moodist_update"
+                        name: "Moodist"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.moodist_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_button_icon_styles:
+                          #   use_themes: false
+                          #   default_state:
+                          #     icon: "si:phpmyadmin"
+                          #     icon_color: "#6C78AF"
+                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          #   unset_state:
+                          #     icon: "si:phpmyadmin"
+                          #     icon_color: "rgba(var(--color-red), 1)"
+                          #     background_color: "rgba(var(--color-red), 0.2)"
+                          var_kepath_generic_set_entity_picture:
+                            is_local_network_link: true
+                        tap_action:
+                          action: "url"
+                          url_path: "http://192.168.10.5:8458/"
 
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
             layout:
-              margin: "8px 0px 0px 0px"
+              margin: "0px"
               card_margin: "0px"
               layout_margin: "0px"
             cards:
-              - type: "custom:button-card"
-                styles:
-                  grid:
-                    - grid-template-areas: "'item1 item2 item3 item4'"
-                    - grid-template-columns: "1fr 1fr 1fr 1fr"
-                    - row-gap: "0px"
-                  card:
-                    - padding: "10px"
-                    - cursor: "default"
-                  custom_fields:
-                    item1: &widget_person_styling
-                      - border-radius: "none"
-                      - box-shadow: "none"
-                      - padding: "4px"
-                      - margin-left: "relative"
-                      - cursor: "default"
-                      - border-radius: "50%"
-                    item2: *widget_person_styling
-                    item3: *widget_person_styling
-                    item4: *widget_person_styling
-                custom_fields:
-                  item1:
-                    card:
-                      type: "custom:button-card"
-                      template: "custom_card_kepath_person_info"
-                      variables:
-                        ulm_card_kepath_person_entity: "person.kevin_thorn"
-                        ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_15_kev_unifi"
-                        ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_15_kev_icloud3"
-                        ulm_card_kepath_person_findmy_device: "kevs_iphone"
-                        ulm_card_kepath_person_driving_entity: "binary_sensor.is_kev_driving"
-                        ulm_card_kepath_person_distance_entity: "sensor.kevs_iphone_icloud_home_distance"
-                  item2:
-                    card:
-                      type: "custom:button-card"
-                      template: "custom_card_kepath_person_info"
-                      variables:
-                        ulm_card_kepath_person_entity: "person.julia_thorn"
-                        ulm_card_kepath_person_wifi_tracker: "device_tracker.ju_iphone_8_unifi"
-                        ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_8_ju_icloud3"
-                        ulm_card_kepath_person_findmy_device: "julias_iphone_8"
-                        ulm_card_kepath_person_driving_entity: ""
-                        ulm_card_kepath_person_distance_entity: "sensor.julia_s_iphone_8_home_distance"
-                  item3:
-                    card:
-                      type: "custom:button-card"
-                      template: "custom_card_kepath_person_info"
-                      variables:
-                        ulm_card_kepath_person_entity: "person.daniel_thorn"
-                        ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_12_dan_unifi"
-                        ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_12_dan_icloud3"
-                        ulm_card_kepath_person_findmy_device: "iphone"
-                        ulm_card_kepath_person_driving_entity: ""
-                        ulm_card_kepath_person_distance_entity: "sensor.iphone_home_distance"
-                  item4:
-                    card:
-                      type: "custom:button-card"
-                      template: "custom_card_kepath_person_info"
-                      variables:
-                        ulm_card_kepath_person_entity: "person.emily_thorn"
-                        ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone13_emily_patrice_unifi"
-                        ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_13_emily_icloud3"
-                        ulm_card_kepath_person_findmy_device: "patrice"
-                        ulm_card_kepath_person_driving_entity: ""
-                        ulm_card_kepath_person_distance_entity: "sensor.patrice_home_distance"
+              - type: "conditional"
+                conditions:
+                  - condition: "or"
+                    conditions:
+                      - condition: "state"
+                        entity: "input_boolean.minimalist_ui_binary_action_sensors"
+                        state: "on"
+                      - condition: "state"
+                        entity: "input_boolean.minimalist_ui_binary_diagnostic_sensors"
+                        state: "on"
+                card:
+                  type: "custom:layout-card"
+                  layout_type: "custom:masonry-layout"
+                  layout:
+                    margin: "8px 0px 0px 0px"
+                    card_margin: "0px"
+                    layout_margin: "0px"
+                  cards:
+                    - type: "custom:button-card"
+                      styles:
+                        grid:
+                          - grid-template-areas: "'item1 item2 item3 item4'"
+                          - grid-template-columns: "1fr 1fr 1fr 1fr"
+                          - row-gap: "0px"
+                        card:
+                          - padding: "10px"
+                          - cursor: "default"
+                        custom_fields:
+                          item1: &widget_person_styling
+                            - border-radius: "none"
+                            - box-shadow: "none"
+                            - padding: "4px"
+                            - margin-left: "relative"
+                            - cursor: "default"
+                            - border-radius: "50%"
+                          item2: *widget_person_styling
+                          item3: *widget_person_styling
+                          item4: *widget_person_styling
+                      custom_fields:
+                        item1:
+                          card:
+                            type: "custom:button-card"
+                            template: "custom_card_kepath_person_info"
+                            variables:
+                              ulm_card_kepath_person_entity: "person.kevin_thorn"
+                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_15_kev_unifi"
+                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_15_kev_icloud3"
+                              ulm_card_kepath_person_findmy_device: "kevs_iphone"
+                              ulm_card_kepath_person_driving_entity: "binary_sensor.is_kev_driving"
+                              ulm_card_kepath_person_distance_entity: "sensor.kevs_iphone_icloud_home_distance"
+                        item2:
+                          card:
+                            type: "custom:button-card"
+                            template: "custom_card_kepath_person_info"
+                            variables:
+                              ulm_card_kepath_person_entity: "person.julia_thorn"
+                              ulm_card_kepath_person_wifi_tracker: "device_tracker.ju_iphone_8_unifi"
+                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_8_ju_icloud3"
+                              ulm_card_kepath_person_findmy_device: "julias_iphone_8"
+                              ulm_card_kepath_person_driving_entity: ""
+                              ulm_card_kepath_person_distance_entity: "sensor.julia_s_iphone_8_home_distance"
+                        item3:
+                          card:
+                            type: "custom:button-card"
+                            template: "custom_card_kepath_person_info"
+                            variables:
+                              ulm_card_kepath_person_entity: "person.daniel_thorn"
+                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_12_dan_unifi"
+                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_12_dan_icloud3"
+                              ulm_card_kepath_person_findmy_device: "iphone"
+                              ulm_card_kepath_person_driving_entity: ""
+                              ulm_card_kepath_person_distance_entity: "sensor.iphone_home_distance"
+                        item4:
+                          card:
+                            type: "custom:button-card"
+                            template: "custom_card_kepath_person_info"
+                            variables:
+                              ulm_card_kepath_person_entity: "person.emily_thorn"
+                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone13_emily_patrice_unifi"
+                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_13_emily_icloud3"
+                              ulm_card_kepath_person_findmy_device: "patrice"
+                              ulm_card_kepath_person_driving_entity: ""
+                              ulm_card_kepath_person_distance_entity: "sensor.patrice_home_distance"
