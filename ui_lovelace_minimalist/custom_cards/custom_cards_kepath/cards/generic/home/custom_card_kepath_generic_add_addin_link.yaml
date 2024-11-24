@@ -1,0 +1,74 @@
+---
+custom_card_kepath_generic_add_addin_link:
+  variables:
+    var_kepath_generic_set_addin_link:
+      evaluated_object: >
+        [[[
+          var evaluatedObject = entity.entity_id;
+          if (variables?.var_kepath_generic_set_addin_link) {
+            if (variables?.var_kepath_generic_set_addin_link?.evaluated_object) {
+              evaluatedObject = variables.var_kepath_generic_set_addin_link.evaluated_object;
+            }
+          }
+          return evaluatedObject;
+        ]]]
+      is_local_network_link: >
+        [[[
+          var isLocalNetworkLink = false;
+          if (variables?.var_kepath_generic_set_addin_link) {
+            if (variables?.var_kepath_generic_set_addin_link?.is_local_network_link) {
+              if (typeof variables.var_kepath_generic_set_addin_link.is_local_network_link === "boolean") {
+                isLocalNetworkLink = variables.var_kepath_generic_set_addin_link.is_local_network_link;
+              }
+            }
+          }
+          return isLocalNetworkLink;
+        ]]]
+  styles:
+    img_cell:
+      - border: >
+          [[[
+            var border = "1px solid rgba(var(--color-theme),0.01)";
+            if (variables?.var_kepath_generic_set_addin_link) {
+              if (variables?.var_kepath_generic_set_addin_link?.is_local_network_link) {
+                border = "1px solid rgba(var(--color-theme),0.3)";
+              }
+            }
+            //hass.callService('system_log', 'write', {level:'warning',message:'tap_action?.url_path: ' + tap_action?.url_path});
+            return border;
+          ]]]
+    icon:
+      - filter: >
+          [[[
+            var imageBlur = "saturate(3) blur(3px)";
+            var deviceId = hass.entities[variables.var_kepath_generic_set_addin_link.evaluated_object].device_id.toString();
+            var runningStates = states["group.all_running_class_binary_sensors"].attributes.entity_id;
+            for (const runningState of runningStates) {
+              if (hass.entities[runningState].device_id.toString() == deviceId) {
+                if (states[runningState].state == "on") {
+                  imageBlur = "none";
+                }
+                //hass.callService('system_log', 'write', {level:'warning',message:'matching device: ' + runningState});
+              }
+            }
+            return imageBlur;
+          ]]]
+  hold_action:
+    action: >
+      [[[
+        var holdAction = "more-info";
+        if (states[variables.var_kepath_generic_set_addin_link.evaluated_object]?.attributes.release_url) {
+          holdAction = "url";
+        }
+        return holdAction;
+      ]]]
+    url_path: >
+      [[[
+        var URLPath = null;
+        if (states[variables.var_kepath_generic_set_addin_link.evaluated_object]?.attributes.release_url) {
+          URLPath = states[variables.var_kepath_generic_set_addin_link.evaluated_object].attributes.release_url;
+        }
+        return URLPath;
+      ]]]
+  double_tap_action:
+    action: "more-info"
