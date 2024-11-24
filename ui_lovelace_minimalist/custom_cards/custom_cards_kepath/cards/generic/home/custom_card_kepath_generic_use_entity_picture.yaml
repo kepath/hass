@@ -24,20 +24,6 @@ custom_card_kepath_generic_use_entity_picture:
           }
           return usePicture;
         ]]]
-      is_local_network_link: >
-        [[[
-          var isLocalNetworkLink = false;
-          if (variables?.var_kepath_generic_set_entity_picture) {
-            if (variables?.var_kepath_generic_set_entity_picture?.is_local_network_link) {
-              if (typeof variables.var_kepath_generic_set_entity_picture.is_local_network_link === "boolean") {
-                isLocalNetworkLink = variables.var_kepath_generic_set_entity_picture.is_local_network_link;
-                hass.callService('system_log', 'write', {level:'warning',message:'isLocalNetworkLink a: ' + isLocalNetworkLink});
-              }
-            }
-          }
-          //hass.callService('system_log', 'write', {level:'warning',message:'isLocalNetworkLink b: ' + isLocalNetworkLink});
-          return isLocalNetworkLink;
-        ]]]
   show_icon: "[[[ return variables.var_kepath_generic_set_entity_picture.use_picture ? true : false ]]]"
   show_entity_picture: "[[[ return variables.var_kepath_generic_set_entity_picture.use_picture ? false : true ]]]"
   entity_picture: >
@@ -48,35 +34,3 @@ custom_card_kepath_generic_use_entity_picture:
       }
       return entityPicture;
     ]]]
-  styles:
-    img_cell:
-      - border: >
-          [[[
-            var border = "1px solid rgba(var(--color-theme),0.01)";
-            if (variables?.var_kepath_generic_set_entity_picture) {
-              if (variables?.var_kepath_generic_set_entity_picture?.is_local_network_link) {
-                border = "1px solid rgba(var(--color-theme),0.3)";
-              }
-            }
-            //hass.callService('system_log', 'write', {level:'warning',message:'borderWidth: ' + borderWidth});
-            return border;
-          ]]]
-  hold_action:
-    action: >
-      [[[
-        var holdAction = "more-info";
-        if (states[variables.var_kepath_generic_set_entity_picture.evaluated_object]?.attributes.release_url) {
-          holdAction = "url";
-        }
-        return holdAction;
-      ]]]
-    url_path: >
-      [[[
-        var URLPath = null;
-        if (states[variables.var_kepath_generic_set_entity_picture.evaluated_object]?.attributes.release_url) {
-          URLPath = states[variables.var_kepath_generic_set_entity_picture.evaluated_object].attributes.release_url;
-        }
-        return URLPath;
-      ]]]
-  double_tap_action:
-    action: "more-info"
