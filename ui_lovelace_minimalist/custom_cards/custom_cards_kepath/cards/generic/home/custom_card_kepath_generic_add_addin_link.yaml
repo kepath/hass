@@ -12,29 +12,32 @@ custom_card_kepath_generic_add_addin_link:
           }
           return evaluatedObject;
         ]]]
-      is_local_network_link: >
+      docker_slug_reference: >
         [[[
-          var isLocalNetworkLink = false;
-          if (variables?.var_kepath_generic_set_addin_link) {
-            if (variables?.var_kepath_generic_set_addin_link?.is_local_network_link) {
-              if (typeof variables.var_kepath_generic_set_addin_link.is_local_network_link === "boolean") {
-                isLocalNetworkLink = variables.var_kepath_generic_set_addin_link.is_local_network_link;
-              }
-            }
+          var dockerSlugReference = "a0d7b954_ssh";
+          if (typeof variables?.var_kepath_generic_set_addin_link?.docker_slug_reference !== 'undefined') {
+            dockerSlugReference = variables?.var_kepath_generic_set_addin_link?.docker_slug_reference;
           }
-          return isLocalNetworkLink;
+          return dockerSlugReference;
+        ]]]
+      ingress_or_local_port: >
+        [[[
+          var ingressOrLocalPort = "ingress";
+          if (typeof variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port !== 'undefined') {
+            ingressOrLocalPort = variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port;
+          }
+          return ingressOrLocalPort;
         ]]]
   styles:
     img_cell:
       - border: >
           [[[
             var border = "1px solid rgba(var(--color-theme),0.01)";
-            if (variables?.var_kepath_generic_set_addin_link) {
-              if (variables?.var_kepath_generic_set_addin_link?.is_local_network_link) {
+            if (typeof variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port !== 'undefined') {
+              if (variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port != "ingress") {
                 border = "1px solid rgba(var(--color-theme),0.3)";
               }
             }
-            //hass.callService('system_log', 'write', {level:'warning',message:'tap_action?.url_path: ' + tap_action?.url_path});
             return border;
           ]]]
     icon:
@@ -43,24 +46,52 @@ custom_card_kepath_generic_add_addin_link:
             var imageBlur = "saturate(3) blur(3px)";
             var deviceId = hass.entities[variables.var_kepath_generic_set_addin_link.evaluated_object].device_id.toString();
             var runningStates = states["group.all_running_class_binary_sensors"].attributes.entity_id;
-            for (const runningState of runningStates) {
+            for (var runningState of runningStates) {
               if (hass.entities[runningState].device_id.toString() == deviceId) {
                 if (states[runningState].state == "on") {
                   imageBlur = "none";
                 }
-                //hass.callService('system_log', 'write', {level:'warning',message:'matching device: ' + runningState});
               }
             }
             return imageBlur;
           ]]]
+  # open addin web ui
+  tap_action:
+    action: "url"
+    url_path: >
+      [[[
+        var returnValue;
+        if (variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port == "ingress") {
+          returnValue = states['sensor.non_hard_coded_secrets_to_use_in_templates'].attributes.ha_nabucasa_url + "hassio/ingress/" + variables?.var_kepath_generic_set_addin_link?.docker_slug_reference;
+        } else {
+          returnValue = "http://" + states['sensor.non_hard_coded_secrets_to_use_in_templates'].attributes.ha_rj45_ip + ":" + variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port.toString();
+        }
+        return returnValue;
+      ]]]
+  # open addin info page
   hold_action:
     action: >
       [[[
         var holdAction = "more-info";
-        if (states[variables.var_kepath_generic_set_addin_link.evaluated_object]?.attributes.release_url) {
-          holdAction = "url";
+        if (typeof variables?.var_kepath_generic_set_addin_link?.docker_slug_reference !== 'undefined') {
+          holdAction = "navigate";
         }
         return holdAction;
+      ]]]
+    navigation_path: >
+      [[[
+        var dockerSlugReference = variables?.var_kepath_generic_set_addin_link?.docker_slug_reference;
+        return "/hassio/addon/" + dockerSlugReference + "/info";
+      ]]]
+  # open latest release information. If this is absent, so more-info
+  double_tap_action:
+    action: >
+      [[[
+        var doubleTapAction = "more-info";
+        if (states[variables.var_kepath_generic_set_addin_link.evaluated_object]?.attributes.release_url) {
+          doubleTapAction = "url";
+        }
+        return doubleTapAction;
       ]]]
     url_path: >
       [[[
@@ -70,5 +101,3 @@ custom_card_kepath_generic_add_addin_link:
         }
         return URLPath;
       ]]]
-  double_tap_action:
-    action: "more-info"
