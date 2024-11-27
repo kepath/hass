@@ -2100,6 +2100,8 @@ views:
                         tap_action:
                           action: "url"
                           url_path: "[[[return states['update.home_assistant_core_update'].attributes.release_url]]]"
+                        hold_action:
+                          action: "more-info"
                     item3:
                       card:
                         type: "custom:button-card"
@@ -2124,6 +2126,8 @@ views:
                         tap_action:
                           action: "url"
                           url_path: "[[[return states['update.home_assistant_supervisor_update'].attributes.release_url]]]"
+                        hold_action:
+                          action: "more-info"
                     item4:
                       card:
                         type: "custom:button-card"
@@ -2184,9 +2188,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/5c53de3b_esphome"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "5c53de3b_esphome"
                     item6:
                       card:
                         type: "custom:button-card"
@@ -2209,10 +2212,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8283/"
+                            docker_slug_reference: "246dd49f_matterbridge"
+                            ingress_or_local_port: !secret "hass_addon_matterbridge_webui_local_port"
                     item7:
                       card:
                         type: "custom:button-card"
@@ -2234,9 +2235,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_emqx"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_emqx"
                     item8:
                       card:
                         type: "custom:button-card"
@@ -2258,9 +2258,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/db21ed7f_guacamole"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "db21ed7f_guacamole"
                     item9:
                       card:
                         type: "custom:button-card"
@@ -2283,10 +2282,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:3001/"
+                            docker_slug_reference: "a0d7b954_uptime-kuma"
+                            ingress_or_local_port: !secret "hass_addon_uptime_kuma_webui_local_port"
                     item10:
                       card:
                         type: "custom:button-card"
@@ -2308,9 +2305,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/47146a2b_netdata"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "47146a2b_netdata"
                     item11:
                       card:
                         type: "custom:button-card"
@@ -2332,9 +2328,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/db21ed7f_portainer"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "db21ed7f_portainer"
                     item12:
                       card:
                         type: "custom:button-card"
@@ -2356,9 +2351,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/db21ed7f_scrutiny_fa"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "db21ed7f_scrutiny_fa"
                     item13:
                       card:
                         type: "custom:button-card"
@@ -2380,9 +2374,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_phpmyadmin"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_phpmyadmin"
                     item14:
                       card:
                         type: "custom:button-card"
@@ -2404,9 +2397,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_ssh"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_ssh"
                     item15:
                       card:
                         type: "custom:button-card"
@@ -2428,9 +2420,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_vscode"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_vscode"
                     item16:
                       card:
                         type: "custom:button-card"
@@ -2453,10 +2444,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:32400/web"
+                            docker_slug_reference: "a0d7b954_plex"
+                            ingress_or_local_port: !secret "hass_addon_plex_webui_local_port"
                     item17:
                       card:
                         type: "custom:button-card"
@@ -2478,9 +2467,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/db21ed7f_calibre"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "db21ed7f_calibre"
                     item18:
                       card:
                         type: "custom:button-card"
@@ -2502,9 +2490,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/2effc9b9_5etools"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "2effc9b9_5etools"
                     item19:
                       card:
                         type: "custom:button-card"
@@ -2526,9 +2513,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/d5369777_music_assistant"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "d5369777_music_assistant"
                     item20:
                       card:
                         type: "custom:button-card"
@@ -2551,10 +2537,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8458/"
+                            docker_slug_reference: "2effc9b9_moodist"
+                            ingress_or_local_port: !secret "hass_addon_moodist_webui_local_port"
                     item21:
                       card:
                         type: "custom:button-card"
@@ -2576,9 +2560,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_tailscale"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_tailscale"
                     item22:
                       card:
                         type: "custom:button-card"
@@ -2600,9 +2583,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/9074a9fa_cloudflared"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "9074a9fa_cloudflared"
                     item23:
                       card:
                         type: "custom:button-card"
@@ -2625,10 +2607,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:81/"
+                            docker_slug_reference: "a0d7b954_nginxproxymanager"
+                            ingress_or_local_port: !secret "hass_addon_nginxproxymanager_webui_local_port"
                     item24:
                       card:
                         type: "custom:button-card"
@@ -2651,10 +2631,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8548/"
+                            docker_slug_reference: "a0d7b954_overseerr"
+                            ingress_or_local_port: !secret "hass_addon_overseerr_webui_local_port"
                     item25:
                       card:
                         type: "custom:button-card"
@@ -2677,10 +2655,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8528/"
+                            docker_slug_reference: "db21ed7f_ombi"
+                            ingress_or_local_port: !secret "hass_addon_ombi_webui_local_port"
                     item26:
                       card:
                         type: "custom:button-card"
@@ -2702,9 +2678,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_adguard"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_adguard"
                     item27:
                       card:
                         type: "custom:button-card"
@@ -2727,10 +2702,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8478/"
+                            docker_slug_reference: "2effc9b9_convertx"
+                            ingress_or_local_port: !secret "hass_addon_convertx_webui_local_port"
                     item28:
                       card:
                         type: "custom:button-card"
@@ -2753,10 +2726,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:5789/"
+                            docker_slug_reference: "2effc9b9_IT-Tools"
+                            ingress_or_local_port: !secret "hass_addon_it_tools_webui_local_port"
                     item29:
                       card:
                         type: "custom:button-card"
@@ -2779,10 +2750,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8488/"
+                            docker_slug_reference: "2effc9b9_cyberchef"
+                            ingress_or_local_port: !secret "hass_addon_cyberchef_webui_local_port"
                     item30:
                       card:
                         type: "custom:button-card"
@@ -2805,10 +2774,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:18966/"
+                            docker_slug_reference: "2effc9b9_myip"
+                            ingress_or_local_port: !secret "hass_addon_myip_webui_local_port"
                     item31:
                       card:
                         type: "custom:button-card"
@@ -2830,9 +2797,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_grafana"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_grafana"
                     item32:
                       card:
                         type: "custom:button-card"
@@ -2854,9 +2820,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_influxdb"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_influxdb"
                     item33:
                       card:
                         type: "custom:button-card"
@@ -2878,9 +2843,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/a0d7b954_grocy"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "a0d7b954_grocy"
                     item34:
                       card:
                         type: "custom:button-card"
@@ -2902,9 +2866,8 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/hassio/ingress/db21ed7f_mealie"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "db21ed7f_mealie"
                     item35:
                       card:
                         type: "custom:button-card"
@@ -2927,10 +2890,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:5050/"
+                            docker_slug_reference: "a0d7b954_appdaemon"
+                            ingress_or_local_port: !secret "hass_addon_appdaemon_webserver_local_port"
                     item36:
                       card:
                         type: "custom:button-card"
@@ -2953,11 +2914,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8578/"
-
+                            docker_slug_reference: "2effc9b9_homebox"
+                            ingress_or_local_port: !secret "hass_addon_homebox_webui_local_port"
                     item37:
                       card:
                         type: "custom:button-card"
@@ -2966,7 +2924,7 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "custom_card_kepath_generic_use_entity_picture"
-                          - "custom_card_kepath_generic_add_addin_link"
+                          # - "custom_card_kepath_generic_add_addin_link"
                         entity: "update.kometa_update"
                         name: "kometa"
                         variables:
@@ -2979,6 +2937,9 @@ views:
                             use_themes: false
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
+                          # var_kepath_generic_set_addin_link:
+                          #   docker_slug_reference: "db21ed7f_kometa"
+                          #   ingress_or_local_port: "8123"
                           # var_kepath_generic_set_addin_link:
                           #   is_local_network_link: true
                         # tap_action:
@@ -3006,10 +2967,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8648/"
+                            docker_slug_reference: "2effc9b9_linkding"
+                            ingress_or_local_port: !secret "hass_addon_linkding_webui_local_port"
                     item39:
                       card:
                         type: "custom:button-card"
@@ -3032,11 +2991,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8538/"
-
+                            docker_slug_reference: "2effc9b9_silverbullet"
+                            ingress_or_local_port: !secret "hass_addon_silverbullet_webui_local_port"
                     item40:
                       card:
                         type: "custom:button-card"
@@ -3059,10 +3015,8 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            is_local_network_link: true
-                        tap_action:
-                          action: "url"
-                          url_path: "http://192.168.10.5:8538/"
+                            docker_slug_reference: "2effc9b9_silverbullet"
+                            ingress_or_local_port: !secret "hass_addon_silverbullet_webui_local_port"
 
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
