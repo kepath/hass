@@ -6,15 +6,13 @@
 #       - select the zone and assigning it to a device
 #       - display all zone information in the Event Log
 #       - utilities for determining if a device can use a zone
-#       - requesting icloud updates for devices not using the mobile app
+#       - requesting famshr updates for devices not using the mobile app
 #
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 import os
 import homeassistant.util.dt as dt_util
-from datetime                   import datetime, timedelta, timezone
-import time
-# from homeassistant.helpers  import event
+from homeassistant.helpers  import event
 from homeassistant.core     import callback
 
 
@@ -26,13 +24,12 @@ from ..zone               import iCloud3_Zone
 from ..support           import stationary_zone as statzone
 from ..support           import determine_interval as det_interval
 from ..helpers           import entity_io
-from ..helpers.file_io   import (file_size, )
 from ..helpers.common    import (instr, is_zone, is_statzone, isnot_statzone, isnot_zone, zone_dname,
-                                list_to_str, list_add, list_del, )
+                                list_to_str, list_add, list_del,)
 from ..helpers.messaging import (post_event, post_error_msg, post_monitor_msg,
                                 log_info_msg, log_exception,
-                                _evlog, _log, )
-from ..helpers.time_util import (time_now_secs, secs_to_time,  secs_to, secs_since, mins_since, time_now,
+                                _trace, _traceha, )
+from ..helpers.time_util import (time_now_secs, secs_to_time,  secs_to, secs_since, time_now,
                                 datetime_now, secs_to_datetime, )
 from ..helpers.dist_util import (gps_distance_km, format_dist_km, format_dist_m,
                                 km_to_um, m_to_um, )
@@ -97,8 +94,8 @@ def update_current_zone(Device, display_zone_msg=True):
 
     # Get distance between zone selected and current zone to see if they overlap.
     # If so, keep the current zone
-    if (is_zone(zone_selected)
-            and is_same_or_overlapping_zone(Device.loc_data_zone, zone_selected)):
+    if (zone_selected != NOT_HOME
+            and is_overlapping_zone(Device.loc_data_zone, zone_selected)):
         zone_selected = Device.loc_data_zone
         ZoneSelected  = Gb.Zones_by_zone[Device.loc_data_zone]
 
@@ -107,7 +104,7 @@ def update_current_zone(Device, display_zone_msg=True):
         # See if any device without the mobapp was in this zone. If so, request a
         # location update since it was running on the inzone timer instead of
         # exit triggers from the Mobile App
-        if (Gb.device_not_monitoring_mobapp
+        if (Gb.mobapp_monitor_any_devices_false_flag
                 and zone_selected == NOT_HOME
                 and Device.loc_data_zone != NOT_HOME):
             request_update_devices_no_mobapp_same_zone_on_exit(Device)
@@ -175,7 +172,7 @@ def select_zone(Device, latitude=None, longitude=None):
 
     zones_data = [[Zone.distance_m(latitude, longitude), Zone, Zone.zone,
                     Zone.radius_m, Zone.dname]
-                            for Zone in set(Gb.HAZones)
+                            for Zone in Gb.HAZones
                             if (Zone.passive is False)]
 
     # Do not select a new zone for the Device if it just left a zone. Set to Away and next_update will be soon
@@ -227,14 +224,14 @@ def post_zone_selected_msg(Device, ZoneSelected, zone_selected,
 
     # Format distance msg
     zones_dist_msg = ''
-    # zones_displayed = [zone_selected]
+    zones_displayed = [zone_selected]
     for zone_distance_list in zones_distance_list:
         zdl_items  = zone_distance_list.split('|')
         _zone      = zdl_items[1]
-        _zone_dist_m = float(zdl_items[2])
+        _zone_dist = float(zdl_items[2])
 
         zones_dist_msg += ( f"{zone_dname(_zone)}"
-                            f"-{m_to_um(_zone_dist_m)}")
+                            f"-{m_to_um(_zone_dist)}")
         zones_dist_msg += ", "
 
     gps_accuracy_msg = ''
@@ -303,7 +300,7 @@ def closest_zone(latitude, longitude):
         return None, 'unknown', 'Unknown', 0
 
 #--------------------------------------------------------------------
-def is_same_or_overlapping_zone(zone1, zone2):
+def is_overlapping_zone(zone1, zone2):
     '''
     zone1 and zone2 overlap if their distance between centers is less than 2m
     '''
@@ -311,21 +308,15 @@ def is_same_or_overlapping_zone(zone1, zone2):
         if zone1 == zone2:
             return True
 
-        if (isnot_zone(zone1)
-                or zone1 not in Gb.Zones_by_zone or zone2 not in Gb.Zones_by_zone
-                or zone1 == 'not_set' or zone2 == 'not_set'
-                or zone1 == "" or zone2 == ""):
-            return False
-
+        if zone1 == "": zone1 = HOME
         Zone1 = Gb.Zones_by_zone[zone1]
         Zone2 = Gb.Zones_by_zone[zone2]
 
-        zone_dist_m = Zone1.distance_m(Zone2.latitude, Zone2.longitude)
+        zone_dist = Zone1.distance(Zone2.latitude, Zone2.longitude)
 
-        return (zone_dist_m <= 2)
+        return (zone_dist <= 2)
 
-    except Exception as err:
-        #log_exception(err)
+    except:
         return False
 
 #--------------------------------------------------------------------
@@ -405,17 +396,33 @@ def log_zone_enter_exit_activity(Device):
     if Device.log_zone == '':
         Device.log_zone = Device.loc_data_zone
         Device.log_zone_enter_secs = Gb.this_update_secs
-        post_event(Device, f"Log Zone Activity > Logging Started, {zone_dname(Device.log_zone)}")
+        post_event(Device, f"Log Zone Activity > Logging Started-{zone_dname(Device.log_zone)}")
         return
 
     # Must be in the zone for at least 4-minutes
-    if mins_since(Device.log_zone_enter_secs) < 4:
-        return
+    inzone_secs = secs_since(Device.log_zone_enter_secs)
+    inzone_hrs  = inzone_secs/3600
+    if inzone_secs < 240: return
 
-    try:
-        Gb.hass.async_add_executor_job(write_log_zone_recd, Device)
-    except:
-        write_log_zone_recd(Device)
+    filename = (f"zone-log-{dt_util.now().strftime('%Y')}-"
+                f"{Device.log_zones_filename}.csv")
+
+    with open(filename, 'a', encoding='utf8') as f:
+        if os.path.getsize(filename) == 0:
+            recd = "Date,Zone Enter Time,Zone Exit Time,Time (Mins),Time (Hrs),Distance (Home),Zone,Device\n"
+            f.write(recd)
+
+        recd = (f"{datetime_now()[:10]},"
+                f"{secs_to_datetime(Device.log_zone_enter_secs)},"
+                f"{secs_to_datetime(Gb.this_update_secs)},"
+                f"{inzone_secs/60:.0f},"
+                f"{inzone_hrs:.2f},"
+                f"{Device.sensors[HOME_DISTANCE]:.2f},"
+                f"{Device.log_zone},"
+                f"{Device.devicename}"
+                "\n")
+        f.write(recd)
+        post_event(Device, f"Log Zone Activity > Logging Ended-{zone_dname(Device.log_zone)}")
 
     if Device.loc_data_zone in Device.log_zones:
         Device.log_zone = Device.loc_data_zone
@@ -423,37 +430,6 @@ def log_zone_enter_exit_activity(Device):
     else:
         Device.log_zone = ''
         Device.log_zone_enter_secs = 0
-
-#------------------------------------------------------------------------------
-def write_log_zone_recd(Device):
-    '''
-    Write the record to the .csv file. Add a header record if the file is new
-    '''
-
-    filename = (f"zone-log-{dt_util.now().strftime('%Y')}-"
-                f"{Device.log_zones_filename}.csv")
-
-    with open(filename, 'a', encoding='utf8') as f:
-        if file_size(filename) == 0:
-            header = "Date,Zone Enter Time,Zone Exit Time,Time (Mins),Time (Hrs),Distance (Home),Zone,Device\n"
-        else:
-            header = ''
-
-        recd = (f"{header}"
-                f"{datetime_now()[:10]},"
-                f"{secs_to_datetime(Device.log_zone_enter_secs)},"
-                f"{secs_to_datetime(Gb.this_update_secs)},"
-                f"{mins_since(Device.log_zone_enter_secs):.0f},"
-                f"{mins_since(Device.log_zone_enter_secs)/60:.2f},"
-                f"{Device.sensors[HOME_DISTANCE]:.2f},"
-                f"{Device.log_zone},"
-                f"{Device.devicename}"
-                "\n")
-        f.write(recd)
-
-        post_event(Device,  f"Log Zone Activity > Logging Ended, "
-                            f"{zone_dname(Device.log_zone)}, "
-                            f"Time-{mins_since(Device.log_zone_enter_secs)/60}h")
 
 #------------------------------------------------------------------------------
 def request_update_devices_no_mobapp_same_zone_on_exit(Device):

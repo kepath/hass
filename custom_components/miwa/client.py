@@ -89,7 +89,9 @@ class MIWAClient:
             tag = soup.find("div", {"id": "app"})
             if tag is None:
                 raise MIWAServiceException("App ID not found on the login page")
-            return json.loads(tag.get("data-page")).get("props")
+            data_props = json.loads(tag.get("data-page")).get("props")
+            _LOGGER.debug(f"Data page props: {data_props}")
+            return data_props
         return response
 
     def login(self) -> dict:
@@ -392,19 +394,20 @@ class MIWAClient:
             if self.scope.get("view_payments"):
                 amount = 0
                 payments = self.mijn_saldo(address_path)
-                for payment in payments:
-                    amount += payment.get("amount")
-                key = format_entity_name(f"{address_id} payments")
-                data[key] = MIWAItem(
-                    name="Payments",
-                    key=key,
-                    type="euro",
-                    device_key=device_key,
-                    device_name=device_name,
-                    device_model=device_model,
-                    state=(amount / 100),
-                    extra_attributes={"betalingen": payments},
-                )
+                if payments and isinstance(payments, list):
+                    for payment in payments:
+                        amount += payment.get("amount")
+                    key = format_entity_name(f"{address_id} payments")
+                    data[key] = MIWAItem(
+                        name="Payments",
+                        key=key,
+                        type="euro",
+                        device_key=device_key,
+                        device_name=device_name,
+                        device_model=device_model,
+                        state=(amount / 100),
+                        extra_attributes={"betalingen": payments},
+                    )
 
             if self.scope.get("view_invoices"):
                 invoices = self.mijn_aanrekeningen(address_path)
@@ -465,4 +468,5 @@ class MIWAClient:
                         state=product.get("status"),
                         extra_attributes=product,
                     )
+        _LOGGER.debug(f"Data returned in client.fetch_data: {data}")
         return data
