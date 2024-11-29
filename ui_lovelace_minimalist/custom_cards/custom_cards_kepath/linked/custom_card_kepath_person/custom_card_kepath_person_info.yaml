@@ -6,7 +6,6 @@ custom_card_kepath_person_info:
     - "ulm_custom_card_kepath_person_language_variables"
     - "custom_popup_kepath_person"
     - "ulm_gradient_green_to_red_5step"
-    # - "ulm_zone_list"
   variables:
     ulm_address: ""
     ulm_address_locality: ""
@@ -27,14 +26,14 @@ custom_card_kepath_person_info:
     [[[
       var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
       var icon = "mdi:map-marker-alert";
-
       var zones = states["group.all_zones"].attributes.entity_id;
-      //hass.callService('system_log', 'write', {level:'warning',message:'zones: ' + zones});
 
       for (const item of zones) {
-        if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "").toLowerCase()) {
-          if (states[item].attributes.icon != null) {
-            icon = states[item].attributes.icon;
+        if (typeof states[item] !== "undefined") {
+          if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "").toLowerCase()) {
+            if (states[item].attributes.icon != null) {
+              icon = states[item].attributes.icon;
+            }
           }
         }
       }
@@ -192,7 +191,7 @@ custom_card_kepath_person_info:
             value: >
               [[[
                 var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
-                var zones = variables.ulm_zone_list;
+                var zones = states["group.all_zones"].attributes.entity_id;
                 for (const item of zones) {
                   if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "").toLowerCase()) {
                     return true
