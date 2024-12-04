@@ -465,25 +465,6 @@ views:
         show_empty: false
         card:
           type: "entities"
-          title: "HACS Plugins"
-        filter:
-          template: >-
-            {%- for update_list in states.update | sort(attribute="name") -%}
-              {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
-                {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
-                  {{{
-                    'type': 'weblink',
-                    'name': device_attr(update_list.entity_id, 'name') | title,
-                    'url': state_attr(update_list.entity_id, 'release_url'),
-                    'secondary_info': state_attr(update_list.entity_id, 'installed_version')
-                  }}},
-                {%- endif -%}
-              {%- endif -%}
-            {%- endfor -%}
-      - type: "custom:auto-entities"
-        show_empty: false
-        card:
-          type: "entities"
           title: "HACS Integrations"
         filter:
           template: >-
@@ -491,9 +472,19 @@ views:
               {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
                 {%- if device_attr(update_list.entity_id, 'model') == 'integration' -%}
                   {{{
-                    'type': 'weblink',
-                    'name': device_attr(update_list.entity_id, 'name') | title,
-                    'url': state_attr(update_list.entity_id, 'release_url')
+                    'entity': update_list.entity_id,
+                    'show_icon': false,
+                    'tap_action': {
+                      'action': 'navigate',
+                      'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
+                    },
+                    'hold_action': {
+                      'action': 'url',
+                      'url_path': state_attr(update_list.entity_id, 'release_url')
+                    },
+                    'double_tap_action': {
+                      'action': 'more-info'
+                    }
                   }}},
                 {%- endif -%}
               {%- endif -%}
@@ -502,17 +493,63 @@ views:
         show_empty: false
         card:
           type: "entities"
-          title: "HACS Themes"
+          title: "HACS Plugins"
         filter:
           template: >-
             {%- for update_list in states.update | sort(attribute="name") -%}
               {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
-                {%- if device_attr(update_list.entity_id, 'model') == 'theme' -%}
+                {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
                   {{{
-                    'type': 'weblink',
-                    'name': device_attr(update_list.entity_id, 'name') | title,
-                    'url': state_attr(update_list.entity_id, 'release_url')
+                    'entity': update_list.entity_id,
+                    'tap_action': {
+                      'action': 'navigate',
+                      'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
+                    },
+                    'hold_action': {
+                      'action': 'url',
+                      'url_path': state_attr(update_list.entity_id, 'release_url')
+                    },
+                    'double_tap_action': {
+                      'action': 'more-info'
+                    }
                   }}},
                 {%- endif -%}
               {%- endif -%}
             {%- endfor -%}
+      # - type: "custom:auto-entities"
+      #   show_empty: false
+      #   card:
+      #     type: "entities"
+      #     title: "HACS Plugins"
+      #   filter:
+      #     template: >-
+      #       {%- for update_list in states.update | sort(attribute="name") -%}
+      #         {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+      #           {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
+      #             {{{
+      #               'type': 'weblink',
+      #               'name': device_attr(update_list.entity_id, 'name') | title,
+      #               'url': state_attr(update_list.entity_id, 'release_url'),
+      #               'secondary_info': state_attr(update_list.entity_id, 'installed_version')
+      #             }}},
+      #           {%- endif -%}
+      #         {%- endif -%}
+      #       {%- endfor -%}
+      # - type: "custom:auto-entities"
+      #   show_empty: false
+      #   card:
+      #     type: "entities"
+      #     title: "HACS Themes"
+      #   filter:
+      #     template: >-
+      #       {%- for update_list in states.update | sort(attribute="name") -%}
+      #         {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+      #           {%- if device_attr(update_list.entity_id, 'model') == 'theme' -%}
+      #             {{{
+      #               'type': 'weblink',
+      #               'name': device_attr(update_list.entity_id, 'name') | title,
+      #               'url': state_attr(update_list.entity_id, 'release_url')
+      #             }}},
+      #           {%- endif -%}
+      #         {%- endif -%}
+      #       {%- endfor -%}
