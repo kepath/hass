@@ -7,6 +7,7 @@ import logging
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import selector
+from . import load_scenes_file
 
 from .const import (
     CONF_DEBOUNCE_TIME,
@@ -38,13 +39,13 @@ from .const import (
     TRANSITION_MAX,
     TRANSITION_MIN,
     TRANSITION_STEP,
+    StatefulScenesYamlInvalid,
+    StatefulScenesYamlNotFound,
 )
 from .helpers import get_area_from_entity_id, get_name_from_entity_id
 from .StatefulScenes import (
     Hub,
     Scene,
-    StatefulScenesYamlInvalid,
-    StatefulScenesYamlNotFound,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -79,9 +80,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                self.hub = Hub(
+                scene_confs = await load_scenes_file(user_input[CONF_SCENE_PATH])
+                _ = Hub(
                     hass=self.hass,
-                    scene_path=user_input[CONF_SCENE_PATH],
+                    scene_confs=scene_confs,
                     number_tolerance=user_input[CONF_NUMBER_TOLERANCE],
                 )
             except StatefulScenesYamlInvalid as err:

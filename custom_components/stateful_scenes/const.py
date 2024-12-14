@@ -25,6 +25,10 @@ DEBOUNCE_MIN = 0
 DEBOUNCE_MAX = 300
 DEBOUNCE_STEP = 0.1
 
+TOLERANCE_MIN = 0
+TOLERANCE_MAX = 20
+TOLERANCE_STEP = 1
+
 # Scene configuration
 CONF_SCENE_NAME = "name"
 CONF_SCENE_LEARN = "learn"
@@ -53,3 +57,11 @@ ATTRIBUTES_TO_CHECK = {
 }
 
 DEVICE_INFO_MANUFACTURER = "Stateful Scenes"
+
+
+class StatefulScenesYamlNotFound(Exception):
+    """Raised when specified yaml is not found."""
+
+
+class StatefulScenesYamlInvalid(Exception):
+    """Raised when specified yaml is invalid."""
