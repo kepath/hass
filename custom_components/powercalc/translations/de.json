@@ -29,7 +29,6 @@
           "name": "Name",
           "on_time": "Dauer",
           "start_time": "Startzeit",
-          "unique_id": "Unique-Id",
           "unit_of_measurement": "Maßeinheit (kWh oder W)",
           "update_frequency": "Aktualisierungsfrequenz",
           "value": "Wert",
@@ -42,7 +41,7 @@
         },
         "title": "Einen daily fixed-Sensor erstellen"
       },
-      "domain_group": {
+      "group_domain": {
         "data": {
           "name": "Name",
           "create_energy_sensor": "Energiesensor erstellen",
@@ -110,7 +109,7 @@
           "utility_meter_types": "Utility meter types"
         }
       },
-      "group": {
+      "group_custom": {
         "data": {
           "area": "Bereich",
           "create_energy_sensor": "Energiesensor erstellen",
@@ -123,8 +122,7 @@
           "hide_members": "Mitglieder ausblenden",
           "include_non_powercalc_sensors": "Nicht powercalc Sensoren einschließen",
           "name": "Name",
-          "sub_groups": "Untergruppen",
-          "unique_id": "Unique-Id"
+          "sub_groups": "Untergruppen"
         },
         "data_description": {
           "area": "Fügt alle Powercalc-Sensoren aus dem angegebenen Bereich hinzu",
@@ -148,6 +146,13 @@
         },
         "description": "Hersteller \"{manufacturer}\" und Modell \"{model}\" wurden für Ihre Gerät automatisch erkannt.{remarks}",
         "title": "Bibliothek"
+      },
+      "library_multi_profile": {
+        "data": {
+          "model": "Select model"
+        },
+        "description": "Manufacturer \"{manufacturer}\" and model \"{model}\" were automatically detected for your device. There are multiple profiles found for the entity which can potentially be used. Please look up the exact model of your device in [Powercalc library]({library_link}) and select the correct one",
+        "title": "Library"
       },
       "linear": {
         "data": {
@@ -179,8 +184,9 @@
       },
       "menu_group": {
         "menu_options": {
-          "group": "Standardgruppe",
-          "domain_group": "Domänenbasierte Gruppe"
+          "group_custom": "Standardgruppe",
+          "group_domain": "Domänenbasierte Gruppe",
+          "group_subtract": "Subtract"
         },
         "title": "Choose the group type",
         "description": "Select the type of group sensor you want to create. Choose domain based group if you want to group all entities of a specific domain, or create a sensor summing all your energy sensors. Choose standard group otherwise."
@@ -250,13 +256,12 @@
         "description": "Derzeit können bestimmte Einstellungen nur global konfiguriert werden",
         "title": "Erstellen eines Energiesensors für einen vorhandenen Leistungssensor"
       },
-      "subtract_group": {
+      "group_subtract": {
         "data": {
           "create_energy_sensor": "Energiesensor erstellen",
           "create_utility_meters": "Verbrauchszähler erstellen",
           "entity_id": "Basis-Entität",
           "name": "Name",
-          "unique_id": "Unique id",
           "subtract_entities": "Subtract entities"
         },
         "data_description": {
@@ -291,6 +296,8 @@
         "menu_options": {
           "daily_energy": "Tägliche Leistung/Energie",
           "group": "Gruppe",
+          "global_configuration": "Global configuration",
+          "menu_group": "Group",
           "menu_library": "Virtuelle Leistung (Bibliothek)",
           "real_power": "Energie des Quell-Energiesensors",
           "virtual_power": "Virtuelle Leistung (manuell)"
@@ -319,8 +326,7 @@
           "group": "Zur Gruppe hinzufügen",
           "mode": "Berechnungsstrategie",
           "name": "Name",
-          "standby_power": "Standby-Leistung",
-          "unique_id": "Unique-Id"
+          "standby_power": "Standby-Leistung"
         },
         "data_description": {
           "create_energy_sensor": "Ob powercalc einen kWh-Sensor erstellen soll",
@@ -328,8 +334,7 @@
           "entity_id": "Entität, auf der die virtuelle Leistung basiert; der Leistungssensore wird auf Zustandsänderungen dieser Entität reagieren, um aktualisiert zu werden",
           "group": "Geben Sie einen benutzerdefinierten Gruppennamen ein, um eine neue Gruppe zu erstellen",
           "name": "Leer lassen wird den Namen von der Quell-Entität übernehmen",
-          "standby_power": "Definieren Sie die Leistung, die das Gerät im ausgeschalteten Zustand verbraucht",
-          "unique_id": "Geben Sie eine eindeutige ID an. Dies ermöglicht die Einrichtung mehrerer Leistungssensoren für dieselbe Entität. Wenn nicht angegeben, wird die unique_id der Quell-Entität verwendet."
+          "standby_power": "Definieren Sie die Leistung, die das Gerät im ausgeschalteten Zustand verbraucht"
         },
         "description": "Weitere Informationen zu den möglichen Strategien und Konfigurationsoptionen finden Sie in der Readme-Datei",
         "title": "Virtuellen Leistung/Energie-Sensor erstellen"
@@ -475,7 +480,7 @@
           "utility_meter_types": "Utility meter types"
         }
       },
-      "group": {
+      "group_custom": {
         "title": "Group options",
         "data": {
           "area": "Bereich",
@@ -506,11 +511,12 @@
           "daily_energy": "Daily energy options",
           "fixed": "Fixed options",
           "group": "Group options",
+          "library_options": "Library options",
           "linear": "Linear options",
           "playbook": "Playbook options",
           "multi_switch": "Multi switch options",
           "real_power": "Real power options",
-          "subtract_group": "Gruppeneinstellungen",
+          "group_subtract": "Gruppeneinstellungen",
           "utility_meter_options": "Utility meter options",
           "wled": "WLED options"
         }
@@ -570,7 +576,7 @@
           "device": "Add the created energy sensor to an specific device"
         }
       },
-      "subtract_group": {
+      "group_subtract": {
         "data": {
           "entity_id": "Base entity",
           "subtract_entities": "Subtract entities"

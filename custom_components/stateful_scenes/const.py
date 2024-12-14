@@ -9,6 +9,7 @@ CONF_RESTORE_STATES_ON_DEACTIVATE = "restore_states_on_deactivate"
 CONF_TRANSITION_TIME = "transition_time"
 CONF_EXTERNAL_SCENE_ACTIVE = "external_scene_active"
 CONF_DEBOUNCE_TIME = "debounce_time"
+CONF_IGNORE_UNAVAILABLE = "ignore_unavailable"
 CONF_ENABLE_DISCOVERY = "enable_discovery"
 
 DEFAULT_SCENE_PATH = "scenes.yaml"
@@ -17,11 +18,16 @@ DEFAULT_RESTORE_STATES_ON_DEACTIVATE = False
 DEFAULT_TRANSITION_TIME = 1
 DEFAULT_EXTERNAL_SCENE_ACTIVE = False
 DEFAULT_DEBOUNCE_TIME = 0.0
+DEFAULT_IGNORE_UNAVAILABLE = False
 DEFAULT_ENABLE_DISCOVERY = True
 
 DEBOUNCE_MIN = 0
 DEBOUNCE_MAX = 300
 DEBOUNCE_STEP = 0.1
+
+TOLERANCE_MIN = 0
+TOLERANCE_MAX = 20
+TOLERANCE_STEP = 1
 
 # Scene configuration
 CONF_SCENE_NAME = "name"
@@ -51,3 +57,11 @@ ATTRIBUTES_TO_CHECK = {
 }
 
 DEVICE_INFO_MANUFACTURER = "Stateful Scenes"
+
+
+class StatefulScenesYamlNotFound(Exception):
+    """Raised when specified yaml is not found."""
+
+
+class StatefulScenesYamlInvalid(Exception):
+    """Raised when specified yaml is invalid."""

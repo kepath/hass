@@ -3,37 +3,28 @@
 import asyncio
 import logging
 
-import yaml
-import os
-from homeassistant.core import HomeAssistant, Event, EventStateChangedData
+from homeassistant.core import Event, EventStateChangedData, HomeAssistant
 from homeassistant.helpers.template import area_id, area_name
-from .helpers import (
-    get_name_from_entity_id,
-    get_icon_from_entity_id,
-    get_id_from_entity_id,
-)
 
 from .const import (
     ATTRIBUTES_TO_CHECK,
-    CONF_SCENE_NAME,
-    CONF_SCENE_LEARN,
-    CONF_SCENE_NUMBER_TOLERANCE,
-    CONF_SCENE_ENTITY_ID,
-    CONF_SCENE_ID,
     CONF_SCENE_AREA,
     CONF_SCENE_ENTITIES,
+    CONF_SCENE_ENTITY_ID,
     CONF_SCENE_ICON,
+    CONF_SCENE_ID,
+    CONF_SCENE_LEARN,
+    CONF_SCENE_NAME,
+    CONF_SCENE_NUMBER_TOLERANCE,
+    StatefulScenesYamlInvalid,
+)
+from .helpers import (
+    get_icon_from_entity_id,
+    get_id_from_entity_id,
+    get_name_from_entity_id,
 )
 
 _LOGGER = logging.getLogger(__name__)
-
-
-class StatefulScenesYamlNotFound(Exception):
-    """Raised when specified yaml is not found."""
-
-
-class StatefulScenesYamlInvalid(Exception):
-    """Raised when specified yaml is invalid."""
 
 
 def get_entity_id_from_id(hass: HomeAssistant, id: str) -> str:
@@ -52,14 +43,14 @@ class Hub:
     def __init__(
         self,
         hass: HomeAssistant,
-        scene_path: str,
+        scene_confs: dict,
         number_tolerance: int = 1,
     ) -> None:
         """Initialize the Hub class.
 
         Args:
             hass (HomeAssistant): Home Assistant instance
-            scene_path (str): Path to the yaml file containing the scenes
+            scene_confs (str): Scene configurations from the scene file
             external_scenes (list): List of external scenes
             number_tolerance (int): Tolerance for comparing numbers
 
@@ -68,48 +59,22 @@ class Hub:
             StatefulScenesYamlInvalid: If the yaml file is invalid
 
         """
-        self.scene_path = scene_path
+        self.scene_confs = scene_confs
         self.number_tolerance = number_tolerance
         self.hass = hass
         self.scenes = []
         self.scene_confs = []
 
-        if self.scene_path:
-            scene_confs = self.load_scenes()
-            for scene_conf in scene_confs:
-                if not self.validate_scene(scene_conf):
-                    continue
-                self.scenes.append(
-                    Scene(
-                        self.hass,
-                        self.extract_scene_configuration(scene_conf),
-                    )
+        for scene_conf in scene_confs:
+            if not self.validate_scene(scene_conf):
+                continue
+            self.scenes.append(
+                Scene(
+                    self.hass,
+                    self.extract_scene_configuration(scene_conf),
                 )
-                self.scene_confs.append(self.extract_scene_configuration(scene_conf))
-
-        else:
-            raise StatefulScenesYamlNotFound("No scenes file specified.")
-
-    def load_scenes(self) -> list:
-        """Load scenes from yaml file."""
-        # check if file exists
-        if self.scene_path is None:
-            raise StatefulScenesYamlNotFound("Scenes file not specified.")
-        if not os.path.exists(self.scene_path):
-            raise StatefulScenesYamlNotFound("No scenes file " + self.scene_path)
-
-        try:
-            with open(self.scene_path, encoding="utf-8") as f:
-                scenes_confs = yaml.load(f, Loader=yaml.FullLoader)
-        except OSError as err:
-            raise StatefulScenesYamlInvalid(
-                "No scenes found in " + self.scene_path
-            ) from err
-
-        if not scenes_confs or not isinstance(scenes_confs, list):
-            raise StatefulScenesYamlInvalid("No scenes found in " + self.scene_path)
-
-        return scenes_confs
+            )
+            self.scene_confs.append(self.extract_scene_configuration(scene_conf))
 
     def validate_scene(self, scene_conf: dict) -> None:
         """Validate scene configuration.
@@ -207,7 +172,7 @@ class Scene:
         self.hass = hass
         self.name = scene_conf[CONF_SCENE_NAME]
         self._entity_id = scene_conf[CONF_SCENE_ENTITY_ID]
-        self.number_tolerance = scene_conf[CONF_SCENE_NUMBER_TOLERANCE]
+        self._number_tolerance = scene_conf[CONF_SCENE_NUMBER_TOLERANCE]
         self._id = scene_conf[CONF_SCENE_ID]
         self.area_id = scene_conf[CONF_SCENE_AREA]
         self.learn = scene_conf[CONF_SCENE_LEARN]
@@ -217,6 +182,7 @@ class Scene:
         self._transition_time = 0.0
         self._restore_on_deactivate = True
         self._debounce_time: float = 0
+        self._ignore_unavailable = False
 
         self.callback = None
         self.callback_funcs = {}
@@ -249,6 +215,10 @@ class Scene:
                 "Cannot find entity_id for: " + self.name + self._entity_id
             )
 
+        # Store the current state of the entities
+        for entity_id in self.entities:
+            self.store_entity_state(entity_id)
+
         self.hass.services.call(
             domain="scene",
             service="turn_on",
@@ -272,6 +242,15 @@ class Scene:
             )
 
         self._is_on = False
+
+    @property
+    def number_tolerance(self) -> int:
+        """Get the number tolerance."""
+        return self._number_tolerance
+
+    def set_number_tolerance(self, number_tolerance):
+        """Set the number tolerance."""
+        self._number_tolerance = number_tolerance
 
     @property
     def transition_time(self) -> float:
@@ -299,6 +278,15 @@ class Scene:
     def set_restore_on_deactivate(self, restore_on_deactivate):
         """Set the restore on deactivate flag."""
         self._restore_on_deactivate = restore_on_deactivate
+
+    @property
+    def ignore_unavailable(self) -> bool:
+        """Get the ignore unavailable flag."""
+        return self._ignore_unavailable
+
+    def set_ignore_unavailable(self, ignore_unavailable):
+        """Set the ignore unavailable flag."""
+        self._ignore_unavailable = ignore_unavailable
 
     def register_callback(self):
         """Register callback."""
@@ -354,6 +342,9 @@ class Scene:
             _LOGGER.warning(f"Entity not found: {entity_id}")
             return False
 
+        if self.ignore_unavailable and new_state.state == "unavailable":
+            return None
+
         # Check state
         if not self.compare_values(self.entities[entity_id]["state"], new_state.state):
             _LOGGER.debug(
@@ -394,14 +385,30 @@ class Scene:
         return True
 
     def check_all_states(self):
-        """Check the state of the scene."""
+        """Check the state of the scene.
+
+        If all entities are in the desired state, the scene is on. If any entity is not
+        in the desired state, the scene is off. Unavaiblable entities are ignored, but
+        if all entities are unavailable, the scene is off.
+        """
         for entity_id in self.entities:
             state = self.hass.states.get(entity_id)
             self.states[entity_id] = self.check_state(entity_id, state)
-        self._is_on = all(self.states.values())
 
-    def store_entity_state(self, entity_id, state):
-        """Store the state of an entity."""
+        states = [state for state in self.states.values() if state is not None]
+
+        if not states:
+            self._is_on = False
+
+        self._is_on = all(states)
+
+    def store_entity_state(self, entity_id, state=None):
+        """Store the state of an entity.
+
+        If the state is not provided, the current state of the entity is used.
+        """
+        if state is None:
+            state = self.hass.states.get(entity_id)
         self.restore_states[entity_id] = state
 
     def restore(self):
@@ -410,7 +417,15 @@ class Scene:
         for entity_id, state in self.restore_states.items():
             if state is None:
                 continue
+
+            # restore state
             entities[entity_id] = {"state": state.state}
+
+            # do not restore attributes if the entity is off
+            if state.state == "off":
+                continue
+
+            # restore attributes
             if state.domain in ATTRIBUTES_TO_CHECK:
                 entity_attrs = state.attributes
                 for attribute in ATTRIBUTES_TO_CHECK.get(state.domain):

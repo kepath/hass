@@ -430,6 +430,13 @@ template:
           house_entities: "{{area_entities('All')+area_entities('HASS Internal')|sort}}"
           mobile_entities: "{{area_entities('Mobile')|sort}}"
 
+      - unique_id: "_secrets_to_use_in_templates"
+        name: "Non hard coded secrets to use in templates"
+        state: "0"
+        attributes:
+          ha_nabucasa_url: !secret "ha_nabucasa_url"
+          ha_rj45_ip: !secret "ha_rj45_ip"
+
       - unique_id: "calculated_non_count_entities_template_generated"
         name: "Calculated Non Count Entities"
         state: "0"

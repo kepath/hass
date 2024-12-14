@@ -7,11 +7,13 @@ import logging
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import selector
+from . import load_scenes_file
 
 from .const import (
     CONF_DEBOUNCE_TIME,
     CONF_ENABLE_DISCOVERY,
     CONF_EXTERNAL_SCENE_ACTIVE,
+    CONF_IGNORE_UNAVAILABLE,
     CONF_NUMBER_TOLERANCE,
     CONF_RESTORE_STATES_ON_DEACTIVATE,
     CONF_SCENE_ENTITIES,
@@ -25,6 +27,7 @@ from .const import (
     DEFAULT_DEBOUNCE_TIME,
     DEFAULT_ENABLE_DISCOVERY,
     DEFAULT_EXTERNAL_SCENE_ACTIVE,
+    DEFAULT_IGNORE_UNAVAILABLE,
     DEFAULT_NUMBER_TOLERANCE,
     DEFAULT_RESTORE_STATES_ON_DEACTIVATE,
     DEFAULT_SCENE_PATH,
@@ -36,13 +39,13 @@ from .const import (
     TRANSITION_MAX,
     TRANSITION_MIN,
     TRANSITION_STEP,
+    StatefulScenesYamlInvalid,
+    StatefulScenesYamlNotFound,
 )
 from .helpers import get_area_from_entity_id, get_name_from_entity_id
 from .StatefulScenes import (
     Hub,
     Scene,
-    StatefulScenesYamlInvalid,
-    StatefulScenesYamlNotFound,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -77,9 +80,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                self.hub = Hub(
+                scene_confs = await load_scenes_file(user_input[CONF_SCENE_PATH])
+                _ = Hub(
                     hass=self.hass,
-                    scene_path=user_input[CONF_SCENE_PATH],
+                    scene_confs=scene_confs,
                     number_tolerance=user_input[CONF_NUMBER_TOLERANCE],
                 )
             except StatefulScenesYamlInvalid as err:
@@ -134,6 +138,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             min=DEBOUNCE_MIN, max=DEBOUNCE_MAX, step=DEBOUNCE_STEP
                         )
                     ),
+                    vol.Optional(
+                        CONF_IGNORE_UNAVAILABLE, default=DEFAULT_IGNORE_UNAVAILABLE
+                    ): selector.BooleanSelector(),
                     vol.Optional(
                         CONF_ENABLE_DISCOVERY, default=DEFAULT_ENABLE_DISCOVERY
                     ): selector.BooleanSelector(),
