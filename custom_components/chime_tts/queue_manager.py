@@ -61,7 +61,7 @@ class ChimeTTSQueueManager:
                 try:
                     service_call['future'].set_result(result)
                 except Exception as e:
-                    _LOGGER.error("Error running Chime TTS call %s: %s", service_call, str(e))
+                    _LOGGER.error("Error setting result for service call %s: %s", service_call, str(e))
 
         except asyncio.TimeoutError:
             self._handle_timeout_error(service_call, start_time)
@@ -77,13 +77,14 @@ class ChimeTTSQueueManager:
     def _handle_timeout_error(self, service_call: ServiceCall, start_time: datetime) -> None:
         """Handle timeout error for a service call."""
         end_time = datetime.now()
-        completion_time = round((end_time - start_time).total_seconds(), 2)
+        completion_time = round((end_time - start_time).total_seconds(), 2) or 0
         elapsed_time = f"{completion_time}s" if completion_time >= 1 else f"{completion_time * 1000}ms"
+        _LOGGER.warning("Service call %s timed out after %s", service_call, elapsed_time)
         service_call['future'].set_exception(
             TimeoutError(f"Service call timed out after {elapsed_time} (configured timeout = {self.timeout_s}s)")
         )
 
-    async def queue_processor(self) -> None:
+    async def async_queue_processor(self) -> None:
         """Continuously process the Chime TTS service call queue."""
         while not self._shutdown_event.is_set():
             await asyncio.sleep(QUEUE_PROCESSOR_SLEEP_TIME)
@@ -129,7 +130,9 @@ class ChimeTTSQueueManager:
         """Clear all items from the queue."""
         while not self.queue.empty():
             try:
-                self.queue.get_nowait()
+                task = self.queue.get_nowait()
+                if isinstance(task, asyncio.Future):
+                    task.cancel()
                 self.queue.task_done()
             except asyncio.QueueEmpty:
                 break
@@ -140,8 +143,8 @@ class ChimeTTSQueueManager:
 
     def start_queue_processor(self) -> None:
         """Start the queue processor task."""
-        task = asyncio.create_task(self.queue_processor())
-        task.add_done_callback(self.running_tasks.remove)  # Ensure task removal when done
+        task = asyncio.create_task(self.async_queue_processor())
+        task.add_done_callback(lambda t: self.running_tasks.remove(t) if t in self.running_tasks else None)
         self.running_tasks.append(task)
 
     async def stop_queue_processor(self) -> None:

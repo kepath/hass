@@ -17,6 +17,7 @@ from ..const import (
     SERVICE_SAY_URL,
     DEFAULT_CHIME_OPTIONS,
     OFFSET_KEY,
+    CROSSFADE_KEY,
     TTS_PLATFORM_KEY,
     DEFAULT_LANGUAGE_KEY,
     DEFAULT_VOICE_KEY,
@@ -24,10 +25,9 @@ from ..const import (
     DEFAULT_OFFSET_MS,
     FFMPEG_ARGS_ALEXA,
     FFMPEG_ARGS_VOLUME,
-    ALEXA_MEDIA_PLAYER_PLATFORM,
     AMAZON_POLLY,
     BAIDU,
-    ELEVENLABS_TTS,
+    ELEVENLABS,
     GOOGLE_CLOUD,
     GOOGLE_TRANSLATE,
     IBM_WATSON_TTS,
@@ -178,6 +178,7 @@ class ChimeTTSHelper:
         chime_path =str(data.get("chime_path", ""))
         end_chime_path = str(data.get("end_chime_path", ""))
         offset = float(data.get("delay", data.get(OFFSET_KEY, DEFAULT_OFFSET_MS)) or 0)
+        crossfade = int(data.get(CROSSFADE_KEY, 0))
         final_delay = float(data.get("final_delay", 0) or 0)
         message = str(data.get("message", ""))
         tts_platform = str(data.get("tts_platform", ""))
@@ -201,12 +202,6 @@ class ChimeTTSHelper:
         # FFmpeg arguments
         ffmpeg_args: str = self.parse_ffmpeg_args(data.get("audio_conversion", None))
 
-        # Force "Alexa" conversion if any Alexa media_player entities included
-        alexa_conversion_forced = False
-        if ffmpeg_args is None and len(media_player_helper.get_media_players_of_platform(entity_ids, ALEXA_MEDIA_PLAYER_PLATFORM)) > 0:
-            ffmpeg_args = FFMPEG_ARGS_ALEXA
-            alexa_conversion_forced = True
-
         params = {
             "entity_ids": entity_ids,
             "hass": hass,
@@ -214,6 +209,7 @@ class ChimeTTSHelper:
             "end_chime_path": end_chime_path,
             "cache": cache,
             "offset": offset,
+            "crossfade": crossfade,
             "final_delay": final_delay,
             "message": message,
             "language": language,
@@ -252,8 +248,6 @@ class ChimeTTSHelper:
                 else:
                     _LOGGER.debug(" * %s = %s", p_key, str(value))
 
-        if alexa_conversion_forced is True:
-            _LOGGER.debug(" --- Audio will be converted to Alexa-friendly format as Alexa speaker/s detected ---")
         return params
 
     def parse_options_yaml(self, data: dict, default_data: dict):
@@ -452,15 +446,16 @@ class ChimeTTSHelper:
     def get_tts_platform(self,
                          hass,
                          tts_platform: str = "",
-                         default_tts_platform: str = ""):
+                         default_tts_platform: str = "",
+                         fallback_tts_platform: str = ""):
         """TTS platform/entity_id to use for TTS audio."""
 
         installed_tts_platforms: list[str] = self.get_installed_tts_platforms(hass)
 
         # No TTS platform provided
         if not tts_platform:
-            tts_platform = default_tts_platform
-            
+            tts_platform = default_tts_platform if default_tts_platform else fallback_tts_platform
+
         # Match for deprecated Nabu Casa platform string
         if tts_platform.lower() == NABU_CASA_CLOUD_TTS_OLD:
             tts_platform = NABU_CASA_CLOUD_TTS
@@ -494,8 +489,8 @@ class ChimeTTSHelper:
             tts_provider = AMAZON_POLLY
         elif stripped_tts_provider == "baidu":
             tts_provider = BAIDU
-        elif stripped_tts_provider == "elevenlabstts":
-            tts_provider = ELEVENLABS_TTS
+        elif stripped_tts_provider == "elevenlabs":
+            tts_provider = ELEVENLABS
         elif stripped_tts_provider == "googlecloud":
             tts_provider = GOOGLE_CLOUD
         elif stripped_tts_provider == "googletranslate":
@@ -555,9 +550,10 @@ class ChimeTTSHelper:
 
 
     async def async_ffmpeg_convert_from_audio_segment(self,
-                                          audio_segment: AudioSegment = None,
-                                          ffmpeg_args: str = "",
-                                          folder: str = ""):
+                                                      hass: HomeAssistant,
+                                                      audio_segment: AudioSegment = None,
+                                                      ffmpeg_args: str = "",
+                                                      folder: str = ""):
         """Convert pydub AudioSegment with FFmpeg and provided arguments."""
         ret_val = audio_segment
 
@@ -577,6 +573,7 @@ class ChimeTTSHelper:
         # Save to temp file
         temp_filename = "temp_segment.mp3"
         temp_audio_file = await filesystem_helper.async_save_audio_to_folder(
+            hass=hass,
             audio=audio_segment,
             folder=folder,
             file_name=temp_filename)
@@ -586,7 +583,7 @@ class ChimeTTSHelper:
             return ret_val
 
         # Convert with FFmpeg
-        converted_audio_file = self.ffmpeg_convert_from_file(temp_audio_file, ffmpeg_args)
+        converted_audio_file = await self.async_ffmpeg_convert_from_file(hass, temp_audio_file, ffmpeg_args)
         if converted_audio_file is None or converted_audio_file is False or len(converted_audio_file) < 5:
             _LOGGER.warning("ffmpeg_convert_from_audio_segment - Unable to convert audio segment from file %s", temp_audio_file)
 
@@ -602,7 +599,7 @@ class ChimeTTSHelper:
         for file_path in [temp_audio_file, converted_audio_file]:
             if (file_path
                 and isinstance(file_path, str)
-                and os.path.exists(file_path)):
+                and await hass.async_add_executor_job(filesystem_helper.path_exists, file_path)):
                 try:
                     os.remove(file_path)
                 except Exception as error:
@@ -611,18 +608,25 @@ class ChimeTTSHelper:
 
         return ret_val
 
-    def ffmpeg_convert_from_file(self, file_path: str, ffmpeg_args: str):
+    async def async_ffmpeg_convert_from_file(self, hass: HomeAssistant, file_path: str, ffmpeg_args: str):
         """Convert audio file with FFmpeg and provided arguments."""
-        if not os.path.exists(file_path):
-            _LOGGER.warning("Unable to perform FFmpeg conversion: source file not found on file system: %s", file_path)
+
+        local_file_path = filesystem_helper.get_local_path(hass, file_path)
+        if not await hass.async_add_executor_job(filesystem_helper.path_exists, local_file_path):
+            _LOGGER.warning("Unable to perform FFmpeg conversion: source file not found on file system: %s", local_file_path)
             return False
+
+        # Prevent Alexa FFmpeg comversion if file is aleady comaptible
+        if ffmpeg_args == FFMPEG_ARGS_ALEXA and await filesystem_helper.async_is_audio_alexa_compatible(hass, local_file_path):
+            _LOGGER.debug("Audio is already Alexa Media Player compatible")
+            return file_path
 
         try:
             # Add standard arguments
             ffmpeg_cmd = [
                 'ffmpeg',
                 '-i',
-                file_path,
+                local_file_path,
                 *ffmpeg_args.split()
             ]
 
@@ -633,23 +637,23 @@ class ChimeTTSHelper:
                 if index >= 0 and len(ffmpeg_args) >= index:
                     file_extension = ffmpeg_cmd[index+1]
                     if file_extension != "mp3":
-                        converted_file_path = file_path.replace(".mp3", f".{file_extension}")
+                        converted_file_path = local_file_path.replace(".mp3", f".{file_extension}")
             except Exception:
                 # Use mp3 as default
-                converted_file_path = file_path.replace(".mp3", "_converted.mp3")
+                converted_file_path = local_file_path.replace(".mp3", "_converted.mp3")
 
-            if converted_file_path == file_path:
-                converted_file_path = file_path.replace(".mp3", "_converted.mp3")
+            if converted_file_path == local_file_path:
+                converted_file_path = local_file_path.replace(".mp3", "_converted.mp3")
 
             # Delete converted output file if it exists
-            if os.path.exists(converted_file_path):
+            if await hass.async_add_executor_job(filesystem_helper.path_exists, converted_file_path):
                 os.remove(converted_file_path)
 
             ffmpeg_cmd.append(converted_file_path)
 
             # Convert the audio file
             ffmpeg_cmd_string = " ".join(ffmpeg_cmd)
-            _LOGGER.debug("Running FFMpeg operation: \"%s\"", ffmpeg_cmd_string)
+            _LOGGER.debug("Running FFmpeg operation: \"%s\"", ffmpeg_cmd_string)
             ffmpeg_process = subprocess.Popen(ffmpeg_cmd,
                                               stdin=subprocess.PIPE,
                                               stdout=subprocess.PIPE,
@@ -666,16 +670,15 @@ class ChimeTTSHelper:
                 return False
 
             # Replace original with converted file
-            if converted_file_path == file_path.replace(".mp3", "_converted.mp3"):
+            if converted_file_path == local_file_path.replace(".mp3", "_converted.mp3"):
                 try:
-                    shutil.move(converted_file_path, file_path)
-                    return file_path
+                    shutil.move(converted_file_path, local_file_path)
                 except Exception as error:
                     _LOGGER.error("Error renaming file %s to %s. Error: %s. FFmpeg options: %s",
-                                   file_path, converted_file_path, error, ffmpeg_cmd_string)
+                                   local_file_path, converted_file_path, error, ffmpeg_cmd_string)
                     return False
 
-            return converted_file_path
+            return file_path
 
         except subprocess.CalledProcessError as error:
             _LOGGER.error("FFmpeg subproces error: %s FFmpeg options: %s",
@@ -710,7 +713,7 @@ class ChimeTTSHelper:
 
         return ffmpeg_args_string
 
-    async def async_change_speed_of_audiosegment(self, audio_segment: AudioSegment, speed: float = 100.0, temp_folder: str = None):
+    async def async_change_speed_of_audiosegment(self, hass: HomeAssistant, audio_segment: AudioSegment, speed: float = 100.0, temp_folder: str = None):
         """Change the playback speed of an audio segment."""
         if not audio_segment or speed == 100 or speed < 1 or speed > 500:
             if not audio_segment:
@@ -726,11 +729,12 @@ class ChimeTTSHelper:
         ffmpeg_args_string = self.add_atempo_values_to_ffmpeg_args_string(tempo)
 
         return await self.async_ffmpeg_convert_from_audio_segment(
+            hass=hass,
             audio_segment=audio_segment,
             ffmpeg_args=ffmpeg_args_string,
             folder=temp_folder)
 
-    async def async_change_pitch_of_audiosegment(self, audio_segment: AudioSegment, pitch: int = 0, temp_folder: str = None):
+    async def async_change_pitch_of_audiosegment(self, hass: HomeAssistant, audio_segment: AudioSegment, pitch: int = 0, temp_folder: str = None):
         """Change the pitch of an audio segment."""
         if not audio_segment:
             _LOGGER.warning("Cannot change TTS audio pitch. No audio available")
@@ -751,6 +755,7 @@ class ChimeTTSHelper:
         ffmpeg_args_string = f"-af asetrate={frame_rate}*{pitch_shift}"
         ffmpeg_args_string = self.add_atempo_values_to_ffmpeg_args_string(tempo_adjustment, ffmpeg_args_string)
         return await self.async_ffmpeg_convert_from_audio_segment(
+            hass=hass,
             audio_segment=audio_segment,
             ffmpeg_args=ffmpeg_args_string,
             folder=temp_folder)
@@ -758,8 +763,9 @@ class ChimeTTSHelper:
     def combine_audio(self,
                       audio_1: AudioSegment,
                       audio_2: AudioSegment,
-                      offset: int = 0):
-        """Combine two AudioSegment object with either a delay (if >0) or overlay (if <0)."""
+                      offset: int = 0,
+                      crossfade: int = 0):
+        """Combine two AudioSegment object with a delay (if offset>0) overlay (if offset<0) or crossfade."""
         if audio_1 is None:
             return audio_2
         if audio_2 is None:
@@ -771,9 +777,14 @@ class ChimeTTSHelper:
             _LOGGER.debug("Performing overlay of %sms", str(offset))
             ret_val = self.overlay(audio_1, audio_2, offset)
         elif offset > 0:
+            _LOGGER.debug("Adding gap of %sms", str(offset))
             ret_val = audio_1 + (AudioSegment.silent(duration=offset) + audio_2)
+        elif crossfade > 0:
+            crossfade = min(len(audio_1), len(audio_2), crossfade)
+            _LOGGER.debug("Performing crossfade of %sms", str(crossfade))
+            ret_val = audio_1.append(audio_2, crossfade=crossfade)
         else:
-            _LOGGER.debug("Combining audio files with no delay or overlay")
+            _LOGGER.debug("Combining audio files with no delay, overlay or crossfade")
 
         return ret_val
 

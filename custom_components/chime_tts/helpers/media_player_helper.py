@@ -199,9 +199,16 @@ class MediaPlayerHelper:
         """Determine whether a media_player belongs to the Spotify platform."""
         return self.get_platform_from_entity_id(entity_id) == SPOTIFY_PLATFORM
 
-    def get_media_players_of_platform(self, entity_ids, platform):
+    def get_alexa_media_players_count(self):
+        """Count of alexa_media_players."""
+        alexa_media_players = [media_player for media_player in self.media_players if media_player.platform == ALEXA_MEDIA_PLAYER_PLATFORM]
+        return len(alexa_media_players)
+
+    def get_media_players_of_platform(self, entity_ids: list = [], platform: str = ""):
         """List of media_players belonging to a specific platform."""
-        return [entity_id for entity_id in entity_ids if self.get_media_players_from_entity_id(entity_id) and self.get_media_players_from_entity_id(entity_id).platform == platform]
+        if entity_ids and platform:
+            return [entity_id for entity_id in entity_ids if self.get_media_players_from_entity_id(entity_id) and self.get_media_players_from_entity_id(entity_id).platform == platform]
+        return []
 
     def get_supported_feature(self, entity: State, feature: str):
         """Whether a feature is supported by the media_player device."""
@@ -220,16 +227,16 @@ class MediaPlayerHelper:
 
         return False
 
-    def get_media_content_id(self, file_path: str):
+    def get_media_content_id(self, hass: HomeAssistant, file_path: str):
         """Create the media content id for a local media directory file."""
-        if file_path is None:
+        if not file_path:
             _LOGGER.error("Audio file path missing in call to get_media_content_id")
             return None
 
         media_source_path = file_path
 
         media_dir_key = ""
-        for name_i, path_i in self.media_dirs_dict.items():
+        for name_i, path_i in hass.config.media_dirs.items():
             if file_path.startswith(path_i) and len(media_dir_key) < len(path_i):
                 media_dir_key = name_i
         if self.media_dirs_dict.get(media_dir_key, None):
@@ -237,9 +244,9 @@ class MediaPlayerHelper:
             media_source_path = media_source_path[len(f"/{path}") :]
             media_source_path = f"media-source://media_source/{media_dir_key}/{media_source_path}"
             return media_source_path
-        else:
-            _LOGGER.error("Media file \"%s\" is not in a local media directory. See https://www.home-assistant.io/more-info/local-media/setup-media/")
-            return None
+
+        # Media file exists outside of a media folder
+        return None
 
     #### ACTIONS ####
 

@@ -1,7 +1,6 @@
 """The Chime TTS integration."""
 
 import logging
-import os
 import io
 import time
 from datetime import datetime
@@ -15,7 +14,7 @@ from homeassistant.components.media_player.const import (
     ATTR_MEDIA_CONTENT_TYPE,
     ATTR_MEDIA_ANNOUNCE,
     SERVICE_PLAY_MEDIA,
-    MEDIA_TYPE_MUSIC,
+    MediaType as MEDIA_TYPE,
 )
 
 from .helpers.helpers import ChimeTTSHelper
@@ -48,6 +47,7 @@ from .const import (
     PUBLIC_PATH_KEY,
     AUDIO_DURATION_KEY,
     FADE_TRANSITION_KEY,
+    REMOVE_TEMP_FILE_DELAY_KEY,
     DEFAULT_FADE_TRANSITION_MS,
     ADD_COVER_ART_KEY,
 
@@ -66,6 +66,7 @@ from .const import (
     WWW_PATH_DEFAULT,
 
     ALEXA_MEDIA_PLAYER_PLATFORM,
+    FFMPEG_ARGS_ALEXA,
     SONOS_PLATFORM,
     MP3_PRESET_CUSTOM_PREFIX,
     MP3_PRESET_CUSTOM_KEY,
@@ -76,10 +77,12 @@ from .const import (
     DEFAULT_LANGUAGE_KEY,
     DEFAULT_VOICE_KEY,
     DEFAULT_TLD_KEY,
+    FALLBACK_TTS_PLATFORM_KEY,
     OFFSET_KEY,
+    CROSSFADE_KEY,
     AMAZON_POLLY,
     BAIDU,
-    ELEVENLABS_TTS,
+    ELEVENLABS,
     GOOGLE_CLOUD,
     GOOGLE_TRANSLATE,
     IBM_WATSON_TTS,
@@ -271,7 +274,10 @@ async def async_setup(hass: HomeAssistant, _config_entry: ConfigEntry) -> bool: 
 
         # Summary
         elapsed_time = (datetime.now() - start_time).total_seconds() * 1000
-        helpers.debug_finish(f"Chime TTS Clear Cache Completed in %s ms {elapsed_time}")
+        elapsed_time = (f"{elapsed_time} s"
+                        if elapsed_time >= 1
+                        else f"{elapsed_time * 1000} ms")
+        helpers.debug_finish(f"Chime TTS Clear Cache Completed in {elapsed_time}")
 
         return True
 
@@ -315,8 +321,13 @@ async def async_prepare_media(hass: HomeAssistant, params, options, media_player
                 )
 
             # Remove temporary local generated mp3
-            if not params.get("cache", False):
-                _LOGGER.debug("Removing temporary file%s:", "s" if local_path and public_path else "")
+            if not bool(params.get("cache", False)):
+                remove_temp_file_delay_s = float(_data.get(REMOVE_TEMP_FILE_DELAY_KEY, 0) / 1000)
+                if remove_temp_file_delay_s > 0:
+                    _LOGGER.debug("Waiting %ss before removing temporary file%s:", str(remove_temp_file_delay_s), "s" if local_path and public_path else "")
+                    await hass.async_add_executor_job(time.sleep, remove_temp_file_delay_s)
+                else:
+                    _LOGGER.debug("Removing temporary file%s:", "s" if local_path and public_path else "")
                 filesystem_helper.delete_file(hass, local_path)
                 filesystem_helper.delete_file(hass, public_path)
 
@@ -330,7 +341,7 @@ async def async_prepare_media(hass: HomeAssistant, params, options, media_player
     # Convert public file path to external URL for chime_tts.say_url
     if is_say_url:
         _LOGGER.debug("Final URL = %s", public_path)
-        helpers.debug_finish(f"Chime TTS Say URL Completed in %s {elapsed_time}")
+        helpers.debug_finish(f"Chime TTS Say URL Completed in {elapsed_time}")
         ret_value = {
             "url": public_path,
             ATTR_MEDIA_CONTENT_ID: media_content_id,
@@ -402,11 +413,20 @@ async def async_update_configuration(config_entry: ConfigEntry, hass: HomeAssist
     # Default voice
     _data[DEFAULT_TLD_KEY] = options.get(DEFAULT_TLD_KEY, None)
 
+    # Fallback TTS Platform
+    _data[FALLBACK_TTS_PLATFORM_KEY] = options.get(FALLBACK_TTS_PLATFORM_KEY, "")
+
     # Default offset
     _data[OFFSET_KEY] = options.get(OFFSET_KEY, 0)
 
+    # Default crossfade
+    _data[CROSSFADE_KEY] = options.get(CROSSFADE_KEY, 0)
+
     # Default audio fade transition duration
     _data[FADE_TRANSITION_KEY] = options.get(FADE_TRANSITION_KEY, DEFAULT_FADE_TRANSITION_MS)
+
+    # Delay before removing temporary file
+    _data[REMOVE_TEMP_FILE_DELAY_KEY] = options.get(REMOVE_TEMP_FILE_DELAY_KEY, 0)
 
     # Add cover art to generated MP3 files
     _data[ADD_COVER_ART_KEY] = options.get(ADD_COVER_ART_KEY, False)
@@ -456,8 +476,11 @@ async def async_update_configuration(config_entry: ConfigEntry, hass: HomeAssist
         DEFAULT_LANGUAGE_KEY,
         DEFAULT_VOICE_KEY,
         DEFAULT_TLD_KEY,
+        FALLBACK_TTS_PLATFORM_KEY,
         OFFSET_KEY,
+        CROSSFADE_KEY,
         FADE_TRANSITION_KEY,
+        REMOVE_TEMP_FILE_DELAY_KEY,
         ADD_COVER_ART_KEY,
         TEMP_CHIMES_PATH_KEY,
         TEMP_PATH_KEY,
@@ -511,7 +534,8 @@ async def async_request_tts_audio(
     # Verify TTS Platform
     tts_platform = helpers.get_tts_platform(hass=hass,
                                             tts_platform=tts_platform,
-                                            default_tts_platform=_data[TTS_PLATFORM_KEY])
+                                            default_tts_platform=_data[TTS_PLATFORM_KEY],
+                                            fallback_tts_platform=_data[FALLBACK_TTS_PLATFORM_KEY])
     if tts_platform is False:
         return None
 
@@ -568,6 +592,7 @@ async def async_request_tts_audio(
     }.items():
         _LOGGER.debug("    * %s = %s", key, value)
 
+    audio_data = None
     media_source_id = None
     try:
         media_source_id = tts.media_source.generate_media_source_id(
@@ -578,6 +603,17 @@ async def async_request_tts_audio(
             cache=cache,
             options=tts_options,
         )
+        if media_source_id is None:
+            _LOGGER.error("Error: Unable to generate media_source_id")
+        else:
+            try:
+                audio_data = await tts.async_get_media_source_audio(
+                    hass=hass, media_source_id=media_source_id
+                )
+            except Exception as error:
+                _LOGGER.error("   - Error calling tts.async_get_media_source_audio with media_source_id = '%s': %s",
+                    str(media_source_id), str(error))
+
     except Exception as error:
         if f"{error}" == "Invalid TTS provider selected":
             missing_tts_platform_error(tts_platform)
@@ -586,21 +622,6 @@ async def async_request_tts_audio(
                 "   - Error calling tts.media_source.generate_media_source_id: %s",
                 error,
             )
-        return None
-    if media_source_id is None:
-        _LOGGER.error("Error: Unable to generate media_source_id")
-        return None
-
-    audio_data = None
-    try:
-        audio_data = await tts.async_get_media_source_audio(
-            hass=hass, media_source_id=media_source_id
-        )
-    except Exception as error:
-        _LOGGER.error(
-            "   - Error calling tts.async_get_media_source_audio: %s", error
-        )
-        return None
 
     if audio_data is not None:
         if len(audio_data) == 2:
@@ -608,23 +629,31 @@ async def async_request_tts_audio(
             file = io.BytesIO(audio_bytes)
             if file is None:
                 _LOGGER.error("...could not convert TTS bytes to audio")
-                return None
-            audio = await filesystem_helper.async_load_audio(file)
-            if audio is not None:
-
-                # Done
-                end_time = datetime.now()
-                completion_time = round((end_time - start_time).total_seconds(), 2)
-                completion_time_string = (f"{completion_time}s"
-                                          if completion_time >= 1
-                                          else f"{completion_time * 1000}ms")
-                _LOGGER.debug("   ...TTS audio generated in %s", completion_time_string)
-                return audio
-            _LOGGER.error("...could not extract TTS audio from file")
+            else:
+                audio: AudioSegment = await filesystem_helper.async_load_audio(file)
+                if audio is not None and len(audio) > 0:
+                    # TTS generated successfully
+                    end_time = datetime.now()
+                    completion_time = round((end_time - start_time).total_seconds(), 2)
+                    completion_time_string = (f"{completion_time}s"
+                                            if completion_time >= 1
+                                            else f"{completion_time * 1000}ms")
+                    _LOGGER.debug("   ...TTS audio generated in %s", completion_time_string)
+                    return audio
+                _LOGGER.error("...could not extract TTS audio from file")
         else:
             _LOGGER.error("...audio_data did not contain audio bytes")
     else:
         _LOGGER.error("...audio_data generation failed")
+
+    if tts_platform != _data[FALLBACK_TTS_PLATFORM_KEY] and _data[FALLBACK_TTS_PLATFORM_KEY]:
+        _LOGGER.debug("Retrying TTS audio generation with fallback platform '%s'", _data[FALLBACK_TTS_PLATFORM_KEY])
+        return await async_request_tts_audio(hass=hass,
+                                             tts_platform=_data[FALLBACK_TTS_PLATFORM_KEY],
+                                             message=message,
+                                             language=language,
+                                             cache=cache,
+                                             options=options)
     return None
 
 
@@ -638,12 +667,12 @@ def missing_tts_platform_error(tts_platform):
     if tts_platform is BAIDU:
         tts_platform_name = "Baidu"
         tts_platform_documentation = "https://www.home-assistant.io/integrations/baidu"
-    if tts_platform is ELEVENLABS_TTS:
-        tts_platform_name = "ElevenLabs TTS"
-        tts_platform_documentation = "https://github.com/carleeno/elevenlabs_tts"
+    if tts_platform is ELEVENLABS:
+        tts_platform_name = "ElevenLabsTS"
+        tts_platform_documentation = "https://github.com/carleeno/elevenlabs"
     if tts_platform is GOOGLE_CLOUD:
         tts_platform_name = "Google Cloud"
-        tts_platform_documentation = "https://www.home-assistant.io/integrations/google_cloud"
+        tts_platform_documentation = "https://www.home-assistant.io/integrations/elevenlabs"
     if tts_platform is GOOGLE_TRANSLATE:
         tts_platform_name = "Google Translate"
         tts_platform_documentation = "https://www.home-assistant.io/integrations/google_translate"
@@ -696,14 +725,14 @@ async def async_get_playback_audio_path(params: dict, options: dict):
     chime_path = params.get("chime_path", None)
     end_chime_path = params.get("end_chime_path", None)
     offset = params.get("offset", _data[OFFSET_KEY])
+    crossfade = params.get("crossfade", _data[CROSSFADE_KEY])
     message = params.get("message", None)
     cache = params.get("cache", False)
     entity_ids = params.get("entity_ids", [])
     ffmpeg_args = params.get("ffmpeg_args", "")
 
     # Produce local and/or public mp3s?
-    alexa_media_player_count = len(media_player_helper.get_media_players_of_platform(entity_ids, ALEXA_MEDIA_PLAYER_PLATFORM))
-    public_count = alexa_media_player_count
+    alexa_media_player_count = public_count = media_player_helper.get_alexa_media_players_count()
     is_public = public_count > 0 or (entity_ids is None or len(entity_ids) == 0)
     is_local = entity_ids is not None and len(entity_ids) > 0 and public_count != len(entity_ids)
 
@@ -715,10 +744,8 @@ async def async_get_playback_audio_path(params: dict, options: dict):
         _LOGGER.debug(" *** Checking Chime TTS audio cache ***")
         audio_dict: dict = await async_verify_cached_audio(hass, filepath_hash, params, options, is_local, is_public, ffmpeg_args)
         if audio_dict:
-            _LOGGER.debug("   ...cached audio found")
             return audio_dict
-        else:
-            _LOGGER.debug("   ...no cached audio found")
+        _LOGGER.debug("   ...no cached audio found")
 
     ######################
     # Generate new audio #
@@ -741,6 +768,7 @@ async def async_get_playback_audio_path(params: dict, options: dict):
                                                    filepath=end_chime_path,
                                                    cache=cache,
                                                    offset=offset,
+                                                   crossfade=crossfade,
                                                    audio=output_audio)
 
     # Save generated audio file
@@ -759,6 +787,7 @@ async def async_get_playback_audio_path(params: dict, options: dict):
             return None
         _LOGGER.debug(" - Saving mp3 file to %s folder: %s...", initial_save_folder_name, save_folder)
         new_audio_file = await filesystem_helper.async_save_audio_to_folder(
+            hass,
             output_audio,
             save_folder)
         if new_audio_file is None:
@@ -771,17 +800,17 @@ async def async_get_playback_audio_path(params: dict, options: dict):
                 _LOGGER.warning("Unable to add cover art. Alexa Media Player media_players are unable to play MP3 file with cover art")
             else:
                 cover_art_filepath = f"{filesystem_helper.path_to_parent_folder('custom_components')}/chime_tts/cover_art.jpg"
-                if os.path.exists(cover_art_filepath):
+                if await hass.async_add_executor_job(filesystem_helper.path_exists, cover_art_filepath):
                     _LOGGER.debug("Adding cover art to %s", new_audio_file)
-                    new_audio_file = helpers.ffmpeg_convert_from_file(
+                    new_audio_file = await helpers.async_ffmpeg_convert_from_file(
+                        hass,
                         new_audio_file,
                         f"-i {cover_art_filepath} -c copy -map 0 -map 1")
 
         # Perform FFmpeg conversion
         if ffmpeg_args:
             _LOGGER.debug("  - Performing FFmpeg audio conversion...")
-            converted_audio_file = helpers.ffmpeg_convert_from_file(new_audio_file,
-                                                                    ffmpeg_args)
+            converted_audio_file = await helpers.async_ffmpeg_convert_from_file(hass, new_audio_file, ffmpeg_args)
             if converted_audio_file is not False:
                 _LOGGER.debug("    ...FFmpeg audio conversion completed.")
                 new_audio_file = converted_audio_file
@@ -799,37 +828,21 @@ async def async_get_playback_audio_path(params: dict, options: dict):
         audio_dict[AUDIO_DURATION_KEY] = duration
         audio_dict[LOCAL_PATH_KEY if is_local else PUBLIC_PATH_KEY] = new_audio_file
         file_path: str = audio_dict.get(LOCAL_PATH_KEY, None) or audio_dict.get(PUBLIC_PATH_KEY, None)
-        audio_dict[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(file_path)
+        audio_dict[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(hass, file_path)
 
-        # Save audio to local and/or public folders
-        for folder_key in [(LOCAL_PATH_KEY if is_local else None), (PUBLIC_PATH_KEY if is_public else None)]:
-            # If file is not stored in local/public folder
-            if folder_key is not None and audio_dict.get(folder_key, None) is None:
-                default_folder = WWW_PATH_DEFAULT if folder_key == PUBLIC_PATH_KEY else TEMP_PATH_DEFAULT
-                folder_path = _data.get(folder_key, default_folder)
-                folder_name = "public" if folder_key == PUBLIC_PATH_KEY else "local"
-                _LOGGER.debug(" - Saving generated audio to %s folder: %s...", folder_name, folder_path)
-                audio_dict[folder_key] = await filesystem_helper.async_save_audio_to_folder(
-                    output_audio,
-                    folder_path)
-                if audio_dict[folder_key] is None:
-                    _LOGGER.error("Error saving audio to folder %s...", _data.get(LOCAL_PATH_KEY, ""))
+        # Copy generated audio to local/public folder/s
+        audio_dict = await async_save_audio_to_folder(hass, is_local, is_public, audio_dict, output_audio)
 
         # Convert external URL (for public paths)
-        audio_dict[PUBLIC_PATH_KEY] = await filesystem_helper.async_get_external_url(hass, audio_dict.get(PUBLIC_PATH_KEY, None))
+        if audio_dict.get(PUBLIC_PATH_KEY, None):
+            audio_dict[PUBLIC_PATH_KEY] = await filesystem_helper.async_get_external_url(hass, audio_dict.get(PUBLIC_PATH_KEY, None))
+
+        # Fetch Media Content ID
+        if is_local:
+            audio_dict[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(hass, audio_dict.get(LOCAL_PATH_KEY, ''))
 
     # Valdiation
-    is_valid = True
-    if audio_dict[AUDIO_DURATION_KEY] == 0:
-        _LOGGER.error("async_get_playback_audio_path --> Audio has no duration")
-        is_valid = False
-    if is_local and audio_dict.get(LOCAL_PATH_KEY, None) is None:
-        _LOGGER.error("async_get_playback_audio_path --> Unable to generate local audio file")
-        is_valid = False
-    if is_public and not(audio_dict.get(PUBLIC_PATH_KEY, None) or audio_dict.get(ATTR_MEDIA_CONTENT_ID, None)):
-        _LOGGER.error("async_get_playback_audio_path --> Unable to generate public audio file")
-        is_valid = False
-    if is_valid is False:
+    if not validate_audio_dict(hass, is_local, is_public, audio_dict):
         return None
 
     _LOGGER.debug(" - Chime TTS audio generated:")
@@ -845,47 +858,130 @@ async def async_get_playback_audio_path(params: dict, options: dict):
 
     return audio_dict
 
-async def async_verify_cached_audio(hass, filepath_hash, params, options, is_local, is_public, ffmpeg_args):
+async def async_save_audio_to_folder(hass: HomeAssistant, is_local: bool, is_public: bool, audio_dict: dict, output_audio: AudioSegment):
+    """Save local/public audio to local/public folder/s."""
+    # Save audio to local folder
+    if is_local and not audio_dict.get(LOCAL_PATH_KEY, None):
+        _LOGGER.debug(" - Saving generated audio to local folder: %s...", _data[TEMP_PATH_KEY])
+        audio_dict[LOCAL_PATH_KEY] = await filesystem_helper.async_save_audio_to_folder(
+            hass, output_audio, _data[TEMP_PATH_KEY])
+    # Save audio to public folder
+    if is_public and not audio_dict.get(PUBLIC_PATH_KEY, None):
+        _LOGGER.debug(" - Saving generated audio to public folder: %s...", _data[WWW_PATH_KEY])
+        audio_dict[PUBLIC_PATH_KEY] = await filesystem_helper.async_save_audio_to_folder(
+            hass, output_audio, _data[WWW_PATH_KEY])
+    return audio_dict
+
+
+def validate_audio_dict(hass: HomeAssistant, is_local: bool, is_public: bool, audio_dict: dict):
+    """Validate audio contained within an audio_dict."""
+    is_valid = True
+    if audio_dict[AUDIO_DURATION_KEY] == 0:
+        _LOGGER.error("async_get_playback_audio_path --> Audio has no duration")
+        is_valid = False
+    if is_local:
+        if audio_dict.get(LOCAL_PATH_KEY, None) is None:
+            _LOGGER.error("async_get_playback_audio_path --> Unable to generate local audio file")
+            is_valid = False
+        elif not filesystem_helper.path_exists(audio_dict.get(LOCAL_PATH_KEY, "")):
+            _LOGGER.error("async_get_playback_audio_path --> Local audio file not found on filesystem")
+            is_valid = False
+        if not audio_dict.get(ATTR_MEDIA_CONTENT_ID, None):
+            _LOGGER.error("async_get_playback_audio_path --> Unable to generate Media Content Id")
+            is_valid = False
+    if is_public:
+        if not(audio_dict.get(PUBLIC_PATH_KEY, None)):
+            _LOGGER.error("async_get_playback_audio_path --> Unable to generate public audio file")
+            is_valid = False
+        else:
+            external_local_path: str = filesystem_helper.get_local_path(hass, audio_dict.get(PUBLIC_PATH_KEY, ""))
+            if not (external_local_path.startswith("http://localhost") or filesystem_helper.path_exists(external_local_path)):
+                _LOGGER.error("async_get_playback_audio_path --> Public audio file not found on filesystem: %s", external_local_path)
+                is_valid = False
+    return is_valid
+
+async def async_verify_cached_audio(hass: HomeAssistant,
+                                    filepath_hash: str,
+                                    params: dict,
+                                    options: dict,
+                                    is_local: bool,
+                                    is_public: bool,
+                                    ffmpeg_args: str):
     """Return verified audio_dict object from cache."""
     audio_dict = await async_get_cached_audio_data(hass, filepath_hash)
+
     if audio_dict is not None and AUDIO_DURATION_KEY in audio_dict:
         duration = audio_dict.get(AUDIO_DURATION_KEY, None)
 
-        # Make a local copy of the public file
-        if is_local and audio_dict.get(LOCAL_PATH_KEY, None) is None and os.path.exists(audio_dict.get(PUBLIC_PATH_KEY, None)):
-            _LOGGER.debug("   - Copying public file to local directory")
-            audio_dict[LOCAL_PATH_KEY] = filesystem_helper.copy_file(audio_dict.get(PUBLIC_PATH_KEY, None), _data.get(TEMP_PATH_KEY, None))
-            await async_add_audio_file_to_cache(hass, audio_dict.get(LOCAL_PATH_KEY, None), duration, params, options)
+        # Test if cached audio file exists on the filesystem
+        local_exists = await hass.async_add_executor_job(filesystem_helper.path_exists, f"{audio_dict.get(LOCAL_PATH_KEY, '')}")
+        local_external_filepath = filesystem_helper.get_local_path(hass=hass, file_path=f"{audio_dict.get(PUBLIC_PATH_KEY, '')}")
+        public_exists = await hass.async_add_executor_job(filesystem_helper.path_exists, local_external_filepath) or f"{audio_dict.get(PUBLIC_PATH_KEY, '')}".startswith("http://localhost")
 
-        # Make a public copy of the local file
-        if is_public and audio_dict.get(PUBLIC_PATH_KEY, None) is None and os.path.exists(audio_dict.get(LOCAL_PATH_KEY, None)):
-            _LOGGER.debug("    - Copying local file to public directory")
-            audio_dict[PUBLIC_PATH_KEY] = filesystem_helper.copy_file(audio_dict.get(LOCAL_PATH_KEY, None), _data.get(WWW_PATH_KEY, None))
-            await async_add_audio_file_to_cache(hass, audio_dict.get(PUBLIC_PATH_KEY, None), duration, params, options)
+        if not (public_exists or local_exists):
+            _LOGGER.debug("   No cached audio found on filesystem")
+            await async_delete_data(hass=hass, key=filepath_hash)
+            return None
 
-        audio_dict[PUBLIC_PATH_KEY] = await filesystem_helper.async_get_external_url(hass, audio_dict.get(PUBLIC_PATH_KEY, None))
-        audio_dict[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(audio_dict.get(LOCAL_PATH_KEY, None) or
-                                                                                        audio_dict.get(PUBLIC_PATH_KEY, None))
+        # No local file exists
+        if is_local and not local_exists:
+            # Make a local copy of the public file
+            if public_exists and await hass.async_add_executor_job(filesystem_helper.path_exists, local_external_filepath):
+                _LOGGER.debug("   - Copying cached public file %s to local path %s", local_external_filepath, _data[TEMP_PATH_KEY])
+                audio_dict[LOCAL_PATH_KEY] = await hass.async_add_executor_job(filesystem_helper.async_copy_file,
+                                                                               hass,
+                                                                               local_external_filepath,
+                                                                               _data[TEMP_PATH_KEY])
+                if await hass.async_add_executor_job(filesystem_helper.path_exists, f"{audio_dict.get(LOCAL_PATH_KEY, '')}"):
+                    await async_add_audio_file_to_cache(hass, audio_dict.get(LOCAL_PATH_KEY, ""), duration, params, options)
+                    local_exists = True
+                else:
+                    _LOGGER.warning("Unable to copy public file %s to path: '%s'", local_external_filepath, audio_dict.get(LOCAL_PATH_KEY, ""))
+                    return None
 
-        if (is_local is False or audio_dict.get(LOCAL_PATH_KEY, None)) and (is_public is False or audio_dict.get(PUBLIC_PATH_KEY, None)):
-            _LOGGER.debug("   Cached audio found:")
+        # No public file exists
+        if is_public and not public_exists and local_exists:
+            _LOGGER.debug("    - Copying cached local file %s to public path %s", audio_dict.get(LOCAL_PATH_KEY, ""), _data[WWW_PATH_KEY])
+            audio_dict[PUBLIC_PATH_KEY] = await hass.async_add_executor_job(filesystem_helper.async_copy_file,
+                                                                            hass,
+                                                                            audio_dict.get(LOCAL_PATH_KEY, ""),
+                                                                            _data[WWW_PATH_KEY])
+            if await hass.async_add_executor_job(filesystem_helper.path_exists, audio_dict.get(PUBLIC_PATH_KEY, "")) or audio_dict.get(PUBLIC_PATH_KEY, "").startswith("http://localhost"):
+                await async_add_audio_file_to_cache(hass, audio_dict.get(PUBLIC_PATH_KEY, ""), duration, params, options)
+                public_exists = True
+            else:
+                _LOGGER.warning("Unable to copy cached local file %s to public path: '%s'", audio_dict.get(LOCAL_PATH_KEY, ""), audio_dict.get(PUBLIC_PATH_KEY, ""))
+                return None
+
+        # Convert local file path to public file to external address
+        if audio_dict.get(PUBLIC_PATH_KEY, None):
+            audio_dict[PUBLIC_PATH_KEY] = await filesystem_helper.async_get_external_url(hass=hass, file_path=audio_dict.get(PUBLIC_PATH_KEY, ""))
+
+        # Get media content ID
+        audio_dict[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(hass,
+                                                                                     f"{audio_dict.get(LOCAL_PATH_KEY, '')}" or
+                                                                                     f"{audio_dict.get(PUBLIC_PATH_KEY, '')}")
+
+        # Apply audio conversion
+        if (local_exists or public_exists) and ffmpeg_args:
+            for local_path in [audio_dict.get(LOCAL_PATH_KEY), local_external_filepath]:
+                if local_path and await hass.async_add_executor_job(filesystem_helper.path_exists, local_path):
+                    if not (ffmpeg_args == FFMPEG_ARGS_ALEXA and await filesystem_helper.async_is_audio_alexa_compatible(hass, local_path)):
+                        _LOGGER.debug("   Apply audio conversion")
+                        await helpers.async_ffmpeg_convert_from_file(hass, local_path, ffmpeg_args)
+                    elif local_path == local_external_filepath:
+                        _LOGGER.debug("Cached file already Alexa Media Player compatible: '%s'", local_path)
+
+        # Cached audio found
+        if public_exists or local_exists:
+            _LOGGER.debug("   Using cached audio:")
             for key, value in audio_dict.items():
-                quote = '"' if value and isinstance(value, str) else ''
-                value = f"{quote}{value}{quote}"
-                _LOGGER.debug("     - %s = %s", key, value)
-
-            # Apply audio conversion
-            if ffmpeg_args is not None and len(ffmpeg_args) > 0:
-                _LOGGER.debug("   Apply audio conversion")
-                if audio_dict.get(LOCAL_PATH_KEY, None):
-                    helpers.ffmpeg_convert_from_file(audio_dict.get(LOCAL_PATH_KEY, None), ffmpeg_args)
-                if audio_dict.get(PUBLIC_PATH_KEY, None):
-                    # Convert public path to local path
-                    local_public_file_path = filesystem_helper.get_local_path(hass, audio_dict.get(PUBLIC_PATH_KEY, None))
-                    helpers.ffmpeg_convert_from_file(local_public_file_path, ffmpeg_args)
+                _LOGGER.debug("     - %s = %s", key, f'"{value}"' if isinstance(value, str) else value)
 
             return audio_dict
+
     return None
+
 
 def get_segment_offset(output_audio, segment, params):
     """Offset value for segment."""
@@ -894,13 +990,13 @@ def get_segment_offset(output_audio, segment, params):
         # Get "offset" parameter
         if "offset" in segment:
             segment_offset = float(segment["offset"])
-
-        # Support deprecated "delay" parmeter
         else:
+            # Support deprecated "delay" parmeter
             if "delay" in segment:
                 segment_offset = float(segment["delay"])
             elif "delay" in params:
                 segment_offset = float(params["delay"])
+            # Fallback to "offset" in list of parameters
             elif "offset" in params:
                 segment_offset = float(params["offset"])
 
@@ -916,7 +1012,8 @@ async def async_process_segments(hass, message, output_audio=None, params={}, op
     for index, segment in enumerate(segments):
         segment_cache: bool = segment.get("cache", params.get("cache", False))
         segment_audio_conversion: str = helpers.parse_ffmpeg_args(segment.get("audio_conversion", ""))
-        segment_offset: float = get_segment_offset(output_audio, segment, params)
+        segment_offset: int = get_segment_offset(output_audio, segment, params)
+        segment_crossfade: int = segment.get("crossfade", params.get("crossfade", 0))
         segment_type =  segment.get("type", None)
         if not segment_type:
             _LOGGER.warning("Segment #%s has no type.", str(index+1))
@@ -929,6 +1026,7 @@ async def async_process_segments(hass, message, output_audio=None, params={}, op
                                                                filepath=segment["path"],
                                                                cache=segment_cache,
                                                                offset=segment_offset,
+                                                               crossfade=segment_crossfade,
                                                                audio_conversion=segment_audio_conversion,
                                                                audio=output_audio)
             else:
@@ -987,7 +1085,7 @@ async def async_process_segments(hass, message, output_audio=None, params={}, op
                 if segment_cache is True:
                     _LOGGER.debug(" - Attempting to retrieve TTS audio from cache...")
                     audio_dict = await async_get_cached_audio_data(hass, segment_filepath_hash)
-                    if audio_dict is not None:
+                    if audio_dict and audio_dict.get(LOCAL_PATH_KEY, None):
                         tts_audio = await async_get_audio_from_path(hass=hass,
                                                                     filepath=audio_dict.get(LOCAL_PATH_KEY, None),
                                                                     cache=segment_cache,
@@ -1015,6 +1113,7 @@ async def async_process_segments(hass, message, output_audio=None, params={}, op
                         if segment_cache is True and audio_dict is None:
                             _LOGGER.debug(" - Saving generated TTS audio to cache...")
                             tts_audio_full_path = await filesystem_helper.async_save_audio_to_folder(
+                                hass,
                                 tts_audio,
                                 _data.get(TEMP_PATH_KEY, None))
                             if tts_audio_full_path is not None:
@@ -1030,13 +1129,16 @@ async def async_process_segments(hass, message, output_audio=None, params={}, op
                 # TTS Audio manipulations
                 if tts_audio is not None:
                     temp_folder: str = _data.get(TEMP_PATH_KEY, None)
-                    tts_audio = await helpers.async_change_speed_of_audiosegment(tts_audio, segment_tts_speed, temp_folder)
-                    tts_audio = await helpers.async_change_pitch_of_audiosegment(tts_audio, segment_tts_pitch, temp_folder)
-                    tts_audio = await helpers.async_ffmpeg_convert_from_audio_segment(tts_audio, segment_audio_conversion, temp_folder)
+                    tts_audio = await helpers.async_change_speed_of_audiosegment(hass, tts_audio, segment_tts_speed, temp_folder)
+                    tts_audio = await helpers.async_change_pitch_of_audiosegment(hass, tts_audio, segment_tts_pitch, temp_folder)
+                    tts_audio = await helpers.async_ffmpeg_convert_from_audio_segment(hass, tts_audio, segment_audio_conversion, temp_folder)
 
                 # Combine audio
                 if tts_audio is not None:
-                    output_audio = helpers.combine_audio(output_audio, tts_audio, segment_offset)
+                    output_audio = helpers.combine_audio(output_audio,
+                                                         tts_audio,
+                                                         segment_offset,
+                                                         segment_crossfade)
                 else:
                     _LOGGER.warning("Error generating TTS audio from messsage segment #%s: %s",
                                     str(index+1), str(segment))
@@ -1051,6 +1153,7 @@ async def async_get_audio_from_path(
         filepath: str,
         cache: bool = False,
         offset: float = 0,
+        crossfade: float = 0,
         audio_conversion: str = "",
         audio: AudioSegment = None
     ):
@@ -1092,7 +1195,8 @@ async def async_get_audio_from_path(
             if audio_conversion is not None and len(audio_conversion) > 0:
                 _LOGGER.debug("  - Performing FFmpeg audio conversion of audio file: \"%s\"...", audio_conversion)
                 temp_folder: str = _data.get(TEMP_PATH_KEY, None)
-                audio_from_path = await helpers.async_ffmpeg_convert_from_audio_segment(audio_from_path,
+                audio_from_path = await helpers.async_ffmpeg_convert_from_audio_segment(hass,
+                                                                                        audio_from_path,
                                                                                         ffmpeg_args=audio_conversion,
                                                                                         folder=temp_folder)
 
@@ -1110,7 +1214,7 @@ async def async_get_audio_from_path(
                     return audio_from_path
 
                 # Apply offset
-                return helpers.combine_audio(audio, audio_from_path, offset)
+                return helpers.combine_audio(audio, audio_from_path, offset, crossfade)
             _LOGGER.warning("Unable to find audio at filepath: %s", filepath)
         except Exception as error:
             _LOGGER.warning('Unable to extract audio from file: "%s"', error)
@@ -1156,19 +1260,19 @@ async def async_play_media(
     service_data = {}
     service_data[CONF_ENTITY_ID] = entity_ids
     service_data[ATTR_MEDIA_ANNOUNCE] = announce
-    service_data[ATTR_MEDIA_CONTENT_TYPE] = MEDIA_TYPE_MUSIC
+    service_data[ATTR_MEDIA_CONTENT_TYPE] = MEDIA_TYPE.MUSIC
     file_path = audio_dict.get(LOCAL_PATH_KEY, None) or audio_dict.get(PUBLIC_PATH_KEY, None)
-    service_data[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(file_path)
+    service_data[ATTR_MEDIA_CONTENT_ID] = media_player_helper.get_media_content_id(hass, file_path)
 
     # Play Chime TTS notification
-    media_service_calls = prepare_media_service_calls(hass, entity_ids, service_data, audio_dict)
+    media_service_calls = await  async_prepare_media_service_calls(hass, entity_ids, service_data, audio_dict)
     play_result = await async_fire_media_service_calls(hass, media_service_calls)
     if play_result is False:
         _LOGGER.error("Playback failed")
 
     return play_result
 
-def prepare_media_service_calls(hass: HomeAssistant, entity_ids, service_data, audio_dict):
+async def async_prepare_media_service_calls(hass: HomeAssistant, entity_ids, service_data, audio_dict):
     """Prepare the media_player service calls for audio playback."""
     helpers.debug_subtitle("Chime TTS playback")
     service_calls = []
@@ -1259,14 +1363,23 @@ def prepare_media_service_calls(hass: HomeAssistant, entity_ids, service_data, a
                     })
 
     # Alexa media_players
-    if len(alexa_media_player_entity_ids) > 0:
+    public_file = f"{audio_dict.get(PUBLIC_PATH_KEY, '')}"
+    if len(alexa_media_player_entity_ids) > 0 and public_file:
+        # Debug
         _LOGGER.debug("   %s Alexa media player%s detected:",
                       len(alexa_media_player_entity_ids),
                       ("s" if len(alexa_media_player_entity_ids) != 1 else ""))
         for entity_id in alexa_media_player_entity_ids:
             _LOGGER.debug("     - %s", entity_id)
-        if len(audio_dict.get(PUBLIC_PATH_KEY, '')) > 0:
-            message_string = f"<audio src=\"{audio_dict.get(PUBLIC_PATH_KEY, '')}\"/>"
+
+        # Ensure audio file is Alexa Media Player compatible
+        if not await filesystem_helper.async_is_audio_alexa_compatible(hass=hass, file_path=public_file):
+            _LOGGER.debug("Applying Alexa Media Player audio conversion for file: %s", public_file)
+            public_file = await helpers.async_ffmpeg_convert_from_file(hass, public_file, FFMPEG_ARGS_ALEXA)
+
+        # Add service call
+        if len(public_file) > 0:
+            message_string = f"<audio src='{public_file}'/>"
             service_calls.append({
                 "domain": "notify",
                 "service": "alexa_media",
@@ -1453,7 +1566,7 @@ async def async_get_cached_audio_data(hass: HomeAssistant, filepath_hash: str):
         for key in [LOCAL_PATH_KEY, PUBLIC_PATH_KEY]:
             audio_dict[key] = audio_dict.get(key, None)
             if audio_dict.get(key, None):
-                if os.path.exists(str(audio_dict.get(key, ""))):
+                if await hass.async_add_executor_job(filesystem_helper.path_exists, str(audio_dict.get(key, ""))):
                     # Add duration data if audio_dict is old format
                     if audio_dict.get(AUDIO_DURATION_KEY, None) is None:
                         audio = await async_get_audio_from_path(hass=hass,
@@ -1516,9 +1629,10 @@ async def async_add_audio_file_to_cache(hass: HomeAssistant,
             filepath_hash = get_filename_hash_from_service_data({**params}, {**options})
 
         audio_cache_dict = await async_get_cached_audio_data(hass, filepath_hash)
-        if audio_cache_dict is None:
+        if not audio_cache_dict:
             audio_cache_dict = {}
-        if str(audio_path).startswith(filesystem_helper.get_external_address(hass)):
+        local_audio_path = filesystem_helper.get_local_path(hass=hass, file_path=audio_path)
+        if local_audio_path.startswith((_data[WWW_PATH_KEY], "http")):
             audio_cache_dict[PUBLIC_PATH_KEY] = audio_path
         else:
             audio_cache_dict[LOCAL_PATH_KEY] = audio_path
@@ -1543,6 +1657,7 @@ def get_filename_hash_from_service_data(params: dict, options: dict):
         "audio_conversion",
         "end_chime_path",
         "offset",
+        "crossfade",
         "tts_playback_speed",
         "tts_speed",
         "tts_pitch"
