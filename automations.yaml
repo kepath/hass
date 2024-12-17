@@ -33,7 +33,7 @@
     domain: switch
   - type: turn_off
     device_id: ecdc93708d2afbf8f645e3eb84d0e39c
-    entity_id: light.bed_c_light_1
+    entity_id: light.shelly_1l_bed_c_light_1
     domain: light
   mode: single
 - id: '1616842943101'
@@ -91,7 +91,7 @@
   actions:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: light.hallway_bottom_light_1
+    entity_id: light.shelly_1l_hallway_bottom_light_1
     domain: light
   mode: single
 - id: '1666811718812'
@@ -133,7 +133,6 @@
       excluded_entities:
       - light.shelly_1l_hallway_bottom_light_2
       - light.shelly_1l_kitchen_utility_light_2
-      - light.91148c10_aec180ca_screen
     action: python_script.create_entity_device_class_group
   mode: single
 - id: '1666812616338'
@@ -229,8 +228,10 @@
       - group.globally_excluded_entities
       excluded_entities:
       - remote.bed_c_xbox_remote
-      - remote.shield_bed_e
-      - remote.shield_bed_c
+      - remote.nvidia_shield_bed_c_android_bridge
+      - remote.nvidia_shield_bed_c_android_tv
+      - remote.nvidia_shield_bed_e_android_bridge
+      - remote.nvidia_shield_bed_e_android_tv
       - remote.tv_samsung_lounge
       - remote.lounge_apple_tv
     action: python_script.create_entity_device_class_group
@@ -596,7 +597,7 @@
       - group.globally_excluded_entities
       excluded_entities:
       - switch.mss425e_6025_outlet_3
-      - switch.udm_pro_plug_bed_c
+      - switch.udm_pro_plug_bed_c_unifi
     action: python_script.create_entity_device_class_group
   mode: single
 - id: '1682192675338'
@@ -610,11 +611,11 @@
   actions:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: light.hallway_bottom_light_1
+    entity_id: light.shelly_1l_hallway_bottom_light_1
     domain: light
   - type: turn_on
     device_id: 2028999f2f7da1303c521c80b4711c16
-    entity_id: light.bathroom_light_light_1
+    entity_id: light.shelly_1l_bathroom_light_1
     domain: light
   mode: single
 - id: '1682192916045'
@@ -628,11 +629,11 @@
   actions:
   - type: turn_on
     device_id: 902d91d28754d1922b19d056054a6de2
-    entity_id: light.bed_a_light_light_1
+    entity_id: light.shelly_1l_bed_a_light_1
     domain: light
   - type: turn_on
     device_id: 357203618a4ede0384cbc3979a6806b7
-    entity_id: light.ensuite_light_light_1
+    entity_id: light.shelly_1l_ensuite_light_1
     domain: light
   mode: single
 - id: '1682193123450'
@@ -646,11 +647,11 @@
   actions:
   - type: turn_off
     device_id: 902d91d28754d1922b19d056054a6de2
-    entity_id: light.bed_a_light_light_1
+    entity_id: light.shelly_1l_bed_a_light_1
     domain: light
   - type: turn_off
     device_id: 357203618a4ede0384cbc3979a6806b7
-    entity_id: light.ensuite_light_light_1
+    entity_id: light.shelly_1l_ensuite_light_1
     domain: light
   mode: single
 - id: '1682263797941'
@@ -674,8 +675,8 @@
       - group.globally_excluded_entities
       excluded_entities:
       - media_player.rx_v777_zone2
-      - media_player.amazon_firestick_kitchen_alexa
-      - media_player.amazon_firestick_bed_a_alexa
+      - media_player.amazon_firestick_android_bridge_kitchen
+      - media_player.amazon_firestick_android_bridge_bed_a
     action: python_script.create_entity_device_class_group
   mode: single
 - id: '1682264073944'
@@ -1512,39 +1513,6 @@
       - sensor.bed_c_g3_instant_data_rate
     action: python_script.create_entity_device_class_group
   mode: single
-- id: '1729003859419'
-  alias: on_detect_power_change_washing_machine
-  description: ''
-  use_blueprint:
-    path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
-    input:
-      power_sensor: sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand
-      starting_threshold: 7
-      finishing_threshold: 7
-      actions:
-      - action: input_boolean.turn_off
-        target:
-          entity_id:
-          - input_boolean.washing_machine_detected_state
-        data: {}
-      - action: input_datetime.set_datetime
-        metadata: {}
-        data:
-          datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
-        target:
-          entity_id: input_datetime.washing_machine_detected_finish_time
-      pre_actions:
-      - action: input_boolean.turn_on
-        metadata: {}
-        data: {}
-        target:
-          entity_id: input_boolean.washing_machine_detected_state
-      - action: input_datetime.set_datetime
-        metadata: {}
-        data:
-          datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
-        target:
-          entity_id: input_datetime.washing_machine_detected_start_time
 - id: '1730882082134'
   alias: on_time_reconnect_dreo_fan
   description: ''
