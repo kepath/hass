@@ -16189,7 +16189,7 @@ if (!customElements.get("map-card")) {
   customElements.define("map-card", MapCard);
   customElements.define("map-card-entity-marker", MapCardEntityMarker);
   console.info(
-    `%cnathan-gs/ha-map-card: 1.7.0`,
+    `%cnathan-gs/ha-map-card: 1.8.0`,
     'color: orange; font-weight: bold; background: black'
   );
 }
