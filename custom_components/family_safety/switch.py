@@ -6,14 +6,13 @@ from typing import Any
 from pyfamilysafety import Account
 
 from homeassistant.components.switch import SwitchEntity, SwitchDeviceClass
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .coordinator import FamilySafetyCoordinator
 
-from .const import DOMAIN, DEFAULT_OVERRIDE_ENTITIES
-
+from .const import DEFAULT_OVERRIDE_ENTITIES
+from .config_entry import FamilySafetyConfigEntry
 from .entity_base import PlatformOverrideEntity, ApplicationEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -21,11 +20,11 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
+    config_entry: FamilySafetyConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Family Safety switches."""
-    accounts: list[Account] = hass.data[DOMAIN][config_entry.entry_id].api.accounts
+    accounts: list[Account] = config_entry.runtime_data.api.accounts
     entities = []
     for account in accounts:
         if (
@@ -36,7 +35,7 @@ async def async_setup_entry(
             for platform in DEFAULT_OVERRIDE_ENTITIES:
                 entities.append(
                     PlatformOverrideSwitch(
-                        coordinator=hass.data[DOMAIN][config_entry.entry_id],
+                        coordinator=config_entry.runtime_data,
                         idx=None,
                         account_id=account.user_id,
                         platform=platform,
@@ -45,7 +44,7 @@ async def async_setup_entry(
             for app in config_entry.options.get("tracked_applications", []):
                 entities.append(
                     ApplicationBlockSwitch(
-                        coordinator=hass.data[DOMAIN][config_entry.entry_id],
+                        coordinator=config_entry.runtime_data,
                         idx=None,
                         account_id=account.user_id,
                         app_id=app,
@@ -76,12 +75,12 @@ class ApplicationBlockSwitch(ApplicationEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off entity."""
         await self._application.unblock_app()
-        await self.coordinator.async_request_refresh()
+        self.schedule_update_ha_state()
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on entity."""
         await self._application.block_app()
-        await self.coordinator.async_request_refresh()
+        self.schedule_update_ha_state()
 
 
 class PlatformOverrideSwitch(PlatformOverrideEntity, SwitchEntity):
@@ -110,8 +109,10 @@ class PlatformOverrideSwitch(PlatformOverrideEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on entity."""
-        return await self._enable_override()
+        await self._enable_override()
+        self.schedule_update_ha_state()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off entity."""
-        return await self._disable_override()
+        await self._disable_override()
+        self.schedule_update_ha_state()

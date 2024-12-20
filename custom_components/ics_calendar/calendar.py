@@ -1,7 +1,6 @@
 """Support for ICS Calendar."""
 
 import logging
-from asyncio import run_coroutine_threadsafe
 from datetime import datetime, timedelta
 from typing import Any, Optional
 
@@ -29,7 +28,6 @@ from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.httpx_client import get_async_client
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from homeassistant.util import Throttle
 from homeassistant.util.dt import now as hanow
 
 from .calendardata import CalendarData
@@ -43,6 +41,7 @@ from .const import (
     CONF_OFFSET_HOURS,
     CONF_PARSER,
     CONF_SET_TIMEOUT,
+    CONF_SUMMARY_DEFAULT,
     CONF_USER_AGENT,
     DOMAIN,
 )
@@ -216,9 +215,9 @@ class ICSCalendarEntity(CalendarEntity):
         )
         return await self.data.async_get_events(start_date, end_date)
 
-    def update(self):
+    async def async_update(self):
         """Get the current or next event."""
-        self.data.update()
+        await self.data.async_update()
         self._event = self.data.event
         self._attr_extra_state_attributes = {
             "offset_reached": (
@@ -267,6 +266,7 @@ class ICSCalendarData:  # pylint: disable=R0902
         self._offset_hours = device_data[CONF_OFFSET_HOURS]
         self.include_all_day = device_data[CONF_INCLUDE_ALL_DAY]
         self._summary_prefix: str = device_data[CONF_PREFIX]
+        self._summary_default: str = device_data[CONF_SUMMARY_DEFAULT]
         self.parser = GetParser.get_parser(device_data[CONF_PARSER])
         self.parser.set_filter(
             Filter(device_data[CONF_EXCLUDE], device_data[CONF_INCLUDE])
@@ -278,9 +278,13 @@ class ICSCalendarData:  # pylint: disable=R0902
         self._calendar_data = CalendarData(
             get_async_client(hass),
             _LOGGER,
-            self.name,
-            device_data[CONF_URL],
-            timedelta(minutes=device_data[CONF_DOWNLOAD_INTERVAL]),
+            {
+                "name": self.name,
+                "url": device_data[CONF_URL],
+                "min_update_time": timedelta(
+                    minutes=device_data[CONF_DOWNLOAD_INTERVAL]
+                ),
+            },
         )
 
         self._calendar_data.set_headers(
@@ -290,11 +294,10 @@ class ICSCalendarData:  # pylint: disable=R0902
             device_data[CONF_ACCEPT_HEADER],
         )
 
-        if CONF_SET_TIMEOUT in device_data:
-            if device_data[CONF_SET_TIMEOUT]:
-                self._calendar_data.set_timeout(
-                    device_data[CONF_CONNECTION_TIMEOUT]
-                )
+        if device_data.get(CONF_SET_TIMEOUT):
+            self._calendar_data.set_timeout(
+                device_data[CONF_CONNECTION_TIMEOUT]
+            )
 
     async def async_get_events(
         self, start_date: datetime, end_date: datetime
@@ -327,19 +330,15 @@ class ICSCalendarData:  # pylint: disable=R0902
 
         for event in event_list:
             event.summary = self._summary_prefix + event.summary
-            # TODO: Make this configurable!
             if not event.summary:
-                event.summary = "No title"
+                event.summary = self._summary_default
 
         return event_list
 
-    @Throttle(MIN_TIME_BETWEEN_UPDATES)
-    def update(self):
+    async def async_update(self):
         """Get the current or next event."""
         _LOGGER.debug("%s: Update was called", self.name)
-        if run_coroutine_threadsafe(
-            self._calendar_data.download_calendar(), self._hass.loop
-        ).result():
+        if await self._calendar_data.download_calendar():
             _LOGGER.debug("%s: Setting calendar content", self.name)
             self.parser.set_content(self._calendar_data.get())
         try:
@@ -364,9 +363,8 @@ class ICSCalendarData:  # pylint: disable=R0902
             )
             (summary, offset) = extract_offset(self.event.summary, OFFSET)
             self.event.summary = self._summary_prefix + summary
-            # TODO: Make this configurable!
             if not self.event.summary:
-                self.event.summary = "No title"
+                self.event.summary = self._summary_default
             self.offset = offset
             return True
 
