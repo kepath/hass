@@ -631,7 +631,7 @@ def record_read_data(
             attr_name = params[p.CSV_LABEL]
         else:
             python_type = type(read_resp[0][attr_id])
-            attr_type = f.DATA_TYPES.pytype_to_datatype_id(python_type)
+            attr_type = f.DataType.from_python_type(python_type).type_id
 
             try:
                 attr_def = cluster.attributes.get(
@@ -690,7 +690,7 @@ def get_attr_type(cluster, attr_id):
         else:
             attr_type = attr_def[1]
 
-        return f.DATA_TYPES.pytype_to_datatype_id(attr_type)
+        return f.DataType.from_python_type(attr_type).type_id
     except Exception:  # nosec
         LOGGER.debug("Could not find type for %s in %r", attr_id, cluster)
 
@@ -800,7 +800,7 @@ def attr_encode(attr_val_in, attr_type):  # noqa C901
     else:
         # Try to apply conversion using foundation DATA_TYPES table
         # Note: this is not perfect and specific conversions may be needed.
-        data_type = f.DATA_TYPES[attr_type][1]
+        data_type = f.DataType.from_type_id(attr_type).python_type
         LOGGER.debug(f"Data type '{data_type}' for attr type {attr_type}")
         if isinstance(attr_val_in, list):
             # Without length byte after serialisation:
@@ -849,14 +849,14 @@ def isManf(manf, includeNone=False):
 #
 def extractParams(  # noqa: C901
     service,
-) -> dict[str, None | int | str | list[int | str] | bytes]:
+) -> dict[str, None | int | str | list[int | str] | dict | bytes]:
     rawParams = service.data
 
     LOGGER.debug("Parameters '%s'", rawParams)
 
     # Potential parameters, initialized to None
     # TODO: Not all parameters are decoded in this function yet
-    params: dict[str, None | int | str | list[int | str] | bytes] = {
+    params: dict[str, None | int | str | list[int | str] | dict | bytes] = {
         p.CMD_ID: None,
         p.EP_ID: None,
         p.DST_EP_ID: None,
@@ -873,6 +873,7 @@ def extractParams(  # noqa: C901
         p.TRIES: 1,
         p.EXPECT_REPLY: True,
         p.ARGS: [],
+        p.KWARGS: {},
         p.STATE_ID: None,
         p.STATE_ATTR: None,
         p.STATE_VALUE_TEMPLATE: None,
@@ -977,6 +978,9 @@ def extractParams(  # noqa: C901
                 cmd_args.append(lval)
                 LOGGER.debug("cmd converted arg %s", lval)
         params[p.ARGS] = cmd_args
+
+    if P.KWARGS in rawParams:
+        params[P.KWARGS] = rawParams[P.KWARGS]
 
     if P.MIN_INTRVL in rawParams:
         params[p.MIN_INTERVAL] = str2int(rawParams[P.MIN_INTRVL])
@@ -1183,4 +1187,9 @@ def get_hass(gateway: ZHAGateway):
     hass = getattr(gateway, "_hass", None)
     if hass is None:
         hass = getattr(gateway, "hass", None)
+    if hass is None:
+        msg = f"Could not get hass from {gateway!r}."
+        if gateway is not None:
+            msg += f"Attributes available {dir(gateway)}."
+        raise ValueError(msg)
     return hass

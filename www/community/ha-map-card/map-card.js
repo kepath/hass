@@ -14691,6 +14691,8 @@ class EntityConfig {
   /** @type {string} */
   picture;
   /** @type {string} */
+  icon;
+  /** @type {string} */
   color;
   /** @type {number} */
   gradualOpacity;
@@ -14740,6 +14742,7 @@ class EntityConfig {
     this.fallbackY = config.fallback_y;
     this.css = config.css ?? "text-align: center; font-size: 60%;";
     this.picture = config.picture ?? null;
+    this.icon = config.icon ?? null;
 
     // If no start/end date values are given, fallback to using date range manager
     this.usingDateRangeManager = (!historyStart && !historyEnd) && defaults.dateRangeManagerEnabled;
@@ -15157,6 +15160,8 @@ class MapConfig {
   historyDateSelection;
   /** @type {string} */
   themeMode;
+  /** @type {object} */
+  mapOptions;
 
   /** @type {boolean} */
   debug = false;
@@ -15168,6 +15173,7 @@ class MapConfig {
     this.y = inputConfig.y;
     this.zoom = this._setConfigWithDefault(inputConfig.zoom, 12);
     this.cardSize = this._setConfigWithDefault(inputConfig.card_size, 5);
+    this.mapOptions = this._setConfigWithDefault(inputConfig.map_options, {});
 
     // Get theme mode.
     this.themeMode = ['dark', 'light', 'auto'].includes(inputConfig.theme_mode) ? inputConfig.theme_mode : 'auto';
@@ -15481,6 +15487,111 @@ class HaLinkedEntityService {
   }
 }
 
+class HaUrlResolveService {
+  hass;
+  /** @type {HaLinkedEntityService} */
+  linkedEntityService;
+  
+  /** @type {object} */
+  entityLayers = {};
+
+  /** @type {object} */
+  states = {};
+
+  constructor(hass, linkedEntityService) {
+    this.hass = hass;
+    this.linkedEntityService = linkedEntityService;
+  };
+
+
+
+  /**
+   * Resolve URL with states
+   * @param {string} url
+   * @returns {string}
+   */
+  resolveUrl(url) {
+    return url.replace(/{{\s*states\(['"]([^'"]+)['"]\)\s*}}/g, (match, entityId) => {
+      if(this.states[entityId]) {
+        Logger.debug(`[HaUrlResolveService]: ${entityId} resolving to ${this.states[entityId]} from HaLinkedEntityService`);
+        return this.states[entityId];
+      }
+
+      const state = this.hass.states[entityId];
+      if(!state) {
+        Logger.warn(`[HaUrlResolveService]: ${entityId} not found`);
+      } else {
+        Logger.debug(`[HaUrlResolveService]: ${entityId} resolving to ${state.state}`);
+      }
+      return state ? state.state : '';
+    });
+  }
+
+  resolveEntities(url) {
+    const regex = /{{\s*states\(['"]([^'"]+)['"]\)\s*}}/g;
+    let match;
+    const sensors = [];
+
+    // Loop through all matches in the URL
+    while ((match = regex.exec(url)) !== null) {
+        sensors.push(match[1]); // match[1] contains the captured group which is the sensor name
+    }
+    
+    return sensors;
+  }
+
+  registerLayer(layer, urlTemplate) {
+    const entities = this.resolveEntities(urlTemplate);
+
+    entities.forEach(entity => {
+      this.entityLayers[entity] = this.entityLayers[entity] || new EntityLayers(entity, this);
+
+      this.entityLayers[entity].layers.add(new LayerUrl(layer, urlTemplate));
+
+      if(!this.entityLayers[entity].registered) {
+        this.linkedEntityService.onStateChange(entity, (state) => {          
+          this.states[entity] = state;
+          this.entityLayers[entity].update();
+        });
+        this.entityLayers[entity].registered = true;
+      }
+    });
+    
+  }
+
+  deregisterLayer(layer) {
+    Object.keys(this.entityLayers).forEach(entity => {
+      this.entityLayers[entity].layers = this.entityLayers[entity].layers.filter(layerUrl => layerUrl.layer !== layer);
+    });
+
+  }
+
+}
+
+class EntityLayers {
+  constructor(entity, urlResolver) {
+    this.entity = entity;
+    this.layers = new Set();
+    this.registered = false;
+    this.urlResolver = urlResolver;
+  }
+
+  update() {
+    this.layers.forEach(layer => {
+      Logger.debug(`[HaUrlResolveService]: Updating layer ${layer.layer}`);
+      layer.layer.setUrl(this.urlResolver.resolveUrl(layer.urlTemplate));
+      layer.layer.redraw();
+    });
+  }
+}
+
+class LayerUrl {
+  constructor(layer, urlTemplate) {
+    this.layer = layer;
+    this.urlTemplate = urlTemplate;
+  }
+}
+
 class Layer {
   
   /** @type {string} */
@@ -15489,11 +15600,14 @@ class Layer {
   config;
   /** @type {L.map} */
   map;
+  /** @type {HaUrlResolveService} */
+  urlResolver;
 
-  constructor(layerType, config, map) {
+  constructor(layerType, config, map, urlResolver) {
     this.layerType = layerType;
     this.config = config;
     this.map = map;
+    this.urlResolver = urlResolver;
   }
 
   get isWms() {
@@ -15509,17 +15623,16 @@ class Layer {
   }
 
   get url() { 
-    return this.config.url;
+    return this.urlResolver.resolveUrl(this.config.url);
   }
 
   render() {
     Logger.debug(`Setting up layer of type ${this.layerType}`);
-    if(this.isWms) {
-      L$1.tileLayer.wms(this.config.url, this.config.options).addTo(this.map);
-    }
-    if(this.isTileLayer) {
-      L$1.tileLayer(this.config.url, this.config.options).addTo(this.map);
-    }
+    const layer = this.isWms ? 
+      L$1.tileLayer.wms(this.url, this.config.options) :
+      L$1.tileLayer(this.url, this.config.options);
+    this.urlResolver.registerLayer(layer, this.config.url);
+    layer.addTo(this.map);
   }
 }
 
@@ -15532,8 +15645,8 @@ class LayerWithHistory extends Layer {
   /** @type {L.TileLayer} */
   layer;
 
-  constructor(layerType, config, map, linkedEntityService, dateRangeManager) {
-    super(layerType, config, map);
+  constructor(layerType, config, map, urlResolver, linkedEntityService, dateRangeManager) {
+    super(layerType, config, map, urlResolver);
     this.linkedEntityService = linkedEntityService;
     this.dateRangeManager = dateRangeManager;
   }
@@ -15556,7 +15669,12 @@ class LayerWithHistory extends Layer {
     // When its ready, remove the old one.
     newLayer.on('load', () => {
       newLayer.off();// remove events
-      if(this.layer) this.map.removeLayer(this.layer);
+      
+      if(this.layer) {
+        this.map.removeLayer(this.layer);
+        this.urlResolver.deregisterLayer(this.layer);
+      }
+      this.urlResolver.registerLayer(newLayer, this.config.url);
       // And make this the new layer
       this.layer = newLayer;
     });
@@ -15709,6 +15827,8 @@ class MapCard extends h {
   linkedEntityService;
   /** @type {HaDateRangeService} */
   dateRangeManager;
+  /** @type {HaUrlResolveService} */
+  urlResolver;
   /** @type {string} */
   themeMode;
   /** @type {MapConfig} */
@@ -15731,10 +15851,7 @@ class MapCard extends h {
     // Is history date range enabled?
     if (this._config.historyDateSelection) {
       this.dateRangeManager = new HaDateRangeService(this.hass);
-    }
-
-    // Manages watching external entities.
-    this.linkedEntityService = new HaLinkedEntityService(this.hass);     
+    }    
   }
 
   refreshEntityHistory(ent) {
@@ -15865,6 +15982,7 @@ class MapCard extends h {
         }
       });
   
+  
     }
 
     return ke`
@@ -15900,12 +16018,13 @@ class MapCard extends h {
       const stateObj = hass.states[configEntity.id];
       const {
         //passive,
-        icon,
+        icon: entity_icon,
         //radius,
         entity_picture,
         //gps_accuracy: gpsAccuracy,
         friendly_name
       } = stateObj.attributes;
+
       const state = hass.formatEntityState(stateObj);
 
       // Get lat lng
@@ -15917,6 +16036,9 @@ class MapCard extends h {
       let picture = configEntity.picture ?? entity_picture;
       // Skip if neither found and return null
       picture = picture ? hass.hassUrl(picture) : null;
+
+      // Override icon?
+      let icon = configEntity.icon ?? entity_icon;
 
       // Attempt to setup entity. Skip on fail, so one bad entity does not affect others.
       try {
@@ -15956,18 +16078,23 @@ class MapCard extends h {
   }
 
   /** @returns {L.Map} Leaflet Map */
-  _setupMap() {    
+  _setupMap() {
+    // Manages watching external entities.
+    this.linkedEntityService = new HaLinkedEntityService(this.hass);     
+    this.urlResolver = new HaUrlResolveService(this.hass, this.linkedEntityService);
+    
     L$1.Icon.Default.imagePath = "/static/images/leaflet/images/";
 
     const mapEl = this.shadowRoot.querySelector('#map');
-    let map = L$1.map(mapEl);
+    let map = L$1.map(mapEl, this._config.mapOptions);
 
     // Add dark class if darkmode
     this._isDarkMode() ? mapEl.classList.add('dark') : mapEl.classList.add('light');
 
-    map.addLayer(
-      L$1.tileLayer(this._config.tileLayer.url, this._config.tileLayer.options)
-    );
+    let tileUrl = this.urlResolver.resolveUrl(this._config.tileLayer.url);
+    let layer = L$1.tileLayer(tileUrl, this._config.tileLayer.options);
+    map.addLayer(layer);
+    this.urlResolver.registerLayer(layer, this._config.tileLayer.url);    
     return map;
   }
 
@@ -15979,8 +16106,8 @@ class MapCard extends h {
   async _addLayers(map, configs, layerType) {
     configs.forEach((l) => {
       const layer = l.historyProperty 
-      ? new LayerWithHistory(layerType, l, map, this.linkedEntityService, this.dateRangeManager)
-      : new Layer(layerType, l, map);
+      ? new LayerWithHistory(layerType, l, map, this.urlResolver, this.linkedEntityService, this.dateRangeManager)
+      : new Layer(layerType, l, map, this.urlResolver);
       layer.render();
     });
   }
@@ -16149,7 +16276,7 @@ class MapCardEntityMarker extends h {
       return ke`<div class="entity-picture" style="background-image: url(${this.picture})"></div>`
     }
     if(this.icon) {
-      return ke`<ha-icon icon="${this.icon}" style="--icon-primary-color: ${this.color}; --mdc-icon-size: ${this.size - 5}px;">icon</ha-icon>`
+      return ke`<ha-icon icon="${this.icon}" style="--icon-primary-color: ${this.color}; --mdc-icon-size: ${this.size - 10}px;">icon</ha-icon>`
     }
     return this.title;
   }
@@ -16189,7 +16316,7 @@ if (!customElements.get("map-card")) {
   customElements.define("map-card", MapCard);
   customElements.define("map-card-entity-marker", MapCardEntityMarker);
   console.info(
-    `%cnathan-gs/ha-map-card: 1.8.0`,
+    `%cnathan-gs/ha-map-card: 1.9.0`,
     'color: orange; font-weight: bold; background: black'
   );
 }
