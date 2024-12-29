@@ -6,6 +6,7 @@ import os
 
 import aiofiles
 import yaml
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -22,10 +23,10 @@ from .discovery import DiscoveryManager
 from .StatefulScenes import Hub, Scene
 
 PLATFORMS: list[Platform] = [
-    Platform.SWITCH,
     Platform.NUMBER,
+    Platform.SELECT,
+    Platform.SWITCH,
 ]
-
 
 # https://developers.home-assistant.io/docs/config_entries_index/#setting-up-an-entry
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

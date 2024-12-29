@@ -1,5 +1,9 @@
 """Constants for the State Scene integration."""
 
+from typing import Any, Protocol
+
+from homeassistant.util.read_only_dict import ReadOnlyDict
+
 DOMAIN = "stateful_scenes"
 
 # Hub configuration
@@ -20,6 +24,7 @@ DEFAULT_EXTERNAL_SCENE_ACTIVE = False
 DEFAULT_DEBOUNCE_TIME = 0.0
 DEFAULT_IGNORE_UNAVAILABLE = False
 DEFAULT_ENABLE_DISCOVERY = True
+DEFAULT_OFF_SCENE_ENTITY_ID: str = "None"
 
 DEBOUNCE_MIN = 0
 DEBOUNCE_MAX = 300
@@ -65,3 +70,19 @@ class StatefulScenesYamlNotFound(Exception):
 
 class StatefulScenesYamlInvalid(Exception):
     """Raised when specified yaml is invalid."""
+
+
+class SceneStateAttributes(ReadOnlyDict[str, Any]):
+    """Protocol Attributes for HA/external scenes or hub state."""
+
+    friendly_name: str
+    icon: str | None
+    area_id: str | None
+    entity_id: list[str]
+
+
+class SceneStateProtocol(Protocol):
+    """Protocol for HA and/or integration State."""
+
+    @property
+    def attributes(self) -> SceneStateAttributes: ...  # noqa: D102
