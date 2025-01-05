@@ -63,7 +63,6 @@ views:
 
           - type: "custom:weather-chart-card"
             entity: "weather.met_office_banbury_daily"
-            press: "sensor.openweathermap_pressure"
             uv: "sensor.banbury_uv_index"
             feels_like: "sensor.banbury_feels_like_temperature"
             show_feels_like: true
@@ -75,20 +74,6 @@ views:
             units:
               pressure: "hPa"
               speed: "mph"
-
-          - type: "custom:weather-chart-card"
-            entity: "weather.openweathermap"
-            # press: "sensor.openweathermap_pressure"
-            uv: "sensor.openweathermap_uv_index"
-            feels_like: "sensor.openweathermap_feels_like_temperature"
-            show_feels_like: true
-            animated_icons: true
-            icon_style: "style1"
-            forecast:
-              precipitation_type: "rainfall"
-            units:
-              pressure: "hPa"
-              speed: "m/s"
 
           - type: "custom:ha-card-weather-conditions"
             animation: true
@@ -106,7 +91,6 @@ views:
               set_skin_type_5: "sensor.skin_type_5_safe_exposure_time"
               set_skin_type_6: "sensor.skin_type_6_safe_exposure_time"
             air_quality:
-              # pm25: "sensor.u_s_main_pollutant"
               epa_aqi: "sensor.u_s_air_quality_index"
               epa_health_concern: "sensor.u_s_air_pollution_level"
             alert:
@@ -115,46 +99,46 @@ views:
               current:
                 sun: "sun.sun"
                 moon_phase: "sensor.moon"
-                current_conditions: "sensor.openweathermap_condition"
-                humidity: "sensor.openweathermap_humidity"
-                pressure: "sensor.openweathermap_pressure"
-                temperature: "sensor.openweathermap_temperature"
-                feels_like: "sensor.openweathermap_feels_like_temperature"
-                visibility: "sensor.openweathermap_visibility"
-                wind_bearing: "sensor.openweathermap_wind_bearing"
-                wind_speed: "sensor.openweathermap_wind_speed"
-                precipitation: "sensor.openweathermap_precipitation_kind"
-              forecast:
-                icons:
-                  day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.condition }}"
-                  day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.condition }}"
-                  day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.condition }}"
-                  day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.condition }}"
-                  day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.condition }}"
-                temperature_high:
-                  day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.temperature }}"
-                  day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.temperature }}"
-                  day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.temperature }}"
-                  day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.temperature }}"
-                  day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.temperature }}"
-                temperature_low:
-                  day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.templow }}"
-                  day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.templow }}"
-                  day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.templow }}"
-                  day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.templow }}"
-                  day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.templow }}"
-                precipitation_probability:
-                  day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.precipitation_probability }}"
-                  day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.precipitation_probability }}"
-                  day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.precipitation_probability }}"
-                  day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.precipitation_probability }}"
-                  day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.precipitation_probability }}"
-                precipitation_intensity:
-                  day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.precipitation }}"
-                  day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.precipitation }}"
-                  day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.precipitation }}"
-                  day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.precipitation }}"
-                  day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.precipitation }}"
+                current_conditions: "sensor.banbury_weather_daily"
+                humidity: "sensor.banbury_humidity_daily"
+                # pressure: "sensor.openweathermap_pressure"
+                temperature: "sensor.banbury_temperature_daily"
+                feels_like: "sensor.banbury_feels_like_temperature_daily"
+                visibility: "sensor.banbury_visibility_daily"
+                wind_bearing: "sensor.banbury_wind_direction"
+                wind_speed: "sensor.banbury_wind_speed_daily"
+                # precipitation: "sensor.openweathermap_precipitation_kind"
+              # forecast:
+              #   icons:
+              #     day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.condition }}"
+              #     day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.condition }}"
+              #     day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.condition }}"
+              #     day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.condition }}"
+              #     day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.condition }}"
+              #   temperature_high:
+              #     day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.temperature }}"
+              #     day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.temperature }}"
+              #     day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.temperature }}"
+              #     day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.temperature }}"
+              #     day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.temperature }}"
+              #   temperature_low:
+              #     day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.templow }}"
+              #     day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.templow }}"
+              #     day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.templow }}"
+              #     day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.templow }}"
+              #     day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.templow }}"
+              #   precipitation_probability:
+              #     day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.precipitation_probability }}"
+              #     day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.precipitation_probability }}"
+              #     day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.precipitation_probability }}"
+              #     day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.precipitation_probability }}"
+              #     day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.precipitation_probability }}"
+              #   precipitation_intensity:
+              #     day_1: "{{ state_attr('weather.openweathermap', 'forecast').0.precipitation }}"
+              #     day_2: "{{ state_attr('weather.openweathermap', 'forecast').1.precipitation }}"
+              #     day_3: "{{ state_attr('weather.openweathermap', 'forecast').2.precipitation }}"
+              #     day_4: "{{ state_attr('weather.openweathermap', 'forecast').3.precipitation }}"
+              #     day_5: "{{ state_attr('weather.openweathermap', 'forecast').4.precipitation }}"
 
           - type: "custom:weather-radar-card"
             data_source: "RainViewer-TITAN"
