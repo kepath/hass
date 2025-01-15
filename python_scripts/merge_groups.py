@@ -54,12 +54,12 @@ try:
         for entity_id in hass.states.get(group).attributes['entity_id']:
             entity_list.append(entity_id)
             logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
-except:
+except LookupError:
     logger.error(logger, "Error - a problem occured creating the entity list")
 
 try:
     service_data = {"object_id": new_group_name, "name": friendly_name, "icon": icon, "entities": entity_list}
     logger.info(f"Calling the service 'set group' with the data '{service_data}' at {time.time()}")
     hass.services.call("group", "set", service_data, False)
-except:
+except ServiceValidationError:
     logger.error(logger, "Error - a problem occured calling the hass group set service")
