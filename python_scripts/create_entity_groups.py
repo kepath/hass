@@ -93,19 +93,19 @@ try:
                     else:
                         globally_excluded_matches.append(entity_id)
                         logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
-except:
+except KeyError:
     logger.error(logger, f"Error - a problem occured adding the members of {excluded_entity_groups} entities to the excluded matches list")
 
 try:
     for entity_id in hass.states.entity_ids(domain):
         logger.debug(f"iterating '{entity_id}' in domain '{domain}' at {time.time()}")
         if entity_id == "":
-            logger.error(logger, f"Error - entity_id missing when looping through domain")
+            logger.error(logger, "Error - entity_id missing when looping through domain")
         else:
             if entity_id not in excluded_entities:
                 entity = hass.states.get(entity_id)
                 if entity is None:
-                    logger.error(logger, f"Error - entity object not found")
+                    logger.error(logger, "Error - entity object not found")
                 else:
                     try:
                         if filter_by_device_class:
@@ -121,8 +121,8 @@ try:
                         else:
                             entity_list.append(entity_id)
                             logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
-                    except:
-                        logger.error(logger, f"Error - a problem occured adding an entity to the entity list")
+                    except KeyError:
+                        logger.error(logger, "Error - a problem occured adding an entity to the entity list")
 
                     try:
                         if filter_by_state_class:
@@ -133,8 +133,8 @@ try:
                                         if entity.attributes.get(attr) != filtered_state_class:
                                             entity_list.remove(entity_id)
                                             logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_state_class}' at {time.time()}")
-                    except:
-                        logger.error(logger, f"Error - a problem occured removing a filtered state_class entity from the entity list")
+                    except KeyError:
+                        logger.error(logger, "Error - a problem occured removing a filtered state_class entity from the entity list")
 
                     try:
                         if filter_by_unit_of_measurement:
@@ -145,8 +145,8 @@ try:
                                         if entity.attributes.get(attr) != filtered_unit_of_measurement:
                                             entity_list.remove(entity_id)
                                             logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_unit_of_measurement}' at {time.time()}")
-                    except:
-                        logger.error(logger, f"Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
+                    except KeyError:
+                        logger.error(logger, "Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
 
                     try:
                         if filter_by_area:
@@ -164,8 +164,8 @@ try:
                                     logger.debug(f"Looking up entities from the list found at '{area_lookup_entity}.attributes.{area_lookup_attribute}' at {time.time()}")
                                     try:
                                         area_entity_list = list(hass.states.get(area_lookup_entity).attributes[area_lookup_attribute])
-                                    except:
-                                        logger.error(logger, f"Error - a problem occured looking up the area entity list from the template sensor")
+                                    except KeyError:
+                                        logger.error(logger, "Error - a problem occured looking up the area entity list from the template sensor")
 
                                     try:
                                         for area_entity in area_entity_list:
@@ -174,20 +174,22 @@ try:
                                                 if area_entity == entity_id:
                                                     remove_entity = False
                                                     logger.debug(f"The entity '{area_entity}' has been found in the list from '{area_lookup_entity}.attributes.{area_lookup_attribute}' at {time.time()}")
-                                    except:
-                                        logger.error(logger, f"Error - a problem occured iterating through the looked up entity list")
+                                    except LookupError:
+                                        logger.error(logger, "Error - a problem occured iterating through the looked up entity list")
+                                    try:
+                                        if remove_entity:
+                                            entity_list.remove(entity_id)
+                                            logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because it was not in the area '{area}' at {time.time()}")
+                                    except KeyError:
+                                        logger.error(logger, f"Error - a problem occured removing the entity '{entity_id}' from the entity_list")
 
-                                    if remove_entity:
-                                        entity_list.remove(entity_id)
-                                        logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because it was not in the area '{area}' at {time.time()}")
+                            except LookupError:
+                                logger.error(logger, "Error - a problem occured iterating through the list of areas")
+                    except LookupError:
+                        logger.error(logger, "Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
 
-                            except:
-                                logger.error(logger, f"Error - a problem occured iterating through the list of areas")
-                    except:
-                        logger.error(logger, f"Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
-
-except:
-    logger.error(logger, f"Error - a problem occured creating the entity list")
+except LookupError:
+    logger.error(logger, "Error - a problem occured creating the entity list")
 
 try:
     for excluded_matches in globally_excluded_matches:
@@ -198,12 +200,12 @@ try:
                 entity_list.remove(match_entity)
                 logger.debug(f"'{match_entity}' removed from group '{friendly_name}' as it matched '{excluded_matches}' at {time.time()}")
 
-except:
-    logger.error(logger, f"Error - a problem occured when removing a matched item from the entity list")
+except KeyError:
+    logger.error(logger, "Error - a problem occured when removing a matched item from the entity list")
 
 try:
     service_data = {"object_id": group_name, "name": friendly_name, "icon": icon, "entities": entity_list, "all": False}
     logger.info(f"Calling the service 'set group' with the data '{service_data}' at {time.time()}")
     hass.services.call("group", "set", service_data, False)
-except:
-    logger.error(logger, f"Error - a problem occured calling the hass set group service")
+except ServiceValidationError:
+    logger.error(logger, "Error - a problem occured calling the hass set group service")
