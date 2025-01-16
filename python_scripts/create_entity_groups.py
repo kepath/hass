@@ -1,18 +1,19 @@
+"""module to to create a group by selecting entities by domain, and other optional attributes"""
+
 #########################################################################################
 # Python script to create domain groups of specific device types
 #
-# domain - the domain type to search through to generate the group
-# group_name - the name of the group to create or recreate
-# icon - the mdi icon to assign to this group after creation
-# friendly_name - the friendly name of the group
-# filter_by_device_class - a boolean to indicate whether to filter by device class
+# DOMAIN - the domain type to search through to generate the group
+# GROUP_NAME - the name of the group to create or recreate
+# ICON - the mdi icon to assign to this group after creation
+# FRIENDLY_NAME - the friendly name of the group
+# FILTER_BY_DEVICE_CLASS - a boolean to indicate whether to filter by device class
 #   if set to false, all entities in the domain will be added to the group
-# included_device_classes - a list of device classes to include in the group
+# INCLUDED_DEVICE_CLASSES - a list of device classes to include in the group
 #   examples of device classes can be found here
 #   binary_sensor - https://developers.home-assistant.io/docs/core/entity/binary-sensor
 #   switch - https://developers.home-assistant.io/docs/core/entity/switch
-# excluded_integrations - a list of integrations to exclude from the group
-# excluded_entities - a list of entity_id's to exclude from the group.
+# EXCLUDED_ENTITIES - a list of entity_id's to exclude from the group.
 #   Be aware that hyphens are replaced by underscores in the entity_id's
 #
 # An example of an automation being used to create this group is
@@ -26,7 +27,7 @@
 #     event: start
 #   condition: []
 #   action:
-#   - service: python_script.create_entity_device_class_group
+#   - service: python_script.create_entity_groups
 #     data:
 #       domain: binary_sensor
 #       group_name: all_door_class_binary_sensors
@@ -45,29 +46,28 @@
 #########################################################################################
 # from homeassistant.helpers import entity_registry as er
 
-domain = data.get('domain', '')
-group_name = data.get('group_name', '')
-icon = data.get('icon', '')
-friendly_name = data.get('friendly_name', group_name)
-filter_by_area = data.get('filter_by_area', False)
-group_areas_by_floor = data.get('group_areas_by_floor', False)
-included_areas = data.get('included_areas', [])
-filter_by_device_class = data.get('filter_by_device_class', False)
-included_device_classes = data.get('included_device_classes', ['door'])
-filter_by_state_class = data.get('filter_by_state_class', False)
-filtered_state_class = data.get('filtered_state_class', '')
-filter_by_unit_of_measurement = data.get('filter_by_unit_of_measurement', False)
-filtered_unit_of_measurement = data.get('filtered_unit_of_measurement', '')
-excluded_entity_groups = data.get('excluded_entity_groups', [])
-excluded_entities = data.get('excluded_entities', [])
+DOMAIN = str(data.get('domain', ''))
+GROUP_NAME = str(data.get('group_name', ''))
+ICON = str(data.get('icon', ''))
+FRIENDLY_NAME = str(data.get('friendly_name', GROUP_NAME))
+FILTER_BY_AREA = bool(data.get('filter_by_area', False))
+GROUP_AREAS_BY_FLOOR = bool(data.get('group_areas_by_floor', False))
+INCLUDED_AREAS = list(data.get('included_areas', []))
+FILTER_BY_DEVICE_CLASS = bool(data.get('filter_by_device_class', False))
+INCLUDED_DEVICE_CLASSES = list(data.get('included_device_classes', ['door']))
+FILTER_BY_STATE_CLASS = bool(data.get('filter_by_state_class', False))
+FILTERED_STATE_CLASS = str(data.get('filtered_state_class', ''))
+FILTER_BY_UNIT_OF_MEASUREMENT = bool(data.get('filter_by_unit_of_measurement', False))
+FILTERED_UNIT_OF_MEASUREMENT = str(data.get('filtered_unit_of_measurement', ''))
+EXCLUDED_ENTITY_GROUPS = list(data.get('excluded_entity_groups', []))
+EXCLUDED_ENTITIES = list(data.get('excluded_entities', []))
 
-# integration_exclusion_template_sensor = "sensor.integration_entity_attributes"
 entity_list = []
 
 try:
-    if not isinstance(domain, str) or not domain or not group_name:
-        logger.error(f"Domain {domain} or group_name {group_name} does not exist")
-except:
+    if not isinstance(DOMAIN, str) or not DOMAIN or not GROUP_NAME:
+        logger.error(f"Domain {DOMAIN} or group_name {GROUP_NAME} does not exist")
+except LookupError:
     logger.error(logger, "Error - a problem occured looking up the domain")
 
 # List of hard coded entity_id's to globally exclude from the groups.
@@ -76,7 +76,7 @@ except:
 globally_excluded_matches = []
 
 try:
-    for group in excluded_entity_groups:
+    for group in EXCLUDED_ENTITY_GROUPS:
         logger.debug(f"iterating '{group}' at {time.time()}")
         if not group:
             logger.error(logger, f"Error - group {group} not found")
@@ -86,7 +86,7 @@ try:
                 logger.error(logger, f"Error - group {group} not found")
             else:
                 for entity_id in group_entities.attributes.get("entity_id"):
-                    logger.debug(f"iterating '{entity_id}' in group '{group}' when creating '{friendly_name}' at {time.time()}")
+                    logger.debug(f"iterating '{entity_id}' in group '{group}' when creating '{FRIENDLY_NAME}' at {time.time()}")
                     entity = hass.states.get(entity_id)
                     if entity is None:
                         logger.warning(logger, f"Warning - entity {entity_id} not found")
@@ -94,92 +94,95 @@ try:
                         globally_excluded_matches.append(entity_id)
                         logger.debug(f"'{entity_id}' added to 'globally_excluded_matches' at {time.time()}")
 except KeyError:
-    logger.error(logger, f"Error - a problem occured adding the members of {excluded_entity_groups} entities to the excluded matches list")
+    logger.error(logger, f"Error - a problem occured adding the members of {EXCLUDED_ENTITY_GROUPS} entities to the excluded matches list")
 
 try:
-    for entity_id in hass.states.entity_ids(domain):
-        logger.debug(f"iterating '{entity_id}' in domain '{domain}' at {time.time()}")
+    for entity_id in hass.states.entity_ids(DOMAIN):
+        logger.debug(f"iterating '{entity_id}' in domain '{DOMAIN}' at {time.time()}")
         if entity_id == "":
             logger.error(logger, "Error - entity_id missing when looping through domain")
         else:
-            if entity_id not in excluded_entities:
+            if entity_id not in EXCLUDED_ENTITIES:
                 entity = hass.states.get(entity_id)
                 if entity is None:
                     logger.error(logger, "Error - entity object not found")
                 else:
                     try:
-                        if filter_by_device_class:
+                        if FILTER_BY_DEVICE_CLASS:
                             for attr in entity.attributes:
-                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
                                 if attr is not None:
                                     if attr == "device_class":
-                                        for device_class_option in included_device_classes:
-                                            logger.debug(f"iterating '{device_class_option}' in device_class '{included_device_classes}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                        for device_class_option in INCLUDED_DEVICE_CLASSES:
+                                            logger.debug(f"iterating '{device_class_option}' in device_class '{INCLUDED_DEVICE_CLASSES}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
                                             if entity.attributes.get(attr) == device_class_option:
                                                 entity_list.append(entity_id)
-                                                logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
+                                                logger.debug(f"'{entity_id}' added to group '{FRIENDLY_NAME}' at {time.time()}")
                         else:
                             entity_list.append(entity_id)
-                            logger.debug(f"'{entity_id}' added to group '{friendly_name}' at {time.time()}")
+                            logger.debug(f"'{entity_id}' added to group '{FRIENDLY_NAME}' at {time.time()}")
                     except KeyError:
                         logger.error(logger, "Error - a problem occured adding an entity to the entity list")
 
                     try:
-                        if filter_by_state_class:
+                        if FILTER_BY_STATE_CLASS:
                             for attr in entity.attributes:
-                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
                                 if attr is not None:
                                     if attr == "state_class":
-                                        if entity.attributes.get(attr) != filtered_state_class:
-                                            entity_list.remove(entity_id)
-                                            logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_state_class}' at {time.time()}")
+                                        if entity.attributes.get(attr) != FILTERED_STATE_CLASS:
+                                            if entity_id in entity_list:
+                                                entity_list.remove(entity_id)
+                                                logger.debug(f"'{entity_id}' removed from group '{FRIENDLY_NAME}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{FILTERED_STATE_CLASS}' at {time.time()}")
                     except KeyError:
                         logger.error(logger, "Error - a problem occured removing a filtered state_class entity from the entity list")
 
                     try:
-                        if filter_by_unit_of_measurement:
+                        if FILTER_BY_UNIT_OF_MEASUREMENT:
                             for attr in entity.attributes:
-                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
+                                logger.debug(f"iterating '{attr}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
                                 if attr is not None:
                                     if attr == "unit_of_measurement":
-                                        if entity.attributes.get(attr) != filtered_unit_of_measurement:
-                                            entity_list.remove(entity_id)
-                                            logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{filtered_unit_of_measurement}' at {time.time()}")
+                                        if entity.attributes.get(attr) != FILTERED_UNIT_OF_MEASUREMENT:
+                                            if entity_id in entity_list:
+                                                entity_list.remove(entity_id)
+                                                logger.debug(f"'{entity_id}' removed from group '{FRIENDLY_NAME}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{FILTERED_UNIT_OF_MEASUREMENT}' at {time.time()}")
                     except KeyError:
                         logger.error(logger, "Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
 
                     try:
-                        if filter_by_area:
+                        if FILTER_BY_AREA:
                             area_entity_list = []
-                            if group_areas_by_floor:
-                                area_lookup_entity = "sensor.floor_grouped_areas_entity_attributes"
+                            if GROUP_AREAS_BY_FLOOR:
+                                AREA_LOOKUP_ENTITY = str("sensor.floor_grouped_areas_entity_attributes")
                             else:
-                                area_lookup_entity = "sensor.area_and_entities_attributes"
+                                AREA_LOOKUP_ENTITY = str("sensor.area_and_entities_attributes")
 
                             try:
-                                for area in included_areas:
+                                for area in INCLUDED_AREAS:
                                     remove_entity = True
-                                    logger.debug(f"Iterating '{area}' in entity '{entity_id}' in domain '{domain}' when creating '{friendly_name}' at {time.time()}")
-                                    area_lookup_attribute = str(area.replace(" ","_").replace(":","").replace(",","").lower()) + "_entities"
-                                    logger.debug(f"Looking up entities from the list found at '{area_lookup_entity}.attributes.{area_lookup_attribute}' at {time.time()}")
+                                    logger.debug(f"Iterating '{area}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
+                                    area_lookup_attribute = str(area.replace(" ", "_").replace(":", "").replace(",", "").lower()) + "_entities"
+                                    logger.debug(f"Looking up entities from the list found at '{AREA_LOOKUP_ENTITY}.attributes.{area_lookup_attribute}' at {time.time()}")
                                     try:
-                                        area_entity_list = list(hass.states.get(area_lookup_entity).attributes[area_lookup_attribute])
+                                        area_entity_list = list(hass.states.get(AREA_LOOKUP_ENTITY).attributes[area_lookup_attribute])
                                     except KeyError:
                                         logger.error(logger, "Error - a problem occured looking up the area entity list from the template sensor")
 
                                     try:
                                         for area_entity in area_entity_list:
-                                            logger.debug(f"Iterating '{area_entity}' in entity_list '{area_lookup_entity}.attributes.{area_lookup_attribute}' when checking area '{area}' at {time.time()}")
+                                            logger.debug(f"Iterating '{area_entity}' in entity_list '{AREA_LOOKUP_ENTITY}.attributes.{area_lookup_attribute}' when checking area '{area}' at {time.time()}")
                                             if area_entity is not None:
                                                 if area_entity == entity_id:
                                                     remove_entity = False
-                                                    logger.debug(f"The entity '{area_entity}' has been found in the list from '{area_lookup_entity}.attributes.{area_lookup_attribute}' at {time.time()}")
+                                                    logger.debug(f"The entity '{area_entity}' has been found in the list from '{AREA_LOOKUP_ENTITY}.attributes.{area_lookup_attribute}' at {time.time()}")
                                     except LookupError:
                                         logger.error(logger, "Error - a problem occured iterating through the looked up entity list")
                                     try:
                                         if remove_entity:
-                                            entity_list.remove(entity_id)
-                                            logger.debug(f"'{entity_id}' removed from group '{friendly_name}' because it was not in the area '{area}' at {time.time()}")
+                                            if entity_id in entity_list:
+                                                entity_list.remove(entity_id)
+                                                logger.debug(f"'{entity_id}' removed from group '{FRIENDLY_NAME}' because it was not in the area '{area}' at {time.time()}")
                                     except KeyError:
                                         logger.error(logger, f"Error - a problem occured removing the entity '{entity_id}' from the entity_list")
 
@@ -198,13 +201,13 @@ try:
             logger.debug(f"iterating '{match_entity}' in 'entity_list' at {time.time()}")
             if match_entity.find(excluded_matches) != -1:
                 entity_list.remove(match_entity)
-                logger.debug(f"'{match_entity}' removed from group '{friendly_name}' as it matched '{excluded_matches}' at {time.time()}")
+                logger.debug(f"'{match_entity}' removed from group '{FRIENDLY_NAME}' as it matched '{excluded_matches}' at {time.time()}")
 
 except KeyError:
     logger.error(logger, "Error - a problem occured when removing a matched item from the entity list")
 
 try:
-    service_data = {"object_id": group_name, "name": friendly_name, "icon": icon, "entities": entity_list, "all": False}
+    service_data = {"object_id": GROUP_NAME, "name": FRIENDLY_NAME, "icon": ICON, "entities": entity_list, "all": False}
     logger.info(f"Calling the service 'set group' with the data '{service_data}' at {time.time()}")
     hass.services.call("group", "set", service_data, False)
 except ServiceValidationError:
