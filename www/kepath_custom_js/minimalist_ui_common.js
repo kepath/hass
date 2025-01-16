@@ -2,7 +2,7 @@ function funckepathGetVariableState(defaultValue, layer0, layer1, layer2, layer3
     var returnValue = defaultValue;
     var entityRef = funckepathGetVariableRef(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
     if (states[entityRef]?.state !== undefined) {
-        returnValue = states[entityRef]?.state
+        returnValue = states[entityRef]?.state;
     }
     return returnValue;
 }
@@ -12,7 +12,7 @@ function funckepathGetVariableRef(layer0, layer1, layer2, layer3, layer4, layer5
     var returnValue = undefined;
     var entityRef = funckepathTestChainDefined(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
     if (states[entityRef]?.state !== undefined) {
-        returnValue = entityRef
+        returnValue = entityRef;
     }
     return returnValue;
 }
@@ -21,7 +21,7 @@ function funckepathGetVariableAttribute(defaultValue, entityRef, layer0, layer1,
     var returnValue = defaultValue;
     var attributeRef = funckepathTestChainDefined(layer0, layer1, layer2, layer3, layer4, layer5, layer6);
     if (states[entityRef]?.attributes[attributeRef] !== undefined) {
-        returnValue = states[entityRef]?.attributes[attributeRef]
+        returnValue = states[entityRef]?.attributes[attributeRef];
     }
     return returnValue;
 }
