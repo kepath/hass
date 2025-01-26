@@ -96,8 +96,7 @@
   mode: single
 - id: '1666811718812'
   alias: on_start_create_group.all_fans_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -111,12 +110,13 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1666812617895'
   alias: on_start_create_group.all_lights_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -133,12 +133,13 @@
       excluded_entities:
       - light.shelly_1l_hallway_bottom_light_2
       - light.shelly_1l_kitchen_utility_light_2
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1666812616338'
   alias: on_start_create_group.all_zones_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -154,8 +155,7 @@
   mode: single
 - id: '1666812616938'
   alias: on_start_create_group.all_update_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -171,8 +171,7 @@
   mode: single
 - id: '1666812616259'
   alias: on_start_create_group.all_camera_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -188,12 +187,13 @@
       - camera.camera_indoor
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1629812616259'
   alias: on_start_create_group.all_media_player_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -207,12 +207,13 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1622852616259'
   alias: on_start_create_group.all_remote_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -234,12 +235,13 @@
       - remote.nvidia_shield_bed_e_android_tv
       - remote.tv_samsung_lounge
       - remote.lounge_apple_tv
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1666812633820'
   alias: on_start_create_group.all_binary_sensor_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -253,12 +255,13 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1666817726320'
   alias: on_start_create_group.all_switch_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -272,12 +275,13 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1672906062419'
   alias: on_start_create_group.all_door_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -300,12 +304,13 @@
       excluded_entities:
       - binary_sensor.zigbee_door_sensor_bed_c_contact
       - binary_sensor.dishwasher_door
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1673133770721'
   alias: on_start_create_group.all_occupancy_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -321,12 +326,13 @@
       - occupancy
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1673133921800'
   alias: on_start_create_group.all_safety_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -350,12 +356,13 @@
       excluded_entities:
       - binary_sensor.diskstation_security_status
       - binary_sensor.climate_devices_on
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1673133328800'
   alias: on_start_create_group.all_battery_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -372,6 +379,8 @@
       - battery_charging
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1679331701346'
@@ -598,6 +607,8 @@
       excluded_entities:
       - switch.mss425e_6025_outlet_3
       - switch.udm_pro_plug_bed_c_unifi
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1682192675338'
@@ -677,6 +688,8 @@
       - media_player.rx_v777_zone2
       - media_player.amazon_firestick_android_bridge_kitchen
       - media_player.amazon_firestick_android_bridge_bed_a
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1682264073944'
@@ -703,6 +716,8 @@
       - media_player.doorbell_g4_speaker
       - media_player.bed_c_g3_instant_speaker
       - media_player.rx_v777_zone2
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1683217570006'
@@ -744,8 +759,7 @@
   mode: single
 - id: '1685624731561'
   alias: on_start_create_group.all_climate_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -761,12 +775,13 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.climate_devices_on
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1685624861506'
   alias: on_start_create_group.all_person_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -780,12 +795,13 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1685624899638'
   alias: on_start_create_group.all_vacuum_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -799,12 +815,13 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1689426384566'
   alias: on_start_create_group.all_locks_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -818,6 +835,8 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1690825562134'
@@ -862,8 +881,7 @@
   mode: single
 - id: '1693773355910'
   alias: on_start_create_group.all_connectivity_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -879,12 +897,13 @@
       - connectivity
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1693773833620'
   alias: on_start_create_group.all_plug_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -900,12 +919,13 @@
       - plug
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1693773913162'
   alias: on_start_create_group.all_power_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -921,12 +941,13 @@
       - power
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1693774053685'
   alias: on_start_create_group.all_running_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -944,12 +965,13 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.docker_containers_all_running
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1693774320732'
   alias: on_start_create_group.all_battery_class_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -970,12 +992,13 @@
       - sensor.kevins_macbook_pro_2018_internal_battery_state
       - sensor.airpods_emily_icloud3_battery
       - sensor.airpods2pro_kev_icloud3_battery
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1693774604091'
   alias: on_start_create_group.all_data_rate_class_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1008,12 +1031,13 @@
       - sensor.speedtest_upload
       - sensor.download_speedtest_london_its_tg_net
       - sensor.upload_speedtest_london_its_tg_net
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1693775484055'
   alias: on_start_create_group.all_signal_strength_class_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1029,12 +1053,13 @@
       - signal_strength
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1693775926514'
   alias: on_start_create_group.all_device_tracker_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1048,6 +1073,8 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1695218259279'
@@ -1090,8 +1117,7 @@
   mode: single
 - id: '1702627536265'
   alias: on_start_create_group.all_lawn_mower_domain_entities
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1105,6 +1131,8 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1705495940138'
@@ -1127,6 +1155,8 @@
       filtered_unit_of_measurement: min
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1705591084335'
@@ -1152,12 +1182,13 @@
       filtered_unit_of_measurement: MB
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1706816168075'
   alias: on_start_create_group.all_moisture_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1173,6 +1204,8 @@
       - moisture
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1706816937410'
@@ -1198,6 +1231,8 @@
       filtered_unit_of_measurement: min
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1706817011614'
@@ -1223,12 +1258,13 @@
       filtered_unit_of_measurement: min
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1707250998794'
   alias: on_start_create_group.all_power_class_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1244,12 +1280,13 @@
       - power
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1707254937478'
   alias: on_start_create_group.all_monetary_class_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1265,12 +1302,13 @@
       - monetary
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1707345933326'
   alias: on_start_create_group.all_restart_class_buttons
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1286,6 +1324,8 @@
       - restart
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1707920066600'
@@ -1300,15 +1340,14 @@
       domain: sensor
       group_name: all_area_bed_e_sensors
       icon: mdi:sort-clock-ascending-outline
-      friendly_name: All sensors in area BedE group
+      friendly_name: All sensors in area Bed E group
       filter_by_area: true
       included_areas:
       - Bed E
-      - Kitchen
-      - Hallway Bottom
-      - External Front
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1707944939122'
@@ -1340,6 +1379,8 @@
       - Bottom Floor
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1707946451163'
@@ -1373,6 +1414,8 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.diskstation_security_status
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1707946473303'
@@ -1403,6 +1446,8 @@
       - Top Floor
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1710616457500'
@@ -1441,8 +1486,7 @@
   mode: single
 - id: '1728474306244'
   alias: on_start_create_group.all_away_occupancy_class_binary_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1463,12 +1507,13 @@
       - binary_sensor.doorbell_g4_doorbell
       - binary_sensor.doorbell_g4_occupancy
       - binary_sensor.back_g3_flex_occupancy
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1728474975114'
   alias: on_start_create_group.all_measured_data_rate_class_sensors
-  description: Uses python script create_entity_groups to create an entity
-    group
+  description: Uses python script create_entity_groups to create an entity group
   triggers:
   - event: start
     trigger: homeassistant
@@ -1511,6 +1556,8 @@
       - sensor.bottom_hallway_g3_flex_data_rate
       - sensor.kitchen_g3_instant_data_rate
       - sensor.bed_c_g3_instant_data_rate
+      excluded_integrations:
+      - browser_mod
     action: python_script.create_entity_groups
   mode: single
 - id: '1730882082134'

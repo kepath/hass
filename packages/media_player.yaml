@@ -37,9 +37,10 @@ homekit:
       - "input_select"
       - "lawn_mower"
       - "light"
-      - "lock"
+      # - "lock"  should be added as a seperate homekit device
       - "person"
-      - "scene"
+      # - "script"
+      # - "scene"
       - "sun"
       - "vacuum"
       - "water_heater"
@@ -63,13 +64,16 @@ homekit:
       - "switch.mss425e*"
       - "switch.bed*fan*"
     include_entities:
+      - "button.homeassistant_restart"
       - "sensor.mfc_j870dw_status"
       - "sensor.ups_status"
       - "sensor.banbury_temperature"
       - "sensor.banbury_humidity"
       - "sensor.dishwasher_operation_state"
-      - "switch.dishwasher_power"
-      - "switch.samsung_tumble_dryer"
+      # - "switch.dishwasher_power"
+      # - "switch.samsung_tumble_dryer"
+      - "script.turn_on_download_pc"
+      - "script.reboot_unifi_network_infrastructure_poe"
     exclude_entities:
       - "binary_sensor.nest_protect_bottom_floor_buzzer_test"
       - "binary_sensor.nest_protect_bottom_floor_co_test"
@@ -80,7 +84,10 @@ homekit:
       - "binary_sensor.nest_protect_bottom_floor_smoke_test"
       - "binary_sensor.nest_protect_bottom_floor_speaker_test"
       - "binary_sensor.nest_protect_bottom_floor_online"
-      - "sensor.nest_protect_bottom_floor_battery_level"
+      - "binary_sensor.nest_protect_bottom_floor_removed_from_base"
+      - "binary_sensor.nest_protect_middle_floor_removed_from_base"
+      - "binary_sensor.nest_protect_top_floor_removed_from_base"
+      # - "sensor.nest_protect_bottom_floor_battery_level"
       - "binary_sensor.nest_protect_middle_floor_buzzer_test"
       - "binary_sensor.nest_protect_middle_floor_co_test"
       - "binary_sensor.nest_protect_middle_floor_humidity_test"
@@ -90,7 +97,7 @@ homekit:
       - "binary_sensor.nest_protect_middle_floor_smoke_test"
       - "binary_sensor.nest_protect_middle_floor_speaker_test"
       - "binary_sensor.nest_protect_middle_floor_online"
-      - "sensor.nest_protect_middle_floor_battery_level"
+      # - "sensor.nest_protect_middle_floor_battery_level"
       - "binary_sensor.nest_protect_top_floor_buzzer_test"
       - "binary_sensor.nest_protect_top_floor_co_test"
       - "binary_sensor.nest_protect_top_floor_humidity_test"
@@ -112,7 +119,7 @@ homekit:
       - "light.shelly_1l_hallway_bottom_light_2"
       - "light.shelly_1l_kitchen_utility_light_2"
       - "person.tablet"
-      - "sensor.nest_protect_top_floor_battery_level"
+      # - "sensor.nest_protect_top_floor_battery_level"
       - "switch.mss425e_6025_outlet_1"
       - "switch.mss425e_6025_outlet_3"
       - "switch.mss425e_6025_usb"
@@ -127,10 +134,10 @@ homekit:
       - "binary_sensor.diskstation_drive_2_exceeded_max_bad_sectors"
       - "binary_sensor.diskstation_drive_3_exceeded_max_bad_sectors"
       - "binary_sensor.diskstation_drive_4_exceeded_max_bad_sectors"
-      - "switch.samsung_tumble_dryer"
+      # - "switch.samsung_tumble_dryer"
       - "switch.zigbee_energy_monitor_outlet_switch_dishwasher_switch"
       - "switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch"
-      - "switch.mss425e_6025_outlet_2"
+      # - "switch.mss425e_6025_outlet_2"
       - "binary_sensor.nest_protect_bottom_floor_battery_health"
       - "binary_sensor.nest_protect_bottom_floor_heat_status"
       - "binary_sensor.nest_protect_middle_floor_battery_health"
@@ -161,18 +168,21 @@ homekit:
     switch.zigbee_outlet_switch_smart_meter_switch:
       name: "Kitchen Smart Meter"
       type: "outlet"
-    switch.tuya_wi_fi_plug_homekitadd_drinks_fridge:
-      name: "Bed C Drinks Fridge"
+    switch.mss425e_6025_outlet_2:
+      name: "Bed E Caldigit Dock"
       type: "outlet"
-    switch.dishwasher_power:
-      name: "Kitchen Dishwasher Status"
-      type: "outlet"
-    switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch:
-      name: "Kitchen Washing Machine Status"
-      type: "outlet"
-    switch.samsung_tumble_dryer:
-      name: "Kitchen Tumble Dryer Status"
-      type: "outlet"
+    # switch.tuya_wi_fi_plug_homekitadd_drinks_fridge:
+    #   name: "Bed C Drinks Fridge"
+    #   type: "outlet"
+    # switch.dishwasher_power:
+    #   name: "Kitchen Dishwasher Status"
+    #   type: "outlet"
+    # switch.zigbee_energy_monitor_outlet_switch_washing_machine_switch:
+    #   name: "Kitchen Washing Machine Status"
+    #   type: "outlet"
+    # switch.samsung_tumble_dryer:
+    #   name: "Kitchen Tumble Dryer Status"
+    #   type: "outlet"
 
     # lights
     light.back_door_smartbulb:
@@ -189,8 +199,8 @@ homekit:
       name: "Bed E Light"
     light.shelly_1l_ensuite_light_1:
       name: "Bed A Ensuite Light"
-    light.front_door_smartbulb:
-      name: "External Front Light"
+    # light.front_door_smartbulb:
+    #   name: "External Front Light"
     light.shelly_1l_hallway_bottom_light_1:
       name: "Hallway - Bottom Light"
     light.shelly_1l_kitchen_main_light_1:
@@ -211,22 +221,22 @@ homekit:
     # smoke and CO sensors
     binary_sensor.nest_protect_bottom_floor_co_status:
       name: "Hallway - Bottom CO Nest Protect"
-      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
     binary_sensor.nest_protect_bottom_floor_smoke_status:
       name: "Hallway - Bottom Smoke Nest Protect"
-      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
     binary_sensor.nest_protect_middle_floor_co_status:
       name: "Hallway - Middle CO Nest Protect"
-      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
     binary_sensor.nest_protect_middle_floor_smoke_status:
       name: "Hallway - Middle Smoke Nest Protect"
-      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
     binary_sensor.nest_protect_top_floor_co_status:
       name: "Hallway - Top CO Nest Protect"
-      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
     binary_sensor.nest_protect_top_floor_smoke_status:
       name: "Hallway - Top Smoke Nest Protect"
-      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
 
     sensor.nest_bottom_floor_humidity:
       name: "Hallway - Bottom Humidity Nest"
@@ -263,13 +273,13 @@ homekit:
       name: "Hallway - Middle G3 Flex Occupancy"
     binary_sensor.nest_protect_bottom_floor_occupancy:
       name: "Hallway - Bottom Nest Protect Occupancy"
-      linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_bottom_floor_battery_level"
     binary_sensor.nest_protect_middle_floor_occupancy:
       name: "Hallway - Middle Nest Protect Occupancy"
-      linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_middle_floor_battery_level"
     binary_sensor.nest_protect_top_floor_occupancy:
       name: "Hallway - Top Nest Protect Occupancy"
-      linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
+      # linked_battery_sensor: "sensor.nest_protect_top_floor_battery_level"
     binary_sensor.zigbee_motion_sensor_bed_e_occupancy:
       name: "Bed E Aqara Occupancy"
       linked_battery_sensor: "sensor.zigbee_motion_sensor_bed_e_battery"
@@ -298,6 +308,14 @@ homekit:
     binary_sensor.zigbee_vibration_sensor_patio_door_vibration:
       name: "External Back Patio Vibration"
 
+
+    script.reboot_unifi_network_infrastructure_poe:
+      name: "House Restart Network"
+    script.turn_on_download_pc:
+      name: "Loft Turn On DLPC"
+    button.homeassistant_restart:
+      name: "House Restart HA"
+
     # temperature
     sensor.zigbee_door_sensor_bed_c_temperature:
       name: "Bed C Temperature"
@@ -322,6 +340,5 @@ homekit:
     sensor.zigbee_motion_sensor_middle_hallway_occupancy_temperature:
       name: "Hallway - Middle Motion Sensor Temperature"
 
-
-    lock.front_door_top_bolt:
-      name: "External Front Door Lock"
+    # lock.front_door_top_bolt:
+    #   name: "External Front Door Lock"

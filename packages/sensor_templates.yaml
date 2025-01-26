@@ -375,8 +375,8 @@ template:
           icon: "mdi:tooltip-question-outline"
           state_class: "measurement"
 
-      - unique_id: "areas_and_entities_template_generated"
-        name: "Areas Entity Attributes"
+      - unique_id: "_area_entities_template_generated"
+        name: "Area Entity Attributes"
         state: "0"
         attributes:
           all_entities: "{{area_entities('All')}}"
@@ -401,25 +401,25 @@ template:
           study_entities: "{{area_entities('Study')}}"
           unknown_device_entities: "{{area_entities('Unknown Device')}}"
 
-      - unique_id: "floors_and_areas_and_entities_template_generated"
-        name: "Floors Areas Entity Attributes"
-        state: >-
-          {%- for floor in floors() -%}
-            {%- if floor!='house_and_mobile' -%}
-              {%- for area in floor_areas(floor) -%}
-                {%- for entity in area_entities(area) -%}
-                  {{{
-                    'floor': floor,
-                    'area': area,
-                    'entity': entity,
-                  }}},
-                {%- endfor -%}
-              {%- endfor -%}
-            {%- endif -%}
-          {%- endfor %}
+      # - unique_id: "floors_and_areas_and_entities_template_generated"
+      #   name: "Floors Areas Entity Attributes"
+      #   state: >-
+      #     {%- for floor in floors() -%}
+      #       {%- if floor!='house_and_mobile' -%}
+      #         {%- for area in floor_areas(floor) -%}
+      #           {%- for entity in area_entities(area) -%}
+      #             {{{
+      #               'floor': floor,
+      #               'area': area,
+      #               'entity': entity,
+      #             }}},
+      #           {%- endfor -%}
+      #         {%- endfor -%}
+      #       {%- endif -%}
+      #     {%- endfor %}
 
-      - unique_id: "floor_grouped_areas_and_entities_template_generated"
-        name: "Floor Grouped Areas Entity Attributes"
+      - unique_id: "_floor_entities_template_generated"
+        name: "Floor Entity Attributes"
         state: "0"
         attributes:
           bottom_floor_entities: "{{area_entities('Kitchen')+area_entities('Lounge')+area_entities('Hallway, Bottom')+area_entities('Study')|sort}}"
@@ -436,6 +436,12 @@ template:
         attributes:
           ha_nabucasa_url: !secret "ha_nabucasa_url"
           ha_rj45_ip: !secret "ha_rj45_ip"
+
+      - unique_id: "integration_entity_list_template_generated"
+        name: "Integration Entity List"
+        state: "0"
+        attributes:
+          browser_mod: "{{ integration_entities('browser_mod') }}"
 
       - unique_id: "calculated_non_count_entities_template_generated"
         name: "Calculated Non Count Entities"
