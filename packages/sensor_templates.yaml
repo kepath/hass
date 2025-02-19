@@ -206,7 +206,9 @@ template:
           }}
         attributes:
           icon: "mdi:printer-alert"
-          state_class: "measurement"
+          device_class: "enum"
+          options: "{{ ['normal', 'warning', 'error'] }}"
+          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_nas"
         name: "DiskStation Simple State"
@@ -223,7 +225,9 @@ template:
           }}
         attributes:
           icon: "mdi:nas"
-          state_class: "measurement"
+          device_class: "enum"
+          options: "{{ ['normal', 'warning', 'error'] }}"
+          state_class: "measurement"          
 
       - unique_id: "_unique_simple_state_ups"
         name: "UPS Simple State"
@@ -240,7 +244,9 @@ template:
           }}
         attributes:
           icon: "mdi:battery-alert-variant"
-          state_class: "measurement"
+          device_class: "enum"
+          options: "{{ ['normal', 'warning', 'error'] }}"
+          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_front_door_lock"
         name: "Front Door Lock Simple State"
@@ -273,7 +279,9 @@ template:
           }}
         attributes:
           icon: "mdi:lock-open-variant-outline"
-          state_class: "measurement"
+          device_class: "enum"
+          options: "{{ ['normal', 'warning', 'error', 'locked', 'jammed', 'door_open'] }}"
+          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_all_occupancy_sensors"
         name: "All Occupancy Sensors Simple State"
@@ -299,7 +307,9 @@ template:
           }}
         attributes:
           icon: "mdi:motion-sensor-off"
-          state_class: "measurement"
+          device_class: "enum"
+          options: "{{ ['not_triggered', 'triggered_home', 'triggered_away', 'warning', 'error'] }}"
+          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_away_occupancy_sensors"
         name: "Internal Occupancy Sensors Simple State"
@@ -325,7 +335,9 @@ template:
           }}
         attributes:
           icon: "mdi:motion-sensor"
-          state_class: "measurement"
+          device_class: "enum"
+          options: "{{ ['not_triggered', 'triggered_home', 'triggered_away', 'warning', 'error'] }}"
+          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_washing_machine_sensors"
         name: "Washing Machine Sensor Simple State"
@@ -337,20 +349,70 @@ template:
               not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
               not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w")
             ) else (
-              'active' if (
-                as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_10w", now())) >
-                as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_10w", now()))
+              'error' if (
+                not has_value("sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand")
               ) else (
-                'standby' if (
-                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_5w", now())) >
-                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_5w", now()))
-                ) else 'off'
+                'active' if (
+                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_10w", now())) >
+                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_10w", now()))
+                ) else (
+                  'standby' if (
+                    as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_5w", now())) >
+                    as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_5w", now()))
+                  ) else 'off'
+                )
               )
             )
           }}
         attributes:
           icon: "mdi:washing-machine-alert"
+          device_class: "enum"
+          options: "{{ ['active', 'standby', 'error', 'warning', 'off'] }}"
           state_class: "measurement"
+
+      - unique_id: "_unique_simple_state_bin_collection_sensors"
+        name: "Bin Collection Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("sensor.ox161ee_blue_bin_days_until_collection") or
+              not has_value("sensor.ox161ee_green_bin_days_until_collection")
+            ) else (
+              'error' if (
+                not has_value("sensor.01jmbzta1k92wq5bpweywa1t8c_raw_json")
+              ) else (
+                'recycling' if (
+                  (states("sensor.ox161ee_blue_bin_days_until_collection")|int(0)) <
+                  (states("sensor.ox161ee_green_bin_days_until_collection")|int(0))
+                ) else (
+                  'general_waste' if (
+                    (states("sensor.ox161ee_blue_bin_days_until_collection")|int(0)) <
+                    (states("sensor.ox161ee_green_bin_days_until_collection")|int(0))
+                  ) else 'unknown'
+                )
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:trash-can-outline"
+          device_class: "enum"
+          options: "{{ ['recycling', 'general_waste', 'error', 'warning', 'unknown'] }}"
+          state_class: "measurement"
+          days_until_collection: >
+            {{
+              0 if (
+                not has_value("sensor.ox161ee_blue_bin_days_until_collection") or
+                not has_value("sensor.ox161ee_green_bin_days_until_collection")
+              ) else (
+                states("sensor.ox161ee_blue_bin_days_until_collection")|int(0) if (
+                  (states('sensor.bin_collection_simple_state')|lower == 'recycling')
+                ) else (
+                  states("sensor.ox161ee_green_bin_days_until_collection")|int(0) if (
+                    (states('sensor.bin_collection_simple_state')|lower == 'general_waste')
+                  ) else 0
+                )
+              )
+            }}
 
       - unique_id: "_unique_minimalist_ui_binary_action_sensors_tooltip"
         name: "minimalist_ui Binary Action Sensors Tooltip"
