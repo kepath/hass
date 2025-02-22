@@ -1,0 +1,46 @@
+---
+device_kepath_entity_and_style_bin_collection_state:
+  variables:
+    var_kepath_device_kepath_entity_and_style_bin_collection_state:
+      recycling_state:
+        icon: "mdi:recycle"
+        icon_color: "blue"
+        background_color: "blue"
+      general_waste_state:
+        icon: "mdi:trash-can-outline"
+        icon_color: "green"
+        background_color: "green"
+
+  state:
+    - value: "recycling"
+      icon: >
+        [[[
+          return variables?.var_kepath_device_kepath_entity_and_style_bin_collection_state?.recycling_state?.icon;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                return `rgba(var(--color-${variables?.var_kepath_device_kepath_entity_and_style_bin_collection_state?.recycling_state?.icon_color}),1)`;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                return `rgba(var(--color-${variables?.var_kepath_device_kepath_entity_and_style_bin_collection_state?.recycling_state?.background_color}),0.2)`;
+              ]]]
+    - value: "general_waste"
+      icon: >
+        [[[
+          return variables?.var_kepath_device_kepath_entity_and_style_bin_collection_state?.general_waste_state?.icon;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                return `rgba(var(--color-${variables?.var_kepath_device_kepath_entity_and_style_bin_collection_state?.general_waste_state?.icon_color}),1)`;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                return `rgba(var(--color-${variables?.var_kepath_device_kepath_entity_and_style_bin_collection_state?.general_waste_state?.background_color}),0.2)`;
+              ]]]

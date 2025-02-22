@@ -602,6 +602,8 @@ views:
                           var_kepath_device_entity_and_style_simple_states:
                             warning_state:
                               icon: "mdi:washing-machine-alert"
+                            error_state:
+                              icon: "mdi:washing-machine-alert"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:washing-machine-off"
@@ -730,7 +732,7 @@ views:
                         name: "Arcade"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
-                            evaluated_entity: "button.arcade_win10_restart"
+                            evaluated_entity: "button.arcade_pc_satellite_arcade_pc_satellite_restart"
                             return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
@@ -759,7 +761,7 @@ views:
                         name: "BigPC"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
-                            evaluated_entity: "button.big_pc_win11_big_pc_win11_restart"
+                            evaluated_entity: "button.big_pc_win11_satellite_big_pc_win11_satellite_restart"
                             return_type: "device"
                           var_kepath_generic_button_icon_styles:
                             default_state:
@@ -1804,6 +1806,10 @@ views:
                             unavailable:
                               attribute_name: "integration_spook_unavailable_count"
                               count_tooltip: "spook entities away"
+                            amount:
+                              entity: "sensor.active_issues"
+                              is_attribute: false
+                              count_tooltip: "active issues"    
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:ghost"
@@ -1864,33 +1870,26 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_binary_count_state"
-                        entity: "sensor.active_issues"
-                        name: "Repairs"
+                          - "device_kepath_entity_and_style_bin_collection_state"
+                          - "custom_card_kepath_navigation_to_parent_from_entity"
+                        entity: "sensor.bin_collection_simple_state"
+                        name: "Bins"
                         variables:
+                          var_kepath_navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.ox161ee_blue_bin_days_until_collection"
+                            return_type: "integration"
                           var_kepath_generic_get_set_group_notification_objects:
                             amount:
-                              entity: "sensor.active_issues"
-                              is_attribute: false
-                              count_tooltip: "active issues"
+                              entity: "sensor.bin_collection_simple_state"
+                              attribute_name: "days_until_collection"
+                              count_tooltip: "days until next collection"
                           var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "mdi:wrench-cog"
-                              icon_color: "green"
-                              background_color: "green"
+                              icon: "mdi:trash-can-outline"
                             unset_state:
-                              icon: "mdi:wrench-cog-outline"
-                          var_kepath_device_entity_and_style_binary_count_state:
-                            entity:
-                              isattribute: false
-                              evaluated_entity: "sensor.active_issues"
-                            style:
-                              icon: "mdi:wrench-cog-outline"
-                              icon_color: "red"
-                              background_color: "red"
-                        tap_action:
-                          action: "navigate"
-                          navigation_path: "/config/repairs"
+                              icon: "mdi:delete-alert"
+                            unknown_state:
+                              icon: "mdi:delete-alert"
                         hold_action:
                           action: "more-info"
                     item14:
@@ -2944,30 +2943,6 @@ views:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
                             docker_slug_reference: "2effc9b9_5etools"
-                    # item40:
-                    #   card:
-                    #     type: "custom:button-card"
-                    #     template:
-                    #       - "custom_card_kepath_binary_notifications_common_styles"
-                    #       - "custom_card_kepath_binary_notifications_device_style"
-                    #       - "device_kepath_entity_common_binary_objects_and_styles"
-                    #       - "custom_card_kepath_generic_use_entity_picture"
-                    #       - "custom_card_kepath_generic_add_addin_link"
-                    #     entity: "update.silverbullet_update"
-                    #     name: "silverbullet"
-                    #     variables:
-                    #       var_kepath_generic_get_set_group_notification_objects:
-                    #         amount:
-                    #           entity: "update.silverbullet_update"
-                    #           count_tooltip: "add-in has update"
-                    #           is_attribute: false
-                    #       var_kepath_generic_button_icon_styles:
-                    #         use_themes: false
-                    #         default_state:
-                    #           background_color: "rgba(var(--color-theme),0.05)"
-                    #       var_kepath_generic_set_addin_link:
-                    #         docker_slug_reference: "2effc9b9_silverbullet"
-                    #         ingress_or_local_port: !secret "hass_addon_silverbullet_webui_local_port"
 
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
@@ -3025,7 +3000,7 @@ views:
                               ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_15_kev_icloud3"
                               ulm_card_kepath_person_findmy_device: "kevs_iphone"
                               ulm_card_kepath_person_driving_entity: "binary_sensor.is_kev_driving"
-                              ulm_card_kepath_person_distance_entity: "sensor.kevs_iphone_icloud_home_distance"
+                              ulm_card_kepath_person_distance_entity: "sensor.iphone_15_kev_icloud3_home_distance"
                         item2:
                           card:
                             type: "custom:button-card"
@@ -3036,7 +3011,7 @@ views:
                               ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_8_ju_icloud3"
                               ulm_card_kepath_person_findmy_device: "julias_iphone_8"
                               ulm_card_kepath_person_driving_entity: ""
-                              ulm_card_kepath_person_distance_entity: "sensor.julia_s_iphone_8_home_distance"
+                              ulm_card_kepath_person_distance_entity: "sensor.iphone_8_ju_icloud3_home_distance"
                         item3:
                           card:
                             type: "custom:button-card"
@@ -3047,7 +3022,7 @@ views:
                               ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_12_dan_icloud3"
                               ulm_card_kepath_person_findmy_device: "iphone"
                               ulm_card_kepath_person_driving_entity: ""
-                              ulm_card_kepath_person_distance_entity: "sensor.iphone_home_distance"
+                              ulm_card_kepath_person_distance_entity: "sensor.iphone_12_dan_icloud3_home_distance"
                         item4:
                           card:
                             type: "custom:button-card"
@@ -3058,4 +3033,4 @@ views:
                               ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_13_emily_patrice_icloud3"
                               ulm_card_kepath_person_findmy_device: "patrice"
                               ulm_card_kepath_person_driving_entity: ""
-                              ulm_card_kepath_person_distance_entity: "sensor.patrice_home_distance"
+                              ulm_card_kepath_person_distance_entity: "sensor.iphone_13_emily_patrice_icloud3_home_distance"

@@ -10,7 +10,7 @@
     trigger: state
   conditions: []
   actions:
-  - type: turn_off
+  - type: turn_on
     device_id: e43877911bcde38af54a242c2b2b8197
     entity_id: efb4ab3caf732c8a07e835c2fb8c9ab8
     domain: switch
@@ -47,11 +47,13 @@
     trigger: device
   conditions: []
   actions:
-  - type: turn_on
-    device_id: fdfca529947f2de73d16ee2ecf6d2d7d
-    entity_id: light.zigbee_bulb_garage_light
-    domain: light
-    flash: short
+  - action: light.turn_on
+    metadata: {}
+    data:
+      kelvin: 5238
+      brightness_pct: 100
+    target:
+      area_id: 0bb083b7a4214d1e8b57fd3974512f03
   mode: single
 - id: '1617175491057'
   alias: on_close_garage_door_turn_off_garage_light_after_10_minutes
@@ -62,16 +64,17 @@
     entity_id: binary_sensor.zigbee_door_sensor_garage_contact
     domain: binary_sensor
     for:
-      hours: 2
-      minutes: 0
+      hours: 0
+      minutes: 10
       seconds: 0
     trigger: device
   conditions: []
   actions:
-  - type: turn_off
-    device_id: fdfca529947f2de73d16ee2ecf6d2d7d
-    entity_id: 90131e8c488eb2eb6c8af71888a51e2b
-    domain: light
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: d831b1c23db5952276c05f231c7fd0da
   mode: single
 - id: '1624743776933'
   alias: on_open_front_door_turn_on_bottom_hallway_light
@@ -133,6 +136,7 @@
       excluded_entities:
       - light.shelly_1l_hallway_bottom_light_2
       - light.shelly_1l_kitchen_utility_light_2
+      - light.camera_indoor_indicator_light
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
