@@ -183,6 +183,7 @@ template:
           integrations_installed_list: "{{ states|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
           integrations_with_unavailable_entities: "{{ states|selectattr('state','eq', 'unavailable')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
           integrations_with_unknown_entities: "{{ states|selectattr('state','eq', 'unknown')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
+          remapped_zone_list: "{{ state_attr('group.all_zones','entity_id')|list }}"
 
 
       - unique_id: "_unique_simple_state_printer"
@@ -386,7 +387,7 @@ template:
                   (states("sensor.ox161ee_green_bin_days_until_collection")|int(0))
                 ) else (
                   'general_waste' if (
-                    (states("sensor.ox161ee_blue_bin_days_until_collection")|int(0)) <
+                    (states("sensor.ox161ee_blue_bin_days_until_collection")|int(0)) >
                     (states("sensor.ox161ee_green_bin_days_until_collection")|int(0))
                   ) else 'unknown'
                 )
