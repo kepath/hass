@@ -24,19 +24,49 @@ custom_card_kepath_person_info:
   entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
   icon: >
     [[[
-      var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
       var icon = "mdi:map-marker-alert";
-      var zones = states["group.all_zones"].attributes.entity_id;
+      var personLocation = "unknown";
+      var zoneList = []
 
-      for (const item of zones) {
-        if (typeof states[item] !== "undefined") {
-          if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "").toLowerCase()) {
-            if (states[item].attributes.icon != null) {
-              icon = states[item].attributes.icon;
+      if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
+        if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
+          personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+        }
+      }
+
+      if (typeof states['sensor.integration_entity_attributes']?.attributes?.remapped_zone_list !== 'undefined') {
+        zoneList = states['sensor.integration_entity_attributes']?.attributes?.remapped_zone_list;
+      }
+
+      switch (personLocation) {
+        case "unknown":
+        case "unavailable":
+        case "notset":
+          icon = "mdi:map-marker-alert";
+          break;
+        case "away":
+        case "not_home":
+        case "stationary":
+        case "statzon1":
+          icon = "mdi:map-marker-question";
+          break;
+        case "home":
+          icon = "mdi:home-map-marker";
+          break;
+        default:
+        for (const zone of zoneList) {
+          if (personLocation == zone.replace("zone.","").replace("_","")) {
+            if (typeof states[zone] !== "undefined") {
+              if (typeof states[zone].attributes.icon !== "undefined") {
+                if (states[zone].attributes.icon != null) {
+                  icon = states[zone].attributes.icon;
+                }
+              }
             }
           }
         }
       }
+
       return icon;
     ]]]
   styles:
@@ -75,30 +105,38 @@ custom_card_kepath_person_info:
     - operator: "template"
       value: >
         [[[
-          var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
-          var location = false;
-          if ((person_location == 'unknown') || (person_location == 'unavailable') || (person_location == 'notset')) {
-            location = true;
+          var personLocation = "unknown";
+
+          if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
+            if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
+              personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+            }
           }
-          return location
+
+          if ((personLocation == 'away') || (personLocation == 'not_home') || (personLocation == 'stationary') || (personLocation == 'statzon1')) {
+            return true;
+          }
         ]]]
-      icon: "mdi:map-marker-question"
       styles:
         icon:
-          - color: "rgba(var(--color-theme),1)"
+          - color: "rgba(var(--color-blue),1)"
         img_cell:
-          - background-color: "rgba(var(--color-theme),0.2)"
+          - background-color: "rgba(var(--color-blue),0.2)"
     - operator: "template"
       value: >
         [[[
-          var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
-          var location = false;
-          if ((person_location == 'away') || (person_location == 'not_home') || (person_location == 'stationary') || (person_location == 'statzon1')) {
-            location = true;
+          var personLocation = "unknown";
+
+          if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
+            if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
+              personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+            }
           }
-          return location
+
+          if ((personLocation == 'unknown') || (personLocation == 'unavailable') || (personLocation == 'notset')) {
+            return true;
+          }
         ]]]
-      icon: "mdi:image-filter-hdr"
       styles:
         icon:
           - color: "rgba(var(--color-red),1)"
@@ -107,19 +145,25 @@ custom_card_kepath_person_info:
     - operator: "template"
       value: >
         [[[
-          var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
-          var location = false;
-          if (person_location == 'home') {
-            location = true;
+          var personLocation = "unknown";
+
+          if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
+            if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
+              personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+            }
           }
-          return location
+
+          if (personLocation == 'home') {
+            return true;
+          }
         ]]]
       styles:
         icon:
-          - color: "rgba(var(--color-blue),1)"
+          - color: "rgba(var(--color-green),1)"
         img_cell:
-          - background-color: "rgba(var(--color-blue),0.2)"
+          - background-color: "rgba(var(--color-green),0.2)"
   custom_fields:
+
     notification:
       card:
         type: "custom:button-card"
@@ -132,10 +176,12 @@ custom_card_kepath_person_info:
                 [[[
                   var color = "rgba(var(--primary-text-color),1)";
                   var fromHomeDistance = 0;
-                  if (states[variables.ulm_card_kepath_person_distance_entity]?.state) {
-                    fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity]?.state
-                    if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
-                      fromHomeDistance = Math.floor(fromHomeDistance);
+                  if (typeof states[variables.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+                    if (states[variables.ulm_card_kepath_person_distance_entity]?.state) {
+                      fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity]?.state
+                      if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
+                        fromHomeDistance = Math.floor(fromHomeDistance);
+                      }
                     }
                   }
                   if (fromHomeDistance > 10) {
@@ -164,8 +210,8 @@ custom_card_kepath_person_info:
             - display: "block"
         icon: >
           [[[
-            var icon = "mdi:map-marker-radius";
-            if (states[variables.ulm_card_kepath_person_driving_entity]?.state) {
+            var icon = "mdi:map-marker-distance";
+            if (typeof states[variables.ulm_card_kepath_person_driving_entity]?.state !== 'undefined') {
               if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
                 icon = "mdi:car"
               }
@@ -176,36 +222,47 @@ custom_card_kepath_person_info:
           - operator: "template"
             value: >
               [[[
-                var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
-                if ((person_location == 'unknown') || (person_location == 'unavailable')) {
-                  return true
-                } else {
-                  return false
+                if (variables?.ulm_card_kepath_person_entity == "") {
+                  return true;
+                }
+
+                if (variables?.ulm_card_kepath_person_distance_entity == "") {
+                  return true;
+                }
+
+                if (typeof states[variables?.ulm_card_kepath_person_entity]?.state === 'undefined') {
+                  return true;
+                }
+
+                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state === 'undefined') {
+                  return true;
                 }
               ]]]
             icon: "mdi:account-alert"
             styles:
               icon:
-                - color: "rgba(var(--color-grey),1)"
+                - color: "rgba(var(--color-red),1)"
+              img_cell:
+                - background-color: "rgba(var(--color-red),0.2)"
           - operator: "template"
             value: >
               [[[
-                var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
-                var zones = states["group.all_zones"].attributes.entity_id;
-                for (const item of zones) {
-                  if (person_location == states[item]?.attributes?.friendly_name.replace(" ", "").toLowerCase()) {
-                    return true
+                var personLocation = "unknown";
+
+                if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
+                  if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
+                    personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
                   }
                 }
-                //var person_location = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
-                if (person_location == 'notset') {
-                  return true
+
+                if (personLocation == 'home') {
+                  return true;
                 }
-                return false
               ]]]
             styles:
               card:
                 - display: "none"
+
           - operator: "template"
             value: >
               [[[
@@ -216,10 +273,10 @@ custom_card_kepath_person_info:
                     fromHomeDistance = Math.floor(fromHomeDistance);
                   }
                 }
-                if ((fromHomeDistance < 10) && (fromHomeDistance != 0) && (!isNaN(fromHomeDistance)) && (fromHomeDistance !== undefined)) {
-                  return true;
-                } else {
-                  return false;
+                if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined) {
+                  if (fromHomeDistance < 10 && fromHomeDistance != 0) {
+                    return true;
+                  }
                 }
               ]]]
             icon: >
