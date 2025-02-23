@@ -12,6 +12,7 @@ custom_card_kepath_person_info:
     ulm_card_kepath_person_entity: ""
     ulm_card_kepath_person_wifi_tracker: ""
     ulm_card_kepath_person_gps_tracker: ""
+    ulm_card_kepath_person_battery_entity: ""
     ulm_card_kepath_person_driving_entity: ""
     ulm_card_kepath_person_distance_entity: ""
     ulm_card_kepath_person_gps_tracker_device_id: ""
@@ -304,10 +305,10 @@ custom_card_kepath_person_info:
             - color: >
                 [[[
                   var color = "rgba(var(--color-theme),0.5)";
-                  if (states[variables.ulm_card_kepath_person_gps_tracker]?.state) {
-                    var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_level;
-                    if (!isNaN(battery)) {
-                      var roundedBattery = Math.ceil(battery / 10) * 10;
+                  var battery = -1;
+                  if (typeof states[variables.ulm_card_kepath_person_battery_entity]?.state !== 'undefined') {
+                    if (!isNaN(states[variables.ulm_card_kepath_person_battery_entity]?.state)) {
+                      battery = states[variables.ulm_card_kepath_person_battery_entity]?.state;
                       if (battery > 50) {
                         color = "rgba(var(--color-green),1)";
                       } else if (battery > 10) {
@@ -335,22 +336,32 @@ custom_card_kepath_person_info:
         icon: >
           [[[
             var icon = "mdi:battery-unknown";
-            if (states[variables.ulm_card_kepath_person_gps_tracker]?.state) {
-              var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_level;
-              if (!isNaN(battery)) {
-                var charging = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_status?.toLowerCase() == "charging";
-                var iconBase = charging ? "mdi:battery-charging" : "mdi:battery";
-                var roundedBattery = Math.ceil(battery / 10) * 10;
-                if (roundedBattery == 0) {
-                  //var icon = "mdi:battery-outline";
-                  return icon;
-                } else {
-                  var icon = roundedBattery == 100 ? iconBase : `${iconBase}-${roundedBattery}`;
-                }
+            if (typeof states[variables.ulm_card_kepath_person_battery_entity]?.attributes?.icon !== 'undefined') {
+              if (states[variables.ulm_card_kepath_person_battery_entity]?.attributes?.icon != '' && states[variables?.ulm_card_kepath_person_battery_entity]?.attributes?.icon.includes('mdi:')) {
+                icon = states[variables.ulm_card_kepath_person_battery_entity]?.attributes?.icon;
               }
             }
+
+
+            //if (states[variables.ulm_card_kepath_person_gps_tracker]?.state) {
+            //  var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_level;
+            //  if (!isNaN(battery)) {
+            //    var charging = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_status?.toLowerCase() == "charging";
+            //    var iconBase = charging ? "mdi:battery-charging" : "mdi:battery";
+            //    var roundedBattery = Math.ceil(battery / 10) * 10;
+            //    if (roundedBattery == 0) {
+            //      //var icon = "mdi:battery-outline";
+            //      return icon;
+            //    } else {
+            //      var icon = roundedBattery == 100 ? iconBase : `${iconBase}-${roundedBattery}`;
+            //    }
+            //  }
+            //}
             return icon;
           ]]]
+        tap_action:
+          action: "more-info"
+          entity: "[[[ return variables.ulm_card_kepath_person_battery_entity ]]]"
 
 custom_popup_kepath_person:
   tap_action:
@@ -474,11 +485,15 @@ custom_popup_kepath_person:
                               }
                               return deviceId;
                             ]]]
-                    style:
-                      $: >
-                        root {
-                          justify-content: space-evenly;
-                        }
+                    # styles:
+                    #   card:
+                    #     - text-align: "center"
+                        # - float: "right"
+                    # style:
+                    #   $: >
+                    #     #root {
+                    #       justify-content: space-evenly;
+                    #     }
                   - type: "map"
                     auto_fit: true
                     aspect_ratio: "12x10"
