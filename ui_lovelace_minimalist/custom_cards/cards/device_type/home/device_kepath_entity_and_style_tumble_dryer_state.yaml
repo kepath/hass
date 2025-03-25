@@ -38,8 +38,11 @@ device_kepath_entity_and_style_tumble_dryer_state:
                   //hass.callService('system_log', 'write', {level:'warning',message:'4: '});
                   var completionHours = (completionMilliseconds / (1000 * 60 * 60)).toFixed();
                   if(!isNaN(parseInt(completionHours))) {
-                    //hass.callService('system_log', 'write', {level:'warning',message:'5: '});
-                    returnedIcon = "mdi:numeric-" + completionHours + "-circle-outline";
+                    //completion time not always updated by integration
+                    if(completionHours >= 0) {
+                      //hass.callService('system_log', 'write', {level:'warning',message:'5: '});
+                      returnedIcon = "mdi:numeric-" + completionHours + "-circle-outline";
+                    }
                   }
                 }
               }
