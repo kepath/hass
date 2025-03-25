@@ -237,7 +237,7 @@
       - remote.nvidia_shield_bed_c_android_tv
       - remote.nvidia_shield_bed_e_android_bridge
       - remote.nvidia_shield_bed_e_android_tv
-      - remote.tv_samsung_lounge
+      - remote.samsung_tv_lounge
       - remote.lounge_apple_tv
       excluded_integrations:
       - browser_mod
@@ -251,6 +251,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_binary_sensors
@@ -291,6 +296,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_door_class_binary_sensors
@@ -320,6 +330,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_occupancy_class_binary_sensors
@@ -342,6 +357,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_safety_class_binary_sensors
@@ -372,6 +392,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_battery_class_binary_sensors
@@ -891,6 +916,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_connectivity_class_binary_sensors
@@ -913,6 +943,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_plug_class_binary_sensors
@@ -935,6 +970,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_power_class_binary_sensors
@@ -957,6 +997,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_running_class_binary_sensors
@@ -1198,6 +1243,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_moisture_class_binary_sensors
@@ -1386,6 +1436,11 @@
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   mode: single
 - id: '1707946451163'
   alias: on_start_create_group.all_middle_floor_area_security_device_class_binary_sensors
@@ -1395,6 +1450,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_middle_floor_area_security_device_class_binary_sensors
@@ -1430,6 +1490,11 @@
     trigger: homeassistant
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
   - data:
       domain: binary_sensor
       group_name: all_top_floor_area_security_device_class_binary_sensors
@@ -1667,4 +1732,68 @@
       datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
     target:
       entity_id: input_datetime.washing_machine_instantaneous_demand_above_5w
+  mode: single
+- id: '1742635062887'
+  alias: on_tab_selection_minimalist_ui_set_datetime
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_boolean.minimalist_ui_binary_alert_sensors
+    - input_boolean.minimalist_ui_binary_diagnostic_sensors
+    - input_boolean.minimalist_ui_binary_information_sensors
+    - input_boolean.minimalist_ui_binary_update_sensors
+    from: 'off'
+    to: 'on'
+  conditions: []
+  actions:
+  - action: input_datetime.set_datetime
+    metadata: {}
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.input_boolean_minimalist_ui_last_change
+  mode: single
+- id: '1742678882495'
+  alias: on_time_restart_kitchen_firestick_power
+  description: ''
+  triggers:
+  - trigger: time
+    at: 07:00:00
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 4acdfe2a06ea6a452ea7ccca7ad734c7
+    entity_id: e52a476520aa229269b7c2ccfb09cf04
+    domain: switch
+  mode: single
+- id: '1742918048585'
+  alias: on_hour_after_tab_selection_reset_minimalist_ui
+  description: ''
+  triggers:
+  - trigger: template
+    value_template: '{{(as_timestamp(now()) - as_timestamp(states(''input_datetime.input_boolean_minimalist_ui_last_change'')))
+      > 3600}}'
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.minimalist_ui_binary_alert_sensors
+      - input_boolean.minimalist_ui_binary_diagnostic_sensors
+      - input_boolean.minimalist_ui_binary_information_sensors
+      - input_boolean.minimalist_ui_binary_update_sensors
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.minimalist_ui_binary_action_sensors
+  - action: input_datetime.set_datetime
+    metadata: {}
+    data:
+      timestamp: 100000000000000000
+    target:
+      entity_id: input_datetime.input_boolean_minimalist_ui_last_change
   mode: single
