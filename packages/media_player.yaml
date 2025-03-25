@@ -41,7 +41,7 @@ homekit:
       - "person"
       # - "script"
       # - "scene"
-      - "sun"
+      # - "sun"
       - "vacuum"
       - "water_heater"
       - "weather"
@@ -74,6 +74,48 @@ homekit:
       # - "switch.samsung_tumble_dryer"
       - "script.turn_on_download_pc"
       - "script.reboot_unifi_network_infrastructure_poe"
+    exclude_domains:
+      - "air_quality"
+      - "automation"
+      # - "binary_sensor"
+      - "button"
+      - "calendar"
+      - "camera"
+      # - "climate"
+      - "conversation"
+      - "device_tracker"
+      - "event"
+      # - "fan"
+      - "geo_location"
+      - "group"
+      - "image"
+      - "input_boolean"
+      - "input_datetime"
+      - "input_select"
+      # - "lawn_mower"
+      # - "light"
+      - "lock"
+      - "media_player"
+      - "number"
+      # - "person"
+      - "remote"
+      - "scene"
+      - "script"
+      - "select"
+      # - "sensor"
+      - "siren"
+      - "stt"
+      - "sun"
+      # - "switch"
+      - "tag"
+      - "text"
+      - "todo"
+      - "tts"
+      - "update"
+      - "wake_word"
+      # - "water_heater"
+      # - "weather"
+      - "zone"
     exclude_entities:
       - "binary_sensor.nest_protect_bottom_floor_buzzer_test"
       - "binary_sensor.nest_protect_bottom_floor_co_test"
@@ -215,8 +257,8 @@ homekit:
       name: "Bed E Lamp"
     light.shelly_1l_study_light_1:
       name: "Study Light"
-    light.garage_light:
-      name: "Garage Light"
+    # light.garage_light:
+    #   name: "Garage Light"
 
     # smoke and CO sensors
     binary_sensor.nest_protect_bottom_floor_co_status:
@@ -318,17 +360,17 @@ homekit:
 
     # temperature
     sensor.zigbee_door_sensor_bed_c_temperature:
-      name: "Bed C Temperature"
+      name: "Bed C Contact Temperature"
     sensor.zigbee_door_sensor_back_temperature:
-      name: "Kitchen Temperature"
+      name: "Kitchen Contact Temperature"
     sensor.zigbee_door_sensor_garage_temperature:
-      name: "Garage Temperature"
+      name: "Garage Contact Temperature"
     sensor.zigbee_door_sensor_loft_temperature:
-      name: "Hallway - Top Temperature"
+      name: "Hallway - Top Contact Temperature"
     sensor.zigbee_door_sensor_patio_1_temperature:
-      name: "Lounge Temperature"
+      name: "Lounge Patio1 Temperature"
     sensor.zigbee_door_sensor_patio_2_temperature:
-      name: "Lounge Temperature"
+      name: "Lounge Patio2 Temperature"
     sensor.bed_c_fan_temperature:
       name: "Bed C Fan Temperature"
     sensor.bed_e_fan_temperature:
@@ -342,3 +384,89 @@ homekit:
 
     # lock.front_door_top_bolt:
     #   name: "External Front Door Lock"
+
+    # remotes
+
+    # media_players
+    # media_player.alexa_echo_dot_bed_c:
+
+    # media_player.alexa_echo_dot_bed_d:
+    # media_player.alexa_echo_dot_with_clock_lounge:
+
+    # media_player.alexa_bottom_floor_speaker_group:
+
+    # media_player.alexa_echo_flex_garage:
+    # media_player.alexa_echo_plus_kitchen:
+
+
+    # media_player.alexa_echo_show_8_bed_e:
+    # media_player.alexa_echo_spot_bed_a:
+
+    # media_player.alexa_firestick_kitchen:
+    # media_player.alexa_firestick_bed_a:
+    # media_player.alexa_fire_tablet_bottom_hallway:
+    # media_player.alexa_kitchen_speaker_group:
+    # media_player.amazon_firestick_android_bridge_bed_a:
+
+
+    # media_player.bed_c_g3_instant_speaker:
+    # media_player.bottom_hallway_g3_instant_speaker:
+    # media_player.doorbell_g4_speaker:
+
+    # media_player.kitchen_g3_instant_speaker:
+
+    # media_player.nvidia_shield_android_bridge_bed_c:
+
+    # media_player.nvidia_shield_android_bridge_bed_e:
+
+    # media_player.nvidia_shield_android_remote_bed_c:
+    # media_player.nvidia_shield_android_remote_bed_e:
+    # media_player.samsung_tv_bed_a:
+
+    # media_player.samsung_tv_lounge:
+    # media_player.shield_music_assistant_bed_c:
+    # media_player.shield_music_assistant_bed_e:
+
+    # media_player.yamaha_reciever_music_assistant_bed_c:
+
+    # media_player.yamaha_rx_v777_reciever_integration_bed_c:
+
+    # media_player.yamaha_rx_v777_reciever_integration_music_assistant_bed_c:
+
+    # media_player.samsung_tv_music_assistant_lounge:
+    # media_player.xbox_one_music_assistant_bed_c:
+    # media_player.kevins_macbook_pro_2018_airplay:
+    # media_player.lounge_apple_tv:
+    # media_player.rx_v777_reciever_yamaha_integration_bed_c:
+    # media_player.rx_v777_zone2:
+    # media_player.spotify_kevin_thorn:
+
+    # media_player.bed_c_xbox:
+    # media_player.nvidia_shield_bed_e_google_cast:
+    # media_player.nvidia_shield_bed_c_google_cast:
+    # media_player.73b3e31c_cd8a9656:
+    # media_player.amazon_firestick_android_bridge_kitchen:
+    # media_player.kevs_iphone_screen:
+    # media_player.a5b50056_9d980ca0:
+    # media_player.shield_bed_e:
+    # media_player.shield_bed_c:
+    # media_player.rx_v777_b75024_airplay:
+    # media_player.shield_bed_c_airplay:
+    # media_player.alexa_echo_dot_music_assistant_bed_d:
+    # media_player.alexa_echo_dot_with_clock_music_assistant_lounge:
+    # media_player.alexa_echo_plus_music_assistant_kitchen:
+    # media_player.alexa_echo_show_8_music_assistant_bed_e:
+    # media_player.alexa_firestick_music_assistant_kitchen:
+    # media_player.alexa_echo_spot_music_assistant_bed_a:
+    # media_player.shield_music_assistant_bed_e_airplay:
+    # media_player.lounge_music_assistant_apple_tv:
+    # media_player.echo_dot_music_assistant_bed_c:
+    # media_player.firestick_music_assistant_bed_a:
+    # media_player.echo_flex_music_assistant_garage:
+    # media_player.shield_bed_e_2:
+    # media_player.shield_bed_e_3:
+    # media_player.shield_bed_e_airplay:
+    # media_player.shield_bed_c_2:
+    # media_player.shield_bed_c_3:
+    # media_player.shield_bed_c_airplay_2:
+    # media_player.f151db3e_e73335c4:
