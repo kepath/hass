@@ -102,11 +102,11 @@ template:
       - unique_id: "binary_state_fire_tv_bed_a"
         name: "Fire TV Bed A State"
         state: >-
-          {% if (states('device_tracker.samsung_ue32f4500_tv_unifi') == 'unknown' or
-            states('device_tracker.samsung_ue32f4500_tv_unifi') == 'unavailable' or
-            states('device_tracker.samsung_ue32f4500_tv_unifi') == 'away' or
-            states('device_tracker.samsung_ue32f4500_tv_unifi') == 'not_home'or
-            states('device_tracker.samsung_ue32f4500_tv_unifi') == 'off') and
+          {% if (states('device_tracker.samsung_tv_bed_a_unifi') == 'unknown' or
+            states('device_tracker.samsung_tv_bed_a_unifi') == 'unavailable' or
+            states('device_tracker.samsung_tv_bed_a_unifi') == 'away' or
+            states('device_tracker.samsung_tv_bed_a_unifi') == 'not_home'or
+            states('device_tracker.samsung_tv_bed_a_unifi') == 'off') and
             (states('media_player.amazon_firestick_bed_a_unifi') == 'unknown' or
             states('media_player.amazon_firestick_bed_a_unifi') == 'unavailable' or
             states('media_player.amazon_firestick_bed_a_unifi') == 'off') %}
@@ -168,19 +168,39 @@ template:
 
       - unique_id: "_unique_binary_sensor_docker_containers_all_running"
         name: "Docker Containers All Running"
-        state: "{{ state_attr('sensor.binary_sensor_state_counts', 'running_stopped_count') > 0 }}"
+        state: >
+          {{ 
+            'off' if not has_value('sensor.binary_sensor_state_counts') else
+            (
+              'on' if (state_attr('sensor.binary_sensor_state_counts', 'running_stopped_count') > 0 ) else
+              'off'
+            )
+          }}
         attributes:
           icon: "mdi:server"
           device_class: "running"
+          # availability: >-
+          #   {% from 'availability_template.jinja' import avail %}
+          #   {{- avail(['sensor.binary_sensor_state_counts']) | bool -}}
 
       # Device states
       - unique_id: "_unique_binary_sensor_climate_devices_on"
         name: "Climate Devices On"
-        state: "{{ state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count') > 0 }}"
+        state: >
+          {{ 
+            'off' if not has_value('sensor.binary_sensor_state_counts') else
+            (
+              'on' if (state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count') > 0 ) else
+              'off'
+            )
+          }}
         attributes:
           name: "Any Climate Devices Active"
           icon: "mdi:home-thermometer"
           device_class: "heat"
+          # availability: >-
+          #   {% from 'availability_template.jinja' import avail %}
+          #   {{- avail(['sensor.binary_sensor_state_counts']) | bool -}}
 
       - unique_id: "_unique_binary_sensor_is_big_pc_on"
         name: "Big PC is Active"
