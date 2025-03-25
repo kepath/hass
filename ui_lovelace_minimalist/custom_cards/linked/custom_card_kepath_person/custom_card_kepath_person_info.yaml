@@ -48,6 +48,11 @@ custom_card_kepath_person_info:
         case "stationary":
         case "statzon1":
           icon = "mdi:map-marker-question";
+          if (typeof states[variables?.ulm_card_kepath_person_driving_entity]?.state !== 'undefined') {
+            if (states[variables.ulm_card_kepath_person_driving_entity].state == "on") {
+              icon = "mdi:car"
+            }
+          }
           break;
         case "home":
           icon = "mdi:home-map-marker";
@@ -95,7 +100,7 @@ custom_card_kepath_person_info:
       - padding-top: "10px"
       - margin: "0"
     custom_fields:
-      notification:
+      distance:
         - position: "absolute"
         - left: "57%"
         - top: "-4px"
@@ -166,7 +171,7 @@ custom_card_kepath_person_info:
           - background-color: "rgba(var(--color-green),0.2)"
   custom_fields:
 
-    notification:
+    distance:
       card:
         type: "custom:button-card"
         styles:
@@ -188,16 +193,6 @@ custom_card_kepath_person_info:
             - border-radius: "50%"
             - display: "block"
         icon: "mdi:help-circle"
-        # icon: >
-        #   [[[
-        #     var icon = "mdi:map-marker-distance";
-        #     if (typeof states[variables?.ulm_card_kepath_person_driving_entity]?.state !== 'undefined') {
-        #       if (states[variables.ulm_card_kepath_person_driving_entity].state == "on") {
-        #         icon = "mdi:car"
-        #       }
-        #     }
-        #     return icon;
-        #   ]]]
         state:
           # variables not supplied
           - operator: "template"
@@ -272,6 +267,9 @@ custom_card_kepath_person_info:
                     icon = icon.replace("0",fromHomeDistance);
                   }
                 }
+                //if(hass.themes.darkMode) {
+                //  icon = icon.replace("-circle","");
+                //}
                 return icon;
               ]]]
             styles:
@@ -307,18 +305,58 @@ custom_card_kepath_person_info:
                     icon = icon.replace("0",fromHomeDistance);
                   }
                 }
+                if(hass.themes.darkMode) {
+                  icon = icon.replace("-circle","");
+                }
                 return icon;
               ]]]
             styles:
+              img_cell:
+                - background-color: "var(--card-background-color)"
+              #   - border-color: >
+              #       [[[
+              #         var color = "rgba(var(--card-background-color),1)";
+              #         var fromHomeDistance = 0;
+              #         if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+              #           if (states[variables.ulm_card_kepath_person_distance_entity].state) {
+              #             fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+              #             if (!isNaN(fromHomeDistance)){
+              #               fromHomeDistance = Math.floor(fromHomeDistance);
+              #             }
+              #           }
+              #         }
+              #         if (fromHomeDistance > 10) {
+              #           fromHomeDistance = Math.floor(fromHomeDistance / 5) * 5;
+              #           if (fromHomeDistance > 100) {
+              #             fromHomeDistance = 100;
+              #           }
+              #           var gradient = "gradient_" + fromHomeDistance
+              #           if (variables?.green_to_red_5step?.[gradient]) {
+              #             color = variables?.green_to_red_5step?.[gradient];
+              #           }
+              #         }
+              #         return color;
+              #       ]]]
+              #   - margin-left: "1px"
+              #   - margin-top: "1px"
+              #   - border: "0"
               icon:
+                # - width: "16px"
+                # - height: "16px"
+                # - color: "rgba(var(--primary-text-color),1)"
                 - color: >
                     [[[
-                      var color = "rgba(var(--primary-text-color),1)";
+                      var color = "rgba(var(--card-background-color),1)";
                       var fromHomeDistance = 0;
+                      //if (!hass.themes.darkMode) {
+                      //  return color;
+                      //}
+                      var gradientSet = hass.themes.darkMode ? "green_to_red_5step_light" : "green_to_red_5step_dark";
+
                       if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
                         if (states[variables.ulm_card_kepath_person_distance_entity].state) {
                           fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
-                          if (!isNaN(fromHomeDistance)){
+                          if (!isNaN(fromHomeDistance)) {
                             fromHomeDistance = Math.floor(fromHomeDistance);
                           }
                         }
@@ -329,12 +367,21 @@ custom_card_kepath_person_info:
                           fromHomeDistance = 100;
                         }
                         var gradient = "gradient_" + fromHomeDistance
-                        if (variables?.green_to_red_5step?.[gradient]) {
-                          color = variables?.green_to_red_5step?.[gradient];
+                        if (variables?.[gradientSet]?.[gradient]) {
+                          color = variables?.[gradientSet]?.[gradient];
                         }
                       }
+
+                      //hass.callService('system_log', 'write', {level:'warning',message:'fromHomeDistance: ' + fromHomeDistance});
+                      //hass.callService('system_log', 'write', {level:'warning',message:'gradientSet: ' + gradientSet});
+                      //hass.callService('system_log', 'write', {level:'warning',message:'gradient: ' + gradient});
+                      //hass.callService('system_log', 'write', {level:'warning',message:'color: ' + color});
+
                       return color;
                     ]]]
+        tap_action:
+          action: "more-info"
+          entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker ]]]"
 
 
     battery:
