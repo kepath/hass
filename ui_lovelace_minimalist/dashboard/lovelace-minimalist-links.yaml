@@ -13,231 +13,276 @@ views:
     icon: "mdi:server"
     theme: "minimalist-mobile"
     cards:
-      - type: "entities"
-        title: "maintenance"
-        entities:
-          - type: "weblink"
-            url: "/hassio/dashboard"
-            icon: "mdi:puzzle"
-            name: "addons"
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_ssh"
-            icon: "mdi:console"
-            name: "Terminal"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/db21ed7f_guacamole"
-            icon: "mdi:lan-connect"
-            name: "Guacamole"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_vscode"
-            icon: "mdi:microsoft-visual-studio-code"
-            name: "VS Code"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/db21ed7f_portainer"
-            icon: "si:portainer"
-            name: "Portainer"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_phpmyadmin"
-            icon: "si:phpmyadmin"
-            name: "phpMyAdmin"
-            new_tab: true
-          - type: "weblink"
-            url: !secret "hass_addon_uptime_kuma_webui_local_url"
-            icon: "si:uptimekuma"
-            name: "Uptime Kuma"
-            new_tab: true
-          - type: "weblink"
-            url: !secret "hass_addon_nginxproxymanager_webui_local_url"
-            icon: "si:nginx"
-            name: "Nginx"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/db21ed7f_scrutiny_fa"
-            icon: "mdi:glasses"
-            name: "Scrutiny"
-            new_tab: true
-      - type: "entities"
-        title: "configuration"
-        entities:
-          - type: "weblink"
-            url: "/hacs"
-            icon: "hacs:hacs"
-            name: "HACS"
-          - type: "weblink"
-            url: "/hassio/ingress/5c53de3b_esphome"
-            icon: "si:esphome"
-            name: "ESP Home"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_adguard"
-            icon: "si:adguard"
-            entity: "update.adguard_home_update"
-            show_icon: false
-            image: "/api/hassio/addons/a0d7b954_adguard/icon"
-            name: "AdGuard Home"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_emqx"
-            icon: "si:eclipsemosquitto"
-            name: "EMQX"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_grafana"
-            icon: "si:grafana"
-            name: "Grafana"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_influxdb"
-            icon: "si:influxdb"
-            name: "InfluxDB"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/47146a2b_netdata"
-            icon: "mdi:chart-line"
-            name: "Netdata"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/00185a40_simplescheduler"
-            icon: "mdi:calendar-month"
-            name: "Simple Scheduler"
-            new_tab: true
-          - type: "weblink"
-            url: !secret "hass_addon_it_tools_webui_local_url"
-            icon: "mdi:devices"
-            name: "IT-Tools"
-            new_tab: true
-      - type: "entities"
-        title: "configuration"
-        card_mod:
-          style: |
-            $ state-badge {
-              width: 30px !important;
-              height: 30px !important;
-              line-height: 30px !important;
-              flex-basis: 30px !important;
-            }
-        entities:
-          - entity: "update.hacs_update"
-            # card_mod:
-            #   style: |
-            #     :host {
-            #       width: 30px !important;
-            #       height: 30px !important;
-            #       line-height: 30px !important;
-            #       flex-basis: 30px !important;
-            #     }
-            show_icon: false
-            name: "HACS"
-            tap_action:
-              action: "navigation"
-              url_path: "/hacs"
-          - entity: "update.esphome_update"
-            show_icon: false
-            name: "ESP Home"
-            tap_action:
-              action: "url"
-              url_path: "/hassio/ingress/5c53de3b_esphome"
-          - entity: "update.adguard_home_update"
-            show_icon: false
-            name: "AdGuard Home"
-            tap_action:
-              action: "url"
-              url_path: "/hassio/ingress/a0d7b954_adguard"
-          - entity: "update.emqx_update"
-            show_icon: false
-            name: "EMQX"
-            tap_action:
-              action: "url"
-              url_path: "/hassio/ingress/a0d7b954_emqx"
-          - entity: "update.grafana_update"
-            show_icon: false
-            name: "Grafana"
-            tap_action:
-              action: "url"
-              url_path: "/hassio/ingress/a0d7b954_grafana"
-          - entity: "update.influxdb_update"
-            show_icon: false
-            name: "InfluxDB"
-            tap_action:
-              action: "url"
-              url_path: "/hassio/ingress/a0d7b954_influxdb"
-          - entity: "update.netdata_update"
-            show_icon: false
-            name: "Netdata"
-            tap_action:
-              action: "url"
-              url_path: "/hassio/ingress/47146a2b_netdata"
-            new_tab: true
-          - entity: "update.simple_scheduler_update"
-            show_icon: false
-            name: "Simple Scheduler"
-            tap_action:
-              action: "url"
-              url_path: "/hassio/ingress/00185a40_simplescheduler"
-          - entity: "update.it_tools_update"
-            show_icon: false
-            name: "IT-Tools"
-            tap_action:
-              action: "url"
-              url_path: !secret "hass_addon_it_tools_webui_local_url"
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "entities"
+          title: "Running Addons"
+        filter:
+          template: >-
+            {%- for update_list in states.update | sort(attribute="name") -%}
+              {%- for entity_list in device_id(update_list.entity_id)|device_entities -%}
+                {%- if state_attr(entity_list, 'device_class') == 'running' -%}
+                  {%- if states(entity_list, 'state') == 'on' -%}
+                    {{{
+                      'entity': update_list.entity_id,
+                      'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
+                      'tap_action': {
+                        'action': 'navigate',
+                        'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','') + '/info'
+                      },
+                      'double_tap_action': {
+                        'action': 'more-info'
+                      }
+                    }}},
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "entities"
+          title: "Installed Addons"
+        filter:
+          template: >-
+            {%- for update_list in states.update | sort(attribute="name") -%}
+              {%- if 'hassio' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+                {{{
+                  'entity': update_list.entity_id,
+                  'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
+                  'tap_action': {
+                    'action': 'navigate',
+                    'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','') + '/info'
+                  },
+                  'double_tap_action': {
+                    'action': 'more-info'
+                  }
+                }}},
+              {%- endif -%}
+            {%- endfor -%}
 
-      - type: "entities"
-        title: "media"
-        entities:
-          - type: "weblink"
-            url: !secret "hass_addon_plex_webui_local_url"
-            icon: "mdi:plex"
-            name: "Plex"
-            new_tab: true
-          - type: "weblink"
-            url: !secret "hass_addon_tautulli_webui_local_url"
-            icon: "si:plex"
-            name: "Tautulli"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/d5369777_music_assistant"
-            icon: "mdi:play-circle"
-            name: "Music Assistant"
-            new_tab: true
-          - type: "weblink"
-            url: "/media-browser/browser"
-            icon: "mdi:play-box-multiple"
-            name: "Media Browser"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/2effc9b9_5etools"
-            icon: "mdi:numeric-5-box"
-            name: "5e Tools"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/db21ed7f_mealie"
-            icon: "mdi:food"
-            name: "Mealie"
-            new_tab: true
-          - type: "weblink"
-            url: !secret "hass_addon_appdaemon_webserver_local_url"
-            icon: "mdi:application-cog"
-            name: "AppDaemon"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/db21ed7f_calibre"
-            icon: "mdi:book"
-            name: "Calibre"
-            new_tab: true
-          - type: "weblink"
-            url: !secret "hass_addon_convertx_webui_local_url"
-            icon: "mdi:file-arrow-left-right"
-            name: "ConvertX"
-            new_tab: true
-          - type: "weblink"
-            url: !secret "hass_addon_moodist_webui_local_url"
-            icon: "mdi:headphones"
-            name: "Moodist"
-            new_tab: true
+
+
+
+
+  #     - type: "entities"
+  #       title: "maintenance"
+  #       entities:
+  #         - type: "weblink"
+  #           url: "/hassio/dashboard"
+  #           icon: "mdi:puzzle"
+  #           name: "addons"
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/a0d7b954_ssh"
+  #           icon: "mdi:console"
+  #           name: "Terminal"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/db21ed7f_guacamole"
+  #           icon: "mdi:lan-connect"
+  #           name: "Guacamole"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/a0d7b954_vscode"
+  #           icon: "mdi:microsoft-visual-studio-code"
+  #           name: "VS Code"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/db21ed7f_portainer"
+  #           icon: "si:portainer"
+  #           name: "Portainer"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/a0d7b954_phpmyadmin"
+  #           icon: "si:phpmyadmin"
+  #           name: "phpMyAdmin"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: !secret "hass_addon_uptime_kuma_webui_local_url"
+  #           icon: "si:uptimekuma"
+  #           name: "Uptime Kuma"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: !secret "hass_addon_nginxproxymanager_webui_local_url"
+  #           icon: "si:nginx"
+  #           name: "Nginx"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/db21ed7f_scrutiny_fa"
+  #           icon: "mdi:glasses"
+  #           name: "Scrutiny"
+  #           new_tab: true
+  #     # - type: "entities"
+  #     #   title: "configuration"
+  #     #   entities:
+  #     #     - type: "weblink"
+  #     #       url: "/hacs"
+  #     #       icon: "hacs:hacs"
+  #     #       name: "HACS"
+  #     #     - type: "weblink"
+  #     #       url: "/hassio/ingress/5c53de3b_esphome"
+  #     #       icon: "si:esphome"
+  #     #       name: "ESP Home"
+  #     #       new_tab: true
+  #     #     - type: "weblink"
+  #     #       url: "/hassio/ingress/a0d7b954_adguard"
+  #     #       icon: "si:adguard"
+  #     #       entity: "update.adguard_home_update"
+  #     #       show_icon: false
+  #     #       image: "/api/hassio/addons/a0d7b954_adguard/icon"
+  #     #       name: "AdGuard Home"
+  #     #       new_tab: true
+  #     #     - type: "weblink"
+  #     #       url: "/hassio/ingress/a0d7b954_emqx"
+  #     #       icon: "si:eclipsemosquitto"
+  #     #       name: "EMQX"
+  #     #       new_tab: true
+  #     #     - type: "weblink"
+  #     #       url: "/hassio/ingress/a0d7b954_grafana"
+  #     #       icon: "si:grafana"
+  #     #       name: "Grafana"
+  #     #       new_tab: true
+  #     #     - type: "weblink"
+  #     #       url: "/hassio/ingress/a0d7b954_influxdb"
+  #     #       icon: "si:influxdb"
+  #     #       name: "InfluxDB"
+  #     #       new_tab: true
+  #     #     - type: "weblink"
+  #     #       url: "/hassio/ingress/47146a2b_netdata"
+  #     #       icon: "mdi:chart-line"
+  #     #       name: "Netdata"
+  #     #       new_tab: true
+  #     #     - type: "weblink"
+  #     #       url: "/hassio/ingress/00185a40_simplescheduler"
+  #     #       icon: "mdi:calendar-month"
+  #     #       name: "Simple Scheduler"
+  #     #       new_tab: true
+  #     #     - type: "weblink"
+  #     #       url: !secret "hass_addon_it_tools_webui_local_url"
+  #     #       icon: "mdi:devices"
+  #     #       name: "IT-Tools"
+  #     #       new_tab: true
+  #     - type: "entities"
+  #       title: "configuration"
+  #       card_mod:
+  #         style: |
+  #           $ state-badge {
+  #             width: 30px !important;
+  #             height: 30px !important;
+  #             line-height: 30px !important;
+  #             flex-basis: 30px !important;
+  #           }
+  #       entities:
+  #         - entity: "update.hacs_update"
+  #           show_icon: false
+  #           name: "HACS"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: "/hacs"
+  #         - entity: "update.esphome_update"
+  #           show_icon: false
+  #           name: "ESP Home"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: "/hassio/ingress/5c53de3b_esphome"
+  #         - entity: "update.adguard_home_update"
+  #           show_icon: false
+  #           name: "AdGuard Home"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: "/hassio/ingress/a0d7b954_adguard"
+  #         - entity: "update.emqx_update"
+  #           show_icon: false
+  #           name: "EMQX"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: "/hassio/ingress/a0d7b954_emqx"
+  #         - entity: "update.grafana_update"
+  #           show_icon: false
+  #           name: "Grafana"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: "/hassio/ingress/a0d7b954_grafana"
+  #         - entity: "update.influxdb_update"
+  #           show_icon: false
+  #           name: "InfluxDB"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: "/hassio/ingress/a0d7b954_influxdb"
+  #         - entity: "update.netdata_update"
+  #           show_icon: false
+  #           name: "Netdata"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: "/hassio/ingress/47146a2b_netdata"
+  #           new_tab: true
+  #         - entity: "update.simple_scheduler_update"
+  #           show_icon: false
+  #           name: "Simple Scheduler"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: "/hassio/ingress/00185a40_simplescheduler"
+  #         - entity: "update.it_tools_update"
+  #           show_icon: false
+  #           name: "IT-Tools"
+  #           tap_action:
+  #             action: "url"
+  #             url_path: !secret "hass_addon_it_tools_webui_local_url"
+
+  #     - type: "entities"
+  #       title: "media"
+  #       entities:
+  #         - type: "weblink"
+  #           url: !secret "hass_addon_plex_webui_local_url"
+  #           icon: "mdi:plex"
+  #           name: "Plex"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: !secret "hass_addon_tautulli_webui_local_url"
+  #           icon: "si:plex"
+  #           name: "Tautulli"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/d5369777_music_assistant"
+  #           icon: "mdi:play-circle"
+  #           name: "Music Assistant"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/media-browser/browser"
+  #           icon: "mdi:play-box-multiple"
+  #           name: "Media Browser"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/2effc9b9_5etools"
+  #           icon: "mdi:numeric-5-box"
+  #           name: "5e Tools"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/db21ed7f_mealie"
+  #           icon: "mdi:food"
+  #           name: "Mealie"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: !secret "hass_addon_appdaemon_webserver_local_url"
+  #           icon: "mdi:application-cog"
+  #           name: "AppDaemon"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: "/hassio/ingress/db21ed7f_calibre"
+  #           icon: "mdi:book"
+  #           name: "Calibre"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: !secret "hass_addon_convertx_webui_local_url"
+  #           icon: "mdi:file-arrow-left-right"
+  #           name: "ConvertX"
+  #           new_tab: true
+  #         - type: "weblink"
+  #           url: !secret "hass_addon_moodist_webui_local_url"
+  #           icon: "mdi:headphones"
+  #           name: "Moodist"
+  #           new_tab: true
 
   - title: "Links"
     icon: "mdi:lan"
@@ -473,6 +518,7 @@ views:
                 {%- if device_attr(update_list.entity_id, 'model') == 'integration' -%}
                   {{{
                     'entity': update_list.entity_id,
+                    'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
                     'show_icon': false,
                     'tap_action': {
                       'action': 'navigate',
@@ -501,6 +547,7 @@ views:
                 {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
                   {{{
                     'entity': update_list.entity_id,
+                    'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
                     'tap_action': {
                       'action': 'navigate',
                       'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
@@ -516,6 +563,58 @@ views:
                 {%- endif -%}
               {%- endif -%}
             {%- endfor -%}
+
+
+  # - title: "Links"
+  #   icon: "mdi:cog"
+  #   theme: "minimalist-mobile"
+  #   cards:
+  #     - type: "custom:auto-entities"
+  #       show_empty: false
+  #       card:
+  #         type: "entities"
+  #         title: "Installed Addons"
+  #       filter:
+  #         template: >-
+  #           {%- for update_list in states.update | sort(attribute="name") -%}
+  #             {%- if 'hassio' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+  #               {{{
+  #                 'entity': update_list.entity_id,
+  #                 'tap_action': {
+  #                   'action': 'navigate',
+  #                   'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
+  #                 },
+  #                 'double_tap_action': {
+  #                   'action': 'more-info'
+  #                 }
+  #               }}},
+  #             {%- endif -%}
+  #           {%- endfor -%}
+  #     - type: "custom:auto-entities"
+  #       show_empty: false
+  #       card:
+  #         type: "entities"
+  #         title: "Running Addons"
+  #       filter:
+  #         template: >-
+  #           {%- for update_list in states.update | sort(attribute="name") -%}
+  #             {%- for entity_list in device_id(update_list.entity_id)|device_entities -%}
+  #               {%- if state_attr(entity_list, 'device_class') == 'running' -%}
+  #                 {%- if states(entity_list, 'state') == 'on' -%}
+  #                   {{{
+  #                     'entity': update_list.entity_id,
+  #                     'tap_action': {
+  #                       'action': 'navigate',
+  #                       'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','') + '/info'
+  #                     },
+  #                     'double_tap_action': {
+  #                       'action': 'more-info'
+  #                     }
+  #                   }}},
+  #                 {%- endif -%}
+  #               {%- endif -%}
+  #             {%- endfor -%}
+  #           {%- endfor -%}
       # - type: "custom:auto-entities"
       #   show_empty: false
       #   card:
