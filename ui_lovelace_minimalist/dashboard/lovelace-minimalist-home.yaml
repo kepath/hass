@@ -726,21 +726,33 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_simple_states"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "binary_sensor.is_arcade_pc_on"
+                        entity: "sensor.arcadepc_sensor_simple_state"
                         name: "Arcade"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
                             evaluated_entity: "button.arcade_pc_satellite_arcade_pc_satellite_restart"
                             return_type: "device"
-                          var_kepath_generic_button_icon_styles:
-                            default_state:
+                          var_kepath_device_entity_and_style_simple_states:
+                            warning_state:
+                              icon: "mdi:controller-off"
+                              icon_color: "yellow"
+                              background_color: "yellow"
+                            error_state:
                               icon: "mdi:controller-off"
                               icon_color: "red"
                               background_color: "red"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:gamepad-down"
+                              icon_color: "blue"
+                              background_color: "blue"
                             unset_state:
                               icon: "mdi:controller-off"
+                              icon_color: "red"
+                              background_color: "red"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
                               icon: "mdi:controller"
@@ -755,24 +767,36 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_simple_states"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "binary_sensor.is_big_pc_on"
+                        entity: "sensor.bigpc_sensor_simple_state"
                         name: "BigPC"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
                             evaluated_entity: "button.big_pc_win11_satellite_big_pc_win11_satellite_restart"
                             return_type: "device"
-                          var_kepath_generic_button_icon_styles:
-                            default_state:
-                              icon: "mdi:desktop-tower"
+                          var_kepath_device_entity_and_style_simple_states:
+                            warning_state:
+                              icon: "mdi:monitor-off"
+                              icon_color: "yellow"
+                              background_color: "yellow"
+                            error_state:
+                              icon: "mdi:monitor-off"
                               icon_color: "red"
                               background_color: "red"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:monitor-arrow-down"
+                              icon_color: "blue"
+                              background_color: "blue"
                             unset_state:
-                              icon: "mdi:desktop-tower"
+                              icon: "mdi:monitor-off"
+                              icon_color: "red"
+                              background_color: "red"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
-                              icon: "mdi:desktop-tower"
+                              icon: "mdi:monitor"
                               icon_color: "green"
                               background_color: "green"
                         hold_action:
@@ -2574,6 +2598,30 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "custom_card_kepath_generic_use_entity_picture"
                           - "custom_card_kepath_generic_add_addin_link"
+                        entity: "update.netalertx_update"
+                        name: "NetAlertX"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.netalertx_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "db21ed7f_netalertx"
+                            # ingress_or_local_port: !secret "hass_addon_netalertx_webui_local_port"
+                    item25:
+                     card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                          - "custom_card_kepath_generic_add_addin_link"
                         entity: "update.overseerr_update"
                         name: "Overseerr"
                         variables:
@@ -2589,30 +2637,6 @@ views:
                           var_kepath_generic_set_addin_link:
                             docker_slug_reference: "db21ed7f_overseerr"
                             ingress_or_local_port: !secret "hass_addon_overseerr_webui_local_port"
-                    item25:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
-                          - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "custom_card_kepath_generic_use_entity_picture"
-                          - "custom_card_kepath_generic_add_addin_link"
-                        entity: "update.ombi_update"
-                        name: "Ombi"
-                        variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            amount:
-                              entity: "update.ombi_update"
-                              count_tooltip: "add-in has update"
-                              is_attribute: false
-                          var_kepath_generic_button_icon_styles:
-                            use_themes: false
-                            default_state:
-                              background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_ombi"
-                            ingress_or_local_port: !secret "hass_addon_ombi_webui_local_port"
                     item26:
                       card:
                         type: "custom:button-card"
