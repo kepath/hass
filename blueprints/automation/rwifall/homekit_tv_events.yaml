@@ -1,0 +1,130 @@
+blueprint:
+  name: Homekit TV Events
+  description: 'A script that allows you to set actions for events fired by homekit
+    tv '
+  domain: automation
+  source_url: https://gist.github.com/rwifall/e6cde65ea0728fe818523e6e86065843
+  input:
+    input_entity:
+      name: TV Entity
+      description: Homekit TV Media Player
+      default: []
+      selector:
+        entity:
+          domain:
+          - media_player
+          device_class:
+          - tv
+          multiple: false
+    up_action:
+      name: Up Action
+      description: Action to perform when pressing up on the homekit remote
+      default: []
+      selector:
+        action: {}
+    down_action:
+      name: Down Action
+      description: Action to perform when pressing down on the homekit remote
+      default: []
+      selector:
+        action: {}
+    right_action:
+      name: Right Action
+      description: Action to perform when pressing right on the homekit remote
+      default: []
+      selector:
+        action: {}
+    left_action:
+      name: Left Action
+      description: Action to perform when pressing left on the homekit remote
+      default: []
+      selector:
+        action: {}
+    select_action:
+      name: Select Action
+      description: Action to perform when pressing select on the homekit remote
+      default: []
+      selector:
+        action: {}
+    back_action:
+      name: Back Action
+      description: Action to perform when pressing back on the homekit remote
+      default: []
+      selector:
+        action: {}
+    information_action:
+      name: Information Action
+      description: Action to perform when pressing the information button on the homekit
+        remote
+      default: []
+      selector:
+        action: {}
+    playpause_action:
+      name: Play Pause Action
+      description: Action to perform when pressing the Play/Pause button on the homekit
+        remote
+      default: []
+      selector:
+        action: {}
+variables:
+  entity_id: !input input_entity
+mode: parallel
+trigger:
+- platform: event
+  event_type: homekit_tv_remote_key_pressed
+  event_data:
+    entity_id: !input input_entity
+    key_name: arrow_up
+- platform: event
+  event_type: homekit_tv_remote_key_pressed
+  event_data:
+    entity_id: !input input_entity
+    key_name: arrow_down
+- platform: event
+  event_type: homekit_tv_remote_key_pressed
+  event_data:
+    entity_id: !input input_entity
+    key_name: arrow_left
+- platform: event
+  event_type: homekit_tv_remote_key_pressed
+  event_data:
+    entity_id: !input input_entity
+    key_name: arrow_right
+- platform: event
+  event_type: homekit_tv_remote_key_pressed
+  event_data:
+    entity_id: !input input_entity
+    key_name: select
+- platform: event
+  event_type: homekit_tv_remote_key_pressed
+  event_data:
+    entity_id: !input input_entity
+    key_name: back
+- platform: event
+  event_type: homekit_tv_remote_key_pressed
+  event_data:
+    entity_id: !input input_entity
+    key_name: information
+- platform: event
+  event_type: homekit_tv_remote_key_pressed
+  event_data:
+    entity_id: !input input_entity
+    key_name: play_pause
+action:
+  choose:
+  - conditions: '{{ trigger.event.data.key_name == ''arrow_up'' }}'
+    sequence: !input up_action
+  - conditions: '{{ trigger.event.data.key_name == ''arrow_down'' }}'
+    sequence: !input down_action
+  - conditions: '{{ trigger.event.data.key_name == ''arrow_left''  }}'
+    sequence: !input left_action
+  - conditions: '{{ trigger.event.data.key_name == ''arrow_right''  }}'
+    sequence: !input right_action
+  - conditions: '{{ trigger.event.data.key_name == ''select''  }}'
+    sequence: !input select_action
+  - conditions: '{{ trigger.event.data.key_name == ''back''  }}'
+    sequence: !input back_action
+  - conditions: '{{ trigger.event.data.key_name == ''information''  }}'
+    sequence: !input information_action
+  - conditions: '{{ trigger.event.data.key_name == ''play_pause''  }}'
+    sequence: !input playpause_action
