@@ -74,9 +74,9 @@ template:
       - unique_id: "binary_state_apple_tv_bed_c"
         name: "Apple TV Bed C State"
         state: >-
-          {% if states('media_player.amazon_firestick_kitchen_unifi') == 'unknown' or
-            states('media_player.amazon_firestick_kitchen_unifi') == 'unavailable' or
-            states('media_player.amazon_firestick_kitchen_unifi') == 'off' %}
+          {% if states('media_player.amazon_firestick_android_bridge_kitchen') == 'unknown' or
+            states('media_player.amazon_firestick_android_bridge_kitchen') == 'unavailable' or
+            states('media_player.amazon_firestick_android_bridge_kitchen') == 'off' %}
               {{ "off" }}
           {% else %}
               {{ "on" }}
@@ -88,9 +88,9 @@ template:
       - unique_id: "binary_state_fire_tv_kitchen"
         name: "Fire TV Kitchen State"
         state: >-
-          {% if states('media_player.amazon_firestick_kitchen_unifi') == 'unknown' or
-            states('media_player.amazon_firestick_kitchen_unifi') == 'unavailable' or
-            states('media_player.amazon_firestick_kitchen_unifi') == 'off' %}
+          {% if states('media_player.amazon_firestick_android_bridge_kitchen') == 'unknown' or
+            states('media_player.amazon_firestick_android_bridge_kitchen') == 'unavailable' or
+            states('media_player.amazon_firestick_android_bridge_kitchen') == 'off' %}
               {{ "off" }}
           {% else %}
               {{ "on" }}
@@ -202,19 +202,19 @@ template:
           #   {% from 'availability_template.jinja' import avail %}
           #   {{- avail(['sensor.binary_sensor_state_counts']) | bool -}}
 
-      - unique_id: "_unique_binary_sensor_is_big_pc_on"
-        name: "Big PC is Active"
-        state: "{{ has_value('sensor.big_pc_win11_satellite_big_pc_win11_satellite_cpuload') }}"
-        attributes:
-          icon: "mdi:desktop-tower"
-          device_class: "power"
+      # - unique_id: "_unique_binary_sensor_is_big_pc_on"
+      #   name: "Big PC is Active"
+      #   state: "{{ has_value('sensor.big_pc_win11_satellite_big_pc_win11_satellite_cpuload') }}"
+      #   attributes:
+      #     icon: "mdi:desktop-tower"
+      #     device_class: "power"
 
-      - unique_id: "_unique_binary_sensor_is_arcade_pc_on"
-        name: "Arcade PC is Active"
-        state: "{{ has_value('sensor.arcade_pc_satellite_arcade_pc_satellite_cpuload') }}"
-        attributes:
-          icon: "mdi:controller"
-          device_class: "power"
+      # - unique_id: "_unique_binary_sensor_is_arcade_pc_on"
+      #   name: "Arcade PC is Active"
+      #   state: "{{ has_value('sensor.arcade_pc_satellite_arcade_pc_satellite_cpuload') }}"
+      #   attributes:
+      #     icon: "mdi:controller"
+      #     device_class: "power"
 
       - unique_id: "_unique_binary_sensor_is_washing_machine_on"
         name: "Washing Machine is Active"
