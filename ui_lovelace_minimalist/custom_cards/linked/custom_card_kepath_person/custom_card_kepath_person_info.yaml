@@ -379,6 +379,36 @@ custom_card_kepath_person_info:
 
                       return color;
                     ]]]
+
+          # location is NOT-HOME, but close to home
+          - operator: "template"
+            value: >
+              [[[
+                var fromHomeDistance = 0;
+                var personLocation = "unknown";
+
+                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                  if (!isNaN(fromHomeDistance)){
+                    fromHomeDistance = Math.floor(fromHomeDistance);
+                  }
+                }
+                if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
+                  if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
+                    personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+                  }
+                }                
+
+                if (fromHomeDistance < 2 && personLocation == 'not-home') {
+                  return true;
+                }
+              ]]]
+            icon: "mdi:home"
+            styles:
+              icon:
+                - color: "rgba(var(--color-red),1)"
+              img_cell:
+                - background-color: "rgba(var(--color-red),0.2)"
         tap_action:
           action: "more-info"
           entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker ]]]"
