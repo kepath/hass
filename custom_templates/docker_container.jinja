@@ -1,0 +1,125 @@
+{# get comparison docker name from addon update entities #}
+{%- macro return_comparison_update_entities(hassio_update_entity) -%}
+    {% set hassio_comparison_entity = device_attr(hassio_update_entity, 'identifiers')|map(attribute=[1][0])|list|replace('[','')|replace(']','')|replace('\u0027','')|lower|string|trim %}
+    {%- if hassio_comparison_entity == 'core' -%}
+        {% set hassio_comparison_entity = 'homeassistant' %}
+    {%- elif hassio_comparison_entity == 'supervisor' -%}
+        {% set hassio_comparison_entity = 'hassio_supervisor' %}
+    {%- else -%}
+    {%- endif -%}
+    {{ hassio_comparison_entity }}
+{%- endmacro -%}
+
+{# get comparison docker name from monitor_docker integration #}
+{%- macro return_comparison_monitor_docker_integration(monitor_docker_integration_entity) -%}
+    {{ state_attr(monitor_docker_integration_entity, 'friendly_name')|replace('addon_','')|replace(' Restart','')|lower|string|trim }}
+{%- endmacro -%}
+
+
+{# get binary_sensor for the device from the sensor entity #}
+{%- macro return_docker_device_binary_sensor_entity(hassio_update_entity) -%}
+    {%- for hassio_update_device_entity in device_entities(device_id(hassio_update_entity)) -%}
+        {%- if states[hassio_update_device_entity].domain == 'binary_sensor' -%}
+            {{ hassio_update_device_entity }}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endmacro -%}
+
+
+{# get all related information about this update entity, and collate it into a common namespace #}
+{%- macro get_combined_details(hassio_update_entity, ns_section_builder=[], ns_processed_entities=[]) -%}
+    {% set ns_entity_builder = namespace() %}
+    {% set updateentitydetails = get_update_entity_details(hassio_update_entity, ns_entity_builder) %}
+    {% set ns_entity_builder.container_state = return_docker_device_binary_sensor_entity(hassio_update_entity) %}
+    {% set updateentitydetails = get_docker_integration_details(hassio_update_entity, ns_entity_builder, ns_processed_entities) %}
+    {% set updateentitydetails = get_docker_integration_details(hassio_update_entity, ns_entity_builder, ns_processed_entities, 'button') %}
+    {% set ns_section_builder.entities = ns_section_builder.entities + [ns_entity_builder] %}
+{%- endmacro -%}
+
+
+{# add to namespace containing details from the update domain about this entity #}
+{%- macro get_update_entity_details(hassio_update_entity, ns_entity_builder=[]) -%}
+    {% set ns_entity_builder.entity_id = hassio_update_entity %}
+    {% set ns_entity_builder.update_available = states(hassio_update_entity) %}
+    {% set ns_entity_builder.friendly_name = state_attr(hassio_update_entity, 'friendly_name') %}
+    {% set ns_entity_builder.entity_picture = state_attr(hassio_update_entity, 'entity_picture') %}
+    {% set ns_entity_builder.installed_version = state_attr(hassio_update_entity, 'installed_version') %}
+    {% set ns_entity_builder.release_url = state_attr(hassio_update_entity, 'release_url') %}
+    {% set ns_entity_builder.title = state_attr(hassio_update_entity, 'title') %}
+    {% set ns_entity_builder.name = device_attr(hassio_update_entity, 'name')|lower %}
+    {% set ns_entity_builder.configuration_url = device_attr(hassio_update_entity, 'configuration_url') %}
+{%- endmacro -%}
+
+
+{# lookup docker container integration entity that matches the docker update entity #}
+{%- macro get_docker_integration_details(hassio_update_entity, ns_entity_builder=[], ns_processed_entities=[], searched_for_entity_type='container') -%}
+    {% set monitor_docker_integration_entities = integration_entities('monitor_docker')|sort %}
+    {%- for monitor_docker_integration_entity in monitor_docker_integration_entities -%}
+        {%- if monitor_docker_integration_entity not in ns_processed_entities.entities|replace('<Namespace ','')|replace('>','') -%}
+            {%- if (return_comparison_monitor_docker_integration(monitor_docker_integration_entity) == return_comparison_update_entities(hassio_update_entity))
+                or
+                (searched_for_entity_type in ['nonupdate','metadata']) -%}
+                {%- if states[monitor_docker_integration_entity].domain == 'sensor' -%}
+                    {%- if (state_attr(monitor_docker_integration_entity, 'health') != None) and (searched_for_entity_type == 'container') -%}
+                        {% set ns_entity_builder.linked_docker_sensor_entity_id = monitor_docker_integration_entity %}
+                        {% set ns_processed_entities.entities = ns_processed_entities.entities + [monitor_docker_integration_entity] %}
+                    {%- elif (state_attr(monitor_docker_integration_entity, 'health') != None) and (searched_for_entity_type == 'nonupdate') -%}
+                        {% set ns_entity_builder.entities = ns_entity_builder.entities + [monitor_docker_integration_entity] %}
+                        {% set ns_processed_entities.entities = ns_processed_entities.entities + [monitor_docker_integration_entity] %}
+                    {%- elif (state_attr(monitor_docker_integration_entity, 'health') == None) and (searched_for_entity_type == 'metadata') -%}
+                        {% set ns_entity_builder.entities = ns_entity_builder.entities + [monitor_docker_integration_entity] %}
+                        {% set ns_processed_entities.entities = ns_processed_entities.entities + [monitor_docker_integration_entity] %}
+                    {%- else -%}
+                    {%- endif -%}
+                    {# {%- elif (searched_for_entity_type == 'metadata') -%}
+                        {% set ns_entity_builder.linked_metadata_sensor_entity_id = monitor_docker_integration_entity %}
+                        {% set ns_processed_entities.entities = ns_processed_entities.entities + [monitor_docker_integration_entity] %}
+                    {%- else -%} #}
+                {%- endif -%}
+                {%- if (states[monitor_docker_integration_entity].domain == 'button') and (searched_for_entity_type == 'button') -%}
+                    {% set ns_entity_builder.linked_button_entity_id = monitor_docker_integration_entity %}
+                    {% set ns_processed_entities.entities = ns_processed_entities.entities + [monitor_docker_integration_entity] %}
+                {%- endif -%}
+            {%- endif -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endmacro -%}
+
+
+
+{# create namespace containing all hassio update domain entities #}
+{%- macro build_docker_json() -%}
+    {% set ns_hassio_update_entities = namespace(entities=[]) %}
+    {%- for update_domain_list in states.update | sort(attribute="name") -%}
+        {%- if 'hassio' in device_attr(update_domain_list.entity_id, 'identifiers') | map('first') | list -%}
+            {% set ns_hassio_update_entities.entities = ns_hassio_update_entities.entities + [update_domain_list.entity_id] %}
+        {%- endif -%}
+    {%- endfor -%}
+
+    {# build docker detail JSON #}
+    {% set ns_json_builder = namespace(core_entities=[], addon_entities=[], non_update_entities=[], metadata_entities=[]) %}
+    {% set ns_core_entity_builder = namespace(entities=[]) %}
+    {% set ns_addon_entity_builder = namespace(entities=[]) %}
+    {% set ns_non_update_entity_builder = namespace(entities=[]) %}
+    {% set ns_metadata_entity_builder = namespace(entities=[]) %}
+    {% set ns_processed_entities = namespace(entities=[]) %}
+    {%- for hassio_update_entity in ns_hassio_update_entities.entities|reject('in',(states.update|map(attribute='entity_id')|select('is_device_attr','model','Home Assistant Add-on')|sort|list))|list -%}
+        {% set updateentitydetails = get_combined_details(hassio_update_entity, ns_core_entity_builder, ns_processed_entities) %}
+    {%- endfor -%}
+    {% set ns_json_builder.core_entities = ns_json_builder.core_entities + [ns_core_entity_builder] %}
+    {%- for hassio_update_entity in ns_hassio_update_entities.entities|select('in',(states.update|map(attribute='entity_id')|select('is_device_attr','model','Home Assistant Add-on')|sort|list))|list -%}
+        {% set updateentitydetails = get_combined_details(hassio_update_entity, ns_addon_entity_builder, ns_processed_entities) %}
+    {%- endfor -%}
+    {% set ns_json_builder.addon_entities = ns_json_builder.addon_entities + [ns_addon_entity_builder] %}
+
+    {% set updateentitydetails = get_docker_integration_details('', ns_non_update_entity_builder, ns_processed_entities, 'nonupdate') %}
+    {% set updateentitydetails = get_docker_integration_details('', ns_metadata_entity_builder, ns_processed_entities, 'metadata') %}
+
+    {% set ns_json_builder.non_update_entities = ns_json_builder.non_update_entities + [ns_non_update_entity_builder] %}
+
+
+    {# {{ ns_json_builder }} #}
+    {# {{ ns_processed_entities.entities|replace('<Namespace ','')|replace('>','') }} #}
+
+    {{ ns_json_builder|replace('<Namespace ','')|replace('>','') }}
+{%- endmacro -%}

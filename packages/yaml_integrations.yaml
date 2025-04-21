@@ -106,14 +106,26 @@ spotcast:   #default is home account
       sp_dc: !secret "spotcast_emily_sp_dc"
       sp_key: !secret "spotcast_emily_sp_key"
 
-iperf3:
-  hosts:
-    - host: "iperf.he.net"
-    - host: "speedtest-london.its-tg.net"
-
+# iperf3:
+#   hosts:
+#     - host: "iperf.he.net"
+#     - host: "speedtest-london.its-tg.net"
 monitor_docker:
   - name: "Docker"
-    url: "tcp://192.168.10.5:2375"
+    url: !secret "hass_docker_monitor_connection_string"
+    rename:
+      it_tools: "it-tools"
+      uptime_kuma: "uptime-kuma"
+    rename_entity: true
+    # switchenabled: true
+    buttonenabled: true
+    monitored_conditions: ["allinone"]
+
+# command_line:
+#   - sensor:
+#       unique_id: "_docker_details_template_6782346"
+#       name: "Docker Details"
+#       command: "docker ps --all --format json | jq"
 
 influxdb:
   username: !secret "hass_addon_influx_db_user"
