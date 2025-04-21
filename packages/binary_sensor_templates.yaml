@@ -220,11 +220,8 @@ template:
         name: "Washing Machine is Active"
         state: >
           {{
-            'off' if not has_value('sensor.washing_machine_sensor_simple_state') else
-            (
-              'on' if (states('sensor.washing_machine_sensor_simple_state')|lower == 'active') else
-              'off'
-            )
+            'off' if not has_value('sensor.washing_machine_machine_state') else
+            ('on' if states('sensor.washing_machine_machine_state')|lower == 'run' else 'off')
           }}
         attributes:
           icon: "mdi:washing-machine"

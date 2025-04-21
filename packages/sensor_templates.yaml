@@ -354,35 +354,35 @@ template:
           device_class: "enum"
           options: "{{ ['not_triggered', 'triggered_home', 'triggered_away', 'warning', 'error'] }}"
 
-      - unique_id: "_unique_simple_state_washing_machine_sensors"
-        name: "Washing Machine Sensor Simple State"
-        state: >
-          {{
-            'warning' if (
-              not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
-              not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w") or
-              not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
-              not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w")
-            ) else (
-              'error' if (
-                not has_value("sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand")
-              ) else (
-                'active' if (
-                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_10w", now())) >
-                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_10w", now()))
-                ) else (
-                  'standby' if (
-                    as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_5w", now())) >
-                    as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_5w", now()))
-                  ) else 'off'
-                )
-              )
-            )
-          }}
-        attributes:
-          icon: "mdi:washing-machine-alert"
-          device_class: "enum"
-          options: "{{ ['active', 'standby', 'error', 'warning', 'off'] }}"
+      # - unique_id: "_unique_simple_state_washing_machine_sensors"
+      #   name: "Washing Machine Sensor Simple State"
+      #   state: >
+      #     {{
+      #       'warning' if (
+      #         not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
+      #         not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w") or
+      #         not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
+      #         not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w")
+      #       ) else (
+      #         'error' if (
+      #           not has_value("sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand")
+      #         ) else (
+      #           'active' if (
+      #             as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_10w", now())) >
+      #             as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_10w", now()))
+      #           ) else (
+      #             'standby' if (
+      #               as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_5w", now())) >
+      #               as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_5w", now()))
+      #             ) else 'off'
+      #           )
+      #         )
+      #       )
+      #     }}
+      #   attributes:
+      #     icon: "mdi:washing-machine-alert"
+      #     device_class: "enum"
+      #     options: "{{ ['active', 'standby', 'error', 'warning', 'off'] }}"
 
       - unique_id: "_unique_simple_state_bin_collection_sensors"
         name: "Bin Collection Simple State"
