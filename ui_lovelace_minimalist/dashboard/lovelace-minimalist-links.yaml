@@ -3,14 +3,6 @@ button_card_templates: !include_dir_merge_named "../../custom_components/ui_love
 views:
   - title: "Links"
     icon: "mdi:link-variant"
-
-  - title: "minimalist ui home"
-    icon: "si:homeassistant"
-    theme: "minimalist-mobile"
-    path: "../lovelace-minimalist-home"
-
-  - title: "Links"
-    icon: "mdi:server"
     theme: "minimalist-mobile"
     cards:
       - type: "entities"
@@ -60,56 +52,7 @@ views:
             icon: "mdi:glasses"
             name: "Scrutiny"
             new_tab: true
-      - type: "entities"
-        title: "configuration"
-        entities:
-          - type: "weblink"
-            url: "/hacs"
-            icon: "hacs:hacs"
-            name: "HACS"
-          - type: "weblink"
-            url: "/hassio/ingress/5c53de3b_esphome"
-            icon: "si:esphome"
-            name: "ESP Home"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_adguard"
-            icon: "si:adguard"
-            entity: "update.adguard_home_update"
-            show_icon: false
-            image: "/api/hassio/addons/a0d7b954_adguard/icon"
-            name: "AdGuard Home"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_emqx"
-            icon: "si:eclipsemosquitto"
-            name: "EMQX"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_grafana"
-            icon: "si:grafana"
-            name: "Grafana"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/a0d7b954_influxdb"
-            icon: "si:influxdb"
-            name: "InfluxDB"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/47146a2b_netdata"
-            icon: "mdi:chart-line"
-            name: "Netdata"
-            new_tab: true
-          - type: "weblink"
-            url: "/hassio/ingress/00185a40_simplescheduler"
-            icon: "mdi:calendar-month"
-            name: "Simple Scheduler"
-            new_tab: true
-          - type: "weblink"
-            url: !secret "hass_addon_it_tools_webui_local_url"
-            icon: "mdi:devices"
-            name: "IT-Tools"
-            new_tab: true
+
       - type: "entities"
         title: "configuration"
         card_mod:
@@ -122,18 +65,12 @@ views:
             }
         entities:
           - entity: "update.hacs_update"
-            # card_mod:
-            #   style: |
-            #     :host {
-            #       width: 30px !important;
-            #       height: 30px !important;
-            #       line-height: 30px !important;
-            #       flex-basis: 30px !important;
-            #     }
             show_icon: false
             name: "HACS"
+            secondary_info: "last-changed"
+            format: "datetime"
             tap_action:
-              action: "navigation"
+              action: "url"
               url_path: "/hacs"
           - entity: "update.esphome_update"
             show_icon: false
@@ -238,6 +175,68 @@ views:
             icon: "mdi:headphones"
             name: "Moodist"
             new_tab: true
+
+  - title: "minimalist ui home"
+    icon: "si:homeassistant"
+    theme: "minimalist-mobile"
+    path: "../lovelace-minimalist-home"
+
+  - title: "Links"
+    icon: "mdi:server"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "entities"
+          title: "Running Addons"
+        filter:
+          template: >-
+            {%- for update_list in states.update | sort(attribute="name") -%}
+              {%- for entity_list in device_id(update_list.entity_id)|device_entities -%}
+                {%- if state_attr(entity_list, 'device_class') == 'running' -%}
+                  {%- if states(entity_list, 'state') == 'on' -%}
+                    {{{
+                      'entity': update_list.entity_id,
+                      'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
+                      'tap_action': {
+                        'action': 'navigate',
+                        'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','') + '/info'
+                      },
+                      'hold_action': {
+                        'action': 'url',
+                        'url_path': state_attr('sensor.non_hard_coded_secrets_to_use_in_templates', 'ha_nabucasa_url') + device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant://','') | replace('addon','ingress')
+                      },
+                      'double_tap_action': {
+                        'action': 'more-info'
+                      }
+                    }}},
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "entities"
+          title: "Installed Addons"
+        filter:
+          template: >-
+            {%- for update_list in states.update | sort(attribute="name") -%}
+              {%- if 'hassio' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+                {{{
+                  'entity': update_list.entity_id,
+                  'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
+                  'tap_action': {
+                    'action': 'navigate',
+                    'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','') + '/info'
+                  },
+                  'double_tap_action': {
+                    'action': 'more-info'
+                  }
+                }}},
+              {%- endif -%}
+            {%- endfor -%}
 
   - title: "Links"
     icon: "mdi:lan"
@@ -473,6 +472,7 @@ views:
                 {%- if device_attr(update_list.entity_id, 'model') == 'integration' -%}
                   {{{
                     'entity': update_list.entity_id,
+                    'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
                     'show_icon': false,
                     'tap_action': {
                       'action': 'navigate',
@@ -501,6 +501,7 @@ views:
                 {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
                   {{{
                     'entity': update_list.entity_id,
+                    'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
                     'tap_action': {
                       'action': 'navigate',
                       'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
@@ -516,40 +517,3 @@ views:
                 {%- endif -%}
               {%- endif -%}
             {%- endfor -%}
-      # - type: "custom:auto-entities"
-      #   show_empty: false
-      #   card:
-      #     type: "entities"
-      #     title: "HACS Plugins"
-      #   filter:
-      #     template: >-
-      #       {%- for update_list in states.update | sort(attribute="name") -%}
-      #         {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
-      #           {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
-      #             {{{
-      #               'type': 'weblink',
-      #               'name': device_attr(update_list.entity_id, 'name') | title,
-      #               'url': state_attr(update_list.entity_id, 'release_url'),
-      #               'secondary_info': state_attr(update_list.entity_id, 'installed_version')
-      #             }}},
-      #           {%- endif -%}
-      #         {%- endif -%}
-      #       {%- endfor -%}
-      # - type: "custom:auto-entities"
-      #   show_empty: false
-      #   card:
-      #     type: "entities"
-      #     title: "HACS Themes"
-      #   filter:
-      #     template: >-
-      #       {%- for update_list in states.update | sort(attribute="name") -%}
-      #         {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
-      #           {%- if device_attr(update_list.entity_id, 'model') == 'theme' -%}
-      #             {{{
-      #               'type': 'weblink',
-      #               'name': device_attr(update_list.entity_id, 'name') | title,
-      #               'url': state_attr(update_list.entity_id, 'release_url')
-      #             }}},
-      #           {%- endif -%}
-      #         {%- endif -%}
-      #       {%- endfor -%}

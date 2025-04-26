@@ -103,7 +103,8 @@ try:
                     logger.debug(logger, f"B4: iterating '{entity_id}' in group '{group}' when creating '{FRIENDLY_NAME}' at {time.time()}")
                     entity = hass.states.get(entity_id)
                     if entity is None:
-                        logger.warning(logger, f"B5: Warning - entity {entity_id} not found")
+                        logger_text = "B5: Warning - entity {} not found"
+                        logger.warning(logger, logger_text.format(entity_id))
                     else:
                         excluded_entities.append(entity_id)
                         logger.debug(logger, f"B6: '{entity_id}' added to 'excluded_entities' at {time.time()}")
@@ -140,7 +141,7 @@ except KeyError:
 
 
 try:
-    for entity_id in hass.states.entity_ids(DOMAIN):
+    for entity_id in sorted(hass.states.entity_ids(DOMAIN)):
         logger.debug(logger, f"D1: iterating '{entity_id}' in domain '{DOMAIN}' at {time.time()}")
         if entity_id == "":
             logger.error(logger, "D2: Error - entity_id missing when looping through domain")
@@ -258,7 +259,10 @@ except LookupError:
 
 try:
     service_data = {"object_id": GROUP_NAME, "name": FRIENDLY_NAME, "icon": ICON, "entities": entity_list, "all": False}
-    logger.info(logger, f"I1: Calling the service 'set group' with the data '{service_data}' at {time.time()}")
+    # service_data_string = service_data)
+    logger_text = "I1: Calling the service 'set group' with the data '{}' at {}"
+    logger.debug(logger, logger_text.format(service_data, time.time()))
     hass.services.call("group", "set", service_data, False)
 except ServiceValidationError:
-    logger.error(logger, "I2: Error - a problem occured calling the hass set group service")
+    logger_text = "I2: Error - a problem occured calling the hass set group service"
+    logger.error(logger, logger_text)

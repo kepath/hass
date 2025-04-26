@@ -86,7 +86,7 @@ views:
                     name: "Energy"
                     color: "yellow"
                   entity_10:
-                    nav: "/a0d7b954_grafana"
+                    nav: "/ingress/a0d7b954_grafana"
                     icon: "si:grafana"
                     name: "Data"
                     color: "purple"
@@ -589,16 +589,20 @@ views:
                       card:
                         type: "custom:button-card"
                         template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "device_kepath_entity_and_style_simple_states"
-                          - "device_kepath_entity_and_style_washing_machine_extra_states"
+                          - "device_kepath_entity_and_style_tumble_dryer_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "sensor.washing_machine_sensor_simple_state"
+                        entity: "binary_sensor.washing_machine_is_active"
                         name: "Washer"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
-                            evaluated_entity: "sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand"
+                            evaluated_entity: "sensor.washing_machine_machine_state"
                             return_type: "device"
+                          var_kepath_device_entity_and_style_binary_count_state:
+                            data_entities:
+                              completion_entity: "sensor.washing_machine_completion_time"
                           var_kepath_device_entity_and_style_simple_states:
                             warning_state:
                               icon: "mdi:washing-machine-alert"
@@ -607,8 +611,8 @@ views:
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:washing-machine-off"
-                              icon_color: "red"
-                              background_color: "red"
+                              icon_color: "blue"
+                              background_color: "blue"
                             unset_state:
                               icon: "mdi:washing-machine-alert"
                         hold_action:
@@ -628,8 +632,8 @@ views:
                           var_kepath_navigation_to_parent_from_entity:
                             evaluated_entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
                             return_type: "device"
-                          var_device_kepath_entity_and_style_tumble_dryer_state:
-                            device_progress: "sensor.samsung_tumble_dryer_dryer_completion_time"
+                          # var_device_kepath_entity_and_style_tumble_dryer_state:
+                          #   device_progress: "sensor.samsung_tumble_dryer_dryer_completion_time"
                           var_kepath_generic_button_icon_styles:
                             default_state:
                               icon: "mdi:tumble-dryer-off"
@@ -726,21 +730,33 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_simple_states"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "binary_sensor.is_arcade_pc_on"
+                        entity: "sensor.arcadepc_sensor_simple_state"
                         name: "Arcade"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
                             evaluated_entity: "button.arcade_pc_satellite_arcade_pc_satellite_restart"
                             return_type: "device"
-                          var_kepath_generic_button_icon_styles:
-                            default_state:
+                          var_kepath_device_entity_and_style_simple_states:
+                            warning_state:
+                              icon: "mdi:controller-off"
+                              icon_color: "yellow"
+                              background_color: "yellow"
+                            error_state:
                               icon: "mdi:controller-off"
                               icon_color: "red"
                               background_color: "red"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:gamepad-down"
+                              icon_color: "blue"
+                              background_color: "blue"
                             unset_state:
                               icon: "mdi:controller-off"
+                              icon_color: "red"
+                              background_color: "red"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
                               icon: "mdi:controller"
@@ -755,24 +771,36 @@ views:
                           - "custom_card_kepath_binary_notifications_common_styles"
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "device_kepath_entity_and_style_simple_states"
                           - "device_kepath_entity_and_style_binary_simple_switch_state"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "binary_sensor.is_big_pc_on"
+                        entity: "sensor.bigpc_sensor_simple_state"
                         name: "BigPC"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
                             evaluated_entity: "button.big_pc_win11_satellite_big_pc_win11_satellite_restart"
                             return_type: "device"
-                          var_kepath_generic_button_icon_styles:
-                            default_state:
-                              icon: "mdi:desktop-tower"
+                          var_kepath_device_entity_and_style_simple_states:
+                            warning_state:
+                              icon: "mdi:monitor-off"
+                              icon_color: "yellow"
+                              background_color: "yellow"
+                            error_state:
+                              icon: "mdi:monitor-off"
                               icon_color: "red"
                               background_color: "red"
+                          var_kepath_generic_button_icon_styles:
+                            default_state:
+                              icon: "mdi:monitor-arrow-down"
+                              icon_color: "blue"
+                              background_color: "blue"
                             unset_state:
-                              icon: "mdi:desktop-tower"
+                              icon: "mdi:monitor-off"
+                              icon_color: "red"
+                              background_color: "red"
                           var_kepath_device_entity_and_style_simple_binary_switch_state:
                             on_state:
-                              icon: "mdi:desktop-tower"
+                              icon: "mdi:monitor"
                               icon_color: "green"
                               background_color: "green"
                         hold_action:
@@ -1365,7 +1393,7 @@ views:
                           - "custom_card_kepath_binary_notifications_device_style"
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "custom_card_kepath_navigation_to_parent_from_entity"
-                        entity: "sensor.docker_addon_d5369777_music_assistant_state"
+                        entity: "binary_sensor.music_assistant_running"
                         name: "MASS"
                         variables:
                           var_kepath_navigation_to_parent_from_entity:
@@ -2457,12 +2485,12 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "custom_card_kepath_generic_use_entity_picture"
                           - "custom_card_kepath_generic_add_addin_link"
-                        entity: "update.music_assistant_update_2"
+                        entity: "update.music_assistant_update"
                         name: "Music Assistant"
                         variables:
                           var_kepath_generic_get_set_group_notification_objects:
                             amount:
-                              entity: "update.music_assistant_update_2"
+                              entity: "update.music_assistant_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
                           var_kepath_generic_button_icon_styles:
@@ -2574,6 +2602,30 @@ views:
                           - "device_kepath_entity_common_binary_objects_and_styles"
                           - "custom_card_kepath_generic_use_entity_picture"
                           - "custom_card_kepath_generic_add_addin_link"
+                        entity: "update.netalertx_update"
+                        name: "NetAlertX"
+                        variables:
+                          var_kepath_generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.netalertx_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          var_kepath_generic_button_icon_styles:
+                            use_themes: false
+                            default_state:
+                              background_color: "rgba(var(--color-theme),0.05)"
+                          var_kepath_generic_set_addin_link:
+                            docker_slug_reference: "db21ed7f_netalertx"
+                            # ingress_or_local_port: !secret "hass_addon_netalertx_webui_local_port"
+                    item25:
+                     card:
+                        type: "custom:button-card"
+                        template:
+                          - "custom_card_kepath_binary_notifications_common_styles"
+                          - "custom_card_kepath_binary_notifications_device_style"
+                          - "device_kepath_entity_common_binary_objects_and_styles"
+                          - "custom_card_kepath_generic_use_entity_picture"
+                          - "custom_card_kepath_generic_add_addin_link"
                         entity: "update.overseerr_update"
                         name: "Overseerr"
                         variables:
@@ -2589,30 +2641,6 @@ views:
                           var_kepath_generic_set_addin_link:
                             docker_slug_reference: "db21ed7f_overseerr"
                             ingress_or_local_port: !secret "hass_addon_overseerr_webui_local_port"
-                    item25:
-                      card:
-                        type: "custom:button-card"
-                        template:
-                          - "custom_card_kepath_binary_notifications_common_styles"
-                          - "custom_card_kepath_binary_notifications_device_style"
-                          - "device_kepath_entity_common_binary_objects_and_styles"
-                          - "custom_card_kepath_generic_use_entity_picture"
-                          - "custom_card_kepath_generic_add_addin_link"
-                        entity: "update.ombi_update"
-                        name: "Ombi"
-                        variables:
-                          var_kepath_generic_get_set_group_notification_objects:
-                            amount:
-                              entity: "update.ombi_update"
-                              count_tooltip: "add-in has update"
-                              is_attribute: false
-                          var_kepath_generic_button_icon_styles:
-                            use_themes: false
-                            default_state:
-                              background_color: "rgba(var(--color-theme),0.05)"
-                          var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_ombi"
-                            ingress_or_local_port: !secret "hass_addon_ombi_webui_local_port"
                     item26:
                       card:
                         type: "custom:button-card"
@@ -2998,6 +3026,7 @@ views:
                               ulm_card_kepath_person_entity: "person.kevin_thorn"
                               ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_15_kev_unifi"
                               ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_15_kev_icloud3"
+                              ulm_card_kepath_person_battery_entity: "sensor.iphone_15_kev_icloud3_battery"
                               ulm_card_kepath_person_findmy_device: "kevs_iphone"
                               ulm_card_kepath_person_driving_entity: "binary_sensor.is_kev_driving"
                               ulm_card_kepath_person_distance_entity: "sensor.iphone_15_kev_icloud3_home_distance"
@@ -3009,7 +3038,8 @@ views:
                               ulm_card_kepath_person_entity: "person.julia_thorn"
                               ulm_card_kepath_person_wifi_tracker: "device_tracker.ju_iphone_8_unifi"
                               ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_8_ju_icloud3"
-                              ulm_card_kepath_person_findmy_device: "julias_iphone_8"
+                              ulm_card_kepath_person_battery_entity: "sensor.iphone_8_ju_icloud3_battery"
+                              ulm_card_kepath_person_findmy_device: "julias_iphone_6"
                               ulm_card_kepath_person_driving_entity: ""
                               ulm_card_kepath_person_distance_entity: "sensor.iphone_8_ju_icloud3_home_distance"
                         item3:
@@ -3020,6 +3050,7 @@ views:
                               ulm_card_kepath_person_entity: "person.daniel_thorn"
                               ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_12_dan_unifi"
                               ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_12_dan_icloud3"
+                              ulm_card_kepath_person_battery_entity: "sensor.iphone_12_dan_icloud3_battery"
                               ulm_card_kepath_person_findmy_device: "iphone"
                               ulm_card_kepath_person_driving_entity: ""
                               ulm_card_kepath_person_distance_entity: "sensor.iphone_12_dan_icloud3_home_distance"
@@ -3031,6 +3062,7 @@ views:
                               ulm_card_kepath_person_entity: "person.emily_thorn"
                               ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone13_emily_patrice_unifi"
                               ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_13_emily_patrice_icloud3"
+                              ulm_card_kepath_person_battery_entity: "sensor.iphone_13_emily_patrice_icloud3_battery"
                               ulm_card_kepath_person_findmy_device: "patrice"
                               ulm_card_kepath_person_driving_entity: ""
                               ulm_card_kepath_person_distance_entity: "sensor.iphone_13_emily_patrice_icloud3_home_distance"

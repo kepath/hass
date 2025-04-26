@@ -7,30 +7,29 @@ custom_card_kepath_person_info:
     - "custom_popup_kepath_person"
     - "ulm_gradient_green_to_red_5step"
   variables:
-    ulm_address: ""
-    ulm_address_locality: ""
     ulm_card_kepath_person_entity: ""
     ulm_card_kepath_person_wifi_tracker: ""
     ulm_card_kepath_person_gps_tracker: ""
+    ulm_card_kepath_person_battery_entity: ""
     ulm_card_kepath_person_driving_entity: ""
     ulm_card_kepath_person_distance_entity: ""
-    ulm_card_kepath_person_gps_tracker_device_id: ""
   triggers_update: "all"
   show_label: false
   show_name: true
   group_expand: true
   label: ""
-  name: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
-  entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
+  name: "[[[ return states[variables?.ulm_card_kepath_person_entity]?.attributes?.friendly_name ]]]"
+  entity: "[[[ return variables?.ulm_card_kepath_person_entity; ]]]"
   icon: >
     [[[
-      var icon = "mdi:map-marker-alert";
+      var icon = "mdi:map-marker";
       var personLocation = "unknown";
       var zoneList = []
 
       if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
         if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
-          personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+          personLocation = states[variables.ulm_card_kepath_person_entity].state
+          personLocation = personLocation.replaceAll(" ", "").replaceAll("'", "").replaceAll("_", "").toLowerCase();
         }
       }
 
@@ -49,22 +48,30 @@ custom_card_kepath_person_info:
         case "stationary":
         case "statzon1":
           icon = "mdi:map-marker-question";
+          if (typeof states[variables?.ulm_card_kepath_person_driving_entity]?.state !== 'undefined') {
+            if (states[variables.ulm_card_kepath_person_driving_entity].state == "on") {
+              icon = "mdi:car"
+            }
+          }
           break;
         case "home":
           icon = "mdi:home-map-marker";
           break;
         default:
-        for (const zone of zoneList) {
-          if (personLocation == zone.replace("zone.","").replace("_","")) {
-            if (typeof states[zone] !== "undefined") {
-              if (typeof states[zone].attributes.icon !== "undefined") {
-                if (states[zone].attributes.icon != null) {
+          for (const zone of zoneList) {
+            if (personLocation == zone.replace("zone.","").replaceAll(" ", "").replaceAll("'", "").replaceAll("_","")) {
+              if (typeof states[zone]?.attributes?.icon !== "undefined") {
+                if (states[zone].attributes.icon.includes('mdi:')) {
                   icon = states[zone].attributes.icon;
+                  break;
                 }
               }
+            } else {
+              //hass.callService('system_log', 'write', {level:'warning',message:'personLocation: ' + personLocation});
+              //hass.callService('system_log', 'write', {level:'warning',message:'zone.replace("zone.","").replaceAll("_",""): ' + zone.replace("zone.","").replaceAll("_","")});
+              icon = "mdi:map-marker-account";
             }
           }
-        }
       }
 
       return icon;
@@ -93,7 +100,7 @@ custom_card_kepath_person_info:
       - padding-top: "10px"
       - margin: "0"
     custom_fields:
-      notification:
+      distance:
         - position: "absolute"
         - left: "57%"
         - top: "-4px"
@@ -164,7 +171,7 @@ custom_card_kepath_person_info:
           - background-color: "rgba(var(--color-green),0.2)"
   custom_fields:
 
-    notification:
+    distance:
       card:
         type: "custom:button-card"
         styles:
@@ -172,30 +179,7 @@ custom_card_kepath_person_info:
             - width: "14px"
             - height: "14px"
             - line-height: "0"
-            - color: >
-                [[[
-                  var color = "rgba(var(--primary-text-color),1)";
-                  var fromHomeDistance = 0;
-                  if (typeof states[variables.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
-                    if (states[variables.ulm_card_kepath_person_distance_entity]?.state) {
-                      fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity]?.state
-                      if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
-                        fromHomeDistance = Math.floor(fromHomeDistance);
-                      }
-                    }
-                  }
-                  if (fromHomeDistance > 10) {
-                    fromHomeDistance = Math.floor(fromHomeDistance / 5) * 5;
-                    if (fromHomeDistance > 100) {
-                      fromHomeDistance = 100;
-                    }
-                    var gradient = "gradient_" + fromHomeDistance
-                    if (variables?.green_to_red_5step?.[gradient]) {
-                      color = variables?.green_to_red_5step?.[gradient];
-                    }
-                  }
-                  return color;
-                ]]]
+            - color: "rgba(var(--color-red),1)"
           img_cell:
             - border-radius: "50%"
             - height: "16px"
@@ -208,17 +192,9 @@ custom_card_kepath_person_info:
             - padding: "0px"
             - border-radius: "50%"
             - display: "block"
-        icon: >
-          [[[
-            var icon = "mdi:map-marker-distance";
-            if (typeof states[variables.ulm_card_kepath_person_driving_entity]?.state !== 'undefined') {
-              if (states[variables.ulm_card_kepath_person_driving_entity]?.state == "on") {
-                icon = "mdi:car"
-              }
-            }
-            return icon;
-          ]]]
+        icon: "mdi:help-circle"
         state:
+          # variables not supplied
           - operator: "template"
             value: >
               [[[
@@ -244,6 +220,8 @@ custom_card_kepath_person_info:
                 - color: "rgba(var(--color-red),1)"
               img_cell:
                 - background-color: "rgba(var(--color-red),0.2)"
+
+          # location is HOME
           - operator: "template"
             value: >
               [[[
@@ -263,35 +241,178 @@ custom_card_kepath_person_info:
               card:
                 - display: "none"
 
+          # distance 0 - 10 miles
           - operator: "template"
             value: >
               [[[
                 var fromHomeDistance = 0;
-                if (states[variables.ulm_card_kepath_person_distance_entity]?.state) {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity]?.state
-                  if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
+                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                  if (!isNaN(fromHomeDistance)){
                     fromHomeDistance = Math.floor(fromHomeDistance);
                   }
                 }
-                if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined) {
-                  if (fromHomeDistance < 10 && fromHomeDistance != 0) {
-                    return true;
-                  }
+                if (fromHomeDistance < 10 && fromHomeDistance != 0) {
+                  return true;
                 }
               ]]]
             icon: >
               [[[
                 var fromHomeDistance = 0;
                 var icon = "mdi:numeric-0-circle";
-                if (states[variables.ulm_card_kepath_person_distance_entity]?.state) {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity]?.state
-                  if (!isNaN(fromHomeDistance) && fromHomeDistance !== undefined){
+                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                  if (!isNaN(fromHomeDistance)){
                     fromHomeDistance = Math.floor(fromHomeDistance);
                     icon = icon.replace("0",fromHomeDistance);
                   }
                 }
+                //if(hass.themes.darkMode) {
+                //  icon = icon.replace("-circle","");
+                //}
                 return icon;
               ]]]
+            styles:
+              icon:
+                - color: "rgba(var(--primary-text-color),1)"
+
+          # distance 10 - 100+ miles
+          - operator: "template"
+            value: >
+              [[[
+                var fromHomeDistance = 0;
+                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                  if (!isNaN(fromHomeDistance)){
+                    fromHomeDistance = Math.floor(fromHomeDistance);
+                  }
+                }
+                if (fromHomeDistance >= 10 && fromHomeDistance != 0) {
+                  return true;
+                }
+              ]]]
+            icon: >
+              [[[
+                var fromHomeDistance = 0;
+                var icon = "mdi:numeric-0-circle";
+                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                  if (!isNaN(fromHomeDistance)){
+                    fromHomeDistance = Math.floor(fromHomeDistance/10);
+                    if (fromHomeDistance > 9) {
+                      fromHomeDistance = 9;
+                    }
+                    icon = icon.replace("0",fromHomeDistance);
+                  }
+                }
+                if(hass.themes.darkMode) {
+                  icon = icon.replace("-circle","");
+                }
+                return icon;
+              ]]]
+            styles:
+              img_cell:
+                - background-color: "var(--card-background-color)"
+              #   - border-color: >
+              #       [[[
+              #         var color = "rgba(var(--card-background-color),1)";
+              #         var fromHomeDistance = 0;
+              #         if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+              #           if (states[variables.ulm_card_kepath_person_distance_entity].state) {
+              #             fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+              #             if (!isNaN(fromHomeDistance)){
+              #               fromHomeDistance = Math.floor(fromHomeDistance);
+              #             }
+              #           }
+              #         }
+              #         if (fromHomeDistance > 10) {
+              #           fromHomeDistance = Math.floor(fromHomeDistance / 5) * 5;
+              #           if (fromHomeDistance > 100) {
+              #             fromHomeDistance = 100;
+              #           }
+              #           var gradient = "gradient_" + fromHomeDistance
+              #           if (variables?.green_to_red_5step?.[gradient]) {
+              #             color = variables?.green_to_red_5step?.[gradient];
+              #           }
+              #         }
+              #         return color;
+              #       ]]]
+              #   - margin-left: "1px"
+              #   - margin-top: "1px"
+              #   - border: "0"
+              icon:
+                # - width: "16px"
+                # - height: "16px"
+                # - color: "rgba(var(--primary-text-color),1)"
+                - color: >
+                    [[[
+                      var color = "rgba(var(--card-background-color),1)";
+                      var fromHomeDistance = 0;
+                      //if (!hass.themes.darkMode) {
+                      //  return color;
+                      //}
+                      var gradientSet = hass.themes.darkMode ? "green_to_red_5step_light" : "green_to_red_5step_dark";
+
+                      if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+                        if (states[variables.ulm_card_kepath_person_distance_entity].state) {
+                          fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                          if (!isNaN(fromHomeDistance)) {
+                            fromHomeDistance = Math.floor(fromHomeDistance);
+                          }
+                        }
+                      }
+                      if (fromHomeDistance > 10) {
+                        fromHomeDistance = Math.floor(fromHomeDistance / 5) * 5;
+                        if (fromHomeDistance > 100) {
+                          fromHomeDistance = 100;
+                        }
+                        var gradient = "gradient_" + fromHomeDistance
+                        if (variables?.[gradientSet]?.[gradient]) {
+                          color = variables?.[gradientSet]?.[gradient];
+                        }
+                      }
+
+                      //hass.callService('system_log', 'write', {level:'warning',message:'fromHomeDistance: ' + fromHomeDistance});
+                      //hass.callService('system_log', 'write', {level:'warning',message:'gradientSet: ' + gradientSet});
+                      //hass.callService('system_log', 'write', {level:'warning',message:'gradient: ' + gradient});
+                      //hass.callService('system_log', 'write', {level:'warning',message:'color: ' + color});
+
+                      return color;
+                    ]]]
+
+          # location is NOT-HOME, but close to home
+          - operator: "template"
+            value: >
+              [[[
+                var fromHomeDistance = 0;
+                var personLocation = "unknown";
+
+                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                  if (!isNaN(fromHomeDistance)){
+                    fromHomeDistance = Math.floor(fromHomeDistance);
+                  }
+                }
+                if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
+                  if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
+                    personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+                  }
+                }                
+
+                if (fromHomeDistance < 2 && personLocation == 'not-home') {
+                  return true;
+                }
+              ]]]
+            icon: "mdi:home"
+            styles:
+              icon:
+                - color: "rgba(var(--color-red),1)"
+              img_cell:
+                - background-color: "rgba(var(--color-red),0.2)"
+        tap_action:
+          action: "more-info"
+          entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker ]]]"
+
 
     battery:
       card:
@@ -304,13 +425,13 @@ custom_card_kepath_person_info:
             - color: >
                 [[[
                   var color = "rgba(var(--color-theme),0.5)";
-                  if (states[variables.ulm_card_kepath_person_gps_tracker]?.state) {
-                    var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_level;
-                    if (!isNaN(battery)) {
-                      var roundedBattery = Math.ceil(battery / 10) * 10;
+                  var battery = -1;
+                  if (typeof states[variables?.ulm_card_kepath_person_battery_entity]?.state !== 'undefined') {
+                    if (!isNaN(states[variables.ulm_card_kepath_person_battery_entity].state)) {
+                      battery = states[variables.ulm_card_kepath_person_battery_entity].state;
                       if (battery > 50) {
                         color = "rgba(var(--color-green),1)";
-                      } else if (battery > 10) {
+                      } else if (battery > 20) {
                         color = "rgba(var(--color-yellow),1)";
                       } else if (battery > 0) {
                         color = "rgba(var(--color-red),1)";
@@ -335,22 +456,49 @@ custom_card_kepath_person_info:
         icon: >
           [[[
             var icon = "mdi:battery-unknown";
-            if (states[variables.ulm_card_kepath_person_gps_tracker]?.state) {
-              var battery = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_level;
-              if (!isNaN(battery)) {
-                var charging = states[variables.ulm_card_kepath_person_gps_tracker]?.attributes?.battery_status?.toLowerCase() == "charging";
-                var iconBase = charging ? "mdi:battery-charging" : "mdi:battery";
-                var roundedBattery = Math.ceil(battery / 10) * 10;
-                if (roundedBattery == 0) {
-                  //var icon = "mdi:battery-outline";
-                  return icon;
-                } else {
-                  var icon = roundedBattery == 100 ? iconBase : `${iconBase}-${roundedBattery}`;
-                }
+            var batteryChargeLevel = -1;
+            var isBatteryCharging = false;
+            if (typeof states[variables?.ulm_card_kepath_person_battery_entity]?.state !== 'undefined') {
+              if (!isNaN(states[variables.ulm_card_kepath_person_battery_entity].state)) {
+                batteryChargeLevel = states[variables.ulm_card_kepath_person_battery_entity].state
               }
             }
+            if (typeof states[variables?.ulm_card_kepath_person_battery_entity]?.attributes?.battery_status !== 'undefined') {
+              if (states[variables.ulm_card_kepath_person_battery_entity].attributes.battery_status.toLowerCase() == "charging") {
+                isBatteryCharging = true;
+              }
+            }
+
+            if (batteryChargeLevel != -1) {
+              batteryChargeLevel = Math.floor(batteryChargeLevel / 10) * 10;
+              icon = isBatteryCharging ? "mdi:battery-charging" : "mdi:battery";
+              switch (batteryChargeLevel) {
+                case 0:
+                  icon = `${icon}-outline`;
+                  break;
+                case 10:
+                case 20:
+                case 30:
+                case 40:
+                case 50:
+                case 60:
+                case 70:
+                case 80:
+                case 90:
+                  icon = `${icon}-${batteryChargeLevel}`;
+                  break;
+                case 100:
+                  break;
+                default:
+                  icon = "mdi:battery-alert";
+              }
+            }
+
             return icon;
           ]]]
+        tap_action:
+          action: "more-info"
+          entity: "[[[ return variables.ulm_card_kepath_person_battery_entity ]]]"
 
 custom_popup_kepath_person:
   tap_action:
@@ -468,17 +616,12 @@ custom_popup_kepath_person:
                             [[[
                               var deviceId = "";
                               if (variables?.ulm_card_kepath_person_gps_tracker) {
-                                if (hass?.entities[variables.ulm_card_kepath_person_gps_tracker]?.device_id) {
+                                if (typeof hass?.entities[variables.ulm_card_kepath_person_gps_tracker]?.device_id !== 'undefined') {
                                   deviceId = hass.entities[variables.ulm_card_kepath_person_gps_tracker].device_id;
                                 }
                               }
                               return deviceId;
                             ]]]
-                    style:
-                      $: >
-                        root {
-                          justify-content: space-evenly;
-                        }
                   - type: "map"
                     auto_fit: true
                     aspect_ratio: "12x10"
@@ -486,7 +629,7 @@ custom_popup_kepath_person:
                     entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
           - service: "icloud3.action"
             data:
-              command: "locate"
+              command: "Locate Device(s) using iCloud"
 
 find_my_phone_button_kepath:
   template:

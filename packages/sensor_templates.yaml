@@ -13,7 +13,7 @@ template:
           area_top_floor_security_sensors_unavailable_count: "{{ expand('group.all_top_floor_area_security_device_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           batteries_below20_count: "{{expand('group.all_battery_class_sensors')|map(attribute='state')|map('int',50)|select('lt',20)|list|count}}"
           batteries_unavailable_count: "{{ expand('group.all_battery_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          batteries_average_value: "{{expand('group.all_battery_class_sensors')|map(attribute='state')|reject('undefined')|map('int',50)|list|average|round(-1)|int(0)}}"
+          batteries_average_value: "{{expand('group.all_battery_class_sensors')|map(attribute='state')|reject('undefined')|map('int',50)|list|average(0)|round(-1)|int(0)}}"
           cameras_off_count: "{{ expand('group.all_cameras')|rejectattr('state','in', ['recording','idle'])|list|count }}"
           cameras_unavailable_count: "{{ expand('group.all_cameras')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           climate_devices_on_count: >
@@ -25,11 +25,31 @@ template:
           connectivity_disconnected_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           connectivity_unavailable_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           data_rate_unavailable_count: "{{ expand('group.all_data_rate_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          data_rate_total_count: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|list|count}}"
-          data_rate_total_value: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|sum|round()}}"
-          data_rate_total_value_10_times_smaller: "{{(state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / 10)|round()}}"
-          data_rate_total_average: "{{ (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count'))|round(2) }}"
-          data_rate_total_average_10_times_larger: "{{(state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_average') * 10)|round()}}"
+          data_rate_total_count: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|list|count|int(0)}}"
+          data_rate_total_value: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|sum|round()|int(0)}}"
+          data_rate_total_value_10_times_smaller:  >
+            {{
+              1 if 
+                state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') is none
+              else 
+                (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / 10)|round()
+            }}
+          data_rate_total_average: >
+            {{
+              1 if 
+                (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') is none
+                or
+                state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count') is none)
+              else 
+                ((state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count'))|round(2))
+            }}
+          data_rate_total_average_10_times_larger: >
+            {{
+              1 if 
+                state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_average') is none 
+              else 
+                (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_average') * 10)|round()
+            }}
           device_trackers_away_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['away','not_home'])|list|count }}"
           device_trackers_unavailable_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
@@ -117,7 +137,7 @@ template:
           safety_sensors_unavailable_count: "{{ expand('group.all_safety_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           signal_sensors_low_count: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|map('int',0)|select('lt',-80)|list|count}}"
           signal_sensors_unavailable_count: "{{ expand('group.all_signal_strength_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          signal_sensors_average_value: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|reject('undefined')|reject('in',['unavailable','unknown'])|map('int',0)|list|average|int(0)}}"
+          signal_sensors_average_value: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|reject('undefined')|reject('in',['unavailable','unknown'])|map('int',0)|list|average(0)|int(0)}}"
           tab_action_sensors_triggered_count: >
             {{
               [
@@ -183,7 +203,7 @@ template:
           integrations_installed_list: "{{ states|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
           integrations_with_unavailable_entities: "{{ states|selectattr('state','eq', 'unavailable')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
           integrations_with_unknown_entities: "{{ states|selectattr('state','eq', 'unknown')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
-          remapped_zone_list: "{{ state_attr('group.all_zones','entity_id')|list }}"
+          remapped_zone_list: "{{ [] if state_attr('group.all_zones','entity_id') is none else state_attr('group.all_zones','entity_id')|list }}"
 
 
       - unique_id: "_unique_simple_state_printer"
@@ -209,7 +229,6 @@ template:
           icon: "mdi:printer-alert"
           device_class: "enum"
           options: "{{ ['normal', 'warning', 'error'] }}"
-          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_nas"
         name: "DiskStation Simple State"
@@ -228,7 +247,6 @@ template:
           icon: "mdi:nas"
           device_class: "enum"
           options: "{{ ['normal', 'warning', 'error'] }}"
-          state_class: "measurement"          
 
       - unique_id: "_unique_simple_state_ups"
         name: "UPS Simple State"
@@ -247,7 +265,6 @@ template:
           icon: "mdi:battery-alert-variant"
           device_class: "enum"
           options: "{{ ['normal', 'warning', 'error'] }}"
-          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_front_door_lock"
         name: "Front Door Lock Simple State"
@@ -282,7 +299,6 @@ template:
           icon: "mdi:lock-open-variant-outline"
           device_class: "enum"
           options: "{{ ['normal', 'warning', 'error', 'locked', 'jammed', 'door_open'] }}"
-          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_all_occupancy_sensors"
         name: "All Occupancy Sensors Simple State"
@@ -310,7 +326,6 @@ template:
           icon: "mdi:motion-sensor-off"
           device_class: "enum"
           options: "{{ ['not_triggered', 'triggered_home', 'triggered_away', 'warning', 'error'] }}"
-          state_class: "measurement" 
 
       - unique_id: "_unique_simple_state_away_occupancy_sensors"
         name: "Internal Occupancy Sensors Simple State"
@@ -338,38 +353,36 @@ template:
           icon: "mdi:motion-sensor"
           device_class: "enum"
           options: "{{ ['not_triggered', 'triggered_home', 'triggered_away', 'warning', 'error'] }}"
-          state_class: "measurement" 
 
-      - unique_id: "_unique_simple_state_washing_machine_sensors"
-        name: "Washing Machine Sensor Simple State"
-        state: >
-          {{
-            'warning' if (
-              not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
-              not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w") or
-              not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
-              not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w")
-            ) else (
-              'error' if (
-                not has_value("sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand")
-              ) else (
-                'active' if (
-                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_10w", now())) >
-                  as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_10w", now()))
-                ) else (
-                  'standby' if (
-                    as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_5w", now())) >
-                    as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_5w", now()))
-                  ) else 'off'
-                )
-              )
-            )
-          }}
-        attributes:
-          icon: "mdi:washing-machine-alert"
-          device_class: "enum"
-          options: "{{ ['active', 'standby', 'error', 'warning', 'off'] }}"
-          state_class: "measurement"
+      # - unique_id: "_unique_simple_state_washing_machine_sensors"
+      #   name: "Washing Machine Sensor Simple State"
+      #   state: >
+      #     {{
+      #       'warning' if (
+      #         not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
+      #         not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w") or
+      #         not has_value("input_datetime.washing_machine_instantaneous_demand_above_5w") or
+      #         not has_value("input_datetime.washing_machine_instantaneous_demand_below_10w")
+      #       ) else (
+      #         'error' if (
+      #           not has_value("sensor.zigbee_energy_monitor_outlet_switch_washing_machine_instantaneous_demand")
+      #         ) else (
+      #           'active' if (
+      #             as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_10w", now())) >
+      #             as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_10w", now()))
+      #           ) else (
+      #             'standby' if (
+      #               as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_above_5w", now())) >
+      #               as_timestamp(states("input_datetime.washing_machine_instantaneous_demand_below_5w", now()))
+      #             ) else 'off'
+      #           )
+      #         )
+      #       )
+      #     }}
+      #   attributes:
+      #     icon: "mdi:washing-machine-alert"
+      #     device_class: "enum"
+      #     options: "{{ ['active', 'standby', 'error', 'warning', 'off'] }}"
 
       - unique_id: "_unique_simple_state_bin_collection_sensors"
         name: "Bin Collection Simple State"
@@ -398,7 +411,6 @@ template:
           icon: "mdi:trash-can-outline"
           device_class: "enum"
           options: "{{ ['recycling', 'general_waste', 'error', 'warning', 'unknown'] }}"
-          state_class: "measurement"
           days_until_collection: >
             {{
               0 if (
@@ -414,6 +426,54 @@ template:
                 )
               )
             }}
+
+      - unique_id: "_unique_simple_state_bigpc_sensors"
+        name: "BigPC Sensor Simple State"
+        state: >
+          {{
+            'error' if (
+              not has_value("device_tracker.big_pc_unifi") and
+              not has_value("sensor.big_pc_win11_satellite_big_pc_win11_satellite_cpuload")
+            ) else (
+              'on' if (
+                states("device_tracker.big_pc_unifi")|lower == 'home' and
+                has_value("sensor.big_pc_win11_satellite_big_pc_win11_satellite_cpuload")
+              ) else (
+                'off' if (
+                  states("device_tracker.big_pc_unifi")|lower == 'not_home' and
+                  not has_value("sensor.big_pc_win11_satellite_big_pc_win11_satellite_cpuload")
+                ) else 'warning'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:desktop-tower"
+          device_class: "enum"
+          options: "{{ ['on', 'off', 'error', 'warning'] }}"
+
+      - unique_id: "_unique_simple_state_arcadepc_sensors"
+        name: "ArcadePC Sensor Simple State"
+        state: >
+          {{
+            'error' if (
+              not has_value("device_tracker.arcade_machine_unifi") and
+              not has_value("sensor.arcade_pc_satellite_arcade_pc_satellite_cpuload")
+            ) else (
+              'on' if (
+                states("device_tracker.arcade_machine_unifi")|lower == 'home' and
+                has_value("sensor.arcade_pc_satellite_arcade_pc_satellite_cpuload")
+              ) else (
+                'off' if (
+                  states("device_tracker.arcade_machine_unifi")|lower == 'not_home' and
+                  not has_value("sensor.arcade_pc_satellite_arcade_pc_satellite_cpuload")
+                ) else 'warning'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:controller"
+          device_class: "enum"
+          options: "{{ ['on', 'off', 'error', 'warning'] }}"
 
       - unique_id: "_unique_minimalist_ui_binary_action_sensors_tooltip"
         name: "minimalist_ui Binary Action Sensors Tooltip"
@@ -432,8 +492,8 @@ template:
           {{- 'dishwasher on,' if states('binary_sensor.is_dishwasher_on')|lower == 'on' -}}
           {{- 'fridge on,' if states('switch.drinks_fridge_plug_bed_c')|lower == 'on' -}}
           {{- 'reciever on,' if states('binary_sensor.yamaha_reciever_state')|lower == 'on' -}}
-          {{- 'arcade pc on,' if states('binary_sensor.is_arcade_pc_on')|lower == 'on' -}}
-          {{- 'bigpc on,' if states('binary_sensor.is_big_pc_on')|lower == 'on' -}}
+          {{- 'arcade pc on,' if states('sensor.arcadepc_sensor_simple_state')|lower == 'on' -}}
+          {{- 'bigpc on,' if states('sensor.bigpc_sensor_simple_state')|lower == 'on' -}}
         attributes:
           icon: "mdi:tooltip-question-outline"
           state_class: "measurement"
