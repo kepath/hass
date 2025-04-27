@@ -1,22 +1,43 @@
 ---
+binary_sensor:
+  - platform: "tod"
+    name: "nighttime"
+    after: "sunset"
+    before: "sunrise"
+    unique_id: "tod_nighttime"
+  - platform: "tod"
+    name: "quiettime"
+    after: "23:00"
+    before: "07:00"
+    unique_id: "tod_quiettime"
+  - platform: "tod"
+    name: "cheap heating time"
+    after: "00:00"
+    before: "07:00"
+    unique_id: "tod_cheap_heating_time"
+  - platform: "tod"
+    name: "morning heating time"
+    after: "06:00"
+    before: "09:00"
+    unique_id: "tod_morning_heating_time"
+  - platform: "tod"
+    name: "afternoon heating time"
+    after: "14:00"
+    before: "17:00"
+    unique_id: "tod_afternoon_heating_time"
+  - platform: "tod"
+    name: "evening heating time"
+    after: "19:00"
+    before: "21:00"
+    unique_id: "tod_evening_heating_time"
+  # - platform: "sdnotify"
+
 sensor:
   - platform: "bitcoin"
     currency: "GBP"
     display_options:
       - "exchangerate"
       - "trade_volume_btc"
-  # - platform: "otp"
-  #   name: "Unifi Auth"
-  #   token: !secret "unifi_auth_otp"
-  # - platform: "otp"
-  #   name: "Amazon Auth"
-  #   token: !secret "amazon_auth_otp"
-  # - platform: "otp"
-  #   name: "Github Auth"
-  #   token: !secret "github_auth_otp"
-  # - platform: "otp"
-  #   name: "FastHosts Auth"
-  #   token: !secret "fasthosts_auth_otp"
 
   #### TODO: Find out why unifi influxdb databse is inaccesible
   # - platform: "influxdb"
@@ -63,38 +84,6 @@ sensor:
       - "Victoria"
       - "Waterloo & City"
 
-binary_sensor:
-  - platform: "tod"
-    name: "nighttime"
-    after: "sunset"
-    before: "sunrise"
-    unique_id: "tod_nighttime"
-  - platform: "tod"
-    name: "quiettime"
-    after: "23:00"
-    before: "07:00"
-    unique_id: "tod_quiettime"
-  - platform: "tod"
-    name: "cheap heating time"
-    after: "00:00"
-    before: "07:00"
-    unique_id: "tod_cheap_heating_time"
-  - platform: "tod"
-    name: "morning heating time"
-    after: "06:00"
-    before: "09:00"
-    unique_id: "tod_morning_heating_time"
-  - platform: "tod"
-    name: "afternoon heating time"
-    after: "14:00"
-    before: "17:00"
-    unique_id: "tod_afternoon_heating_time"
-  - platform: "tod"
-    name: "evening heating time"
-    after: "19:00"
-    before: "21:00"
-    unique_id: "tod_evening_heating_time"
-
 spotcast:   #default is home account
   sp_dc: !secret "spotcast_homeaccount_sp_dc"
   sp_key: !secret "spotcast_homeaccount_sp_key"
@@ -106,10 +95,6 @@ spotcast:   #default is home account
       sp_dc: !secret "spotcast_emily_sp_dc"
       sp_key: !secret "spotcast_emily_sp_key"
 
-# iperf3:
-#   hosts:
-#     - host: "iperf.he.net"
-#     - host: "speedtest-london.its-tg.net"
 monitor_docker:
   - name: "Docker"
     url: !secret "hass_docker_monitor_connection_string"
@@ -117,7 +102,6 @@ monitor_docker:
       it_tools: "it-tools"
       uptime_kuma: "uptime-kuma"
     rename_entity: true
-    # switchenabled: true
     buttonenabled: true
     monitored_conditions: ["allinone"]
 
