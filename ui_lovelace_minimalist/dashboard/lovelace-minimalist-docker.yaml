@@ -1,0 +1,328 @@
+---
+button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
+views:
+  - title: "Docker"
+    icon: "si:docker"
+    type: "panel"
+    # theme: "minimalist-mobile"
+    # {% set docker_json = state_attr("sensor.collated_docker_details", "docker_json") %}
+    cards:
+    #   - type: "entities"
+    #     entities:
+    #     {% for matched_entities in docker_json.matched_entities %}
+    #       - entity: {{ matched_entities.entity_id }}
+    #     {% endfor %}
+
+
+
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "vertical-stack"
+          # columns: 2
+        card_param: "cards"
+        filter:
+          template: >-
+            {%- for matched_entities in state_attr('sensor.collated_docker_details','docker_json').matched_entities -%}
+              {%- set docker_sensor = matched_entities.linked_docker_sensor_entity_id -%}
+              {%- set docker_health = state_attr(docker_sensor, "health") -%}
+              {%- set docker_uptime = state_attr(docker_sensor, "status") -%}
+              {%- set docker_image = state_attr(docker_sensor, "image") -%}
+              {{
+              {
+                'type': 'horizontal-stack',
+                'cards': [
+                  {
+                    'type': 'vertical-stack',
+                    'cards': [
+                      {
+                        'type': 'horizontal-stack',
+                        'cards': [
+                          {
+                            'type': 'picture-entity',
+                            'entity': matched_entities.container_state if matched_entities.container_state|trim != '' else 'binary_sensor.empty_docker_binary_sensor',
+                            'name': matched_entities.friendly_name|lower|replace(' update','')|title,
+                            'show_state': false,
+                            'image': matched_entities.entity_picture if matched_entities.entity_picture is not none else '/local/Empty.png',
+                            'state_filter': {
+                              'off':  'saturate(3) blur(10px)'
+                            }
+                          },
+                          {
+                            'type': 'markdown',
+                            'content': 
+                              '**Health** ' + docker_health + '\n'
+                              '**Uptime** ' + docker_uptime + '\n'
+                              '**Image** ' + docker_image + '\n'
+                              '**Installed Version** ' + matched_entities.installed_version + '\n'
+                          }
+                        ]
+                      },
+                      {
+                        'type': 'custom:plotly-graph',
+                        'entities': [
+                          {
+                            'entity': docker_sensor,
+                            'attribute': '1cpu_percentage',
+                            'line': {
+                              'color': 'red',
+                              'width': '3'
+                            },
+                            'fill': 'tozeroy'
+                          },
+                          {
+                            'entity': docker_sensor,
+                            'attribute': 'memory_percentage',
+                            'line': {
+                              'color': 'blue',
+                              'width': '1'
+                            }
+                          },
+                          {
+                            'entity': docker_sensor,
+                            'attribute': 'network_speed_down'
+                          },
+                          {
+                            'entity': docker_sensor,
+                            'attribute': 'network_speed_up'
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    'type': 'vertical-stack',
+                    'cards': [
+                      {
+                        'type': 'horizontal-stack',
+                        'cards': [
+                          {
+                            'type': 'button',
+                            'name': 'Open WebUI',
+                            'icon': 'mdi:web' if matched_entities.linked_button_entity_id is defined else 'mdi:web-off',
+                            'tap_action': {
+                              'action': 'button.press',
+                              'data': {},
+                              'target': {
+                                'entity_id': matched_entities.linked_button_entity_id|default('button.unignore_all_issues')
+                              }
+                            }
+                          },
+                          {
+                            'type': 'button',
+                            'name': 'Reboot',
+                            'icon': 'mdi:restart' if matched_entities.linked_button_entity_id is defined else 'mdi:restart-off',
+                            'tap_action': {
+                              'action': 'button.press',
+                              'data': {},
+                              'target': {
+                                'entity_id': matched_entities.linked_button_entity_id|default('button.unignore_all_issues')
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        'type': 'horizontal-stack',
+                        'cards': [
+                          {
+                            'type': 'button',
+                            'name': 'Container Info',
+                            'icon': 'mdi:cog' if matched_entities.linked_button_entity_id is defined else 'mdi:cog-off',
+                            'tap_action': {
+                              'action': 'button.press',
+                              'data': {},
+                              'target': {
+                                'entity_id': matched_entities.linked_button_entity_id|default('button.unignore_all_issues')
+                              }
+                            }
+                          },
+                          {
+                            'type': 'button',
+                            'name': 'Release URL',
+                            'icon': 'mdi:source-pull' if matched_entities.linked_button_entity_id is defined else 'mdi:source-branch-remove',
+                            'tap_action': {
+                              'action': 'button.press',
+                              'data': {},
+                              'target': {
+                                'entity_id': matched_entities.linked_button_entity_id|default('button.unignore_all_issues')
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+              }},
+            {%- endfor -%}
+        # {{
+        # {
+        #   'type': 'horizontal-stack',
+        #   'cards': [
+        #     {
+        #       'type': 'vertical-stack',
+        #       'cards': [
+        #         {
+        #           'type': 'picture-entity',
+        #           'entity': matched_entities.container_state if matched_entities.container_state|trim != '' else 'binary_sensor.empty_docker_binary_sensor',
+        #           'name': matched_entities.friendly_name|lower|replace(' update','')|title,
+        #           'show_state': false,
+        #           'image': matched_entities.entity_picture if matched_entities.entity_picture is not none else '/local/Empty.png',
+        #           'state_filter': {
+        #             'off':  'saturate(3) blur(10px)'
+        #           }
+        #         },
+        #         {
+        #           'type': 'markdown',
+        #           'content': 
+        #             '**Health** ' + docker_health + '\n'
+        #             '**Uptime** ' + docker_uptime + '\n'
+        #             '**Image** ' + docker_image + '\n'
+        #             '**Version** ' + matched_entities.installed_version + '\n'
+        #         }
+        #       ]
+        #     },
+        #     {
+        #       'type': 'vertical-stack',
+        #       'cards': [
+        #         {
+        #           'type': 'custom:plotly-graph',
+        #           'entities': [
+        #             {
+        #               'entity': docker_sensor,
+        #               'attribute': '1cpu_percentage',
+        #               'line': {
+        #                 'color': 'red',
+        #                 'width': '3'
+        #               },
+        #               'fill': 'tozeroy'
+        #             },
+        #             {
+        #               'entity': docker_sensor,
+        #               'attribute': 'memory_percentage',
+        #               'line': {
+        #                 'color': 'blue',
+        #                 'width': '1'
+        #               }
+        #             },
+        #             {
+        #               'entity': docker_sensor,
+        #               'attribute': 'network_speed_down'
+        #             },
+        #             {
+        #               'entity': docker_sensor,
+        #               'attribute': 'network_speed_up'
+        #             }
+        #           ],
+        #           'defaults': {
+        #             'xaxes':
+        #           }
+        #         }
+        #       ]
+        #     },
+        #     {
+        #       'type': 'vertical-stack',
+        #       'cards': [
+        #         {
+        #           'type': 'button',
+        #           'name': 'Reboot',
+        #           'icon': 'mdi:restart' if matched_entities.linked_button_entity_id is defined else 'mdi:restart-off',
+        #           'tap_action': {
+        #             'action': 'button.press',
+        #             'data': {},
+        #             'target': {
+        #               'entity_id': matched_entities.linked_button_entity_id|default('button.unignore_all_issues')
+        #             }
+        #           }
+        #         }
+        #       ]
+        #     }
+        #   ]
+        # }
+        # }},
+
+
+
+        # {%- for matched_entities in state_attr('sensor.collated_docker_details','docker_json').matched_entities -%}
+        #   {{
+        #   {
+        #     'entity': matched_entities.entity_id,
+        #     'type': 'custom:multiple-entity-row',
+        #     'name': matched_entities.friendly_name|replace(' Update', ''),
+        #     'show_state': false,
+        #     'entities': [
+        #       {
+        #         'attribute': 'installed_version',
+        #         'name': 'Installed Version',
+        #         'hide_unavailable': true
+        #       },
+        #       {
+        #         'icon': 'mdi:restart' if matched_entities.linked_button_entity_id is defined else 'mdi:restart-off',
+        #         'tap_action': {
+        #           'action': 'button.press',
+        #           'data': {},
+        #           'target': {
+        #             'entity_id': matched_entities.linked_button_entity_id|default('button.unignore_all_issues')
+        #           }
+        #         },
+        #         'hide_unavailable': true
+        #       },
+        #       {
+        #         'entity': matched_entities.linked_docker_sensor_entity_id|default('sensor.empty_docker_sensor')
+        #       },
+        #       {
+        #         'entity': matched_entities.linked_docker_sensor_entity_id|default('sensor.empty_docker_sensor') + '.attributes.health',
+        #         'name': 'Container Health'
+        #       }
+        #     ]
+        #   }
+        #   }},
+        # {%- endfor -%}
+
+
+      # - type: "custom:config-template-card"
+      #   variables:
+      #     - DOCKER_JSON: 'state_attr("sensor.collated_docker_details", "docker_json")'
+      #   entities:
+      #     - "sensor.collated_docker_details"
+      #   card:
+      #     - type: "entities"
+      #       entities:
+      #         - entity: "sensor.collated_docker_details"
+
+
+
+        # content: >
+        #   {% set docker_json = state_attr("sensor.collated_docker_details", "docker_json") %}
+        #   <table>
+        #     <tr>
+        #       <th>Name</th>
+        #       <th>Run State</th>
+        #       <th>Open Info</th>
+        #       <th>Open WebUI</th>
+        #       <th>Operating State</th>
+        #       <th>Reboot</th>
+        #     </tr>
+        #   {% for entity in docker_json.core_entities[0].entities %}
+        #     <tr>
+        #       <td>{{entity.friendly_name}}</td>
+        #       <td><img src="{{entity.entity_picture}}"></td>
+        #       <td>{{entity.configuration_url}}</td>
+        #       <td></td>
+        #       <td>{{entity.linked_docker_sensor_entity_id}}</td>
+        #       <td>{{entity.linked_button_entity_id}}</td>
+        #     </tr>
+        #   {% endfor %}
+        #   {% for entity in docker_json.addon_entities[0].entities %}
+        #     <tr>
+        #       <td>{{entity.friendly_name}}</td>
+        #       <td><img src="{{entity.entity_picture}}"></td>
+        #       <td>{{entity.configuration_url}}</td>
+        #       <td></td>
+        #       <td>{{entity.linked_docker_sensor_entity_id}}</td>
+        #       <td>{{entity.linked_button_entity_id}}</td>
+        #     </tr>
+        #   {% endfor %}
+        #   </table>
