@@ -364,6 +364,8 @@ views:
               margin: "0px"
               card_margin: "0px"
               layout_margin: "0px"
+          # - type: "custom:swipe-card"
+          #   start_card: 0
             cards:
               - type: "conditional"
                 conditions:
@@ -2168,7 +2170,10 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "5c53de3b_esphome"
+                            webui_access_type: !secret "hass_addon_esphome_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_esphome_docker_slug"
+                            local_port: !secret "hass_addon_esphome_webui_local_port"
+
                     item6:
                       card:
                         type: "custom:button-card"
@@ -2191,7 +2196,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_vscode"
+                            webui_access_type: !secret "hass_addon_studiocodeserver_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_studiocodeserver_docker_slug"
+                            local_port: !secret "hass_addon_studiocodeserver_webui_local_url"
                     item7:
 
                       card:
@@ -2215,7 +2222,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_adguard"
+                            webui_access_type: !secret "hass_addon_adguard_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_adguard_docker_slug"
+                            local_port: !secret "hass_addon_adguard_webui_local_port"
                     item8:
                       card:
                         type: "custom:button-card"
@@ -2238,7 +2247,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_emqx"
+                            webui_access_type: !secret "hass_addon_emqx_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_emqx_docker_slug"
+                            local_port: !secret "hass_addon_emqx_webui_local_port"
                     item9:
                       card:
                         type: "custom:button-card"
@@ -2261,7 +2272,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_guacamole"
+                            webui_access_type: !secret "hass_addon_guacamole_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_guacamole_docker_slug"
+                            local_port: !secret "hass_addon_guacamole_webui_local_port"
                     item10:
                       card:
                         type: "custom:button-card"
@@ -2284,8 +2297,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_uptime-kuma"
-                            ingress_or_local_port: !secret "hass_addon_uptime_kuma_webui_local_port"
+                            webui_access_type: !secret "hass_addon_uptime_kuma_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_uptime_kuma_docker_slug"
+                            local_port: !secret "hass_addon_uptime_kuma_webui_local_port"
                     item11:
                       card:
                         type: "custom:button-card"
@@ -2308,7 +2322,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_portainer"
+                            webui_access_type: !secret "hass_addon_portainer_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_portainer_docker_slug"
+                            local_port: !secret "hass_addon_portainer_webui_local_port"
                     item12:
                       card:
                         type: "custom:button-card"
@@ -2331,7 +2347,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_scrutiny_fa"
+                            webui_access_type: !secret "hass_addon_scrutinyfa_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_scrutinyfa_docker_slug"
+                            local_port: !secret "hass_addon_scrutinyfa_webui_local_port"
                     item13:
                       card:
                         type: "custom:button-card"
@@ -2354,7 +2372,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_phpmyadmin"
+                            webui_access_type: !secret "hass_addon_phpmyadmin_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_phpmyadmin_docker_slug"
+                            local_port: !secret "hass_addon_phpmyadmin_webui_local_port"
                     item14:
                       card:
                         type: "custom:button-card"
@@ -2377,7 +2397,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "core_mariadb"
+                            webui_access_type: !secret "hass_addon_mariadb_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_mariadb_docker_slug"
+                            local_port: !secret "hass_addon_mariadb_database_local_port"
                         tap_action:
                           action: "more-info"
 
@@ -2403,7 +2425,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_ssh"
+                            webui_access_type: !secret "hass_addon_advanced_ssh_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_advanced_ssh_docker_slug"
+                            local_port: !secret "hass_addon_advanced_ssh_local_port"
                     item16:
                       card:
                         type: "custom:button-card"
@@ -2426,8 +2450,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_plex"
-                            ingress_or_local_port: !secret "hass_addon_plex_webui_local_port"
+                            webui_access_type: !secret "hass_addon_plex_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_plex_docker_slug"
+                            local_port: !secret "hass_addon_plex_webui_local_port"
                     item17:
 
                       card:
@@ -2451,8 +2476,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_tautulli"
-                            ingress_or_local_port: !secret "hass_addon_tautulli_webui_local_port"
+                            webui_access_type: !secret "hass_addon_tautulli_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_tautulli_docker_slug"
+                            local_port: !secret "hass_addon_tautulli_webui_local_port"
                     item18:
                       card:
                         type: "custom:button-card"
@@ -2475,7 +2501,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_calibre"
+                            webui_access_type: !secret "hass_addon_calibre_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_calibre_docker_slug"
+                            local_port: !secret "hass_addon_calibre_webui_local_port"
                     item19:
                       card:
                         type: "custom:button-card"
@@ -2498,7 +2526,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "d5369777_music_assistant"
+                            webui_access_type: !secret "hass_addon_musicassistantserver_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_musicassistantserver_docker_slug"
+                            local_port: !secret "hass_addon_musicassistantserverwebui_local_port"
                     item20:
                       card:
                         type: "custom:button-card"
@@ -2521,8 +2551,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "2effc9b9_moodist"
-                            ingress_or_local_port: !secret "hass_addon_moodist_webui_local_port"
+                            webui_access_type: !secret "hass_addon_moodist_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_moodist_docker_slug"
+                            local_port: !secret "hass_addon_moodist_webui_local_port"
                     item21:
                       card:
                         type: "custom:button-card"
@@ -2545,7 +2576,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_tailscale"
+                            webui_access_type: !secret "hass_addon_tailscale_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_tailscale_docker_slug"
+                            local_port: !secret "hass_addon_tailscale_webui_local_port"
                     item22:
                       card:
                         type: "custom:button-card"
@@ -2568,7 +2601,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "9074a9fa_cloudflared"
+                            webui_access_type: !secret "hass_addon_cloudflared_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_cloudflared_docker_slug"
+                            local_port: !secret "hass_addon_cloudflared_webui_local_port"
                     item23:
                       card:
                         type: "custom:button-card"
@@ -2591,8 +2626,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_nginxproxymanager"
-                            ingress_or_local_port: !secret "hass_addon_nginxproxymanager_webui_local_port"
+                            webui_access_type: !secret "hass_addon_nginxproxymanager_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_nginxproxymanager_docker_slug"
+                            local_port: !secret "hass_addon_nginxproxymanager_webui_local_port"
                     item24:
                       card:
                         type: "custom:button-card"
@@ -2615,8 +2651,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_netalertx"
-                            # ingress_or_local_port: !secret "hass_addon_netalertx_webui_local_port"
+                            webui_access_type: !secret "hass_addon_netalertx_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_netalertx_docker_slug"
+                            local_port: !secret "hass_addon_netalertx_webui_local_port"
                     item25:
                      card:
                         type: "custom:button-card"
@@ -2639,8 +2676,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_overseerr"
-                            ingress_or_local_port: !secret "hass_addon_overseerr_webui_local_port"
+                            webui_access_type: !secret "hass_addon_overseer_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_overseer_docker_slug"
+                            local_port: !secret "hass_addon_overseerr_webui_local_port"
                     item26:
                       card:
                         type: "custom:button-card"
@@ -2663,7 +2701,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "47146a2b_netdata"
+                            webui_access_type: !secret "hass_addon_netdata_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_netdata_docker_slug"
+                            local_port: !secret "hass_addon_netdata_webui_local_port"
                     item27:
                       card:
                         type: "custom:button-card"
@@ -2686,8 +2726,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "2effc9b9_convertx"
-                            ingress_or_local_port: !secret "hass_addon_convertx_webui_local_port"
+                            webui_access_type: !secret "hass_addon_convertx_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_convertx_docker_slug"
+                            local_port: !secret "hass_addon_convertx_webui_local_port"
                     item28:
                       card:
                         type: "custom:button-card"
@@ -2710,8 +2751,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "2effc9b9_IT-Tools"
-                            ingress_or_local_port: !secret "hass_addon_it_tools_webui_local_port"
+                            webui_access_type: !secret "hass_addon_it_tools_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_it_tools_docker_slug"
+                            local_port: !secret "hass_addon_it_tools_webui_local_port"
                     item29:
                       card:
                         type: "custom:button-card"
@@ -2734,8 +2776,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "2effc9b9_cyberchef"
-                            ingress_or_local_port: !secret "hass_addon_cyberchef_webui_local_port"
+                            webui_access_type: !secret "hass_addon_cyberchef_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_cyberchef_docker_slug"
+                            local_port: !secret "hass_addon_cyberchef_webui_local_port"
                     item30:
                       card:
                         type: "custom:button-card"
@@ -2758,8 +2801,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "2effc9b9_myip"
-                            ingress_or_local_port: !secret "hass_addon_myip_webui_local_port"
+                            webui_access_type: !secret "hass_addon_myip_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_myip_docker_slug"
+                            local_port: !secret "hass_addon_myip_webui_local_port"
                     item31:
                       card:
                         type: "custom:button-card"
@@ -2782,7 +2826,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_grafana"
+                            webui_access_type: !secret "hass_addon_grafana_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_grafana_docker_slug"
+                            local_port: !secret "hass_addon_grafana_webui_local_port"
                     item32:
                       card:
                         type: "custom:button-card"
@@ -2805,7 +2851,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_influxdb"
+                            webui_access_type: !secret "hass_addon_influx_db_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_influx_db_docker_slug"
+                            local_port: !secret "hass_addon_influx_db_server_local_port"
                     item33:
                       card:
                         type: "custom:button-card"
@@ -2828,7 +2876,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_grocy"
+                            webui_access_type: !secret "hass_addon_grocy_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_grocy_docker_slug"
+                            local_port: !secret "hass_addon_grocy_webui_local_port"
                     item34:
                       card:
                         type: "custom:button-card"
@@ -2851,8 +2901,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "db21ed7f_openproject"
-                            ingress_or_local_port: !secret "hass_addon_openproject_webui_local_port"
+                            webui_access_type: !secret "hass_addon_openproject_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_openproject_docker_slug"
+                            local_port: !secret "hass_addon_openproject_webui_local_port"
                     item35:
                       card:
                         type: "custom:button-card"
@@ -2875,8 +2926,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "a0d7b954_appdaemon"
-                            ingress_or_local_port: !secret "hass_addon_appdaemon_webserver_local_port"
+                            webui_access_type: !secret "hass_addon_appdaemon_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_appdaemon_docker_slug"
+                            local_port: !secret "hass_addon_appdaemon_webserver_local_port"
                     item36:
                       card:
                         type: "custom:button-card"
@@ -2899,8 +2951,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "246dd49f_matterbridge"
-                            ingress_or_local_port: !secret "hass_addon_matterbridge_webui_local_port"
+                            webui_access_type: !secret "hass_addon_matterbridge_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_matterbridge_docker_slug"
+                            local_port: !secret "hass_addon_matterbridge_webui_local_port"
                     item37:
                       card:
                         type: "custom:button-card"
@@ -2923,7 +2976,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "core_matter_server"
+                            webui_access_type: !secret "hass_addon_matterserver_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_matterserver_docker_slug"
+                            local_port: !secret "hass_addon_matterserver_webui_local_port"
                     item38:
                       card:
                         type: "custom:button-card"
@@ -2946,8 +3001,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "2effc9b9_homebox"
-                            ingress_or_local_port: !secret "hass_addon_homebox_webui_local_port"
+                            webui_access_type: !secret "hass_addon_homebox_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_homebox_docker_slug"
+                            local_port: !secret "hass_addon_homebox_webui_local_port"
                     item39:
                       card:
                         type: "custom:button-card"
@@ -2970,7 +3026,9 @@ views:
                             default_state:
                               background_color: "rgba(var(--color-theme),0.05)"
                           var_kepath_generic_set_addin_link:
-                            docker_slug_reference: "2effc9b9_5etools"
+                            webui_access_type: !secret "hass_addon_5etools_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_5etools_docker_slug"
+                            local_port: !secret "hass_addon_5etools_webui_local_port"
 
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
