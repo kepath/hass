@@ -55,6 +55,467 @@ views:
     theme: "minimalist-mobile"
     path: "../lovelace-minimalist-home"
 
+
+  - title: "Network Diagram"
+    icon: "mdi:lan-connect"
+    theme: "minimalist-mobile"
+    panel: true
+    cards:
+      - type: "picture-elements"
+        image: "/local/network.png"
+        elements:
+          - type: "custom:mini-graph-card"
+            name: "UDMPRO"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.udmpro_internet_uplink_data_rate"
+                name: "WAN"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "40%"
+              top: "8%"
+              height: "10%"
+              width: "10%"
+            color_thresholds:
+              - value: 1
+                color: "#57bb8a"
+              - color: "#63b682"
+              - color: "#73b87e"
+              - color: "#84bb7b"
+              - color: "#94bd77"
+              - color: "#a4c073"
+              - color: "#b0be6e"
+              - color: "#c4c56d"
+              - color: "#d4c86a"
+              - color: "#e2c965"
+              - color: "#f5ce62"
+              - color: "#f3c563"
+              - color: "#e9b861"
+              - color: "#e6ad61"
+              - color: "#ecac67"
+              - color: "#e9a268"
+              - color: "#e79a69"
+              - color: "#e5926b"
+              - color: "#e2886c"
+              - color: "#e0816d"
+              - value: 50
+                color: "#dd776e"
+
+          - type: "custom:mini-graph-card"
+            name: "USW-Pro-24-PoE"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_pro_24_poe_home_assistant_downlink_data_rate"
+                name: "HA"
+                color: "yellow"
+              - entity: "sensor.usw_pro_24_poe_nas_downlink_data_rate"
+                name: "NAS"
+                color: "yellow"
+              - entity: "sensor.usw_pro_24_poe_nvidia_shield_downlink_data_rate"
+                name: "NVidia"
+                color: "red"
+              - entity: "sensor.usw_pro_24_poe_udm_pro_sfp_uplink_data_rate"
+                name: "SFP"
+                color: "green"
+              - entity: "sensor.usw_pro_24_poe_xbox_one_x_downlink_data_rate"
+                name: "XBox"
+                color: "orange"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "68%"
+              top: "18%"
+              height: "15%"
+              width: "20%"
+          - type: "custom:mini-graph-card"
+            name: "U6-LR"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_flex_loft_u6_lr_ap_data_rate"
+                name: "Wi-Fi"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "7%"
+              top: "8%"
+              height: "10%"
+              width: "10%"
+            color_thresholds:
+              - value: 1
+                color: "#57bb8a"
+              - color: "#63b682"
+              - color: "#73b87e"
+              - color: "#84bb7b"
+              - color: "#94bd77"
+              - color: "#a4c073"
+              - color: "#b0be6e"
+              - color: "#c4c56d"
+              - color: "#d4c86a"
+              - color: "#e2c965"
+              - color: "#f5ce62"
+              - color: "#f3c563"
+              - color: "#e9b861"
+              - color: "#e6ad61"
+              - color: "#ecac67"
+              - color: "#e9a268"
+              - color: "#e79a69"
+              - color: "#e5926b"
+              - color: "#e2886c"
+              - color: "#e0816d"
+              - value: 20
+                color: "#dd776e"
+          - type: "custom:mini-graph-card"
+            name: "USW-Loft"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_pro_24_poe_loft_downlink_data_rate"
+                name: "Upstream"
+                color: "green"
+              - entity: "sensor.usw_flex_loft_g3_flex_back_data_rate"
+                name: "Cam Back"
+                color: "brown"
+              - entity: "sensor.usw_flex_loft_g3_flex_front_data_rate"
+                name: "Cam Front"
+                color: "brown"
+              - entity: "sensor.usw_flex_loft_dlpc_data_rate"
+                name: "DLPC"
+                color: "blue"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "23%"
+              top: "8%"
+              height: "15%"
+              width: "20%"
+          - type: "custom:mini-graph-card"
+            name: "USW-Lite-8Port"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_pro_24_poe_bed_e_downlink_data_rate"
+                name: "Upstream"
+                color: "green"
+              - entity: "sensor.usw_lite_8_port_bed_e_g3_flex_middle_hall_data_rate"
+                name: "Cam Hall"
+                color: "brown"
+              - entity: "sensor.usw_lite_8_port_bed_e_big_pc_data_rate"
+                name: "Big PC"
+                color: "blue"
+              - entity: "sensor.usw_lite_8_port_bed_e_caldigit_dock_data_rate"
+                name: "Caldigit"
+                color: "blue"
+              - entity: "sensor.usw_lite_8_port_bed_e_nvidia_shield_data_rate"
+                name: "NVidia"
+                color: "red"
+              - entity: "sensor.usw_lite_8_port_bed_e_empty_data_rate"
+                name: "TV"
+                color: "red"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "88%"
+              top: "8%"
+              height: "15%"
+              width: "20%"
+          - type: "custom:mini-graph-card"
+            name: "USW-Lounge"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_pro_24_poe_lounge_right_downlink_data_rate"
+                name: "Upstream"
+                color: "green"
+              - entity: "sensor.usw_flex_mini_lounge_apple_tv_data_rate"
+                name: "Apple TV"
+                color: "red"
+              - entity: "sensor.usw_flex_mini_lounge_samsung_tv_data_rate"
+                name: "TV"
+                color: "red"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "12%"
+              top: "43%"
+              height: "15%"
+              width: "20%"
+          - type: "custom:mini-graph-card"
+            name: "USW-BedA-TV"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_pro_24_poe_bed_a_tv_downlink_data_rate"
+                name: "Upstream"
+                color: "green"
+              - entity: "sensor.usw_flex_mini_bed_a_tv_firestick_data_rate"
+                name: "FireStick"
+                color: "red"
+              - entity: "sensor.usw_flex_mini_bed_a_tv_samsung_tv_data_rate"
+                name: "TV"
+                color: "red"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "36%"
+              top: "76%"
+              height: "15%"
+              width: "20%"
+          - type: "custom:mini-graph-card"
+            name: "USW-Study"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_pro_24_poe_study_downlink_data_rate"
+                name: "Upstream"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "55%"
+              top: "75%"
+              height: "10%"
+              width: "10%"
+            color_thresholds:
+              - value: 1
+                color: "#57bb8a"
+              - color: "#63b682"
+              - color: "#73b87e"
+              - color: "#84bb7b"
+              - color: "#94bd77"
+              - color: "#a4c073"
+              - color: "#b0be6e"
+              - color: "#c4c56d"
+              - color: "#d4c86a"
+              - color: "#e2c965"
+              - color: "#f5ce62"
+              - color: "#f3c563"
+              - color: "#e9b861"
+              - color: "#e6ad61"
+              - color: "#ecac67"
+              - color: "#e9a268"
+              - color: "#e79a69"
+              - color: "#e5926b"
+              - color: "#e2886c"
+              - color: "#e0816d"
+              - value: 20
+                color: "#dd776e"
+          - type: "custom:mini-graph-card"
+            name: "USW-BedC"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_pro_24_poe_bed_c_left_downlink_data_rate"
+                name: "Upstream"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "75%"
+              top: "75%"
+              height: "10%"
+              width: "10%"
+            color_thresholds:
+              - value: 1
+                color: "#57bb8a"
+              - color: "#63b682"
+              - color: "#73b87e"
+              - color: "#84bb7b"
+              - color: "#94bd77"
+              - color: "#a4c073"
+              - color: "#b0be6e"
+              - color: "#c4c56d"
+              - color: "#d4c86a"
+              - color: "#e2c965"
+              - color: "#f5ce62"
+              - color: "#f3c563"
+              - color: "#e9b861"
+              - color: "#e6ad61"
+              - color: "#ecac67"
+              - color: "#e9a268"
+              - color: "#e79a69"
+              - color: "#e5926b"
+              - color: "#e2886c"
+              - color: "#e0816d"
+              - value: 20
+                color: "#dd776e"
+          - type: "custom:mini-graph-card"
+            name: "UAP-Lounge"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_flex_mini_lounge_uap_flexhd_lounge_data_rate"
+                name: "Wi-Fi"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "18%"
+              top: "90%"
+              height: "10%"
+              width: "10%"
+            color_thresholds:
+              - value: 1
+                color: "#57bb8a"
+              - color: "#63b682"
+              - color: "#73b87e"
+              - color: "#84bb7b"
+              - color: "#94bd77"
+              - color: "#a4c073"
+              - color: "#b0be6e"
+              - color: "#c4c56d"
+              - color: "#d4c86a"
+              - color: "#e2c965"
+              - color: "#f5ce62"
+              - color: "#f3c563"
+              - color: "#e9b861"
+              - color: "#e6ad61"
+              - color: "#ecac67"
+              - color: "#e9a268"
+              - color: "#e79a69"
+              - color: "#e5926b"
+              - color: "#e2886c"
+              - color: "#e0816d"
+              - value: 20
+                color: "#dd776e"
+          - type: "custom:mini-graph-card"
+            name: "UAP-Kitchen"
+            icon: "mdi:web"
+            hours_to_show: 3
+            points_per_hour: 6
+            update_interval: 30
+            font_size: 50
+            lower_bound: 0
+            group: true
+            entities:
+              - entity: "sensor.usw_pro_24_poe_kitchen_downlink_data_rate"
+                name: "Wi-Fi"
+            show:
+              name: false
+              icon: false
+              legend: false
+            style:
+              left: "80%"
+              top: "50%"
+              height: "10%"
+              width: "10%"
+            color_thresholds:
+              - value: 1
+                color: "#57bb8a"
+              - color: "#63b682"
+              - color: "#73b87e"
+              - color: "#84bb7b"
+              - color: "#94bd77"
+              - color: "#a4c073"
+              - color: "#b0be6e"
+              - color: "#c4c56d"
+              - color: "#d4c86a"
+              - color: "#e2c965"
+              - color: "#f5ce62"
+              - color: "#f3c563"
+              - color: "#e9b861"
+              - color: "#e6ad61"
+              - color: "#ecac67"
+              - color: "#e9a268"
+              - color: "#e79a69"
+              - color: "#e5926b"
+              - color: "#e2886c"
+              - color: "#e0816d"
+              - value: 20
+                color: "#dd776e"
+          # - type: "custom:mini-graph-card"
+          #   name: "UAP-Garage"
+          #   icon: "mdi:web"
+          #   hours_to_show: 3
+          #   points_per_hour: 6
+          #   update_interval: 30
+          #   font_size: 50
+          #   lower_bound: 0
+          #   group: true
+          #   entities:
+          #     - entity: "sensor.usw_flex_loft_cam_back_rx"
+          #       name: "Wi-Fi"
+          #   show:
+          #     name: false
+          #     icon: false
+          #   style:
+          #     left: "66%"
+          #     top: "8%"
+          #     height: "10%"
+          #     width: "10%"
+
+
+
   - title: "Floorplan"
     icon: "mdi:floor-plan"
     theme: "minimalist-mobile"
