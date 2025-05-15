@@ -12,6 +12,15 @@ custom_card_kepath_generic_add_addin_link:
           }
           return evaluatedObject;
         ]]]
+
+      webui_access_type: >
+        [[[
+          var ingressOrLocalPort = "ingress";
+          if (typeof variables?.var_kepath_generic_set_addin_link?.webui_access_type !== 'undefined') {
+            ingressOrLocalPort = variables?.var_kepath_generic_set_addin_link?.webui_access_type;
+          }
+          return ingressOrLocalPort;
+        ]]]
       docker_slug_reference: >
         [[[
           var dockerSlugReference = "a0d7b954_ssh";
@@ -20,21 +29,21 @@ custom_card_kepath_generic_add_addin_link:
           }
           return dockerSlugReference;
         ]]]
-      ingress_or_local_port: >
+      local_port: >
         [[[
-          var ingressOrLocalPort = "ingress";
-          if (typeof variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port !== 'undefined') {
-            ingressOrLocalPort = variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port;
+          var localPort = "8123";
+          if (typeof variables?.var_kepath_generic_set_addin_link?.local_port !== 'undefined') {
+            localPort = variables?.var_kepath_generic_set_addin_link?.local_port;
           }
-          return ingressOrLocalPort;
+          return localPort;
         ]]]
   styles:
     img_cell:
       - border: >
           [[[
             var border = "1px solid rgba(var(--color-theme),0.01)";
-            if (typeof variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port !== 'undefined') {
-              if (variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port != "ingress") {
+            if (typeof variables?.var_kepath_generic_set_addin_link?.webui_access_type !== 'undefined') {
+              if (variables?.var_kepath_generic_set_addin_link?.webui_access_type != "ingress") {
                 border = "1px solid rgba(var(--color-theme),0.3)";
               }
             }
@@ -47,10 +56,14 @@ custom_card_kepath_generic_add_addin_link:
             var deviceId = hass.entities[variables.var_kepath_generic_set_addin_link.evaluated_object].device_id.toString();
             var runningStates = states["group.all_running_class_binary_sensors"].attributes.entity_id;
             for (var runningState of runningStates) {
-              if (hass.entities[runningState].device_id.toString() == deviceId) {
-                if (states[runningState].state == "on") {
-                  imageBlur = "none";
-                  break;
+              if (hass.entities[runningState]) {
+                if (hass.entities[runningState]?.device_id) {
+                  if (hass.entities[runningState].device_id.toString() == deviceId) {
+                    if (states[runningState].state == "on") {
+                      imageBlur = "none";
+                      break;
+                    }
+                  }
                 }
               }
             }
@@ -62,10 +75,10 @@ custom_card_kepath_generic_add_addin_link:
     url_path: >
       [[[
         var returnValue;
-        if (variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port == "ingress") {
+        if (variables?.var_kepath_generic_set_addin_link?.webui_access_type == "ingress") {
           returnValue = states['sensor.non_hard_coded_secrets_to_use_in_templates'].attributes.ha_nabucasa_url + "hassio/ingress/" + variables?.var_kepath_generic_set_addin_link?.docker_slug_reference;
         } else {
-          returnValue = "http://" + states['sensor.non_hard_coded_secrets_to_use_in_templates'].attributes.ha_rj45_ip + ":" + variables?.var_kepath_generic_set_addin_link?.ingress_or_local_port.toString();
+          returnValue = "http://" + states['sensor.non_hard_coded_secrets_to_use_in_templates'].attributes.ha_rj45_ip + ":" + variables?.var_kepath_generic_set_addin_link?.local_port.toString();
         }
         return returnValue;
       ]]]

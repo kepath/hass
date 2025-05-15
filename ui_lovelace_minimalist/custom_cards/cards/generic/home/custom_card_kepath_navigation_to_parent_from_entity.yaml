@@ -26,14 +26,22 @@ custom_card_kepath_navigation_to_parent_from_entity:
           switch(returnType) {
             case "device":
               parentPath = "/config/devices/device/";
-              parentId = hass.entities[entityId].device_id;
-
+              if (hass.entities[entityId]) {
+                if (hass.entities[entityId]?.device_id) {
+                  parentId = hass.entities[entityId]?.device_id;
+                }
+              }
+              
               //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: lt'});
               break;
 
             case "integration":
               parentPath = "/config/integrations/integration/";
-              parentId = hass.entities[entityId].platform;
+              if (hass.entities[entityId]) {
+                if (hass.entities[entityId]?.platform) {
+                  parentId = hass.entities[entityId]?.platform;
+                }
+              }
 
               //hass.callService('system_log', 'write', {level:'warning',message:'switch mathExpression: gt'});
               break;

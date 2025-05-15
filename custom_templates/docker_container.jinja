@@ -97,7 +97,7 @@
     {%- endfor -%}
 
     {# build docker detail JSON #}
-    {% set ns_json_builder = namespace(core_entities=[], addon_entities=[], non_update_entities=[], metadata_entities=[]) %}
+    {% set ns_json_builder = namespace(matched_entities=[], unmatched_entities=[], metadata_entities=[]) %}
     {% set ns_core_entity_builder = namespace(entities=[]) %}
     {% set ns_addon_entity_builder = namespace(entities=[]) %}
     {% set ns_non_update_entity_builder = namespace(entities=[]) %}
@@ -106,20 +106,19 @@
     {%- for hassio_update_entity in ns_hassio_update_entities.entities|reject('in',(states.update|map(attribute='entity_id')|select('is_device_attr','model','Home Assistant Add-on')|sort|list))|list -%}
         {% set updateentitydetails = get_combined_details(hassio_update_entity, ns_core_entity_builder, ns_processed_entities) %}
     {%- endfor -%}
-    {% set ns_json_builder.core_entities = ns_json_builder.core_entities + [ns_core_entity_builder] %}
+    {% set ns_json_builder.matched_entities = ns_json_builder.matched_entities + ns_core_entity_builder.entities %}
     {%- for hassio_update_entity in ns_hassio_update_entities.entities|select('in',(states.update|map(attribute='entity_id')|select('is_device_attr','model','Home Assistant Add-on')|sort|list))|list -%}
         {% set updateentitydetails = get_combined_details(hassio_update_entity, ns_addon_entity_builder, ns_processed_entities) %}
     {%- endfor -%}
-    {% set ns_json_builder.addon_entities = ns_json_builder.addon_entities + [ns_addon_entity_builder] %}
+    {% set ns_json_builder.matched_entities = ns_json_builder.matched_entities + ns_addon_entity_builder.entities %}
 
     {% set updateentitydetails = get_docker_integration_details('', ns_non_update_entity_builder, ns_processed_entities, 'nonupdate') %}
     {% set updateentitydetails = get_docker_integration_details('', ns_metadata_entity_builder, ns_processed_entities, 'metadata') %}
 
-    {% set ns_json_builder.non_update_entities = ns_json_builder.non_update_entities + [ns_non_update_entity_builder] %}
-
+    {% set ns_json_builder.unmatched_entities = ns_json_builder.unmatched_entities + ns_non_update_entity_builder.entities %}
 
     {# {{ ns_json_builder }} #}
     {# {{ ns_processed_entities.entities|replace('<Namespace ','')|replace('>','') }} #}
 
-    {{ ns_json_builder|replace('<Namespace ','')|replace('>','') }}
+    {{ ns_json_builder|replace('<Namespace ','')|replace('>','')|replace('- entities:','') }}
 {%- endmacro -%}

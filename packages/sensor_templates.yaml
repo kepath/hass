@@ -205,7 +205,6 @@ template:
           integrations_with_unknown_entities: "{{ states|selectattr('state','eq', 'unknown')|map(attribute='entity_id')|map('device_attr', 'identifiers')|reject('none')|map('first')|select('defined')|map(attribute='0')|unique|list|sort }}"
           remapped_zone_list: "{{ [] if state_attr('group.all_zones','entity_id') is none else state_attr('group.all_zones','entity_id')|list }}"
 
-
       - unique_id: "_unique_simple_state_printer"
         name: "Printer Simple State"
         state: >
@@ -565,6 +564,29 @@ template:
         state: "0"
         attributes:
           browser_mod: "{{ integration_entities('browser_mod') }}"
+
+      - unique_id: "_unique_empty_docker_sensor"
+        name: "Empty Docker Sensor"
+        state: "Exited"
+        attributes:
+          installed_version: 0
+          latest_version: 0
+          release_url: ""
+          title: ""
+          entity_picture: ""
+          friendly_name: "Not Running"
+          health: "Unknown"
+          status: "Stopped"
+          image: "_blank"
+          cpu_percentage: 0
+          1cpu_percentage: 0
+          memory: 0
+          memory_percentage: 0
+          network_speed_up: 0
+          network_speed_down: 0
+          network_total_up: 0
+          network_total_down: 0
+          icon: "mdi:radiobox-blank"
 
       - unique_id: "calculated_non_count_entities_template_generated"
         name: "Calculated Non Count Entities"
@@ -932,3 +954,18 @@ template:
             {% else %}
               theme
             {% endif %}
+
+  - trigger:
+      - platform: "homeassistant"
+        event: "start"
+      - platform: "event"
+        event_type: "event_template_reloaded"
+    sensor:
+      - unique_id: "_unique_docker_container_details"
+        name: "Collated Docker Details"
+        state: "0"
+        attributes:
+          icon: "si:docker"
+          docker_json: >
+            {% from 'docker_container.jinja' import build_docker_json %}
+            {{ build_docker_json() }}
