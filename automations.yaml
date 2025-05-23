@@ -47,13 +47,10 @@
     trigger: device
   conditions: []
   actions:
-  - action: light.turn_on
-    metadata: {}
-    data:
-      kelvin: 5238
-      brightness_pct: 100
-    target:
-      area_id: 0bb083b7a4214d1e8b57fd3974512f03
+  - type: turn_on
+    device_id: d831b1c23db5952276c05f231c7fd0da
+    entity_id: d5d91915db67c44855a02055118709eb
+    domain: light
   mode: single
 - id: '1617175491057'
   alias: on_close_garage_door_turn_off_garage_light_after_10_minutes
@@ -70,6 +67,11 @@
     trigger: device
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
   - action: light.turn_off
     metadata: {}
     data: {}
@@ -1671,8 +1673,8 @@
   conditions: []
   actions:
   - type: turn_off
-    device_id: 4acdfe2a06ea6a452ea7ccca7ad734c7
-    entity_id: e52a476520aa229269b7c2ccfb09cf04
+    device_id: 2d5f3ad48848aebccc1382bd43a8ec63
+    entity_id: 283054e6b9bc5764a0246f8b5286f4af
     domain: switch
   - delay:
       hours: 0
@@ -1680,8 +1682,8 @@
       seconds: 0
       milliseconds: 0
   - type: turn_on
-    device_id: 4acdfe2a06ea6a452ea7ccca7ad734c7
-    entity_id: e52a476520aa229269b7c2ccfb09cf04
+    device_id: 2d5f3ad48848aebccc1382bd43a8ec63
+    entity_id: 283054e6b9bc5764a0246f8b5286f4af
     domain: switch
   mode: single
 - id: '1742918048585'
