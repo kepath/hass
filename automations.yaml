@@ -33,7 +33,7 @@
     domain: switch
   - type: turn_off
     device_id: ecdc93708d2afbf8f645e3eb84d0e39c
-    entity_id: light.shelly_1l_bed_c_light_1
+    entity_id: e6b4d1e2ff0ee908b2748c74dc79e446
     domain: light
   mode: single
 - id: '1616842943101'
@@ -47,13 +47,10 @@
     trigger: device
   conditions: []
   actions:
-  - action: light.turn_on
-    metadata: {}
-    data:
-      kelvin: 5238
-      brightness_pct: 100
-    target:
-      area_id: 0bb083b7a4214d1e8b57fd3974512f03
+  - type: turn_on
+    device_id: d831b1c23db5952276c05f231c7fd0da
+    entity_id: d5d91915db67c44855a02055118709eb
+    domain: light
   mode: single
 - id: '1617175491057'
   alias: on_close_garage_door_turn_off_garage_light_after_10_minutes
@@ -70,6 +67,11 @@
     trigger: device
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
   - action: light.turn_off
     metadata: {}
     data: {}
@@ -94,7 +96,7 @@
   actions:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: light.shelly_1l_hallway_bottom_light_1
+    entity_id: 1813701c3c3e731fbc2e7d96fdc28608
     domain: light
   mode: single
 - id: '1666811718812'
@@ -651,11 +653,11 @@
   actions:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: light.shelly_1l_hallway_bottom_light_1
+    entity_id: 1813701c3c3e731fbc2e7d96fdc28608
     domain: light
   - type: turn_on
     device_id: 2028999f2f7da1303c521c80b4711c16
-    entity_id: light.shelly_1l_bathroom_light_1
+    entity_id: 58fbf748e169b5548ffd469abc3f3222
     domain: light
   mode: single
 - id: '1682192916045'
@@ -669,11 +671,11 @@
   actions:
   - type: turn_on
     device_id: 902d91d28754d1922b19d056054a6de2
-    entity_id: light.shelly_1l_bed_a_light_1
+    entity_id: cb83e82662d5defeacaef16c92aac611
     domain: light
   - type: turn_on
     device_id: 357203618a4ede0384cbc3979a6806b7
-    entity_id: light.shelly_1l_ensuite_light_1
+    entity_id: ab515b1312541dd270b5c561e6a9a630
     domain: light
   mode: single
 - id: '1682193123450'
@@ -687,11 +689,11 @@
   actions:
   - type: turn_off
     device_id: 902d91d28754d1922b19d056054a6de2
-    entity_id: light.shelly_1l_bed_a_light_1
+    entity_id: cb83e82662d5defeacaef16c92aac611
     domain: light
   - type: turn_off
     device_id: 357203618a4ede0384cbc3979a6806b7
-    entity_id: light.shelly_1l_ensuite_light_1
+    entity_id: ab515b1312541dd270b5c561e6a9a630
     domain: light
   mode: single
 - id: '1682263797941'
@@ -879,11 +881,11 @@
   actions:
   - type: turn_off
     device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: d9527ab709d81e2de0a93bbccb128fdc
+    entity_id: 1813701c3c3e731fbc2e7d96fdc28608
     domain: light
   - type: turn_off
     device_id: 2028999f2f7da1303c521c80b4711c16
-    entity_id: ee905f55deb5e0d895d09030119f1c85
+    entity_id: 58fbf748e169b5548ffd469abc3f3222
     domain: light
   mode: single
 - id: '1690839144197'
@@ -1671,8 +1673,8 @@
   conditions: []
   actions:
   - type: turn_off
-    device_id: 4acdfe2a06ea6a452ea7ccca7ad734c7
-    entity_id: e52a476520aa229269b7c2ccfb09cf04
+    device_id: 2d5f3ad48848aebccc1382bd43a8ec63
+    entity_id: 283054e6b9bc5764a0246f8b5286f4af
     domain: switch
   - delay:
       hours: 0
@@ -1680,8 +1682,8 @@
       seconds: 0
       milliseconds: 0
   - type: turn_on
-    device_id: 4acdfe2a06ea6a452ea7ccca7ad734c7
-    entity_id: e52a476520aa229269b7c2ccfb09cf04
+    device_id: 2d5f3ad48848aebccc1382bd43a8ec63
+    entity_id: 283054e6b9bc5764a0246f8b5286f4af
     domain: switch
   mode: single
 - id: '1742918048585'
@@ -1722,4 +1724,26 @@
     event: start
   conditions: []
   actions: []
+  mode: single
+- id: '1749977980510'
+  alias: On_time_restart_firestick_bed_a
+  description: ''
+  triggers:
+  - trigger: time
+    at: 06:00:00
+  conditions: []
+  actions:
+  - type: turn_off
+    device_id: 1dddd900490ca39de861eecd812f55a4
+    entity_id: 5ace7f22569ea6895405df1dbc211d03
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - type: turn_on
+    device_id: 1dddd900490ca39de861eecd812f55a4
+    entity_id: 5ace7f22569ea6895405df1dbc211d03
+    domain: switch
   mode: single
