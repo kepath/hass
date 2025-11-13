@@ -2,8 +2,9 @@
 substitutions:
   device_name: "shellykitchenmain"
   friendly_name: "Shelly Light Switch Kitchen"
-  area: "kitchen_main"
+  area: "kitchen"
   light1_icon: "mdi:light-recessed"
+  light2_icon: "mdi:lightbulb-fluorescent-tube"
   device_ip: "14"
   ssid: !secret "not_wifi_ssid"
   log_level: "DEBUG"
@@ -19,6 +20,12 @@ light:
     output: "${device_name}_shellyrelay1"
     id: "${device_name}_lightid1"
     icon: "${light1_icon}"
+
+  - platform: "binary"
+    name: "${device_name}_light_2"
+    output: "${device_name}_shellyrelay1"
+    id: "${device_name}_lightid2"
+    icon: "${light2_icon}"
 
 output:
   - platform: "gpio"
@@ -50,4 +57,9 @@ binary_sensor:
       number: "GPIO14"
     name: "${device_name}_switch_2"
     id: "${device_name}_switchid2"
-    disabled_by_default: true
+    on_state:
+      then:
+        - light.toggle: "${device_name}_lightid2"
+    filters:
+      - delayed_on_off: "50ms"
+    # disabled_by_default: true

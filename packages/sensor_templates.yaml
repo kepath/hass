@@ -55,6 +55,8 @@ template:
           door_sensors_triggered_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
           door_sensors_unavailable_count: "{{ expand('group.all_door_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           hacs_updates_available: "{{ expand('group.all_updates')|selectattr('state','eq', 'on')|map(attribute='entity_id')|map('device_attr', 'identifiers')|map('first')|select('defined')|map('first')|select('eq', 'hacs')|list|count }}"
+          hazard_sensors_triggered_count: "{{ expand('group.all_hazard_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
+          hazard_sensors_unavailable_count: "{{ expand('group.all_hazard_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           integration_icloud3_unavailable_count: >
             {{
               states|selectattr('state','in',['unavailable','unknown'])|
@@ -189,6 +191,8 @@ template:
                 states('sensor.binary_sensor_state_counts')|int(0),
               0]|sum
             }}
+          tech_alert_sensors_triggered: "{{ expand('group.all_tech_alert_binary_sensors')|selectattr('state','eq', 'on')|list|count }}"
+          tech_alert_sensors_unavailable_count: "{{ expand('group.all_tech_alert_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           unknown_value: "unknown"
           non_zero_value: "{{ 1|int }}"
           zero_value: "{{ 0|int }}"
@@ -220,7 +224,8 @@ template:
               states('sensor.mfc_j870dw_status')|lower|contains('full'))
             else (
               'warning' if (not has_value('sensor.mfc_j870dw_status') or
-              states('sensor.mfc_j870dw_status')|lower|contains('low'))
+              states('sensor.mfc_j870dw_status')|lower|contains('low') or
+              states('sensor.mfc_j870dw_status')|lower|contains('page'))
             else 'normal'
             )
           }}
@@ -333,12 +338,12 @@ template:
             'warning' if (
               not has_value("sensor.binary_sensor_state_counts")
             ) else (
-              'not_triggered' if (
-                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") == 0
+              'triggered_home' if (
+                state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0
               ) else (
-                'triggered_home' if (
-                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0 and
-                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") > 0
+                'not_triggered' if (
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") == 0 and
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") == 0
                 ) else (
                   'triggered_away' if (
                     state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") == 0 and
@@ -477,27 +482,53 @@ template:
       - unique_id: "_unique_minimalist_ui_binary_action_sensors_tooltip"
         name: "minimalist_ui Binary Action Sensors Tooltip"
         state: >
-          {{- state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 0 -}}
-          {{- ' light on,' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) == 1 -}}
-          {{- ' lights on,' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 1 -}}
-          {{- state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 0 -}}
+          {{- state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string -}}
+          {{- ' lights on' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) == 0 -}}
+          {{- ' light on' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) == 1 -}}
+          {{- ' lights on' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 1 -}}
+          {{- ', ' + state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 0 -}}
           {{- ' fan on,' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) == 1 -}}
           {{- ' fans on,' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 1 -}}
-          {{- state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0 -}}
-          {{- ' heat on,' if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0 -}}
-          {{- 'mower on,' if state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0) > 0 -}}
-          {{- 'washer on,' if states('binary_sensor.washing_machine_is_active')|lower == 'on' -}}
-          {{- 'dryer on,' if states('binary_sensor.is_tumble_dryer_on')|lower == 'on' -}}
-          {{- 'dishwasher on,' if states('binary_sensor.is_dishwasher_on')|lower == 'on' -}}
-          {{- 'fridge on,' if states('switch.drinks_fridge_plug_bed_c')|lower == 'on' -}}
-          {{- 'reciever on,' if states('binary_sensor.yamaha_reciever_state')|lower == 'on' -}}
-          {{- 'arcade pc on,' if states('sensor.arcadepc_sensor_simple_state')|lower == 'on' -}}
-          {{- 'bigpc on,' if states('sensor.bigpc_sensor_simple_state')|lower == 'on' -}}
+          {{- ', ' + state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|string if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 0 -}}
+          {{- ' heater on' if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) == 1 -}}
+          {{- ' heaters on' if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 1 -}}
+          {{- ', mower on' if state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0) > 0 -}}
+          {{- ', washer on' if states('binary_sensor.washing_machine_is_active')|lower == 'on' -}}
+          {{- ', dryer on' if states('binary_sensor.is_tumble_dryer_on')|lower == 'on' -}}
+          {{- ', dishwasher on' if states('binary_sensor.is_dishwasher_on')|lower == 'on' -}}
+          {{- ', fridge on' if states('switch.drinks_fridge_plug_bed_c')|lower == 'on' -}}
+          {{- ', reciever on' if states('binary_sensor.yamaha_reciever_state')|lower == 'on' -}}
+          {{- ', arcade pc on' if states('sensor.arcadepc_sensor_simple_state')|lower == 'on' -}}
+          {{- ', bigpc on' if states('sensor.bigpc_sensor_simple_state')|lower == 'on' -}}
         attributes:
           icon: "mdi:tooltip-question-outline"
           state_class: "measurement"
 
-      - unique_id: "_area_entities_template_generated"
+      - unique_id: "_unique_widgy_json_data_template_generated"
+        name: "Widgy App JSON Endpoint data"
+        state: "0"
+        attributes:
+          lights_on_count_tooltip: >
+            {{-state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string-}}
+          climate_devices_on_count:  >
+            {{-state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|string-}}
+          fans_on_count:  >
+            {{-state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|string-}}
+          hazard_sensors_triggered_count:  >
+            {{-state_attr('sensor.binary_sensor_state_counts', 'hazard_sensors_triggered_count')|string-}}
+          occupancy_tooltip: >
+            {{-
+              '-' if states('sensor.internal_occupancy_sensors_simple_state')|string == 'not_triggered' else
+              'H' if states('sensor.internal_occupancy_sensors_simple_state')|string == 'triggered_home' else
+              'A' if states('sensor.internal_occupancy_sensors_simple_state')|string == 'triggered_away' else
+              '?' if states('sensor.internal_occupancy_sensors_simple_state')|string == 'warning' else
+              '!' 
+            -}}
+          update_count_tooltip:  >
+            {{-states('sensor.binary_sensor_state_counts')|string-}}
+
+
+      - unique_id: "_unique_area_entities_template_generated"
         name: "Area Entity Attributes"
         state: "0"
         attributes:
@@ -540,7 +571,7 @@ template:
       #       {%- endif -%}
       #     {%- endfor %}
 
-      - unique_id: "_floor_entities_template_generated"
+      - unique_id: "_unique_floor_entities_template_generated"
         name: "Floor Entity Attributes"
         state: "0"
         attributes:
@@ -552,14 +583,14 @@ template:
           house_entities: "{{area_entities('All')+area_entities('HASS Internal')|sort}}"
           mobile_entities: "{{area_entities('Mobile')|sort}}"
 
-      - unique_id: "_secrets_to_use_in_templates"
+      - unique_id: "_unique_secrets_to_use_in_templates"
         name: "Non hard coded secrets to use in templates"
         state: "0"
         attributes:
           ha_nabucasa_url: !secret "ha_nabucasa_url"
           ha_rj45_ip: !secret "ha_rj45_ip"
 
-      - unique_id: "integration_entity_list_template_generated"
+      - unique_id: "_unique_integration_entity_list_template_generated"
         name: "Integration Entity List"
         state: "0"
         attributes:
