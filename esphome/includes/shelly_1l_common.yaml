@@ -15,7 +15,7 @@ esp8266:
 wifi:
   ssid: "${ssid}"
   password: !secret "not_wifi_password"
-  domain: ".lan"
+  domain: ".not"
   on_connect:
     - light.turn_off: "${device_name}_lightid1"
   on_disconnect:
@@ -53,10 +53,14 @@ text_sensor:
   # Expose ESPHome version as sensor.
   - platform: "version"
     name: "${device_name} ESPHome Version"
-  - platform: "template"
-    name: "${device_name}_uptime"
-    id: "${device_name}_uptimehuman"
-    icon: "mdi:clock-start"
+  # - platform: "template"
+  #   name: "${device_name}_uptime"
+  #   id: "${device_name}_uptimehuman"
+  #   icon: "mdi:clock-start"
+  # - platform: "uptime"
+  #   name: "${device_name}_uptime"
+  #   id: "${device_name}_uptime_id"
+  #   icon: "mdi:clock-start"
   # Expose WiFi information as sensors.
   - platform: "wifi_info"
     ip_address:
@@ -101,28 +105,28 @@ sensor:
     name: "${device_name}_RSSI"
     update_interval: "60s"
     icon: "mdi:wifi"
-  - platform: "uptime"
-    name: "uptime_sensor"
-    id: "uptime_sensor"
-    internal: true
-    update_interval: "60s"
-    on_raw_value:
-      then:
-        - text_sensor.template.publish:
-            id: "${device_name}_uptimehuman"
-            state: !lambda |-
-              int seconds = round(id(uptime_sensor).raw_state);
-              int days = seconds / (24 * 3600);
-              seconds = seconds % (24 * 3600);
-              int hours = seconds / 3600;
-              seconds = seconds % 3600;
-              int minutes = seconds /  60;
-              seconds = seconds % 60;
-              return (
-                (days ? to_string(days) + "d " : "") +
-                (hours ? to_string(hours) + "h " : "") +
-                (minutes ? to_string(minutes) + "m " : "")
-              ).c_str();
+  # - platform: "uptime"
+  #   name: "uptime_sensor"
+  #   id: "uptime_sensor"
+  #   internal: true
+  #   update_interval: "60s"
+  #   on_raw_value:
+  #     then:
+  #       - text_sensor.template.publish:
+  #           id: "${device_name}_uptimehuman"
+  #           state: !lambda |-
+  #             int seconds = round(id(uptime_sensor).raw_state);
+  #             int days = seconds / (24 * 3600);
+  #             seconds = seconds % (24 * 3600);
+  #             int hours = seconds / 3600;
+  #             seconds = seconds % 3600;
+  #             int minutes = seconds /  60;
+  #             seconds = seconds % 60;
+  #             return (
+  #               (days ? to_string(days) + "d " : "") +
+  #               (hours ? to_string(hours) + "h " : "") +
+  #               (minutes ? to_string(minutes) + "m " : "")
+  #             ).c_str();
 
 status_led:
   pin: "GPIO0"
