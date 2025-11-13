@@ -46,14 +46,14 @@ custom_card_kepath_person_info:
         case "away":
         case "not_home":
         case "stationary":
-        case "statzon1":
           icon = "mdi:map-marker-question";
-          if (typeof states[variables?.ulm_card_kepath_person_driving_entity]?.state !== 'undefined') {
-            if (states[variables.ulm_card_kepath_person_driving_entity].state == "on") {
-              icon = "mdi:car"
-            }
-          }
-          break;
+          break;        
+        case "statzon1":
+          icon = "mdi:roman-numeral-1";
+          break; 
+        case "statzon2":
+          icon = "mdi:roman-numeral-2";
+          break; 
         case "home":
           icon = "mdi:home-map-marker";
           break;
@@ -72,6 +72,11 @@ custom_card_kepath_person_info:
               icon = "mdi:map-marker-account";
             }
           }
+      }
+      if (typeof states[variables?.ulm_card_kepath_person_driving_entity]?.state !== 'undefined') {
+        if (states[variables.ulm_card_kepath_person_driving_entity].state == "on") {
+          icon = "mdi:car"
+        }
       }
 
       return icon;
