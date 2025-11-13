@@ -139,6 +139,7 @@
       - light.shelly_1l_hallway_bottom_light_2
       - light.shelly_1l_kitchen_utility_light_2
       - light.camera_indoor_indicator_light
+      - light.mss425e_6025_outlet_3
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -1746,4 +1747,67 @@
     device_id: 1dddd900490ca39de861eecd812f55a4
     entity_id: 5ace7f22569ea6895405df1dbc211d03
     domain: switch
+  mode: single
+- id: '1758627030591'
+  alias: on_start_create_group.all_hazard_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - data:
+      domain: binary_sensor
+      group_name: all_hazard_binary_sensors
+      icon: mdi:alert
+      friendly_name: All binary_sensor carbon_monoxide smoke device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - carbon_monoxide
+      - heat
+      - smoke
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+      excluded_entities:
+      - binary_sensor.diskstation_security_status
+      - binary_sensor.climate_devices_on
+      excluded_integrations:
+      - browser_mod
+    action: python_script.create_entity_groups
+  mode: single
+- id: '1758627225220'
+  alias: on_start_create_group.all_tech_alert_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - data:
+      domain: binary_sensor
+      group_name: all_tech_alert_binary_sensors
+      icon: mdi:smoke-detector-alert
+      friendly_name: All binary_sensor safety problem device class group
+      filter_by_device_class: true
+      included_device_classes:
+      - problem
+      - safety
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+      excluded_entities:
+      - binary_sensor.diskstation_security_status
+      - binary_sensor.climate_devices_on
+      excluded_integrations:
+      - browser_mod
+    action: python_script.create_entity_groups
   mode: single
