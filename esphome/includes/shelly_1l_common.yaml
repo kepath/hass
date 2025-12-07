@@ -12,10 +12,55 @@ esphome:
 esp8266:
   board: "esp01_1m"
 
+light:
+  - platform: "binary"
+    name: "${device_name}_light_1"
+    output: "${device_name}_shellyrelay1"
+    id: "${device_name}_lightid1"
+    icon: "${light1_icon}"
+
+output:
+  - platform: "gpio"
+    pin: "GPIO5"
+    id: "${device_name}_shellyrelay1"
+
+binary_sensor:
+  - platform: "status"
+    name: "${device_name}_status"
+    icon: "mdi:web-check"
+    device_class: "connectivity"
+    filters:
+      - delayed_off: "5min"
+  - platform: "gpio"
+    pin:
+      number: "GPIO4"
+    name: "${device_name}_switch_1"
+    id: "${device_name}_switchid1"
+    icon: "mdi:light-switch"
+    on_state:
+      then:
+        - light.toggle: "${device_name}_lightid1"
+    filters:
+      - delayed_on_off: "50ms"
+  - platform: "gpio"
+    pin:
+      number: "GPIO14"
+    name: "${device_name}_switch_2"
+    id: "${device_name}_switchid2"
+    icon: "mdi:light-switch"
+    disabled_by_default: true
+
+mdns:
+  services:
+    - service: "_${device_name}"
+      protocol: "_udp"
+      port: 5353
+
 wifi:
   ssid: "${ssid}"
   password: !secret "not_wifi_password"
   domain: ".not"
+  reboot_timeout: "30min"
   on_connect:
     - light.turn_off: "${device_name}_lightid1"
   on_disconnect:
@@ -25,6 +70,8 @@ wifi:
     gateway: "192.168.30.1"
     subnet: "255.255.255.0"
     dns1: "192.168.30.1"
+  min_auth_mode: "WPA2"
+  power_save_mode: "none"
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
@@ -42,35 +89,30 @@ captive_portal:
 logger:
   level: "${log_level}"
 api:
+  reboot_timeout: "30min"
 ota:
   platform: "esphome"
 web_server:
   port: 80
-  version: 2
+  version: 3
 
 # Text sensors with general information.
 text_sensor:
-  # Expose ESPHome version as sensor.
   - platform: "version"
-    name: "${device_name} ESPHome Version"
-  # - platform: "template"
-  #   name: "${device_name}_uptime"
-  #   id: "${device_name}_uptimehuman"
-  #   icon: "mdi:clock-start"
-  # - platform: "uptime"
-  #   name: "${device_name}_uptime"
-  #   id: "${device_name}_uptime_id"
-  #   icon: "mdi:clock-start"
-  # Expose WiFi information as sensors.
+    name: "${device_name}_esphome_version"
   - platform: "wifi_info"
     ip_address:
       name: "${device_name}_IP"
+      icon: "mdi:ip-network"
     ssid:
       name: "${device_name}_SSID"
+      icon: "mdi:access-point-network"
     bssid:
       name: "${device_name}_BSSID"
+      icon: "mdi:router-wireless-settings"
     mac_address:
       name: "${device_name}_MAC"
+      icon: "mdi:router-network"
 
 sensor:
   - platform: "ntc"
@@ -103,30 +145,21 @@ sensor:
     pin: "A0"
   - platform: "wifi_signal"
     name: "${device_name}_RSSI"
+    id: "wifi_signal_db"
     update_interval: "60s"
     icon: "mdi:wifi"
-  # - platform: "uptime"
-  #   name: "uptime_sensor"
-  #   id: "uptime_sensor"
-  #   internal: true
-  #   update_interval: "60s"
-  #   on_raw_value:
-  #     then:
-  #       - text_sensor.template.publish:
-  #           id: "${device_name}_uptimehuman"
-  #           state: !lambda |-
-  #             int seconds = round(id(uptime_sensor).raw_state);
-  #             int days = seconds / (24 * 3600);
-  #             seconds = seconds % (24 * 3600);
-  #             int hours = seconds / 3600;
-  #             seconds = seconds % 3600;
-  #             int minutes = seconds /  60;
-  #             seconds = seconds % 60;
-  #             return (
-  #               (days ? to_string(days) + "d " : "") +
-  #               (hours ? to_string(hours) + "h " : "") +
-  #               (minutes ? to_string(minutes) + "m " : "")
-  #             ).c_str();
+    entity_category: "diagnostic"
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: "wifi_signal_db"
+    name: "${device_name}_wifi_percent"
+    filters:
+      - lambda: "return min(max(2 * (x + 100.0), 0.0), 100.0);"
+    unit_of_measurement: "%"
+    entity_category: "diagnostic"
+    device_class: ""
 
+  - platform: "uptime"
+    type: "seconds"
+    name: "${device_name}_uptime"
 status_led:
   pin: "GPIO0"
