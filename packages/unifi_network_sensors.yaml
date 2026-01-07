@@ -300,6 +300,12 @@ sensor:
     unique_id: "_unique_sensor_ipad_air_4thgen_emily_unifi_total_increasing_rx"
     unit_time: "s"
     round: 3
+  - platform: "integration"
+    source: "sensor.emily_hp_laptop_wifi_rx"
+    name: "emily_hp_laptop_wifi_total_increasing_rx"
+    unique_id: "_unique_sensor_emily_hp_laptop_wifi_total_increasing_rx"
+    unit_time: "s"
+    round: 3
   # - platform: "integration"
   #   source: "sensor.amazon_echo_dot_bed_b_rx"
   #   name: "amazon_echo_dot_bed_b_total_increasing_rx"
@@ -379,7 +385,7 @@ sensor:
     unit_time: "s"
     round: 3
   - platform: "integration"
-    source: "sensor.macbook_pro_2018_wifi_rx"
+    source: "sensor.macbook_pro_2018_kev_wifi_rx"
     name: "apple_macbook_pro_2018_kev_unifi_total_increasing_rx"
     unique_id: "_unique_sensor_apple_macbook_pro_2018_kev_unifi_total_increasing_rx"
     unit_time: "s"
@@ -475,9 +481,9 @@ sensor:
     unit_time: "s"
     round: 3
   - platform: "integration"
-    source: "sensor.iphone_15_kev_unifi_rx"
-    name: "iphone_15_kev_unifi_total_increasing_rx"
-    unique_id: "_unique_sensor_iphone_15_kev_unifi_total_increasing_rx"
+    source: "sensor.iphone_kev_unifi_rx"
+    name: "iphone_kev_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_iphone_kev_unifi_total_increasing_rx"
     unit_time: "s"
     round: 3
   - platform: "integration"
@@ -493,9 +499,9 @@ sensor:
     unit_time: "s"
     round: 3
   - platform: "integration"
-    source: "sensor.ju_iphone_8_unifi_rx"
-    name: "ju_iphone_8_unifi_total_increasing_rx"
-    unique_id: "_unique_sensor_ju_iphone_8_unifi_total_increasing_rx"
+    source: "sensor.iphone_ju_unifi_rx"
+    name: "iphone_ju_unifi_total_increasing_rx"
+    unique_id: "_unique_iphone_ju_unifi_total_increasing_rx"
     unit_time: "s"
     round: 3
   - platform: "integration"
@@ -607,6 +613,12 @@ sensor:
   #   unit_time: "s"
   #   round: 3
   - platform: "integration"
+    source: "sensor.emily_hp_laptop_wifi_rx"
+    name: "emily_hp_laptop_wifi_unifi_total_increasing_rx"
+    unique_id: "_unique_sensor_emily_hp_laptop_wifi_unifi_total_increasing_rx"
+    unit_time: "s"
+    round: 3
+  - platform: "integration"
     source: "sensor.firestick_plug_kitchen_unifi_rx"
     name: "fridge_freezer_plug_garage_total_increasing_rx"
     unique_id: "_unique_sensor_firestick_plug_kitchen_unifi_total_increasing_rx"
@@ -679,6 +691,12 @@ sensor:
     source: "sensor.ipad_air_4thgen_emily_unifi_tx"
     name: "ipad_air_4thgen_emily_unifi_total_increasing_tx"
     unique_id: "_unique_sensor_ipad_air_4thgen_emily_unifi_total_increasing_tx"
+    unit_time: "s"
+    round: 3
+  - platform: "integration"
+    source: "sensor.emily_hp_laptop_wifi_tx"
+    name: "emily_hp_laptop_wifi_total_increasing_tx"
+    unique_id: "_unique_sensor_emily_hp_laptop_wifi_total_increasing_tx"
     unit_time: "s"
     round: 3
   # - platform: "integration"
@@ -760,7 +778,7 @@ sensor:
     unit_time: "s"
     round: 3
   - platform: "integration"
-    source: "sensor.macbook_pro_2018_wifi_tx"
+    source: "sensor.macbook_pro_2018_kev_wifi_tx"
     name: "apple_macbook_pro_2018_kev_unifi_total_increasing_tx"
     unique_id: "_unique_sensor_apple_macbook_pro_2018_kev_unifi_total_increasing_tx"
     unit_time: "s"
@@ -856,9 +874,9 @@ sensor:
     unit_time: "s"
     round: 3
   - platform: "integration"
-    source: "sensor.iphone_15_kev_unifi_tx"
-    name: "iphone_15_kev_unifi_total_increasing_tx"
-    unique_id: "_unique_sensor_iphone_15_kev_unifi_total_increasing_tx"
+    source: "sensor.iphone_kev_unifi_tx"
+    name: "iphone_kev_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_iphone_kev_unifi_total_increasing_tx"
     unit_time: "s"
     round: 3
   - platform: "integration"
@@ -874,9 +892,9 @@ sensor:
     unit_time: "s"
     round: 3
   - platform: "integration"
-    source: "sensor.ju_iphone_8_unifi_tx"
-    name: "ju_iphone_8_unifi_total_increasing_tx"
-    unique_id: "_unique_sensor_ju_iphone_8_unifi_total_increasing_tx"
+    source: "sensor.iphone_ju_unifi_tx"
+    name: "iphone_ju_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_iphone_ju_unifi_total_increasing_tx"
     unit_time: "s"
     round: 3
   - platform: "integration"
@@ -987,6 +1005,12 @@ sensor:
   #   unique_id: "_unique_sensor_emilys_macbook_wifi_unifi_total_increasing_tx"
   #   unit_time: "s"
   #   round: 3
+  - platform: "integration"
+    source: "sensor.emily_hp_laptop_wifi_tx"
+    name: "emily_hp_laptop_wifi_unifi_total_increasing_tx"
+    unique_id: "_unique_sensor_emily_hp_laptop_wifi_unifi_total_increasing_tx"
+    unit_time: "s"
+    round: 3
   - platform: "integration"
     source: "sensor.firestick_plug_kitchen_unifi_tx"
     name: "firestick_plug_kitchen_total_increasing_tx"
@@ -1972,6 +1996,15 @@ sensor:
       - "sensor.apple_macbook_pro_2018_kev_unifi_rx"
 
   - platform: "min_max"
+    name: "Emily HP Laptop WiFi Unifi Data Rate"
+    unique_id: "_unique_emilys_macbook_wifi_data_rate"
+    type: "mean"
+    round_digits: 3
+    entity_ids:
+      - "sensor.emilys_macbook_wifi_total_increasing_tx"
+      - "sensor.emilys_macbook_wifi_total_increasing_rx"
+
+  - platform: "min_max"
     name: "Apple TV 4k Unifi Data Rate"
     unique_id: "_unique_apple_tv_4k_data_rate"
     type: "mean"
@@ -2031,8 +2064,8 @@ sensor:
     type: "last"
     round_digits: 3
     entity_ids:
-      - "sensor.iphone_15_kev_unifi_tx"
-      - "sensor.iphone_15_kev_unifi_rx"
+      - "sensor.iphone_kev_unifi_tx"
+      - "sensor.iphone_kev_unifi_rx"
 
   - platform: "min_max"
     name: "Home Assistant Unifi Data Rate"
@@ -2057,8 +2090,8 @@ sensor:
     type: "max"
     round_digits: 3
     entity_ids:
-      - "sensor.ju_iphone_8_unifi_tx"
-      - "sensor.ju_iphone_8_unifi_rx"
+      - "sensor.iphone_ju_unifi_tx"
+      - "sensor.iphone_ju_unifi_rx"
   - platform: "min_max"
     name: "Samsung TV Bed A Unifi Data Rate"
     unique_id: "_unique_samsung_tv_bed_a_data_rate"
@@ -2267,14 +2300,22 @@ sensor:
     entity_ids:
       - "sensor.dreo_fan_bed_e_unifi_rx"
       - "sensor.dreo_fan_bed_e_unifi_tx"
-  # - platform: "min_max"
-  #   name: "Emily MacBook WiFi Unifi Data Rate"
-  #   unique_id: "_unique_emilys_macbook_wifi_data_rate"
-  #   type: "mean"
-  #   round_digits: 3
-  #   entity_ids:
-  #     - "sensor.emilys_macbook_wifi_unifi_rx"
-  #     - "sensor.emilys_macbook_wifi_unifi_tx"
+  - platform: "min_max"
+    name: "Emily HP Laptop WiFi Unifi Data Rate"
+    unique_id: "_unique_sensor_emily_hp_laptop_wifi_unifi_data_rate"
+    type: "mean"
+    round_digits: 3
+    entity_ids:
+      - "sensor.emily_hp_laptop_wifi_unifi_total_increasing_rx"
+      - "sensor.emily_hp_laptop_wifi_unifi_total_increasing_tx"
+  - platform: "min_max"
+    name: "iPad Air 4thGen Emily Unifi Data Rate"
+    unique_id: "_unique_ipad_air_4thgen_emily_unifi_data_rate"
+    type: "mean"
+    round_digits: 3
+    entity_ids:
+      - "sensor.ipad_air_4thgen_emily_unifi_total_increasing_rx"
+      - "sensor.ipad_air_4thgen_emily_unifi_total_increasing_tx"
   - platform: "min_max"
     name: "Light Ensuite Unifi Data Rate"
     unique_id: "_unique_ensuite_light_data_rate"
