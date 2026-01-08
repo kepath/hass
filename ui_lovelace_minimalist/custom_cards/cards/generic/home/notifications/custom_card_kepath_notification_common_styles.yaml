@@ -50,66 +50,78 @@ custom_card_kepath_binary_notifications_tab_style:
 custom_card_kepath_binary_notifications_common_styles:
   variables:
     var_kepath_constant_position_overrides:
-      evaluated_position_entity: >
-        [[[
-          var entity = entity?.entity_id;
-          if (variables?.var_kepath_constant_position_overrides?.evaluated_position_entity) {
-            entity = variables.var_kepath_constant_position_overrides.evaluated_position_entity;
-          }
-          return entity;
-        ]]]
-      is_compact_mode: >
-        [[[
-          var isCompactMode = false;
-          if (variables?.var_kepath_constant_position_overrides) {
-            if (variables?.var_kepath_constant_position_overrides?.is_compact_mode) {
-              if (typeof variables.var_kepath_constant_position_overrides.is_compact_mode === "boolean") {
-                isCompactMode = variables.var_kepath_constant_position_overrides.is_compact_mode;
-              }
-            }
-          }
-          return isCompactMode;
-        ]]]
-      off_state_only: >
-        [[[
-          var offStateOnly = false;
-          if (variables?.var_kepath_constant_position_overrides) {
-            if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
-              if (typeof variables?.var_kepath_constant_position_overrides?.off_state_only === "boolean") {
-                offStateOnly = variables?.var_kepath_constant_position_overrides?.off_state_only;
-              }
-            }
-          }
-          return offStateOnly;
-        ]]]
+      # evaluated_position_entity:
+      #   force_eval: true
+      #   value: "[[[ return entity.entity_id]]]"
+      #   value: >
+      #     [[[
+      #       var entity = entity?.entity_id;
+      #       if (variables?.var_kepath_constant_position_overrides?.evaluated_position_entity) {
+      #         entity = variables.var_kepath_constant_position_overrides.evaluated_position_entity;
+      #       }
+      #       return entity;
+      #     ]]]
+      is_compact_mode: false
+        # force_eval: true
+        # value: >
+        #   [[[
+        #     return hass.themes.darkMode ? false : true
+        #     //var isCompactMode = false;
+        #     //if (variables?.var_kepath_constant_position_overrides) {
+        #     //  if (variables?.var_kepath_constant_position_overrides?.is_compact_mode) {
+        #     //    if (typeof variables.var_kepath_constant_position_overrides.is_compact_mode === "boolean") {
+        #     //      isCompactMode = variables.var_kepath_constant_position_overrides.is_compact_mode;
+        #     //    }
+        #     //  }
+        #     //}
+        #     //return isCompactMode;
+        #   ]]]
+      off_state_only: true
+        # force_eval: true
+        # value: >
+        #   [[[
+        #     var offStateOnly = false;
+        #     if (variables?.var_kepath_constant_position_overrides) {
+        #       if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
+        #         if (typeof variables?.var_kepath_constant_position_overrides?.off_state_only === "boolean") {
+        #           offStateOnly = variables?.var_kepath_constant_position_overrides?.off_state_only;
+        #         }
+        #       }
+        #     }
+        #     return offStateOnly;
+        #   ]]]
     var_kepath_generic_get_set_group_notification_objects:
       amount:
         entity: "sensor.binary_sensor_state_counts"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
+        is_attribute: true
+          # force_eval: true
+          # value: >
+          #   [[[
+          #     var isValueAttribute = true;
+          #     if (variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.is_attribute) {
+          #       if (typeof variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute === "boolean") {
+          #         isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.amount.is_attribute;
+          #       }
+          #     }
+          #     return isValueAttribute;
+          #   ]]]
         attribute_name: "zero_value"
         count_tooltip: ""
         substitute_icon: ""
       unavailable:
         entity: "sensor.binary_sensor_state_counts"
-        is_attribute: >
-          [[[
-            var isValueAttribute = true;
-            if (variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.is_attribute) {
-              if (typeof variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute === "boolean") {
-                isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute;
-              }
-            }
-            return isValueAttribute;
-          ]]]
+        is_attribute: true
+          # force_eval: true
+          # value: >
+          #   [[[
+          #     var isValueAttribute = true;
+          #     if (variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.is_attribute) {
+          #       if (typeof variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute === "boolean") {
+          #         isValueAttribute = variables.var_kepath_generic_get_set_group_notification_objects.unavailable.is_attribute;
+          #       }
+          #     }
+          #     return isValueAttribute;
+          #   ]]]
         attribute_name: "zero_value"
         count_tooltip: ""
         substitute_icon: ""
@@ -125,9 +137,9 @@ custom_card_kepath_binary_notifications_common_styles:
           [[[
             let styleTemplate = [ "widget_count_mdi_number_indicator" ];
             var extraTemplate = "widget_count_mdi_number_indicator_default_style"
-            if (variables?.var_kepath_constant_position_overrides?.is_compact_mode) {
+            if (variables?.var_kepath_constant_position_overrides?.is_compact_mode?.value) {
               if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
-                if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
+                if (states[entity.entity_id]?.state == "off") {
                   extraTemplate = "widget_count_mdi_number_indicator_compact_style"
                 }
               } else {
@@ -141,7 +153,9 @@ custom_card_kepath_binary_notifications_common_styles:
         tap_action:
           action: "none"
         variables:
-          notification_counts: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.amount; ]]]"
+          notification_counts: 
+            force_eval: true
+            value: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.amount; ]]]"
         entity: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.entity; ]]]"
         styles:
           tooltip:
@@ -160,7 +174,7 @@ custom_card_kepath_binary_notifications_common_styles:
             var extraTemplate = "widget_count_mdi_number_indicator_default_style"
             if (variables?.var_kepath_constant_position_overrides?.is_compact_mode) {
               if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
-                if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity]?.state == "off") {
+                if (states[entity.entity_id]?.state == "off") {
                   extraTemplate = "widget_count_mdi_number_indicator_compact_style"
                 }
               } else {
@@ -174,7 +188,9 @@ custom_card_kepath_binary_notifications_common_styles:
         tap_action:
           action: "none"
         variables:
-          notification_counts: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable; ]]]"
+          notification_counts:
+            force_eval: true
+            value: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable; ]]]"
         entity: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.entity; ]]]"
         styles:
           tooltip:

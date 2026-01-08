@@ -2,35 +2,40 @@
 custom_card_kepath_generic_use_entity_picture:
   variables:
     var_kepath_generic_set_entity_picture:
-      evaluated_object: >
-        [[[
-          var evaluatedObject = entity.entity_id;
-          if (variables?.var_kepath_generic_set_entity_picture) {
-            if (variables?.var_kepath_generic_set_entity_picture?.evaluated_object) {
-              evaluatedObject = variables.var_kepath_generic_set_entity_picture.evaluated_object;
-            }
-          }
-          return evaluatedObject;
-        ]]]
-      use_picture: >
-        [[[
-          var usePicture = true;
-          if (variables?.var_kepath_generic_set_entity_picture) {
-            if (variables?.var_kepath_generic_set_entity_picture?.use_picture) {
-              if (typeof variables.var_kepath_generic_set_entity_picture.use_picture === "boolean") {
-                usePicture = variables.var_kepath_generic_set_entity_picture.use_picture;
-              }
-            }
-          }
-          return usePicture;
-        ]]]
+      # evaluated_object:
+      #   force_eval: true
+      #   value: "[[[ return entity.entity_id ]]]"
+      #   value: >
+      #     [[[
+      #       var evaluatedObject = entity.entity_id;
+      #       if (variables?.var_kepath_generic_set_entity_picture) {
+      #         if (variables?.var_kepath_generic_set_entity_picture?.evaluated_object) {
+      #           evaluatedObject = variables.var_kepath_generic_set_entity_picture.evaluated_object;
+      #         }
+      #       }
+      #       return evaluatedObject;
+      #     ]]]
+      use_picture: true
+        # force_eval: true
+        # value: >
+        #   [[[
+        #     var usePicture = true;
+        #     if (variables?.var_kepath_generic_set_entity_picture) {
+        #       if (variables?.var_kepath_generic_set_entity_picture?.use_picture) {
+        #         if (typeof variables.var_kepath_generic_set_entity_picture.use_picture === "boolean") {
+        #           usePicture = variables.var_kepath_generic_set_entity_picture.use_picture;
+        #         }
+        #       }
+        #     }
+        #     return usePicture;
+        #   ]]]
   show_icon: "[[[ return variables.var_kepath_generic_set_entity_picture.use_picture ? true : false ]]]"
   show_entity_picture: "[[[ return variables.var_kepath_generic_set_entity_picture.use_picture ? false : true ]]]"
   entity_picture: >
     [[[
       var entityPicture = null;
-      if (states[variables.var_kepath_generic_set_entity_picture.evaluated_object]?.attributes?.entity_picture) {
-        entityPicture = states[variables.var_kepath_generic_set_entity_picture.evaluated_object].attributes.entity_picture;
+      if (states[entity.entity_id]?.attributes?.entity_picture) {
+        entityPicture = states[entity.entity_id].attributes.entity_picture;
       }
       return entityPicture;
     ]]]

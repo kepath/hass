@@ -150,7 +150,9 @@ views:
                             substitute_icon: "mdi:fire-circle"
                           amount:
                             attribute_name: "tab_action_sensors_triggered_count"
-                            count_tooltip: "[[[ return states['sensor.minimalist_ui_binary_action_sensors_tooltip'].state ]]]"
+                            count_tooltip:
+                              force_eval: true
+                              value: "[[[ return states['sensor.minimalist_ui_binary_action_sensors_tooltip'].state ]]]"
                         var_kepath_generic_group_popup:
                           evaluated_entity: "group.all_lights"
                           action: "popup"
@@ -159,8 +161,10 @@ views:
                             auto_entities:
                               exclude_unavailable_state: true
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          # off_state_only: true
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -204,9 +208,12 @@ views:
                             title: "safety entities ↓ last changed"
                             auto_entities:
                               sort_method: "last_changed"
+                              sort_numeric: true
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          # off_state_only: true
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -250,9 +257,12 @@ views:
                             title: "all occupancy entities ↓ last changed"
                             auto_entities:
                               sort_method: "last_changed"
+                              sort_numeric: true
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          # off_state_only: true
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -299,8 +309,10 @@ views:
                               sort_numeric: true
                               exclude_unknown_state: true
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          # off_state_only: true
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -336,8 +348,10 @@ views:
                             attribute_name: "tab_update_sensors_triggered_count"
                             count_tooltip: "sum of on update sensors"
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
+                          # off_state_only: true
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -1017,6 +1031,7 @@ views:
                                 exclude_unknown_state: false
                                 exclude_unavailable_state: false
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     item2:
@@ -1133,6 +1148,7 @@ views:
                               title: "door entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
 
@@ -1175,6 +1191,7 @@ views:
                               title: "internal occupancy entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     cameras1:
@@ -1289,6 +1306,7 @@ views:
                               title: "all occupancy entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     item2:
@@ -1395,6 +1413,7 @@ views:
                               title: "speaker entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                                 exclude_unavailable_state: true
                         hold_action:
                           action: "more-info"
@@ -1508,6 +1527,7 @@ views:
                               title: "device tracker entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     item2:
@@ -1549,6 +1569,7 @@ views:
                               title: "connectivity entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     item3:
@@ -2660,7 +2681,13 @@ views:
                           var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
+                              icon: "mdi:router-network"
+                              icon_color: "#41bdf5"
                               background_color: "rgba(var(--color-theme),0.05)"
+                            unset_state:
+                              icon: "mdi:router-wireless-off"
+                              icon_color: "rgba(var(--color-red), 1)"
+                              background_color: "rgba(var(--color-red), 0.2)"
                           var_kepath_generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_netalertx_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_netalertx_docker_slug"

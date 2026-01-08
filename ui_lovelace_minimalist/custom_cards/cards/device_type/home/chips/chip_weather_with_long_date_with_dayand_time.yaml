@@ -5,14 +5,16 @@ chip_weather_with_long_date_with_dayand_time:
     - "ulm_actions_card"
   variables:
     ulm_card_weather_enable_popup: false
-    ulm_language: >
-      [[[
-        return hass["language"];
-      ]]]
-    ulm_chip_temperature_weather: >
-      [[[
-        return variables.ulm_chip_temperature_weather;
-      ]]]
+    # ulm_language: >
+    #   [[[
+    #     return hass["language"];
+    #   ]]]
+    ulm_chip_temperature_weather:
+      force_eval: true
+      value: >
+        [[[
+          return variables.ulm_chip_temperature_weather;
+        ]]]
   # triggers_update: "all"
   entity: "[[[ return variables.ulm_chip_temperature_weather ]]]"
   tap_action:
