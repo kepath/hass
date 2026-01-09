@@ -3,17 +3,15 @@ chip_long_date_with_dayand_time:
   template:
     - "chips"
     - "ulm_actions_card"
-  # variables:
-  #   ulm_language: >
-  #     [[[
-  #       return hass["language"];
-  #     ]]]
-  # triggers_update: "all"
+  variables:
+    ulm_language:
+        force_eval: true
+        value: "[[[ return hass['language'];]]]"
   tap_action:
     action: "none"
   label: |
     [[[
-      var locale = variables.ulm_language;
+      var locale = variables.ulm_language.value;
       let dt = new Intl.DateTimeFormat(locale , {
         month: "short",
         day: "numeric",

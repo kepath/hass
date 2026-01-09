@@ -2,50 +2,12 @@
 custom_card_kepath_generic_add_addin_link:
   variables:
     var_kepath_generic_set_addin_link:
-      # evaluated_object: 
-      #   force_eval: true
-      #   value: "[[[ return entity.entity_id ]]]"
-      #   value: >
-      #     [[[
-      #       var evaluatedObject = entity.entity_id;
-      #       if (variables?.var_kepath_generic_set_addin_link) {
-      #         if (variables?.var_kepath_generic_set_addin_link?.evaluated_object) {
-      #           evaluatedObject = variables.var_kepath_generic_set_addin_link.evaluated_object;
-      #         }
-      #       }
-      #       return evaluatedObject;
-      #     ]]]
-
+      evaluated_object:
+        force_eval: true
+        value: "[[[ return entity.entity_id ]]]"
       webui_access_type: "ingress"
-        # force_eval: true
-        # value: >
-        #   [[[
-        #     var ingressOrLocalPort = "ingress";
-        #     if (typeof variables?.var_kepath_generic_set_addin_link?.webui_access_type !== 'undefined') {
-        #       ingressOrLocalPort = variables?.var_kepath_generic_set_addin_link?.webui_access_type;
-        #     }
-        #     return ingressOrLocalPort;
-        #   ]]]
       docker_slug_reference: "a0d7b954_ssh"
-        # force_eval: true
-        # value: >
-        #   [[[
-        #     var dockerSlugReference = "a0d7b954_ssh";
-        #     if (typeof variables?.var_kepath_generic_set_addin_link?.docker_slug_reference !== 'undefined') {
-        #       dockerSlugReference = variables?.var_kepath_generic_set_addin_link?.docker_slug_reference;
-        #     }
-        #     return dockerSlugReference;
-        #   ]]]
       local_port: "8123"
-        # force_eval: true
-        # value: >
-        #   [[[
-        #     var localPort = "8123";
-        #     if (typeof variables?.var_kepath_generic_set_addin_link?.local_port !== 'undefined') {
-        #       localPort = variables?.var_kepath_generic_set_addin_link?.local_port;
-        #     }
-        #     return localPort;
-        #   ]]]
   styles:
     img_cell:
       - border: >
@@ -111,7 +73,7 @@ custom_card_kepath_generic_add_addin_link:
     action: >
       [[[
         var doubleTapAction = "more-info";
-        if (states[entity.entity_id]?.attributes.release_url) {
+        if (states[variables?.var_kepath_generic_set_addin_link?.evaluated_object?.value]?.attributes.release_url) {
           doubleTapAction = "url";
         }
         return doubleTapAction;
@@ -119,8 +81,8 @@ custom_card_kepath_generic_add_addin_link:
     url_path: >
       [[[
         var URLPath = null;
-        if (states[entity.entity_id]?.attributes.release_url) {
-          URLPath = states[entity.entity_id].attributes.release_url;
+        if (states[variables?.var_kepath_generic_set_addin_link?.evaluated_object?.value]?.attributes.release_url) {
+          URLPath = states[variables?.var_kepath_generic_set_addin_link?.evaluated_object?.value].attributes.release_url;
         }
         return URLPath;
       ]]]
