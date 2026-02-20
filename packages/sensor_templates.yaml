@@ -625,13 +625,76 @@ template:
         attributes:
           middle_floor_nest_temperature: "{{ state_attr('climate.nest_middle_floor', 'current_temperature') }}"
           apple_maps_url_kev_location: >
-            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_15_kev_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_15_kev_icloud3', 'longitude') | string)}}
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_kev_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_kev_icloud3', 'longitude') | string)}}
           apple_maps_url_ju_location: >
-            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_8_ju_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_8_ju_icloud3', 'longitude') | string)}}
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_ju_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_ju_icloud3', 'longitude') | string)}}
           apple_maps_url_dan_location: >
             {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_12_dan_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_12_dan_icloud3', 'longitude') | string)}}
           apple_maps_url_emily_location: >
             {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_13_emily_patrice_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_13_emily_patrice_icloud3', 'longitude') | string)}}
+
+      - unique_id: "adebd6db-c2f7-4fd8-9ff5-cd3c8f66c762"
+        name: "Sorted available updates list"
+        state: "{{ states.update|selectattr('state', 'eq', 'on')|list|count }}"
+        attributes:
+          update_list: >
+            {%- set ns = namespace(entity_list = []) -%}
+            {%- for update_list in states.update|sort(attribute="name") -%}
+            {###### no model or identifier set. Selection contains mostly firmware ######}
+              {%- if device_attr(update_list.entity_id, 'model')|length == 0 or device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",'')|length == 0 -%}
+                {%- if states(update_list.entity_id) == 'on' -%}
+                  {%- set ns.entity_list = ns.entity_list + [update_list.entity_id] -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {###### place 'hacs' before 'hassio' ######}
+            {%- for identifiers in states.update|map(attribute="entity_id")|map('device_attr','identifiers')|map('first')|select('defined')|map('first')|unique|list|sort -%}
+              {###### sorting in this way will put HA Core and Supervisor updates last ######}
+              {%- for model in states.update|map(attribute="entity_id")|map('device_attr','model')|unique|list|sort -%}
+                {%- for update_list in states.update|sort(attribute="name") -%}
+                  {%- if states(update_list.entity_id) == 'on' -%}
+                    {%- if identifiers == device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",'') -%}
+                      {%- if model == device_attr(update_list.entity_id, 'model') %}
+                        {%- set ns.entity_list = ns.entity_list + [update_list.entity_id] -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- endfor -%}
+            {{ns.entity_list}}
+        # {%- for identifiers in states.update|map(attribute="entity_id")|map('device_attr','identifiers')|map('first')|select('defined')|map('first')|unique|list|sort -%}
+        #   {%- for model in states.update|map(attribute="entity_id")|map('device_attr','model')|unique|list|sort('reverse') -%}
+        #     {%- for update_list in states.update|sort(attribute="name") -%}
+        #       {%- if states(update_list.entity_id) == 'on' -%}
+        #         {%- if identifiers == device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",'') -%}
+        #           {%- if model == device_attr(update_list.entity_id, 'model') -%}
+        #             {{{
+        #               'entity_id' : update_list.entity_id|default(''),
+        #               'indentifier' : device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",''),
+        #               'state' : states(update_list.entity_id),
+        #               'model' : device_attr(update_list.entity_id, 'model'),
+        #               'friendly_name' : state_attr(update_list.entity_id, 'friendly_name') | title,
+        #               'device_name' : device_name(update_list.entity_id)
+        #             }}},
+        #           {%- endif -%}
+        #         {%- endif -%}
+        #       {%- endif -%}
+        #     {%- endfor -%}
+        #   {%- endfor -%}
+        # {%- endfor -%}
+
+        # {%- for update_list in states.update|sort(attribute="name") -%}
+        #   {%- if device_attr(update_list.entity_id, 'model')|length == 0 or device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",'')|length == 0 -%}
+        #     {{{
+        #       'entity_id' : update_list.entity_id|default(''),
+        #       'indentifier' : device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",''),
+        #       'model' : device_attr(update_list.entity_id, 'model'),
+        #       'friendly_name' : state_attr(update_list.entity_id, 'friendly_name') | title,
+        #       'device_name' : device_name(update_list.entity_id)
+        #     }}},
+        #   {%- endif -%}
+        # {%- endfor -%}
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"
@@ -996,7 +1059,7 @@ template:
         name: "Collated Docker Details"
         state: "0"
         attributes:
-          icon: "si:docker"
+          icon: "simple-icons:docker"
           docker_json: >
             {% from 'docker_container.jinja' import build_docker_json %}
             {{ build_docker_json() }}
