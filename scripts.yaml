@@ -20,10 +20,6 @@ lockdown_mode_on:
       seconds: 30
       milliseconds: 0
   - type: turn_off
-    device_id: 2cdc2d6151cce99ac31e17c0938b6fc1
-    entity_id: d65bc26641af80e186698dd0f2f80d38
-    domain: light
-  - type: turn_off
     device_id: 2028999f2f7da1303c521c80b4711c16
     entity_id: 58fbf748e169b5548ffd469abc3f3222
     domain: light
@@ -52,8 +48,8 @@ lockdown_mode_on:
     entity_id: ab515b1312541dd270b5c561e6a9a630
     domain: light
   - type: turn_off
-    device_id: 4af87793104d14b408c6c458e29fe6bf
-    entity_id: e336b87525f357bde69faf811ed875ed
+    device_id: 684a47e68a8f6ae121c0e2e171e9e610
+    entity_id: b1d6d87686160a14f90c6c840b40ed69
     domain: light
   - type: turn_off
     device_id: e669b0433c107f284100dea0aeb682fe
@@ -187,6 +183,10 @@ lockdown_mode_on:
       title: Lockdown On
       message: Lockdown mode has been activated
     action: notify.pushover
+  - type: turn_off
+    device_id: ece78833b7fabb95d95b92f934928742
+    entity_id: b59d1f817c281f44ee6cc36cbe383b8a
+    domain: switch
   mode: single
   icon: mdi:lock
 lockdown_mode_off:
@@ -489,4 +489,11 @@ front_light_toggle:
   alias: Back Light Toggle
   mode: single
   icon: mdi:coach-lamp
+  description: ''
+sorted_update_script:
+  sequence:
+  - repeat:
+      for_each: '{{state_attr(''sensor.sorted_available_updates_list'', ''update_list'')}}'
+      sequence: []
+  alias: Sorted Update Script
   description: ''
