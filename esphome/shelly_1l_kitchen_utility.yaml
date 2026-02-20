@@ -13,7 +13,9 @@ substitutions:
 # Common Include
 <<: !include "includes/shelly_1l_common.yaml"
 
-# Extended Config
+# Extended Config - only use when overwriting values in include
+# Note: the entire light and binary_sensor blocks will be overwritten
+
 light:
   - platform: "binary"
     name: "${device_name}_light_1"
@@ -24,7 +26,7 @@ light:
   - platform: "binary"
     name: "${device_name}_light_2"
     output: "ha_script"
-    id: "lightid2"
+    id: "${device_name}_lightid2"
     icon: "${light2_icon}"
 
 output:
@@ -41,19 +43,19 @@ output:
             service: "script.back_light_toggle"
 
 binary_sensor:
-  # =====================common binary_sensor
   - platform: "status"
     name: "${device_name}_status"
+    icon: "mdi:web-check"
     device_class: "connectivity"
     filters:
       - delayed_off: "5min"
-  # =====================common binary_sensor
 
   - platform: "gpio"
     pin:
       number: "GPIO4"
     name: "${device_name}_switch_1"
     id: "${device_name}_switchid1"
+    icon: "mdi:light-switch"
     on_state:
       then:
         - light.toggle: "${device_name}_lightid1"
@@ -64,7 +66,8 @@ binary_sensor:
     pin:
       number: "GPIO14"
     name: "${device_name}_switch_2"
+    id: "${device_name}_switchid2"
+    icon: "mdi:light-switch"
     on_state:
       then:
-        - light.toggle: "lightid2"
-    id: "${device_name}_switchid2"
+        - light.toggle: "${device_name}_lightid2"

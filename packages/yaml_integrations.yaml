@@ -96,15 +96,15 @@ spotcast:   #default is home account
       sp_dc: !secret "spotcast_emily_sp_dc"
       sp_key: !secret "spotcast_emily_sp_key"
 
-monitor_docker:
-  - name: "Docker"
-    url: !secret "hass_docker_monitor_connection_string"
-    rename:
-      it_tools: "it-tools"
-      uptime_kuma: "uptime-kuma"
-    rename_entity: true
-    buttonenabled: true
-    monitored_conditions: ["allinone"]
+# monitor_docker:
+#   - name: "Docker"
+#     url: !secret "hass_docker_monitor_connection_string"
+#     rename:
+#       it_tools: "it-tools"
+#       uptime_kuma: "uptime-kuma"
+#     rename_entity: true
+#     buttonenabled: true
+#     monitored_conditions: ["allinone"]
 
 influxdb:
   username: !secret "hass_addon_influx_db_user"
@@ -118,6 +118,7 @@ influxdb:
 air_quality:
   - platform: "opensensemap"
     station_id: "5faeb5589b2df8001b980304"
+    # located near Batsford Arboretum
 
 emulated_roku:
   servers:

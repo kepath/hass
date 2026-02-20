@@ -13,7 +13,7 @@ custom_card_kepath_person_info:
     ulm_card_kepath_person_battery_entity: ""
     ulm_card_kepath_person_driving_entity: ""
     ulm_card_kepath_person_distance_entity: ""
-  triggers_update: "all"
+  # triggers_update: "all"
   show_label: false
   show_name: true
   group_expand: true
@@ -544,21 +544,21 @@ custom_popup_kepath_person:
                     hui-entities-card{
                       padding: 0.8em 1.4em;
                     }
-                  $hui-entities-card$: >
-                    ha-card{
-                      box-shadow: none;
-                    }
-                  $hui-history-graph-card$: >
-                    .content {
-                      padding: 0 2.4em !important;
-                    }
-                    ha-card{
-                      box-shadow: none;
-                    }
-                  $hui-glance-card$: >
-                    ha-card{
-                      box-shadow: none;
-                    }
+                  # $hui-entities-card$: >
+                  #   ha-card{
+                  #     box-shadow: none;
+                  #   }
+                  # $hui-history-graph-card$: >
+                  #   .content {
+                  #     padding: 0 2.4em !important;
+                  #   }
+                  #   ha-card{
+                  #     box-shadow: none;
+                  #   }
+                  # $hui-glance-card$: >
+                  #   ha-card{
+                  #     box-shadow: none;
+                  #   }
                   $hui-map-card:
                     $: >
                       ha-icon-button {
@@ -613,21 +613,25 @@ custom_popup_kepath_person:
                         template:
                           - "find_my_phone_button_kepath"
                         variables:
-                          findmy_device: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
+                          findmy_device: 
+                            force_eval: true
+                            value: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
                       - type: "custom:button-card"
                         template:
                           - "about_my_phone_button_kepath"
                         variables:
-                          device_id: >
-                            [[[
-                              var deviceId = "";
-                              if (variables?.ulm_card_kepath_person_gps_tracker) {
-                                if (typeof hass?.entities[variables.ulm_card_kepath_person_gps_tracker]?.device_id !== 'undefined') {
-                                  deviceId = hass.entities[variables.ulm_card_kepath_person_gps_tracker].device_id;
+                          device_id:
+                            force_eval: true
+                            value: >
+                              [[[
+                                var deviceId = "";
+                                if (variables?.ulm_card_kepath_person_gps_tracker) {
+                                  if (typeof hass?.entities[variables.ulm_card_kepath_person_gps_tracker]?.device_id !== 'undefined') {
+                                    deviceId = hass.entities[variables.ulm_card_kepath_person_gps_tracker].device_id;
+                                  }
                                 }
-                              }
-                              return deviceId;
-                            ]]]
+                                return deviceId;
+                              ]]]
                   - type: "map"
                     auto_fit: true
                     aspect_ratio: "12x10"

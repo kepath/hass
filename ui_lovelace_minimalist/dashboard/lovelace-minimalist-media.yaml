@@ -59,7 +59,7 @@ views:
         account: "kevin"  # <optional> which account to use for spotcast. Defaults to "default"
 
   - title: "minimalist ui home"
-    icon: "si:homeassistant"
+    icon: "simple-icons:homeassistant"
     theme: "minimalist-mobile"
     path: "../lovelace-minimalist-home"
 
@@ -305,14 +305,16 @@ views:
                   - "card_remotecontrol_logitechharmony_group_home"
                 variables:
                   ulm_card_harmony_remote_group_home_entity: "remote.harmony_hub"
-                ulm_card_harmony_remote_group_current_activity: >
-                  [[[
-                    var currentActivity = 'PowerOff';
-                    if (typeof states[variables.ulm_card_remote_group_home_entity].attributes.current_activity !== 'undefined'){
-                      currentActivity = states[variables.ulm_card_remote_group_home_entity].attributes.current_activity
-                    }
-                    return currentActivity;
-                  ]]]
+                  ulm_card_harmony_remote_group_current_activity:
+                    force_eval: true
+                    value: >
+                      [[[
+                        var currentActivity = 'PowerOff';
+                        if (typeof states[variables.ulm_card_remote_group_home_entity].attributes.current_activity !== 'undefined'){
+                          currentActivity = states[variables.ulm_card_remote_group_home_entity].attributes.current_activity
+                        }
+                        return currentActivity;
+                      ]]]
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
@@ -320,14 +322,16 @@ views:
                 variables:
                   ulm_card_harmony_remote_group_volume_entity: "media_player.rx_v777_reciever_yamaha_integration_bed_c"
                   ulm_card_harmony_remote_group_arrow_select_entity: "remote.harmony_hub"
-                ulm_card_harmony_remote_group_current_activity: >
-                  [[[
-                    var currentActivity = 'PowerOff';
-                    if (typeof states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity !== 'undefined'){
-                      currentActivity = states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity
-                    }
-                    return currentActivity;
-                  ]]]
+                  ulm_card_harmony_remote_group_current_activity:
+                    force_eval: true
+                    value: >
+                      [[[
+                        var currentActivity = 'PowerOff';
+                        if (typeof states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity !== 'undefined'){
+                          currentActivity = states[variables.ulm_remotecontrol_group_arrow_select_entity].attributes.current_activity
+                        }
+                        return currentActivity;
+                      ]]]
 
           - type: "horizontal-stack"
             cards:
@@ -336,14 +340,16 @@ views:
                   - "card_remotecontrol_logitechharmony_group_play"
                 variables:
                   ulm_card_harmony_remote_group_play_entity: "remote.harmony_hub"
-                ulm_card_harmony_remote_group_current_activity: >
-                  [[[
-                    var currentActivity = 'PowerOff';
-                    if (typeof states[variables.ulm_remotecontrol_group_play_entity].attributes.current_activity !== 'undefined'){
-                      currentActivity = states[variables.ulm_remotecontrol_group_play_entity].attributes.current_activity
-                    }
-                    return currentActivity;
-                  ]]]
+                  ulm_card_harmony_remote_group_current_activity:
+                    force_eval: true
+                    value: >
+                      [[[
+                        var currentActivity = 'PowerOff';
+                        if (typeof states[variables.ulm_remotecontrol_group_play_entity].attributes.current_activity !== 'undefined'){
+                          currentActivity = states[variables.ulm_remotecontrol_group_play_entity].attributes.current_activity
+                        }
+                        return currentActivity;
+                      ]]]
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
@@ -351,14 +357,16 @@ views:
                   - "card_remotecontrol_logitechharmony_group_numbers"
                 variables:
                   ulm_card_harmony_remote_group_numbers_entity: "remote.harmony_hub"
-                ulm_card_harmony_remote_group_current_activity: >
-                  [[[
-                    var currentActivity = 'PowerOff';
-                    if (typeof states[variables.ulm_card_remote_group_numbers_entity].attributes.current_activity !== 'undefined'){
-                      currentActivity = states[variables.ulm_card_remote_group_numbers_entity].attributes.current_activity
-                    }
-                    return currentActivity;
-                  ]]]
+                  ulm_card_harmony_remote_group_current_activity:
+                    force_eval: true
+                    value: >
+                      [[[
+                        var currentActivity = 'PowerOff';
+                        if (typeof states[variables.ulm_card_remote_group_numbers_entity].attributes.current_activity !== 'undefined'){
+                          currentActivity = states[variables.ulm_card_remote_group_numbers_entity].attributes.current_activity
+                        }
+                        return currentActivity;
+                      ]]]
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
@@ -366,14 +374,16 @@ views:
                   - "card_remotecontrol_logitechharmony_group_colors"
                 variables:
                   ulm_card_harmony_remote_group_colors_entity: "remote.harmony_hub"
-                ulm_card_harmony_remote_group_current_activity: >
-                  [[[
-                    var currentActivity = 'PowerOff';
-                    if (typeof states[variables.ulm_card_remote_group_colors_entity].attributes.current_activity !== 'undefined'){
-                      currentActivity = states[variables.ulm_card_remote_group_colors_entity].attributes.current_activity
-                    }
-                    return currentActivity;
-                  ]]]
+                  ulm_card_harmony_remote_group_current_activity:
+                    force_eval: true
+                    value: >
+                      [[[
+                        var currentActivity = 'PowerOff';
+                        if (typeof states[variables.ulm_card_remote_group_colors_entity].attributes.current_activity !== 'undefined'){
+                          currentActivity = states[variables.ulm_card_remote_group_colors_entity].attributes.current_activity
+                        }
+                        return currentActivity;
+                      ]]]
 
   - title: "Bed E"
     icon: "mdi:television-classic"
@@ -487,35 +497,35 @@ views:
                 template:
                   - "card_media_player"
                   - "vars_remotecontrol_constants"
-                entity: "media_player.lounge_apple_tv"
+                entity: "media_player.apple_tv_4k_lounge_unifi"
                 name: "Apple TV"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template: "card_remotecontrol_appletv_group_power"
                 variables:
-                  entity_id: "media_player.lounge_apple_tv"
+                  entity_id: "media_player.apple_tv_4k_lounge_unifi"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template: "card_remotecontrol_appletv_group_home"
                 variables:
-                  entity_id: "media_player.lounge_apple_tv"
+                  entity_id: "media_player.apple_tv_4k_lounge_unifi"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template: "card_remotecontrol_appletv_group_arrows_and_volume"
                 variables:
-                  entity_id: "media_player.lounge_apple_tv"
+                  entity_id: "media_player.apple_tv_4k_lounge_unifi"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template: "card_remotecontrol_appletv_group_play"
                 variables:
-                  entity_id: "media_player.lounge_apple_tv"
+                  entity_id: "media_player.apple_tv_4k_lounge_unifi"
           - type: "horizontal-stack"
             cards:
               - type: "custom:button-card"
                 template: "card_remotecontrol_appletv_group_apps"
                 variables:
-                  entity_id: "media_player.lounge_apple_tv"
+                  entity_id: "media_player.apple_tv_4k_lounge_unifi"
