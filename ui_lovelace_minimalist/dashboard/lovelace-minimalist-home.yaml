@@ -34,7 +34,6 @@ views:
             cards:
               - type: "custom:button-card"
                 template: "card_kepath_welcome"
-                triggers_update: "input_boolean.welcome_toggle"
                 variables:
                   ulm_card_kepath_welcome_collapse: "input_boolean.welcome_toggle"
                   ulm_chip_temperature_inside: "sensor.nest_middle_floor_temperature"
@@ -87,7 +86,7 @@ views:
                     color: "yellow"
                   entity_10:
                     nav: "/ingress/a0d7b954_grafana"
-                    icon: "si:grafana"
+                    icon: "simple-icons:grafana"
                     name: "Data"
                     color: "purple"
 
@@ -150,7 +149,9 @@ views:
                             substitute_icon: "mdi:fire-circle"
                           amount:
                             attribute_name: "tab_action_sensors_triggered_count"
-                            count_tooltip: "[[[ return states['sensor.minimalist_ui_binary_action_sensors_tooltip'].state ]]]"
+                            count_tooltip:
+                              force_eval: true
+                              value: "[[[ return states['sensor.minimalist_ui_binary_action_sensors_tooltip'].state ]]]"
                         var_kepath_generic_group_popup:
                           evaluated_entity: "group.all_lights"
                           action: "popup"
@@ -159,8 +160,9 @@ views:
                             auto_entities:
                               exclude_unavailable_state: true
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -204,9 +206,11 @@ views:
                             title: "safety entities ↓ last changed"
                             auto_entities:
                               sort_method: "last_changed"
+                              sort_numeric: true
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -250,9 +254,11 @@ views:
                             title: "all occupancy entities ↓ last changed"
                             auto_entities:
                               sort_method: "last_changed"
+                              sort_numeric: true
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -299,8 +305,9 @@ views:
                               sort_numeric: true
                               exclude_unknown_state: true
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -336,8 +343,9 @@ views:
                             attribute_name: "tab_update_sensors_triggered_count"
                             count_tooltip: "sum of on update sensors"
                         var_kepath_constant_position_overrides:
-                          is_compact_mode: "[[[ return hass.themes.darkMode ? false : true ]]]"
-                          off_state_only: true
+                          is_compact_mode:
+                            force_eval: true
+                            value: "[[[ return hass.themes.darkMode ? false : true ]]]"
                         var_kepath_generic_button_icon_styles:
                           use_themes: false
                           default_state:
@@ -1017,6 +1025,7 @@ views:
                                 exclude_unknown_state: false
                                 exclude_unavailable_state: false
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     item2:
@@ -1133,6 +1142,7 @@ views:
                               title: "door entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
 
@@ -1175,6 +1185,7 @@ views:
                               title: "internal occupancy entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     cameras1:
@@ -1289,6 +1300,7 @@ views:
                               title: "all occupancy entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     item2:
@@ -1314,11 +1326,11 @@ views:
                               count_tooltip: "not set"
                           var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "phu:unifi-protect"
+                              icon: "cbi:unifi-protect"
                               icon_color: "blue"
                               background_color: "blue"
                             unset_state:
-                              icon: "phu:unifi-protect"
+                              icon: "cbi:unifi-protect"
                         hold_action:
                           action: "more-info"
                     item3:
@@ -1395,6 +1407,7 @@ views:
                               title: "speaker entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                                 exclude_unavailable_state: true
                         hold_action:
                           action: "more-info"
@@ -1508,6 +1521,7 @@ views:
                               title: "device tracker entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     item2:
@@ -1549,6 +1563,7 @@ views:
                               title: "connectivity entities ↓ last changed"
                               auto_entities:
                                 sort_method: "last_changed"
+                                sort_numeric: true
                         hold_action:
                           action: "more-info"
                     item3:
@@ -1776,16 +1791,16 @@ views:
                               count_tooltip: "not set"
                           var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "si:ubiquiti"
+                              icon: "simple-icons:ubiquiti"
                               icon_color: "green"
                               background_color: "green"
                             unset_state:
-                              icon: "si:ubiquiti"
+                              icon: "simple-icons:ubiquiti"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
                               evaluated_attribute: "integration_unifi_unavailable_count"
                             style:
-                              icon: "si:ubiquiti"
+                              icon: "simple-icons:ubiquiti"
                               icon_color: "red"
                               background_color: "red"
                         hold_action:
@@ -1814,16 +1829,16 @@ views:
                               count_tooltip: "not set"
                           var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "si:zigbee"
+                              icon: "simple-icons:zigbee"
                               icon_color: "green"
                               background_color: "green"
                             unset_state:
-                              icon: "si:zigbee"
+                              icon: "simple-icons:zigbee"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
                               evaluated_attribute: "integration_zha_unavailable_count"
                             style:
-                              icon: "si:zigbee"
+                              icon: "simple-icons:zigbee"
                               icon_color: "red"
                               background_color: "red"
                         hold_action:
@@ -1954,16 +1969,16 @@ views:
                               count_tooltip: "iCloud3 entities away"
                           var_kepath_generic_button_icon_styles:
                             default_state:
-                              icon: "si:icloud"
+                              icon: "simple-icons:icloud"
                               icon_color: "green"
                               background_color: "green"
                             unset_state:
-                              icon: "si:icloud"
+                              icon: "simple-icons:icloud"
                           var_kepath_device_entity_and_style_binary_count_state:
                             entity:
                               evaluated_attribute: "integration_icloud3_unavailable_count"
                             style:
-                              icon: "si:icloud"
+                              icon: "simple-icons:icloud"
                               icon_color: "red"
                               background_color: "red"
                         hold_action:
@@ -2660,7 +2675,13 @@ views:
                           var_kepath_generic_button_icon_styles:
                             use_themes: false
                             default_state:
+                              icon: "mdi:router-network"
+                              icon_color: "#41bdf5"
                               background_color: "rgba(var(--color-theme),0.05)"
+                            unset_state:
+                              icon: "mdi:router-wireless-off"
+                              icon_color: "rgba(var(--color-red), 1)"
+                              background_color: "rgba(var(--color-red), 0.2)"
                           var_kepath_generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_netalertx_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_netalertx_docker_slug"
@@ -3093,24 +3114,24 @@ views:
                             template: "custom_card_kepath_person_info"
                             variables:
                               ulm_card_kepath_person_entity: "person.kevin_thorn"
-                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_15_kev_unifi"
-                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_15_kev_icloud3"
-                              ulm_card_kepath_person_battery_entity: "sensor.iphone_15_kev_icloud3_battery"
+                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_kev_unifi"
+                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_kev_icloud3"
+                              ulm_card_kepath_person_battery_entity: "sensor.iphone_kev_icloud3_battery"
                               ulm_card_kepath_person_findmy_device: "kevs_iphone"
                               ulm_card_kepath_person_driving_entity: "binary_sensor.is_kev_driving"
-                              ulm_card_kepath_person_distance_entity: "sensor.iphone_15_kev_icloud3_home_distance"
+                              ulm_card_kepath_person_distance_entity: "sensor.iphone_kev_icloud3_home_distance"
                         item2:
                           card:
                             type: "custom:button-card"
                             template: "custom_card_kepath_person_info"
                             variables:
                               ulm_card_kepath_person_entity: "person.julia_thorn"
-                              ulm_card_kepath_person_wifi_tracker: "device_tracker.ju_iphone_8_unifi"
-                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_8_ju_icloud3"
-                              ulm_card_kepath_person_battery_entity: "sensor.iphone_8_ju_icloud3_battery"
-                              ulm_card_kepath_person_findmy_device: "julias_iphone_6"
+                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_ju_unifi"
+                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_ju_icloud3"
+                              ulm_card_kepath_person_battery_entity: "sensor.iphone_ju_icloud3_battery"
+                              ulm_card_kepath_person_findmy_device: "julia_iphone"
                               ulm_card_kepath_person_driving_entity: ""
-                              ulm_card_kepath_person_distance_entity: "sensor.iphone_8_ju_icloud3_home_distance"
+                              ulm_card_kepath_person_distance_entity: "sensor.iphone_ju_icloud3_home_distance"
                         item3:
                           card:
                             type: "custom:button-card"

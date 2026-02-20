@@ -55,6 +55,8 @@ ota:
 
 web_server:
   port: 80
+  version: 3
+
 
 # Exposes this data to Home Assistant, and display on the web server
 text_sensor:
@@ -147,31 +149,6 @@ binary_sensor:
     stream_server: "ss"
     name: "TubesZB Serial Connected"
     icon: "mdi:serial-port"
-
-# converts uptime in seconds to a more human friendly format
-sensor:
-  - platform: "uptime"
-    name: "Uptime Sensor"
-    id: "uptime_sensor"
-    internal: true
-    update_interval: "60s"
-    on_raw_value:
-      then:
-        - text_sensor.template.publish:
-            id: "uptime_human"
-            state: !lambda |-
-              int seconds = round(id(uptime_sensor).raw_state);
-              int days = seconds / (24 * 3600);
-              seconds = seconds % (24 * 3600);
-              int hours = seconds / 3600;
-              seconds = seconds % 3600;
-              int minutes = seconds /  60;
-              seconds = seconds % 60;
-              return (
-                (days ? to_string(days) + "d " : "") +
-                (hours ? to_string(hours) + "h " : "") +
-                (minutes ? to_string(minutes) + "m " : "")
-              ).c_str();
 mdns:
   services:
     - service: "_tubeszb"

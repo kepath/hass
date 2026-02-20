@@ -1,185 +1,11 @@
 ---
-ingress:
+# ingress:
   # convertx_addin:
-  #   # work_mode: "iframe"
-  #   # ui_mode: "replace"
-  #   title: "ConvertX"
-  #   icon: "mdi:alpha-x-circle"
-  #   url: "http://127.0.0.1:8478"
-  #   rewrite:
-  #     - mode: "body"
-  #       match: href="/"
-  #       replace: href="$http_x_ingress_path/"
-  #     - mode: "body"
-  #       match: href="/history"
-  #       replace: href="$http_x_ingress_path/history"
-  #     # rewrite root files
-  #     - mode: "body"
-  #       match: \/generated.css
-  #       replace: $http_x_ingress_path/generated.css
   # it_tools_addin:
-  #   # work_mode: "iframe"
-  #   # ui_mode: "replace"
-  #   title: "IT-Tools"
-  #   icon: "mdi:devices"
-  #   url: "http://127.0.0.1:5789"
-  #   headers:
-  #     # Remote-User: admin
-  #     X-Script-Name: $http_x_ingress_path
-  #     Origin: $auto
-  #   rewrite:
-  #     # rewrite folders
-  #     # - mode: body
-  #     #   match: ui.nabu.casa/
-  #     #   replace: ui.nabu.casa/$http_x_ingress_path/
-  #     # - mode: "body"
-  #     #   match: /(assets)/
-  #     #   replace: $http_x_ingress_path/\1/
-  #     # - mode: "body"
-  #     #   match: /(password-strength-analyser)
-  #     #   replace: $http_x_ingress_path/\1
-        
-  #     # fix no directory REST links
-  #     - mode: "body"
-  #       match: href="/*([\S]+)"
-  #       replace: href="$http_x_ingress_path/\1"
-  #     - mode: "body"
-  #       match: src="/*([\S]+)"
-  #       replace: src="$http_x_ingress_path/\1"
-  #     # - mode: "body"
-  #     #   match: href="(/[\w\-]+)"
-  #     #   replace: href="$http_x_ingress_path\1"
-  #     # rewrite root files
-  #     - mode: "body"
-  #       match: \/sw.js
-  #       replace: $http_x_ingress_path/sw.js
-  #     # MIME type correction (if needed for CSS/JS responses)
-  #     - mode: "header"
-  #       path: \.css$
-  #       name: "Content-Type"
-  #       match: "text/plain"
-  #       replace: "text/css"
-  #     # - mode: body
-  #     #   path: /api/ingress/\w+/\w+/$
-  #     #   match: (href=".*/api/ingress/\w+)"
-  #     #   replace: \1/"
-  #     # - mode: "body"
-  #     #   match: href=\"\/([^\"]+)\"
-  #     #   replace: href="$http_x_ingress_path/\1"
-  #     # - mode: "body"
-  #     #   match: src=\"\/([^\"]+)\"
-  #     #   replace: href="$http_x_ingress_path/\1"
-  #   #   # rewrite root files
-  #   #   - mode: "body"
-  #   #     match: \/sw.js
-  #   #     replace: $http_x_ingress_path/sw.js
   # moodist_addin:
-  #   title: "Moodist"
-  #   icon: "mdi:headphones"
-  #   url: "http://127.0.0.1:8458"
-  #   rewrite:
-  #     # rewrite folders
-  #     - mode: "body"
-  #       match: /(_astro|fonts|sounds)/
-  #       replace: $http_x_ingress_path/\1/
-  #     # - mode: "body"
-  #     #   match: /(fonts)/
-  #     #   replace: $http_x_ingress_path/\1/
-  #     # - mode: "body"
-  #     #   match: /(sounds)/
-  #     #   replace: $http_x_ingress_path/\1/
-  #     # rewrite logo
-  #     - mode: "body"
-  #       match: \/logo.svg
-  #       replace: $http_x_ingress_path/logo.svg
-  #     # rewrite root files
-  #     - mode: "body"
-  #       match: \/sw.js
-  #       replace: $http_x_ingress_path/sw.js
-  #     - mode: "body"
-  #       match: \/logo-light.png
-  #       replace: $http_x_ingress_path/logo-light.png
-        
-  #     # MIME type correction (if needed for CSS/JS responses)
-  #     - mode: "header"
-  #       path: \.css$
-  #       name: "Content-Type"
-  #       match: "text/plain"
-  #       replace: "text/css"
   # overseerr_addin:
-  #   title: "Overseerr"
-  #   icon: "mdi:movie-open-plus"
-  #   url: "http://127.0.0.1:5055"
-  #   index: "/login"
-  #   headers:
-  #     Cache-Control: no-cache
-  #   rewrite:
-  #     # rewrite folders
-  #     # - mode: "body"
-  #     #   match: /(api)/
-  #     #   replace: $http_x_ingress_path/\1/
-  #     # - mode: "body"
-  #     #   match: /(_next)/
-  #     #   replace: $http_x_ingress_path/\1/
-  #     - mode: "body"
-  #       match: href="/*([\S]+)"
-  #       replace: href="$http_x_ingress_path/\1"
-  #     - mode: "body"
-  #       match: src="/*([\S]+)"
-  #       replace: src="$http_x_ingress_path/\1"
-      # rewrite logo
-      # - mode: "body"
-      #   match: \/logo_stacked.svg
-      #   replace: $http_x_ingress_path/logo_stacked.svg
-    # rewrite:
-    #   # rewrite folders
-    #   - mode: "body"
-    #     match: \/login
-    #     replace: $http_x_ingress_path/login
   # plex_addin:
-  #   title: "Plex"
-  #   icon: "si:plex"
-  #   work_mode: "auth"
-  #   url: "https://app.plex.tv/desktop/#!/"
-    # headers:
-    #   X-Script-Name: $http_x_ingress_path
-    #   Origin: $auto
-    # url: "http://192.168.10.5:32400"
-    # # work_mode: "auth"
-    # # index: "/web/index.html"
-    # rewrite:
-    #   - mode: "body"
-    #     match: href="/*([\S]+)"
-    #     replace: href="$http_x_ingress_path/\1"
-    #   - mode: "body"
-    #     match: src="/*([\S]+)"
-    #     replace: src="$http_x_ingress_path/\1"
-    # #   # rewrite folders
-    # #   - mode: "body"
-    # #     match: /(web)/
-    # #     replace: $http_x_ingress_path/\1/
   # uptime_kuma_addin:
-  #   title: "Uptime Kuma"
-  #   icon: "mdi:cog-clockwise"
-  #   url: "http://127.0.0.1:3001"
-  #   index: "/dashboard"
-  #   rewrite:
-  #     - mode: "body"
-  #       match: href="/*([\S]+)"
-  #       replace: href="$http_x_ingress_path/\1"
-  #     - mode: "body"
-  #       match: src="/*([\S]+)"
-  #       replace: src="$http_x_ingress_path/\1"
-  #     - mode: "body"
-  #       match: data="/*([\S]+)"
-  #       replace: data="$http_x_ingress_path/\1"
-  #     - mode: "body"
-  #       match: /(socket\.io)/
-  #       replace: /$http_x_ingress_path/\1/
-  #     # rewrite folders
-  #     # - mode: "body"
-  #     #   match: /(dashboard|fonts|sounds)/
-  #     #   replace: $http_x_ingress_path/\1/
   # unifi_local:
   #   work_mode: "iframe"
   #   ui_mode: "normal"
@@ -187,45 +13,38 @@ ingress:
   #   icon: "mdi:router-network"
   #   url: "https://unifi.ui.com/"
 
-  hacsredirect:
-    work_mode: "iframe"
-    ui_mode: "replace"
-    title: "HACS"
-    icon: "mdi:folder-remove"
-    url: "/hacs/dashboard"
-
-
-
+ingress:
   tabs_development:
     work_mode: "custom" # MUST
     url: "/files/ingress/ha-tabs-ingress.js" # MUST
     title: "Dev Add-ins"
+    ui_mode: "replace"
     icon: "mdi:application-braces"
   esphome:
     parent: "tabs_development"
     work_mode: "hassio"
     title: "ESPHome"
-    icon: "si:esphome"
+    icon: "simple-icons:esphome"
     url: "5c53de3b_esphome"
   studio_code_server:
     parent: "tabs_development"
     work_mode: "hassio"
     title: "VS Code"
-    icon: "si:coder"
+    icon: "simple-icons:coder"
     url: "a0d7b954_vscode"
   hacs:
     parent: "tabs_development"
     work_mode: "iframe"
-    # ui_mode: "replace"
+    ui_mode: "toolbar"
     title: "HACS"
-    icon: "si:homeassistantcommunitystore"
+    icon: "simple-icons:homeassistantcommunitystore"
     url: "/hacs/dashboard"
   # hacsproxy:
   #   parent: "tabs_development"
   #   work_mode: "ingress"
   #   ui_mode: "normal"
   #   title: "HACS"
-  #   icon: "si:homeassistantcommunitystore"
+  #   icon: "simple-icons:homeassistantcommunitystore"
   #   url: "/api/ingress/hacsredirect"
   #   static_token: !secret "ha_statuc_key_hacs_ingress"
   #   headers:
@@ -234,13 +53,14 @@ ingress:
     parent: "tabs_development"
     work_mode: "hassio"
     title: "NetAlertX"
-    icon: "mdi:lan"
-    url: "db21ed7f_netalertx"
+    # icon: "mdi:wifi-check"
+    url: "db21ed7f_netalertx_fa"
   it_tools:
     parent: "tabs_development"
     title: "IT-Tools"
-    icon: "mdi:tools"
-    url: "http://127.0.0.1:5789"
+    # icon: "mdi:tools"
+    url: "http://homeassistant.aot:5789"
+    #   url: "http://127.0.0.1:5789"
     headers:
       X-Script-Name: $http_x_ingress_path
       Origin: $auto
@@ -266,13 +86,14 @@ ingress:
     parent: "tabs_development"
     work_mode: "hassio"
     title: "CyberChef"
-    icon: "mdi:chef-hat"
+    # icon: "mdi:chef-hat"
     url: "2effc9b9_cyberchef"
   convertx:
     parent: "tabs_development"
     title: "ConvertX"
-    icon: "mdi:alpha-x-circle"
-    url: "http://127.0.0.1:8478"
+    # icon: "mdi:alpha-x-circle"
+    url: "http://convertx.aot"
+    #   url: "http://127.0.0.1:8478"
     rewrite:
       - mode: "body"
         match: href="/"
@@ -284,22 +105,11 @@ ingress:
       - mode: "body"
         match: \/generated.css
         replace: $http_x_ingress_path/generated.css
-  node_red:
-    parent: "tabs_development"
-    work_mode: "hassio"
-    title: "Node-Red"
-    icon: "si:nodered"
-    url: "a0d7b954_nodered"
   my_ip:
     parent: "tabs_development"
     title: "My-IP"
-    icon: "mdi:ip"
-    url: "http://127.0.0.1:18966"
-  appdaemon:
-    parent: "tabs_development"
-    title: "AppDaemon"
-    icon: "mdi:tablet-dashboard"
-    url: "http://127.0.0.1:5050"
+    # icon: "mdi:ip"
+    url: "http:///homeassistant.aot:18966"
 
 
 
@@ -312,19 +122,19 @@ ingress:
     parent: "tabs_admin"
     work_mode: "hassio"
     title: "Guacamole"
-    icon: "si:apacheguacamole"
+    icon: "simple-icons:apacheguacamole"
     url: "db21ed7f_guacamole"
   portainer:
     parent: "tabs_admin"
     work_mode: "hassio"
     title: "Portainer"
-    icon: "si:portainer"
+    icon: "simple-icons:portainer"
     url: "db21ed7f_portainer"
   phpmyadmin:
     parent: "tabs_admin"
     work_mode: "hassio"
     title: "phpMyAdmin"
-    icon: "si:phpmyadmin"
+    icon: "simple-icons:phpmyadmin"
     url: "a0d7b954_phpmyadmin"
   advanced_ssh:
     parent: "tabs_admin"
@@ -336,25 +146,20 @@ ingress:
     parent: "tabs_admin"
     work_mode: "hassio"
     title: "AdGuard"
-    icon: "si:adguard"
+    icon: "simple-icons:adguard"
     url: "a0d7b954_adguard"
   browser_mod:
     parent: "tabs_admin"
     work_mode: "iframe"
+    # ui_mode: "replace"
     title: "Browser Mod"
-    icon: "si:firefoxbrowser"
+    # icon: "simple-icons:firefoxbrowser"
     url: "/browser-mod"
-  nginx_proxy_manager:
-    parent: "tabs_admin"
-    title: "Nginx Proxy Manager"
-    icon: "si:nginxproxymanager"
-    url: "http://127.0.0.1:81"
-  tailscale:
-    parent: "tabs_admin"
-    work_mode: "hassio"
-    title: "Tailscale"
-    icon: "si:tailscale"
-    url: "a0d7b954_tailscale"
+  # nginx_proxy_manager:
+  #   parent: "tabs_admin"
+  #   title: "Nginx Proxy Manager"
+  #   icon: "simple-icons:nginxproxymanager"
+  #   url: "http://127.0.0.1:81"
 
 
 
@@ -366,27 +171,42 @@ ingress:
   uptime_kuma:
     parent: "tabs_diagnostics"
     title: "Uptime Kuma"
-    icon: "mdi:cog-clockwise"
-    url: "http://127.0.0.1:3001"
+    icon: "simple-icons:uptimekuma"
+    url: "http:///homeassistant.aot:3001"
+    #   url: "http://127.0.0.1:3001"
     index: "/dashboard"
     rewrite:
-      - mode: "body"
-        match: href="/*([\S]+)"
-        replace: href="$http_x_ingress_path/\1"
-      - mode: "body"
-        match: src="/*([\S]+)"
-        replace: src="$http_x_ingress_path/\1"
-      - mode: "body"
-        match: data="/*([\S]+)"
-        replace: data="$http_x_ingress_path/\1"
-      - mode: "body"
-        match: /(socket\.io)/
-        replace: /$http_x_ingress_path/\1/
+    # Fix HTML asset references
+      - mode: body
+        path:  /.*
+        match: '((?:href|src|action|data|poster|srcset)=")(/(?!api/ingress|http)[^"]+)(")'
+        replace: "\\1$http_x_ingress_path\\2\\3"
+
+      # Fix CSS url() - separate pattern to preserve url(
+      - mode: body
+        path: /.*
+        match: "(url\\()(['\"]?)(/(?!api/ingress|http)[^'\")]+)(\\2)(\\))"
+        replace: "\\1\\2$http_x_ingress_path\\3\\4\\5"
+      # - mode: "body"
+      #   match: href="/*([\S]+)"
+      #   replace: href="$http_x_ingress_path/\1"
+      # - mode: "body"
+      #   match: src="/*([\S]+)"
+      #   replace: src="$http_x_ingress_path/\1"
+      # - mode: "body"
+      #   match: data="/*([\S]+)"
+      #   replace: data="$http_x_ingress_path/\1"
+      # - mode: "body"
+      #   match: (/socket\.io/)
+      #   replace: /$http_x_ingress_path/\1/
+      # - mode: "header"
+      #   match: /(socket\.io)/
+      #   replace: /$http_x_ingress_path/\1/
   emqx:
     parent: "tabs_diagnostics"
     work_mode: "hassio"
     title: "EMQX"
-    icon: "si:mqtt"
+    icon: "simple-icons:mqtt"
     url: "a0d7b954_emqx"
   scrutiny:
     parent: "tabs_diagnostics"
@@ -398,13 +218,13 @@ ingress:
     parent: "tabs_diagnostics"
     work_mode: "hassio"
     title: "InfluxDB"
-    icon: "si:influxdb"
+    icon: "simple-icons:influxdb"
     url: "a0d7b954_influxdb"
   grafana:
     parent: "tabs_diagnostics"
     work_mode: "hassio"
     title: "Grafana"
-    icon: "si:grafana"
+    icon: "simple-icons:grafana"
     url: "a0d7b954_grafana"
   matter_server:
     parent: "tabs_diagnostics"
@@ -412,18 +232,18 @@ ingress:
     title: "Matter Server"
     icon: "m3of:matter"
     url: "core_matter_server"
-  matterbridge:
-    parent: "tabs_diagnostics"
-    work_mode: "hassio"
-    title: "MatterBridge"
-    icon: "si:homebridge"
-    url: "246dd49f_matterbridge"
-  netdata:
-    parent: "tabs_diagnostics"
-    work_mode: "hassio"
-    title: "Netdata"
-    icon: "si:netdata"
-    url: "47146a2b_netdata"
+  # matterbridge:
+  #   parent: "tabs_diagnostics"
+  #   work_mode: "hassio"
+  #   title: "MatterBridge"
+  #   icon: "simple-icons:homebridge"
+  #   url: "246dd49f_matterbridge"
+  # netdata:
+  #   parent: "tabs_diagnostics"
+  #   work_mode: "hassio"
+  #   title: "Netdata"
+  #   icon: "simple-icons:netdata"
+  #   url: "47146a2b_netdata"
 
 
 
@@ -436,19 +256,21 @@ ingress:
     parent: "tabs_media"
     work_mode: "hassio"
     title: "Music Assistant Server"
-    icon: "si:applemusic"
+    # icon: "simple-icons:applemusic"
     url: "d5369777_music_assistant"
   media_browser:
     parent: "tabs_media"
     work_mode: "iframe"
+    # ui_mode: "replace"
     title: "Media Browser"
-    icon: "si:vlcmediaplayer"
+    # icon: "simple-icons:vlcmediaplayer"
     url: "/media-browser/browser"
   moodist:
     parent: "tabs_media"
     title: "Moodist"
-    icon: "mdi:headphones"
-    url: "http://127.0.0.1:8458"
+    # icon: "mdi:headphones"
+    url: "http:///homeassistant.aot:8458"
+    #   url: "http://127.0.0.1:8458"
     rewrite:
       # rewrite folders
       - mode: "body"
@@ -475,40 +297,14 @@ ingress:
     parent: "tabs_media"
     work_mode: "hassio"
     title: "5e Tools"
-    icon: "si:dungeonsanddragons"
+    icon: "simple-icons:dungeonsanddragons"
     url: "2effc9b9_5etools"
   calibre_web:
     parent: "tabs_media"
     work_mode: "hassio"
     title: "Calibre Web"
-    icon: "si:calibreweb"
+    # icon: "simple-icons:calibreweb"
     url: "db21ed7f_calibre"
-  overseerr:
-    parent: "tabs_media"
-    title: "Overseerr"
-    icon: "mdi:movie-open-plus"
-    url: "http://127.0.0.1:5055"
-    index: "/login"
-    headers:
-      Cache-Control: no-cache
-    rewrite:
-      - mode: "body"
-        match: href="/*([\S]+)"
-        replace: href="$http_x_ingress_path/\1"
-      - mode: "body"
-        match: src="/*([\S]+)"
-        replace: src="$http_x_ingress_path/\1"
-  plex:
-    parent: "tabs_media"
-    title: "Plex"
-    icon: "si:plex"
-    work_mode: "auth"
-    url: "https://app.plex.tv/desktop/#!/"
-  tautulli:
-    parent: "tabs_media"
-    title: "Tautulli"
-    icon: "mdi:movie-cog"
-    url: "http://127.0.0.1:8181"
 
 
 
@@ -516,61 +312,69 @@ ingress:
     work_mode: "custom" # MUST
     url: "/files/ingress/ha-tabs-ingress.js" # MUST
     title: "Organisation Add-ins"
-    icon: "si:openmediavault"
+    icon: "simple-icons:openmediavault"
+  ha_map:
+    parent: "tabs_organisation"
+    work_mode: "iframe"
+    # ui_mode: "replace"
+    title: "Map"
+    # icon: "mdi:history"
+    url: "/map"
   ha_logbook:
     parent: "tabs_organisation"
     work_mode: "iframe"
+    # ui_mode: "replace"
     title: "Logbook"
-    icon: "mdi:book-open-variant"
+    # icon: "mdi:book-open-variant"
     url: "/logbook"
   ha_history:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    title: "Logbook"
-    icon: "mdi:history"
+    # ui_mode: "replace"
+    title: "History"
+    # icon: "mdi:history"
     url: "/history"
   ha_calendar:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    title: "Logbook"
-    icon: "mdi:calendar-month"
+    # ui_mode: "replace"
+    title: "Calendar"
+    # icon: "mdi:calendar-month"
     url: "/calendar"
   ha_todo:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    title: "Logbook"
-    icon: "mdi:checkbox-outline"
+    # ui_mode: "replace"
+    title: "ToDo"
+    # icon: "mdi:checkbox-outline"
     url: "/todo"
   homebox:
     parent: "tabs_organisation"
     title: "Homebox"
-    icon: "mdi:folder-home"
+    # icon: "mdi:folder-home"
     url: "http://127.0.0.1:8578"
   ha_home_maintenance:
     parent: "tabs_organisation"
     work_mode: "iframe"
+    # ui_mode: "replace"
     title: "Home Maintenance"
-    icon: "mdi:home-edit"
+    # icon: "mdi:home-edit"
     url: "/home-maintenance"
-  grocy:
+  monica:
     parent: "tabs_organisation"
-    work_mode: "hassio"
-    title: "Grocy"
-    icon: "si:grocy"
-    url: "a0d7b954_grocy"
-  mealie:
-    parent: "tabs_organisation"
-    work_mode: "hassio"
-    title: "Mealie"
-    icon: "si:mealie"
-    url: "db21ed7f_mealie"
+    # work_mode: "iframe"
+    # ui_mode: "replace"
+    title: "Monica"
+    # icon: "simple-icons:openproject"
+    url: "http:///homeassistant.aot:8849"
+
   openproject:
     parent: "tabs_organisation"
     title: "Open Project"
-    icon: "si:openproject"
-    url: "http://127.0.0.1:8579"
+    # icon: "simple-icons:openproject"
+    url: "http:///homeassistant.aot:8579"
   silverbullet:
     parent: "tabs_organisation"
     title: "Silver Bullet"
-    icon: "mdi:flower-poppy"
-    url: "http://127.0.0.1:8538"
+    # icon: "mdi:flower-poppy"
+    url: "http:///homeassistant.aot:8538"
