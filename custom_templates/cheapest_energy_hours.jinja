@@ -1,4 +1,4 @@
-{%- set _version = 'v7.2.0b1'-%}
+{%- set _version = 'v7.2.3'-%}
 
 {#- set settings for source sensors -#}
 {#- list values are 'attr_today', 'attr_tomorrow', 'attr_all', 'time_key', 'value_key' -#}
@@ -128,7 +128,7 @@
         {# check if all days use same datapoints per hour #}
         {%- set dph_ystrd = (output | map(attribute=time_key) | map('as_local') | map('string') | select('search', (time.date() - timedelta(days=1)) | string) | list | count / 24) | round | int -%}
         {%- set dph_today = (output | map(attribute=time_key) | map('as_local') | map('string') | select('search', time.date() | string) | list | count / 24) | round | int -%}
-        {%- set dph_tmrw = (output | map(attribute=time_key) | map('as_local') | map('string') | select('search', (time.date() + timedelta(days=1)) | string) | list  | count / 24) | round | int -%}
+        {%- set dph_tmrw = (output | map(attribute=time_key) | map('as_local') | map('string') | select('search', (time.date() + timedelta(days=1)) | string) | list | count / 24) | round | int -%}
         {%- set dph_list = [dph_ystrd, dph_today, dph_tmrw, force_dph] | select | list -%}
         {%- endif -%}
     {%- set dph = force_dph or use_hourly_avg | int or dph_list | max -%}
@@ -433,6 +433,7 @@
                         {%- set start = today_at(start) if start is string and ':' in start and start | replace(':', '') | is_number else today_at() -%}
                         {%- set start = start if include_today else start + day -%}
                     {%- endif -%}
+                    {%- set original_start = start -%}
                     {%- if look_ahead -%}
                         {%- set start = [_now, start] | max -%}
                     {%- endif -%}
@@ -449,7 +450,7 @@
                         {%- set end = end + day if end == today_at() else end -%}
                         {%- set end = end + day if include_tomorrow else end -%}
                     {%- endif -%}
-                    {%- if start > end -%} {#- START = 20:00, END = 8:00 -#}
+                    {%- if original_start > end -%} {#- START = 20:00, END = 8:00 -#}
                         {%- if end > _now and not start_is_dt -%} {#- NOW() = 04:00, END = 8:00 -#}
                             {%- set start = start - day -%} {#- Set start yesterday -#}
                         {%- elif end < _now and not end_is_dt -%} {#- NOW() = 12:00, END = 8:00 -#}
@@ -548,7 +549,8 @@
                                         plot_sensor=plot_sensor,
                                         plot_attr=plot_attr,
                                         split=split,
-                                        use_hourly_avg=use_hourly_avg
+                                        use_hourly_avg=use_hourly_avg,
+                                        dph=dph
                                     )
             -%}
             {%- set set_by_macro = dict(macro_input.items() | reject('in', user_input.items())) -%}
@@ -609,11 +611,13 @@
                         {%- set dp_minutes, wp_minutes = 60 / dph, 60 / no_weight_points -%}
                 {# add weights for additional datapoints if needed #}
                     {%- elif dp_minutes < wp_minutes and w is not none -%}
+                        {%- set multiplier = (wp_minutes/dp_minutes) | round | int -%}
                         {%- set weight_adjust = namespace(weight=[]) -%}
                         {%- for item in w -%}
-                            {%- set weight_adjust.weight = weight_adjust.weight + [item] * int(round(wp_minutes/dp_minutes),0) -%}
+                            {%- set weight_adjust.weight = weight_adjust.weight + [item] * multiplier -%}
                         {%- endfor -%}
                         {%- set w = weight_adjust.weight -%}
+                        {%- set no_weight_points = no_weight_points * multiplier -%}
                     {%- endif -%}
             {#- debugging data -#}
                 {%- if debug -%}
@@ -661,7 +665,7 @@
                                     {%- if ns.wanted > 0 -%}
                                         {# create list with value blocks #}
                                         {%- set ns.parts = [] -%}
-                                        {%- for i in range((values | count - split_dp) | round(0) | int) -%}
+                                        {%- for i in range((values | count - split_dp + 1) | round(0) | int) -%}
                                             {%- set part = values[i:i+split_dp] | reject('in', ns.selected) | list -%}
                                             {%- set avg = part | map(attribute=value_key) | average if part | count > 0 else none -%}
                                             {%- set ns.parts = ns.parts + [dict(avg=avg, count=part|count, part=part)] -%}
@@ -792,6 +796,7 @@
                         {#- create output for all modes if split is set to false -#}
                             {%- set output = namespace(average=none, start=none, min=none, max=none, weighted_average=none, compare=none, time_min=none, time_max=none, prices_list=[], list=[], is_now=false, extreme_now=none, estimated_costs="unknown") -%}
                             {%- set last_values = (h * no_weight_points) | round(0) | int -%}
+                            {%- set to_add = dict(dp=dp, no_weight_points=no_weight_points, dph=dph)-%}
                             {%- for i in range(values | count - (last_values - 1)) -%}
                                 {%- set prices_list = values[i:i + last_values] | map(attribute=value_key) | list -%}
                                 {%- set original_price_list =
