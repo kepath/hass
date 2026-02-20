@@ -2,95 +2,18 @@
 custom_card_kepath_generic_group_popup:
   variables:
     var_kepath_generic_group_popup:
-      evaluated_entity: >
-        [[[
-          var evaluatedEntity = entity.entity_id;
-          if (typeof variables?.var_kepath_generic_group_popup?.evaluated_entity !== 'undefined') {
-            evaluatedEntity = variables?.var_kepath_generic_group_popup?.evaluated_entity;
-          }
-
-          return evaluatedEntity;
-        ]]]
-      action: >
-        [[[
-          var tapAction = "navigate";
-          const tap_actions = ['navigate', 'popup', 'more_info'];
-          if (variables?.var_kepath_generic_group_popup?.action) {
-            for (let i = 0; i < tap_actions.length; i++) {
-              if (tap_actions[i] == variables.var_kepath_generic_group_popup.action) {
-                tapAction = tap_actions[i];
-              }
-            }
-          }
-          return tapAction;
-        ]]]
+      evaluated_entity:
+        force_eval: true
+        value: "[[[ return entity.entity_id ]]]"
+      action: "navigate"  # tap_actions = ['navigate', 'popup', 'more_info'];
       popup:
         title: "entity group"
         auto_entities:
-          sort_method: >
-            [[[
-              var autoEntitiesSortMethod = "state";
-              const sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
-              if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_method) {
-                for (let i = 0; i < sort_methods.length; i++) {
-                  if (sort_methods[i] == variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method) {
-                    autoEntitiesSortMethod = sort_methods[i];
-                  }
-                }
-              }
-              return autoEntitiesSortMethod;
-            ]]]
-          sort_reversed: >
-            [[[
-              var autoEntitiesSortReversed = false;
-              if (variables?.var_kepath_generic_group_popuptities?.sort_reversed) {
-                if (typeof variables.var_kepath_generic_group_popup.popup.auto_entities.sort_reversed === "boolean") {
-                  autoEntitiesSortReversed = variables.var_kepath_generic_group_popup.popup.auto_entities.sort_reversed;
-                }
-              }
-              return autoEntitiesSortReversed;
-            ]]]
-          sort_numeric: >
-            [[[
-              var autoEntitiesSortNumeric = false;
-              if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_method) {
-                if (variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method == "last_changed" ||
-                    variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method == "last_updated" ||
-                    variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method == "last_triggered") {
-                  autoEntitiesSortNumeric = true;
-                }
-              }
-              if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_numeric) {
-                if (typeof variables.var_kepath_generic_group_popup.popup.auto_entities.sort_numeric === "boolean") {
-                  autoEntitiesSortNumeric = variables.var_kepath_generic_group_popup.popup.auto_entities.sort_numeric;
-                }
-              }
-              return autoEntitiesSortNumeric;
-            ]]]
-          exclude_unknown_state: >
-            [[[
-              var autoEntitiesExcludeUnknownState = false;
-              if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.exclude_unknown_state) {
-                if (typeof variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unknown_state === "boolean") {
-                  autoEntitiesExcludeUnknownState = variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unknown_state;
-                }
-              }
-              return autoEntitiesExcludeUnknownState;
-            ]]]
-          exclude_unavailable_state: >
-            [[[
-              var autoEntitiesExcludeUnavailableState = false;
-              if (variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.exclude_unavailable_state) {
-                if (typeof variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unavailable_state === "boolean") {
-                  autoEntitiesExcludeUnavailableState = variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unavailable_state;
-                }
-              }
-              //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_group_popup?.popup?.title: '+variables?.var_kepath_generic_group_popup?.popup?.title});
-              //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_method: '+variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.sort_method});
-              //hass.callService('system_log', 'write', {level:'warning',message:'variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.exclude_unavailable_state: '+variables?.var_kepath_generic_group_popup?.popup?.auto_entities?.exclude_unavailable_state});
-
-              return autoEntitiesExcludeUnavailableState;
-            ]]]
+          sort_method: "state" # sort_methods = ['domain', 'entity_id', 'name', 'device', 'area', 'state', 'last_changed', 'last_updated', 'last_triggered'];
+          sort_reversed: false
+          sort_numeric: false
+          exclude_unknown_state: false
+          exclude_unavailable_state: false
   tap_action: &default_popup_action
     action: "fire-dom-event"
     browser_mod:
@@ -134,10 +57,10 @@ custom_card_kepath_generic_group_popup:
               hui-entities-card {
                 padding: 0.8em 1.4em;
               }
-            $hui-entities-card$: >
-              ha-card{
-                box-shadow: none;
-              }
+            # $hui-entities-card$: >
+            #   ha-card{
+            #     box-shadow: none;
+            #   }
         content:
           type: "vertical-stack"
           cards:
@@ -148,7 +71,7 @@ custom_card_kepath_generic_group_popup:
                 state_color: true
               filter:
                 include:
-                  - group: "[[[ return variables?.var_kepath_generic_group_popup?.evaluated_entity ]]]"
+                  - group: "[[[ return variables?.var_kepath_generic_group_popup?.evaluated_entity?.value ]]]"
                 exclude:
                   - state: >
                       [[[

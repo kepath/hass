@@ -43,7 +43,7 @@ template:
         name: "Bed C G3 Instant Occupancy"
         state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bed_c_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
-          icon: "phu:mini-camera"
+          icon: "cbi:mini-camera"
           device_class: "occupancy"
           minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bed_c_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
@@ -51,7 +51,7 @@ template:
         name: "Bottom Hallway G3 Instant Occupancy"
         state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bottom_hallway_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
-          icon: "phu:mini-camera"
+          icon: "cbi:mini-camera"
           device_class: "occupancy"
           minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.bottom_hallway_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
@@ -59,7 +59,7 @@ template:
         name: "Kitchen G3 Instant Occupancy"
         state: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.kitchen_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round < 20 }}"
         attributes:
-          icon: "phu:mini-camera"
+          icon: "cbi:mini-camera"
           device_class: "occupancy"
           minutes_since_last_motion: "{{ (((as_timestamp(utcnow().isoformat()) | round) / 60) - ((as_timestamp(states('sensor.kitchen_g3_instant_last_motion_detected')) | int(1440) | round) / 60)) | int(1440) | round }}"
 
@@ -260,3 +260,32 @@ template:
         attributes:
           friendly_name: "Container Running"
           device_class: "running"
+
+      - unique_id: "_unique_binary_sensor_is_water_heater_on"
+        name: "Heat Pump Water Heater is Active"
+        state: >
+          {{
+            'off' if not has_value('water_heater.air_to_water_heat_pump_water_heater') else
+            (
+              'on' if (states('water_heater.air_to_water_heat_pump_water_heater')|lower == 'heat_pump') else
+              'off'
+            )
+          }}
+        attributes:
+          icon: "mdi:heating-coil"
+          device_class: "heat"
+
+      - unique_id: "_unique_binary_sensor_is_heat_pump_on"
+        name: "Heat Pump is Active"
+        state: >
+          {{
+            'off' if not has_value('climate.air_to_water_heat_pump') else
+            (
+              'on' if (states('climate.air_to_water_heat_pump')|lower == 'heat') else
+              'off'
+            )
+          }}
+        attributes:
+          icon: "mdi:heat-pump"
+          device_class: "heat"
+
