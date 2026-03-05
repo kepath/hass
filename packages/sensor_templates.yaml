@@ -18,9 +18,10 @@ template:
           cameras_unavailable_count: "{{ expand('group.all_cameras')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           climate_devices_on_count: >
             {{
-              [(expand('group.all_climate')|map(attribute='entity_id')|select('is_state_attr', 'hvac_action', 'heating')|list|count),
-              (expand('group.all_climate')|rejectattr('attributes.hvac_action', 'defined')|selectattr('state', 'in', ['heat','on'])|list|count),
-              (( 0 if (states('sensor.air_to_water_heat_pump_out_water_temperature')|round < 45) else 1) if (has_value('sensor.air_to_water_heat_pump_out_water_temperature')) else 0 )]|sum
+              [(expand('group.all_climate_all_water_heater')|map(attribute='entity_id')|select('is_state_attr', 'hvac_action', 'heating')|list|count),
+              (expand('group.all_climate_all_water_heater')|rejectattr('attributes.hvac_action', 'defined')|selectattr('state', 'in', ['heat','on'])|list|count),
+              (( 0 if (states('sensor.air_to_water_heat_pump_out_water_temperature')|round < 45) else 1) if (has_value('sensor.air_to_water_heat_pump_out_water_temperature')) else 0 ),
+              (expand('group.all_climate_all_water_heater')|selectattr('state', 'eq', 'heat_pump'))|list|count]|sum
             }}
           connectivity_disconnected_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           connectivity_unavailable_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
@@ -663,38 +664,6 @@ template:
               {%- endfor -%}
             {%- endfor -%}
             {{ns.entity_list}}
-        # {%- for identifiers in states.update|map(attribute="entity_id")|map('device_attr','identifiers')|map('first')|select('defined')|map('first')|unique|list|sort -%}
-        #   {%- for model in states.update|map(attribute="entity_id")|map('device_attr','model')|unique|list|sort('reverse') -%}
-        #     {%- for update_list in states.update|sort(attribute="name") -%}
-        #       {%- if states(update_list.entity_id) == 'on' -%}
-        #         {%- if identifiers == device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",'') -%}
-        #           {%- if model == device_attr(update_list.entity_id, 'model') -%}
-        #             {{{
-        #               'entity_id' : update_list.entity_id|default(''),
-        #               'indentifier' : device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",''),
-        #               'state' : states(update_list.entity_id),
-        #               'model' : device_attr(update_list.entity_id, 'model'),
-        #               'friendly_name' : state_attr(update_list.entity_id, 'friendly_name') | title,
-        #               'device_name' : device_name(update_list.entity_id)
-        #             }}},
-        #           {%- endif -%}
-        #         {%- endif -%}
-        #       {%- endif -%}
-        #     {%- endfor -%}
-        #   {%- endfor -%}
-        # {%- endfor -%}
-
-        # {%- for update_list in states.update|sort(attribute="name") -%}
-        #   {%- if device_attr(update_list.entity_id, 'model')|length == 0 or device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",'')|length == 0 -%}
-        #     {{{
-        #       'entity_id' : update_list.entity_id|default(''),
-        #       'indentifier' : device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",''),
-        #       'model' : device_attr(update_list.entity_id, 'model'),
-        #       'friendly_name' : state_attr(update_list.entity_id, 'friendly_name') | title,
-        #       'device_name' : device_name(update_list.entity_id)
-        #     }}},
-        #   {%- endif -%}
-        # {%- endfor -%}
 
       # Shelly Light Diagnotics
       - unique_id: "light_bathroom_shelly_diagnostics"
