@@ -2,7 +2,7 @@
 device_kepath_entity_and_style_signal_strength_state:
   variables:
     var_kepath_device_entity_and_style_binary_count_state:
-      entity:
+      entity_references:
         evaluated_entity: "sensor.binary_sensor_state_counts"
         isattribute: true
         evaluated_attribute: "signal_sensors_average_value"
@@ -16,8 +16,8 @@ device_kepath_entity_and_style_signal_strength_state:
     - operator: "template"
       value: >
         [[[
-          var evaluatedSignalEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-          var evaluatedSignalAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+          var evaluatedSignalEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity_references?.evaluated_entity;
+          var evaluatedSignalAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity_references?.evaluated_attribute;
 
           var resolvedSignalState;
           var returnValue = false;
@@ -33,8 +33,8 @@ device_kepath_entity_and_style_signal_strength_state:
         [[[
           var returnedIcon = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon;
           var iconSuffix = "-outline";
-          var evaluatedSignalEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-          var evaluatedSignalAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+          var evaluatedSignalEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity_references?.evaluated_entity;
+          var evaluatedSignalAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity_references?.evaluated_attribute;
 
           var resolvedSignalState;
 
@@ -62,8 +62,8 @@ device_kepath_entity_and_style_signal_strength_state:
           - color: >
               [[[
                 var returnedColor = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.icon_color;
-                var evaluatedSignalEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-                var evaluatedSignalAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+                var evaluatedSignalEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity_references?.evaluated_entity;
+                var evaluatedSignalAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity_references?.evaluated_attribute;
 
                 var resolvedSignalState;
 
@@ -90,8 +90,8 @@ device_kepath_entity_and_style_signal_strength_state:
           - background-color: >
               [[[
                 var returnedColor = variables?.var_kepath_device_entity_and_style_binary_count_state?.style?.background_color;
-                var evaluatedSignalEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-                var evaluatedSignalAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+                var evaluatedSignalEntity = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity_references?.evaluated_entity;
+                var evaluatedSignalAttribute = variables?.var_kepath_device_entity_and_style_binary_count_state?.entity_references?.evaluated_attribute;
 
                 var resolvedSignalState;
 
