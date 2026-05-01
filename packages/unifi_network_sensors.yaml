@@ -1,297 +1,297 @@
 ---
 # take rate measurements from Unifi Protect as Unifi Network is always zero. The Protect unit is bytes
 # The Unifi Protect measurements are total increasing (reset on reboot?), so the unit needs changing
-template:
-  - sensor:
-      # create total increasing Mb sensor
-      - unique_id: "_unique_back_g3_flex_rx_total_increasing_mb"
-        name: "Back G3 Flex Total Increasing Rx to Mb"
-        state: "{{ states('sensor.back_g3_flex_received_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
-      - unique_id: "_unique_back_g3_flex_tx_total_increasing_mb"
-        name: "Back G3 Flex Total Increasing Tx to Mb"
-        state: "{{ states('sensor.back_g3_flex_transferred_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
+# template:
+#   - sensor:
+#       # create total increasing Mb sensor
+#       - unique_id: "_unique_back_g3_flex_rx_total_increasing_mb"
+#         name: "Back G3 Flex Total Increasing Rx to Mb"
+#         state: "{{ states('sensor.back_g3_flex_received_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
+#       - unique_id: "_unique_back_g3_flex_tx_total_increasing_mb"
+#         name: "Back G3 Flex Total Increasing Tx to Mb"
+#         state: "{{ states('sensor.back_g3_flex_transferred_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
 
-      - unique_id: "_unique_doorbell_g4_flex_rx_total_increasing_mb"
-        name: "Doorbell G4 Flex Total Increasing Rx to Mb"
-        state: "{{ states('sensor.doorbell_g4_received_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
-      - unique_id: "_unique_doorbell_g4_flex_tx_total_increasing_mb"
-        name: "Doorbell G4 Flex Total Increasing Tx to Mb"
-        state: "{{ states('sensor.doorbell_g4_transferred_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
+#       - unique_id: "_unique_doorbell_g4_flex_rx_total_increasing_mb"
+#         name: "Doorbell G4 Flex Total Increasing Rx to Mb"
+#         state: "{{ states('sensor.doorbell_g4_received_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
+#       - unique_id: "_unique_doorbell_g4_flex_tx_total_increasing_mb"
+#         name: "Doorbell G4 Flex Total Increasing Tx to Mb"
+#         state: "{{ states('sensor.doorbell_g4_transferred_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
 
-      - unique_id: "_unique_front_g3_flex_rx_total_increasing_mb"
-        name: "Front G3 Flex Total Increasing Rx to Mb"
-        state: "{{ states('sensor.front_g3_flex_received_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
-      - unique_id: "_unique_front_g3_flex_tx_total_increasing_mb"
-        name: "Front G3 Flex Total Increasing Tx to Mb"
-        state: "{{ states('sensor.front_g3_flex_transferred_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
+#       - unique_id: "_unique_front_g3_flex_rx_total_increasing_mb"
+#         name: "Front G3 Flex Total Increasing Rx to Mb"
+#         state: "{{ states('sensor.front_g3_flex_received_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
+#       - unique_id: "_unique_front_g3_flex_tx_total_increasing_mb"
+#         name: "Front G3 Flex Total Increasing Tx to Mb"
+#         state: "{{ states('sensor.front_g3_flex_transferred_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
 
-      - unique_id: "_unique_middle_hallway_g3_flex_rx_total_increasing_mb"
-        name: "Middle Hallway G3 Flex Total Increasing Rx to Mb"
-        state: "{{ states('sensor.middle_hallway_g3_flex_received_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
-      - unique_id: "_unique_middle_hallway_g3_flex_tx_total_increasing_mb"
-        name: "Middle Hallway G3 Flex Total Increasing Tx to Mb"
-        state: "{{ states('sensor.middle_hallway_g3_flex_transferred_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
+#       - unique_id: "_unique_middle_hallway_g3_flex_rx_total_increasing_mb"
+#         name: "Middle Hallway G3 Flex Total Increasing Rx to Mb"
+#         state: "{{ states('sensor.middle_hallway_g3_flex_received_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
+#       - unique_id: "_unique_middle_hallway_g3_flex_tx_total_increasing_mb"
+#         name: "Middle Hallway G3 Flex Total Increasing Tx to Mb"
+#         state: "{{ states('sensor.middle_hallway_g3_flex_transferred_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
 
-      - unique_id: "_unique_bottom_hallway_g3_instant_rx_total_increasing_mb"
-        name: "Bottom Hallway G3 Instant Total Increasing Rx to Mb"
-        state: "{{ states('sensor.bottom_hallway_g3_instant_received_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
-      - unique_id: "_unique_bottom_hallway_g3_instant_tx_total_increasing_mb"
-        name: "Bottom Hallway G3 Instant Total Increasing Tx to Mb"
-        state: "{{ states('sensor.bottom_hallway_g3_instant_transferred_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
+#       - unique_id: "_unique_bottom_hallway_g3_instant_rx_total_increasing_mb"
+#         name: "Bottom Hallway G3 Instant Total Increasing Rx to Mb"
+#         state: "{{ states('sensor.bottom_hallway_g3_instant_received_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
+#       - unique_id: "_unique_bottom_hallway_g3_instant_tx_total_increasing_mb"
+#         name: "Bottom Hallway G3 Instant Total Increasing Tx to Mb"
+#         state: "{{ states('sensor.bottom_hallway_g3_instant_transferred_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
 
-      - unique_id: "_unique_kitchen_g3_instant_rx_total_increasing_mb"
-        name: "Kitchen G3 Instant Total Increasing Rx to Mb"
-        state: "{{ states('sensor.kitchen_g3_instant_received_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
-      - unique_id: "_unique_kitchen_g3_instant_tx_total_increasing_mb"
-        name: "Kitchen G3 Instant Total Increasing Tx to Mb"
-        state: "{{ states('sensor.kitchen_g3_instant_transferred_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
+#       - unique_id: "_unique_kitchen_g3_instant_rx_total_increasing_mb"
+#         name: "Kitchen G3 Instant Total Increasing Rx to Mb"
+#         state: "{{ states('sensor.kitchen_g3_instant_received_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
+#       - unique_id: "_unique_kitchen_g3_instant_tx_total_increasing_mb"
+#         name: "Kitchen G3 Instant Total Increasing Tx to Mb"
+#         state: "{{ states('sensor.kitchen_g3_instant_transferred_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
 
-      - unique_id: "_unique_bed_c_g3_instant_rx_total_increasing_mb"
-        name: "Bed C G3 Instant Total Increasing Rx to Mb"
-        state: "{{ states('sensor.bed_c_g3_instant_received_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
-      - unique_id: "_unique_bed_c_g3_instant_tx_total_increasing_mb"
-        name: "Bed C G3 Instant Total Increasing Tx to Mb"
-        state: "{{ states('sensor.bed_c_g3_instant_transferred_data') | float(0.0) / 1048576 | round(3) }}"
-        attributes:
-          unit_of_measurement: "MB"
-          state_class: "total_increasing"
-          device_class: "data_size"
+#       - unique_id: "_unique_bed_c_g3_instant_rx_total_increasing_mb"
+#         name: "Bed C G3 Instant Total Increasing Rx to Mb"
+#         state: "{{ states('sensor.bed_c_g3_instant_received_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
+#       - unique_id: "_unique_bed_c_g3_instant_tx_total_increasing_mb"
+#         name: "Bed C G3 Instant Total Increasing Tx to Mb"
+#         state: "{{ states('sensor.bed_c_g3_instant_transferred_data') | float(0.0) / 1048576 | round(3) }}"
+#         attributes:
+#           unit_of_measurement: "MB"
+#           state_class: "total_increasing"
+#           device_class: "data_size"
 
-utility_meter:
-  back_g3_flex_total_increasing_utility_meter_rx:
-    source: "sensor.back_g3_flex_total_increasing_rx_to_mb"
-    name: "Back G3 Flex Total Increasing Utility Meter Rx"
-    unique_id: "_unique_back_g3_flex_total_increasing_utility_meter_rx"
-    periodically_resetting: true
-  back_g3_flex_total_increasing_utility_meter_tx:
-    source: "sensor.back_g3_flex_total_increasing_tx_to_mb"
-    name: "Back G3 Flex Total Increasing Utility Meter Tx"
-    unique_id: "_unique_back_g3_flex_total_increasing_utility_meter_tx"
-    periodically_resetting: true
+# utility_meter:
+#   back_g3_flex_total_increasing_utility_meter_rx:
+#     source: "sensor.back_g3_flex_total_increasing_rx_to_mb"
+#     name: "Back G3 Flex Total Increasing Utility Meter Rx"
+#     unique_id: "_unique_back_g3_flex_total_increasing_utility_meter_rx"
+#     periodically_resetting: true
+#   back_g3_flex_total_increasing_utility_meter_tx:
+#     source: "sensor.back_g3_flex_total_increasing_tx_to_mb"
+#     name: "Back G3 Flex Total Increasing Utility Meter Tx"
+#     unique_id: "_unique_back_g3_flex_total_increasing_utility_meter_tx"
+#     periodically_resetting: true
 
-  doorbell_g4_flex_total_increasing_utility_meter_rx:
-    source: "sensor.doorbell_g4_flex_total_increasing_rx_to_mb"
-    name: "Doorbell G4 Flex Total Increasing Utility Meter Rx"
-    unique_id: "_unique_doorbell_g4_flex_total_increasing_utility_meter_rx"
-    periodically_resetting: true
-  doorbell_g4_flex_total_increasing_utility_meter_tx:
-    source: "sensor.doorbell_g4_flex_total_increasing_tx_to_mb"
-    name: "Doorbell G4 Flex Total Increasing Utility Meter Tx"
-    unique_id: "_unique_doorbell_g4_flex_total_increasing_utility_meter_tx"
-    periodically_resetting: true
+#   doorbell_g4_flex_total_increasing_utility_meter_rx:
+#     source: "sensor.doorbell_g4_flex_total_increasing_rx_to_mb"
+#     name: "Doorbell G4 Flex Total Increasing Utility Meter Rx"
+#     unique_id: "_unique_doorbell_g4_flex_total_increasing_utility_meter_rx"
+#     periodically_resetting: true
+#   doorbell_g4_flex_total_increasing_utility_meter_tx:
+#     source: "sensor.doorbell_g4_flex_total_increasing_tx_to_mb"
+#     name: "Doorbell G4 Flex Total Increasing Utility Meter Tx"
+#     unique_id: "_unique_doorbell_g4_flex_total_increasing_utility_meter_tx"
+#     periodically_resetting: true
 
-  front_g3_flex_total_increasing_utility_meter_rx:
-    source: "sensor.front_g3_flex_total_increasing_rx_to_mb"
-    name: "Front G3 Flex Total Increasing Utility Meter Rx"
-    unique_id: "_unique_front_g3_flex_total_increasing_utility_meter_rx"
-    periodically_resetting: true
-  front_g3_flex_total_increasing_utility_meter_tx:
-    source: "sensor.front_g3_flex_total_increasing_tx_to_mb"
-    name: "Front G3 Flex Total Increasing Utility Meter Tx"
-    unique_id: "_unique_front_g3_flex_total_increasing_utility_meter_tx"
-    periodically_resetting: true
+#   front_g3_flex_total_increasing_utility_meter_rx:
+#     source: "sensor.front_g3_flex_total_increasing_rx_to_mb"
+#     name: "Front G3 Flex Total Increasing Utility Meter Rx"
+#     unique_id: "_unique_front_g3_flex_total_increasing_utility_meter_rx"
+#     periodically_resetting: true
+#   front_g3_flex_total_increasing_utility_meter_tx:
+#     source: "sensor.front_g3_flex_total_increasing_tx_to_mb"
+#     name: "Front G3 Flex Total Increasing Utility Meter Tx"
+#     unique_id: "_unique_front_g3_flex_total_increasing_utility_meter_tx"
+#     periodically_resetting: true
 
-  middle_hallway_g3_flex_total_increasing_utility_meter_rx:
-    source: "sensor.middle_hallway_g3_flex_total_increasing_rx_to_mb"
-    name: "Middle Hallway G3 Flex Total Increasing Utility Meter Rx"
-    unique_id: "_unique_middle_hallway_g3_flex_total_increasing_utility_meter_rx"
-    periodically_resetting: true
-  middle_hallway_g3_flex_total_increasing_utility_meter_tx:
-    source: "sensor.middle_hallway_g3_flex_total_increasing_tx_to_mb"
-    name: "Middle Hallway G3 Flex Total Increasing Utility Meter Tx"
-    unique_id: "_unique_middle_hallway_g3_flex_total_increasing_utility_meter_tx"
-    periodically_resetting: true
+#   middle_hallway_g3_flex_total_increasing_utility_meter_rx:
+#     source: "sensor.middle_hallway_g3_flex_total_increasing_rx_to_mb"
+#     name: "Middle Hallway G3 Flex Total Increasing Utility Meter Rx"
+#     unique_id: "_unique_middle_hallway_g3_flex_total_increasing_utility_meter_rx"
+#     periodically_resetting: true
+#   middle_hallway_g3_flex_total_increasing_utility_meter_tx:
+#     source: "sensor.middle_hallway_g3_flex_total_increasing_tx_to_mb"
+#     name: "Middle Hallway G3 Flex Total Increasing Utility Meter Tx"
+#     unique_id: "_unique_middle_hallway_g3_flex_total_increasing_utility_meter_tx"
+#     periodically_resetting: true
 
-  bottom_hallway_g3_instant_total_increasing_utility_meter_rx:
-    source: "sensor.bottom_hallway_g3_instant_total_increasing_rx_to_mb"
-    name: "Bottom Hallway G3 Instant Total Increasing Utility Meter Rx"
-    unique_id: "_unique_bottom_hallway_g3_instant_total_increasing_utility_meter_rx"
-    periodically_resetting: true
-  bottom_hallway_g3_instant_total_increasing_utility_meter_tx:
-    source: "sensor.bottom_hallway_g3_instant_total_increasing_tx_to_mb"
-    name: "Bottom Hallway G3 Instant Total Increasing Utility Meter Tx"
-    unique_id: "_unique_bottom_hallway_g3_instant_total_increasing_utility_meter_tx"
-    periodically_resetting: true
+#   bottom_hallway_g3_instant_total_increasing_utility_meter_rx:
+#     source: "sensor.bottom_hallway_g3_instant_total_increasing_rx_to_mb"
+#     name: "Bottom Hallway G3 Instant Total Increasing Utility Meter Rx"
+#     unique_id: "_unique_bottom_hallway_g3_instant_total_increasing_utility_meter_rx"
+#     periodically_resetting: true
+#   bottom_hallway_g3_instant_total_increasing_utility_meter_tx:
+#     source: "sensor.bottom_hallway_g3_instant_total_increasing_tx_to_mb"
+#     name: "Bottom Hallway G3 Instant Total Increasing Utility Meter Tx"
+#     unique_id: "_unique_bottom_hallway_g3_instant_total_increasing_utility_meter_tx"
+#     periodically_resetting: true
 
-  kitchen_g3_instant_total_increasing_utility_meter_rx:
-    source: "sensor.kitchen_g3_instant_total_increasing_rx_to_mb"
-    name: "Kitchen G3 Instant Total Increasing Utility Meter Rx"
-    unique_id: "_unique_kitchen_g3_instant_total_increasing_utility_meter_rx"
-    periodically_resetting: true
-  kitchen_g3_instant_total_increasing_utility_meter_tx:
-    source: "sensor.kitchen_g3_instant_total_increasing_tx_to_mb"
-    name: "Kitchen G3 Instant Total Increasing Utility Meter Tx"
-    unique_id: "_unique_kitchen_g3_instant_total_increasing_utility_meter_tx"
-    periodically_resetting: true
+#   kitchen_g3_instant_total_increasing_utility_meter_rx:
+#     source: "sensor.kitchen_g3_instant_total_increasing_rx_to_mb"
+#     name: "Kitchen G3 Instant Total Increasing Utility Meter Rx"
+#     unique_id: "_unique_kitchen_g3_instant_total_increasing_utility_meter_rx"
+#     periodically_resetting: true
+#   kitchen_g3_instant_total_increasing_utility_meter_tx:
+#     source: "sensor.kitchen_g3_instant_total_increasing_tx_to_mb"
+#     name: "Kitchen G3 Instant Total Increasing Utility Meter Tx"
+#     unique_id: "_unique_kitchen_g3_instant_total_increasing_utility_meter_tx"
+#     periodically_resetting: true
 
-  bed_c_g3_instant_total_increasing_utility_meter_rx:
-    source: "sensor.bed_c_g3_instant_total_increasing_rx_to_mb"
-    name: "Bed C G3 Instant Total Increasing Utility Meter Rx"
-    unique_id: "_unique_bed_c_g3_instant_total_increasing_utility_meter_rx"
-    periodically_resetting: true
-  bed_c_g3_instant_total_increasing_utility_meter_tx:
-    source: "sensor.bed_c_g3_instant_total_increasing_tx_to_mb"
-    name: "Bed C G3 Instant Total Increasing Utility Meter Tx"
-    unique_id: "_unique_bed_c_g3_instant_total_increasing_utility_meter_tx"
-    periodically_resetting: true
+#   bed_c_g3_instant_total_increasing_utility_meter_rx:
+#     source: "sensor.bed_c_g3_instant_total_increasing_rx_to_mb"
+#     name: "Bed C G3 Instant Total Increasing Utility Meter Rx"
+#     unique_id: "_unique_bed_c_g3_instant_total_increasing_utility_meter_rx"
+#     periodically_resetting: true
+#   bed_c_g3_instant_total_increasing_utility_meter_tx:
+#     source: "sensor.bed_c_g3_instant_total_increasing_tx_to_mb"
+#     name: "Bed C G3 Instant Total Increasing Utility Meter Tx"
+#     unique_id: "_unique_bed_c_g3_instant_total_increasing_utility_meter_tx"
+#     periodically_resetting: true
 
 sensor:
-  - platform: "statistics"
-    name: "Back G3 Flex Rx Mb per second"
-    entity_id: "sensor.back_g3_flex_total_increasing_utility_meter_rx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_back_g3_flex_rx_mb_per_second"
-    sampling_size: 6
-  - platform: "statistics"
-    name: "Back G3 Flex Tx Mb per second"
-    entity_id: "sensor.back_g3_flex_total_increasing_utility_meter_tx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_back_g3_flex_tx_mb_per_second"
-    sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Back G3 Flex Rx Mb per second"
+  #   entity_id: "sensor.back_g3_flex_total_increasing_utility_meter_rx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_back_g3_flex_rx_mb_per_second"
+  #   sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Back G3 Flex Tx Mb per second"
+  #   entity_id: "sensor.back_g3_flex_total_increasing_utility_meter_tx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_back_g3_flex_tx_mb_per_second"
+  #   sampling_size: 6
 
-  - platform: "statistics"
-    name: "Doorbell G4 Flex Rx Mb per second"
-    entity_id: "sensor.doorbell_g4_flex_total_increasing_utility_meter_rx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_doorbell_g4_flex_rx_mb_per_second"
-    sampling_size: 6
-  - platform: "statistics"
-    name: "Doorbell G4 Flex Tx Mb per second"
-    entity_id: "sensor.doorbell_g4_flex_total_increasing_utility_meter_tx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_doorbell_g4_flex_tx_mb_per_second"
-    sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Doorbell G4 Flex Rx Mb per second"
+  #   entity_id: "sensor.doorbell_g4_flex_total_increasing_utility_meter_rx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_doorbell_g4_flex_rx_mb_per_second"
+  #   sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Doorbell G4 Flex Tx Mb per second"
+  #   entity_id: "sensor.doorbell_g4_flex_total_increasing_utility_meter_tx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_doorbell_g4_flex_tx_mb_per_second"
+  #   sampling_size: 6
 
-  - platform: "statistics"
-    name: "Front G3 Flex Rx Mb per second"
-    entity_id: "sensor.front_g3_flex_total_increasing_utility_meter_rx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_front_g3_flex_rx_mb_per_second"
-    sampling_size: 6
-  - platform: "statistics"
-    name: "Front G3 Flex Tx Mb per second"
-    entity_id: "sensor.front_g3_flex_total_increasing_utility_meter_tx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_front_g3_flex_tx_mb_per_second"
-    sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Front G3 Flex Rx Mb per second"
+  #   entity_id: "sensor.front_g3_flex_total_increasing_utility_meter_rx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_front_g3_flex_rx_mb_per_second"
+  #   sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Front G3 Flex Tx Mb per second"
+  #   entity_id: "sensor.front_g3_flex_total_increasing_utility_meter_tx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_front_g3_flex_tx_mb_per_second"
+  #   sampling_size: 6
 
-  - platform: "statistics"
-    name: "Middle Hallway G3 Flex Rx Mb per second"
-    entity_id: "sensor.middle_hallway_g3_flex_total_increasing_utility_meter_rx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_middle_hallway_g3_instant_rx_mb_per_second"
-    sampling_size: 6
-  - platform: "statistics"
-    name: "Middle Hallway G3 Flex Tx Mb per second"
-    entity_id: "sensor.middle_hallway_g3_flex_total_increasing_utility_meter_tx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_middle_hallway_g3_instant_tx_mb_per_second"
-    sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Middle Hallway G3 Flex Rx Mb per second"
+  #   entity_id: "sensor.middle_hallway_g3_flex_total_increasing_utility_meter_rx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_middle_hallway_g3_instant_rx_mb_per_second"
+  #   sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Middle Hallway G3 Flex Tx Mb per second"
+  #   entity_id: "sensor.middle_hallway_g3_flex_total_increasing_utility_meter_tx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_middle_hallway_g3_instant_tx_mb_per_second"
+  #   sampling_size: 6
 
-  - platform: "statistics"
-    name: "Bottom Hallway G3 Instant Rx Mb per second"
-    entity_id: "sensor.bottom_hallway_g3_instant_total_increasing_utility_meter_rx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_bottom_hallway_g3_instant_rx_mb_per_second"
-    sampling_size: 6
-  - platform: "statistics"
-    name: "Bottom Hallway G3 Instant Tx Mb per second"
-    entity_id: "sensor.bottom_hallway_g3_instant_total_increasing_utility_meter_tx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_bottom_hallway_g3_instant_tx_mb_per_second"
-    sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Bottom Hallway G3 Instant Rx Mb per second"
+  #   entity_id: "sensor.bottom_hallway_g3_instant_total_increasing_utility_meter_rx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_bottom_hallway_g3_instant_rx_mb_per_second"
+  #   sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Bottom Hallway G3 Instant Tx Mb per second"
+  #   entity_id: "sensor.bottom_hallway_g3_instant_total_increasing_utility_meter_tx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_bottom_hallway_g3_instant_tx_mb_per_second"
+  #   sampling_size: 6
 
-  - platform: "statistics"
-    name: "Kitchen G3 Instant Rx Mb per second"
-    entity_id: "sensor.kitchen_g3_instant_total_increasing_utility_meter_rx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_kitchen_g3_instant_rx_mb_per_second"
-    sampling_size: 6
-  - platform: "statistics"
-    name: "Kitchen G3 Instant Tx Mb per second"
-    entity_id: "sensor.kitchen_g3_instant_total_increasing_utility_meter_tx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_kitchen_g3_instant_tx_mb_per_second"
-    sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Kitchen G3 Instant Rx Mb per second"
+  #   entity_id: "sensor.kitchen_g3_instant_total_increasing_utility_meter_rx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_kitchen_g3_instant_rx_mb_per_second"
+  #   sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Kitchen G3 Instant Tx Mb per second"
+  #   entity_id: "sensor.kitchen_g3_instant_total_increasing_utility_meter_tx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_kitchen_g3_instant_tx_mb_per_second"
+  #   sampling_size: 6
 
-  - platform: "statistics"
-    name: "Bed C G3 Instant Rx Mb per second"
-    entity_id: "sensor.bed_c_g3_instant_total_increasing_utility_meter_rx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_bed_c_g3_instant_rx_mb_per_second"
-    sampling_size: 6
-  - platform: "statistics"
-    name: "Bed C G3 Instant Tx Mb per second"
-    entity_id: "sensor.bed_c_g3_instant_total_increasing_utility_meter_tx"
-    state_characteristic: "change_second"
-    precision: 3
-    unique_id: "_unique_sensor_bed_c_g3_instant_tx_mb_per_second"
-    sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Bed C G3 Instant Rx Mb per second"
+  #   entity_id: "sensor.bed_c_g3_instant_total_increasing_utility_meter_rx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_bed_c_g3_instant_rx_mb_per_second"
+  #   sampling_size: 6
+  # - platform: "statistics"
+  #   name: "Bed C G3 Instant Tx Mb per second"
+  #   entity_id: "sensor.bed_c_g3_instant_total_increasing_utility_meter_tx"
+  #   state_characteristic: "change_second"
+  #   precision: 3
+  #   unique_id: "_unique_sensor_bed_c_g3_instant_tx_mb_per_second"
+  #   sampling_size: 6
 
   # total increasing unifi rx rates wireless
   - platform: "integration"
@@ -306,12 +306,6 @@ sensor:
     unique_id: "_unique_sensor_emily_hp_laptop_wifi_total_increasing_rx"
     unit_time: "s"
     round: 3
-  # - platform: "integration"
-  #   source: "sensor.amazon_echo_dot_bed_b_rx"
-  #   name: "amazon_echo_dot_bed_b_total_increasing_rx"
-  #   unique_id: "_unique_sensor_amazon_echo_dot_bed_b_total_increasing_rx"
-  #   unit_time: "s"
-  #   round: 3
   - platform: "integration"
     source: "sensor.tuya_smart_sockets_wifi_bed_c_rx"
     name: "tuya_smart_sockets_wifi_bed_c_total_increasing_rx"
@@ -552,12 +546,6 @@ sensor:
     unique_id: "_unique_sensor_msi_gf66_dan_wifi_unifi_total_increasing_rx"
     unit_time: "s"
     round: 3
-  # - platform: "integration"
-  #   source: "sensor.nespresso_vertuo_next_unifi_rx"
-  #   name: "nespresso_vertuo_next_unifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_nespresso_vertuo_next_unifi_total_increasing_rx"
-  #   unit_time: "s"
-  #   round: 3
   - platform: "integration"
     source: "sensor.nest_protect_bottom_hallway_unifi_rx"
     name: "nest_protect_bottom_hallway_unifi_total_increasing_rx"
@@ -606,12 +594,6 @@ sensor:
     unique_id: "_unique_sensor_dreo_fan_bed_e_unifi_total_increasing_rx"
     unit_time: "s"
     round: 3
-  # - platform: "integration"
-  #   source: "sensor.emilys_macbook_wifi_unifi_rx"
-  #   name: "emilys_macbook_wifi_total_increasing_rx"
-  #   unique_id: "_unique_sensor_emilys_macbook_wifi_unifi_total_increasing_rx"
-  #   unit_time: "s"
-  #   round: 3
   - platform: "integration"
     source: "sensor.emily_hp_laptop_wifi_rx"
     name: "emily_hp_laptop_wifi_unifi_total_increasing_rx"
@@ -699,12 +681,6 @@ sensor:
     unique_id: "_unique_sensor_emily_hp_laptop_wifi_total_increasing_tx"
     unit_time: "s"
     round: 3
-  # - platform: "integration"
-  #   source: "sensor.amazon_echo_dot_bed_b_tx"
-  #   name: "amazon_echo_dot_bed_b_total_increasing_tx"
-  #   unique_id: "_unique_sensor_amazon_echo_dot_bed_b_total_increasing_tx"
-  #   unit_time: "s"
-  #   round: 3
   - platform: "integration"
     source: "sensor.tuya_smart_sockets_wifi_bed_c_tx"
     name: "tuya_smart_sockets_wifi_bed_c_total_increasing_tx"
@@ -945,12 +921,6 @@ sensor:
     unique_id: "_unique_sensor_msi_gf66_dan_wifi_unifi_total_increasing_tx"
     unit_time: "s"
     round: 3
-  # - platform: "integration"
-  #   source: "sensor.nespresso_vertuo_next_unifi_tx"
-  #   name: "nespresso_vertuo_next_unifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_nespresso_vertuo_next_unifi_total_increasing_tx"
-  #   unit_time: "s"
-  #   round: 3
   - platform: "integration"
     source: "sensor.nest_protect_bottom_hallway_unifi_tx"
     name: "nest_protect_bottom_hallway_unifi_total_increasing_tx"
@@ -999,12 +969,6 @@ sensor:
     unique_id: "_unique_sensor_dreo_fan_bed_e_unifi_total_increasing_tx"
     unit_time: "s"
     round: 3
-  # - platform: "integration"
-  #   source: "sensor.emilys_macbook_wifi_unifi_tx"
-  #   name: "emilys_macbook_wifi_total_increasing_tx"
-  #   unique_id: "_unique_sensor_emilys_macbook_wifi_unifi_total_increasing_tx"
-  #   unit_time: "s"
-  #   round: 3
   - platform: "integration"
     source: "sensor.emily_hp_laptop_wifi_tx"
     name: "emily_hp_laptop_wifi_unifi_total_increasing_tx"
@@ -2468,14 +2432,6 @@ sensor:
     entity_ids:
       - "sensor.msi_gf66_dan_wifi_unifi_rx"
       - "sensor.msi_gf66_dan_wifi_unifi_tx"
-  # - platform: "min_max"
-  #   name: "Nespresso Vertuo Next Unifi Data Rate"
-  #   unique_id: "_unique_nespresso_vertuo_next_data_rate"
-  #   type: "mean"
-  #   round_digits: 3
-  #   entity_ids:
-  #     - "sensor.nespresso_vertuo_next_unifi_rx"
-  #     - "sensor.nespresso_vertuo_next_unifi_tx"
   - platform: "min_max"
     name: "Nest Protect Bottom Hallway Unifi Data Rate"
     unique_id: "_unique_nest_protect_bottom_hallway_data_rate"

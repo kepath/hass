@@ -1,43 +1,14 @@
 ---
-binary_sensor:
-  - platform: "tod"
-    name: "nighttime"
-    after: "sunset"
-    before: "sunrise"
-    unique_id: "tod_nighttime"
-  - platform: "tod"
-    name: "quiettime"
-    after: "23:00"
-    before: "07:00"
-    unique_id: "tod_quiettime"
-  - platform: "tod"
-    name: "cheap heating time"
-    after: "00:00"
-    before: "07:00"
-    unique_id: "tod_cheap_heating_time"
-  - platform: "tod"
-    name: "morning heating time"
-    after: "06:00"
-    before: "09:00"
-    unique_id: "tod_morning_heating_time"
-  - platform: "tod"
-    name: "afternoon heating time"
-    after: "14:00"
-    before: "17:00"
-    unique_id: "tod_afternoon_heating_time"
-  - platform: "tod"
-    name: "evening heating time"
-    after: "19:00"
-    before: "21:00"
-    unique_id: "tod_evening_heating_time"
-  # - platform: "sdnotify"
-
 sensor:
   - platform: "bitcoin"
     currency: "GBP"
     display_options:
       - "exchangerate"
       - "trade_volume_btc"
+
+  # - platform: "command_line"
+  #   command: "curl -L -H 'Accept: application/vnd.github+json' -H 'Authorization: Bearer {{github_bearer_token}}' -H 'X-GitHub-Api-Version: 2022-11-28' {{release_url}}"
+  #   name: ""
 
   #### TODO: Find out why unifi influxdb databse is inaccesible
   # - platform: "influxdb"
@@ -133,3 +104,6 @@ emulated_roku:
       # light, lock, media_player, number, person, remote, scene, script, select, sensor, siren, stt,
       # sun, switch, text, tts,
       # update, wake_word, water_heater, weather, zone
+
+shell_command:
+  get_update_github_release_notes: "curl -L -H 'Accept: application/vnd.github+json' -H 'Authorization: Bearer {{github_bearer_token}}' -H 'X-GitHub-Api-Version: 2022-11-28' {{release_url}}"
