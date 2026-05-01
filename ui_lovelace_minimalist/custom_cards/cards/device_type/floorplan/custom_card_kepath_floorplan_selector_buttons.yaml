@@ -95,7 +95,7 @@ card_kepath_call_floorplan_selector:
       - border: "0"
       - border-radius: "0"
   variables:
-    var_kepath_call_floorplan_selector:
+    call_floorplan_selector:
       tap_action:
         navigate_floor: "G"
         navigate_path: "/lovelace-minimalist-security/2"
@@ -112,11 +112,11 @@ card_kepath_call_floorplan_selector:
         sequence:
           - service: "input_select.select_option"
             data:
-              option: "[[[return variables.var_kepath_call_floorplan_selector.tap_action.navigate_floor;]]]"
+              option: "[[[return variables.call_floorplan_selector.tap_action.navigate_floor;]]]"
               entity_id: "input_select.floorplan_floor"
           - service: "browser_mod.navigate"
             data:
-              path: "[[[return variables.var_kepath_call_floorplan_selector.tap_action.navigate_path;]]]"
+              path: "[[[return variables.call_floorplan_selector.tap_action.navigate_path;]]]"
   hold_action:
     action: "fire-dom-event"
     browser_mod:
@@ -125,8 +125,8 @@ card_kepath_call_floorplan_selector:
         sequence:
           - service: "input_select.select_option"
             data:
-              option: "[[[return variables.var_kepath_call_floorplan_selector.hold_action.navigate_floor;]]]"
+              option: "[[[return variables.call_floorplan_selector.hold_action.navigate_floor;]]]"
               entity_id: "input_select.floorplan_floor"
           - service: "browser_mod.navigate"
             data:
-              path: "[[[return variables.var_kepath_call_floorplan_selector.hold_action.navigate_path;]]]"
+              path: "[[[return variables.call_floorplan_selector.hold_action.navigate_path;]]]"
