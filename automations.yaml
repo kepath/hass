@@ -384,7 +384,6 @@
       filter_by_device_class: true
       included_device_classes:
       - carbon_monoxide
-      - heat
       - problem
       - safety
       - smoke
@@ -1434,7 +1433,6 @@
       filter_by_device_class: true
       included_device_classes:
       - carbon_monoxide
-      - heat
       - problem
       - safety
       - smoke
@@ -1477,7 +1475,6 @@
       filter_by_device_class: true
       included_device_classes:
       - carbon_monoxide
-      - heat
       - problem
       - safety
       - smoke
@@ -1516,7 +1513,6 @@
       filter_by_device_class: true
       included_device_classes:
       - carbon_monoxide
-      - heat
       - problem
       - safety
       - smoke
@@ -1779,7 +1775,6 @@
       filter_by_device_class: true
       included_device_classes:
       - carbon_monoxide
-      - heat
       - smoke
       excluded_entity_groups:
       - group.globally_excluded_entities
@@ -1817,6 +1812,75 @@
       excluded_entities:
       - binary_sensor.diskstation_security_status
       - binary_sensor.climate_devices_on
+      excluded_integrations:
+      - browser_mod
+    action: python_script.create_entity_groups
+  mode: single
+- id: '1775237254031'
+  alias: on_start_create_group.all_water_heater_domain_entities
+  description: Uses python script create_entity_groups to create an entity group
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - data:
+      domain: water_heater
+      group_name: all_water_heaters
+      icon: mdi:water-boiler
+      friendly_name: All water heater domain entities
+      filter_by_device_class: false
+      excluded_entity_groups:
+      - group.globally_excluded_entities
+      excluded_integrations:
+      - browser_mod
+    action: python_script.create_entity_groups
+  mode: single
+- id: '1775237597573'
+  alias: on_start_merge_groups_climate_water_heater
+  description: ''
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 40
+      milliseconds: 0
+  - data:
+      groups:
+      - group.all_water_heaters
+      - group.all_climate
+      new_group_name: all_climate_and_water_heaters
+      icon: mdi:home-thermometer
+      friendly_name: All climate and water heaters group
+    action: python_script.merge_groups
+  mode: single
+- id: '1775242427000'
+  alias: on_start_create_group.all_heat_class_binary_sensors
+  description: Uses python script create_entity_groups to create an entity group
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - data:
+      domain: binary_sensor
+      group_name: all_heat_class_binary_sensors
+      icon: mdi:heat-wave
+      friendly_name: All binary_sensor heat class group
+      filter_by_device_class: true
+      included_device_classes:
+      - heat
+      excluded_entity_groups:
+      - group.globally_excluded_entities
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
