@@ -1,0 +1,121 @@
+---
+template:
+  - sensor:
+
+      - unique_id: "_unique_minimalist_ui_binary_action_sensors_tooltip"
+        name: "minimalist_ui Binary Action Sensors Tooltip"
+        state: >
+          {{- state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string -}}
+          {{- ' lights on' if is_state_attr('sensor.binary_sensor_state_counts', 'lights_on_count', 0) -}}
+          {{- ' light on' if is_state_attr('sensor.binary_sensor_state_counts', 'lights_on_count', 1) -}}
+          {{- ' lights on' if state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|int(0) > 1 -}}
+          {{- ', fan on' if is_state_attr('sensor.binary_sensor_state_counts', 'fans_on_count', 1) -}}
+          {{- ', fans on' if state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|int(0) > 1 -}}
+          {{- ', heater on' if is_state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count', 1) -}}
+          {{- ', heaters on' if state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0) > 1 -}}
+          {{- ', mower on' if state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0) > 0 -}}
+          {{- ', washer on' if is_state('binary_sensor.washing_machine_is_active'|lower, 'on') -}}
+          {{- ', dryer on' if is_state('binary_sensor.is_tumble_dryer_on'|lower, 'on') -}}
+          {{- ', dishwasher on' if is_state('binary_sensor.is_dishwasher_on'|lower, 'on') -}}
+          {{- ', fridge on' if is_state('switch.drinks_fridge_plug_bed_c'|lower, 'on') -}}
+          {{- ', reciever on' if is_state('binary_sensor.yamaha_reciever_state'|lower, 'on') -}}
+          {{- ', arcade pc on' if is_state('sensor.arcadepc_sensor_simple_state'|lower, 'on') -}}
+          {{- ', bigpc on' if is_state('sensor.bigpc_sensor_simple_state'|lower, 'on') -}}
+        attributes:
+          icon: "mdi:tooltip-question-outline"
+          state_class: "measurement"
+
+
+      - unique_id: "_unique_widgy_json_data_template_generated"
+        name: "Widgy App JSON Endpoint data"
+        state: "0"
+        attributes:
+          lights_on_count_tooltip: >
+            {{-state_attr('sensor.binary_sensor_state_counts', 'lights_on_count')|string-}}
+          climate_devices_on_count:  >
+            {{-state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|string-}}
+          fans_on_count:  >
+            {{-state_attr('sensor.binary_sensor_state_counts', 'fans_on_count')|string-}}
+          hazard_sensors_triggered_count:  >
+            {{-state_attr('sensor.binary_sensor_state_counts', 'hazard_sensors_triggered_count')|string-}}
+          occupancy_tooltip: >
+            {{-
+              '-' if states('sensor.internal_occupancy_sensors_simple_state')|string == 'not_triggered' else
+              'H' if states('sensor.internal_occupancy_sensors_simple_state')|string == 'triggered_home' else
+              'A' if states('sensor.internal_occupancy_sensors_simple_state')|string == 'triggered_away' else
+              '?' if states('sensor.internal_occupancy_sensors_simple_state')|string == 'warning' else
+              '!' 
+            -}}
+          update_count_tooltip:  >
+            {{-states('sensor.binary_sensor_state_counts')|string-}}
+
+
+      - unique_id: "_unique_calculated_non_count_entities_template_generated"
+        name: "Calculated Non Count Entities"
+        state: "0"
+        attributes:
+          middle_floor_nest_temperature: "{{ state_attr('climate.nest_middle_floor', 'current_temperature') }}"
+          apple_maps_url_kev_location: >
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_kev_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_kev_icloud3', 'longitude') | string)}}
+          apple_maps_url_ju_location: >
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_ju_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_ju_icloud3', 'longitude') | string)}}
+          apple_maps_url_dan_location: >
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_12_dan_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_12_dan_icloud3', 'longitude') | string)}}
+          apple_maps_url_emily_location: >
+            {{"https://maps.apple.com/place?ll=" + (state_attr('device_tracker.iphone_13_emily_patrice_icloud3', 'latitude') | string) + "," + (state_attr('device_tracker.iphone_13_emily_patrice_icloud3', 'longitude') | string)}}
+
+
+      - unique_id: "_unique_widgy_widgets_json_template_generated"
+        name: "Widgy Widgets JSON"
+        state: "0"
+        attributes:
+          bottom_hallway_light: >
+            {{ "/local/widgy_widget_images/lights/bulb_1_on.png" if (states("light.bottom_hallway_light") == "on") else "/local/widgy_widget_images/lights/bulb_1_off.png" }}
+          lounge_light: >
+            {{ "/local/widgy_widget_images/lights/chandelier_on.png" if (states("light.lounge_light") == "on") else "/local/widgy_widget_images/lights/chandelier_off.png" }}
+          study_light: >
+            {{ "/local/widgy_widget_images/lights/light_1_on.png" if (states("light.study_light") == "on") else "/local/widgy_widget_images/lights/light_1_off.png" }}
+          kitchen_main_light: >
+            {{ "/local/widgy_widget_images/lights/recessed_lights_on.png" if (states("light.kitchen_main_light") == "on") else "/local/widgy_widget_images/lights/recessed_lights_off.png" }}
+          kitchen_utility_light: >
+            {{ "/local/widgy_widget_images/lights/light_1_on.png" if (states("light.kitchen_utility_light") == "on") else "/local/widgy_widget_images/lights/light_1_off.png" }}
+          bathroom_light: >
+            {{ "/local/widgy_widget_images/lights/recessed_lights_on.png" if (states("light.bathroom_light") == "on") else "/local/widgy_widget_images/lights/recessed_lights_off.png" }}
+          bed_a_light: >
+            {{ "/local/widgy_widget_images/lights/light_2_on.png" if (states("light.bed_a_light") == "on") else "/local/widgy_widget_images/lights/light_2_off.png" }}
+          bed_a_ensuite_light: >
+            {{ "/local/widgy_widget_images/lights/recessed_lights_on.png" if (states("light.ensuite_light") == "on") else "/local/widgy_widget_images/lights/recessed_lights_off.png" }}
+          bed_b_light: >
+            {{ "/local/widgy_widget_images/lights/light_1_on.png" if (states("light.bed_b_light") == "on") else "/local/widgy_widget_images/lights/light_1_off.png" }}
+          bed_c_light: >
+            {{ "/local/widgy_widget_images/lights/bulb_1_on.png" if (states("light.bed_c_light") == "on") else "/local/widgy_widget_images/lights/bulb_1_off.png" }}
+          bed_e_light: >
+            {{ "/local/widgy_widget_images/lights/light_2_on.png" if (states("light.bed_e_light") == "on") else "/local/widgy_widget_images/lights/light_2_off.png" }}
+          bed_e_lamp: >
+            {{ "/local/widgy_widget_images/lights/lamp_1_on.png" if (states("light.mss425e_6025_outlet_3") == "on") else "/local/widgy_widget_images/lights/lamp_1_off.png" }}
+          bed_c_fan: >
+            {{ "/local/widgy_widget_images/fans/fan_1_off.png"
+              if (states('fan.bed_c_fan') == "off")
+              else ("/local/widgy_widget_images/fans/fan_1_low.png" if state_attr('fan.bed_c_fan', 'percentage') < 50
+              else "/local/widgy_widget_images/fans/fan_1_high.png"  ) }}
+          bed_e_fan: >
+            {{ "/local/widgy_widget_images/fans/fan_1_off.png"
+              if (states('fan.bed_e_fan') == "off")
+              else ("/local/widgy_widget_images/fans/fan_1_low.png" if state_attr('fan.bed_e_fan', 'percentage') < 50
+              else "/local/widgy_widget_images/fans/fan_1_high.png"  ) }}
+          front_door_lock: >
+            {{ "/local/widgy_widget_images/locks/lock_1_closed.png" if (states("lock.front_door_top_bolt") == "locked") else "/local/widgy_widget_images/locks/lock_1_open.png" }}
+          bottom_floor_nest_image: >
+            {{ "/local/widgy_widget_images/climate/temperature_up.png" if (state_attr('climate.nest_bottom_floor', 'hvac_action') == "heat") else "/local/widgy_widget_images/climate/temperature_down.png" }}
+          bottom_floor_nest_temperature: >
+            {{ state_attr('climate.nest_bottom_floor', 'current_temperature') }}
+          middle_floor_nest_image: >
+            {{ "/local/widgy_widget_images/climate/temperature_up.png" if (state_attr('climate.nest_middle_floor', 'hvac_action') == "heat") else "/local/widgy_widget_images/climate/temperature_down.png" }}
+          persons_home_count: >
+            {{ state_attr('sensor.binary_sensor_state_counts', 'occupancy_persons_home_count') }}
+          nest_smoke_alert: >
+            {{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'smoke')|selectattr('state', 'eq', 'on')|list|count }}
+          nest_carbon_monoxide_alert: >
+            {{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'carbon_monoxide')|selectattr('state', 'eq', 'on')|list|count }}
+          nest_heat_alert: >
+            {{ expand('group.all_safety_class_binary_sensors')|selectattr('attributes.device_class', 'eq', 'heat')|selectattr('state', 'eq', 'on')|list|count }}

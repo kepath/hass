@@ -1,0 +1,88 @@
+---
+add_app_link:
+  variables:
+    _addin_link:
+      evaluated_object:
+        force_eval: true
+        value: "[[[ return entity.entity_id ]]]"
+      webui_access_type: "ingress"
+      docker_slug_reference: "a0d7b954_ssh"
+      local_port: "8123"
+  styles:
+    img_cell:
+      - border: >
+          [[[
+            var border = "1px solid rgba(var(--color-theme),0.01)";
+            if (typeof variables?.generic_set_addin_link?.webui_access_type !== 'undefined') {
+              if (variables?.generic_set_addin_link?.webui_access_type != "ingress") {
+                border = "1px solid rgba(var(--color-theme),0.3)";
+              }
+            }
+            return border;
+          ]]]
+    icon:
+      - filter: >
+          [[[
+            var imageBlur = "saturate(3) blur(3px)";
+            var deviceId = hass.entities[entity.entity_id].device_id.toString();
+            var runningStates = states["group.all_running_class_binary_sensors"].attributes.entity_id;
+            for (var runningState of runningStates) {
+              if (hass.entities[runningState]) {
+                if (hass.entities[runningState]?.device_id) {
+                  if (hass.entities[runningState].device_id.toString() == deviceId) {
+                    if (states[runningState].state == "on") {
+                      imageBlur = "none";
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+            return imageBlur;
+          ]]]
+  # open addin web ui
+  tap_action:
+    action: "url"
+    url_path: >
+      [[[
+        var returnValue;
+        if (variables?.generic_set_addin_link?.webui_access_type == "ingress") {
+          returnValue = states['sensor.non_hard_coded_secrets_to_use_in_templates'].attributes.ha_nabucasa_url + "hassio/ingress/" + variables?.generic_set_addin_link?.docker_slug_reference;
+        } else {
+          returnValue = "http://" + states['sensor.non_hard_coded_secrets_to_use_in_templates'].attributes.ha_rj45_ip + ":" + variables?.generic_set_addin_link?.local_port.toString();
+        }
+        return returnValue;
+      ]]]
+  # open addin info page
+  hold_action:
+    action: >
+      [[[
+        var holdAction = "more-info";
+        if (typeof variables?.generic_set_addin_link?.docker_slug_reference !== 'undefined') {
+          holdAction = "navigate";
+        }
+        return holdAction;
+      ]]]
+    navigation_path: >
+      [[[
+        var dockerSlugReference = variables?.generic_set_addin_link?.docker_slug_reference;
+        return "/hassio/addon/" + dockerSlugReference + "/info";
+      ]]]
+  # open latest release information. If this is absent, show more-info
+  double_tap_action:
+    action: >
+      [[[
+        var doubleTapAction = "more-info";
+        if (states[variables?.generic_set_addin_link?.evaluated_object?.value]?.attributes.release_url) {
+          doubleTapAction = "url";
+        }
+        return doubleTapAction;
+      ]]]
+    url_path: >
+      [[[
+        var URLPath = null;
+        if (states[variables?.generic_set_addin_link?.evaluated_object?.value]?.attributes.release_url) {
+          URLPath = states[variables?.generic_set_addin_link?.evaluated_object?.value].attributes.release_url;
+        }
+        return URLPath;
+      ]]]

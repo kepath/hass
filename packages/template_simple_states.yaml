@@ -1,0 +1,339 @@
+---
+template:
+  - sensor:
+
+# Washing Machine
+# sensor.washing_machine_machine_state
+# pause, run, stop
+# sensor.washing_machine_job_state
+# air_wash, ai_rinse, ai_spin, ai_wash, cooling, delay_wash, drying, finish, none, pre_wash, rinse, spin, wash, weight_sensing, wrinkle_prevent, freeze_protection
+
+# Tumble Dryer
+# sensor.samsung_tumble_dryer_dryer_machine_state
+# pause, run, stop
+
+# Dishwasher
+# sensor.dishwasher_operation_state
+# inactive, ready, delayedstart, run, pause, actionrequired, finished, error, aborting
+# Heating
+      - unique_id: "_unique_simple_state_washing_machine"
+        name: "Washing Machine Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value('sensor.washing_machine_machine_state') or
+              is_state("sensor.washing_machine_machine_state","pause")
+            ) else (
+                'on' if (
+                is_state("sensor.washing_machine_machine_state","run")
+              ) else (
+                  'off' if (
+                  is_state("sensor.washing_machine_machine_state","stop")
+                ) else 'error'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:washing-machine"
+          device_class: "enum"
+          options: "{{ ['on', 'off', 'warning', 'error'] }}"
+
+      - unique_id: "_unique_simple_state_tumble_dryer"
+        name: "Tumble Dryer Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value('sensor.samsung_tumble_dryer_dryer_machine_state') or
+              is_state("sensor.samsung_tumble_dryer_dryer_machine_state","pause")
+            ) else (
+                'on' if (
+                is_state("sensor.samsung_tumble_dryer_dryer_machine_state","run")
+              ) else (
+                  'off' if (
+                  is_state("sensor.samsung_tumble_dryer_dryer_machine_state","stop")
+                ) else 'error'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:dryer"
+          device_class: "enum"
+          options: "{{ ['on', 'off', 'warning', 'error'] }}"
+
+      - unique_id: "_unique_simple_state_dishwasher"
+        name: "Dishwasher Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value('sensor.dishwasher_operation_state') or
+              is_state("sensor.dishwasher_operation_state","pause")
+            ) else (
+                'on' if (
+                is_state("sensor.dishwasher_operation_state","run") or
+                is_state("sensor.dishwasher_operation_state","delayedstart")
+              ) else (
+                  'off' if (
+                  is_state("sensor.dishwasher_operation_state","inactive") or
+                  is_state("sensor.dishwasher_operation_state","finished") or
+                  is_state("sensor.dishwasher_operation_state","ready")
+                ) else 'error'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:dryer"
+          device_class: "enum"
+          options: "{{ ['on', 'off', 'warning', 'error'] }}"
+
+      - unique_id: "_unique_simple_state_printer"
+        name: "Printer Simple State"
+        state: >-
+          {% set printerList = state_attr("sensor.integration_entity_list", "brother")|select('contains','status')|list %}
+          {% set returnVal = 'normal' %}
+          {% for item in printerList %}
+            {% if not has_value(item) %}
+              {% set returnVal = 'warning' %}
+            {% endif %}
+          {% endfor %}
+          {% if returnVal == 'normal' %}
+          {% set printerVal = printerList|expand|map(attribute='state')|list|lower %}
+          {{
+            'error' if (
+              printerVal|contains('jam') or
+              printerVal|contains('replace') or
+              printerVal|contains('cannot') or
+              printerVal|contains('cover') or
+              printerVal|contains('unable') or
+              printerVal|contains('unusable') or
+              printerVal|contains('wrong') or
+              printerVal|contains('full'))
+            else (
+              'warning' if (
+                printerVal|contains('low') or
+                printerVal|contains('page')
+              )
+            else 'normal'
+            )
+          }}
+          {% else %}
+            {{ returnVal }}
+          {% endif %}
+        attributes:
+          icon: "mdi:printer-alert"
+          device_class: "enum"
+          options: "{{ ['normal', 'warning', 'error'] }}"
+
+      - unique_id: "_unique_simple_state_nas"
+        name: "DiskStation Simple State"
+        state: >
+          {{
+            'error' if (
+              states('sensor.diskstation_volume_1_status')|lower|contains('degrade') or
+              states('sensor.diskstation_volume_1_status')|lower|contains('crash'))
+            else (
+              'normal' if (has_value('sensor.diskstation_volume_1_status') and
+              states('sensor.diskstation_volume_1_status')|lower|contains('normal'))
+            else 'warning'
+            )
+          }}
+        attributes:
+          icon: "mdi:nas"
+          device_class: "enum"
+          options: "{{ ['normal', 'warning', 'error'] }}"
+
+      - unique_id: "_unique_simple_state_ups"
+        name: "UPS Simple State"
+        state: >
+          {{
+            'warning' if (
+              states('sensor.ups_status')|lower == 'online battery charging' or
+              not has_value('sensor.ups_status'))
+            else (
+              'normal' if
+              states('sensor.ups_status')|lower == 'online'
+            else 'error'
+            )
+          }}
+        attributes:
+          icon: "mdi:battery-alert-variant"
+          device_class: "enum"
+          options: "{{ ['normal', 'warning', 'error'] }}"
+
+      - unique_id: "_unique_simple_state_front_door_lock"
+        name: "Front Door Lock Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("lock.front_door_top_bolt") or
+              not has_value("binary_sensor.lock_45f7_door")
+            ) else (
+              'locked' if (
+                states('lock.front_door_top_bolt')|lower|contains('locked')
+              ) else (
+                'jammed' if (
+                  states('lock.front_door_top_bolt')|lower|contains('jammed')
+                ) else (
+                  'door_open' if (
+                    states("binary_sensor.lock_45f7_door") == 'on'
+                  ) else (
+                    'normal' if (
+                      states('lock.front_door_top_bolt')|lower|contains('unlocked') and
+                      (
+                        now().hour < 21 or now().hour >= 7
+                      ) and
+                      state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0
+                    ) else 'error'
+                  )
+                )
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:lock-open-variant-outline"
+          device_class: "enum"
+          options: "{{ ['normal', 'warning', 'error', 'locked', 'jammed', 'door_open'] }}"
+
+      - unique_id: "_unique_simple_state_bigpc_sensors"
+        name: "BigPC Sensor Simple State"
+        state: >
+          {{
+            'error' if (
+              not has_value("device_tracker.big_pc_unifi") and
+              not has_value("sensor.big_pc_win11_satellite_big_pc_win11_satellite_cpuload")
+            ) else (
+              'on' if (
+                is_state("device_tracker.big_pc_unifi"|lower,"home") and
+                has_value("sensor.big_pc_win11_satellite_big_pc_win11_satellite_cpuload")
+              ) else (
+                'off' if (
+                  is_state("device_tracker.big_pc_unifi"|lower,"not_home") and
+                  not has_value("sensor.big_pc_win11_satellite_big_pc_win11_satellite_cpuload")
+                ) else 'warning'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:desktop-tower"
+          device_class: "enum"
+          options: "{{ ['on', 'off', 'error', 'warning'] }}"
+
+      - unique_id: "_unique_simple_state_arcadepc_sensors"
+        name: "ArcadePC Sensor Simple State"
+        state: >
+          {{
+            'error' if (
+              not has_value("device_tracker.arcade_machine_unifi") and
+              not has_value("sensor.arcade_pc_satellite_arcade_pc_satellite_cpuload")
+            ) else (
+              'on' if (
+                is_state("device_tracker.arcade_machine_unifi"|lower,"home") and
+                has_value("sensor.arcade_pc_satellite_arcade_pc_satellite_cpuload")
+              ) else (
+                'off' if (
+                  is_state("device_tracker.arcade_machine_unifi"|lower,"not_home") and
+                  not has_value("sensor.arcade_pc_satellite_arcade_pc_satellite_cpuload")
+                ) else 'warning'
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:controller"
+          device_class: "enum"
+          options: "{{ ['on', 'off', 'error', 'warning'] }}"
+
+      - unique_id: "_unique_simple_state_all_occupancy_sensors"
+        name: "All Occupancy Sensors Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("sensor.binary_sensor_state_counts")
+            ) else (
+              'not_triggered' if (
+                  is_state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count", 0)
+              ) else (
+                'triggered_home' if (
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0 and
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count") > 0
+                ) else (
+                  'triggered_away' if (
+                    is_state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count", 0) and
+                    state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_count") > 0
+                  ) else 'error'
+                )
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:motion-sensor-off"
+          device_class: "enum"
+          options: "{{ ['not_triggered', 'triggered_home', 'triggered_away', 'warning', 'error'] }}"
+
+      - unique_id: "_unique_simple_state_away_occupancy_sensors"
+        name: "Internal Occupancy Sensors Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("sensor.binary_sensor_state_counts")
+            ) else (
+              'triggered_home' if (
+                state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count") > 0
+              ) else (
+                'not_triggered' if (
+                  is_state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count", 0) and
+                  state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") == 0
+                ) else (
+                  'triggered_away' if (
+                    state_attr("sensor.binary_sensor_state_counts", "occupancy_persons_home_count", 0) and
+                    state_attr("sensor.binary_sensor_state_counts", "occupancy_sensors_triggered_away_count") > 0
+                  ) else 'error'
+                )
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:motion-sensor"
+          device_class: "enum"
+          options: "{{ ['not_triggered', 'triggered_home', 'triggered_away', 'warning', 'error'] }}"
+
+      - unique_id: "_unique_simple_state_bin_collection_sensors"
+        name: "Bin Collection Simple State"
+        state: >
+          {{
+            'warning' if (
+              not has_value("sensor.ox161ee_blue_bin_days_until_collection") or
+              not has_value("sensor.ox161ee_green_bin_days_until_collection")
+            ) else (
+              'error' if (
+                not has_value("sensor.01jmbzta1k92wq5bpweywa1t8c_raw_json")
+              ) else (
+                'recycling' if (
+                  (states("sensor.ox161ee_blue_bin_days_until_collection")|int(0)) <
+                  (states("sensor.ox161ee_green_bin_days_until_collection")|int(0))
+                ) else (
+                  'general_waste' if (
+                    (states("sensor.ox161ee_blue_bin_days_until_collection")|int(0)) >
+                    (states("sensor.ox161ee_green_bin_days_until_collection")|int(0))
+                  ) else 'unknown'
+                )
+              )
+            )
+          }}
+        attributes:
+          icon: "mdi:trash-can-outline"
+          device_class: "enum"
+          options: "{{ ['recycling', 'general_waste', 'error', 'warning', 'unknown'] }}"
+          days_until_collection: >
+            {{
+              0 if (
+                not has_value("sensor.ox161ee_blue_bin_days_until_collection") or
+                not has_value("sensor.ox161ee_green_bin_days_until_collection")
+              ) else (
+                states("sensor.ox161ee_blue_bin_days_until_collection")|int(0) if (
+                  (states('sensor.bin_collection_simple_state')|lower == 'recycling')
+                ) else (
+                  states("sensor.ox161ee_green_bin_days_until_collection")|int(0) if (
+                    (states('sensor.bin_collection_simple_state')|lower == 'general_waste')
+                  ) else 0
+                )
+              )
+            }}

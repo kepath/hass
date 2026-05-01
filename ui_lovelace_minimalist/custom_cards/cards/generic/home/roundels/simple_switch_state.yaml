@@ -1,0 +1,163 @@
+---
+simple_switch_state:
+  variables:
+    device_entity_and_style_simple_binary_switch_state:
+      use_themes: true
+      on_state:
+        icon: "mdi:circle"
+        icon_color: "green"
+        background_color: "green"
+      off_state:
+        icon: "mdi:circle-outline"
+        icon_color: "theme"
+        background_color: "theme"
+
+  state:
+    - value: "on"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:circle";
+          var returnedIcon;
+          if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon !== 'undefined') {
+            if (variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon.includes('mdi:') ||
+                variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon.includes('cbi:') ||
+                variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon.includes('simple-icons:')) {
+              returnedIcon = variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes === 'boolean') {
+                    useThemes = variables?.device_entity_and_style_simple_binary_switch_state?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                returnedColor = variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon_color;
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    }
+                  }
+                }
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes === 'boolean') {
+                    useThemes = variables?.device_entity_and_style_simple_binary_switch_state?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                returnedColor = variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.background_color;
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    }
+                  }
+                }
+
+                return returnedColor;
+              ]]]
+
+    - value: "off"
+      icon: >
+        [[[
+          var backupIcon =  "mdi:circle-outline";
+          var returnedIcon;
+          if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon !== 'undefined') {
+            if (variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon.includes('mdi:') ||
+                variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon.includes('cbi:') ||
+                variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon.includes('simple-icons:')) {
+              returnedIcon = variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon;
+            }
+          }
+          if (typeof returnedIcon !== 'undefined') {
+            return returnedIcon;
+          } else {
+            return backupIcon;
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes === 'boolean') {
+                    useThemes = variables?.device_entity_and_style_simple_binary_switch_state?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                returnedColor = variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon_color;
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.5)";
+                    }
+                  }
+                }
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColor;
+                var useThemesDefault = true;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes === 'boolean') {
+                    useThemes = variables?.device_entity_and_style_simple_binary_switch_state?.use_themes;
+                  } else {
+                    useThemes = useThemesDefault;
+                  }
+                } else {
+                  useThemes = useThemesDefault;
+                }
+                returnedColor = variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.background_color;
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (returnedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.05)";
+                    }
+                  }
+                }
+
+                return returnedColor;
+              ]]]
+
