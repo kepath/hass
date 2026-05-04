@@ -1,7 +1,9 @@
 ---
 simple_switch_state:
+  # template:
+  #   - "common_button_icon_styles"
   variables:
-    device_entity_and_style_simple_binary_switch_state:
+    binary_switch_state:
       use_themes: true
       on_state:
         icon: "mdi:circle"
@@ -11,6 +13,21 @@ simple_switch_state:
         icon: "mdi:circle-outline"
         icon_color: "theme"
         background_color: "theme"
+    # common_button_icon_styles:
+    #   use_themes: true
+    #   unset_state:
+    #     icon: "mdi:close-circle"
+    #     icon_color: "red"
+    #     background_color: "theme"
+    #   unknown_state:
+    #     use_unknown_state: false
+    #     icon: "mdi:radiobox-marked"
+    #     icon_color: "red"
+    #     background_color: "theme"
+    #   default_state:
+    #     icon: "mdi:checkbox-blank-circle-outline"
+    #     icon_color: "red"
+    #     background_color: "theme"
 
   state:
     - value: "on"
@@ -18,11 +35,11 @@ simple_switch_state:
         [[[
           var backupIcon =  "mdi:circle";
           var returnedIcon;
-          if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon !== 'undefined') {
-            if (variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon.includes('mdi:') ||
-                variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon.includes('cbi:') ||
-                variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon.includes('simple-icons:')) {
-              returnedIcon = variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon;
+          if (typeof variables?.binary_switch_state?.on_state?.icon !== 'undefined') {
+            if (variables?.binary_switch_state?.on_state?.icon.includes('mdi:') ||
+                variables?.binary_switch_state?.on_state?.icon.includes('cbi:') ||
+                variables?.binary_switch_state?.on_state?.icon.includes('simple-icons:')) {
+              returnedIcon = variables?.binary_switch_state?.on_state?.icon;
             }
           }
           if (typeof returnedIcon !== 'undefined') {
@@ -39,16 +56,16 @@ simple_switch_state:
                 var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_binary_switch_state?.use_themes;
+                if (typeof variables?.binary_switch_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.binary_switch_state?.use_themes === 'boolean') {
+                    useThemes = variables?.binary_switch_state?.use_themes;
                   } else {
                     useThemes = useThemesDefault;
                   }
                 } else {
                   useThemes = useThemesDefault;
                 }
-                returnedColor = variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.icon_color;
+                returnedColor = variables?.binary_switch_state?.on_state?.icon_color;
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
                     if (returnedColor.includes(colorOptions[i])){
@@ -66,16 +83,16 @@ simple_switch_state:
                 var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_binary_switch_state?.use_themes;
+                if (typeof variables?.binary_switch_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.binary_switch_state?.use_themes === 'boolean') {
+                    useThemes = variables?.binary_switch_state?.use_themes;
                   } else {
                     useThemes = useThemesDefault;
                   }
                 } else {
                   useThemes = useThemesDefault;
                 }
-                returnedColor = variables?.device_entity_and_style_simple_binary_switch_state?.on_state?.background_color;
+                returnedColor = variables?.binary_switch_state?.on_state?.background_color;
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
                     if (returnedColor.includes(colorOptions[i])){
@@ -92,11 +109,11 @@ simple_switch_state:
         [[[
           var backupIcon =  "mdi:circle-outline";
           var returnedIcon;
-          if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon !== 'undefined') {
-            if (variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon.includes('mdi:') ||
-                variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon.includes('cbi:') ||
-                variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon.includes('simple-icons:')) {
-              returnedIcon = variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon;
+          if (typeof variables?.binary_switch_state?.off_state?.icon !== 'undefined') {
+            if (variables?.binary_switch_state?.off_state?.icon.includes('mdi:') ||
+                variables?.binary_switch_state?.off_state?.icon.includes('cbi:') ||
+                variables?.binary_switch_state?.off_state?.icon.includes('simple-icons:')) {
+              returnedIcon = variables?.binary_switch_state?.off_state?.icon;
             }
           }
           if (typeof returnedIcon !== 'undefined') {
@@ -113,16 +130,16 @@ simple_switch_state:
                 var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_binary_switch_state?.use_themes;
+                if (typeof variables?.binary_switch_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.binary_switch_state?.use_themes === 'boolean') {
+                    useThemes = variables?.binary_switch_state?.use_themes;
                   } else {
                     useThemes = useThemesDefault;
                   }
                 } else {
                   useThemes = useThemesDefault;
                 }
-                returnedColor = variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.icon_color;
+                returnedColor = variables?.binary_switch_state?.off_state?.icon_color;
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
                     if (returnedColor.includes(colorOptions[i])){
@@ -140,16 +157,16 @@ simple_switch_state:
                 var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_binary_switch_state?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_binary_switch_state?.use_themes;
+                if (typeof variables?.binary_switch_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.binary_switch_state?.use_themes === 'boolean') {
+                    useThemes = variables?.binary_switch_state?.use_themes;
                   } else {
                     useThemes = useThemesDefault;
                   }
                 } else {
                   useThemes = useThemesDefault;
                 }
-                returnedColor = variables?.device_entity_and_style_simple_binary_switch_state?.off_state?.background_color;
+                returnedColor = variables?.binary_switch_state?.off_state?.background_color;
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
                     if (returnedColor.includes(colorOptions[i])){

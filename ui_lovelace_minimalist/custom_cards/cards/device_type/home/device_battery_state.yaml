@@ -1,7 +1,7 @@
 ---
 device_battery_state:
   variables:
-    device_entity_and_style_binary_count_state:
+    binary_count_evaluated_state:
       entity:
         evaluated_entity: "sensor.binary_sensor_state_counts"
         isattribute: true
@@ -18,8 +18,8 @@ device_battery_state:
     - operator: "template"
       value: >
         [[[
-          var evaluatedBatteryEntity = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-          var evaluatedBatteryAttribute = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+          var evaluatedBatteryEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          var evaluatedBatteryAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
 
           var resolvedBatteryState;
           var returnValue = false;
@@ -33,10 +33,10 @@ device_battery_state:
         ]]]
       icon: >
         [[[
-          var returnedIcon = variables?.device_entity_and_style_binary_count_state?.style?.icon;
+          var returnedIcon = variables?.binary_count_evaluated_state?.style?.icon;
           var iconSuffix;
-          var evaluatedBatteryEntity = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-          var evaluatedBatteryAttribute = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+          var evaluatedBatteryEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          var evaluatedBatteryAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
 
           var resolvedBatteryState;
 
@@ -62,9 +62,9 @@ device_battery_state:
         icon:
           - color: >
               [[[
-                var returnedColor = variables?.device_entity_and_style_binary_count_state?.style?.icon_color;
-                var evaluatedBatteryEntity = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-                var evaluatedBatteryAttribute = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.icon_color;
+                var evaluatedBatteryEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+                var evaluatedBatteryAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
 
                 var gradient = "gradient_";
                 var resolvedBatteryState;
@@ -83,9 +83,9 @@ device_battery_state:
         img_cell:
           - background-color: >
               [[[
-                var returnedColor = variables?.device_entity_and_style_binary_count_state?.style?.background_color;
-                var evaluatedBatteryEntity = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
-                var evaluatedBatteryAttribute = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.background_color;
+                var evaluatedBatteryEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+                var evaluatedBatteryAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
 
                 var gradient = "gradient_";
                 var resolvedBatteryState;
