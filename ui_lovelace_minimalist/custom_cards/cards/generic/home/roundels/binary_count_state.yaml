@@ -1,32 +1,31 @@
 ---
 binary_count_state:
   variables:
-    device_entity_and_style_binary_count_state:
+    metadata:
+      page_name: "binary_count_state.yaml"
+    binary_count_evaluated_state:
       entity:
         evaluated_entity: "sensor.binary_sensor_state_counts"
         isattribute: true
         evaluated_attribute: "zero_value"
-      value:
+      expression:
         math_expresion_used: "gt"
         trigger_value: 0
       style:
         use_themes: true
         icon: "mdi:checkbox-blank-circle-outline"
-        icon_color: "theme"
-        background_color: "theme"
+        icon_color: "red"
+        icon_color_alpha: "1"
+        background_color: "red"
+        background_color_alpha: "0.2"
   state:
     - operator: "template"
       value: >
         [[[
-          var evaluatedEntityDefault = "sensor.binary_sensor_state_counts";
           var evaluatedEntity;
-          var isAttributeDefault = true;
           var isAttribute;
-          var evaluatedAttributeDefault = "zero_value";
           var evaluatedAttribute;
-          var mathExpressionDefault = "gt";
           var mathExpression;
-          var triggerValueDefault = 0;
           var triggerValue;
 
           const mathExpressionList = ['eq', 'lt', 'gt', 'ne'];
@@ -34,24 +33,24 @@ binary_count_state:
           var isValidExpression = false;
           var returnValue = false;
 
-          if (typeof variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_entity !== 'undefined') {
-            evaluatedEntity = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_entity;
+          if (typeof variables?.binary_count_evaluated_state?.entity?.evaluated_entity !== 'undefined') {
+            evaluatedEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
           } else {
-            evaluatedEntity = evaluatedEntityDefault;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ' + variables?.binary_count_evaluated_state?.entity?.evaluated_entity});
           }
-          if (typeof variables?.device_entity_and_style_binary_count_state?.entity?.isattribute !== 'undefined') {
-            if (typeof variables?.device_entity_and_style_binary_count_state?.entity?.isattribute === 'boolean') {
-              isAttribute = variables?.device_entity_and_style_binary_count_state?.entity?.isattribute;
+          if (typeof variables?.binary_count_evaluated_state?.entity?.isattribute !== 'undefined') {
+            if (typeof variables?.binary_count_evaluated_state?.entity?.isattribute === 'boolean') {
+              isAttribute = variables?.binary_count_evaluated_state?.entity?.isattribute;
             } else {
-              isAttribute = isAttributeDefault;
+              hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.entity?.isattribute: ' + variables?.binary_count_evaluated_state?.entity?.isattribute});
             }
           } else {
-            isAttribute = isAttributeDefault;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.entity?.isattribute: ' + variables?.binary_count_evaluated_state?.entity?.isattribute});
           }
-          if (typeof variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_attribute !== 'undefined') {
-            evaluatedAttribute = variables?.device_entity_and_style_binary_count_state?.entity?.evaluated_attribute;
+          if (typeof variables?.binary_count_evaluated_state?.entity?.evaluated_attribute !== 'undefined') {
+            evaluatedAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
           } else {
-            evaluatedAttribute = evaluatedAttributeDefault;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute: ' + variables?.binary_count_evaluated_state?.entity?.evaluated_attribute});
           }
 
           if (isAttribute) {
@@ -59,11 +58,14 @@ binary_count_state:
           } else {
             resolvedState = states[evaluatedEntity].state;
           }
+          if (typeof resolvedState === 'undefined') {
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ', evaluated state cannot be resolved: ' + resolvedState});
+          }
 
-          if (typeof variables?.device_entity_and_style_binary_count_state?.entity?.math_expresion_used !== 'undefined') {
-            mathExpression = variables?.device_entity_and_style_binary_count_state?.entity?.math_expresion_used;
+          if (typeof variables?.binary_count_evaluated_state?.expression?.math_expresion_used !== 'undefined') {
+            mathExpression = variables?.binary_count_evaluated_state?.expression?.math_expresion_used;
           } else {
-            mathExpression = mathExpressionDefault;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.expression?.math_expresion_used: ' + variables?.binary_count_evaluated_state?.expression?.math_expresion_used});
           }
           for (let i = 0; i < mathExpressionList.length; i++) {
             if (mathExpression.includes(mathExpressionList[i])){
@@ -71,12 +73,12 @@ binary_count_state:
             }
           }
           if (!isValidExpression) {
-            mathExpression = mathExpressionDefault;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.entity?.expression?.math_expresion_used: expression not in expression list'});
           }
-          if (typeof variables?.device_entity_and_style_binary_count_state?.entity?.trigger_value !== 'undefined') {
-            triggerValue = variables?.device_entity_and_style_binary_count_state?.entity?.trigger_value;
+          if (typeof variables?.binary_count_evaluated_state?.expression?.trigger_value !== 'undefined') {
+            triggerValue = variables?.binary_count_evaluated_state?.expression?.trigger_value;
           } else {
-            triggerValue = triggerValueDefault;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.expression?.trigger_value: ' + variables?.binary_count_evaluated_state?.expression?.trigger_valuey});
           }
           if (!isNaN(resolvedState) && !isNaN(triggerValue)) {
             switch(mathExpression) {
@@ -121,86 +123,96 @@ binary_count_state:
         ]]]
       icon: >
         [[[
-          var backupIcon =  "mdi:checkbox-blank-circle-outline";
-          var returnedIcon;
-          if (typeof variables?.device_entity_and_style_binary_count_state?.style?.icon !== 'undefined') {
-            if (variables?.device_entity_and_style_binary_count_state?.style?.icon.includes('mdi:') ||
-                variables?.device_entity_and_style_binary_count_state?.style?.icon.includes('cbi:') ||
-                variables?.device_entity_and_style_binary_count_state?.style?.icon.includes('simple-icons:')) {
-              returnedIcon = variables?.device_entity_and_style_binary_count_state?.style?.icon;
+          if (typeof variables?.binary_count_evaluated_state?.style?.icon !== 'undefined') {
+            if (variables?.binary_count_evaluated_state?.style?.icon.includes('mdi:') ||
+                variables?.binary_count_evaluated_state?.style?.icon.includes('cbi:') ||
+                variables?.binary_count_evaluated_state?.style?.icon.includes('simple-icons:')) {
+              return variables?.binary_count_evaluated_state?.style?.icon;
+            } else {
+              hass.callService('system_log', 'write', {level:'warning',message:'warning in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.icon: This may not be a valid icon type: ' + variables?.binary_count_evaluated_state?.style?.icon});
+              return variables?.binary_count_evaluated_state?.style?.icon;
             }
-          }
-          if (typeof returnedIcon !== 'undefined') {
-            //hass.callService('system_log', 'write', {level:'warning',message:'returnedIcon: ' + returnedIcon});
-            return returnedIcon;
-          } else {
-            return backupIcon;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.icon: ' + variables?.binary_count_evaluated_state?.style?.icon});
           }
         ]]]
       styles:
         icon:
           - color: >
               [[[
-                //var returnedColorDefault = "green";
+                var importedColor;
+                var importedColorAlpha
                 var returnedColor;
-                var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_binary_count_state?.style?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_binary_count_state?.style?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_binary_count_state?.style?.use_themes;
+                if (typeof variables?.binary_count_evaluated_state?.style?.use_themes !== 'undefined') {
+                  if (typeof variables?.binary_count_evaluated_state?.style?.use_themes === 'boolean') {
+                    useThemes = variables?.binary_count_evaluated_state?.style?.use_themes;
                   } else {
-                    useThemes = useThemesDefault;
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.use_themes: ' + variables?.binary_count_evaluated_state?.style?.use_themes});
                   }
                 } else {
-                  useThemes = useThemesDefault;
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.use_themes: ' + variables?.binary_count_evaluated_state?.style?.use_themes});
                 }
-                //if (typeof variables?.device_entity_and_style_binary_count_state?.style?.icon_color !== 'undefined') {
-                  returnedColor = variables?.device_entity_and_style_binary_count_state?.style?.icon_color;
-                //} else {
-                //  returnedColor = returnedColorDefault;
-                //}
+                if (typeof variables?.binary_count_evaluated_state?.style?.icon_color !== 'undefined') {
+                  importedColor = variables?.binary_count_evaluated_state?.style?.icon_color;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.icon_color: ' + variables?.binary_count_evaluated_state?.style?.icon_color});
+                }
+                if (typeof variables?.binary_count_evaluated_state?.style?.icon_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.binary_count_evaluated_state?.style?.icon_color_alpha;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.icon_color_alpha: ' + variables?.binary_count_evaluated_state?.style?.icon_color_alpha});
+                }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
-                    if (returnedColor.includes(colorOptions[i])){
-                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
                     }
                   }
+                  if (returnedColor.length == 0) {
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.icon_color: The use of themes was specified, but an invalid color was imported: ' + variables?.binary_count_evaluated_state?.style?.icon_color});
+                  }
                 }
-                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
 
                 return returnedColor;
               ]]]
         img_cell:
           - background-color: >
               [[[
-                //var returnedColorDefault = "green";
+                var importedColor;
+                var importedColorAlpha
                 var returnedColor;
-                var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_binary_count_state?.style?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_binary_count_state?.style?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_binary_count_state?.style?.use_themes;
+                if (typeof variables?.binary_count_evaluated_state?.style?.use_themes !== 'undefined') {
+                  if (typeof variables?.binary_count_evaluated_state?.style?.use_themes === 'boolean') {
+                    useThemes = variables?.binary_count_evaluated_state?.style?.use_themes;
                   } else {
-                    useThemes = useThemesDefault;
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.use_themes: ' + variables?.binary_count_evaluated_state?.style?.use_themes});
                   }
                 } else {
-                  useThemes = useThemesDefault;
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.use_themes: ' + variables?.binary_count_evaluated_state?.style?.use_themes});
                 }
-                //if (typeof variables?.device_entity_and_style_binary_count_state?.style?.background_color !== 'undefined') {
-                  returnedColor = variables?.device_entity_and_style_binary_count_state?.style?.background_color;
-                //} else {
-                //  returnedColor = returnedColorDefault;
-                //}
+                if (typeof variables?.binary_count_evaluated_state?.style?.background_color !== 'undefined') {
+                  importedColor = variables?.binary_count_evaluated_state?.style?.background_color;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.background_color: ' + variables?.binary_count_evaluated_state?.style?.background_color});
+                }
+                if (typeof variables?.binary_count_evaluated_state?.style?.background_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.binary_count_evaluated_state?.style?.background_color_alpha;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.background_color_alpha: ' + variables?.binary_count_evaluated_state?.style?.background_color_alpha});
+                }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
-                    if (returnedColor.includes(colorOptions[i])){
-                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
                     }
                   }
+                  if (returnedColor.length == 0) {
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.binary_count_evaluated_state?.style?.background_color: The use of themes was specified, but an invalid color was imported: ' + variables?.binary_count_evaluated_state?.style?.background_color});
+                  }
                 }
-                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
 
                 return returnedColor;
               ]]]

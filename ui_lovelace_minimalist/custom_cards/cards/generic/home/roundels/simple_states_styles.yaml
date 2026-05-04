@@ -1,137 +1,178 @@
 ---
 simple_states_styles:
   variables:
-    device_entity_and_style_simple_states:
-      use_themes: true
+    metadata:
+      page_name: "simple_states_styles.yaml"
+    basic_simple_states:
       normal_state:
+        use_themes: true
         icon: "mdi:circle-outline"
         icon_color: "green"
+        icon_color_alpha: "1"
         background_color: "green"
+        background_color_alpha: "0.2"
       warning_state:
+        use_themes: true
         icon: "mdi:help-circle"
         icon_color: "yellow"
+        icon_color_alpha: "1"
         background_color: "yellow"
+        background_color_alpha: "0.2"
       error_state:
+        use_themes: true
         icon: "mdi:alert-circle"
         icon_color: "red"
+        icon_color_alpha: "1"
         background_color: "red"
+        background_color_alpha: "0.2"
   state:
     - value: "normal"
       icon: >
         [[[
-          var backupIcon =  "mdi:circle-outline";
-          var returnedIcon;
-          if (typeof variables?.device_entity_and_style_simple_states?.normal_state?.icon !== 'undefined') {
-            if (variables?.device_entity_and_style_simple_states?.normal_state?.icon.includes('mdi:') ||
-                variables?.device_entity_and_style_simple_states?.normal_state?.icon.includes('cbi:') ||
-                variables?.device_entity_and_style_simple_states?.normal_state?.icon.includes('simple-icons:')) {
-              returnedIcon = variables?.device_entity_and_style_simple_states?.normal_state?.icon;
+          if (typeof variables?.basic_simple_states?.normal_state?.icon !== 'undefined') {
+            if (variables?.basic_simple_states?.normal_state?.icon.includes('mdi:') ||
+                variables?.basic_simple_states?.normal_state?.icon.includes('cbi:') ||
+                variables?.basic_simple_states?.normal_state?.icon.includes('simple-icons:')) {
+              return variables?.basic_simple_states?.normal_state?.icon;
+            } else {
+              hass.callService('system_log', 'write', {level:'warning',message:'warning in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon: This may not be a valid icon type: ' + variables?.basic_simple_states?.normal_state?.icon});
+              return variables?.basic_simple_states?.normal_state?.icon;
             }
-          }
-          if (typeof returnedIcon !== 'undefined') {
-            return returnedIcon;
-          } else {
-            return backupIcon;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon: ' + variables?.basic_simple_states?.normal_state?.icon});
           }
         ]]]
       styles:
         icon:
           - color: >
               [[[
+                var importedColor;
+                var importedColorAlpha
                 var returnedColor;
-                var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_states?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_states?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_states?.use_themes;
+                if (typeof variables?.basic_simple_states?.normal_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.basic_simple_states?.normal_state?.use_themes === 'boolean') {
+                    useThemes = variables?.basic_simple_states?.normal_state?.use_themes;
                   } else {
-                    useThemes = useThemesDefault;
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.use_themes: ' + variables?.basic_simple_states?.normal_state?.use_themes});
                   }
                 } else {
-                  useThemes = useThemesDefault;
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.use_themes: ' + variables?.basic_simple_states?.normal_state?.use_themes});
                 }
-                returnedColor = variables?.device_entity_and_style_simple_states?.normal_state?.icon_color;
+                if (typeof variables?.basic_simple_states?.normal_state?.icon_color !== 'undefined') {
+                  importedColor = variables?.basic_simple_states?.normal_state?.icon_color;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon_color: ' + variables?.basic_simple_states?.normal_state?.icon_color});
+                }
+                if (typeof variables?.basic_simple_states?.normal_state?.icon_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.basic_simple_states?.normal_state?.icon_color_alpha;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon_color_alpha: ' + variables?.basic_simple_states?.normal_state?.icon_color_alpha});
+                }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
-                    if (returnedColor.includes(colorOptions[i])){
-                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
                     }
                   }
+                  if (returnedColor.length == 0) {
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.normal_state?.icon_color});
+                  }
                 }
-                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
 
                 return returnedColor;
               ]]]
         img_cell:
           - background-color: >
               [[[
+                var importedColor;
+                var importedColorAlpha
                 var returnedColor;
-                var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_states?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_states?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_states?.use_themes;
+                if (typeof variables?.basic_simple_states?.normal_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.basic_simple_states?.normal_state?.use_themes === 'boolean') {
+                    useThemes = variables?.basic_simple_states?.normal_state?.use_themes;
                   } else {
-                    useThemes = useThemesDefault;
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.use_themes: ' + variables?.basic_simple_states?.normal_state?.use_themes});
                   }
                 } else {
-                  useThemes = useThemesDefault;
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.use_themes: ' + variables?.basic_simple_states?.normal_state?.use_themes});
                 }
-                returnedColor = variables?.device_entity_and_style_simple_states?.normal_state?.background_color;
+                if (typeof variables?.basic_simple_states?.normal_state?.background_color !== 'undefined') {
+                  importedColor = variables?.basic_simple_states?.normal_state?.background_color;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.background_color: ' + variables?.basic_simple_states?.normal_state?.background_color});
+                }
+                if (typeof variables?.basic_simple_states?.normal_state?.background_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.basic_simple_states?.normal_state?.background_color_alpha;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.background_color_alpha: ' + variables?.basic_simple_states?.normal_state?.background_color_alpha});
+                }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
-                    if (returnedColor.includes(colorOptions[i])){
-                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
                     }
                   }
+                  if (returnedColor.length == 0) {
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.background_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.normal_state?.background_color});
+                  }
                 }
-                //hass.callService('system_log', 'write', {level:'warning',message:'returnedColor: ' + returnedColor});
 
                 return returnedColor;
               ]]]
     - value: "warning"
       icon: >
         [[[
-          var backupIcon =  "mdi:help-circle";
-          var returnedIcon;
-          if (typeof variables?.device_entity_and_style_simple_states?.warning_state?.icon !== 'undefined') {
-            if (variables?.device_entity_and_style_simple_states?.warning_state?.icon.includes('mdi:') ||
-                variables?.device_entity_and_style_simple_states?.warning_state?.icon.includes('cbi:') ||
-                variables?.device_entity_and_style_simple_states?.warning_state?.icon.includes('simple-icons:')) {
-              returnedIcon = variables?.device_entity_and_style_simple_states?.warning_state?.icon;
+          if (typeof variables?.basic_simple_states?.warning_state?.icon !== 'undefined') {
+            if (variables?.basic_simple_states?.warning_state?.icon.includes('mdi:') ||
+                variables?.basic_simple_states?.warning_state?.icon.includes('cbi:') ||
+                variables?.basic_simple_states?.warning_state?.icon.includes('simple-icons:')) {
+              return variables?.basic_simple_states?.warning_state?.icon;
+            } else {
+              hass.callService('system_log', 'write', {level:'warning',message:'warning in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon: This may not be a valid icon type: ' + variables?.basic_simple_states?.warning_state?.icon});
+              return variables?.basic_simple_states?.warning_state?.icon;
             }
-          }
-          if (typeof returnedIcon !== 'undefined') {
-            return returnedIcon;
-          } else {
-            return backupIcon;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon: ' + variables?.basic_simple_states?.warning_state?.icon});
           }
         ]]]
       styles:
         icon:
           - color: >
               [[[
+                var importedColor;
+                var importedColorAlpha
                 var returnedColor;
-                var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_states?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_states?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_states?.use_themes;
+                if (typeof variables?.basic_simple_states?.warning_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.basic_simple_states?.warning_state?.use_themes === 'boolean') {
+                    useThemes = variables?.basic_simple_states?.warning_state?.use_themes;
                   } else {
-                    useThemes = useThemesDefault;
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.use_themes: ' + variables?.basic_simple_states?.warning_state?.use_themes});
                   }
                 } else {
-                  useThemes = useThemesDefault;
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.use_themes: ' + variables?.basic_simple_states?.warning_state?.use_themes});
                 }
-                returnedColor = variables?.device_entity_and_style_simple_states?.warning_state?.icon_color;
+                if (typeof variables?.basic_simple_states?.warning_state?.icon_color !== 'undefined') {
+                  importedColor = variables?.basic_simple_states?.warning_state?.icon_color;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon_color: ' + variables?.basic_simple_states?.warning_state?.icon_color});
+                }
+                if (typeof variables?.basic_simple_states?.warning_state?.icon_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.basic_simple_states?.warning_state?.icon_color_alpha;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon_color_alpha: ' + variables?.basic_simple_states?.warning_state?.icon_color_alpha});
+                }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
-                    if (returnedColor.includes(colorOptions[i])){
-                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
                     }
+                  }
+                  if (returnedColor.length == 0) {
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.warning_state?.icon_color});
                   }
                 }
 
@@ -140,25 +181,38 @@ simple_states_styles:
         img_cell:
           - background-color: >
               [[[
+                var importedColor;
+                var importedColorAlpha
                 var returnedColor;
-                var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_states?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_states?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_states?.use_themes;
+                if (typeof variables?.basic_simple_states?.warning_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.basic_simple_states?.warning_state?.use_themes === 'boolean') {
+                    useThemes = variables?.basic_simple_states?.warning_state?.use_themes;
                   } else {
-                    useThemes = useThemesDefault;
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.use_themes: ' + variables?.basic_simple_states?.warning_state?.use_themes});
                   }
                 } else {
-                  useThemes = useThemesDefault;
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.use_themes: ' + variables?.basic_simple_states?.warning_state?.use_themes});
                 }
-                returnedColor = variables?.device_entity_and_style_simple_states?.warning_state?.background_color;
+                if (typeof variables?.basic_simple_states?.warning_state?.background_color !== 'undefined') {
+                  importedColor = variables?.basic_simple_states?.warning_state?.background_color;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.background_color: ' + variables?.basic_simple_states?.warning_state?.background_color});
+                }
+                if (typeof variables?.basic_simple_states?.warning_state?.background_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.basic_simple_states?.warning_state?.background_color_alpha;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.background_color_alpha: ' + variables?.basic_simple_states?.warning_state?.background_color_alpha});
+                }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
-                    if (returnedColor.includes(colorOptions[i])){
-                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
                     }
+                  }
+                  if (returnedColor.length == 0) {
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.background_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.warning_state?.background_color});
                   }
                 }
 
@@ -167,44 +221,54 @@ simple_states_styles:
     - value: "error"
       icon: >
         [[[
-          var backupIcon =  "mdi:alert-circle";
-          var returnedIcon;
-          if (typeof variables?.device_entity_and_style_simple_states?.error_state?.icon !== 'undefined') {
-            if (variables?.device_entity_and_style_simple_states?.error_state?.icon.includes('mdi:') ||
-                variables?.device_entity_and_style_simple_states?.error_state?.icon.includes('cbi:') ||
-                variables?.device_entity_and_style_simple_states?.error_state?.icon.includes('simple-icons:')) {
-              returnedIcon = variables?.device_entity_and_style_simple_states?.error_state?.icon;
+          if (typeof variables?.basic_simple_states?.error_state?.icon !== 'undefined') {
+            if (variables?.basic_simple_states?.error_state?.icon.includes('mdi:') ||
+                variables?.basic_simple_states?.error_state?.icon.includes('cbi:') ||
+                variables?.basic_simple_states?.error_state?.icon.includes('simple-icons:')) {
+              return variables?.basic_simple_states?.error_state?.icon;
+            } else {
+              hass.callService('system_log', 'write', {level:'warning',message:'warning in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon: This may not be a valid icon type: ' + variables?.basic_simple_states?.error_state?.icon});
+              return variables?.basic_simple_states?.error_state?.icon;
             }
-          }
-          if (typeof returnedIcon !== 'undefined') {
-            return returnedIcon;
-          } else {
-            return backupIcon;
+            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon: ' + variables?.basic_simple_states?.error_state?.icon});
           }
         ]]]
       styles:
         icon:
           - color: >
               [[[
+                var importedColor;
+                var importedColorAlpha
                 var returnedColor;
-                var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_states?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_states?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_states?.use_themes;
+                if (typeof variables?.basic_simple_states?.error_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.basic_simple_states?.error_state?.use_themes === 'boolean') {
+                    useThemes = variables?.basic_simple_states?.error_state?.use_themes;
                   } else {
-                    useThemes = useThemesDefault;
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.use_themes: ' + variables?.basic_simple_states?.error_state?.use_themes});
                   }
                 } else {
-                  useThemes = useThemesDefault;
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.use_themes: ' + variables?.basic_simple_states?.error_state?.use_themes});
                 }
-                returnedColor = variables?.device_entity_and_style_simple_states?.error_state?.icon_color;
+                if (typeof variables?.basic_simple_states?.error_state?.icon_color !== 'undefined') {
+                  importedColor = variables?.basic_simple_states?.error_state?.icon_color;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon_color: ' + variables?.basic_simple_states?.error_state?.icon_color});
+                }
+                if (typeof variables?.basic_simple_states?.error_state?.icon_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.basic_simple_states?.error_state?.icon_color_alpha;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon_color_alpha: ' + variables?.basic_simple_states?.error_state?.icon_color_alpha});
+                }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
-                    if (returnedColor.includes(colorOptions[i])){
-                      returnedColor = "rgba(var(--color-" + returnedColor + "), 1)";
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
                     }
+                  }
+                  if (returnedColor.length == 0) {
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.error_state?.icon_color});
                   }
                 }
 
@@ -213,25 +277,38 @@ simple_states_styles:
         img_cell:
           - background-color: >
               [[[
+                var importedColor;
+                var importedColorAlpha
                 var returnedColor;
-                var useThemesDefault = true;
                 var useThemes;
                 const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
-                if (typeof variables?.device_entity_and_style_simple_states?.use_themes !== 'undefined') {
-                  if (typeof variables?.device_entity_and_style_simple_states?.use_themes === 'boolean') {
-                    useThemes = variables?.device_entity_and_style_simple_states?.use_themes;
+                if (typeof variables?.basic_simple_states?.error_state?.use_themes !== 'undefined') {
+                  if (typeof variables?.basic_simple_states?.error_state?.use_themes === 'boolean') {
+                    useThemes = variables?.basic_simple_states?.error_state?.use_themes;
                   } else {
-                    useThemes = useThemesDefault;
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.use_themes: ' + variables?.basic_simple_states?.error_state?.use_themes});
                   }
                 } else {
-                  useThemes = useThemesDefault;
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.use_themes: ' + variables?.basic_simple_states?.error_state?.use_themes});
                 }
-                returnedColor = variables?.device_entity_and_style_simple_states?.error_state?.background_color;
+                if (typeof variables?.basic_simple_states?.error_state?.background_color !== 'undefined') {
+                  importedColor = variables?.basic_simple_states?.error_state?.background_color;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.background_color: ' + variables?.basic_simple_states?.error_state?.background_color});
+                }
+                if (typeof variables?.basic_simple_states?.error_state?.background_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.basic_simple_states?.error_state?.background_color_alpha;
+                } else {
+                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.background_color_alpha: ' + variables?.basic_simple_states?.error_state?.background_color_alpha});
+                }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
-                    if (returnedColor.includes(colorOptions[i])){
-                      returnedColor = "rgba(var(--color-" + returnedColor + "), 0.2)";
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
                     }
+                  }
+                  if (returnedColor.length == 0) {
+                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.background_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.error_state?.background_color});
                   }
                 }
 
