@@ -1,16 +1,21 @@
 ---
 signal_strength_state:
   variables:
+    metadata:
+      page_name: "signal_strength_state.yaml"
     binary_count_evaluated_state:
       entity:
         evaluated_entity: "sensor.binary_sensor_state_counts"
         isattribute: true
-        evaluated_attribute: "signal_sensors_average_value"
+        evaluated_attribute: "signal_sensors_average_value_rounded"
       style:
         use_themes: true
         icon: "mdi:signal-cellular"
         icon_color: "theme"
         background_color: "theme"
+
+  template:
+    - "ulm_gradient_green_yellow_red_10step"
 
   state:
     - operator: "template"
@@ -23,8 +28,11 @@ signal_strength_state:
           var returnValue = false;
 
           resolvedSignalState = states[evaluatedSignalEntity].attributes[evaluatedSignalAttribute];
+
           if (typeof resolvedSignalState !== 'undefined') {
               returnValue = true;
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with resolvedSignalState: ${resolvedSignalState}`});
           }
 
           return returnValue;
@@ -41,18 +49,22 @@ signal_strength_state:
           resolvedSignalState = states[evaluatedSignalEntity].attributes[evaluatedSignalAttribute];
           if (!isNaN(resolvedSignalState) && typeof resolvedSignalState !== 'undefined') {
             switch(true) {
-              case resolvedSignalState > -60:
+              case resolvedSignalState < 60:
                 iconSuffix = "-3";
                 break;
-              case resolvedSignalState > -67:
+              case resolvedSignalState < 70:
                 iconSuffix = "-2";
                 break;
-              case resolvedSignalState > -80:
+              case resolvedSignalState < 80:
                 iconSuffix = "-1";
                 break;
               default:
                 break;
             }
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalEntity: ${evaluatedSignalEntity}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalAttribute: ${evaluatedSignalAttribute}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with resolvedSignalState: ${resolvedSignalState}`});
           }
 
           return returnedIcon + iconSuffix;;
@@ -65,52 +77,56 @@ signal_strength_state:
                 var evaluatedSignalEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
                 var evaluatedSignalAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
 
+                var gradient = "gradient_";
                 var resolvedSignalState;
 
                 resolvedSignalState = states[evaluatedSignalEntity].attributes[evaluatedSignalAttribute];
                 if (!isNaN(resolvedSignalState) && typeof resolvedSignalState !== 'undefined') {
-                  switch(true) {
-                    case resolvedSignalState > -60:
-                      returnedColor = "green";
-                      break;
-                    case resolvedSignalState > -67:
-                      returnedColor = "yellow";
-                      break;
-                    case resolvedSignalState > -80:
-                      returnedColor = "red";
-                      break;
-                    default:
-                      break;
+                  gradient = `${gradient}${resolvedSignalState}`;
+                  if (variables?.green_yellow_red_rssi_10step_non_theme?.[gradient]) {
+                    returnedColor = variables?.green_yellow_red_rssi_10step_non_theme?.[gradient];
+                  } else {
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with gradient: ${gradient}`});
                   }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalEntity: ${evaluatedSignalEntity}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalAttribute: ${evaluatedSignalAttribute}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with resolvedSignalState: ${resolvedSignalState}`});
                 }
 
-                return `rgba(var(--color-${returnedColor}),1)`;
+                if (hass.themes.darkMode) {
+                  returnedColor.replace(", 40%",", 70%");
+                }
+
+                return returnedColor;
               ]]]
         img_cell:
           - background-color: >
               [[[
-                var returnedColor = variables?.ty_and_style_binary_count_state?.style?.background_color;
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.background_color;
                 var evaluatedSignalEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
                 var evaluatedSignalAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
 
+                var gradient = "gradient_";
                 var resolvedSignalState;
 
                 resolvedSignalState = states[evaluatedSignalEntity].attributes[evaluatedSignalAttribute];
                 if (!isNaN(resolvedSignalState) && typeof resolvedSignalState !== 'undefined') {
-                  switch(true) {
-                    case resolvedSignalState > -60:
-                      returnedColor = "green";
-                      break;
-                    case resolvedSignalState > -67:
-                      returnedColor = "yellow";
-                      break;
-                    case resolvedSignalState > -80:
-                      returnedColor = "red";
-                      break;
-                    default:
-                      break;
+                  gradient = gradient + resolvedSignalState;
+                  if (variables?.green_yellow_red_rssi_10step_non_theme?.[gradient]) {
+                    returnedColor = variables?.green_yellow_red_rssi_10step_non_theme?.[gradient];
+                  } else {
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with gradient: ${gradient}`});
                   }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalEntity: ${evaluatedSignalEntity}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalAttribute: ${evaluatedSignalAttribute}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with resolvedSignalState: ${resolvedSignalState}`});
                 }
 
-                return `rgba(var(--color-${returnedColor}),0.2)`;
+                if (hass.themes.darkMode) {
+                  returnedColor.replace(", 40%",", 70%");
+                }
+
+                return returnedColor.replace(", 1)", ", 0.2)");
               ]]]
