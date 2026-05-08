@@ -144,7 +144,7 @@ views:
                       variables:
                         generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "zero_value"  # "non_zero_value"
+                            attribute_name: "zero_value"
                             count_tooltip: "double-tap to show lights"
                             substitute_icon: "mdi:fire-circle"
                           amount:
@@ -191,7 +191,7 @@ views:
                       variables:
                         generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "zero_value"  # "non_zero_value"
+                            attribute_name: "zero_value"
                             count_tooltip: "double-tap to show alerts"
                             substitute_icon: "mdi:lightning-bolt-circle"
                           amount:
@@ -238,7 +238,7 @@ views:
                       variables:
                         generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "zero_value"  # "non_zero_value"
+                            attribute_name: "zero_value"
                             count_tooltip: "double-tap to show motion"
                             substitute_icon: "mdi:account-circle"
                           amount:
@@ -286,7 +286,7 @@ views:
                       variables:
                         generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "zero_value"  # "non_zero_value"
+                            attribute_name: "zero_value"
                             count_tooltip: "double-tap to show data"
                             substitute_icon: "mdi:swap-vertical-circle"
                           amount:
@@ -333,7 +333,7 @@ views:
                       variables:
                         generic_get_set_group_notification_objects:
                           unavailable:
-                            attribute_name: "zero_value"  # "non_zero_value"
+                            attribute_name: "zero_value"
                             count_tooltip: "double-tap to show updates"
                             substitute_icon: "mdi:refresh-circle"
                           amount:
@@ -437,11 +437,11 @@ views:
                             unset_state:
                               icon: "mdi:lightbulb-group-off-outline"
                           binary_switch_state:
-                            use_themes: false
                             on_state:
                               icon: "mdi:lightbulb-multiple"
-                              icon_color: "rgba(var(--color-yellow),1)"
-                              background_color: "rgba(var(--color-theme),0.05)"
+                              icon_color: "yellow"
+                              background_color: "theme"
+                              background_color_alpha: "0.05"
                             off_state:
                               icon: "mdi:lightbulb-multiple-off-outline"
                           auto_entities_group_popup:
@@ -546,7 +546,7 @@ views:
                             default_state:
                               icon: "mdi:thermometer-low"
                               icon_color: "theme"
-                              background_color: "theme"
+                              # background_color: "theme"
                             unknown_state:
                               icon: "mdi:thermometer-alert"
                             unset_state:
@@ -604,7 +604,7 @@ views:
                           - "notifications_device_style"
                           - "common_objects_and_styles"
                           - "simple_states_styles"
-                          - "device_tumble_dryer_state"
+                          - "device_completions_state"
                           - "navigate_to_parent"
                         entity: "sensor.washing_machine_simple_state"
                         name: "Washer"
@@ -624,7 +624,7 @@ views:
                               icon: "mdi:washing-machine-alert"
                             unset_state:
                               icon: "mdi:washing-machine-alert"
-                          device_completion_state:
+                          device_completions_state:
                             data_entities:
                               completion_entity: "sensor.washing_machine_completion_time"
                             on_state:
@@ -641,7 +641,7 @@ views:
                           - "notifications_device_style"
                           - "common_objects_and_styles"
                           - "simple_states_styles"
-                          - "device_tumble_dryer_state"
+                          - "device_completions_state"
                           - "navigate_to_parent"
                         entity: "sensor.tumble_dryer_simple_state"
                         name: "Dryer"
@@ -661,7 +661,7 @@ views:
                               icon: "mdi:tumble-dryer-alert"
                             unset_state:
                               icon: "mdi:tumble-dryer-alert"
-                          device_completion_state:
+                          device_completions_state:
                             data_entities:
                               completion_entity: "sensor.samsung_tumble_dryer_dryer_completion_time"
                             on_state:
@@ -678,7 +678,7 @@ views:
                           - "notifications_device_style"
                           - "common_objects_and_styles"
                           - "simple_states_styles"
-                          - "device_tumble_dryer_state"
+                          - "device_completions_state"
                           - "navigate_to_parent"
                         entity: "sensor.dishwasher_simple_state"
                         name: "Dishwasher"
@@ -698,7 +698,7 @@ views:
                               icon: "mdi:dishwasher-alert"
                             unset_state:
                               icon: "mdi:dishwasher-alert"
-                          device_completion_state:
+                          device_completions_state:
                             data_entities:
                               completion_entity: "sensor.dishwasher_remaining_program_time"
                             on_state:
@@ -883,9 +883,9 @@ views:
                             unavailable:
                               attribute_name: "integration_synology_dsm_unavailable_count"
                               count_tooltip: "DSM entities away"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
+                            # amount:
+                            #   attribute_name: "zero_value"
+                            #   count_tooltip: "not set"
                           basic_simple_states:
                             normal_state:
                               icon: "mdi:nas"
@@ -1018,11 +1018,13 @@ views:
                             style:
                               icon: "mdi:alarm-light"
                           common_button_icon_styles:
-                            use_themes: false
                             default_state:
+                              # use_themes: false
                               icon: "mdi:alarm-light-off"
-                              icon_color: "rgba(var(--color-green), 1)"
-                              background_color: "rgba(var(--color-green), 0.2)"
+                              icon_color: "green"
+                              icon_color_alpha: "1"
+                              background_color: "green"
+                              background_color_alpha: "0.2"
                             unknown_state:
                               icon: "mdi:alarm-light-outline"
                             unset_state:
@@ -1104,11 +1106,13 @@ views:
                             style:
                               icon: "mdi:camera-off"
                           common_button_icon_styles:
-                            use_themes: false
                             default_state:
+                              # use_themes: false
                               icon: "mdi:camera"
-                              icon_color: "rgba(var(--color-green), 1)"
-                              background_color: "rgba(var(--color-green), 0.2)"
+                              icon_color: "green"
+                              icon_color_alpha: "1"
+                              background_color: "green"
+                              background_color_alpha: "0.2"
                             unknown_state:
                               icon: "mdi:camera-off-outline"
                             unset_state:
@@ -1131,7 +1135,6 @@ views:
                           - "notifications_device_style"
                           - "common_objects_and_styles"
                           - "binary_count_state"
-                          # - "simple_switch_state"
                           - "auto_entities_group_popup"
                         entity: "group.all_door_class_binary_sensors"
                         name: "Doors"
@@ -1155,9 +1158,6 @@ views:
                               icon: "mdi:door-closed-cancel"
                             unset_state:
                               icon: "mdi:door-closed-cancel"
-                          # binary_switch_state:
-                          #   on_state:
-                          #     icon: "mdi:door-open"
                           auto_entities_group_popup:
                             action: "popup"
                             popup:
@@ -1304,12 +1304,8 @@ views:
                             error_state:
                               icon: "mdi:cctv-off"
                           occupancy_state:
-                          #   not_triggered:
-                          #     icon: "mdi:motion-sensor"
                             triggered_home:
                               icon: "mdi:motion-sensor"
-                            # triggered_away:
-                            #   icon: "mdi:motion-sensor"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:cctv"
@@ -1346,20 +1342,21 @@ views:
                             unavailable:
                               attribute_name: "integration_unifiprotect_unavailable_count"
                               count_tooltip: "protect entities away"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
+                            # amount:
+                            #   attribute_name: "zero_value"
+                            #   count_tooltip: "not set"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "integration_unifiprotect_unavailable_count"
                             style:
                               icon: "cbi:unifi-protect"
                           common_button_icon_styles:
-                            use_themes: false
                             default_state:
                               icon: "cbi:unifi-protect"
-                              icon_color: "rgba(var(--color-green), 1)"
-                              background_color: "rgba(var(--color-green), 0.2)"
+                              icon_color: "green"
+                              icon_color_alpha: "1"
+                              background_color: "green"
+                              background_color_alpha: "0.2"
                             unknown_state:
                               icon: "cbi:unifi-protect"
                             unset_state:
@@ -1373,7 +1370,8 @@ views:
                           - "notifications_common_styles"
                           - "notifications_device_style"
                           - "common_objects_and_styles"
-                          - "simple_switch_state"
+                          - "binary_count_state"
+                          # - "simple_switch_state"
                           - "auto_entities_group_popup"
                         entity: "group.all_remotes_and_tv_class_media_player"
                         name: "Video"
@@ -1382,16 +1380,21 @@ views:
                             amount:
                               attribute_name: "media_player_tv_and_remote_on_count"
                               count_tooltip: "num video players on"
+                          binary_count_evaluated_state:
+                            entity:
+                              evaluated_attribute: "media_player_tv_and_remote_on_count"
+                            style:
+                              icon: "mdi:television"
+                              icon_color: "green"
+                              background_color: "green"
                           common_button_icon_styles:
                             default_state:
-                              icon: "mdi:television"
+                              icon: "mdi:television-off"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:television-off"
                             unset_state:
                               icon: "mdi:television-off"
-                          binary_switch_state:
-                            on_state:
-                              icon: "mdi:television-play"
                           auto_entities_group_popup:
                             action: "popup"
                             popup:
@@ -1408,7 +1411,8 @@ views:
                           - "notifications_common_styles"
                           - "notifications_device_style"
                           - "common_objects_and_styles"
-                          - "simple_switch_state"
+                          - "binary_count_state"
+                          # - "simple_switch_state"
                           - "auto_entities_group_popup"
                         entity: "group.all_audio_class_media_player"
                         name: "Audio"
@@ -1420,16 +1424,24 @@ views:
                             amount:
                               attribute_name: "media_player_audio_on_count"
                               count_tooltip: "num audio players on"
+                          binary_count_evaluated_state:
+                            entity:
+                              evaluated_attribute: "media_player_audio_on_count"
+                            style:
+                              icon: "mdi:volume-high"
+                              icon_color: "green"
+                              background_color: "green"
                           common_button_icon_styles:
                             default_state:
-                              icon: "mdi:volume-low"
+                              icon: "mdi:volume-off"
+                              icon_color: "theme"
                             unknown_state:
-                              icon: "mdi:volume-off"
+                              icon: "mdi:volume-low"
                             unset_state:
-                              icon: "mdi:volume-off"
-                          binary_switch_state:
-                            on_state:
-                              icon: "mdi:volume-high"
+                              icon: "mdi:volume-low"
+                          # binary_switch_state:
+                          #   on_state:
+                          #     icon: "mdi:volume-high"
                           auto_entities_group_popup:
                             action: "popup"
                             popup:
@@ -1447,29 +1459,39 @@ views:
                           - "notifications_common_styles"
                           - "notifications_device_style"
                           - "common_objects_and_styles"
+                          - "binary_count_state"
                           - "navigate_to_parent"
                         entity: "binary_sensor.music_assistant_running"
                         name: "MASS"
                         variables:
                           navigation_to_parent_from_entity:
-                            evaluated_entity: "media_player.rx_v777_reciever_yamaha_integration_bed_c"
+                            evaluated_entity: "media_player.shield_music_assistant_bed_e"
                             return_type: "integration"
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_mass_unavailable_count"
                               count_tooltip: "MASS entities away"
                             amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
+                              attribute_name: "integration_mass_on_count"
+                              count_tooltip: "MASS entities playing"
+                          binary_count_evaluated_state:
+                            entity:
+                              evaluated_attribute: "integration_mass_on_count"
+                            style:
+                              icon: "mdi:playlist-music"
+                              icon_color: "green"
+                              background_color: "green"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:playlist-music"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:playlist-music"
                             unset_state:
                               icon: "mdi:playlist-music"
                         hold_action:
-                          action: "more-info"
+                          action: "navigate"
+                          navigation_path: "/media-apps/music-assistant-server"
                     floorplan1:
                       card: !include "floorplan_pictures/floor-ground.yaml"
                     floorplan2:
@@ -1530,18 +1552,19 @@ views:
                             amount:
                               attribute_name: "device_trackers_away_count"
                               count_tooltip: "device trackers not home"
-                          common_button_icon_styles:
-                            default_state:
-                              icon: "mdi:devices"
-                            unknown_state:
-                              icon: "mdi:cellphone-link-off"
-                            unset_state:
-                              icon: "mdi:cellphone-link-off"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "device_trackers_unavailable_count"
                             style:
                               icon: "mdi:devices"
+                          common_button_icon_styles:
+                            default_state:
+                              icon: "mdi:devices"
+                              icon_color: "theme"
+                            unknown_state:
+                              icon: "mdi:cellphone-link-off"
+                            unset_state:
+                              icon: "mdi:cellphone-link-off"
                           auto_entities_group_popup:
                             action: "popup"
                             popup:
@@ -1573,6 +1596,7 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:lan"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:lan-disconnect"
                             unset_state:
@@ -1613,15 +1637,18 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:play"
+                              icon_color: "theme"
                             unknown_state:
-                              icon: "mdi:pause"
+                              icon: "mdi:stop"
                             unset_state:
-                              icon: "mdi:pause"
+                              icon: "mdi:stop"
                           binary_count_evaluated_state:
                             entity:
-                              evaluated_entity: "group.all_running_class_binary_sensors"
+                              evaluated_attribute: "running_unavailable_count"
                             style:
-                              icon: "mdi:stop"
+                              icon: "mdi:pause"
+                              icon_color: "yellow"
+                              background_color: "yellow"
                           auto_entities_group_popup:
                             action: "popup"
                             popup:
@@ -1640,6 +1667,7 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:home-lightning-bolt"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:home-alert"
                             unset_state:
@@ -1660,6 +1688,7 @@ views:
                         type: "custom:button-card"
                         template:
                           - "common_objects_and_styles"
+                          # - "simple_switch_state"
                           - "lockdown_script_trigger"
                         entity: "input_boolean.away_script_active"
                         icon: "mdi:home-lock-open"
@@ -1672,6 +1701,11 @@ views:
                               icon: "mdi:lock-alert"
                             unset_state:
                               icon: "mdi:lock-alert"
+                          # binary_switch_state:
+                          #   on_state:
+                          #     icon: "mdi:lock"
+                          #   off_state:
+                          #     icon: "mdi:lock-open-variant"
                           script_activate:
                             icon:
                               mdi: "mdi:home-lock"
@@ -1700,12 +1734,10 @@ views:
                             unavailable:
                               attribute_name: "data_rate_unavailable_count"
                               count_tooltip: "num data rate sensors away"
-                            amount:
-                              attribute_name: "data_rate_total_average_10_times_larger"
-                              count_tooltip: "average network data rate (100's kb/s)"
                           common_button_icon_styles:
                             default_state:
-                              icon: "mdi:speedometer"
+                              icon: "mdi:lan"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:lan-disconnect"
 
@@ -1743,6 +1775,7 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:battery-unknown"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:battery-alert"
                             unset_state:
@@ -1780,6 +1813,7 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:signal-off"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:wifi-alert"
                             unset_state:
@@ -1805,29 +1839,29 @@ views:
                         entity: "sensor.udmpro_state"
                         name: "Unifi"
                         variables:
-                          navigation_to_parent_from_entity:
-                            evaluated_entity: "sensor.udmpro_state"
-                            return_type: "integration"
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_unifi_unavailable_count"
                               count_tooltip: "unifi entities away"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
+                            # amount:
+                            #   attribute_name: "zero_value"
+                            #   count_tooltip: "not set"
                           common_button_icon_styles:
                             default_state:
                               icon: "simple-icons:ubiquiti"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "simple-icons:ubiquiti"
                             unset_state:
                               icon: "simple-icons:ubiquiti"
-
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "integration_unifi_unavailable_count"
                             style:
                               icon: "simple-icons:ubiquiti"
+                          navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.udmpro_state"
+                            return_type: "integration"                              
                         hold_action:
                           action: "more-info"
                     item10:
@@ -1842,21 +1876,20 @@ views:
                         entity: "sensor.silicon_labs_ezsp_unicast_rx"
                         name: "ZHA"
                         variables:
-                          navigation_to_parent_from_entity:
-                            evaluated_entity: "sensor.silicon_labs_ezsp_unicast_rx"
-                            return_type: "integration"
+
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_zha_unavailable_count"
                               count_tooltip: "ZHA entities away"
-                            amount:
-                              attribute_name: "zero_value"
-                              count_tooltip: "not set"
+                            # amount:
+                            #   attribute_name: "zero_value"
+                            #   count_tooltip: "not set"
                           common_button_icon_styles:
                             default_state:
                               icon: "simple-icons:zigbee"
+                              icon_color: "theme"
                             unknown_state:
-                              use_unknown_state: true
+                              # use_unknown_state: true
                               icon: "simple-icons:zigbee"
                             unset_state:
                               icon: "simple-icons:zigbee"
@@ -1866,6 +1899,9 @@ views:
                               evaluated_attribute: "integration_zha_unavailable_count"
                             style:
                               icon: "simple-icons:zigbee"
+                          navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.silicon_labs_ezsp_unicast_rx"
+                            return_type: "integration"                              
                         hold_action:
                           action: "more-info"
                     item11:
@@ -1880,9 +1916,6 @@ views:
                         entity: "sensor.active_issues"
                         name: "Spook"
                         variables:
-                          navigation_to_parent_from_entity:
-                            evaluated_entity: "sensor.active_issues"
-                            return_type: "integration"
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_spook_unavailable_count"
@@ -1894,16 +1927,20 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:ghost"
+                              icon_color: "theme"
                             unknown_state:
-                              icon: "mdi:ghost"
+                              icon: "mdi:ghost-outline"
                             unset_state:
-                              icon: "mdi:ghost"
+                              icon: "mdi:ghost-outline"
                           binary_count_evaluated_state:
                             entity:
                               isattribute: false
                               evaluated_entity: "sensor.active_issues"
                             style:
-                              icon: "mdi:ghost-outline"
+                              icon: "mdi:ghost"
+                          navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.active_issues"
+                            return_type: "integration"
                         hold_action:
                           action: "more-info"
                     item12:
@@ -1925,6 +1962,7 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:shield-half-full"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:shield-off-outline"
                             unset_state:
@@ -1937,7 +1975,7 @@ views:
                               icon: "mdi:shield-half-full"
                         tap_action:
                           action: "navigate"
-                          navigation_path: "/lovelace-minimalist-downloads/3"
+                          navigation_path: "/lovelace-minimalist-downloads/4"
                         hold_action:
                           action: "more-info"
                     item13:
@@ -1963,6 +2001,7 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:trash-can-outline"
+                              icon_color: "theme"
                             unset_state:
                               icon: "mdi:delete-alert"
                             unknown_state:
@@ -1981,9 +2020,6 @@ views:
                         entity: "sensor.icloud3_event_log"
                         name: "iCloud3"
                         variables:
-                          navigation_to_parent_from_entity:
-                            evaluated_entity: "sensor.icloud3_event_log"
-                            return_type: "integration"
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_icloud3_unavailable_count"
@@ -1991,6 +2027,7 @@ views:
                           common_button_icon_styles:
                             default_state:
                               icon: "simple-icons:icloud"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "simple-icons:icloud"
                             unset_state:
@@ -2000,6 +2037,10 @@ views:
                               evaluated_attribute: "integration_icloud3_unavailable_count"
                             style:
                               icon: "simple-icons:icloud"
+                          navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.icloud3_event_log"
+                            return_type: "integration"
+
                         hold_action:
                           action: "more-info"
                     item15:
@@ -2014,16 +2055,15 @@ views:
                         entity: "binary_sensor.nest_protect_bottom_floor_smoke_status"
                         name: "Nest"
                         variables:
-                          navigation_to_parent_from_entity:
-                            evaluated_entity: "binary_sensor.nest_protect_bottom_floor_smoke_status"
-                            return_type: "integration"
+
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "integration_nest_protect_unavailable_count"
                               count_tooltip: "nest entities away"
                           common_button_icon_styles:
                             default_state:
-                              icon: "mdi:smoke-detector-variant"
+                              icon: "mdi:smoke-detector-variant-off"
+                              icon_color: "theme"
                             unknown_state:
                               icon: "mdi:smoke-detector-variant-alert"
                             unset_state:
@@ -2032,7 +2072,10 @@ views:
                             entity:
                               evaluated_attribute: "integration_nest_protect_unavailable_count"
                             style:
-                              icon: "mdi:smoke-detector-variant-off"
+                              icon: "mdi:smoke-detector-variant-alert"
+                          navigation_to_parent_from_entity:
+                            evaluated_entity: "binary_sensor.nest_protect_bottom_floor_smoke_status"
+                            return_type: "integration"
                         hold_action:
                           action: "more-info"
 
@@ -2171,26 +2214,23 @@ views:
                               attribute_name: "hacs_updates_available"
                               count_tooltip: "num hacs updates available"
                           common_button_icon_styles:
-                            use_themes: false
                             default_state:
+                              use_themes: false
                               icon: "mdi:store"
-                              icon_color: "#41bdf5"
-                              background_color: "rgba(var(--color-theme),0.05)"
+                              icon_color: "rgba(65, 189, 245, 1)"
+                              background_color: "rgba(var(--color-theme), 0.05)"
                             unknown_state:
                               icon: "mdi:store-alert"
-                              # icon_color: "rgba(var(--color-red), 1)"
-                              # background_color: "rgba(var(--color-red), 0.2)"
                             unset_state:
                               icon: "mdi:store-alert"
-                              # icon_color: "rgba(var(--color-red), 1)"
-                              # background_color: "rgba(var(--color-red), 0.2)"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "hacs_updates_available"
                             style:
                               use_themes: false
                               icon: "mdi:store"
-                              icon_color: "#41F595FF"
+                              icon_color: "rgba(65, 189, 245, 1)"
+                              background_color: "rgba(65, 189, 245, 0.2)"
                         tap_action:
                           action: "navigate"
                           navigation_path: "/hacs"
