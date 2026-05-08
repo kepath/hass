@@ -5,7 +5,7 @@ data_rate_state:
       entity:
         evaluated_entity: "sensor.binary_sensor_state_counts"
         isattribute: true
-        evaluated_attribute: "data_rate_total_value_10_times_smaller"
+        evaluated_attribute: "data_rate_total_average"
       style:
         use_themes: true
         icon: "mdi:numeric-off"
@@ -19,16 +19,14 @@ data_rate_state:
           var evaluatedDataValueEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
           var evaluatedDataValueAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
 
-          var resolvedDataValueStateDefault = 0;
           var resolvedDataValueState;
           var returnValue = false;
 
           resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
           if (isNaN(resolvedDataValueState) || typeof resolvedDataValueState === 'undefined') {
-              resolvedDataValueState = resolvedDataValueStateDefault;
-          }
-          if (resolvedDataValueState > 0) {
             returnValue = true;
+          } else {
+          
           }
 
           return returnValue;
@@ -68,6 +66,8 @@ data_rate_state:
                 if (!isNaN(resolvedDataValueState) && typeof resolvedDataValueState !== 'undefined') {
                   switch(resolvedDataValueState) {
                     case 0:
+                      returnedColor = "theme";
+                      break;
                     case 1:
                     case 2:
                     case 3:
@@ -101,6 +101,8 @@ data_rate_state:
                 if (!isNaN(resolvedDataValueState) && typeof resolvedDataValueState !== 'undefined') {
                   switch(resolvedDataValueState) {
                     case 0:
+                      returnedColor = "theme";
+                      break;
                     case 1:
                     case 2:
                     case 3:
