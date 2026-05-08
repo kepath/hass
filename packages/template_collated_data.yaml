@@ -24,32 +24,18 @@ template:
           connectivity_disconnected_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','eq', 'off')|list|count }}"
           connectivity_unavailable_count: "{{ expand('group.all_connectivity_class_binary_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           data_rate_unavailable_count: "{{ expand('group.all_data_rate_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
-          data_rate_total_count: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|list|count|int(0)}}"
-          data_rate_total_value: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|sum|round()|int(0)}}"
-          data_rate_total_value_10_times_smaller:  >
-            {{
-              1 if 
-                state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') is none
-              else 
-                (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / 10)|round()
-            }}
+          data_rate_total_count: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|reject('eq', 0.0)|list|count|int(0)}}"
+          data_rate_total_value: "{{expand('group.all_measured_data_rate_class_sensors')|map(attribute='state')|reject('in',['none','unknown','unavailable'])|select('is_number')|map('float', '0.0')|reject('eq', 0.0)|sum|round()|int(0)}}"
           data_rate_total_average: >
             {{
-              1 if 
+              'warning' if 
                 (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') is none
                 or
                 state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count') is none
                 or
                 is_state('sensor.binary_sensor_state_counts', 0))
               else 
-                ((state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count'))|round(2))
-            }}
-          data_rate_total_average_10_times_larger: >
-            {{
-              1 if 
-                state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_average') is none 
-              else 
-                (state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_average') * 10)|round()
+                ((state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_value') / state_attr('sensor.binary_sensor_state_counts', 'data_rate_total_count'))|round())
             }}
           device_trackers_away_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['away','not_home'])|list|count }}"
           device_trackers_unavailable_count: "{{ expand('group.all_device_trackers')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
@@ -71,6 +57,13 @@ template:
               rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
               map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
               select('eq', 'nest_protect')|list|count
+            }}
+          integration_mass_on_count: >
+            {{
+              states|selectattr('state','in',['on','playing'])|
+              rejectattr('domain','in',['button','event','conversation','stt','tts','wake_word'])|map(attribute='entity_id')|
+              map('device_attr','identifiers')|reject('none')|map('first')|select('defined')|map('first')|select('defined')|
+              select('eq', 'mass')|list|count
             }}
           integration_mass_unavailable_count: >
             {{
@@ -141,6 +134,7 @@ template:
           signal_sensors_low_count: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|map('int',0)|select('lt',-80)|list|count}}"
           signal_sensors_unavailable_count: "{{ expand('group.all_signal_strength_class_sensors')|selectattr('state','in', ['unavailable','unknown'])|list|count }}"
           signal_sensors_average_value: "{{expand('group.all_signal_strength_class_sensors')|map(attribute='state')|reject('undefined')|reject('in',['unavailable','unknown'])|map('int',0)|list|average(0)|int(0)}}"
+          signal_sensors_average_value_rounded: " {{(0 - state_attr('sensor.binary_sensor_state_counts', 'signal_sensors_average_value') / 5)|round(0) * 5}}"
           tab_action_sensors_triggered_count: >
             {{
               [
