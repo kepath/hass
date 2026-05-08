@@ -35,10 +35,10 @@ simple_states_styles:
                 variables?.basic_simple_states?.normal_state?.icon.includes('simple-icons:')) {
               return variables?.basic_simple_states?.normal_state?.icon;
             } else {
-              hass.callService('system_log', 'write', {level:'warning',message:'warning in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon: This may not be a valid icon type: ' + variables?.basic_simple_states?.normal_state?.icon});
+              hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.icon: This may not be a valid icon type: ${variables?.basic_simple_states?.normal_state?.icon}`});
               return variables?.basic_simple_states?.normal_state?.icon;
             }
-            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon: ' + variables?.basic_simple_states?.normal_state?.icon});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.icon: ${variables?.basic_simple_states?.normal_state?.icon}`});
           }
         ]]]
       styles:
@@ -54,20 +54,20 @@ simple_states_styles:
                   if (typeof variables?.basic_simple_states?.normal_state?.use_themes === 'boolean') {
                     useThemes = variables?.basic_simple_states?.normal_state?.use_themes;
                   } else {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.use_themes: ' + variables?.basic_simple_states?.normal_state?.use_themes});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.use_themes: ${variables?.basic_simple_states?.normal_state?.use_themes}`});
                   }
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.use_themes: ' + variables?.basic_simple_states?.normal_state?.use_themes});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.use_themes: ${variables?.basic_simple_states?.normal_state?.use_themes}`});
                 }
                 if (typeof variables?.basic_simple_states?.normal_state?.icon_color !== 'undefined') {
                   importedColor = variables?.basic_simple_states?.normal_state?.icon_color;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon_color: ' + variables?.basic_simple_states?.normal_state?.icon_color});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.icon_color: ${variables?.basic_simple_states?.normal_state?.icon_color}`});
                 }
                 if (typeof variables?.basic_simple_states?.normal_state?.icon_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.basic_simple_states?.normal_state?.icon_color_alpha;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon_color_alpha: ' + variables?.basic_simple_states?.normal_state?.icon_color_alpha});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.icon_color_alpha: ${variables?.basic_simple_states?.normal_state?.icon_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -76,8 +76,10 @@ simple_states_styles:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.icon_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.normal_state?.icon_color});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.icon_color: The use of themes was specified, but an invalid color was imported: ${variables?.basic_simple_states?.normal_state?.icon_color}`});
                   }
+                } else {
+                  returnedColor = importedColor;
                 }
 
                 return returnedColor;
@@ -94,20 +96,20 @@ simple_states_styles:
                   if (typeof variables?.basic_simple_states?.normal_state?.use_themes === 'boolean') {
                     useThemes = variables?.basic_simple_states?.normal_state?.use_themes;
                   } else {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.use_themes: ' + variables?.basic_simple_states?.normal_state?.use_themes});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.use_themes: ${variables?.basic_simple_states?.normal_state?.use_themes}`});
                   }
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.use_themes: ' + variables?.basic_simple_states?.normal_state?.use_themes});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.use_themes: ${variables?.basic_simple_states?.normal_state?.use_themes}`});
                 }
                 if (typeof variables?.basic_simple_states?.normal_state?.background_color !== 'undefined') {
                   importedColor = variables?.basic_simple_states?.normal_state?.background_color;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.background_color: ' + variables?.basic_simple_states?.normal_state?.background_color});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.background_color: ${variables?.basic_simple_states?.normal_state?.background_color}`});
                 }
                 if (typeof variables?.basic_simple_states?.normal_state?.background_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.basic_simple_states?.normal_state?.background_color_alpha;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.background_color_alpha: ' + variables?.basic_simple_states?.normal_state?.background_color_alpha});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.background_color_alpha: ${variables?.basic_simple_states?.normal_state?.background_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -116,8 +118,10 @@ simple_states_styles:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.normal_state?.background_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.normal_state?.background_color});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.normal_state?.background_color: The use of themes was specified, but an invalid color was imported: ${variables?.basic_simple_states?.normal_state?.background_color}`});
                   }
+                } else {
+                  returnedColor = importedColor;
                 }
 
                 return returnedColor;
@@ -131,10 +135,10 @@ simple_states_styles:
                 variables?.basic_simple_states?.warning_state?.icon.includes('simple-icons:')) {
               return variables?.basic_simple_states?.warning_state?.icon;
             } else {
-              hass.callService('system_log', 'write', {level:'warning',message:'warning in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon: This may not be a valid icon type: ' + variables?.basic_simple_states?.warning_state?.icon});
+              hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.icon: This may not be a valid icon type: ${variables?.basic_simple_states?.warning_state?.icon}`});
               return variables?.basic_simple_states?.warning_state?.icon;
             }
-            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon: ' + variables?.basic_simple_states?.warning_state?.icon});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.icon: ${variables?.basic_simple_states?.warning_state?.icon}`});
           }
         ]]]
       styles:
@@ -150,20 +154,20 @@ simple_states_styles:
                   if (typeof variables?.basic_simple_states?.warning_state?.use_themes === 'boolean') {
                     useThemes = variables?.basic_simple_states?.warning_state?.use_themes;
                   } else {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.use_themes: ' + variables?.basic_simple_states?.warning_state?.use_themes});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.use_themes: ${variables?.basic_simple_states?.warning_state?.use_themes}`});
                   }
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.use_themes: ' + variables?.basic_simple_states?.warning_state?.use_themes});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.use_themes: ${variables?.basic_simple_states?.warning_state?.use_themes}`});
                 }
                 if (typeof variables?.basic_simple_states?.warning_state?.icon_color !== 'undefined') {
                   importedColor = variables?.basic_simple_states?.warning_state?.icon_color;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon_color: ' + variables?.basic_simple_states?.warning_state?.icon_color});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.icon_color: ${variables?.basic_simple_states?.warning_state?.icon_color}`});
                 }
                 if (typeof variables?.basic_simple_states?.warning_state?.icon_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.basic_simple_states?.warning_state?.icon_color_alpha;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon_color_alpha: ' + variables?.basic_simple_states?.warning_state?.icon_color_alpha});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.icon_color_alpha: ${variables?.basic_simple_states?.warning_state?.icon_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -172,8 +176,10 @@ simple_states_styles:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.icon_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.warning_state?.icon_color});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.icon_color: The use of themes was specified, but an invalid color was imported: ${variables?.basic_simple_states?.warning_state?.icon_color}`});
                   }
+                } else {
+                  returnedColor = importedColor;
                 }
 
                 return returnedColor;
@@ -190,20 +196,20 @@ simple_states_styles:
                   if (typeof variables?.basic_simple_states?.warning_state?.use_themes === 'boolean') {
                     useThemes = variables?.basic_simple_states?.warning_state?.use_themes;
                   } else {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.use_themes: ' + variables?.basic_simple_states?.warning_state?.use_themes});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.use_themes: ${variables?.basic_simple_states?.warning_state?.use_themes}`});
                   }
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.use_themes: ' + variables?.basic_simple_states?.warning_state?.use_themes});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.use_themes: ${variables?.basic_simple_states?.warning_state?.use_themes}`});
                 }
                 if (typeof variables?.basic_simple_states?.warning_state?.background_color !== 'undefined') {
                   importedColor = variables?.basic_simple_states?.warning_state?.background_color;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.background_color: ' + variables?.basic_simple_states?.warning_state?.background_color});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.background_color: ${variables?.basic_simple_states?.warning_state?.background_color}`});
                 }
                 if (typeof variables?.basic_simple_states?.warning_state?.background_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.basic_simple_states?.warning_state?.background_color_alpha;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.background_color_alpha: ' + variables?.basic_simple_states?.warning_state?.background_color_alpha});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.background_color_alpha: ${variables?.basic_simple_states?.warning_state?.background_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -212,8 +218,10 @@ simple_states_styles:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.warning_state?.background_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.warning_state?.background_color});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.warning_state?.background_color: The use of themes was specified, but an invalid color was imported: ${variables?.basic_simple_states?.warning_state?.background_color}`});
                   }
+                } else {
+                  returnedColor = importedColor;
                 }
 
                 return returnedColor;
@@ -227,10 +235,10 @@ simple_states_styles:
                 variables?.basic_simple_states?.error_state?.icon.includes('simple-icons:')) {
               return variables?.basic_simple_states?.error_state?.icon;
             } else {
-              hass.callService('system_log', 'write', {level:'warning',message:'warning in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon: This may not be a valid icon type: ' + variables?.basic_simple_states?.error_state?.icon});
+              hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.icon: This may not be a valid icon type: ${variables?.basic_simple_states?.error_state?.icon}`});
               return variables?.basic_simple_states?.error_state?.icon;
             }
-            hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon: ' + variables?.basic_simple_states?.error_state?.icon});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.icon: ${variables?.basic_simple_states?.error_state?.icon}`});
           }
         ]]]
       styles:
@@ -246,20 +254,20 @@ simple_states_styles:
                   if (typeof variables?.basic_simple_states?.error_state?.use_themes === 'boolean') {
                     useThemes = variables?.basic_simple_states?.error_state?.use_themes;
                   } else {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.use_themes: ' + variables?.basic_simple_states?.error_state?.use_themes});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.use_themes: ${variables?.basic_simple_states?.error_state?.use_themes}`});
                   }
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.use_themes: ' + variables?.basic_simple_states?.error_state?.use_themes});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.use_themes: ${variables?.basic_simple_states?.error_state?.use_themes}`});
                 }
                 if (typeof variables?.basic_simple_states?.error_state?.icon_color !== 'undefined') {
                   importedColor = variables?.basic_simple_states?.error_state?.icon_color;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon_color: ' + variables?.basic_simple_states?.error_state?.icon_color});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.icon_color: ${variables?.basic_simple_states?.error_state?.icon_color}`});
                 }
                 if (typeof variables?.basic_simple_states?.error_state?.icon_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.basic_simple_states?.error_state?.icon_color_alpha;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon_color_alpha: ' + variables?.basic_simple_states?.error_state?.icon_color_alpha});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.icon_color_alpha: ${variables?.basic_simple_states?.error_state?.icon_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -268,8 +276,10 @@ simple_states_styles:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.icon_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.error_state?.icon_color});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.icon_color: The use of themes was specified, but an invalid color was imported: ${variables?.basic_simple_states?.error_state?.icon_color}`});
                   }
+                } else {
+                  returnedColor = importedColor;
                 }
 
                 return returnedColor;
@@ -286,20 +296,20 @@ simple_states_styles:
                   if (typeof variables?.basic_simple_states?.error_state?.use_themes === 'boolean') {
                     useThemes = variables?.basic_simple_states?.error_state?.use_themes;
                   } else {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.use_themes: ' + variables?.basic_simple_states?.error_state?.use_themes});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.use_themes: ${variables?.basic_simple_states?.error_state?.use_themes}`});
                   }
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.use_themes: ' + variables?.basic_simple_states?.error_state?.use_themes});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.use_themes: ${variables?.basic_simple_states?.error_state?.use_themes}`});
                 }
                 if (typeof variables?.basic_simple_states?.error_state?.background_color !== 'undefined') {
                   importedColor = variables?.basic_simple_states?.error_state?.background_color;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.background_color: ' + variables?.basic_simple_states?.error_state?.background_color});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.background_color: ${variables?.basic_simple_states?.error_state?.background_color}`});
                 }
                 if (typeof variables?.basic_simple_states?.error_state?.background_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.basic_simple_states?.error_state?.background_color_alpha;
                 } else {
-                  hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.background_color_alpha: ' + variables?.basic_simple_states?.error_state?.background_color_alpha});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.background_color_alpha: ${variables?.basic_simple_states?.error_state?.background_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -308,8 +318,10 @@ simple_states_styles:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    hass.callService('system_log', 'write', {level:'warning',message:'error in page: ' + variables?.metadata?.page_name + ' with variables?.basic_simple_states?.error_state?.background_color: The use of themes was specified, but an invalid color was imported: ' + variables?.basic_simple_states?.error_state?.background_color});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.basic_simple_states?.error_state?.background_color: The use of themes was specified, but an invalid color was imported: ${variables?.basic_simple_states?.error_state?.background_color}`});
                   }
+                } else {
+                  returnedColor = importedColor;
                 }
 
                 return returnedColor;
