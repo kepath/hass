@@ -428,7 +428,7 @@ views:
                           generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "lights_on_count"
-                              count_tooltip: "num lights on"
+                              count_tooltip: "№ lights on"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:lightbulb-multiple-off-outline"
@@ -467,7 +467,7 @@ views:
                           generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "plugs_off_count"
-                              count_tooltip: "num plugs off"
+                              count_tooltip: "№ plugs off"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:power-plug-off"
@@ -503,10 +503,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "fans_unavailable_count"
-                              count_tooltip: "num fans away"
+                              count_tooltip: "№ fans away"
                             amount:
                               attribute_name: "fans_on_count"
-                              count_tooltip: "num fans on"
+                              count_tooltip: "№ fans on"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:fan-off"
@@ -541,12 +541,11 @@ views:
                           generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "climate_devices_on_count"
-                              count_tooltip: "num climate devices on"
+                              count_tooltip: "№ climate devices on"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:thermometer-low"
                               icon_color: "theme"
-                              # background_color: "theme"
                             unknown_state:
                               icon: "mdi:thermometer-alert"
                             unset_state:
@@ -583,10 +582,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "lawn_mower_error_count"
-                              count_tooltip: "num mowers with error"
+                              count_tooltip: "№ mowers with error"
                             amount:
                               attribute_name: "lawn_mower_busy_count"
-                              count_tooltip: "num mowers active"
+                              count_tooltip: "№ mowers active"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:robot-mower"
@@ -609,9 +608,6 @@ views:
                         entity: "sensor.washing_machine_simple_state"
                         name: "Washer"
                         variables:
-                          navigation_to_parent_from_entity:
-                            evaluated_entity: "sensor.washing_machine_machine_state"
-                            return_type: "device"
                           basic_simple_states:
                             warning_state:
                               icon: "mdi:washing-machine-alert"
@@ -631,6 +627,9 @@ views:
                               icon: "mdi:washing-machine"
                             off_state:
                               icon: "mdi:washing-machine-off"
+                          navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.washing_machine_machine_state"
+                            return_type: "device"
                         hold_action:
                           action: "more-info"
                     item7:
@@ -646,9 +645,6 @@ views:
                         entity: "sensor.tumble_dryer_simple_state"
                         name: "Dryer"
                         variables:
-                          navigation_to_parent_from_entity:
-                            evaluated_entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
-                            return_type: "device"
                           basic_simple_states:
                             warning_state:
                               icon: "mdi:tumble-dryer-alert"
@@ -668,6 +664,9 @@ views:
                               icon: "mdi:tumble-dryer"
                             off_state:
                               icon: "mdi:tumble-dryer-off"
+                          navigation_to_parent_from_entity:
+                            evaluated_entity: "sensor.samsung_tumble_dryer_dryer_machine_state"
+                            return_type: "device"
                         hold_action:
                           action: "more-info"
                     item8:
@@ -883,9 +882,6 @@ views:
                             unavailable:
                               attribute_name: "integration_synology_dsm_unavailable_count"
                               count_tooltip: "DSM entities away"
-                            # amount:
-                            #   attribute_name: "zero_value"
-                            #   count_tooltip: "not set"
                           basic_simple_states:
                             normal_state:
                               icon: "mdi:nas"
@@ -1008,10 +1004,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "safety_sensors_unavailable_count"
-                              count_tooltip: "num safety sensors away"
+                              count_tooltip: "№ safety sensors away"
                             amount:
                               attribute_name: "safety_sensors_triggered_count"
-                              count_tooltip: "num safety sensors triggered"
+                              count_tooltip: "№ safety sensors triggered"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "safety_sensors_triggered_count"
@@ -1019,7 +1015,6 @@ views:
                               icon: "mdi:alarm-light"
                           common_button_icon_styles:
                             default_state:
-                              # use_themes: false
                               icon: "mdi:alarm-light-off"
                               icon_color: "green"
                               icon_color_alpha: "1"
@@ -1060,10 +1055,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "locks_unavailable_count"
-                              count_tooltip: "num locks away"
+                              count_tooltip: "№ locks away"
                             amount:
                               attribute_name: "locks_unlocked_count"
-                              count_tooltip: "num locks unlocked"
+                              count_tooltip: "№ locks unlocked"
                           basic_simple_states:
                             normal_state:
                               icon: "mdi:lock-open-variant"
@@ -1096,10 +1091,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "cameras_unavailable_count"
-                              count_tooltip: "num cameras away"
+                              count_tooltip: "№ cameras away"
                             amount:
                               attribute_name: "cameras_off_count"
-                              count_tooltip: "num cameras off"
+                              count_tooltip: "№ cameras off"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "cameras_off_count"
@@ -1107,7 +1102,6 @@ views:
                               icon: "mdi:camera-off"
                           common_button_icon_styles:
                             default_state:
-                              # use_themes: false
                               icon: "mdi:camera"
                               icon_color: "green"
                               icon_color_alpha: "1"
@@ -1142,10 +1136,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "door_sensors_unavailable_count"
-                              count_tooltip: "num doors away"
+                              count_tooltip: "№ doors away"
                             amount:
                               attribute_name: "door_sensors_triggered_count"
-                              count_tooltip: "num doors open"
+                              count_tooltip: "№ doors open"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "door_sensors_triggered_count"
@@ -1184,10 +1178,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "occupancy_sensors_unavailable_away_count"
-                              count_tooltip: "num occupancy sensors away"
+                              count_tooltip: "№ occupancy sensors away"
                             amount:
                               attribute_name: "occupancy_sensors_triggered_away_count"
-                              count_tooltip: "num occupancy sensors on"
+                              count_tooltip: "№ occupancy sensors on"
                           occupancy_state:
                             not_triggered:
                               icon_color: "green"
@@ -1294,10 +1288,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "occupancy_sensors_unavailable_count"
-                              count_tooltip: "num occupancy sensors away"
+                              count_tooltip: "№ occupancy sensors away"
                             amount:
                               attribute_name: "occupancy_sensors_triggered_count"
-                              count_tooltip: "num occupancy sensors on"
+                              count_tooltip: "№ occupancy sensors on"
                           basic_simple_states:
                             warning_state:
                               icon: "mdi:cctv-off"
@@ -1342,9 +1336,6 @@ views:
                             unavailable:
                               attribute_name: "integration_unifiprotect_unavailable_count"
                               count_tooltip: "protect entities away"
-                            # amount:
-                            #   attribute_name: "zero_value"
-                            #   count_tooltip: "not set"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "integration_unifiprotect_unavailable_count"
@@ -1371,7 +1362,6 @@ views:
                           - "notifications_device_style"
                           - "common_objects_and_styles"
                           - "binary_count_state"
-                          # - "simple_switch_state"
                           - "auto_entities_group_popup"
                         entity: "group.all_remotes_and_tv_class_media_player"
                         name: "Video"
@@ -1379,7 +1369,7 @@ views:
                           generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "media_player_tv_and_remote_on_count"
-                              count_tooltip: "num video players on"
+                              count_tooltip: "№ video players on"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "media_player_tv_and_remote_on_count"
@@ -1412,7 +1402,6 @@ views:
                           - "notifications_device_style"
                           - "common_objects_and_styles"
                           - "binary_count_state"
-                          # - "simple_switch_state"
                           - "auto_entities_group_popup"
                         entity: "group.all_audio_class_media_player"
                         name: "Audio"
@@ -1420,10 +1409,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "media_player_audio_unavailable_count"
-                              count_tooltip: "num audio players away"
+                              count_tooltip: "№ audio players away"
                             amount:
                               attribute_name: "media_player_audio_on_count"
-                              count_tooltip: "num audio players on"
+                              count_tooltip: "№ audio players on"
                           binary_count_evaluated_state:
                             entity:
                               evaluated_attribute: "media_player_audio_on_count"
@@ -1439,9 +1428,6 @@ views:
                               icon: "mdi:volume-low"
                             unset_state:
                               icon: "mdi:volume-low"
-                          # binary_switch_state:
-                          #   on_state:
-                          #     icon: "mdi:volume-high"
                           auto_entities_group_popup:
                             action: "popup"
                             popup:
@@ -1589,10 +1575,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "connectivity_unavailable_count"
-                              count_tooltip: "num devices away"
+                              count_tooltip: "№ devices away"
                             amount:
                               attribute_name: "connectivity_disconnected_count"
-                              count_tooltip: "num devices not home"
+                              count_tooltip: "№ devices not home"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:lan"
@@ -1630,10 +1616,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "running_unavailable_count"
-                              count_tooltip: "num containers away"
+                              count_tooltip: "№ containers away"
                             amount:
                               attribute_name: "running_stopped_count"
-                              count_tooltip: "num containers stopped"
+                              count_tooltip: "№ containers stopped"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:play"
@@ -1688,7 +1674,6 @@ views:
                         type: "custom:button-card"
                         template:
                           - "common_objects_and_styles"
-                          # - "simple_switch_state"
                           - "lockdown_script_trigger"
                         entity: "input_boolean.away_script_active"
                         icon: "mdi:home-lock-open"
@@ -1701,11 +1686,6 @@ views:
                               icon: "mdi:lock-alert"
                             unset_state:
                               icon: "mdi:lock-alert"
-                          # binary_switch_state:
-                          #   on_state:
-                          #     icon: "mdi:lock"
-                          #   off_state:
-                          #     icon: "mdi:lock-open-variant"
                           script_activate:
                             icon:
                               mdi: "mdi:home-lock"
@@ -1733,7 +1713,7 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "data_rate_unavailable_count"
-                              count_tooltip: "num data rate sensors away"
+                              count_tooltip: "№ data rate sensors away"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:lan"
@@ -1768,10 +1748,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "batteries_unavailable_count"
-                              count_tooltip: "num batteries away"
+                              count_tooltip: "№ batteries away"
                             amount:
                               attribute_name: "batteries_below20_count"
-                              count_tooltip: "num batteries under 20%"
+                              count_tooltip: "№ batteries under 20%"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:battery-unknown"
@@ -1806,10 +1786,10 @@ views:
                           generic_get_set_group_notification_objects:
                             unavailable:
                               attribute_name: "signal_sensors_unavailable_count"
-                              count_tooltip: "num signals away"
+                              count_tooltip: "№ signals away"
                             amount:
                               attribute_name: "signal_sensors_low_count"
-                              count_tooltip: "num signals under -80dBm"
+                              count_tooltip: "№ signals under -80dBm"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:signal-off"
@@ -1843,9 +1823,6 @@ views:
                             unavailable:
                               attribute_name: "integration_unifi_unavailable_count"
                               count_tooltip: "unifi entities away"
-                            # amount:
-                            #   attribute_name: "zero_value"
-                            #   count_tooltip: "not set"
                           common_button_icon_styles:
                             default_state:
                               icon: "simple-icons:ubiquiti"
@@ -1881,15 +1858,11 @@ views:
                             unavailable:
                               attribute_name: "integration_zha_unavailable_count"
                               count_tooltip: "ZHA entities away"
-                            # amount:
-                            #   attribute_name: "zero_value"
-                            #   count_tooltip: "not set"
                           common_button_icon_styles:
                             default_state:
                               icon: "simple-icons:zigbee"
                               icon_color: "theme"
                             unknown_state:
-                              # use_unknown_state: true
                               icon: "simple-icons:zigbee"
                             unset_state:
                               icon: "simple-icons:zigbee"
@@ -2121,7 +2094,7 @@ views:
                           generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "tab_update_sensors_triggered_count"
-                              count_tooltip: "num updates available"
+                              count_tooltip: "№ updates available"
                           common_button_icon_styles:
                             default_state:
                               icon: "mdi:refresh"
@@ -2150,8 +2123,7 @@ views:
                           - "notifications_common_styles"
                           - "notifications_device_style"
                           - "common_objects_and_styles"
-                          - "use_entity_picture"
-                          # - "add_app_link"
+                          # - "use_entity_picture"
                         entity: "update.home_assistant_core_update"
                         name: "HA Core"
                         variables:
@@ -2160,12 +2132,15 @@ views:
                               entity: "update.home_assistant_core_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          common_button_icon_styles:
+                            default_state:
+                              use_themes: false
+                              icon: "mdi:home-assistant"
+                              icon_color: "#18BCF2"
+                              background_color: "rgba(var(--color-theme), 0.05)"
                           generic_set_entity_picture:
-                            use_picture: false
+                            evaluated_object:
+                              use_picture: false
                         tap_action:
                           action: "url"
                           url_path: "[[[return states['update.home_assistant_core_update'].attributes.release_url]]]"
@@ -2178,7 +2153,7 @@ views:
                           - "notifications_common_styles"
                           - "notifications_device_style"
                           - "common_objects_and_styles"
-                          - "use_entity_picture"
+                          # - "use_entity_picture"
                         entity: "update.home_assistant_supervisor_update"
                         name: "HA Supervisor"
                         variables:
@@ -2187,12 +2162,15 @@ views:
                               entity: "update.home_assistant_supervisor_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
+                          common_button_icon_styles:
+                            default_state:
+                              use_themes: false
+                              icon: "mdi:home-assistant"
+                              icon_color: "#18BCF2"
+                              background_color: "rgba(var(--color-theme), 0.05)"
                           generic_set_entity_picture:
-                            use_picture: false
+                            evaluated_object:
+                              use_picture: false
                         tap_action:
                           action: "url"
                           url_path: "[[[return states['update.home_assistant_supervisor_update'].attributes.release_url]]]"
@@ -2212,7 +2190,7 @@ views:
                           generic_get_set_group_notification_objects:
                             amount:
                               attribute_name: "hacs_updates_available"
-                              count_tooltip: "num hacs updates available"
+                              count_tooltip: "№ hacs updates available"
                           common_button_icon_styles:
                             default_state:
                               use_themes: false
@@ -2253,10 +2231,6 @@ views:
                               entity: "update.esphome_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_esphome_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_esphome_docker_slug"
@@ -2279,10 +2253,6 @@ views:
                               entity: "update.studio_code_server_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_studiocodeserver_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_studiocodeserver_docker_slug"
@@ -2305,10 +2275,6 @@ views:
                               entity: "update.adguard_home_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_adguard_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_adguard_docker_slug"
@@ -2330,10 +2296,6 @@ views:
                               entity: "update.emqx_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_emqx_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_emqx_docker_slug"
@@ -2355,10 +2317,6 @@ views:
                               entity: "update.guacamole_client_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_guacamole_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_guacamole_docker_slug"
@@ -2380,10 +2338,6 @@ views:
                               entity: "update.uptime_kuma_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_uptime_kuma_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_uptime_kuma_docker_slug"
@@ -2405,10 +2359,6 @@ views:
                               entity: "update.portainer_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_portainer_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_portainer_docker_slug"
@@ -2430,10 +2380,6 @@ views:
                               entity: "update.scrutiny_full_access_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_scrutinyfa_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_scrutinyfa_docker_slug"
@@ -2455,10 +2401,6 @@ views:
                               entity: "update.phpmyadmin_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_phpmyadmin_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_phpmyadmin_docker_slug"
@@ -2480,10 +2422,6 @@ views:
                               entity: "update.mariadb_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_mariadb_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_mariadb_docker_slug"
@@ -2508,10 +2446,6 @@ views:
                               entity: "update.advanced_ssh_web_terminal_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_advanced_ssh_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_advanced_ssh_docker_slug"
@@ -2533,10 +2467,6 @@ views:
                               entity: "update.plex_media_server_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_plex_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_plex_docker_slug"
@@ -2559,10 +2489,6 @@ views:
                               entity: "update.tautulli_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_tautulli_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_tautulli_docker_slug"
@@ -2584,10 +2510,6 @@ views:
                               entity: "update.calibre_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_calibre_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_calibre_docker_slug"
@@ -2609,10 +2531,6 @@ views:
                               entity: "update.music_assistant_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_musicassistantserver_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_musicassistantserver_docker_slug"
@@ -2634,10 +2552,6 @@ views:
                               entity: "update.moodist_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_moodist_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_moodist_docker_slug"
@@ -2659,10 +2573,6 @@ views:
                               entity: "update.tailscale_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_tailscale_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_tailscale_docker_slug"
@@ -2684,10 +2594,6 @@ views:
                               entity: "update.cloudflared_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_cloudflared_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_cloudflared_docker_slug"
@@ -2709,10 +2615,6 @@ views:
                               entity: "update.nginx_proxy_manager_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_nginxproxymanager_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_nginxproxymanager_docker_slug"
@@ -2734,16 +2636,6 @@ views:
                               entity: "update.netalertx_full_access_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     # icon: "mdi:router-network"
-                          #     # icon_color: "#41bdf5"
-                          #     background_color: "rgba(var(--color-theme),0.05)"
-                          #   # unset_state:
-                          #     # icon: "mdi:router-wireless-off"
-                          #     # icon_color: "rgba(var(--color-red), 1)"
-                          #     # background_color: "rgba(var(--color-red), 0.2)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_netalertx_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_netalertx_docker_slug"
@@ -2765,10 +2657,6 @@ views:
                               entity: "update.overseerr_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_overseer_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_overseer_docker_slug"
@@ -2790,10 +2678,6 @@ views:
                               entity: "update.netdata_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_netdata_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_netdata_docker_slug"
@@ -2815,10 +2699,6 @@ views:
                               entity: "update.convertx_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_convertx_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_convertx_docker_slug"
@@ -2840,10 +2720,6 @@ views:
                               entity: "update.it_tools_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_it_tools_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_it_tools_docker_slug"
@@ -2865,10 +2741,6 @@ views:
                               entity: "update.cyberchef_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_cyberchef_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_cyberchef_docker_slug"
@@ -2890,10 +2762,6 @@ views:
                               entity: "update.myip_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_myip_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_myip_docker_slug"
@@ -2915,10 +2783,6 @@ views:
                               entity: "update.grafana_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_grafana_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_grafana_docker_slug"
@@ -2940,10 +2804,6 @@ views:
                               entity: "update.influxdb_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_influx_db_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_influx_db_docker_slug"
@@ -2965,10 +2825,6 @@ views:
                               entity: "update.grocy_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_grocy_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_grocy_docker_slug"
@@ -2990,10 +2846,6 @@ views:
                               entity: "update.openproject_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_openproject_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_openproject_docker_slug"
@@ -3015,10 +2867,6 @@ views:
                               entity: "update.appdaemon_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_appdaemon_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_appdaemon_docker_slug"
@@ -3040,10 +2888,6 @@ views:
                               entity: "update.matterbridge_home_assistant_add_on_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_matterbridge_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_matterbridge_docker_slug"
@@ -3065,10 +2909,6 @@ views:
                               entity: "update.matter_server_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_matterserver_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_matterserver_docker_slug"
@@ -3090,10 +2930,6 @@ views:
                               entity: "update.homebox_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_homebox_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_homebox_docker_slug"
@@ -3115,14 +2951,31 @@ views:
                               entity: "update.5etools_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
-                          # common_button_icon_styles:
-                          #   use_themes: false
-                          #   default_state:
-                          #     background_color: "rgba(var(--color-theme),0.05)"
                           generic_set_addin_link:
                             webui_access_type: !secret "hass_addon_5etools_webui_access_type"
                             docker_slug_reference: !secret "hass_addon_5etools_docker_slug"
                             local_port: !secret "hass_addon_5etools_webui_local_port"
+                    item40:
+                      card:
+                        type: "custom:button-card"
+                        template:
+                          - "notifications_common_styles"
+                          - "notifications_device_style"
+                          - "common_objects_and_styles"
+                          - "use_entity_picture"
+                          - "add_app_link"
+                        entity: "update.monica_update"
+                        name: "Monica"
+                        variables:
+                          generic_get_set_group_notification_objects:
+                            amount:
+                              entity: "update.monica_update"
+                              count_tooltip: "add-in has update"
+                              is_attribute: false
+                          generic_set_addin_link:
+                            webui_access_type: !secret "hass_addon_monica_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_monica_docker_slug"
+                            local_port: !secret "hass_addon_monica_webui_local_port"
 
           - type: "custom:layout-card"
             layout_type: "custom:masonry-layout"
