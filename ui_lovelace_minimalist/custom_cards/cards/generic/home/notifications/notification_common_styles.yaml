@@ -1,6 +1,8 @@
 ---
 notifications_common_styles:
   variables:
+    metadata:
+      page_name: "notifications_common_styles.yaml"
     constant_position_overrides:
       evaluated_position_entity:
         force_eval: true
@@ -129,6 +131,8 @@ widget_count_mdi_number_indicator:
             }
             return iconColor;
           ]]]
+    tooltip:
+      - --button-card-tooltip-padding: "0"
   state:
     - operator: "template"
       value: >
@@ -152,10 +156,8 @@ widget_count_mdi_number_indicator:
         card:
           - display: "none"
   tooltip:
-    content: >
-      [[[
-        return variables?.notification_counts?.count_tooltip ? variables.notification_counts.count_tooltip : "";
-      ]]]
+    placement: "left"
+    content: "[[[ return variables?.notification_counts?.count_tooltip ? variables.notification_counts.count_tooltip : ''; ]]]"
 
 widget_count_mdi_number_indicator_default_style:
   styles:
