@@ -1,61 +1,15 @@
 ---
-custom_card_kepath_binary_notifications_device_style:
-  styles:
-    custom_fields:
-      amount:
-        - position: "absolute"
-        - left: "65%"
-        - top: "6px"
-        - width: "20px"
-        - height: "20px"
-      unavailable:
-        - position: "absolute"
-        - left: "65%"
-        - top: "38px"
-        - width: "20px"
-        - height: "20px"
-
-custom_card_kepath_binary_notifications_floorplan_style:
-  styles:
-    custom_fields:
-      amount:
-        - position: "absolute"
-        - left: "81%"
-        - top: "5px"
-        - width: "14px"
-        - height: "14px"
-      unavailable:
-        - position: "absolute"
-        - left: "15px"
-        - top: "5px"
-        - width: "14px"
-        - height: "14px"
-
-custom_card_kepath_binary_notifications_tab_style:
-  styles:
-    custom_fields:
-      amount:
-        - position: "absolute"
-        - left: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off') ? '60%' : '64%' ]]]"
-        - top: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '10px' : '8px' ]]]"
-        - width: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '20px' : '14px' ]]]"
-        - height: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '20px' : '14px' ]]]"
-      unavailable:
-        - position: "absolute"
-        - left: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '60%' : '64%' ]]]"
-        - top: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '42px' : '38px' ]]]"
-        - width: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '20px' : '14px' ]]]"
-        - height: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '20px' : '14px' ]]]"
-
-custom_card_kepath_binary_notifications_common_styles:
+notifications_common_styles:
   variables:
-    var_kepath_constant_position_overrides:
+    metadata:
+      page_name: "notifications_common_styles.yaml"
+    constant_position_overrides:
       evaluated_position_entity:
         force_eval: true
         value: "[[[ return entity.entity_id]]]"
       is_compact_mode: false
       off_state_only: true
-    var_kepath_generic_get_set_group_notification_objects:
+    generic_get_set_group_notification_objects:
       amount:
         entity: "sensor.binary_sensor_state_counts"
         is_attribute: true
@@ -80,9 +34,9 @@ custom_card_kepath_binary_notifications_common_styles:
           [[[
             let styleTemplate = [ "widget_count_mdi_number_indicator" ];
             var extraTemplate = "widget_count_mdi_number_indicator_default_style"
-            if (variables?.var_kepath_constant_position_overrides?.is_compact_mode?.value) {
-              if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
-                if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity?.value]?.state == "off") {
+            if (variables?.constant_position_overrides?.is_compact_mode?.value) {
+              if (variables?.constant_position_overrides?.off_state_only) {
+                if (states[variables?.constant_position_overrides?.evaluated_position_entity?.value]?.state == "off") {
                   extraTemplate = "widget_count_mdi_number_indicator_compact_style"
                 }
               } else {
@@ -98,16 +52,8 @@ custom_card_kepath_binary_notifications_common_styles:
         variables:
           notification_counts: 
             force_eval: true
-            value: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.amount; ]]]"
-        entity: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.amount?.entity; ]]]"
-        styles:
-          tooltip:
-            - font-weight: "bold"
-            - font-size: "10px"
-            - margin: "0"
-            - border: "0"
-            - border-radius: "0"
-            - transform: "translate(-75%,-75%)"
+            value: "[[[ return variables?.generic_get_set_group_notification_objects?.amount; ]]]"
+        entity: "[[[ return variables?.generic_get_set_group_notification_objects?.amount?.entity; ]]]"
     unavailable:
       card:
         type: "custom:button-card"
@@ -115,9 +61,9 @@ custom_card_kepath_binary_notifications_common_styles:
           [[[
             let styleTemplate = [ "widget_count_mdi_number_indicator" ];
             var extraTemplate = "widget_count_mdi_number_indicator_default_style"
-            if (variables?.var_kepath_constant_position_overrides?.is_compact_mode) {
-              if (variables?.var_kepath_constant_position_overrides?.off_state_only) {
-                if (states[variables?.var_kepath_constant_position_overrides?.evaluated_position_entity?.value]?.state == "off") {
+            if (variables?.constant_position_overrides?.is_compact_mode) {
+              if (variables?.constant_position_overrides?.off_state_only) {
+                if (states[variables?.constant_position_overrides?.evaluated_position_entity?.value]?.state == "off") {
                   extraTemplate = "widget_count_mdi_number_indicator_compact_style"
                 }
               } else {
@@ -133,16 +79,8 @@ custom_card_kepath_binary_notifications_common_styles:
         variables:
           notification_counts:
             force_eval: true
-            value: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable; ]]]"
-        entity: "[[[ return variables?.var_kepath_generic_get_set_group_notification_objects?.unavailable?.entity; ]]]"
-        styles:
-          tooltip:
-            - font-weight: "bold"
-            - font-size: "10px"
-            - margin: "0"
-            - border: "0"
-            - border-radius: "0"
-            - transform: "translate(-75%,-25%)"
+            value: "[[[ return variables?.generic_get_set_group_notification_objects?.unavailable; ]]]"
+        entity: "[[[ return variables?.generic_get_set_group_notification_objects?.unavailable?.entity; ]]]"
 
 widget_count_mdi_number_indicator:
   show_icon: true
@@ -193,6 +131,8 @@ widget_count_mdi_number_indicator:
             }
             return iconColor;
           ]]]
+    tooltip:
+      - --button-card-tooltip-padding: "0"
   state:
     - operator: "template"
       value: >
@@ -215,14 +155,9 @@ widget_count_mdi_number_indicator:
       styles:
         card:
           - display: "none"
-  tooltip: >
-    [[[
-      var tooltipValue = "";
-      if(variables?.notification_counts?.count_tooltip) {
-        tooltipValue = variables.notification_counts.count_tooltip;
-      }
-      return tooltipValue;
-    ]]]
+  tooltip:
+    placement: "left"
+    content: "[[[ return variables?.notification_counts?.count_tooltip ? variables.notification_counts.count_tooltip : ''; ]]]"
 
 widget_count_mdi_number_indicator_default_style:
   styles:
@@ -253,3 +188,54 @@ widget_count_mdi_number_indicator_compact_style:
       - box-shadow: "none"
       - padding: "0"
       - border-radius: "50%"
+
+
+
+notifications_device_style:
+  styles:
+    custom_fields:
+      amount:
+        - position: "absolute"
+        - left: "65%"
+        - top: "6px"
+        - width: "20px"
+        - height: "20px"
+      unavailable:
+        - position: "absolute"
+        - left: "65%"
+        - top: "38px"
+        - width: "20px"
+        - height: "20px"
+
+custom_card_kepath_binary_notifications_floorplan_style:
+  styles:
+    custom_fields:
+      amount:
+        - position: "absolute"
+        - left: "81%"
+        - top: "5px"
+        - width: "14px"
+        - height: "14px"
+      unavailable:
+        - position: "absolute"
+        - left: "15px"
+        - top: "5px"
+        - width: "14px"
+        - height: "14px"
+
+notifications_tab_style:
+  styles:
+    custom_fields:
+      amount:
+        - position: "absolute"
+        - left: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off') ? '60%' : '64%' ]]]"
+        - top: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '10px' : '8px' ]]]"
+        - width: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '20px' : '14px' ]]]"
+        - height: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '20px' : '14px' ]]]"
+      unavailable:
+        - position: "absolute"
+        - left: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '60%' : '64%' ]]]"
+        - top: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '42px' : '38px' ]]]"
+        - width: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '20px' : '14px' ]]]"
+        - height: "[[[ return (!hass.themes.darkMode && states[entity.entity_id]?.state == 'off')  ? '20px' : '14px' ]]]"
+

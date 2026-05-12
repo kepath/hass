@@ -1,0 +1,145 @@
+---
+data_rate_state:
+  variables:
+    metadata:
+      page_name: "data_rate_state.yaml"
+    binary_count_evaluated_state:
+      entity:
+        evaluated_entity: "sensor.binary_sensor_state_counts"
+        isattribute: true
+        evaluated_attribute: "data_rate_total_average"
+      style:
+        use_themes: true
+        icon: "mdi:numeric-off"
+        icon_color: "theme"
+        background_color: "theme"
+
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedDataValueEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          var evaluatedDataValueAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+          var resolvedDataValueState;
+          var returnValue = true;
+
+          resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
+          if (isNaN(resolvedDataValueState) || typeof resolvedDataValueState === 'undefined') {
+            returnValue = false;
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute: ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+            hass.callService(`system_log`, `write`, {level: 'warning', message: `warning in page: ${variables?.metadata?.page_name} with resolvedDataValueState: ${resolvedDataValueState}`});
+          }
+
+          return returnValue;
+        ]]]
+      icon: >
+        [[[
+          var returnedIcon = variables?.binary_count_evaluated_state?.style?.icon;
+          var evaluatedDataValueEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          var evaluatedDataValueAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+          var resolvedDataValueState;
+
+          resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
+          if (!isNaN(resolvedDataValueState) && typeof resolvedDataValueState !== 'undefined') {
+            returnedIcon = "mdi:numeric-0";
+            if (resolvedDataValueState > 9) {
+              resolvedDataValueState = "9-plus";
+            }
+            returnedIcon = returnedIcon.replace("0",resolvedDataValueState);
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.icon: ${variables?.binary_count_evaluated_state?.style?.icon}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute: ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+            hass.callService(`system_log`, `write`, {level: 'warning', message: `warning in page: ${variables?.metadata?.page_name} with resolvedDataValueState: ${resolvedDataValueState}`});
+          }
+
+          return returnedIcon;
+        ]]]
+      styles:
+        icon:
+          - width: "150%"
+          - height: "150%"
+          - color: >
+              [[[
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.icon_color;
+                var evaluatedDataValueEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+                var evaluatedDataValueAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+                var resolvedDataValueState;
+
+                resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
+                if (!isNaN(resolvedDataValueState) && typeof resolvedDataValueState !== 'undefined') {
+                  switch(resolvedDataValueState) {
+                    case 0:
+                      returnedColor = "theme";
+                      break;
+                    case 1:
+                    case 2:
+                    case 3:
+                      returnedColor = "green";
+                      break;
+                    case 4:
+                    case 5:
+                    case 6:
+                      returnedColor = "yellow";
+                      break;
+                    case 7:
+                    case 8:
+                    case 9:
+                    default:
+                      returnedColor = "red";
+                      break;
+                  }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.icon_color: ${variables?.binary_count_evaluated_state?.style?.icon_color}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute: ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+                  hass.callService(`system_log`, `write`, {level: 'warning', message: `warning in page: ${variables?.metadata?.page_name} with resolvedDataValueState: ${resolvedDataValueState}`});
+                }
+
+                return `rgba(var(--color-${returnedColor}),1)`;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.background_color;
+                var evaluatedDataValueEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+                var evaluatedDataValueAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+                var resolvedDataValueState;
+
+                resolvedDataValueState = states[evaluatedDataValueEntity].attributes[evaluatedDataValueAttribute];
+                if (!isNaN(resolvedDataValueState) && typeof resolvedDataValueState !== 'undefined') {
+                  switch(resolvedDataValueState) {
+                    case 0:
+                      returnedColor = "theme";
+                      break;
+                    case 1:
+                    case 2:
+                    case 3:
+                      returnedColor = "green";
+                      break;
+                    case 4:
+                    case 5:
+                    case 6:
+                      returnedColor = "yellow";
+                      break;
+                    case 7:
+                    case 8:
+                    case 9:
+                    default:
+                      returnedColor = "red";
+                      break;
+                  }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.background_color: ${variables?.binary_count_evaluated_state?.style?.background_color}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute: ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+                  hass.callService(`system_log`, `write`, {level: 'warning', message: `warning in page: ${variables?.metadata?.page_name} with resolvedDataValueState: ${resolvedDataValueState}`});
+                }
+
+                return `rgba(var(--color-${returnedColor}),0.2)`;
+              ]]]

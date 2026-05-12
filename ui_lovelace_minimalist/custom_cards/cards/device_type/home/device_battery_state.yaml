@@ -1,0 +1,126 @@
+---
+device_battery_state:
+  variables:
+    metadata:
+      page_name: "device_battery_state.yaml"
+    binary_count_evaluated_state:
+      entity:
+        evaluated_entity: "sensor.binary_sensor_state_counts"
+        isattribute: true
+        evaluated_attribute: "batteries_average_value"
+      style:
+        use_themes: true
+        icon: "mdi:battery-alert"
+        icon_color: "theme"
+        background_color: "theme"
+
+  template:
+    - "ulm_gradient_green_yellow_red_10step"
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedBatteryEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          var evaluatedBatteryAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+          var resolvedBatteryState;
+          var returnValue = false;
+
+          resolvedBatteryState = states[evaluatedBatteryEntity].attributes[evaluatedBatteryAttribute];
+          if (typeof resolvedBatteryState !== 'undefined') {
+              returnValue = true;
+          }
+
+          return returnValue;
+        ]]]
+      icon: >
+        [[[
+          var returnedIcon = variables?.binary_count_evaluated_state?.style?.icon;
+          var iconSuffix;
+          var evaluatedBatteryEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          var evaluatedBatteryAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+          var resolvedBatteryState;
+
+          resolvedBatteryState = states[evaluatedBatteryEntity].attributes[evaluatedBatteryAttribute];
+          if (!isNaN(resolvedBatteryState) && typeof resolvedBatteryState !== 'undefined') {
+            switch(resolvedBatteryState) {
+              case "0":
+                iconSuffix = "-outline";
+                break;
+              case "100":
+                iconSuffix = "";
+                break;
+              default:
+                iconSuffix = "-" + resolvedBatteryState;
+                break;
+            }
+            returnedIcon = "mdi:battery" + iconSuffix;
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.icon: ${variables?.binary_count_evaluated_state?.style?.icon}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with resolvedBatteryState ${resolvedBatteryState}`});
+          }
+
+          return returnedIcon;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.icon_color;
+                var evaluatedBatteryEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+                var evaluatedBatteryAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+                var gradient = "gradient_";
+                var resolvedBatteryState;
+
+                resolvedBatteryState = states[evaluatedBatteryEntity].attributes[evaluatedBatteryAttribute];
+
+                if (!isNaN(resolvedBatteryState) && typeof resolvedBatteryState !== 'undefined') {
+                  gradient = gradient + resolvedBatteryState;
+                  if (variables?.green_yellow_red_battery_10step_non_theme?.[gradient]) {
+                    returnedColor = variables?.green_yellow_red_battery_10step_non_theme?.[gradient];
+                  }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.icon_color: ${variables?.binary_count_evaluated_state?.style?.icon_color}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with resolvedBatteryState ${resolvedBatteryState}`});
+                }
+                if (hass.themes.darkMode) {
+                  returnedColor.replace(", 40%",", 70%");
+                }
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.background_color;
+                var evaluatedBatteryEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+                var evaluatedBatteryAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+                var gradient = "gradient_";
+                var resolvedBatteryState;
+
+                resolvedBatteryState = states[evaluatedBatteryEntity].attributes[evaluatedBatteryAttribute];
+
+                if (!isNaN(resolvedBatteryState) && typeof resolvedBatteryState !== 'undefined') {
+                  gradient = gradient + resolvedBatteryState;
+                  if (variables?.green_yellow_red_battery_10step_non_theme?.[gradient]) {
+                    returnedColor = variables?.green_yellow_red_battery_10step_non_theme?.[gradient];
+                  }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.background_color: ${variables?.binary_count_evaluated_state?.style?.background_color}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with resolvedBatteryState ${resolvedBatteryState}`});
+                }
+                if (hass.themes.darkMode) {
+                  returnedColor.replace(", 40%",", 70%");
+                }
+
+                return returnedColor.replace(", 1)", ", 0.2)");
+              ]]]

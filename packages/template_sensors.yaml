@@ -1,0 +1,142 @@
+---
+template:
+  - sensor:
+
+      - unique_id: "_unique_secrets_to_use_in_templates"
+        name: "Non hard coded secrets to use in templates"
+        state: "0"
+        attributes:
+          ha_nabucasa_url: !secret "ha_nabucasa_url"
+          ha_rj45_ip: !secret "ha_rj45_ip"
+          github_repo_release_note_reader: !secret "github_repo_release_note_reader"
+
+
+      - unique_id: "adebd6db-c2f7-4fd8-9ff5-cd3c8f66c762"
+        name: "Sorted available updates list"
+        state: "{{ states.update|selectattr('state', 'eq', 'on')|list|count }}"
+        attributes:
+          update_list: >
+            {%- set ns_update_list = namespace(entity_list = []) -%}
+            {%- for update_list in states.update|sort(attribute="name") -%}
+            {###### no model or identifier set. Selection contains mostly firmware ######}
+              {%- if device_attr(update_list.entity_id, 'model')|length == 0 or device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",'')|length == 0 -%}
+                {%- if states(update_list.entity_id) == 'on' -%}
+                  {%- set ns_update_list.entity_list = ns_update_list.entity_list + [update_list.entity_id] -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {###### place 'hacs' before 'hassio' ######}
+            {%- for identifiers in states.update|map(attribute="entity_id")|map('device_attr','identifiers')|map('first')|select('defined')|map('first')|unique|list|sort -%}
+              {###### sorting in this way will put HA Core and Supervisor updates last ######}
+              {%- for model in states.update|map(attribute="entity_id")|map('device_attr','model')|unique|list|sort -%}
+                {%- for update_list in states.update|sort(attribute="name") -%}
+                  {%- if states(update_list.entity_id) == 'on' -%}
+                    {%- if identifiers == device_attr(update_list.entity_id, 'identifiers')|map('first')|list|replace("[",'')|replace("]",'')|replace("'",'') -%}
+                      {%- if model == device_attr(update_list.entity_id, 'model') %}
+                        {%- set ns_update_list.entity_list = ns_update_list.entity_list + [update_list.entity_id] -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- endfor -%}
+            {{ns_update_list.entity_list}}
+            
+        # {%- set update_entity_list = [] if state_attr('sensor.sorted_available_updates_list', 'update_list') is none else state_attr('sensor.sorted_available_updates_list', 'update_list') -%}
+        # {%- for updates in update_entity_list -%}
+        # {{{
+        #  'entity_id': updates,
+        #  'friendly_name': '' if state_attr(updates, 'friendly_name') is none else state_attr(updates, 'friendly_name'), 
+        #  'installed_version': '' if state_attr(updates, 'installed_version') is none else state_attr(updates, 'installed_version'), 
+        #  'latest_version': '' if state_attr(updates, 'latest_version') is none else state_attr(updates, 'latest_version'), 
+        #  'title': '' if state_attr(updates, 'title') is none else state_attr(updates, 'title'),
+        #  'entity_picture': 'https://brands.home-assistant.io/_/homeassistant/icon.png' if state_attr(updates, 'entity_picture') is none else state_attr(updates, 'entity_picture'),
+        #  'release_summary': '' if state_attr(updates, 'release_summary') is none else state_attr(updates, 'release_summary'),
+        #  'release_url': '' if state_attr(updates, 'release_url') is none else state_attr(updates, 'release_url'),
+        #  'in_progress': false if state_attr(updates, 'in_progress') is none else state_attr(updates, 'in_progress')
+        # }}},
+        # {%- endfor -%}
+
+      - unique_id: "_unique_floorplan_dates_template_generated"
+        name: "Floorplan dates template generated"
+        icon: >
+          {% from 'easy_time.jinja' import clock_icon %}
+          {{ clock_icon() }}
+        state: >
+          {% from 'easy_time.jinja' import clock %}
+          {{ clock() }}
+        attributes:
+          front_door_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.front_door_last_opened')) else easy_relative_time('input_datetime.front_door_last_opened') }}
+          front_door_last_locked: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.front_door_last_locked')) else easy_relative_time('input_datetime.front_door_last_locked') }}
+          back_door_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.back_door_last_opened')) else easy_relative_time('input_datetime.back_door_last_opened') }}
+          patio_door1_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.patio_door1_last_opened')) else easy_relative_time('input_datetime.patio_door1_last_opened') }}
+          patio_door2_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.patio_door2_last_opened')) else easy_relative_time('input_datetime.patio_door2_last_opened') }}
+          garage_door_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.garage_door_last_opened')) else easy_relative_time('input_datetime.garage_door_last_opened') }}
+          loft_ladder_last_opened: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.loft_ladder_last_opened')) else easy_relative_time('input_datetime.loft_ladder_last_opened') }}
+          nest_protect_bottom_floor_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.nest_protect_bottom_floor_last_activity')) else easy_relative_time('input_datetime.nest_protect_bottom_floor_last_activity') }}
+          nest_protect_middle_floor_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.nest_protect_middle_floor_last_activity')) else easy_relative_time('input_datetime.nest_protect_middle_floor_last_activity') }}
+          nest_protect_top_floor_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.nest_protect_top_floor_last_activity')) else easy_relative_time('input_datetime.nest_protect_top_floor_last_activity') }}
+          motion_sensor_front_door_stairs_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.motion_sensor_front_door_stairs_last_activity')) else easy_relative_time('input_datetime.motion_sensor_front_door_stairs_last_activity') }}
+          motion_sensor_bed_e_last_activity: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('input_datetime.motion_sensor_bed_e_last_activity')) else easy_relative_time('input_datetime.motion_sensor_bed_e_last_activity') }}
+          back_g3_flex_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.back_g3_flex_last_motion_detected')) else easy_relative_time('sensor.back_g3_flex_last_motion_detected') }}
+          bed_c_g3_instant_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.bed_c_g3_instant_last_motion_detected')) else easy_relative_time('sensor.bed_c_g3_instant_last_motion_detected') }}
+          bottom_hallway_g3_instant_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.bottom_hallway_g3_instant_last_motion_detected')) else easy_relative_time('sensor.bottom_hallway_g3_instant_last_motion_detected') }}
+          doorbell_g4_last_doorbell_ring: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.doorbell_g4_last_doorbell_ring')) else easy_relative_time('sensor.doorbell_g4_last_doorbell_ring') }}
+          front_g3_flex_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.front_g3_flex_last_motion_detected')) else easy_relative_time('sensor.front_g3_flex_last_motion_detected') }}
+          kitchen_g3_instant_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.kitchen_g3_instant_last_motion_detected')) else easy_relative_time('sensor.kitchen_g3_instant_last_motion_detected') }}
+          middle_hallway_g3_flex_last_motion_detected: >
+            {% from 'easy_time.jinja' import easy_relative_time %}
+            {{ 'Unknown' if has_value(easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected')) else easy_relative_time('sensor.middle_hallway_g3_flex_last_motion_detected') }}
+          clock_icon_color: >
+            {% from 'easy_time.jinja' import clock_icon %}
+            {% if clock_icon()=='mdi:clock-time-six' or  clock_icon()=='mdi:clock-time-twelve'%}
+              red
+            {% elif clock_icon()=='mdi:clock-time-seven' or  clock_icon()=='mdi:clock-time-one'%}
+              pink
+            {% elif clock_icon()=='mdi:clock-time-eight' or  clock_icon()=='mdi:clock-time-two'%}
+              yellow
+            {% elif clock_icon()=='mdi:clock-time-nine' or  clock_icon()=='mdi:clock-time-three'%}
+              green
+            {% elif clock_icon()=='mdi:clock-time-ten' or  clock_icon()=='mdi:clock-time-four'%}
+              blue
+            {% elif clock_icon()=='mdi:clock-time-eleven' or  clock_icon()=='mdi:clock-time-five'%}
+              purple
+            {% else %}
+              theme
+            {% endif %}

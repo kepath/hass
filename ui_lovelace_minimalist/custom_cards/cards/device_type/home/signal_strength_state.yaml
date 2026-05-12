@@ -1,0 +1,132 @@
+---
+signal_strength_state:
+  variables:
+    metadata:
+      page_name: "signal_strength_state.yaml"
+    binary_count_evaluated_state:
+      entity:
+        evaluated_entity: "sensor.binary_sensor_state_counts"
+        isattribute: true
+        evaluated_attribute: "signal_sensors_average_value_rounded"
+      style:
+        use_themes: true
+        icon: "mdi:signal-cellular"
+        icon_color: "theme"
+        background_color: "theme"
+
+  template:
+    - "ulm_gradient_green_yellow_red_10step"
+
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedSignalEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          var evaluatedSignalAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+          var resolvedSignalState;
+          var returnValue = false;
+
+          resolvedSignalState = states[evaluatedSignalEntity].attributes[evaluatedSignalAttribute];
+
+          if (typeof resolvedSignalState !== 'undefined') {
+              returnValue = true;
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with resolvedSignalState: ${resolvedSignalState}`});
+          }
+
+          return returnValue;
+        ]]]
+      icon: >
+        [[[
+          var returnedIcon = variables?.binary_count_evaluated_state?.style?.icon;
+          var iconSuffix = "-outline";
+          var evaluatedSignalEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          var evaluatedSignalAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+          var resolvedSignalState;
+
+          resolvedSignalState = states[evaluatedSignalEntity].attributes[evaluatedSignalAttribute];
+          if (!isNaN(resolvedSignalState) && typeof resolvedSignalState !== 'undefined') {
+            switch(true) {
+              case resolvedSignalState < 60:
+                iconSuffix = "-3";
+                break;
+              case resolvedSignalState < 70:
+                iconSuffix = "-2";
+                break;
+              case resolvedSignalState < 80:
+                iconSuffix = "-1";
+                break;
+              default:
+                break;
+            }
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalEntity: ${evaluatedSignalEntity}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalAttribute: ${evaluatedSignalAttribute}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with resolvedSignalState: ${resolvedSignalState}`});
+          }
+
+          return returnedIcon + iconSuffix;;
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.icon_color;
+                var evaluatedSignalEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+                var evaluatedSignalAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+                var gradient = "gradient_";
+                var resolvedSignalState;
+
+                resolvedSignalState = states[evaluatedSignalEntity].attributes[evaluatedSignalAttribute];
+                if (!isNaN(resolvedSignalState) && typeof resolvedSignalState !== 'undefined') {
+                  gradient = `${gradient}${resolvedSignalState}`;
+                  if (variables?.green_yellow_red_rssi_10step_non_theme?.[gradient]) {
+                    returnedColor = variables?.green_yellow_red_rssi_10step_non_theme?.[gradient];
+                  } else {
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with gradient: ${gradient}`});
+                  }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalEntity: ${evaluatedSignalEntity}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalAttribute: ${evaluatedSignalAttribute}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with resolvedSignalState: ${resolvedSignalState}`});
+                }
+
+                if (hass.themes.darkMode) {
+                  returnedColor.replace(", 40%",", 70%");
+                }
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var returnedColor = variables?.binary_count_evaluated_state?.style?.background_color;
+                var evaluatedSignalEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+                var evaluatedSignalAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+
+                var gradient = "gradient_";
+                var resolvedSignalState;
+
+                resolvedSignalState = states[evaluatedSignalEntity].attributes[evaluatedSignalAttribute];
+                if (!isNaN(resolvedSignalState) && typeof resolvedSignalState !== 'undefined') {
+                  gradient = gradient + resolvedSignalState;
+                  if (variables?.green_yellow_red_rssi_10step_non_theme?.[gradient]) {
+                    returnedColor = variables?.green_yellow_red_rssi_10step_non_theme?.[gradient];
+                  } else {
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with gradient: ${gradient}`});
+                  }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalEntity: ${evaluatedSignalEntity}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with evaluatedSignalAttribute: ${evaluatedSignalAttribute}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with resolvedSignalState: ${resolvedSignalState}`});
+                }
+
+                if (hass.themes.darkMode) {
+                  returnedColor.replace(", 40%",", 70%");
+                }
+
+                return returnedColor.replace(", 1)", ", 0.2)");
+              ]]]

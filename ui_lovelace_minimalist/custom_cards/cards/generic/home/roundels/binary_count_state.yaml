@@ -1,0 +1,216 @@
+---
+binary_count_state:
+  variables:
+    metadata:
+      page_name: "binary_count_state.yaml"
+    binary_count_evaluated_state:
+      entity:
+        evaluated_entity: "sensor.binary_sensor_state_counts"
+        isattribute: true
+        evaluated_attribute: "zero_value"
+      expression:
+        math_expresion_used: "gt"
+        trigger_value: 0
+      style:
+        use_themes: true
+        icon: "mdi:checkbox-blank-circle-outline"
+        icon_color: "red"
+        icon_color_alpha: "1"
+        background_color: "red"
+        background_color_alpha: "0.2"
+  state:
+    - operator: "template"
+      value: >
+        [[[
+          var evaluatedEntity;
+          var isAttribute;
+          var evaluatedAttribute;
+          var mathExpression;
+          var triggerValue;
+
+          const mathExpressionList = ['eq', 'lt', 'gt', 'ne'];
+          var resolvedState;
+          var isValidExpression = false;
+          var returnValue = false;
+
+          if (typeof variables?.binary_count_evaluated_state?.entity?.evaluated_entity !== 'undefined') {
+            evaluatedEntity = variables?.binary_count_evaluated_state?.entity?.evaluated_entity;
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}`});
+          }
+          if (typeof variables?.binary_count_evaluated_state?.entity?.isattribute !== 'undefined') {
+            if (typeof variables?.binary_count_evaluated_state?.entity?.isattribute === 'boolean') {
+              isAttribute = variables?.binary_count_evaluated_state?.entity?.isattribute;
+            } else {
+              hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.isattribute: ${variables?.binary_count_evaluated_state?.entity?.isattribute}`});
+            }
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.isattribute: ${variables?.binary_count_evaluated_state?.entity?.isattribute}`});
+          }
+          if (typeof variables?.binary_count_evaluated_state?.entity?.evaluated_attribute !== 'undefined') {
+            evaluatedAttribute = variables?.binary_count_evaluated_state?.entity?.evaluated_attribute;
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.evaluated_attribute: ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+          }
+
+          if (isAttribute) {
+            resolvedState = states[evaluatedEntity].attributes[evaluatedAttribute];
+          } else {
+            resolvedState = states[evaluatedEntity].state;
+          }
+          if (typeof resolvedState === 'undefined') {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name}\nevaluated state cannot be resolved: ${resolvedState}\nvariables?.binary_count_evaluated_state?.entity?.evaluated_entity: ${variables?.binary_count_evaluated_state?.entity?.evaluated_entity}\nvariables?.binary_count_evaluated_state?.entity?.evaluated_attribute: ${variables?.binary_count_evaluated_state?.entity?.evaluated_attribute}`});
+          }
+
+          if (typeof variables?.binary_count_evaluated_state?.expression?.math_expresion_used !== 'undefined') {
+            mathExpression = variables?.binary_count_evaluated_state?.expression?.math_expresion_used;
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.expression?.math_expresion_used: ${variables?.binary_count_evaluated_state?.expression?.math_expresion_used}`});
+          }
+          for (let i = 0; i < mathExpressionList.length; i++) {
+            if (mathExpression.includes(mathExpressionList[i])){
+              isValidExpression = true;
+            }
+          }
+          if (!isValidExpression) {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.entity?.expression?.math_expresion_used: expression not in expression list`});
+          }
+          if (typeof variables?.binary_count_evaluated_state?.expression?.trigger_value !== 'undefined') {
+            triggerValue = variables?.binary_count_evaluated_state?.expression?.trigger_value;
+          } else {
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.expression?.trigger_value: ${variables?.binary_count_evaluated_state?.expression?.trigger_value}`});
+          }
+          if (!isNaN(resolvedState) && !isNaN(triggerValue)) {
+            switch(mathExpression) {
+              case "eq":
+                if (resolvedState == triggerValue) {
+                  returnValue = true;
+                }
+                //hass.callService(`system_log`, `write`, {level: `warning`, message:`switch mathExpression: eq`});
+                break;
+              case "lt":
+                if (resolvedState < triggerValue) {
+                  returnValue = true;
+                }
+                //hass.callService(`system_log`, `write`, {level: `warning`, message:`switch mathExpression: lt`});
+                break;
+              case "gt":
+                if (resolvedState > triggerValue) {
+                  returnValue = true;
+                }
+                //hass.callService(`system_log`, `write`, {level: `warning`, message:`switch mathExpression: gt`});
+                break;
+              case "ne":
+                if (resolvedState != triggerValue) {
+                  returnValue = true;
+                }
+                //hass.callService(`system_log`, `write`, {level: `warning`, message:`switch mathExpression: ne`});
+                break;
+              default:
+                //hass.callService(`system_log`, `write`, {level: `warning`, message:`switch mathExpression: default`});
+                returnValue = false;
+                break;
+            }
+          }
+
+          return returnValue;
+        ]]]
+      icon: >
+        [[[
+          if (typeof variables?.binary_count_evaluated_state?.style?.icon !== 'undefined') {
+            if (variables?.binary_count_evaluated_state?.style?.icon.includes('mdi:') ||
+                variables?.binary_count_evaluated_state?.style?.icon.includes('cbi:') ||
+                variables?.binary_count_evaluated_state?.style?.icon.includes('simple-icons:')) {
+              return variables?.binary_count_evaluated_state?.style?.icon;
+            } else {
+              hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.icon: This may not be a valid icon type: ${variables?.binary_count_evaluated_state?.style?.icon}`});
+              return variables?.binary_count_evaluated_state?.style?.icon;
+            }
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.icon: ${variables?.binary_count_evaluated_state?.style?.icon}`});
+          }
+        ]]]
+      styles:
+        icon:
+          - color: >
+              [[[
+                var importedColor;
+                var importedColorAlpha
+                var returnedColor;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.binary_count_evaluated_state?.style?.use_themes !== 'undefined') {
+                  if (typeof variables?.binary_count_evaluated_state?.style?.use_themes === 'boolean') {
+                    useThemes = variables?.binary_count_evaluated_state?.style?.use_themes;
+                  } else {
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.use_themes: ${variables?.binary_count_evaluated_state?.style?.use_themes}`});
+                  }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.use_themes: ${variables?.binary_count_evaluated_state?.style?.use_themes}`});
+                }
+                if (typeof variables?.binary_count_evaluated_state?.style?.icon_color !== 'undefined') {
+                  importedColor = variables?.binary_count_evaluated_state?.style?.icon_color;
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.icon_color: ${variables?.binary_count_evaluated_state?.style?.icon_color}`});
+                }
+                if (typeof variables?.binary_count_evaluated_state?.style?.icon_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.binary_count_evaluated_state?.style?.icon_color_alpha;
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with ables?.binary_count_evaluated_state?.style?.icon_color_alpha: ${variables?.binary_count_evaluated_state?.style?.icon_color_alpha}`});
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
+                    }
+                  }
+                  if (returnedColor.length == 0) {
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.icon_color: The use of themes was specified, but an invalid color was imported: ${variables?.binary_count_evaluated_state?.style?.icon_color}`});
+                  }
+                } else {
+                  returnedColor = importedColor;
+                }
+
+                return returnedColor;
+              ]]]
+        img_cell:
+          - background-color: >
+              [[[
+                var importedColor;
+                var importedColorAlpha
+                var returnedColor;
+                var useThemes;
+                const colorOptions = ['grey', 'red', 'green', 'yellow', 'blue', 'purple', 'pink', 'amber', 'theme'];
+                if (typeof variables?.binary_count_evaluated_state?.style?.use_themes !== 'undefined') {
+                  if (typeof variables?.binary_count_evaluated_state?.style?.use_themes === 'boolean') {
+                    useThemes = variables?.binary_count_evaluated_state?.style?.use_themes;
+                  } else {
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.use_themes: ${variables?.binary_count_evaluated_state?.style?.use_themes}`});
+                  }
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.use_themes: ${variables?.binary_count_evaluated_state?.style?.use_themes}`});
+                }
+                if (typeof variables?.binary_count_evaluated_state?.style?.background_color !== 'undefined') {
+                  importedColor = variables?.binary_count_evaluated_state?.style?.background_color;
+                } else {
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.background_color: ${variables?.binary_count_evaluated_state?.style?.background_color}`});
+                }
+                if (typeof variables?.binary_count_evaluated_state?.style?.background_color_alpha !== 'undefined') {
+                  importedColorAlpha = variables?.binary_count_evaluated_state?.style?.background_color_alpha;
+                } else {
+                  hass.llService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.background_color_alpha: ${variables?.binary_count_evaluated_state?.style?.background_color_alpha}`});
+                }
+                if (useThemes) {
+                  for (let i = 0; i < colorOptions.length; i++) {
+                    if (importedColor.includes(colorOptions[i])){
+                      returnedColor = "rgba(var(--color-" + importedColor + "), " + importedColorAlpha + ")";
+                    }
+                  }
+                  if (returnedColor.length == 0) {
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.binary_count_evaluated_state?.style?.background_color: The use of themes was specified, but an invalid color was imported: ${variables?.binary_count_evaluated_state?.style?.background_color}`});
+                  }
+                } else {
+                  returnedColor = importedColor;
+                }
+
+                return returnedColor;
+              ]]]

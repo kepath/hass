@@ -517,3 +517,72 @@ views:
                 {%- endif -%}
               {%- endif -%}
             {%- endfor -%}
+
+  - title: "Updates"
+    icon: "material-icon-theme:dependencies-update"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "horizontal-stack"
+        cards:
+          - type: "vertical-stack"
+            cards:
+              - type: "entity"
+                entity: "update.mini_media_player_update"
+          - type: "vertical-stack"
+            cards:
+              - type: "entity"
+                entity: "update.mini_media_player_update"
+                attribute: "title"
+              - type: "entity"
+                entity: "update.mini_media_player_update"
+                attribute: "installed_version"
+              - type: "entity"
+                entity: "update.mini_media_player_update"
+                attribute: "latest_version"
+          - type: "vertical-stack"
+            cards:
+              - type: "entity"
+                entity: "update.mini_media_player_update"
+                attribute: "release_summary"
+              - type: "entity"
+                entity: "update.mini_media_player_update"
+                attribute: "release_url"
+            
+# - type: "markdown"
+#   content: >-
+#     {% set update_entity_list = [] if state_attr('sensor.sorted_available_updates_list', 'update_list') is none else state_attr('sensor.sorted_available_updates_list', 'update_list') -%}
+#     <table>
+#     {% for updates in update_entity_list -%}
+#       <tr>
+#         <th><img src="{{'https://brands.home-assistant.io/_/homeassistant/icon.png' if state_attr(updates, 'entity_picture') is none else state_attr(updates, 'entity_picture')}}" alt="{{'' if state_attr(updates, 'friendly_name') is none else state_attr(updates, 'friendly_name')}}" width="40px" height="40px"/></th>
+#         <th colspan="2">{{'' if state_attr(updates, 'friendly_name') is none else state_attr(updates, 'friendly_name')}}</th>
+#       </tr>
+#       <tr>
+#         <td>{{'' if state_attr(updates, 'title') is none else state_attr(updates, 'title')}}</td>
+#         <td>{{'' if state_attr(updates, 'installed_version') is none else state_attr(updates, 'installed_version')}}</td>
+#         <td>{{'' if state_attr(updates, 'latest_version') is none else state_attr(updates, 'latest_version')}}</td>
+#       </tr>
+#       <tr>
+#         <td colspan="3">
+#           {% set release_text = shell_command.get_update_github_release_notes %}
+#           {{ release_text }}
+#         </td>
+#       </tr>
+#     {% endfor -%}
+#     </table>
+
+# {%- endfor -%}
+# {%- set update_entity_list = [] if state_attr('sensor.sorted_available_updates_list', 'update_list') is none else state_attr('sensor.sorted_available_updates_list', 'update_list') -%}
+# {%- for updates in update_entity_list -%}
+# {{{
+#  'entity_id': updates,
+#  'friendly_name': '' if state_attr(updates, 'friendly_name') is none else state_attr(updates, 'friendly_name'), 
+#  'installed_version': '' if state_attr(updates, 'installed_version') is none else state_attr(updates, 'installed_version'), 
+#  'latest_version': '' if state_attr(updates, 'latest_version') is none else state_attr(updates, 'latest_version'), 
+#  'title': '' if state_attr(updates, 'title') is none else state_attr(updates, 'title'),
+#  'entity_picture': 'https://brands.home-assistant.io/_/homeassistant/icon.png' if state_attr(updates, 'entity_picture') is none else state_attr(updates, 'entity_picture'),
+#  'release_summary': '' if state_attr(updates, 'release_summary') is none else state_attr(updates, 'release_summary'),
+#  'release_url': '' if state_attr(updates, 'release_url') is none else state_attr(updates, 'release_url'),
+#  'in_progress': false if state_attr(updates, 'in_progress') is none else state_attr(updates, 'in_progress')
+# }}},
+# {%- endfor -%}

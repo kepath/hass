@@ -1,0 +1,22 @@
+---
+use_entity_picture:
+  variables:
+    metadata:
+      page_name: "use_entity_picture.yaml"
+    generic_set_entity_picture:
+      evaluated_object:
+        force_eval: true
+        value: "[[[ return entity.entity_id ]]]"
+        use_picture: true
+  show_icon: "[[[ return variables.generic_set_entity_picture.evaluated_object.use_picture ? true : false ]]]"
+  show_entity_picture: "[[[ return variables.generic_set_entity_picture.evaluated_object.use_picture ? false : true ]]]"
+  entity_picture: >
+    [[[
+      var entityPicture = null;
+      if (states[variables?.generic_set_entity_picture?.evaluated_object?.value]?.attributes?.entity_picture) {
+        entityPicture = states[variables?.generic_set_entity_picture?.evaluated_object?.value].attributes.entity_picture;
+      } else {
+        hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with entityPicture: ${entityPicture}`});
+      }
+      return entityPicture;
+    ]]]

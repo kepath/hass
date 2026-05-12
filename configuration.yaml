@@ -4,14 +4,12 @@ stream:
 python_script:
 frontend:
   themes: !include_dir_merge_named "themes"
-  # extra_module_url:
-  #   - "/hacsfiles/lovelace-card-mod/card-mod.js"
 browser_mod:
-custom_filters:
+# custom_filters:
 recorder:
   db_url: !secret "hass_addon_mariadb_url"
-  db_max_retries: 20
-  db_retry_wait: 10
+  db_max_retries: 40
+  db_retry_wait: 20
   exclude:
     entities:
       - "sensor.icloud3_event_log"
@@ -36,6 +34,8 @@ logger:
   # default: "info"
   # logs:
   #   custom_components.ui_lovelace_minimalist: "debug"
+  # logs:
+  #   homeassistant.components.shell_command: "debug"
 ffmpeg:
 history:
 wake_on_lan:

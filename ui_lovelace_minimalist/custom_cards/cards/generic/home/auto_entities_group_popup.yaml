@@ -1,7 +1,9 @@
 ---
-custom_card_kepath_generic_group_popup:
+auto_entities_group_popup:
   variables:
-    var_kepath_generic_group_popup:
+    metadata:
+      page_name: "auto_entities_group_popup.yaml"
+    auto_entities_group_popup:
       evaluated_entity:
         force_eval: true
         value: "[[[ return entity.entity_id ]]]"
@@ -20,7 +22,7 @@ custom_card_kepath_generic_group_popup:
       service: >
         [[[
           var service = "";
-          switch(variables.var_kepath_generic_group_popup.action) {
+          switch(variables.auto_entities_group_popup.action) {
             case "navigate":
               service = "browser_mod.navigate";
               break;
@@ -34,8 +36,8 @@ custom_card_kepath_generic_group_popup:
           return service;
         ]]]
       data:
-        path: "[[[ return variables.var_kepath_generic_group_popup.action == 'navigate' ? variables.var_kepath_generic_group_popup.navigate.page : '/0' ]]]"
-        title: "[[[return variables.var_kepath_generic_group_popup.popup.title]]]"
+        path: "[[[ return variables.auto_entities_group_popup.action == 'navigate' ? variables.auto_entities_group_popup.navigate.page : '/0' ]]]"
+        title: "[[[return variables.auto_entities_group_popup.popup.title]]]"
         autoclose: false
         style:
           $: >
@@ -57,10 +59,6 @@ custom_card_kepath_generic_group_popup:
               hui-entities-card {
                 padding: 0.8em 1.4em;
               }
-            # $hui-entities-card$: >
-            #   ha-card{
-            #     box-shadow: none;
-            #   }
         content:
           type: "vertical-stack"
           cards:
@@ -71,12 +69,12 @@ custom_card_kepath_generic_group_popup:
                 state_color: true
               filter:
                 include:
-                  - group: "[[[ return variables?.var_kepath_generic_group_popup?.evaluated_entity?.value ]]]"
+                  - group: "[[[ return variables?.auto_entities_group_popup?.evaluated_entity?.value ]]]"
                 exclude:
                   - state: >
                       [[[
                         var excludedState = "notavalidstate";
-                        if (variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unknown_state == true) {
+                        if (variables.auto_entities_group_popup.popup.auto_entities.exclude_unknown_state == true) {
                           excludedState = "unknown";
                         }
                         return excludedState;
@@ -84,18 +82,18 @@ custom_card_kepath_generic_group_popup:
                   - state: >
                       [[[
                         var excludedState = "notavalidstate";
-                        if (variables.var_kepath_generic_group_popup.popup.auto_entities.exclude_unavailable_state == true) {
+                        if (variables.auto_entities_group_popup.popup.auto_entities.exclude_unavailable_state == true) {
                           excludedState = "unavailable";
                         }
                         return excludedState;
                       ]]]
               sort:
-                method: "[[[ return variables.var_kepath_generic_group_popup.popup.auto_entities.sort_method ]]]"
-                numeric: "[[[ return variables.var_kepath_generic_group_popup.popup.auto_entities.sort_numeric ]]]"
+                method: "[[[ return variables.auto_entities_group_popup.popup.auto_entities.sort_method ]]]"
+                numeric: "[[[ return variables.auto_entities_group_popup.popup.auto_entities.sort_numeric ]]]"
                 reverse: >
                   [[[
                     var sortReversed = true;
-                    if (variables.var_kepath_generic_group_popup.popup.auto_entities.sort_reversed == true) {
+                    if (variables.auto_entities_group_popup.popup.auto_entities.sort_reversed == true) {
                       sortReversed = false;
                     }
                     return sortReversed;
