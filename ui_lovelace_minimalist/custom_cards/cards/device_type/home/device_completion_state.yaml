@@ -25,7 +25,7 @@ device_completions_state:
       icon: >
         [[[
           var evaluatedCompletionEntity = variables?.device_completions_state?.data_entities?.completion_entity;
-          var returnedIcon; = variables?.device_completions_state?.on_state?.icon;
+          var returnedIcon = variables?.device_completions_state?.on_state?.icon;
 
           if (typeof variables?.device_completions_state?.on_state?.icon !== 'undefined') {
             if (variables?.device_completions_state?.on_state?.icon.includes('mdi:') ||
@@ -33,25 +33,25 @@ device_completions_state:
                 variables?.device_completions_state?.on_state?.icon.includes('simple-icons:')) {
               returnedIcon = variables?.device_completions_state?.on_state?.icon;
             } else {
-              //hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon: This may not be a valid icon type: ${variables?.device_completions_state?.on_state?.icon}`});
+              hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon: This may not be a valid icon type: ${variables?.device_completions_state?.on_state?.icon}`});
               returnedIcon = variables?.device_completions_state?.on_state?.icon;
             }
-            //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon: ${variables?.device_completions_state?.on_state?.icon}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon: ${variables?.device_completions_state?.on_state?.icon}`});
           }
 
-          var resolvedCompletionState = states[evaluatedProgressEntity].state;
+          var resolvedCompletionState = states[evaluatedCompletionEntity].state;
 
           if (typeof resolvedCompletionState !== 'undefined') {
             if (!isNaN(Date.parse(resolvedCompletionState))) {
-              var progressMilliseconds = Date.parse(resolvedCompletionState) - Date.now();
-              if(!isNaN(parseInt(progressMilliseconds))) {
-                var progressHours = parseInt((progressMilliseconds / (1000 * 60 * 60)).toFixed());
-                if(!isNaN(parseInt(progressHours))) {
-                  if (progressHours >= 0 && progressHours <= 9 ) {
-                    returnedIcon = "mdi:numeric-" + progressHours + "-circle-outline";
+              var completionMilliseconds = Date.parse(resolvedCompletionState) - Date.now();
+              if(!isNaN(parseInt(completionMilliseconds))) {
+                var completionHours = parseInt((completionMilliseconds / (1000 * 60 * 60)).toFixed());
+                if(!isNaN(parseInt(completionHours))) {
+                  if (completionHours >= 0 && completionHours <= 9 ) {
+                    returnedIcon = "mdi:numeric-" + completionHours + "-circle-outline";
                   }
                 }
-            }
+              }
             }
           }
 
@@ -70,20 +70,20 @@ device_completions_state:
                   if (typeof variables?.device_completions_state?.on_state?.use_themes === 'boolean') {
                     useThemes = variables?.device_completions_state?.on_state?.use_themes;
                   } else {
-                    //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.use_themes: ${variables?.device_completions_state?.on_state?.use_themes}`});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.use_themes: ${variables?.device_completions_state?.on_state?.use_themes}`});
                   }
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.use_themes: ${variables?.device_completions_state?.on_state?.use_themes}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.use_themes: ${variables?.device_completions_state?.on_state?.use_themes}`});
                 }
                 if (typeof variables?.device_completions_state?.on_state?.icon_color !== 'undefined') {
                   importedColor = variables?.device_completions_state?.on_state?.icon_color;
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon_color: ${variables?.device_completions_state?.on_state?.icon_color}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon_color: ${variables?.device_completions_state?.on_state?.icon_color}`});
                 }
                 if (typeof variables?.device_completions_state?.on_state?.icon_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.device_completions_state?.on_state?.icon_color_alpha;
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon_color_alpha: ${variables?.device_completions_state?.on_state?.icon_color_alpha}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon_color_alpha: ${variables?.device_completions_state?.on_state?.icon_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -92,7 +92,7 @@ device_completions_state:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon_color: The use of themes was specified, but an invalid color was imported: ${variables?.device_completions_state?.on_state?.icon_color}`});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.icon_color: The use of themes was specified, but an invalid color was imported: ${variables?.device_completions_state?.on_state?.icon_color}`});
                   }
                 } else {
                   returnedColor = importedColor;
@@ -112,20 +112,20 @@ device_completions_state:
                   if (typeof variables?.device_completions_state?.on_state?.use_themes === 'boolean') {
                     useThemes = variables?.device_completions_state?.on_state?.use_themes;
                   } else {
-                    //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.use_themes: ${variables?.device_completions_state?.on_state?.use_themes}`});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.use_themes: ${variables?.device_completions_state?.on_state?.use_themes}`});
                   }
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.use_themes: ${variables?.device_completions_state?.on_state?.use_themes}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.use_themes: ${variables?.device_completions_state?.on_state?.use_themes}`});
                 }
                 if (typeof variables?.device_completions_state?.on_state?.background_color !== 'undefined') {
                   importedColor = variables?.device_completions_state?.on_state?.background_color;
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.background_color: ${variables?.device_completions_state?.on_state?.background_color}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.background_color: ${variables?.device_completions_state?.on_state?.background_color}`});
                 }
                 if (typeof variables?.device_completions_state?.on_state?.background_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.device_completions_state?.on_state?.background_color_alpha;
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.background_color_alpha: ${variables?.device_completions_state?.on_state?.background_color_alpha}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.background_color_alpha: ${variables?.device_completions_state?.on_state?.background_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -134,7 +134,7 @@ device_completions_state:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.background_color: The use of themes was specified, but an invalid color was imported: ${variables?.device_completions_state?.on_state?.background_color}`});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.on_state?.background_color: The use of themes was specified, but an invalid color was imported: ${variables?.device_completions_state?.on_state?.background_color}`});
                   }
                 } else {
                   returnedColor = importedColor;
@@ -151,10 +151,10 @@ device_completions_state:
                 variables?.device_completions_state?.off_state?.icon.includes('simple-icons:')) {
               return variables?.device_completions_state?.off_state?.icon;
             } else {
-              //hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon: This may not be a valid icon type: ${variables?.device_completions_state?.off_state?.icon}`});
+              hass.callService(`system_log`, `write`, {level: `warning`, message: `warning in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon: This may not be a valid icon type: ${variables?.device_completions_state?.off_state?.icon}`});
               return variables?.device_completions_state?.off_state?.icon;
             }
-            //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon: ${variables?.device_completions_state?.off_state?.icon}`});
+            hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon: ${variables?.device_completions_state?.off_state?.icon}`});
           }
         ]]]
       styles:
@@ -170,20 +170,20 @@ device_completions_state:
                   if (typeof variables?.device_completions_state?.off_state?.use_themes === 'boolean') {
                     useThemes = variables?.device_completions_state?.off_state?.use_themes;
                   } else {
-                    //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.use_themes: ${variables?.device_completions_state?.off_state?.use_themes}`});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.use_themes: ${variables?.device_completions_state?.off_state?.use_themes}`});
                   }
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.use_themes: ${variables?.device_completions_state?.off_state?.use_themes}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.use_themes: ${variables?.device_completions_state?.off_state?.use_themes}`});
                 }
                 if (typeof variables?.device_completions_state?.off_state?.icon_color !== 'undefined') {
                   importedColor = variables?.device_completions_state?.off_state?.icon_color;
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon_color: ${variables?.device_completions_state?.off_state?.icon_color}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon_color: ${variables?.device_completions_state?.off_state?.icon_color}`});
                 }
                 if (typeof variables?.device_completions_state?.off_state?.icon_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.device_completions_state?.off_state?.icon_color_alpha;
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon_color_alpha: ${variables?.device_completions_state?.off_state?.icon_color_alpha}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon_color_alpha: ${variables?.device_completions_state?.off_state?.icon_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -192,7 +192,7 @@ device_completions_state:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon_color: The use of themes was specified, but an invalid color was imported: ${variables?.device_completions_state?.off_state?.icon_color}`});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.icon_color: The use of themes was specified, but an invalid color was imported: ${variables?.device_completions_state?.off_state?.icon_color}`});
                   }
                 } else {
                   returnedColor = importedColor;
@@ -212,20 +212,20 @@ device_completions_state:
                   if (typeof variables?.device_completions_state?.off_state?.use_themes === 'boolean') {
                     useThemes = variables?.device_completions_state?.off_state?.use_themes;
                   } else {
-                    //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.use_themes: ${variables?.device_completions_state?.off_state?.use_themes}`});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.use_themes: ${variables?.device_completions_state?.off_state?.use_themes}`});
                   }
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.use_themes: ${variables?.device_completions_state?.off_state?.use_themes}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.use_themes: ${variables?.device_completions_state?.off_state?.use_themes}`});
                 }
                 if (typeof variables?.device_completions_state?.off_state?.background_color !== 'undefined') {
                   importedColor = variables?.device_completions_state?.off_state?.background_color;
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.background_color: ${variables?.device_completions_state?.off_state?.background_color}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.background_color: ${variables?.device_completions_state?.off_state?.background_color}`});
                 }
                 if (typeof variables?.device_completions_state?.off_state?.background_color_alpha !== 'undefined') {
                   importedColorAlpha = variables?.device_completions_state?.off_state?.background_color_alpha;
                 } else {
-                  //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.background_color_alpha: ${variables?.device_completions_state?.off_state?.background_color_alpha}`});
+                  hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.background_color_alpha: ${variables?.device_completions_state?.off_state?.background_color_alpha}`});
                 }
                 if (useThemes) {
                   for (let i = 0; i < colorOptions.length; i++) {
@@ -234,7 +234,7 @@ device_completions_state:
                     }
                   }
                   if (returnedColor.length == 0) {
-                    //hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.background_color: The use of themes was specified, but an invalid color was imported: ${variables?.device_completions_state?.off_state?.background_color}`});
+                    hass.callService(`system_log`, `write`, {level: `warning`, message: `error in page: ${variables?.metadata?.page_name} with variables?.device_completions_state?.off_state?.background_color: The use of themes was specified, but an invalid color was imported: ${variables?.device_completions_state?.off_state?.background_color}`});
                   }
                 } else {
                   returnedColor = importedColor;
