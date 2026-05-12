@@ -5,8 +5,6 @@ auto_entities_group_popup:
       page_name: "auto_entities_group_popup.yaml"
     auto_entities_group_popup:
       evaluated_entity:
-        force_eval: true
-        value: "[[[ return entity.entity_id ]]]"
       action: "navigate"  # tap_actions = ['navigate', 'popup', 'more_info'];
       popup:
         title: "entity group"
@@ -37,7 +35,7 @@ auto_entities_group_popup:
         ]]]
       data:
         path: "[[[ return variables.auto_entities_group_popup.action == 'navigate' ? variables.auto_entities_group_popup.navigate.page : '/0' ]]]"
-        title: "[[[return variables.auto_entities_group_popup.popup.title]]]"
+        title: "[[[ return variables.auto_entities_group_popup.popup.title ]]]"
         autoclose: false
         style:
           $: >
@@ -69,7 +67,10 @@ auto_entities_group_popup:
                 state_color: true
               filter:
                 include:
-                  - group: "[[[ return variables?.auto_entities_group_popup?.evaluated_entity?.value ]]]"
+                  - group: >
+                      [[[ 
+                        return variables?.auto_entities_group_popup?.evaluated_entity ? variables.auto_entities_group_popup.evaluated_entity : entity.entity_id;
+                      ]]]
                 exclude:
                   - state: >
                       [[[
