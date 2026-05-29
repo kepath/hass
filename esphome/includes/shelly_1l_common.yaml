@@ -4,51 +4,56 @@ esphome:
   friendly_name: "${friendly_name}"
   area: "${area}"
   on_boot:
-    - priority: 300
-      then:
-        - light.turn_off: "${device_name}_lightid1"
-        - logger.log: "startup - light should be off"
-
+    priority: 300
+    then:
+      - light.turn_off: "${device_name}_lightid1"
+      - logger.log: "startup - light should be off"
+  
 esp8266:
   board: "esp01_1m"
 
 light:
   - platform: "binary"
-    name: "${device_name}_light_1"
-    output: "${device_name}_shellyrelay1"
+    name: "${friendly_name}"
     id: "${device_name}_lightid1"
     icon: "${light1_icon}"
+    output: "${device_name}_relay1"
 
 output:
   - platform: "gpio"
     pin: "GPIO5"
-    id: "${device_name}_shellyrelay1"
-
+    id: "${device_name}_relay1"
+    
 binary_sensor:
   - platform: "status"
-    name: "${device_name}_status"
+    name: "${friendly_name} Status"
+    id: "${device_name}_status"
     icon: "mdi:web-check"
     device_class: "connectivity"
     filters:
       - delayed_off: "5min"
+      
   - platform: "gpio"
-    pin:
-      number: "GPIO4"
-    name: "${device_name}_switch_1"
+    name: "${friendly_name} Switch"
     id: "${device_name}_switchid1"
     icon: "mdi:light-switch"
+    pin:
+      number: "GPIO4"
     on_state:
       then:
         - light.toggle: "${device_name}_lightid1"
     filters:
       - delayed_on_off: "50ms"
+    device_class: "power"
+        
   - platform: "gpio"
-    pin:
-      number: "GPIO14"
-    name: "${device_name}_switch_2"
+    name: "${friendly_name} Switch (Unused)"
     id: "${device_name}_switchid2"
     icon: "mdi:light-switch"
+    pin:
+      number: "GPIO14"
     disabled_by_default: true
+    device_class: "power"
 
 mdns:
   services:
@@ -62,9 +67,11 @@ wifi:
   domain: ".not"
   reboot_timeout: "30min"
   on_connect:
-    - light.turn_off: "${device_name}_lightid1"
+    then:
+      - light.turn_off: "${device_name}_lightid1"
   on_disconnect:
-    - light.turn_off: "${device_name}_lightid1"
+    then:
+      - light.turn_off: "${device_name}_lightid1"
   manual_ip:
     static_ip: "192.168.30.${device_ip}"
     gateway: "192.168.30.1"
@@ -85,81 +92,119 @@ wifi:
     ap_timeout: "10min"
 
 captive_portal:
-
+  id: "${device_name}_captive_portal"
+  
 logger:
   level: "${log_level}"
+  id: "${device_name}_logger"
 api:
   reboot_timeout: "30min"
+  encryption:
+    key: !secret "esphome_api_key"
 ota:
   platform: "esphome"
 web_server:
   port: 80
   version: 3
-
+  include_internal: true
+  
 # Text sensors with general information.
 text_sensor:
   - platform: "version"
-    name: "${device_name}_esphome_version"
+    name: "${friendly_name} ESPHome Version"
   - platform: "wifi_info"
     ip_address:
-      name: "${device_name}_IP"
+      name: "${friendly_name} IP"
       icon: "mdi:ip-network"
     ssid:
-      name: "${device_name}_SSID"
+      name: "${friendly_name} SSID"
       icon: "mdi:access-point-network"
     bssid:
-      name: "${device_name}_BSSID"
+      name: "${friendly_name} BSSID"
       icon: "mdi:router-wireless-settings"
     mac_address:
-      name: "${device_name}_MAC"
+      name: "${friendly_name} MAC"
       icon: "mdi:router-network"
-
+    dns_address:
+      name: "${friendly_name} DNS"
+      icon: "mdi:help-network"
+    scan_results:
+      name: "${friendly_name} WiFi Scan"
+      icon: "mdi:cloud-search"
+      
 sensor:
   - platform: "ntc"
+    name: "${friendly_name} Temperature"
+    id: "${device_name}_temperature"
+    icon: "mdi:thermometer"
     sensor: "temp_resistance_reading"
-    name: "${device_name}_temperature"
     unit_of_measurement: "°C"
     accuracy_decimals: 1
-    icon: "mdi:thermometer"
+    device_class: "temperature"
+    state_class: "measurement"
     calibration:
       b_constant: 3350
       reference_resistance: "10kOhm"
       reference_temperature: "298.15K"
     on_value_range:
-      - above: "${max_temp}"
-        then:
-          - light.turn_off: "${device_name}_lightid1"
-          - homeassistant.service:
-              service: "persistent_notification.create"
-              data:
-                title: "Message from ${device_name}"
-              data_template:
-                message: "Switch turned off because temperature exceeded ${max_temp}°C"
+      above: "${max_temp}"
+      then:
+        - light.turn_off: "${device_name}_lightid1"
+        - homeassistant.service:
+            service: "persistent_notification.create"
+            data:
+              title: "Message from ${device_name}"
+            data_template:
+              message: "Switch turned off because temperature exceeded ${max_temp}°C"
+              
   - platform: "resistance"
+    name: "${friendly_name} Resistor"
     id: "temp_resistance_reading"
+    icon: "mdi:resistor"
     sensor: "temp_analog_reading"
     configuration: "DOWNSTREAM"
-    resistor: "32kOhm"
-  - platform: "adc"
-    id: "temp_analog_reading"
-    pin: "A0"
-  - platform: "wifi_signal"
-    name: "${device_name}_RSSI"
-    id: "wifi_signal_db"
-    update_interval: "60s"
-    icon: "mdi:wifi"
+    resistor: 32000
+    unit_of_measurement: "Ω"
+    device_class: "conductivity"
     entity_category: "diagnostic"
-  - platform: copy # Reports the WiFi signal strength in %
+    state_class: "measurement"
+    
+  - platform: "adc"
+    name: "${friendly_name} ADC"
+    id: "temp_analog_reading"
+    icon: "mdi:sine-wave"
+    pin: "GPIO17"
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    entity_category: "diagnostic"
+    state_class: "measurement"
+    
+  - platform: "wifi_signal"
+    name: "${friendly_name} RSSI"
+    id: "wifi_signal_db"
+    icon: "mdi:wifi"
+    update_interval: "60s"
+    device_class: "signal_strength"
+    entity_category: "diagnostic"
+    unit_of_measurement: "dBm"
+    state_class: "measurement"
+    
+  - platform: "copy" # Reports the WiFi signal strength in %
+    name: "${friendly_name} WiFi Percent"
+    id: "${device_name}_wifi_percent"
+    icon: "mdi:wifi"
     source_id: "wifi_signal_db"
-    name: "${device_name}_wifi_percent"
     filters:
       - lambda: "return min(max(2 * (x + 100.0), 0.0), 100.0);"
     unit_of_measurement: "%"
+    device_class: "signal_strength"
     entity_category: "diagnostic"
-    device_class: ""
 
   - platform: "uptime"
     type: "seconds"
-    name: "${device_name}_uptime"
+    name: "${friendly_name} Uptime"
+    id: "${device_name}_uptime"
+    
 status_led:
-  pin: "GPIO0"
+  pin:
+    number: "GPIO0"
