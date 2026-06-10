@@ -7,7 +7,7 @@ elements:
   #### IMAGES ####
   # BED E
   - type: "image"
-    entity: "light.bed_e_light"
+    entity: "light.bed_e_light_bed_e_light"
     style:
       left: "50%"
       top: "50%"
@@ -23,7 +23,7 @@ elements:
       action: "none"
   # LOFT
   - type: "image"
-    entity: "binary_sensor.zigbee_door_sensor_loft_contact"
+    entity: "binary_sensor.zigbee_door_sensor_loft_loft_contact_sensor"
     style:
       left: "50%"
       top: "50%"
@@ -42,7 +42,7 @@ elements:
   # BED E
   - type: "custom:button-card"
     template: "card_kepath_floorplan_binary_item"
-    entity: "light.bed_e_light"
+    entity: "light.bed_e_light_bed_e_light"
     variables:
       ulm_card_kepath_floorplan_item_tooltip: "bed e light"
     style:
@@ -79,18 +79,32 @@ elements:
     template: "card_kepath_floorplan_item"
     entity: "fan.bed_e_fan"
     variables:
+      basic_simple_states:
+        warning_state:
+          icon: "mdi:fan-alert"
+        error_state:
+          icon: "mdi:fan-alert"
       common_button_icon_styles:
-        use_themes: false
         default_state:
+          use_themes: false
           icon: "mdi:fan-off"
-          icon_color: "rgba(var(--color-green),1)"
+          icon_color: "rgba(var(--color-theme),1)"
+          background_color: "rgba(130, 130, 130, 0.3)"
+        unknown_state:
+          icon: "mdi:fan-alert"
         unset_state:
           icon: "mdi:fan-alert"
       binary_switch_state:
-        use_themes: false
         on_state:
+          use_themes: true
           icon: "mdi:fan"
-          icon_color: "rgba(var(--color-blue),1)"
+          icon_color: "rgba(var(--color-green),1)"
+          background_color: "rgba(130, 130, 130, 0.3)"
+        off_state:
+          use_themes: false
+          icon: "mdi:fan-off"
+          icon_color: "rgba(var(--color-theme),1)"
+          background_color: "rgba(130, 130, 130, 0.3)"
       ulm_card_kepath_floorplan_item_tooltip: "bed e fan"
     style:
       left: "87%"

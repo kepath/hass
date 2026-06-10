@@ -52,32 +52,33 @@
 
 
 card_kepath_floorplan_binary_item_plug:
-  show_icon: true
-  show_label: false
-  show_name: false
+  template:
+    - "card_kepath_floorplan_common_styles"
+  # show_icon: true
+  # show_label: false
+  # show_name: false
   icon: "mdi:power-plug"
-  styles:
-    icon:
-      - width: "18px"
-      - height: "18px"
-      - line-height: "0"
-      - color: "rgba(var(--color-green),1)"
-    img_cell:
-      - border-radius: "50%"
-      - height: "32px"
-      - width: "32px"
-      - background-color: "rgba(130, 130, 130, 0.3)"
-      - backdrop-filter: "blur(8px)"
-    card:
-      - background-color: "rgba(100, 100, 100, 0.0)"
-    tooltip:
-      - font-weight: "bold"
-      - font-size: "12px"
-      - margin: "0"
-      - border: "0"
-      - border-radius: "0"
+  # styles:
+  #   # icon:
+  #   #   - width: "18px"
+  #   #   - height: "18px"
+  #   #   - line-height: "0"
+  #   #   - color: "rgba(var(--color-green),1)"
+  #   # img_cell:
+  #   #   - border-radius: "50%"
+  #   #   - height: "32px"
+  #   #   - width: "32px"
+  #   #   - background-color: "rgba(130, 130, 130, 0.3)"
+  #   #   - backdrop-filter: "blur(8px)"
+  #   card:
+  #     - background-color: "rgba(100, 100, 100, 0.0)"
+  #   tooltip:
+  #     - font-weight: "bold"
+  #     - font-size: "12px"
+  #     - margin: "0"
+  #     - border: "0"
+  #     - border-radius: "0"
   state:
-
     - operator: "template"
       value: >
         [[[
@@ -98,7 +99,7 @@ card_kepath_floorplan_binary_item_plug:
           - color: >
               [[[
                 var powerValue = 0;
-                var color = "rgba(var(--color-blue),1)";
+                var color = "rgba(var(--color-theme),1)";
                 if (variables?.ulm_card_kepath_floorplan_item_binary_device_power) {
                   powerValue = states[variables.ulm_card_kepath_floorplan_item_binary_device_power].state
                   if (!isNaN(powerValue) && powerValue !== undefined){
@@ -126,7 +127,7 @@ card_kepath_floorplan_binary_item_plug:
         icon:
           - color: >
               [[[
-                var color = "rgba(var(--color-blue),1)";
+                var color = "rgba(var(--color-theme),1)";
                 if (states[entity.entity_id]?.state) {
                   if (states[entity.entity_id].state == "on") {
                     color = "rgba(var(--color-green),1)";
@@ -189,24 +190,26 @@ card_kepath_floorplan_binary_item_plug:
 
 
 card_kepath_floorplan_binary_item_heater:
-  show_icon: true
-  show_label: false
-  show_name: false
+  template:
+    - "card_kepath_floorplan_common_styles"
+  # show_icon: true
+  # show_label: false
+  # show_name: false
   icon: "mdi:radiator-disabled"
   styles:
     icon:
-      - width: "18px"
-      - height: "18px"
-      - line-height: "0"
+      # - width: "18px"
+      # - height: "18px"
+      # - line-height: "0"
       - color: "rgba(221, 221, 221, 1.0)"
-    img_cell:
-      - border-radius: "50%"
-      - height: "32px"
-      - width: "32px"
-      - background-color: "rgba(130, 130, 130, 0.3)"
-      - backdrop-filter: "blur(8px)"
-    card:
-      - background-color: "rgba(100, 100, 100, 0.0)"
+    # img_cell:
+    #   - border-radius: "50%"
+    #   - height: "32px"
+    #   - width: "32px"
+    #   - background-color: "rgba(130, 130, 130, 0.3)"
+    #   - backdrop-filter: "blur(8px)"
+    # card:
+    #   - background-color: "rgba(100, 100, 100, 0.0)"
   state:
     - value: "on"
       icon: "mdi:radiator"
@@ -290,9 +293,11 @@ card_kepath_floorplan_binary_item_heater:
 
 
 card_kepath_floorplan_camera:
-  show_icon: true
+  template:
+    - "card_kepath_floorplan_common_styles"
+  # show_icon: true
   show_label: true
-  show_name: false
+  # show_name: false
   icon: "[[[ return variables.ulm_card_kepath_floorplan_camera_icon ]]]"
   label: >
     [[[
@@ -308,16 +313,16 @@ card_kepath_floorplan_camera:
     ]]]
   styles:
     icon:
-      - width: "18px"
-      - height: "18px"
-      - line-height: "0"
+      # - width: "18px"
+      # - height: "18px"
+      # - line-height: "0"
       - color: "rgba(221, 221, 221, 1.0)"
     img_cell:
-      - border-radius: "50%"
+      # - border-radius: "50%"
       - height: "30px"
       - width: "30px"
-      - background-color: "rgba(130, 130, 130, 0.3)"
-      - backdrop-filter: "blur(8px)"
+      # - background-color: "rgba(130, 130, 130, 0.3)"
+      # - backdrop-filter: "blur(8px)"
       - border: "2px solid rgba(130, 130, 130, 0.0)"
       - border-color: >
           [[[
@@ -329,17 +334,17 @@ card_kepath_floorplan_camera:
 
             return borderColor
           ]]]
-    card:
-      - background-color: "rgba(100, 100, 100, 0.0)"
-    label:
-      - justify-self: "start"
-      - align-self: "start"
-      - font-weight: "bold"
-      - font-size: "12px"
-      - margin: "0 12px 0 12px"
-      - text-overflow: "ellipsis"
-      - overflow: "hidden"
-      - color: "rgba(221, 221, 221, 0.4)"
+    # card:
+    #   - background-color: "rgba(100, 100, 100, 0.0)"
+    # label:
+    #   - justify-self: "start"
+    #   - align-self: "start"
+    #   - font-weight: "bold"
+    #   - font-size: "12px"
+    #   - margin: "0 12px 0 12px"
+    #   - text-overflow: "ellipsis"
+    #   - overflow: "hidden"
+    #   - color: "rgba(221, 221, 221, 0.4)"
   state:
     - operator: "template"
       value: "[[[ return (states[variables.ulm_card_kepath_floorplan_camera_motion_sensor].state == 'on') ]]]"
@@ -370,9 +375,11 @@ card_kepath_floorplan_camera:
 
 
 card_kepath_floorplan_door:
-  show_icon: true
+  template:
+    - "card_kepath_floorplan_common_styles"
+  # show_icon: true
   show_label: true
-  show_name: false
+  # show_name: false
   icon: >
     [[[
       var doorIcon = "mdi:door";
@@ -395,27 +402,27 @@ card_kepath_floorplan_door:
     ]]]
   styles:
     icon:
-      - width: "18px"
-      - height: "18px"
-      - line-height: "0"
+      # - width: "18px"
+      # - height: "18px"
+      # - line-height: "0"
       - color: "rgba(221, 221, 221, 1.0)"
-    img_cell:
-      - border-radius: "50%"
-      - height: "32px"
-      - width: "32px"
-      - background-color: "rgba(130, 130, 130, 0.3)"
-      - backdrop-filter: "blur(8px)"
-    card:
-      - background-color: "rgba(100, 100, 100, 0.0)"
-    label:
-      - justify-self: "start"
-      - align-self: "start"
-      - font-weight: "bold"
-      - font-size: "12px"
-      - margin: "0 12px 0 12px"
-      - text-overflow: "ellipsis"
-      - overflow: "hidden"
-      - color: "rgba(221, 221, 221, 0.4)"
+    # img_cell:
+    #   - border-radius: "50%"
+    #   - height: "32px"
+    #   - width: "32px"
+    #   - background-color: "rgba(130, 130, 130, 0.3)"
+    #   - backdrop-filter: "blur(8px)"
+    # card:
+    #   - background-color: "rgba(100, 100, 100, 0.0)"
+    # label:
+    #   - justify-self: "start"
+    #   - align-self: "start"
+    #   - font-weight: "bold"
+    #   - font-size: "12px"
+    #   - margin: "0 12px 0 12px"
+    #   - text-overflow: "ellipsis"
+    #   - overflow: "hidden"
+    #   - color: "rgba(221, 221, 221, 0.4)"
   tap_action:
     action: "more-info"
   state:
@@ -443,9 +450,11 @@ card_kepath_floorplan_door:
 
 
 card_kepath_floorplan_nest_protect:
-  show_icon: true
+  template:
+    - "card_kepath_floorplan_common_styles"
+  # show_icon: true
   show_label: true
-  show_name: false
+  # show_name: false
   icon: "mdi:smoke-detector-variant"
   label: >
     [[[
@@ -463,7 +472,7 @@ card_kepath_floorplan_nest_protect:
     icon:
       - color: "rgba(221, 221, 221, 1.0)"
     img_cell:
-      - border-radius: "50%"
+      # - border-radius: "50%"
       - width: "75%"
       - height: "75%"
       - max-width: "none"
@@ -474,22 +483,23 @@ card_kepath_floorplan_nest_protect:
       - transform: "translate(-50%,-50%)"
       - margin-top: "25%"
       - margin-left: "-25%"
-      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "none"
+      # - background-color: "rgba(130, 130, 130, 0.3)"
     card:
       - border-radius: "20px"
       - box-shadow: "var(--box-shadow)"
       - padding: "5px"
       - backdrop-filter: "blur(8px)"
-      - background-color: "rgba(100, 100, 100, 0.0)"
-    label:
-      - justify-self: "start"
-      - align-self: "start"
-      - font-weight: "bold"
-      - font-size: "12px"
-      - margin: "0 12px 0 12px"
-      - text-overflow: "ellipsis"
-      - overflow: "hidden"
-      - color: "rgba(221, 221, 221, 0.4)"
+      # - background-color: "rgba(100, 100, 100, 0.0)"
+    # label:
+    #   - justify-self: "start"
+    #   - align-self: "start"
+    #   - font-weight: "bold"
+    #   - font-size: "12px"
+    #   - margin: "0 12px 0 12px"
+    #   - text-overflow: "ellipsis"
+    #   - overflow: "hidden"
+    #   - color: "rgba(221, 221, 221, 0.4)"
     grid:
       - grid-template-areas: "'l l l l' 'i i i CO' 'i i i heat' 'i i i smoke'"
       - grid-template-columns: "1fr 1fr 1fr 1fr"
@@ -515,24 +525,26 @@ card_kepath_floorplan_nest_protect:
     CO:
       card:
         type: "custom:button-card"
+        template:
+          - "card_kepath_floorplan_common_nest_protect"
         icon: "mdi:molecule-co"
         styles:
-          icon:
-            - width: "14px"
-            - height: "14px"
-            - line-height: "0"
-            - color: "var(--card-background-color)"
-          img_cell:
-            - border-radius: "50%"
+          # icon:
+          #   - width: "14px"
+          #   - height: "14px"
+          #   - line-height: "0"
+          #   - color: "var(--card-background-color)"
+          # img_cell:
+          #   - border-radius: "50%"
             - background-color: "rgba(var(--color-blue),1)"
-            - height: "16px"
-            - width: "16px"
-          card:
-            - height: "100%"
-            - box-shadow: "none"
-            - padding: "0px"
-            - border-radius: "50%"
-            - margin: "1px"
+          #   - height: "16px"
+          #   - width: "16px"
+          # card:
+          #   - height: "100%"
+          #   - box-shadow: "none"
+          #   - padding: "0px"
+          #   - border-radius: "50%"
+          #   - margin: "1px"
         state:
           - operator: "template"
             value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_co_status].state ]]]"
@@ -556,27 +568,29 @@ card_kepath_floorplan_nest_protect:
     heat:
       card:
         type: "custom:button-card"
-        show_icon: true
-        show_label: false
-        show_name: false
+        template:
+          - "card_kepath_floorplan_common_nest_protect"
+        # show_icon: true
+        # show_label: false
+        # show_name: false
         icon: "mdi:thermometer"
         styles:
-          icon:
-            - width: "14px"
-            - height: "14px"
-            - line-height: "0"
-            - color: "var(--card-background-color)"
+          # icon:
+          #   - width: "14px"
+          #   - height: "14px"
+          #   - line-height: "0"
+          #   - color: "var(--card-background-color)"
           img_cell:
-            - border-radius: "50%"
+            # - border-radius: "50%"
             - background-color: "rgba(var(--color-yellow),1)"
-            - height: "16px"
-            - width: "16px"
-          card:
-            - height: "100%"
-            - box-shadow: "none"
-            - padding: "0px"
-            - border-radius: "50%"
-            - margin: "1px"
+          #   - height: "16px"
+          #   - width: "16px"
+          # card:
+          #   - height: "100%"
+          #   - box-shadow: "none"
+          #   - padding: "0px"
+          #   - border-radius: "50%"
+          #   - margin: "1px"
         state:
           - operator: "template"
             value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_heat_status].state ]]]"
@@ -600,27 +614,29 @@ card_kepath_floorplan_nest_protect:
     smoke:
       card:
         type: "custom:button-card"
-        show_icon: true
-        show_label: false
-        show_name: false
+        template:
+          - "card_kepath_floorplan_common_nest_protect"
+        # show_icon: true
+        # show_label: false
+        # show_name: false
         icon: "mdi:fire"
         styles:
-          icon:
-            - width: "14px"
-            - height: "14px"
-            - line-height: "0"
-            - color: "var(--card-background-color)"
+          # icon:
+          #   - width: "14px"
+          #   - height: "14px"
+          #   - line-height: "0"
+          #   - color: "var(--card-background-color)"
           img_cell:
-            - border-radius: "50%"
+            # - border-radius: "50%"
             - background-color: "rgba(var(--color-red),1)"
-            - height: "16px"
-            - width: "16px"
-          card:
-            - height: "100%"
-            - box-shadow: "none"
-            - padding: "0px"
-            - border-radius: "50%"
-            - margin: "1px"
+          #   - height: "16px"
+          #   - width: "16px"
+          # card:
+          #   - height: "100%"
+          #   - box-shadow: "none"
+          #   - padding: "0px"
+          #   - border-radius: "50%"
+          #   - margin: "1px"
         state:
           - operator: "template"
             value: "[[[ return states[variables.ulm_card_kepath_floorplan_nest_protect_smoke_status].state ]]]"
@@ -651,21 +667,24 @@ card_kepath_floorplan_nest_protect:
 
 
 card_kepath_floorplan_nest_protect_alert:
-  show_icon: true
-  show_label: false
-  show_name: false
+  template:
+    - "card_kepath_floorplan_common_styles"
+  # show_icon: true
+  # show_label: false
+  # show_name: false
   icon: "[[[ return variables.card_kepath_floorplan_nest_protect_alert_icon ]]]"
   styles:
     icon:
       - width: "14px"
       - height: "14px"
-      - line-height: "0"
+      # - line-height: "0"
       - color: "var(--card-background-color)"
     img_cell:
-      - border-radius: "50%"
+      # - border-radius: "50%"
       - background-color: "[[[ return variables.card_kepath_floorplan_nest_protect_alert_color ]]]"
       - height: "16px"
       - width: "16px"
+      - backdrop-filter: "none"
     card:
       - height: "100%"
       - box-shadow: "none"
@@ -694,7 +713,9 @@ card_kepath_floorplan_nest_protect_alert:
 
 
 card_kepath_floorplan_thermostat:
-  show_icon: true
+  template:
+    - "card_kepath_floorplan_common_styles"
+  # show_icon: true
   show_label: true
   show_name: true
   name: >
@@ -721,30 +742,32 @@ card_kepath_floorplan_thermostat:
   styles:
     card:
       - background-color: "rgba(130, 130, 130, 0.3)"
-      - backdrop-filter: "blur(8px)"
+      # - backdrop-filter: "blur(8px)"
       - border-radius: "20px"
     label:
       - justify-self: "end"
       - align-self: "end"
-      - font-weight: "bold"
+      # - font-weight: "bold"
       - font-size: "10px"
-      - text-overflow: "ellipsis"
-      - overflow: "hidden"
+      # - text-overflow: "ellipsis"
+      # - overflow: "hidden"
       - margin: "0 6px 0 6px"
-      - color: "rgba(221, 221, 221, 0.4)"
-    name:
-      - justify-self: "start"
-      - align-self: "start"
-      - font-weight: "bold"
-      - font-size: "10px"
-      - text-overflow: "ellipsis"
-      - overflow: "hidden"
-      - margin: "0 6px 0 6px"
-      - color: "rgba(221, 221, 221, 0.4)"
+      # - color: "rgba(221, 221, 221, 0.4)"
+    img_cell:
+      - background-color: "inherit"
+    # name:
+    #   - justify-self: "start"
+    #   - align-self: "start"
+    #   - font-weight: "bold"
+    #   - font-size: "10px"
+    #   - text-overflow: "ellipsis"
+    #   - overflow: "hidden"
+    #   - margin: "0 6px 0 6px"
+    #   - color: "rgba(221, 221, 221, 0.4)"
     icon:
       - width: "14px"
       - height: "14px"
-      - line-height: "0"
+      # - line-height: "0"
       - color: "rgba(var(--color-yellow),0.8)"
       - margin-right: "15px"
       - display: "none"
@@ -907,27 +930,28 @@ card_kepath_floorplan_thermostat:
 
 card_kepath_floorplan_network_item:
   template:
+    - "card_kepath_floorplan_common_styles"
     - "ulm_gradient_green_to_red_18step"
-  show_icon: true
-  show_label: false
-  show_name: false
+  # show_icon: true
+  # show_label: false
+  # show_name: false
   icon: >
     [[[
       return (variables?.ulm_card_kepath_floorplan_network_device_icon ? variables.ulm_card_kepath_floorplan_network_device_icon : "mdi:network-outline")
     ]]]
   styles:
     icon:
-      - width: "18px"
-      - height: "18px"
-      - line-height: "0"
+      # - width: "18px"
+      # - height: "18px"
+      # - line-height: "0"
       - color: >
           [[[
             return (variables?.ulm_card_kepath_floorplan_network_device_color ? variables.ulm_card_kepath_floorplan_network_device_color : "#121212")
           ]]]
     img_cell:
-      - border-radius: "50%"
-      - height: "32px"
-      - width: "32px"
+      # - border-radius: "50%"
+      # - height: "32px"
+      # - width: "32px"
       - background-color: >
           [[[
             var dataSpeed = 0;
@@ -945,9 +969,9 @@ card_kepath_floorplan_network_item:
             }
             return color;
           ]]]
-      - backdrop-filter: "blur(8px)"
-    card:
-      - background-color: "rgba(100, 100, 100, 0.0)"
+    #   - backdrop-filter: "blur(8px)"
+    # card:
+    #   - background-color: "rgba(100, 100, 100, 0.0)"
   state:
     - template:
       value: "[[[ return ((states[entity.entity_id]?.state == 'unavailable' || states[entity.entity_id]?.state == 'unknown') ? true : false) ]]]"
@@ -959,9 +983,11 @@ card_kepath_floorplan_network_item:
 
 
 card_kepath_floorplan_lock:
-  show_icon: true
+  template:
+    - "card_kepath_floorplan_common_styles"
+  # show_icon: true
   show_label: true
-  show_name: false
+  # show_name: false
   icon: >
     [[[
       var doorIcon = "mdi:lock";
@@ -984,27 +1010,27 @@ card_kepath_floorplan_lock:
     ]]]
   styles:
     icon:
-      - width: "18px"
-      - height: "18px"
-      - line-height: "0"
+      # - width: "18px"
+      # - height: "18px"
+      # - line-height: "0"
       - color: "rgba(221, 221, 221, 1.0)"
-    img_cell:
-      - border-radius: "50%"
-      - height: "32px"
-      - width: "32px"
-      - background-color: "rgba(130, 130, 130, 0.3)"
-      - backdrop-filter: "blur(8px)"
-    card:
-      - background-color: "rgba(100, 100, 100, 0.0)"
-    label:
-      - justify-self: "start"
-      - align-self: "start"
-      - font-weight: "bold"
-      - font-size: "12px"
-      - margin: "0 12px 0 12px"
-      - text-overflow: "ellipsis"
-      - overflow: "hidden"
-      - color: "rgba(221, 221, 221, 0.4)"
+    # img_cell:
+    #   - border-radius: "50%"
+    #   - height: "32px"
+    #   - width: "32px"
+    #   - background-color: "rgba(130, 130, 130, 0.3)"
+    #   - backdrop-filter: "blur(8px)"
+    # card:
+    #   - background-color: "rgba(100, 100, 100, 0.0)"
+    # label:
+    #   - justify-self: "start"
+    #   - align-self: "start"
+    #   - font-weight: "bold"
+    #   - font-size: "12px"
+    #   - margin: "0 12px 0 12px"
+    #   - text-overflow: "ellipsis"
+    #   - overflow: "hidden"
+    #   - color: "rgba(221, 221, 221, 0.4)"
   tap_action:
     action: "more-info"
   state:
@@ -1033,56 +1059,51 @@ card_kepath_floorplan_lock:
 
 card_kepath_floorplan_binary_item:
   template:
-    - "common_button_icon_styles"
+    - "common_objects_and_styles"
+    - "simple_states_styles"
     - "simple_switch_state"
+    - "card_kepath_floorplan_common_styles"
   variables:
+    basic_simple_states:
+      warning_state:
+        use_themes: false
+        icon: "mdi:lightbulb-alert"
+      error_state:
+        icon: "mdi:lightbulb-alert"
     common_button_icon_styles:
-      use_themes: false
       default_state:
+        use_themes: false
         icon: "mdi:lightbulb-outline"
         icon_color: "rgba(221, 221, 221, 1.0)"
         background_color: "rgba(130, 130, 130, 0.3)"
+      unknown_state:
+        icon: "mdi:lightbulb-question"
       unset_state:
-        icon: "mdi:lightbulb-outline"
-        icon_color: "rgba(var(--color-red), 0.6)"
-        background_color: "rgba(130, 130, 130, 0.5)"
+        icon: "mdi:lightbulb-question"
     binary_switch_state:
-      use_themes: false
       on_state:
+        use_themes: true
         icon: "mdi:lightbulb-on"
-        icon_color: "rgba(var(--color-yellow),1)"
-        background_color: "rgba(130, 130, 130, 0.3)"
+        icon_color: "yellow"
+        background_color: "theme"
+        # icon_color: "rgba(var(--color-yellow),1)"
+        # background_color: "rgba(130, 130, 130, 0.3)"
+      off_state:
+        use_themes: true
+        icon: "mdi:lightbulb-outline"
+        # icon_color: "rgba(221, 221, 221, 1.0)"
+        # background_color: "rgba(130, 130, 130, 0.3)"
     ulm_card_kepath_floorplan_item_tooltip: "unknown item"
-  show_icon: true
-  show_label: false
-  show_name: false
-  styles:
-    icon:
-      - width: "18px"
-      - height: "18px"
-      - line-height: "0"
-    img_cell:
-      - border-radius: "50%"
-      - height: "32px"
-      - width: "32px"
-      - backdrop-filter: "blur(8px)"
-    card:
-      - background-color: "rgba(100, 100, 100, 0.0)"
-    tooltip:
-      - font-weight: "bold"
-      - font-size: "12px"
-      - margin: "0"
-      - border: "0"
-      - border-radius: "0"
-  state:
-    - template:
-      value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
-      icon: "[[[return variables?.common_button_icon_styles?.unset_state?.icon;]]]"
-      styles:
-        icon:
-          - color: "[[[return variables?.common_button_icon_styles?.unset_state?.icon_color;]]]"
-        img_cell:
-          - background-color: "[[[return variables?.common_button_icon_styles?.unset_state?.background_color;]]]"
+
+  # state:
+  #   - template:
+  #     value: "[[[ return (entity?.state == 'unavailable' || entity?.state == 'unknown' ? true : false) ]]]"
+  #     icon: "[[[return variables?.common_button_icon_styles?.unset_state?.icon;]]]"
+  #     styles:
+  #       icon:
+  #         - color: "[[[return variables?.common_button_icon_styles?.unset_state?.icon_color;]]]"
+  #       img_cell:
+  #         - background-color: "[[[return variables?.common_button_icon_styles?.unset_state?.background_color;]]]"
   tooltip: >
     [[[
       var toolTipText = "unknown item";
@@ -1095,3 +1116,70 @@ card_kepath_floorplan_binary_item:
     action: "toggle"
   hold_action:
     action: "more-info"
+
+
+card_kepath_floorplan_common_styles:
+  show_icon: true
+  show_label: false
+  show_name: false
+  styles:
+    icon:
+      - width: "18px"
+      - height: "18px"
+      - line-height: "0"
+    img_cell:
+      - border-radius: "50%"
+      - height: "32px"
+      - width: "32px"
+      - background-color: "rgba(130, 130, 130, 0.3)"
+      - backdrop-filter: "blur(8px)"
+    card:
+      - background-color: "rgba(100, 100, 100, 0.0)"
+    tooltip:
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0"
+      - border: "0"
+      - border-radius: "0"
+    label:
+      - justify-self: "start"
+      - align-self: "start"
+      - font-weight: "bold"
+      - font-size: "12px"
+      - margin: "0 12px 0 12px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - color: "rgba(221, 221, 221, 0.4)"
+    name:
+      - justify-self: "start"
+      - align-self: "start"
+      - font-weight: "bold"
+      - font-size: "10px"
+      - text-overflow: "ellipsis"
+      - overflow: "hidden"
+      - margin: "0 6px 0 6px"
+      - color: "rgba(221, 221, 221, 0.4)"
+    ellipsis:
+      - display: "none"
+
+card_kepath_floorplan_common_nest_protect:
+  show_icon: true
+  show_label: false
+  show_name: false
+  styles:
+    icon:
+      - width: "14px"
+      - height: "14px"
+      - line-height: "0"
+      - color: "var(--card-background-color)"
+    img_cell:
+      - border-radius: "50%"
+      # - background-color: "rgba(var(--color-blue),1)"
+      - height: "16px"
+      - width: "16px"
+    card:
+      - height: "100%"
+      - box-shadow: "none"
+      - padding: "0px"
+      - border-radius: "50%"
+      - margin: "1px"
