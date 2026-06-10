@@ -100,7 +100,7 @@ views:
           <h1><ha-icon icon="mdi:shield-link-variant"></ha-icon>&nbsp;Watchman report</h1>
           <h3>Missing Entities: {{ states("sensor.watchman_missing_entities") }}</h3>
           <table>
-          {%- for item in state_attr("sensor.watchman_missing_entities", "entities") -%}
+          {%- for item in state_attr("sensor.watchman_missing_entities", "entities")|sort(attribute="occurrences,id") -%}
             {%- if item.state=="missing" -%}
               {%- if loop.changed(item.occurrences.split(':')[0]) -%}
                 <tr>
