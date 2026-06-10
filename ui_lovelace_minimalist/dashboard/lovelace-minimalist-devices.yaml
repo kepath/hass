@@ -107,337 +107,337 @@ views:
     cards:
       - type: "custom:button-card"
         template: "custom_card_mpse_printer"
-        entity: "sensor.mfc_j870dw_status"
+        entity: "sensor.brother_mfc_j870dw_bed_c_status"
         variables:
           ulm_card_printer_name: "Brother MFC-J870DW"
-          ulm_card_printer_black_name: "sensor.mfc_j870dw_black_ink_remaining"
-          ulm_card_printer_yellow_name: "sensor.mfc_j870dw_yellow_ink_remaining"
-          ulm_card_printer_cyan_name: "sensor.mfc_j870dw_cyan_ink_remaining"
-          ulm_card_printer_magenta_name: "sensor.mfc_j870dw_magenta_ink_remaining"
+          ulm_card_printer_black_name: "sensor.brother_mfc_j870dw_bed_c_black_ink_remaining"
+          ulm_card_printer_yellow_name: "sensor.brother_mfc_j870dw_bed_c_yellow_ink_remaining"
+          ulm_card_printer_cyan_name: "sensor.brother_mfc_j870dw_bed_c_cyan_ink_remaining"
+          ulm_card_printer_magenta_name: "sensor.brother_mfc_j870dw_bed_c_magenta_ink_remaining"
       - type: "custom:button-card"
         template: "card_generic_swap"
-        entity: "sensor.mfc_j870dw_status"
+        entity: "sensor.brother_mfc_j870dw_bed_c_status"
       - type: "custom:button-card"
         template: "card_generic_swap"
-        entity: "sensor.mfc_j870dw_page_counter"
+        entity: "sensor.brother_mfc_j870dw_bed_c_page_counter"
       - type: "custom:button-card"
         template: "card_generic_swap"
-        entity: "sensor.mfc_j870dw_b_w_pages"
+        entity: "sensor.brother_mfc_j870dw_bed_c_b_w_pages"
       - type: "custom:button-card"
         template: "card_generic_swap"
-        entity: "sensor.mfc_j870dw_color_pages"
+        entity: "sensor.brother_mfc_j870dw_bed_c_color_pages"
+      # - type: "custom:button-card"
+      #   template: "card_generic_swap"
+      #   entity: "sensor.mfc_j870dw_last_restart"
       - type: "custom:button-card"
         template: "card_generic_swap"
-        entity: "sensor.mfc_j870dw_last_restart"
+        entity: "sensor.brother_mfc_j870dw_bed_c_rx"
+        value_template: "{{states('sensor.brother_mfc_j870dw_bed_c_rx') | round(2, 'floor')}}"
       - type: "custom:button-card"
         template: "card_generic_swap"
-        entity: "sensor.brother_mfc_j870dw_printer_unifi_rx"
-        value_template: "{{states('sensor.brother_mfc_j870dw_printer_unifi_rx') | round(2, 'floor')}}"
-      - type: "custom:button-card"
-        template: "card_generic_swap"
-        entity: "sensor.brother_mfc_j870dw_printer_unifi_tx"
-        value_template: "{{states('sensor.brother_mfc_j870dw_printer_unifi_tx') | round(2, 'floor')}}"
+        entity: "sensor.brother_mfc_j870dw_bed_c_tx"
+        value_template: "{{states('sensor.brother_mfc_j870dw_bed_c_tx') | round(2, 'floor')}}"
       - type: "custom:button-card"
         template: "edge"
 
-  - title: "NAS"
-    icon: "mdi:nas"
-    theme: "minimalist-mobile"
-    cards:
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_cpu_load_average_15_min"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_cpu_load_average_1_min"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_cpu_load_average_5_min"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_cpu_utilization_other"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_cpu_utilization_system"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_cpu_utilization_total"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_cpu_utilization_user"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_drive_1_status"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_drive_1_temperature"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_drive_2_status"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_drive_2_temperature"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_drive_3_status"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_drive_3_temperature"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_drive_4_status"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_drive_4_temperature"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_memory_available_real"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_memory_available_swap"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_memory_cached"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_memory_size"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_memory_total_real"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_memory_total_swap"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_memory_usage_real"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.synology_diskstation_ds412_net_unifi_rx"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.synology_diskstation_ds412_net_unifi_tx"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_temperature"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_volume_1_average_disk_temp"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_volume_1_status"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_volume_1_total_size"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_volume_1_used_space"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.diskstation_volume_1_volume_used"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "update.diskstation_dsm_update"
+  # - title: "NAS"
+  #   icon: "mdi:nas"
+  #   theme: "minimalist-mobile"
+  #   cards:
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_cpu_load_average_15_min"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_cpu_load_average_1_min"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_cpu_load_average_5_min"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_cpu_utilization_other"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_cpu_utilization_system"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_cpu_utilization_total"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_cpu_utilization_user"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_drive_1_status"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_drive_1_temperature"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_drive_2_status"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_drive_2_temperature"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_drive_3_status"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_drive_3_temperature"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_drive_4_status"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_drive_4_temperature"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_memory_available_real"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_memory_available_swap"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_memory_cached"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_memory_size"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_memory_total_real"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_memory_total_swap"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_memory_usage_real"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.synology_diskstation_ds412_net_unifi_rx"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.synology_diskstation_ds412_net_unifi_tx"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_temperature"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_volume_1_average_disk_temp"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_volume_1_status"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_volume_1_total_size"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_volume_1_used_space"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.diskstation_volume_1_volume_used"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "update.diskstation_dsm_update"
 
-      - type: "custom:canvas-gauge-card"
-        entity: "sensor.diskstation_cpu_utilization_total"
-        card_height: 125
-        dropshadow: false
-        gauge:
-          type: "radial-gauge"
-          title: "CPU Utilisation (Total)"
-          width: 220
-          height: 220
-          borderShadowWidth: 0
-          borderOuterWidth: 0
-          borderMiddleWidth: 0
-          borderInnerWidth: 0
-          minValue: 0
-          maxValue: 100
-          startAngle: 90
-          ticksAngle: 180
-          valueBox: false
-          majorTicks:
-            ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]
-          minorTicks: 2
-          strokeTicks: true
-          highlights:
-            [{ "from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)" }]
-          colorPlate: "#ddd"
-          borders: false
-          needleType: "arrow"
-          needleWidth: 2
-          needleCircleSize: 7
-          needleCircleOuter: true
-          needleCircleInner: false
-          animationDuration: 1500
-          animationRule: "linear"
-      - type: "custom:sixdegrees-card"
-        entity: "sensor.diskstation_temperature"
-        title: false
-        name: true
-        show_value: false
-        min: 10
-        max: 60
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:sixdegrees-card"
-            entity: "sensor.diskstation_drive_1_temperature"
-            title: false
-            name: true
-            show_value: false
-            min: 10
-            max: 60
-          - type: "custom:sixdegrees-card"
-            entity: "sensor.diskstation_drive_2_temperature"
-            title: false
-            name: true
-            show_value: true
-            min: 10
-            max: 60
-          - type: "custom:sixdegrees-card"
-            entity: "sensor.diskstation_drive_3_temperature"
-            title: false
-            name: false
-            show_value: true
-            min: 10
-            max: 60
-          - type: "custom:sixdegrees-card"
-            entity: "sensor.diskstation_drive_4_temperature"
-            title: false
-            name: false
-            show_value: false
-            min: 10
-            max: 60
+  #     - type: "custom:canvas-gauge-card"
+  #       entity: "sensor.diskstation_cpu_utilization_total"
+  #       card_height: 125
+  #       dropshadow: false
+  #       gauge:
+  #         type: "radial-gauge"
+  #         title: "CPU Utilisation (Total)"
+  #         width: 220
+  #         height: 220
+  #         borderShadowWidth: 0
+  #         borderOuterWidth: 0
+  #         borderMiddleWidth: 0
+  #         borderInnerWidth: 0
+  #         minValue: 0
+  #         maxValue: 100
+  #         startAngle: 90
+  #         ticksAngle: 180
+  #         valueBox: false
+  #         majorTicks:
+  #           ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]
+  #         minorTicks: 2
+  #         strokeTicks: true
+  #         highlights:
+  #           [{ "from": 80, "to": 100, "color": "rgba(200, 50, 50, .75)" }]
+  #         colorPlate: "#ddd"
+  #         borders: false
+  #         needleType: "arrow"
+  #         needleWidth: 2
+  #         needleCircleSize: 7
+  #         needleCircleOuter: true
+  #         needleCircleInner: false
+  #         animationDuration: 1500
+  #         animationRule: "linear"
+  #     - type: "custom:sixdegrees-card"
+  #       entity: "sensor.diskstation_temperature"
+  #       title: false
+  #       name: true
+  #       show_value: false
+  #       min: 10
+  #       max: 60
+  #     - type: "horizontal-stack"
+  #       cards:
+  #         - type: "custom:sixdegrees-card"
+  #           entity: "sensor.diskstation_drive_1_temperature"
+  #           title: false
+  #           name: true
+  #           show_value: false
+  #           min: 10
+  #           max: 60
+  #         - type: "custom:sixdegrees-card"
+  #           entity: "sensor.diskstation_drive_2_temperature"
+  #           title: false
+  #           name: true
+  #           show_value: true
+  #           min: 10
+  #           max: 60
+  #         - type: "custom:sixdegrees-card"
+  #           entity: "sensor.diskstation_drive_3_temperature"
+  #           title: false
+  #           name: false
+  #           show_value: true
+  #           min: 10
+  #           max: 60
+  #         - type: "custom:sixdegrees-card"
+  #           entity: "sensor.diskstation_drive_4_temperature"
+  #           title: false
+  #           name: false
+  #           show_value: false
+  #           min: 10
+  #           max: 60
 
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-        entity: "binary_sensor.diskstation_drive_1_below_min_remaining_life"
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-        entity: "binary_sensor.diskstation_drive_1_exceeded_max_bad_sectors"
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-        entity: "binary_sensor.diskstation_drive_2_below_min_remaining_life"
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-        entity: "binary_sensor.diskstation_drive_2_exceeded_max_bad_sectors"
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-        entity: "binary_sensor.diskstation_drive_3_below_min_remaining_life"
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-        entity: "binary_sensor.diskstation_drive_3_exceeded_max_bad_sectors"
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-        entity: "binary_sensor.diskstation_drive_4_below_min_remaining_life"
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-        entity: "binary_sensor.diskstation_drive_4_exceeded_max_bad_sectors"
-      - type: "custom:button-card"
-        template: "card_binary_sensor"
-        variables:
-          ulm_card_binary_sensor_alert: true
-          ulm_show_last_changed: true
-        entity: "binary_sensor.diskstation_security_status"
-      - type: "custom:button-card"
-        template: "card_input_boolean"
-        entity: "button.diskstation_reboot"
-      - type: "custom:button-card"
-        template: "card_input_boolean"
-        entity: "button.diskstation_shutdown"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #       entity: "binary_sensor.diskstation_drive_1_below_min_remaining_life"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #       entity: "binary_sensor.diskstation_drive_1_exceeded_max_bad_sectors"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #       entity: "binary_sensor.diskstation_drive_2_below_min_remaining_life"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #       entity: "binary_sensor.diskstation_drive_2_exceeded_max_bad_sectors"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #       entity: "binary_sensor.diskstation_drive_3_below_min_remaining_life"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #       entity: "binary_sensor.diskstation_drive_3_exceeded_max_bad_sectors"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #       entity: "binary_sensor.diskstation_drive_4_below_min_remaining_life"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #       entity: "binary_sensor.diskstation_drive_4_exceeded_max_bad_sectors"
+  #     - type: "custom:button-card"
+  #       template: "card_binary_sensor"
+  #       variables:
+  #         ulm_card_binary_sensor_alert: true
+  #         ulm_show_last_changed: true
+  #       entity: "binary_sensor.diskstation_security_status"
+  #     - type: "custom:button-card"
+  #       template: "card_input_boolean"
+  #       entity: "button.diskstation_reboot"
+  #     - type: "custom:button-card"
+  #       template: "card_input_boolean"
+  #       entity: "button.diskstation_shutdown"
 
-  - title: "NUT (UPS)"
-    icon: "mdi:home-battery"
-    theme: "minimalist-mobile"
-    cards:
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_load"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_ups_shutdown_delay"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_load_reboot_timer"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_load_shutdown_timer"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_self_test_result"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_nominal_real_power"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_beeper_status"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_battery_charge"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_low_battery_setpoint"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_status"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_nominal_input_voltage"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_input_voltage"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_high_voltage_transfer"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_low_voltage_transfer"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_input_power_sensitivity"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_battery_chemistry"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_battery_manuf_date"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_battery_date"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_low_battery_runtime"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_battery_runtime"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_nominal_battery_voltage"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_battery_voltage"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_warning_battery_setpoint"
-      - type: "custom:button-card"
-        template: "card_generic"
-        entity: "sensor.ups_status_data"
+  # - title: "NUT (UPS)"
+  #   icon: "mdi:home-battery"
+  #   theme: "minimalist-mobile"
+  #   cards:
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_load"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_ups_shutdown_delay"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_load_reboot_timer"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_load_shutdown_timer"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_self_test_result"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_nominal_real_power"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_beeper_status"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_battery_charge"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_low_battery_setpoint"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_status"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_nominal_input_voltage"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_input_voltage"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_high_voltage_transfer"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_low_voltage_transfer"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_input_power_sensitivity"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_battery_chemistry"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_battery_manuf_date"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_battery_date"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_low_battery_runtime"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_battery_runtime"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_nominal_battery_voltage"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_battery_voltage"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_warning_battery_setpoint"
+  #     - type: "custom:button-card"
+  #       template: "card_generic"
+  #       entity: "sensor.ups_status_data"
 
   - title: "Arcade Machine"
     icon: "mdi:controller-classic"
