@@ -143,12 +143,12 @@ template:
                 state_attr('sensor.binary_sensor_state_counts', 'climate_devices_on_count')|int(0),
                 state_attr('sensor.binary_sensor_state_counts', 'lawn_mower_busy_count')|int(0),
                 1 if is_state('switch.drinks_fridge_plug_bed_c'|lower, 'on') else 0,
-                1 if is_state('binary_sensor.washing_machine_is_active'|lower, 'on') else 0,
-                1 if is_state('binary_sensor.is_tumble_dryer_on'|lower, 'on') else 0,
-                1 if is_state('binary_sensor.is_dishwasher_on'|lower, 'on') else 0,
-                1 if is_state('binary_sensor.yamaha_reciever_state'|lower, 'on') else 0,
-                1 if is_state('binary_sensor.is_arcade_pc_on'|lower, 'on') else 0,
-                1 if is_state('binary_sensor.is_big_pc_on'|lower, 'on') else 0,
+                1 if is_state('sensor.washing_machine_simple_state'|lower, 'on') else 0,
+                1 if is_state('sensor.tumble_dryer_simple_state'|lower, 'on') else 0,
+                1 if is_state('sensor.dishwasher_simple_state'|lower, 'on') else 0,
+                1 if is_state('remote.rx_v777_main_remote'|lower, 'on') else 0,
+                1 if is_state('sensor.arcadepc_sensor_simple_state'|lower, 'on') else 0,
+                1 if is_state('sensor.bigpc_sensor_simple_state'|lower, 'on') else 0,
               0]|sum
             }}
           tab_alert_sensors_triggered_count: >
@@ -248,3 +248,13 @@ template:
         attributes:
           brother: "{{ integration_entities('brother') + integration_entities('brother_scanner') }}"
           browser_mod: "{{ integration_entities('browser_mod') }}"
+
+
+      - unique_id: "_unique_docker_container_details"
+        name: "Collated Docker Details"
+        state: "0"
+        attributes:
+          icon: "simple-icons:docker"
+          docker_json: >
+            {% from 'docker_container.jinja' import build_docker_json %}
+            {{ build_docker_json() }}

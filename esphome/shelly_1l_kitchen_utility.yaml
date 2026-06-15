@@ -1,7 +1,8 @@
 ---
 substitutions:
   device_name: "shellykitchenutility"
-  friendly_name: "Shelly Light Switch Kitchen Utility and Backdoor"
+  friendly_name: "Kitchen Utility Light"
+  friendly_name2: "Back Door Light"
   area: "kitchen"
   light1_icon: "mdi:vanity-light"
   light2_icon: "mdi:coach-lamp"
@@ -18,21 +19,21 @@ substitutions:
 
 light:
   - platform: "binary"
-    name: "${device_name}_light_1"
-    output: "${device_name}_shellyrelay1"
+    name: "${friendly_name}"
+    output: "${device_name}_relay1"
     id: "${device_name}_lightid1"
     icon: "${light1_icon}"
-
+    
   - platform: "binary"
-    name: "${device_name}_light_2"
+    name: "${friendly_name2}"
     output: "ha_script"
     id: "${device_name}_lightid2"
     icon: "${light2_icon}"
-
+    
 output:
   - platform: "gpio"
     pin: "GPIO5"
-    id: "${device_name}_shellyrelay1"
+    id: "${device_name}_relay1"
 
   - platform: "template"
     type: "binary"
@@ -44,30 +45,35 @@ output:
 
 binary_sensor:
   - platform: "status"
-    name: "${device_name}_status"
+    name: "${friendly_name} Status"
+    id: "${device_name}_status"
     icon: "mdi:web-check"
     device_class: "connectivity"
     filters:
       - delayed_off: "5min"
-
+      
   - platform: "gpio"
     pin:
       number: "GPIO4"
-    name: "${device_name}_switch_1"
+    name: "${friendly_name} Switch"
     id: "${device_name}_switchid1"
     icon: "mdi:light-switch"
     on_state:
       then:
         - light.toggle: "${device_name}_lightid1"
     filters:
-      - delayed_on_off: "50ms"
-
+      - delayed_on_off: 50ms
+    device_class: "power"
+        
   - platform: "gpio"
     pin:
       number: "GPIO14"
-    name: "${device_name}_switch_2"
+    name: "${friendly_name2} Switch"
     id: "${device_name}_switchid2"
     icon: "mdi:light-switch"
     on_state:
       then:
         - light.toggle: "${device_name}_lightid2"
+    device_class: "power"
+
+    

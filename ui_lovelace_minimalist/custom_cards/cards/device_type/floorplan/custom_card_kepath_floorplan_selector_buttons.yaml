@@ -25,31 +25,31 @@ card_kepath_floorplan_selector_buttons:
         template: "card_kepath_floorplan_selector_button"
         entity: "input_select.floorplan_floor"
         variables:
-          ulm_card_kepath_floorplan_selector_button_icon: "mdi:home-floor-g"
-          ulm_card_kepath_floorplan_selector_button_service: "input_select.select_option"
-          ulm_card_kepath_floorplan_selector_button_option: "G"
+          floorplan_selector_button_icon: "mdi:home-floor-g"
+          floorplan_selector_button_service: "input_select.select_option"
+          floorplan_selector_button_option: "G"
     floor_first:
       card:
         type: "custom:button-card"
         template: "card_kepath_floorplan_selector_button"
         entity: "input_select.floorplan_floor"
         variables:
-          ulm_card_kepath_floorplan_selector_button_icon: "mdi:home-floor-1"
-          ulm_card_kepath_floorplan_selector_button_service: "input_select.select_option"
-          ulm_card_kepath_floorplan_selector_button_option: "1"
+          floorplan_selector_button_icon: "mdi:home-floor-1"
+          floorplan_selector_button_service: "input_select.select_option"
+          floorplan_selector_button_option: "1"
     floor_second:
       card:
         type: "custom:button-card"
         template: "card_kepath_floorplan_selector_button"
         entity: "input_select.floorplan_floor"
         variables:
-          ulm_card_kepath_floorplan_selector_button_icon: "mdi:home-floor-2"
-          ulm_card_kepath_floorplan_selector_button_service: "input_select.select_option"
-          ulm_card_kepath_floorplan_selector_button_option: "2"
+          floorplan_selector_button_icon: "mdi:home-floor-2"
+          floorplan_selector_button_service: "input_select.select_option"
+          floorplan_selector_button_option: "2"
 
 
 card_kepath_floorplan_selector_button:
-  icon: "[[[ return variables.ulm_card_kepath_floorplan_selector_button_icon ]]]"
+  icon: "[[[ return variables.floorplan_selector_button_icon ]]]"
   show_icon: true
   show_label: false
   show_name: false
@@ -59,7 +59,7 @@ card_kepath_floorplan_selector_button:
       - color: >
           [[[
             var returnedColour = "var(--primary-text-color)";
-            if (states[entity.entity_id].state == variables.ulm_card_kepath_floorplan_selector_button_option) {
+            if (states[entity.entity_id].state == variables.floorplan_selector_button_option) {
               returnedColour = "rgba(var(--color-yellow),1)";
             }
 
@@ -70,9 +70,9 @@ card_kepath_floorplan_selector_button:
       - box-shadow: "none"
   tap_action:
     action: "call-service"
-    service: "[[[ return variables.ulm_card_kepath_floorplan_selector_button_service ]]]"
+    service: "[[[ return variables.floorplan_selector_button_service ]]]"
     service_data:
-      option: "[[[ return variables.ulm_card_kepath_floorplan_selector_button_option ]]]"
+      option: "[[[ return variables.floorplan_selector_button_option ]]]"
       entity_id: "[[[ return entity.entity_id ]]]"
 
 

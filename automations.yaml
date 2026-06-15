@@ -3,9 +3,11 @@
   description: ''
   triggers:
   - entity_id:
-    - binary_sensor.yamaha_reciever_state
-    from: 'on'
-    to: 'off'
+    - media_player.yamaha_rx_v777_reciever_integration_music_assistant_bed_c
+    from:
+    - 'on'
+    to:
+    - 'off'
     id: dfsdfsdewwer21
     trigger: state
   conditions: []
@@ -20,9 +22,11 @@
   description: ''
   triggers:
   - entity_id:
-    - binary_sensor.yamaha_reciever_state
-    from: 'off'
-    to: 'on'
+    - media_player.yamaha_rx_v777_reciever_integration_music_assistant_bed_c
+    from:
+    - 'off'
+    to:
+    - 'on'
     id: 345343gges4
     trigger: state
   conditions: []
@@ -33,7 +37,7 @@
     domain: switch
   - type: turn_off
     device_id: ecdc93708d2afbf8f645e3eb84d0e39c
-    entity_id: e6b4d1e2ff0ee908b2748c74dc79e446
+    entity_id: d583e1eb09cf707e4d7b261143a7bd89
     domain: light
   mode: single
 - id: '1616842943101'
@@ -96,7 +100,7 @@
   actions:
   - type: turn_on
     device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: 1813701c3c3e731fbc2e7d96fdc28608
+    entity_id: 7ffed542d9679187ac8a66726336bf89
     domain: light
   mode: single
 - id: '1666811718812'
@@ -136,9 +140,6 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
       excluded_entities:
-      - light.shelly_1l_hallway_bottom_light_2
-      - light.shelly_1l_kitchen_utility_light_2
-      - light.camera_indoor_indicator_light
       - light.u6_lr_led
       - light.uap_iw_hd_garage_led
       - light.uap_flexhd_lounge_led
@@ -200,8 +201,6 @@
       icon: mdi:camera
       friendly_name: All camera domain entities
       filter_by_device_class: false
-      excluded_entities:
-      - camera.camera_indoor
       excluded_entity_groups:
       - group.globally_excluded_entities
       excluded_integrations:
@@ -245,13 +244,11 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
       excluded_entities:
-      - remote.bed_c_xbox_remote
       - remote.nvidia_shield_bed_c_android_bridge
       - remote.nvidia_shield_bed_c_android_tv
       - remote.nvidia_shield_bed_e_android_bridge
       - remote.nvidia_shield_bed_e_android_tv
       - remote.samsung_tv_lounge
-      - remote.lounge_apple_tv
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -330,7 +327,6 @@
       - group.globally_excluded_entities
       excluded_entities:
       - binary_sensor.zigbee_door_sensor_bed_c_contact
-      - binary_sensor.dishwasher_door
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -389,9 +385,6 @@
       - smoke
       excluded_entity_groups:
       - group.globally_excluded_entities
-      excluded_entities:
-      - binary_sensor.diskstation_security_status
-      - binary_sensor.climate_devices_on
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -652,24 +645,6 @@
       - browser_mod
     action: python_script.create_entity_groups
   mode: single
-- id: '1682192675338'
-  alias: on_sunset_turn_on_bathroom_bottom_hallway_lights
-  description: ''
-  triggers:
-  - event: sunset
-    offset: 00:19:00
-    trigger: sun
-  conditions: []
-  actions:
-  - type: turn_on
-    device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: 1813701c3c3e731fbc2e7d96fdc28608
-    domain: light
-  - type: turn_on
-    device_id: 2028999f2f7da1303c521c80b4711c16
-    entity_id: 58fbf748e169b5548ffd469abc3f3222
-    domain: light
-  mode: single
 - id: '1682192916045'
   alias: on_sunset_turn_on_bed_a_ensuite_lights
   description: ''
@@ -681,29 +656,11 @@
   actions:
   - type: turn_on
     device_id: 902d91d28754d1922b19d056054a6de2
-    entity_id: cb83e82662d5defeacaef16c92aac611
+    entity_id: 64736ef540b4dcc5ae8462094b5f4113
     domain: light
   - type: turn_on
     device_id: 357203618a4ede0384cbc3979a6806b7
-    entity_id: ab515b1312541dd270b5c561e6a9a630
-    domain: light
-  mode: single
-- id: '1682193123450'
-  alias: on_sunset_turn_off_bed_a_ensuite_lights
-  description: ''
-  triggers:
-  - event: sunset
-    offset: 04:03:00
-    trigger: sun
-  conditions: []
-  actions:
-  - type: turn_off
-    device_id: 902d91d28754d1922b19d056054a6de2
-    entity_id: cb83e82662d5defeacaef16c92aac611
-    domain: light
-  - type: turn_off
-    device_id: 357203618a4ede0384cbc3979a6806b7
-    entity_id: ab515b1312541dd270b5c561e6a9a630
+    entity_id: 69c8584530196768a96e4ec720039c24
     domain: light
   mode: single
 - id: '1682263797941'
@@ -727,8 +684,6 @@
       - group.globally_excluded_entities
       excluded_entities:
       - media_player.rx_v777_zone2
-      - media_player.amazon_firestick_android_bridge_kitchen
-      - media_player.amazon_firestick_android_bridge_bed_a
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -814,8 +769,6 @@
       filter_by_device_class: false
       excluded_entity_groups:
       - group.globally_excluded_entities
-      excluded_entities:
-      - binary_sensor.climate_devices_on
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -891,11 +844,11 @@
   actions:
   - type: turn_off
     device_id: 707639a037c05f21cb7ba1e119538bf0
-    entity_id: 1813701c3c3e731fbc2e7d96fdc28608
+    entity_id: 7ffed542d9679187ac8a66726336bf89
     domain: light
   - type: turn_off
     device_id: 2028999f2f7da1303c521c80b4711c16
-    entity_id: 58fbf748e169b5548ffd469abc3f3222
+    entity_id: f6e46cfb86135007157126afd2e44e7d
     domain: light
   mode: single
 - id: '1690839144197'
@@ -1076,9 +1029,6 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
       excluded_entities:
-      - sensor.download_iperf_he_net
-      - sensor.upload_iperf_he_net
-      - sensor.influxdb_unifi_rx
       - sensor.kitchen_g3_instant_disk_write_rate
       - sensor.bed_c_g3_instant_disk_write_rate
       - sensor.bottom_hallway_g3_instant_disk_write_rate
@@ -1086,12 +1036,6 @@
       - sensor.doorbell_g4_disk_write_rate
       - sensor.front_g3_flex_disk_write_rate
       - sensor.back_g3_flex_disk_write_rate
-      - sensor.diskstation_upload_throughput
-      - sensor.diskstation_download_throughput
-      - sensor.speedtest_download
-      - sensor.speedtest_upload
-      - sensor.download_speedtest_london_its_tg_net
-      - sensor.upload_speedtest_london_its_tg_net
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -1114,6 +1058,18 @@
       - signal_strength
       excluded_entity_groups:
       - group.globally_excluded_entities
+      excluded_entities:
+      - sensor.bathroom_light_bathroom_light_wifi_percent
+      - sensor.bed_a_light_bed_a_light_wifi_percent
+      - sensor.bed_b_light_bed_b_light_wifi_percent
+      - sensor.bed_c_light_bed_c_light_wifi_percent
+      - sensor.bed_e_light_bed_e_light_wifi_percent
+      - sensor.bottom_hallway_light_bottom_hallway_light_wifi_percent
+      - sensor.ensuite_light_ensuite_light_wifi_percent
+      - sensor.kitchen_main_light_kitchen_main_light_wifi_percent
+      - sensor.kitchen_utility_light_kitchen_utility_light_wifi_percent
+      - sensor.lounge_light_lounge_light_wifi_percent
+      - sensor.study_light_study_light_wifi_percent
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -1152,29 +1108,6 @@
     domain: lock
     entity_id: 2aa351b0b7bdb31860450ecf842ca28b
     type: unlock
-  mode: single
-- id: '1696689232940'
-  alias: on_sunset_offset_turn_on_fly_killer_lamp
-  description: ''
-  triggers:
-  - event: sunset
-    offset: -02:00:00
-    trigger: sun
-  conditions: []
-  actions:
-  - type: turn_on
-    device_id: bbf437ec8b6d27f7e77867efc9691239
-    entity_id: fa9ebab8e7f832ddb25c15229bb0b015
-    domain: light
-  - delay:
-      hours: 4
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  - type: turn_off
-    device_id: bbf437ec8b6d27f7e77867efc9691239
-    entity_id: fa9ebab8e7f832ddb25c15229bb0b015
-    domain: light
   mode: single
 - id: '1702627536265'
   alias: on_start_create_group.all_lawn_mower_domain_entities
@@ -1486,8 +1419,6 @@
       - Middle Floor
       excluded_entity_groups:
       - group.globally_excluded_entities
-      excluded_entities:
-      - binary_sensor.diskstation_security_status
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -1608,9 +1539,6 @@
       excluded_entity_groups:
       - group.globally_excluded_entities
       excluded_entities:
-      - sensor.download_iperf_he_net
-      - sensor.upload_iperf_he_net
-      - sensor.influxdb_unifi_rx
       - sensor.kitchen_g3_instant_disk_write_rate
       - sensor.bed_c_g3_instant_disk_write_rate
       - sensor.bottom_hallway_g3_instant_disk_write_rate
@@ -1618,22 +1546,6 @@
       - sensor.doorbell_g4_disk_write_rate
       - sensor.front_g3_flex_disk_write_rate
       - sensor.back_g3_flex_disk_write_rate
-      - sensor.diskstation_upload_throughput
-      - sensor.diskstation_download_throughput
-      - sensor.speedtest_download
-      - sensor.speedtest_upload
-      - sensor.download_speedtest_london_its_tg_net
-      - sensor.upload_speedtest_london_its_tg_net
-      - sensor.udmpro_internet_uplink_data_rate
-      - sensor.udmpro_usw_pro_24_poe_backup_downlink_data_rate
-      - sensor.udmpro_usw_pro_24_poe_sfp_downlink_data_rate
-      - sensor.back_g3_flex_data_rate
-      - sensor.doorbell_g4_flex_data_rate
-      - sensor.front_g3_flex_data_rate
-      - sensor.middle_hallway_g3_flex_data_rate
-      - sensor.bottom_hallway_g3_flex_data_rate
-      - sensor.kitchen_g3_instant_data_rate
-      - sensor.bed_c_g3_instant_data_rate
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -1670,28 +1582,6 @@
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.input_boolean_minimalist_ui_last_change
-  mode: single
-- id: '1742678882495'
-  alias: on_time_restart_kitchen_firestick_power
-  description: ''
-  triggers:
-  - trigger: time
-    at: 07:00:00
-  conditions: []
-  actions:
-  - type: turn_off
-    device_id: 2d5f3ad48848aebccc1382bd43a8ec63
-    entity_id: 283054e6b9bc5764a0246f8b5286f4af
-    domain: switch
-  - delay:
-      hours: 0
-      minutes: 1
-      seconds: 0
-      milliseconds: 0
-  - type: turn_on
-    device_id: 2d5f3ad48848aebccc1382bd43a8ec63
-    entity_id: 283054e6b9bc5764a0246f8b5286f4af
-    domain: switch
   mode: single
 - id: '1742918048585'
   alias: on_hour_after_tab_selection_reset_minimalist_ui
@@ -1778,9 +1668,6 @@
       - smoke
       excluded_entity_groups:
       - group.globally_excluded_entities
-      excluded_entities:
-      - binary_sensor.diskstation_security_status
-      - binary_sensor.climate_devices_on
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -1809,9 +1696,6 @@
       - safety
       excluded_entity_groups:
       - group.globally_excluded_entities
-      excluded_entities:
-      - binary_sensor.diskstation_security_status
-      - binary_sensor.climate_devices_on
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
@@ -1884,4 +1768,29 @@
       excluded_integrations:
       - browser_mod
     action: python_script.create_entity_groups
+  mode: single
+- id: '1780949277873'
+  alias: at_sunset_turn_on_fly_killer
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: -01:00:00
+  conditions: []
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    target:
+      entity_id: switch.kitchen_fly_killer_plug_kitchen_unifi
+    data: {}
+  - delay:
+      hours: 3
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.kitchen_fly_killer_plug_kitchen_unifi
+    data: {}
   mode: single

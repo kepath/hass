@@ -99,14 +99,14 @@ views:
               current:
                 sun: "sun.sun"
                 moon_phase: "sensor.moon"
-                current_conditions: "sensor.banbury_weather_daily"
-                humidity: "sensor.banbury_humidity_daily"
+                current_conditions: "sensor.banbury_weather"
+                humidity: "sensor.banbury_humidity"
                 # pressure: "sensor.openweathermap_pressure"
-                temperature: "sensor.banbury_temperature_daily"
-                feels_like: "sensor.banbury_feels_like_temperature_daily"
-                visibility: "sensor.banbury_visibility_daily"
+                temperature: "sensor.banbury_temperature"
+                feels_like: "sensor.banbury_feels_like_temperature"
+                visibility: "sensor.banbury_visibility"
                 wind_bearing: "sensor.banbury_wind_direction"
-                wind_speed: "sensor.banbury_wind_speed_daily"
+                wind_speed: "sensor.banbury_wind_speed"
                 # precipitation: "sensor.openweathermap_precipitation_kind"
               # forecast:
               #   icons:
@@ -363,9 +363,9 @@ views:
                 name: "Bed E Motion"
               - entity: "sensor.zigbee_door_sensor_patio_2_temperature"
                 name: "Patio 2 Contact"
-              - entity: "sensor.zigbee_door_sensor_patio_1_temperature"
+              - entity: "sensor.zigbee_door_sensor_patio_1_device_temperature"
                 name: "Patio 1 Contact"
-              - entity: "sensor.zigbee_door_sensor_loft_temperature"
+              - entity: "sensor.zigbee_door_sensor_loft_device_temperature"
                 name: "Loft Contact"
               - entity: "sensor.zigbee_door_sensor_garage_temperature"
                 name: "Garage Contact"
@@ -431,18 +431,18 @@ views:
       #         ulm_chip_navigate_icon: "mdi:alpha-k-box"
       #         ulm_chip_navigate_icon_color: "rgba(var(--color-green),1)"
       #         ulm_chip_navigate_label_color: "rgba(var(--color-green),0.2)"
-      - type: "vertical-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "custom_card_httpedo13_thermostat_with_buttons"
-            variables:
-              entity: "climate.air_to_water_heat_pump"
-              name: "Heat Pump"
-          - type: "custom:button-card"
-            template: "custom_card_httpedo13_thermostat_with_buttons"
-            variables:
-              entity: "water_heater.air_to_water_heat_pump_water_heater"
-              name: "Water Heater"
+      # - type: "vertical-stack"
+      #   cards:
+      #     - type: "custom:button-card"
+      #       template: "custom_card_httpedo13_thermostat_with_buttons"
+      #       variables:
+      #         entity: "climate.air_to_water_heat_pump"
+      #         name: "Heat Pump"
+      #     - type: "custom:button-card"
+      #       template: "custom_card_httpedo13_thermostat_with_buttons"
+      #       variables:
+      #         entity: "water_heater.air_to_water_heat_pump"
+      #         name: "Water Heater"
       - type: "vertical-stack"
         cards:
           - type: "custom:better-thermostat-ui-card"
@@ -460,7 +460,7 @@ views:
             disable_window: true
             disable_summer: true
           - type: "custom:better-thermostat-ui-card"
-            entity: "water_heater.air_to_water_heat_pump_water_heater"
+            entity: "water_heater.air_to_water_heat_pump"
             disable_window: true
             disable_summer: true
 

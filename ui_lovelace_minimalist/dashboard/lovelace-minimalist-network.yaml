@@ -13,42 +13,42 @@ views:
               ulm_card_graph_color: "var(--google-blue)"
               ulm_card_graph_name: "DNS queries"
               ulm_card_graph_entity: "sensor.adguard_dns_queries"
-          - type: "custom:button-card"
-            template: "card_graph"
-            variables:
-              ulm_card_graph_color: "var(--google-blue)"
-              ulm_card_graph_name: "WAN Speed"
-              ulm_card_graph_entity: "sensor.speedtest_download"
-          - type: "custom:button-card"
-            template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
           # - type: "custom:button-card"
-          #   template: "card_generic"
-          #   entity: "sensor.plex_state_mqtt"
-          # - type: "custom:button-card"
-          #   template: "card_generic"
-          #   entity: "sensor.plex_state_tautulli"
-          - type: "custom:button-card"
-            template: "card_generic"
-            entity: "sensor.ups_status"
+          #   template: "card_graph"
+          #   variables:
+          #     ulm_card_graph_color: "var(--google-blue)"
+          #     ulm_card_graph_name: "WAN Speed"
+          #     ulm_card_graph_entity: "sensor.speedtest_download"
           - type: "custom:button-card"
             template: "edge"
-      - type: "horizontal-stack"
-        cards:
-          - type: "custom:button-card"
-            template: "edge"
-          - type: "custom:button-card"
-            template: "card_binary_sensor_alert"
-            variables:
-              - ulm_card_binary_sensor_alert: true
-            entity: "binary_sensor.diskstation_security_status"
-            show_last_changed: true
-            name: "NAS Status"
-          - type: "custom:button-card"
-            template: "edge"
+      # - type: "horizontal-stack"
+      #   cards:
+      #     - type: "custom:button-card"
+      #       template: "edge"
+      #     # - type: "custom:button-card"
+      #     #   template: "card_generic"
+      #     #   entity: "sensor.plex_state_mqtt"
+      #     # - type: "custom:button-card"
+      #     #   template: "card_generic"
+      #     #   entity: "sensor.plex_state_tautulli"
+      #     - type: "custom:button-card"
+      #       template: "card_generic"
+      #       entity: "sensor.ups_status"
+      #     - type: "custom:button-card"
+      #       template: "edge"
+      # - type: "horizontal-stack"
+      #   cards:
+      #     - type: "custom:button-card"
+      #       template: "edge"
+      #     - type: "custom:button-card"
+      #       template: "card_binary_sensor_alert"
+      #       variables:
+      #         - ulm_card_binary_sensor_alert: true
+      #       entity: "binary_sensor.diskstation_security_status"
+      #       show_last_changed: true
+      #       name: "NAS Status"
+      #     - type: "custom:button-card"
+      #       template: "edge"
 
   - title: "minimalist ui home"
     icon: "simple-icons:homeassistant"
@@ -74,7 +74,7 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.udmpro_internet_uplink_data_rate"
+              - entity: "sensor.udmpro_internet_combined_data_rate"
                 name: "WAN"
             show:
               name: false
@@ -120,19 +120,19 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_pro_24_poe_home_assistant_downlink_data_rate"
+              - entity: "sensor.usw_pro_24_poe_home_assistant_combined_data_rate"
                 name: "HA"
                 color: "yellow"
-              - entity: "sensor.usw_pro_24_poe_nas_downlink_data_rate"
-                name: "NAS"
-                color: "yellow"
-              - entity: "sensor.usw_pro_24_poe_nvidia_shield_downlink_data_rate"
+              # - entity: "sensor.usw_pro_24_poe_nas_downlink_data_rate"
+              #   name: "NAS"
+              #   color: "yellow"
+              - entity: "sensor.usw_pro_24_poe_nvidia_shield_combined_data_rate"
                 name: "NVidia"
                 color: "red"
-              - entity: "sensor.usw_pro_24_poe_udm_pro_sfp_uplink_data_rate"
+              - entity: "sensor.usw_pro_24_poe_udmpro_sfp_combined_data_rate"
                 name: "SFP"
                 color: "green"
-              - entity: "sensor.usw_pro_24_poe_xbox_one_x_downlink_data_rate"
+              - entity: "sensor.usw_pro_24_poe_xbox_1_combined_data_rate"
                 name: "XBox"
                 color: "orange"
             show:
@@ -154,7 +154,7 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_flex_loft_u6_lr_ap_data_rate"
+              - entity: "sensor.usw_flex_loft_u6_lr_combined_data_rate"
                 name: "Wi-Fi"
             show:
               name: false
@@ -199,16 +199,16 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_pro_24_poe_loft_downlink_data_rate"
+              - entity: "sensor.usw_pro_24_poe_loft_combined_data_rate"
                 name: "Upstream"
                 color: "green"
-              - entity: "sensor.usw_flex_loft_g3_flex_back_data_rate"
+              - entity: "sensor.usw_flex_loft_cam_back_combined_data_rate"
                 name: "Cam Back"
                 color: "brown"
-              - entity: "sensor.usw_flex_loft_g3_flex_front_data_rate"
+              - entity: "sensor.usw_flex_loft_cam_front_combined_data_rate"
                 name: "Cam Front"
                 color: "brown"
-              - entity: "sensor.usw_flex_loft_dlpc_data_rate"
+              - entity: "sensor.usw_flex_loft_dlpc_combined_data_rate"
                 name: "DLPC"
                 color: "blue"
             show:
@@ -230,22 +230,22 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_pro_24_poe_bed_e_downlink_data_rate"
+              - entity: "sensor.usw_pro_24_poe_bed_e_combined_data_rate"
                 name: "Upstream"
                 color: "green"
-              - entity: "sensor.usw_lite_8_port_bed_e_g3_flex_middle_hall_data_rate"
+              - entity: "sensor.usw_lite_8port_bed_e_cam_hall_combined_data_rate"
                 name: "Cam Hall"
                 color: "brown"
-              - entity: "sensor.usw_lite_8_port_bed_e_big_pc_data_rate"
+              - entity: "sensor.usw_lite_8port_bed_e_big_pc_combined_data_rate"
                 name: "Big PC"
                 color: "blue"
-              - entity: "sensor.usw_lite_8_port_bed_e_caldigit_dock_data_rate"
+              - entity: "sensor.usw_lite_8port_bed_e_caldigit_dock_combined_data_rate"
                 name: "Caldigit"
                 color: "blue"
-              - entity: "sensor.usw_lite_8_port_bed_e_nvidia_shield_data_rate"
+              - entity: "sensor.usw_lite_8port_bed_e_nvidia_shield_combined_data_rate"
                 name: "NVidia"
                 color: "red"
-              - entity: "sensor.usw_lite_8_port_bed_e_empty_data_rate"
+              - entity: "sensor.usw_lite_8port_bed_e_sony_bravia_tv_combined_data_rate"
                 name: "TV"
                 color: "red"
             show:
@@ -267,13 +267,13 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_pro_24_poe_lounge_right_downlink_data_rate"
+              - entity: "sensor.usw_pro_24_poe_lounge_right_combined_data_rate"
                 name: "Upstream"
                 color: "green"
-              - entity: "sensor.usw_flex_mini_lounge_apple_tv_data_rate"
+              - entity: "sensor.usw_flex_mini_lounge_apple_tv_combined_data_rate"
                 name: "Apple TV"
                 color: "red"
-              - entity: "sensor.usw_flex_mini_lounge_samsung_tv_data_rate"
+              - entity: "sensor.usw_flex_mini_lounge_samsung_tv_combined_data_rate"
                 name: "TV"
                 color: "red"
             show:
@@ -295,13 +295,13 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_pro_24_poe_bed_a_tv_downlink_data_rate"
+              - entity: "sensor.usw_flex_mini_bed_a_laptop_uplink_combined_data_rate"
                 name: "Upstream"
                 color: "green"
-              - entity: "sensor.usw_flex_mini_bed_a_tv_firestick_data_rate"
+              - entity: "sensor.usw_flex_mini_bed_a_tv_firestick_combined_data_rate"
                 name: "FireStick"
                 color: "red"
-              - entity: "sensor.usw_flex_mini_bed_a_tv_samsung_tv_data_rate"
+              - entity: "sensor.usw_flex_mini_bed_a_tv_samsung_tv_combined_data_rate"
                 name: "TV"
                 color: "red"
             show:
@@ -323,7 +323,7 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_pro_24_poe_study_downlink_data_rate"
+              - entity: "sensor.usw_flex_mini_study_uplink_combined_data_rate"
                 name: "Upstream"
             show:
               name: false
@@ -368,7 +368,7 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_pro_24_poe_bed_c_left_downlink_data_rate"
+              - entity: "sensor.usw_pro_24_poe_bed_c_left_combined_data_rate"
                 name: "Upstream"
             show:
               name: false
@@ -413,7 +413,7 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_flex_mini_lounge_uap_flexhd_lounge_data_rate"
+              - entity: "sensor.usw_flex_mini_lounge_flexhd_combined_data_rate"
                 name: "Wi-Fi"
             show:
               name: false
@@ -458,7 +458,7 @@ views:
             lower_bound: 0
             group: true
             entities:
-              - entity: "sensor.usw_pro_24_poe_kitchen_downlink_data_rate"
+              - entity: "sensor.usw_pro_24_poe_kitchen_combined_data_rate"
                 name: "Wi-Fi"
             show:
               name: false
@@ -609,7 +609,7 @@ views:
         update_interval: "1m"
         graph_span: "2h"
         series:
-          - entity: "sensor.amazon_firestick_4k_rj45_unifi_rx_2"
+          - entity: "sensor.amazon_firestick_4k_rj45_bed_a_unifi_rx"
             name: "RX"
             color_threshold:
               - value: 0
@@ -670,7 +670,7 @@ views:
             title: "Location Info - Kev"
             column_width: "25%"
             entities:
-              - entity: "device_tracker.kevs_iphone_icloud"
+              - entity: "device_tracker.iphone_kev_icloud3"
                 name: "Kev"
               # - entity: "sensor.kevs_iphone_icloud_interval"
               #   name: "Interval"
@@ -688,7 +688,7 @@ views:
               # - entity: "sensor.kevs_iphone_icloud_dir_of_travel"
               #   name: "Direction"
               #   icon: "mdi:compass-outline"
-              - entity: "binary_sensor.is_kev_driving"
+              - entity: "binary_sensor.iphone_kev_icloud3_iphone_kev_icloud3_kev_driving_state"
                 name: "Driving"
                 icon: "mdi:car-info"
               # - entity: "sensor.repl_iphone_11_zone_info_context_security.attributes.waze_distance"
@@ -729,7 +729,7 @@ views:
             title: "Location Info - Ju"
             column_width: "25%"
             entities:
-              - entity: "device_tracker.julia_s_iphone_8"
+              - entity: "device_tracker.iphone_ju_icloud3"
                 name: "Ju"
               # - entity: "sensor.julia_s_iphone_8_interval"
               #   name: "Interval"
