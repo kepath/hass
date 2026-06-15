@@ -1,5 +1,5 @@
 ---
-button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
+button_card_templates: !include_dir_merge_named "./../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
 card-mod-root-yaml: |
   .: |
     .header {
@@ -35,7 +35,7 @@ views:
               - type: "custom:button-card"
                 template: "card_kepath_welcome"
                 variables:
-                  ulm_card_kepath_welcome_collapse: "input_boolean.welcome_toggle"
+                  welcome_collapse: "input_boolean.welcome_toggle"
                   ulm_chip_temperature_inside: "sensor.nest_middle_floor_temperature"
                   ulm_chip_temperature_outside: "sensor.banbury_feels_like_temperature"
                   ulm_chip_temperature_weather: "weather.met_office_banbury"
@@ -2649,18 +2649,18 @@ views:
                           - "common_objects_and_styles"
                           - "use_entity_picture"
                           - "add_app_link"
-                        entity: "update.overseerr_update"
+                        entity: "update.seerr_update"
                         name: "Overseerr"
                         variables:
                           generic_get_set_group_notification_objects:
                             amount:
-                              entity: "update.overseerr_update"
+                              entity: "update.seerr_update"
                               count_tooltip: "add-in has update"
                               is_attribute: false
                           generic_set_addin_link:
-                            webui_access_type: !secret "hass_addon_overseer_webui_access_type"
-                            docker_slug_reference: !secret "hass_addon_overseer_docker_slug"
-                            local_port: !secret "hass_addon_overseerr_webui_local_port"
+                            webui_access_type: !secret "hass_addon_seer_webui_access_type"
+                            docker_slug_reference: !secret "hass_addon_seer_docker_slug"
+                            local_port: !secret "hass_addon_seerr_webui_local_port"
                     item26:
                       card:
                         type: "custom:button-card"
@@ -3028,46 +3028,46 @@ views:
                             type: "custom:button-card"
                             template: "custom_card_kepath_person_info"
                             variables:
-                              ulm_card_kepath_person_entity: "person.kevin_thorn"
-                              ulm_card_kepath_person_wifi_tracker: "device_tracker.kevs_iphone_15_app"
-                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_kev_icloud3"
-                              ulm_card_kepath_person_battery_entity: "sensor.iphone_kev_icloud3_battery"
-                              ulm_card_kepath_person_findmy_device: "kevs_iphone"
-                              ulm_card_kepath_person_driving_entity: "binary_sensor.iphone_kev_icloud3_iphone_kev_icloud3_kev_driving_state"
-                              ulm_card_kepath_person_distance_entity: "sensor.iphone_kev_icloud3_home_distance"
+                              person_entity: "person.kevin_thorn"
+                              person_wifi_tracker: "device_tracker.kevs_iphone_15_app"
+                              person_gps_tracker: "device_tracker.iphone_kev_icloud3"
+                              person_battery_entity: "sensor.iphone_kev_icloud3_battery"
+                              person_findmy_device: "kevs_iphone"
+                              person_driving_entity: "binary_sensor.iphone_kev_icloud3_iphone_kev_icloud3_kev_driving_state"
+                              person_distance_entity: "sensor.iphone_kev_icloud3_home_distance"
                         item2:
                           card:
                             type: "custom:button-card"
                             template: "custom_card_kepath_person_info"
                             variables:
-                              ulm_card_kepath_person_entity: "person.julia_thorn"
-                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_ju_unifi"
-                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_ju_icloud3"
-                              ulm_card_kepath_person_battery_entity: "sensor.iphone_ju_icloud3_battery"
-                              ulm_card_kepath_person_findmy_device: "julia_iphone"
-                              ulm_card_kepath_person_driving_entity: ""
-                              ulm_card_kepath_person_distance_entity: "sensor.iphone_ju_icloud3_home_distance"
+                              person_entity: "person.julia_thorn"
+                              person_wifi_tracker: "device_tracker.iphone_ju_unifi"
+                              person_gps_tracker: "device_tracker.iphone_ju_icloud3"
+                              person_battery_entity: "sensor.iphone_ju_icloud3_battery"
+                              person_findmy_device: "julia_iphone"
+                              person_driving_entity: ""
+                              person_distance_entity: "sensor.iphone_ju_icloud3_home_distance"
                         item3:
                           card:
                             type: "custom:button-card"
                             template: "custom_card_kepath_person_info"
                             variables:
-                              ulm_card_kepath_person_entity: "person.daniel_thorn"
-                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone_12_dan_unifi"
-                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_12_dan_icloud3"
-                              ulm_card_kepath_person_battery_entity: "sensor.iphone_12_dan_icloud3_battery"
-                              ulm_card_kepath_person_findmy_device: "iphone"
-                              ulm_card_kepath_person_driving_entity: ""
-                              ulm_card_kepath_person_distance_entity: "sensor.iphone_12_dan_icloud3_home_distance"
+                              person_entity: "person.daniel_thorn"
+                              person_wifi_tracker: "device_tracker.iphone_12_dan_unifi"
+                              person_gps_tracker: "device_tracker.iphone_12_dan_icloud3"
+                              person_battery_entity: "sensor.iphone_12_dan_icloud3_battery"
+                              person_findmy_device: "iphone"
+                              person_driving_entity: ""
+                              person_distance_entity: "sensor.iphone_12_dan_icloud3_home_distance"
                         item4:
                           card:
                             type: "custom:button-card"
                             template: "custom_card_kepath_person_info"
                             variables:
-                              ulm_card_kepath_person_entity: "person.emily_thorn"
-                              ulm_card_kepath_person_wifi_tracker: "device_tracker.iphone13_emily_patrice_unifi"
-                              ulm_card_kepath_person_gps_tracker: "device_tracker.iphone_13_emily_patrice_icloud3"
-                              ulm_card_kepath_person_battery_entity: "sensor.iphone_13_emily_patrice_icloud3_battery"
-                              ulm_card_kepath_person_findmy_device: "patrice"
-                              ulm_card_kepath_person_driving_entity: ""
-                              ulm_card_kepath_person_distance_entity: "sensor.iphone_13_emily_patrice_icloud3_home_distance"
+                              person_entity: "person.emily_thorn"
+                              person_wifi_tracker: "device_tracker.iphone13_emily_patrice_unifi"
+                              person_gps_tracker: "device_tracker.iphone_13_emily_patrice_icloud3"
+                              person_battery_entity: "sensor.iphone_13_emily_patrice_icloud3_battery"
+                              person_findmy_device: "patrice"
+                              person_driving_entity: ""
+                              person_distance_entity: "sensor.iphone_13_emily_patrice_icloud3_home_distance"
