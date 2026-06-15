@@ -518,6 +518,53 @@ views:
               {%- endif -%}
             {%- endfor -%}
 
+  - title: "Links"
+    icon: "hacs:hacs"
+    theme: "minimalist-mobile"
+    cards:
+      - type: "custom:auto-entities"
+        show_empty: false
+        card:
+          type: "entities"
+          title: "HACS Installed Components"
+        filter:
+          template: >-
+            {%- set ns_update_list = namespace(entity_list = []) -%}
+            {%- for update_list in states.update|sort(attribute="name") -%}
+              {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+                {%- set ns_update_list.entity_list = ns_update_list.entity_list + [update_list.entity_id] -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- for model in ns_update_list.entity_list | map('device_attr','model') | unique | list | sort -%}
+              {%- if loop.changed -%}
+                {{{
+                  'type': 'section',
+                  'label': 'HACS ' + model | capitalize
+                }}},
+              {%- endif -%}
+                {%- for update_list in states.update | sort(attribute="name") -%}
+                  {%- if device_attr(update_list.entity_id, 'model') == model -%}
+                    {{{
+                      'entity': update_list.entity_id,
+                      'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
+                      'show_icon': false,
+                      'tap_action': {
+                        'action': 'navigate',
+                        'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
+                      },
+                      'hold_action': {
+                        'action': 'url',
+                        'url_path': state_attr(update_list.entity_id, 'release_url')
+                      },
+                      'double_tap_action': {
+                        'action': 'more-info'
+                      }
+                    }}},
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+
   - title: "Updates"
     icon: "material-icon-theme:dependencies-update"
     theme: "minimalist-mobile"
