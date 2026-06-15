@@ -7,28 +7,28 @@ custom_card_kepath_person_info:
     - "custom_popup_kepath_person"
     - "ulm_gradient_green_to_red_5step"
   variables:
-    ulm_card_kepath_person_entity: ""
-    ulm_card_kepath_person_wifi_tracker: ""
-    ulm_card_kepath_person_gps_tracker: ""
-    ulm_card_kepath_person_battery_entity: ""
-    ulm_card_kepath_person_driving_entity: ""
-    ulm_card_kepath_person_distance_entity: ""
+    person_entity: ""
+    person_wifi_tracker: ""
+    person_gps_tracker: ""
+    person_battery_entity: ""
+    person_driving_entity: ""
+    person_distance_entity: ""
   # triggers_update: "all"
   show_label: false
   show_name: true
   group_expand: true
   label: ""
-  name: "[[[ return states[variables?.ulm_card_kepath_person_entity]?.attributes?.friendly_name ]]]"
-  entity: "[[[ return variables?.ulm_card_kepath_person_entity; ]]]"
+  name: "[[[ return states[variables?.person_entity]?.attributes?.friendly_name ]]]"
+  entity: "[[[ return variables?.person_entity; ]]]"
   icon: >
     [[[
       var icon = "mdi:map-marker";
       var personLocation = "unknown";
       var zoneList = []
 
-      if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
-        if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
-          personLocation = states[variables.ulm_card_kepath_person_entity].state
+      if (typeof variables?.person_entity !== 'undefined') {
+        if (typeof states[variables?.person_entity]?.state !== 'undefined') {
+          personLocation = states[variables.person_entity].state
           personLocation = personLocation.replaceAll(" ", "").replaceAll("'", "").replaceAll("_", "").toLowerCase();
         }
       }
@@ -71,8 +71,8 @@ custom_card_kepath_person_info:
             }
           }
       }
-      if (typeof states[variables?.ulm_card_kepath_person_driving_entity]?.state !== 'undefined') {
-        if (states[variables.ulm_card_kepath_person_driving_entity].state == "on") {
+      if (typeof states[variables?.person_driving_entity]?.state !== 'undefined') {
+        if (states[variables.person_driving_entity].state == "on") {
           icon = "mdi:car"
         }
       }
@@ -117,9 +117,9 @@ custom_card_kepath_person_info:
         [[[
           var personLocation = "unknown";
 
-          if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
-            if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
-              personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+          if (typeof variables?.person_entity !== 'undefined') {
+            if (typeof states[variables?.person_entity]?.state !== 'undefined') {
+              personLocation = states[variables.person_entity].state.replace(" ", "").toLowerCase();
             }
           }
 
@@ -137,9 +137,9 @@ custom_card_kepath_person_info:
         [[[
           var personLocation = "unknown";
 
-          if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
-            if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
-              personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+          if (typeof variables?.person_entity !== 'undefined') {
+            if (typeof states[variables?.person_entity]?.state !== 'undefined') {
+              personLocation = states[variables.person_entity].state.replace(" ", "").toLowerCase();
             }
           }
 
@@ -157,9 +157,9 @@ custom_card_kepath_person_info:
         [[[
           var personLocation = "unknown";
 
-          if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
-            if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
-              personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+          if (typeof variables?.person_entity !== 'undefined') {
+            if (typeof states[variables?.person_entity]?.state !== 'undefined') {
+              personLocation = states[variables.person_entity].state.replace(" ", "").toLowerCase();
             }
           }
 
@@ -201,19 +201,19 @@ custom_card_kepath_person_info:
           - operator: "template"
             value: >
               [[[
-                if (variables?.ulm_card_kepath_person_entity == "") {
+                if (variables?.person_entity == "") {
                   return true;
                 }
 
-                if (variables?.ulm_card_kepath_person_distance_entity == "") {
+                if (variables?.person_distance_entity == "") {
                   return true;
                 }
 
-                if (typeof states[variables?.ulm_card_kepath_person_entity]?.state === 'undefined') {
+                if (typeof states[variables?.person_entity]?.state === 'undefined') {
                   return true;
                 }
 
-                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state === 'undefined') {
+                if (typeof states[variables?.person_distance_entity]?.state === 'undefined') {
                   return true;
                 }
               ]]]
@@ -230,9 +230,9 @@ custom_card_kepath_person_info:
               [[[
                 var personLocation = "unknown";
 
-                if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
-                  if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
-                    personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+                if (typeof variables?.person_entity !== 'undefined') {
+                  if (typeof states[variables?.person_entity]?.state !== 'undefined') {
+                    personLocation = states[variables.person_entity].state.replace(" ", "").toLowerCase();
                   }
                 }
 
@@ -249,8 +249,8 @@ custom_card_kepath_person_info:
             value: >
               [[[
                 var fromHomeDistance = 0;
-                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.person_distance_entity].state
                   if (!isNaN(fromHomeDistance)){
                     fromHomeDistance = Math.floor(fromHomeDistance);
                   }
@@ -263,8 +263,8 @@ custom_card_kepath_person_info:
               [[[
                 var fromHomeDistance = 0;
                 var icon = "mdi:numeric-0-circle";
-                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.person_distance_entity].state
                   if (!isNaN(fromHomeDistance)){
                     fromHomeDistance = Math.floor(fromHomeDistance);
                     icon = icon.replace("0",fromHomeDistance);
@@ -284,8 +284,8 @@ custom_card_kepath_person_info:
             value: >
               [[[
                 var fromHomeDistance = 0;
-                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.person_distance_entity].state
                   if (!isNaN(fromHomeDistance)){
                     fromHomeDistance = Math.floor(fromHomeDistance);
                   }
@@ -298,8 +298,8 @@ custom_card_kepath_person_info:
               [[[
                 var fromHomeDistance = 0;
                 var icon = "mdi:numeric-0-circle";
-                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.person_distance_entity].state
                   if (!isNaN(fromHomeDistance)){
                     fromHomeDistance = Math.floor(fromHomeDistance/10);
                     if (fromHomeDistance > 9) {
@@ -321,9 +321,9 @@ custom_card_kepath_person_info:
               #       [[[
               #         var color = "rgba(var(--card-background-color),1)";
               #         var fromHomeDistance = 0;
-              #         if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
-              #           if (states[variables.ulm_card_kepath_person_distance_entity].state) {
-              #             fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+              #         if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
+              #           if (states[variables.person_distance_entity].state) {
+              #             fromHomeDistance = states[variables.person_distance_entity].state
               #             if (!isNaN(fromHomeDistance)){
               #               fromHomeDistance = Math.floor(fromHomeDistance);
               #             }
@@ -357,9 +357,9 @@ custom_card_kepath_person_info:
                       //}
                       var gradientSet = hass.themes.darkMode ? "green_to_red_5step_light" : "green_to_red_5step_dark";
 
-                      if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
-                        if (states[variables.ulm_card_kepath_person_distance_entity].state) {
-                          fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                      if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
+                        if (states[variables.person_distance_entity].state) {
+                          fromHomeDistance = states[variables.person_distance_entity].state
                           if (!isNaN(fromHomeDistance)) {
                             fromHomeDistance = Math.floor(fromHomeDistance);
                           }
@@ -387,15 +387,15 @@ custom_card_kepath_person_info:
                 var fromHomeDistance = 0;
                 var personLocation = "unknown";
 
-                if (typeof states[variables?.ulm_card_kepath_person_distance_entity]?.state !== 'undefined') {
-                  fromHomeDistance = states[variables.ulm_card_kepath_person_distance_entity].state
+                if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
+                  fromHomeDistance = states[variables.person_distance_entity].state
                   if (!isNaN(fromHomeDistance)){
                     fromHomeDistance = Math.floor(fromHomeDistance);
                   }
                 }
-                if (typeof variables?.ulm_card_kepath_person_entity !== 'undefined') {
-                  if (typeof states[variables?.ulm_card_kepath_person_entity]?.state !== 'undefined') {
-                    personLocation = states[variables.ulm_card_kepath_person_entity].state.replace(" ", "").toLowerCase();
+                if (typeof variables?.person_entity !== 'undefined') {
+                  if (typeof states[variables?.person_entity]?.state !== 'undefined') {
+                    personLocation = states[variables.person_entity].state.replace(" ", "").toLowerCase();
                   }
                 }                
 
@@ -411,7 +411,7 @@ custom_card_kepath_person_info:
                 - background-color: "rgba(var(--color-red),0.2)"
         tap_action:
           action: "more-info"
-          entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker ]]]"
+          entity: "[[[ return variables.person_gps_tracker ]]]"
 
 
     battery:
@@ -426,9 +426,9 @@ custom_card_kepath_person_info:
                 [[[
                   var color = "rgba(var(--color-theme),0.5)";
                   var battery = -1;
-                  if (typeof states[variables?.ulm_card_kepath_person_battery_entity]?.state !== 'undefined') {
-                    if (!isNaN(states[variables.ulm_card_kepath_person_battery_entity].state)) {
-                      battery = states[variables.ulm_card_kepath_person_battery_entity].state;
+                  if (typeof states[variables?.person_battery_entity]?.state !== 'undefined') {
+                    if (!isNaN(states[variables.person_battery_entity].state)) {
+                      battery = states[variables.person_battery_entity].state;
                       if (battery > 50) {
                         color = "rgba(var(--color-green),1)";
                       } else if (battery > 20) {
@@ -458,13 +458,13 @@ custom_card_kepath_person_info:
             var icon = "mdi:battery-unknown";
             var batteryChargeLevel = -1;
             var isBatteryCharging = false;
-            if (typeof states[variables?.ulm_card_kepath_person_battery_entity]?.state !== 'undefined') {
-              if (!isNaN(states[variables.ulm_card_kepath_person_battery_entity].state)) {
-                batteryChargeLevel = states[variables.ulm_card_kepath_person_battery_entity].state
+            if (typeof states[variables?.person_battery_entity]?.state !== 'undefined') {
+              if (!isNaN(states[variables.person_battery_entity].state)) {
+                batteryChargeLevel = states[variables.person_battery_entity].state
               }
             }
-            if (typeof states[variables?.ulm_card_kepath_person_battery_entity]?.attributes?.battery_status !== 'undefined') {
-              if (states[variables.ulm_card_kepath_person_battery_entity].attributes.battery_status.toLowerCase() == "charging") {
+            if (typeof states[variables?.person_battery_entity]?.attributes?.battery_status !== 'undefined') {
+              if (states[variables.person_battery_entity].attributes.battery_status.toLowerCase() == "charging") {
                 isBatteryCharging = true;
               }
             }
@@ -498,7 +498,7 @@ custom_card_kepath_person_info:
           ]]]
         tap_action:
           action: "more-info"
-          entity: "[[[ return variables.ulm_card_kepath_person_battery_entity ]]]"
+          entity: "[[[ return variables.person_battery_entity ]]]"
 
 custom_popup_kepath_person:
   tap_action:
@@ -509,7 +509,7 @@ custom_popup_kepath_person:
         sequence:
           - service: "browser_mod.popup"
             data:
-              title: "[[[ return states[variables.ulm_card_kepath_person_entity].attributes.friendly_name ]]]"
+              title: "[[[ return states[variables.person_entity].attributes.friendly_name ]]]"
               style:
                 $: >
                   [[[
@@ -581,15 +581,15 @@ custom_popup_kepath_person:
                 cards:
                   - type: "entities"
                     entities:
-                      - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
+                      - entity: "[[[ return variables.person_entity; ]]]"
                         secondary_info: "last-changed"
                   - type: "history-graph"
                     entities:
-                      - entity: "[[[ return variables.ulm_card_kepath_person_entity; ]]]"
+                      - entity: "[[[ return variables.person_entity; ]]]"
                   - type: "glance"
                     show_state: false
                     entities:
-                      - entity: "[[[ return variables.ulm_card_kepath_person_wifi_tracker; ]]]"
+                      - entity: "[[[ return variables.person_wifi_tracker; ]]]"
                         name: "WiFi"
                         icon: "mdi:wifi"
                         style: &state >
@@ -597,7 +597,7 @@ custom_popup_kepath_person:
                             color: {{ 'rgba(var(--color-blue),1)' if is_state(config.entity, 'home') }};
                             filter: {{ 'opacity(100%)' if is_state(config.entity, 'home') else 'opacity(40%)'}};
                           }
-                      - entity: "[[[ return variables.ulm_card_kepath_person_gps_tracker; ]]]"
+                      - entity: "[[[ return variables.person_gps_tracker; ]]]"
                         name: "GPS"
                         icon: "mdi:map-marker"
                         style: *state
@@ -609,7 +609,7 @@ custom_popup_kepath_person:
                         variables:
                           findmy_device: 
                             force_eval: true
-                            value: "[[[ return variables.ulm_card_kepath_person_findmy_device; ]]]"
+                            value: "[[[ return variables.person_findmy_device; ]]]"
                       - type: "custom:button-card"
                         template:
                           - "about_my_phone_button_kepath"
@@ -619,9 +619,9 @@ custom_popup_kepath_person:
                             value: >
                               [[[
                                 var deviceId = "";
-                                if (variables?.ulm_card_kepath_person_gps_tracker) {
-                                  if (typeof hass?.entities[variables.ulm_card_kepath_person_gps_tracker]?.device_id !== 'undefined') {
-                                    deviceId = hass.entities[variables.ulm_card_kepath_person_gps_tracker].device_id;
+                                if (variables?.person_gps_tracker) {
+                                  if (typeof hass?.entities[variables.person_gps_tracker]?.device_id !== 'undefined') {
+                                    deviceId = hass.entities[variables.person_gps_tracker].device_id;
                                   }
                                 }
                                 return deviceId;
@@ -630,7 +630,7 @@ custom_popup_kepath_person:
                     auto_fit: true
                     aspect_ratio: "12x10"
                     hours_to_show: 48
-                    entities: "[[[ return [variables.ulm_card_kepath_person_gps_tracker]; ]]]"
+                    entities: "[[[ return [variables.person_gps_tracker]; ]]]"
           - service: "icloud3.action"
             data:
               command: "Locate Device(s) using iCloud"
