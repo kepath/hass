@@ -13,6 +13,18 @@ custom_card_kepath_person_info:
     person_battery_entity: ""
     person_driving_entity: ""
     person_distance_entity: ""
+    person_device_id:
+      force_eval: true
+      value: >
+        [[[
+          var deviceId = "";
+          if (variables?.person_gps_tracker) {
+            if (typeof hass?.entities[variables.person_gps_tracker]?.device_id !== 'undefined') {
+              deviceId = hass.entities[variables.person_gps_tracker].device_id;
+            }
+          }
+          return deviceId;
+        ]]]
   # triggers_update: "all"
   show_label: false
   show_name: true
@@ -61,10 +73,10 @@ custom_card_kepath_person_info:
           for (const zone of zoneList) {
             if (personLocation == zone.replace("zone.","").replaceAll(" ", "").replaceAll("'", "").replaceAll("_","")) {
               if (typeof states[zone]?.attributes?.icon !== "undefined") {
-                if (states[zone].attributes.icon.includes('mdi:')) {
+                //if (states[zone].attributes.icon.includes('mdi:')) {
                   icon = states[zone].attributes.icon;
                   break;
-                }
+                //}
               }
             } else {
               icon = "mdi:map-marker-account";
@@ -270,9 +282,7 @@ custom_card_kepath_person_info:
                     icon = icon.replace("0",fromHomeDistance);
                   }
                 }
-                //if(hass.themes.darkMode) {
-                //  icon = icon.replace("-circle","");
-                //}
+
                 return icon;
               ]]]
             styles:
@@ -303,7 +313,6 @@ custom_card_kepath_person_info:
                   if (!isNaN(fromHomeDistance)){
                     fromHomeDistance = Math.floor(fromHomeDistance/10);
                     if (fromHomeDistance > 9) {
-                      //fromHomeDistance = 9;
                       icon = "mdi:numeric-9-plus-circle";
                     }
                     icon = icon.replace("0",fromHomeDistance);
@@ -317,44 +326,11 @@ custom_card_kepath_person_info:
             styles:
               img_cell:
                 - background-color: "var(--card-background-color)"
-              #   - border-color: >
-              #       [[[
-              #         var color = "rgba(var(--card-background-color),1)";
-              #         var fromHomeDistance = 0;
-              #         if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
-              #           if (states[variables.person_distance_entity].state) {
-              #             fromHomeDistance = states[variables.person_distance_entity].state
-              #             if (!isNaN(fromHomeDistance)){
-              #               fromHomeDistance = Math.floor(fromHomeDistance);
-              #             }
-              #           }
-              #         }
-              #         if (fromHomeDistance > 10) {
-              #           fromHomeDistance = Math.floor(fromHomeDistance / 5) * 5;
-              #           if (fromHomeDistance > 100) {
-              #             fromHomeDistance = 100;
-              #           }
-              #           var gradient = "gradient_" + fromHomeDistance
-              #           if (variables?.green_to_red_5step?.[gradient]) {
-              #             color = variables?.green_to_red_5step?.[gradient];
-              #           }
-              #         }
-              #         return color;
-              #       ]]]
-              #   - margin-left: "1px"
-              #   - margin-top: "1px"
-              #   - border: "0"
               icon:
-                # - width: "16px"
-                # - height: "16px"
-                # - color: "rgba(var(--primary-text-color),1)"
                 - color: >
                     [[[
                       var color = "rgba(var(--card-background-color),1)";
                       var fromHomeDistance = 0;
-                      //if (!hass.themes.darkMode) {
-                      //  return color;
-                      //}
                       var gradientSet = hass.themes.darkMode ? "green_to_red_5step_light" : "green_to_red_5step_dark";
 
                       if (typeof states[variables?.person_distance_entity]?.state !== 'undefined') {
@@ -538,21 +514,6 @@ custom_popup_kepath_person:
                     hui-entities-card{
                       padding: 0.8em 1.4em;
                     }
-                  # $hui-entities-card$: >
-                  #   ha-card{
-                  #     box-shadow: none;
-                  #   }
-                  # $hui-history-graph-card$: >
-                  #   .content {
-                  #     padding: 0 2.4em !important;
-                  #   }
-                  #   ha-card{
-                  #     box-shadow: none;
-                  #   }
-                  # $hui-glance-card$: >
-                  #   ha-card{
-                  #     box-shadow: none;
-                  #   }
                   $hui-map-card:
                     $: >
                       ha-icon-button {
@@ -581,15 +542,18 @@ custom_popup_kepath_person:
                 cards:
                   - type: "entities"
                     entities:
-                      - entity: "[[[ return variables.person_entity; ]]]"
+                      - entity: >
+                          [[[ return variables.person_entity; ]]]
                         secondary_info: "last-changed"
                   - type: "history-graph"
                     entities:
-                      - entity: "[[[ return variables.person_entity; ]]]"
+                      - entity: >
+                          [[[ return variables.person_entity; ]]]
                   - type: "glance"
                     show_state: false
                     entities:
-                      - entity: "[[[ return variables.person_wifi_tracker; ]]]"
+                      - entity: >
+                          [[[ return variables.person_wifi_tracker; ]]]
                         name: "WiFi"
                         icon: "mdi:wifi"
                         style: &state >
@@ -607,25 +571,16 @@ custom_popup_kepath_person:
                         template:
                           - "find_my_phone_button_kepath"
                         variables:
-                          findmy_device: 
+                          device_id: 
                             force_eval: true
-                            value: "[[[ return variables.person_findmy_device; ]]]"
+                            value: "[[[ return variables.person_device_id; ]]]"
                       - type: "custom:button-card"
                         template:
                           - "about_my_phone_button_kepath"
                         variables:
-                          device_id:
+                          device_id: 
                             force_eval: true
-                            value: >
-                              [[[
-                                var deviceId = "";
-                                if (variables?.person_gps_tracker) {
-                                  if (typeof hass?.entities[variables.person_gps_tracker]?.device_id !== 'undefined') {
-                                    deviceId = hass.entities[variables.person_gps_tracker].device_id;
-                                  }
-                                }
-                                return deviceId;
-                              ]]]
+                            value: "[[[ return variables.person_device_id; ]]]"
                   - type: "map"
                     auto_fit: true
                     aspect_ratio: "12x10"
@@ -644,7 +599,10 @@ find_my_phone_button_kepath:
     browser_mod:
       service: "icloud3.find_iphone_alert"
       data:
-        device_name: "[[[ return variables.findmy_device; ]]]"
+        device_name: >
+          [[[
+            return variables.device_id;
+          ]]]
   icon: "mdi:volume-high"
   name: "Find my iPhone"
 
