@@ -9,7 +9,7 @@ substitutions:
   device_ip: "13"
   ssid: !secret "not_wifi_ssid"
   log_level: "DEBUG"
-  max_temp: "80.0"  # Centigrade
+  max_temp: "80.0" # Centigrade
 
 # Common Include
 <<: !include "includes/shelly_1l_common.yaml"
@@ -23,13 +23,13 @@ light:
     output: "${device_name}_relay1"
     id: "${device_name}_lightid1"
     icon: "${light1_icon}"
-    
+
   - platform: "binary"
     name: "${friendly_name2}"
     output: "ha_script"
     id: "${device_name}_lightid2"
     icon: "${light2_icon}"
-    
+
 output:
   - platform: "gpio"
     pin: "GPIO5"
@@ -41,7 +41,7 @@ output:
     write_action:
       then:
         - homeassistant.service:
-            service: "script.back_light_toggle"
+            service: "script.unique_back_light_toggle"
 
 binary_sensor:
   - platform: "status"
@@ -51,7 +51,7 @@ binary_sensor:
     device_class: "connectivity"
     filters:
       - delayed_off: "5min"
-      
+
   - platform: "gpio"
     pin:
       number: "GPIO4"
@@ -64,7 +64,7 @@ binary_sensor:
     filters:
       - delayed_on_off: 50ms
     device_class: "power"
-        
+
   - platform: "gpio"
     pin:
       number: "GPIO14"
@@ -75,5 +75,3 @@ binary_sensor:
       then:
         - light.toggle: "${device_name}_lightid2"
     device_class: "power"
-
-    
