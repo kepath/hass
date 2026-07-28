@@ -5,7 +5,8 @@ substitutions:
   friendly_name2: "Back Door Light"
   area: "kitchen"
   light1_icon: "mdi:vanity-light"
-  light2_icon: "mdi:coach-lamp"
+  # light2_icon: "mdi:coach-lamp"
+  light2_entityid: "light.backdoor_smartbulb"
   device_ip: "13"
   ssid: !secret "not_wifi_ssid"
   log_level: "DEBUG"
@@ -24,24 +25,25 @@ light:
     id: "${device_name}_lightid1"
     icon: "${light1_icon}"
 
-  - platform: "binary"
-    name: "${friendly_name2}"
-    output: "ha_script"
-    id: "${device_name}_lightid2"
-    icon: "${light2_icon}"
+  # - platform: "binary"
+  #   name: "${friendly_name2}"
+  #   output: "ha_script"
+  #   id: "${device_name}_lightid2"
+  #   icon: "${light2_icon}"
 
 output:
   - platform: "gpio"
     pin: "GPIO5"
     id: "${device_name}_relay1"
 
-  - platform: "template"
-    type: "binary"
-    id: "ha_script"
-    write_action:
-      then:
-        - homeassistant.service:
-            service: "script.unique_back_light_toggle"
+  # - platform: "template"
+  #   type: "binary"
+  #   id: "ha_script"
+  #   write_action:
+  #     then:
+  #       - light.toggle: "light.backdoor_smartbulb"
+  #       # - homeassistant.service:
+  #       #     service: "script.unique_back_light_toggle"
 
 binary_sensor:
   - platform: "status"
@@ -73,5 +75,6 @@ binary_sensor:
     icon: "mdi:light-switch"
     on_state:
       then:
-        - light.toggle: "${device_name}_lightid2"
+        - light.toggle: "${light2_entityid}"
+        # - light.toggle: "${device_name}_lightid2"
     device_class: "power"
