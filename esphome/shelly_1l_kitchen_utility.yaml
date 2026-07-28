@@ -6,7 +6,7 @@ substitutions:
   area: "kitchen"
   light1_icon: "mdi:vanity-light"
   # light2_icon: "mdi:coach-lamp"
-  light2_entityid: "light.backdoor_smartbulb"
+  # light2_entityid: "light.backdoor_smartbulb"
   light2_script: "script.unique_back_light_toggle"
   device_ip: "13"
   ssid: !secret "not_wifi_ssid"
@@ -19,12 +19,12 @@ substitutions:
 # Extended Config - only use when overwriting values in include
 # Note: the entire light and binary_sensor blocks will be overwritten
 
-light:
-  - platform: "binary"
-    name: "${friendly_name}"
-    output: "${device_name}_relay1"
-    id: "${device_name}_lightid1"
-    icon: "${light1_icon}"
+# light:
+#   - platform: "binary"
+#     name: "${friendly_name}"
+#     output: "${device_name}_relay1"
+#     id: "${device_name}_lightid1"
+#     icon: "${light1_icon}"
 
   # - platform: "binary"
   #   name: "${friendly_name2}"
@@ -32,10 +32,10 @@ light:
   #   id: "${device_name}_lightid2"
   #   icon: "${light2_icon}"
 
-output:
-  - platform: "gpio"
-    pin: "GPIO5"
-    id: "${device_name}_relay1"
+# output:
+#   - platform: "gpio"
+#     pin: "GPIO5"
+#     id: "${device_name}_relay1"
 
   # - platform: "template"
   #   type: "binary"
@@ -56,24 +56,24 @@ binary_sensor:
       - delayed_off: "5min"
 
   - platform: "gpio"
-    pin:
-      number: "GPIO4"
     name: "${friendly_name} Switch"
     id: "${device_name}_switchid1"
     icon: "mdi:light-switch"
+    pin:
+      number: "GPIO4"
     on_state:
       then:
         - light.toggle: "${device_name}_lightid1"
     filters:
-      - delayed_on_off: 50ms
+      - delayed_on_off: "50ms"
     device_class: "power"
 
   - platform: "gpio"
-    pin:
-      number: "GPIO14"
     name: "${friendly_name2} Switch"
     id: "${device_name}_switchid2"
     icon: "mdi:light-switch"
+    pin:
+      number: "GPIO14"
     on_state:
       then:
         - homeassistant.action:
