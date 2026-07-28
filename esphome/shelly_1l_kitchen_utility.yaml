@@ -7,6 +7,7 @@ substitutions:
   light1_icon: "mdi:vanity-light"
   # light2_icon: "mdi:coach-lamp"
   light2_entityid: "light.backdoor_smartbulb"
+  light2_script: "script.unique_back_light_toggle"
   device_ip: "13"
   ssid: !secret "not_wifi_ssid"
   log_level: "DEBUG"
@@ -75,6 +76,13 @@ binary_sensor:
     icon: "mdi:light-switch"
     on_state:
       then:
-        - light.toggle: "${light2_entityid}"
+        - homeassistant.action:
+          action: light.toggle
+          data:
+          target:
+            entity_id: "${light2_entityid}"
+
+            # action: "${light2_script}"
+        # - light.toggle: "${light2_entityid}"
         # - light.toggle: "${device_name}_lightid2"
     device_class: "power"
