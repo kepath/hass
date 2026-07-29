@@ -76,12 +76,14 @@ binary_sensor:
       number: "GPIO14"
     on_state:
       then:
-        - homeassistant.action:
-            # action: light.toggle
-            # target:
-            #   entity_id: "${light2_entityid}"
+        - homeassistant.service:
+            service: "${light2_script}"
+        # - homeassistant.action:
+        #     # action: light.toggle
+        #     # target:
+        #     #   entity_id: "${light2_entityid}"
 
-            action: "${light2_script}"
+        #     action: "${light2_script}"
         # - light.toggle: "${light2_entityid}"
         # - light.toggle: "${device_name}_lightid2"
     device_class: "power"
