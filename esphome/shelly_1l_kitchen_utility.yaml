@@ -7,7 +7,7 @@ substitutions:
   light1_icon: "mdi:vanity-light"
   # light2_icon: "mdi:coach-lamp"
   # light2_entityid: "light.backdoor_smartbulb"
-  light2_script: "script.unique_back_light_toggle"
+  light2_script: "script.back_light_toggle"
   device_ip: "13"
   ssid: !secret "not_wifi_ssid"
   log_level: "DEBUG"
@@ -46,16 +46,20 @@ substitutions:
 #         # - homeassistant.service:
 #         #     service: "script.unique_back_light_toggle"
 
-api:
-  reboot_timeout: "30min"
-  homeassistant_services: true
-  homeassistant_states: true
-  id: "fdhddterdfgdfgħ"
-  encryption:
-    key: !secret "esphome_api_key"
-  actions:
-    - action: toggle_backdoor_light
-      then: []
+# api:
+#   reboot_timeout: "30min"
+#   homeassistant_services: true
+#   homeassistant_states: true
+#   id: "fdhddterdfgdfgħ"
+#   encryption:
+#     key: !secret "esphome_api_key"
+#   # - homeassistant.action:
+#   #     action: notify.html5
+#   #     data:
+#   #       message: Button was pressed
+#   # actions:
+#   #   - action: toggle_backdoor_light
+#   #     then: []
 
 
 binary_sensor:
@@ -89,8 +93,8 @@ binary_sensor:
     device_class: "power"
     on_state:
       then:
-        - homeassistant.service:
-        #     action: script.turn_on
+        - homeassistant.action:
+            action:  "${light2_script}"
         #     target:
         #       entity_id: ${light2_script}"
         # - homeassistant.service:
