@@ -3,7 +3,7 @@
   description: ''
   triggers:
   - entity_id:
-    - media_player.yamaha_rx_v777_reciever_integration_music_assistant_bed_c
+    - media_player.rx_v777_reciever_yamaha_integration_bed_c
     from:
     - 'on'
     to:
@@ -22,7 +22,7 @@
   description: ''
   triggers:
   - entity_id:
-    - media_player.yamaha_rx_v777_reciever_integration_music_assistant_bed_c
+    - media_player.rx_v777_reciever_yamaha_integration_bed_c
     from:
     - 'off'
     to:
@@ -78,23 +78,24 @@
       milliseconds: 0
   - action: light.turn_off
     metadata: {}
-    data: {}
     target:
-      device_id: d831b1c23db5952276c05f231c7fd0da
+      entity_id: light.garage_light
+    data: {}
   mode: single
 - id: '1624743776933'
   alias: on_open_front_door_turn_on_bottom_hallway_light
   description: ''
   triggers:
-  - type: opened
-    device_id: c433a6de7503fff598e3b00eebd934b8
-    entity_id: 728aecc504877295ccda5a9c04e5f2fa
-    domain: binary_sensor
+  - device_id: c433a6de7503fff598e3b00eebd934b8
+    domain: lock
+    entity_id: 2aa351b0b7bdb31860450ecf842ca28b
+    type: opening
     trigger: device
   conditions:
   - condition: state
     entity_id: binary_sensor.nighttime
-    state: 'on'
+    state:
+    - 'on'
   - condition: time
     before: '22:00:00'
   actions:
