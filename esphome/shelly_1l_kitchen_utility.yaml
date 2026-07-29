@@ -77,7 +77,11 @@ binary_sensor:
     on_state:
       then:
         - homeassistant.service:
-            service: "${light2_script}"
+            action: script.turn_on
+            target:
+              entity_id: ${light2_script}"
+        # - homeassistant.service:
+            # service: "${light2_script}"
         # - homeassistant.action:
         #     # action: light.toggle
         #     # target:
