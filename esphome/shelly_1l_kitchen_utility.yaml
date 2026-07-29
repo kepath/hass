@@ -32,19 +32,31 @@ substitutions:
   #   id: "${device_name}_lightid2"
   #   icon: "${light2_icon}"
 
-output:
-  - platform: "gpio"
-    pin: "GPIO5"
-    id: "${device_name}_relay1"
+# output:
+#   - platform: "gpio"
+#     pin: "GPIO5"
+#     id: "${device_name}_relay1"
 
-  - platform: "template"
-    type: "binary"
-    id: "ha_script"
-    write_action:
-      then:
-        # - light.toggle: "light.backdoor_smartbulb"
-        # - homeassistant.service:
-        #     service: "script.unique_back_light_toggle"
+#   - platform: "template"
+#     type: "binary"
+#     id: "ha_script"
+#     write_action:
+#       then:
+#         # - light.toggle: "light.backdoor_smartbulb"
+#         # - homeassistant.service:
+#         #     service: "script.unique_back_light_toggle"
+
+api:
+  reboot_timeout: "30min"
+  homeassistant_services: true
+  homeassistant_states: true
+  id: "fdhddterdfgdfgħ"
+  encryption:
+    key: !secret "esphome_api_key"
+  actions:
+    - action: toggle_backdoor_light
+      then: []
+
 
 binary_sensor:
   - platform: "status"
@@ -61,12 +73,12 @@ binary_sensor:
     icon: "mdi:light-switch"
     pin:
       number: "GPIO4"
+    device_class: "power"
     on_state:
       then:
         - light.toggle: "${device_name}_lightid1"
     filters:
       - delayed_on_off: "50ms"
-    device_class: "power"
 
   - platform: "gpio"
     name: "${friendly_name2} Switch"
@@ -74,6 +86,7 @@ binary_sensor:
     icon: "mdi:light-switch"
     pin:
       number: "GPIO14"
+    device_class: "power"
     on_state:
       then:
         - homeassistant.service:
@@ -90,17 +103,3 @@ binary_sensor:
         #     action: "${light2_script}"
         # - light.toggle: "${light2_entityid}"
         # - light.toggle: "${device_name}_lightid2"
-    device_class: "power"
-
-
-api:
-  reboot_timeout: "30min"
-  homeassistant_services: true
-  encryption:
-    key: !secret "esphome_api_key"
-  actions:
-    - action: toggle_backdoor_light
-      then: []
-
-  homeassistant_states: true
-  id: fdhddterdfgdfgħ
