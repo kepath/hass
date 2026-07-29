@@ -60,6 +60,8 @@
 # from homeassistant.helpers import entity_registry as er
 
 # import fnmatch
+# import time
+# import logging as logger
 
 DOMAIN = str(data.get('domain', ''))
 GROUP_NAME = str(data.get('group_name', ''))
@@ -77,72 +79,81 @@ FILTERED_UNIT_OF_MEASUREMENT = str(data.get('filtered_unit_of_measurement', ''))
 EXCLUDED_ENTITY_GROUPS = list(data.get('excluded_entity_groups', []))
 EXCLUDED_INTEGRATIONS = list(data.get('excluded_integrations', []))
 EXCLUDED_INTEGRATION_ENTITY_SOURCE = "sensor.integration_entity_list"
+LOGGER_LEVEL = str(data.get('log_level', 'WARNING'))
 
 excluded_entities = list(data.get('excluded_entities', []))
 entity_list = []
+try:
+    if LOGGER_LEVEL != "WARNING":
+        logger.setLevel(LOGGER_LEVEL)
+        logger.debug(logger, "log level set to '{0}' when creating '{1}' at {2}".format(LOGGER_LEVEL, FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
+except ValueError:
+    logger.error(logger, "An error occurred setting the log level to '{0}' when creating '{1}' at {2}".format(LOGGER_LEVEL, FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
 
+if LOGGER_LEVEL != "WARNING":
+    logger.setLevel(LOGGER_LEVEL)
 
 try:
     if not isinstance(DOMAIN, str) or not DOMAIN or not GROUP_NAME:
-        logger.error(logger, f"A1: Domain {DOMAIN} or group_name {GROUP_NAME} does not exist")
+        logger.error(logger, "A1: Domain {0} or group_name {1} does not exist".format(DOMAIN, GROUP_NAME))
 except LookupError:
-    logger.error(logger, "A2: Error - a problem occured looking up the domain")
+    logger.error(logger, "A2: Error - a problem occurred looking up the domain")
 
 
 try:
     for group in EXCLUDED_ENTITY_GROUPS:
-        logger.debug(logger, f"B1: iterating group '{group}' at {time.time()}")
+        logger.debug(logger, "B1: iterating group '{0}' at {1}".format(str(group), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
         if not group:
-            logger.error(logger, f"B2: Error - group {group} not found")
+            logger.error(logger, "B2: Error - group {0} not found".format(str(group)))
         else:
             group_entities = hass.states.get(group)
             if group_entities is None:
-                logger.error(logger, f"B3: Error - group {group} not found")
+                logger.error(logger, "B3: Error - group {0} not found".format(str(group)))
             else:
                 for entity_id in group_entities.attributes.get("entity_id"):
-                    logger.debug(logger, f"B4: iterating '{entity_id}' in group '{group}' when creating '{FRIENDLY_NAME}' at {time.time()}")
+                    logger.debug(logger, "B4: iterating '{0}' in group '{1}' when creating '{2}' at {3}".format(str(entity_id), str(group), FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                     entity = hass.states.get(entity_id)
                     if entity is None:
-                        logger_text = "B5: Warning - entity {} not found"
-                        logger.warning(logger, logger_text.format(entity_id))
+                        logger_text = "B5: Warning - entity {0} not found"
+                        logger.warning(logger, logger_text.format(str(entity_id)))
                     else:
                         excluded_entities.append(entity_id)
-                        logger.debug(logger, f"B6: '{entity_id}' added to 'excluded_entities' at {time.time()}")
+                        logger.debug(logger, "B6: '{0}' added to 'excluded_entities' at {1}".format(str(entity_id), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
 except KeyError:
-    logger.error(logger, f"B7: Error - a problem occured adding the members of {EXCLUDED_ENTITY_GROUPS} entities to the excluded matches list")
-   
+    logger.error(logger, "B7: Error - a problem occurred adding the members of {0} entities to the excluded matches list".format(EXCLUDED_ENTITY_GROUPS))
+
     
 try:
     for integration in EXCLUDED_INTEGRATIONS:
-        logger.debug(logger, f"C1: iterating integration '{integration}' at {time.time()}")
+        logger.debug(logger, "C1: iterating integration '{0}' at {1}".format(str(integration), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
         
         
         try:
-            integration_entity_list = list(hass.states.get(EXCLUDED_INTEGRATION_ENTITY_SOURCE).attributes[integration])
+            integration_entity_list = list(hass.states.get(EXCLUDED_INTEGRATION_ENTITY_SOURCE).attributes[integration]) if len(list(hass.states.get(EXCLUDED_INTEGRATION_ENTITY_SOURCE).attributes[integration])) > 0 else []
         except KeyError:
-            logger.error(logger, f"C2: Error - a problem occured looking up the integration entity list from the templated sensor '{EXCLUDED_INTEGRATION_ENTITY_SOURCE}'")
-            
+            logger.error(logger, "C2: Error - a problem occurred looking up the integration entity list from the templated sensor '{0}'".format(EXCLUDED_INTEGRATION_ENTITY_SOURCE))
             
         try:
             for integration_entity in integration_entity_list:
-                logger.debug(logger, f"C3: Iterating '{integration_entity}' in entity_list '{EXCLUDED_INTEGRATION_ENTITY_SOURCE}.attributes.{integration}' when checking integration '{integration}' at {time.time()}")
-                
+                # logger.info(logger, "C3: Iterating '{}' in entity_list '{}.attributes.{}' when checking integration '{}' at {}".format(str(integration_entity), EXCLUDED_INTEGRATION_ENTITY_SOURCE, str(integration), str(integration), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
+                logger.debug(logger, "C3: Iterating '{0}' in entity_list '{1}.attributes.{2}' when checking integration '{2}' at {3}".format(str(integration_entity), EXCLUDED_INTEGRATION_ENTITY_SOURCE, str(integration), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
+
                 if integration_entity is None:
-                    logger.error(logger, f"C4: Error - entity {integration_entity} not found")
+                    logger.error(logger, "C4: Error - entity {0} not found".format(str(integration_entity)))
                 else:
                     excluded_entities.append(integration_entity)
-                    logger.debug(logger, f"C5: '{integration_entity}' added to 'excluded_entities' at {time.time()}")
+                    logger.debug(logger, "C5: '{0}' added to 'excluded_entities' at {1}".format(str(integration_entity), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                 
         except LookupError:
-            logger.error(logger, "C6: Error - a problem occured iterating through the looked up entity list")
+            logger.error(logger, "C6: Error - a problem occurred iterating through the looked up entity list")
         
 except KeyError:
-    logger.error(logger, f"C7: Error - a problem occured adding the members of {EXCLUDED_ENTITY_GROUPS} entities to the excluded matches list")
+    logger.error(logger, "C7: Error - a problem occurred adding the members of {0} entities to the excluded matches list".format(EXCLUDED_ENTITY_GROUPS))
 
 
 try:
     for entity_id in sorted(hass.states.entity_ids(DOMAIN)):
-        logger.debug(logger, f"D1: iterating '{entity_id}' in domain '{DOMAIN}' at {time.time()}")
+        logger.debug(logger, "D1: iterating '{0}' in domain '{1}' at {2}".format(str(entity_id), DOMAIN, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
         if entity_id == "":
             logger.error(logger, "D2: Error - entity_id missing when looping through domain")
         else:
@@ -156,51 +167,51 @@ try:
                     try:
                         if FILTER_BY_DEVICE_CLASS:
                             for attr in entity.attributes:
-                                logger.debug(logger, f"E1: iterating '{attr}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
+                                logger.debug(logger, "E1: iterating '{0}' in entity '{1}' in domain '{2}' when creating '{3}' at {4}".format(str(attr), str(entity_id), DOMAIN, FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                 if attr is not None:
                                     if attr == "device_class":
                                         for device_class_option in INCLUDED_DEVICE_CLASSES:
-                                            logger.debug(logger, f"E2: iterating '{device_class_option}' in device_class '{INCLUDED_DEVICE_CLASSES}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
+                                            logger.debug(logger, "E2: iterating '{0}' in device_class '{1}' in entity '{2}' in domain '{3}' when creating '{4}' at {5}".format(str(device_class_option), INCLUDED_DEVICE_CLASSES, str(entity_id), DOMAIN, FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                             if entity.attributes.get(attr) == device_class_option:
                                                 entity_list.append(entity_id)
-                                                logger.debug(logger, f"E3: '{entity_id}' added to group '{FRIENDLY_NAME}' at {time.time()}")
+                                                logger.debug(logger, "E3: '{0}' added to group '{1}' at {2}".format(str(entity_id), FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                         else:
                             entity_list.append(entity_id)
-                            logger.debug(logger, f"E4: '{entity_id}' added to group '{FRIENDLY_NAME}' at {time.time()}")
+                            logger.debug(logger, "E4: '{0}' added to group '{1}' at {2}".format(str(entity_id), FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                     except KeyError:
-                        logger.error(logger, "E5: Error - a problem occured adding an entity to the entity list")
+                        logger.error(logger, "E5: Error - a problem occurred adding an entity to the entity list")
 
 
                     try:
                         if FILTER_BY_STATE_CLASS:
                             for attr in entity.attributes:
-                                logger.debug(logger, f"F1: iterating '{attr}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
+                                logger.debug(logger, "F1: iterating '{0}' in entity '{1}' in domain '{2}' when creating '{3}' at {4}".format(str(attr), str(entity_id), DOMAIN, FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                 if attr is not None:
                                     if attr == "state_class":
                                         if entity.attributes.get(attr) != FILTERED_STATE_CLASS:
                                             if entity_id in entity_list:
                                                 entity_list.remove(entity_id)
-                                                logger.debug(logger, f"F2: '{entity_id}' removed from group '{FRIENDLY_NAME}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{FILTERED_STATE_CLASS}' at {time.time()}")
+                                                logger.debug(logger, "F2: '{0}' removed from group '{1}' because the state class of the entity '{2}' did not match the filtered state class '{3}' at {4}".format(str(entity_id), FRIENDLY_NAME, str(entity.attributes.get(attr)), FILTERED_STATE_CLASS, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                             else:
-                                                logger.debug(logger, f"F3: '{entity_id}' does not exist in the group '{FRIENDLY_NAME}', so cannot be removed. This may indicate a problem.")
+                                                logger.debug(logger, "F3: '{0}' does not exist in the group '{1}', so cannot be removed. This may indicate a problem.".format(str(entity_id), FRIENDLY_NAME))
                     except KeyError:
-                        logger.error(logger, "F4: Error - a problem occured removing a filtered state_class entity from the entity list")
+                        logger.error(logger, "F4: Error - a problem occurred removing a filtered state_class entity from the entity list")
 
 
                     try:
                         if FILTER_BY_UNIT_OF_MEASUREMENT:
                             for attr in entity.attributes:
-                                logger.debug(logger, f"G1: iterating '{attr}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
+                                logger.debug(logger, "G1: iterating '{0}' in entity '{1}' in domain '{2}' when creating '{3}' at {4}".format(str(attr), str(entity_id), DOMAIN, FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                 if attr is not None:
                                     if attr == "unit_of_measurement":
                                         if entity.attributes.get(attr) != FILTERED_UNIT_OF_MEASUREMENT:
                                             if entity_id in entity_list:
                                                 entity_list.remove(entity_id)
-                                                logger.debug(logger, f"G2: '{entity_id}' removed from group '{FRIENDLY_NAME}' because the state class of the entity '{entity.attributes.get(attr)}' did not match the filtered state class '{FILTERED_UNIT_OF_MEASUREMENT}' at {time.time()}")
+                                                logger.debug(logger, "G2: '{0}' removed from group '{1}' because the state class of the entity '{2}' did not match the filtered state class '{3}' at {4}".format(str(entity_id), FRIENDLY_NAME, str(entity.attributes.get(attr)), FILTERED_UNIT_OF_MEASUREMENT, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                             else:
-                                                logger.debug(logger, f"G3: '{entity_id}' does not exist in the group '{FRIENDLY_NAME}', so cannot be removed. This may indicate a problem.")
+                                                logger.debug(logger, "G3: '{0}' does not exist in the group '{1}', so cannot be removed. This may indicate a problem.".format(str(entity_id), FRIENDLY_NAME))
                     except KeyError:
-                        logger.error(logger, "G4: Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
+                        logger.error(logger, "G4: Error - a problem occurred removing a filtered unit_of_measurement entity from the entity list")
 
 
                     try:
@@ -215,54 +226,55 @@ try:
                             try:
                                 for area in INCLUDED_AREAS:
                                     remove_entity = True
-                                    logger.debug(logger, f"H1: Iterating '{area}' in entity '{entity_id}' in domain '{DOMAIN}' when creating '{FRIENDLY_NAME}' at {time.time()}")
+                                    logger.debug(logger, "H1: Iterating '{0}' in entity '{1}' in domain '{2}' when creating '{3}' at {4}".format(str(area), str(entity_id), DOMAIN, FRIENDLY_NAME, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                     area_lookup_attribute = str(area.replace(" ", "_").replace(":", "").replace(",", "").lower()) + "_entities"
-                                    logger.debug(logger, f"H2: Looking up entities from the list found at '{AREA_LOOKUP_ENTITY}.attributes.{area_lookup_attribute}' at {time.time()}")
+                                    logger.debug(logger, "H2: Looking up entities from the list found at '{0}.attributes.{1}' at {2}".format(AREA_LOOKUP_ENTITY, str(area_lookup_attribute), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                     
                                     
                                     try:
                                         if area_lookup_attribute:
                                             area_entity_list = list(hass.states.get(AREA_LOOKUP_ENTITY).attributes[area_lookup_attribute])
+                                            logger.debug(logger, "H3: Creating 'area_entity_list' using 'list(hass.states.get({0}).attributes[{1}])' at {2}".format(AREA_LOOKUP_ENTITY, str(area_lookup_attribute), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                     except KeyError:
-                                        logger.error(logger, f"H3: Error - a problem occured looking up the area entity list from the templated sensor '{AREA_LOOKUP_ENTITY}'")
+                                        logger.error(logger, "H4: Error - a problem occurred looking up the area entity list from the templated sensor '{0}'".format(AREA_LOOKUP_ENTITY))
 
 
                                     try:
                                         for area_entity in area_entity_list:
-                                            logger.debug(logger, f"H4: Iterating '{area_entity}' in entity_list '{AREA_LOOKUP_ENTITY}.attributes.{area_lookup_attribute}' when checking area '{area}' at {time.time()}")
+                                            logger.debug(logger, "H5: Iterating '{0}' in entity_list '{1}.attributes.{2}' when checking area '{3}' at {4}".format(str(area_entity), AREA_LOOKUP_ENTITY, str(area_lookup_attribute), str(area), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                             if area_entity is not None:
                                                 if area_entity == entity_id:
                                                     remove_entity = False
-                                                    logger.debug(logger, f"H5: The entity '{area_entity}' has been found in the list from '{AREA_LOOKUP_ENTITY}.attributes.{area_lookup_attribute}' at {time.time()}")
+                                                    logger.debug(logger, "H6: The entity '{0}' has been found in the list from '{1}.attributes.{2}' at {3}".format(str(area_entity), AREA_LOOKUP_ENTITY, str(area_lookup_attribute), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                     except LookupError:
-                                        logger.error(logger, "H6: Error - a problem occured iterating through the looked up entity list")
+                                        logger.error(logger, "H7: Error - a problem occurred iterating through the looked up entity list")
                                         
                                         
                                     try:
                                         if remove_entity:
                                             if entity_id in entity_list:
                                                 entity_list.remove(entity_id)
-                                                logger.debug(logger, f"H7: '{entity_id}' removed from group '{FRIENDLY_NAME}' because it was not in the area '{area}' at {time.time()}")
+                                                logger.debug(logger, "H8: '{0}' removed from group '{1}' because it was not in the area '{2}' at {3}".format(str(entity_id), FRIENDLY_NAME, str(area), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
                                             else:
-                                                logger.debug(logger, f"H8: '{entity_id}' does not exist in the group '{FRIENDLY_NAME}', so cannot be removed. This may indicate a problem.")
+                                                logger.info(logger, "H9: '{0}' does not exist in the group '{1}', so cannot be removed. This may indicate a problem.".format(str(entity_id), FRIENDLY_NAME))
                                     except KeyError:
-                                        logger.error(logger, f"H9: Error - a problem occured removing the entity '{entity_id}' from the entity_list")
+                                        logger.error(logger, "H10: Error - a problem occurred removing the entity '{0}' from the entity_list".format(str(entity_id)))
 
                             except LookupError:
-                                logger.error(logger, "H10: Error - a problem occured iterating through the list of areas")
+                                logger.error(logger, "H11: Error - a problem occurred iterating through the list of areas")
                     except LookupError:
-                        logger.error(logger, "H11: Error - a problem occured removing a filtered unit_of_measurement entity from the entity list")
+                        logger.error(logger, "H12: Error - a problem occurred removing a filtered unit_of_measurement entity from the entity list")
 
 except LookupError:
-    logger.error(logger, "D4: Error - a problem occured creating the entity list")
+    logger.error(logger, "D4: Error - a problem occurred creating the entity list")
 
 
 try:
     service_data = {"object_id": GROUP_NAME, "name": FRIENDLY_NAME, "icon": ICON, "entities": entity_list, "all": False}
     # service_data_string = service_data)
-    logger_text = "I1: Calling the service 'set group' with the data '{}' at {}"
-    logger.debug(logger, logger_text.format(service_data, time.time()))
+    # logger_text = "I1: Calling the service 'set group' with the data '{}' at {}".format(service_data, str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time()))))
+    logger.debug(logger, "I1: Calling the service 'set group' with the data '{0}' at {1}".format(str(service_data), str(time.strftime('%a %d %b %Y, %H:%M:%S', time.localtime(time.time())))))
     hass.services.call("group", "set", service_data, False)
 except ServiceValidationError:
-    logger_text = "I2: Error - a problem occured calling the hass set group service"
+    logger_text = "I2: Error - a problem occurred calling the hass set group service"
     logger.error(logger, logger_text)
