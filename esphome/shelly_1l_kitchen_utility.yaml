@@ -11,14 +11,16 @@ substitutions:
   log_level: "DEBUG"
   max_temp: "80.0" # Centigrade
 
+
+# Second Switch Script Calling Include
+<<: !include "includes/shelly_1l_switch2_call_script.yaml"
+
+
 # Common Include
 <<: !include "includes/shelly_1l_common.yaml"
 
 # Extended Config - only use when overwriting values in include
 # Note: the entire light and binary_sensor blocks will be overwritten
-
-
-<<: !include "includes/shelly_1l_switch2_call_script.yaml"
 
 # binary_sensor:
 #   - platform: "status"
