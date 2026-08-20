@@ -25,13 +25,13 @@ ingress:
     work_mode: "hassio"
     title: "ESPHome"
     icon: "simple-icons:esphome"
-    url: "5c53de3b_esphome"
+    url: !secret "hass_addon_esphome_docker_slug"
   studio_code_server:
     parent: "tabs_development"
     work_mode: "hassio"
     title: "VS Code"
     icon: "simple-icons:coder"
-    url: "a0d7b954_vscode"
+    url: !secret "hass_addon_studiocodeserver_docker_slug"
   hacs:
     parent: "tabs_development"
     work_mode: "iframe"
@@ -53,14 +53,11 @@ ingress:
     parent: "tabs_development"
     work_mode: "hassio"
     title: "NetAlertX"
-    # icon: "mdi:wifi-check"
-    url: "db21ed7f_netalertx_fa"
+    url: !secret "hass_addon_netdata_docker_slug"
   it_tools:
     parent: "tabs_development"
     title: "IT-Tools"
-    # icon: "mdi:tools"
-    url: "http://homeassistant.aot:5789"
-    #   url: "http://127.0.0.1:5789"
+    url: !secret "hass_addon_it_tools_webui_local_url"
     headers:
       X-Script-Name: $http_x_ingress_path
       Origin: $auto
@@ -86,14 +83,11 @@ ingress:
     parent: "tabs_development"
     work_mode: "hassio"
     title: "CyberChef"
-    # icon: "mdi:chef-hat"
-    url: "2effc9b9_cyberchef"
+    url: !secret "hass_addon_cyberchef_docker_slug"
   convertx:
     parent: "tabs_development"
     title: "ConvertX"
-    # icon: "mdi:alpha-x-circle"
-    url: "http://convertx.aot"
-    #   url: "http://127.0.0.1:8478"
+    url: !secret "hass_addon_convertx_webui_local_url"
     rewrite:
       - mode: "body"
         match: href="/"
@@ -108,8 +102,7 @@ ingress:
   my_ip:
     parent: "tabs_development"
     title: "My-IP"
-    # icon: "mdi:ip"
-    url: "http:///homeassistant.aot:18966"
+    url: !secret "hass_addon_myip_webui_local_url"
 
 
 
@@ -123,37 +116,36 @@ ingress:
     work_mode: "hassio"
     title: "Guacamole"
     icon: "simple-icons:apacheguacamole"
-    url: "db21ed7f_guacamole"
+    url: !secret "hass_addon_guacamole_docker_slug"
   portainer:
     parent: "tabs_admin"
     work_mode: "hassio"
     title: "Portainer"
     icon: "simple-icons:portainer"
-    url: "db21ed7f_portainer"
+    url: !secret "hass_addon_portainer_docker_slug"
   phpmyadmin:
     parent: "tabs_admin"
     work_mode: "hassio"
     title: "phpMyAdmin"
     icon: "simple-icons:phpmyadmin"
-    url: "a0d7b954_phpmyadmin"
+    url: !secret "hass_addon_phpmyadmin_docker_slug"
   advanced_ssh:
     parent: "tabs_admin"
     work_mode: "hassio"
     title: "SSH"
     icon: "mdi:ssh"
-    url: "a0d7b954_ssh"
+    url: !secret "hass_addon_advanced_ssh_docker_slug"
   adguard:
     parent: "tabs_admin"
     work_mode: "hassio"
     title: "AdGuard"
     icon: "simple-icons:adguard"
-    url: "a0d7b954_adguard"
+    url: !secret "hass_addon_adguard_docker_slug"
   browser_mod:
     parent: "tabs_admin"
     work_mode: "iframe"
     # ui_mode: "replace"
     title: "Browser Mod"
-    # icon: "simple-icons:firefoxbrowser"
     url: "/browser-mod"
   # nginx_proxy_manager:
   #   parent: "tabs_admin"
@@ -172,8 +164,7 @@ ingress:
     parent: "tabs_diagnostics"
     title: "Uptime Kuma"
     icon: "simple-icons:uptimekuma"
-    url: "http:///homeassistant.aot:3001"
-    #   url: "http://127.0.0.1:3001"
+    url: !secret "hass_addon_uptime_kuma_webui_local_url"
     index: "/dashboard"
     rewrite:
     # Fix HTML asset references
@@ -207,31 +198,31 @@ ingress:
     work_mode: "hassio"
     title: "EMQX"
     icon: "simple-icons:mqtt"
-    url: "a0d7b954_emqx"
+    url: !secret "hass_addon_emqx_docker_slug"
   scrutiny:
     parent: "tabs_diagnostics"
     work_mode: "hassio"
     title: "Scrutiny (Full Access)"
     icon: "mdi:glasses"
-    url: "db21ed7f_scrutiny_fa"
+    url: !secret "hass_addon_scrutinyfa_docker_slug"
   influxdb:
     parent: "tabs_diagnostics"
     work_mode: "hassio"
     title: "InfluxDB"
     icon: "simple-icons:influxdb"
-    url: "a0d7b954_influxdb"
+    url: !secret "hass_addon_influx_db_docker_slug"
   grafana:
     parent: "tabs_diagnostics"
     work_mode: "hassio"
     title: "Grafana"
     icon: "simple-icons:grafana"
-    url: "a0d7b954_grafana"
+    url: !secret "hass_addon_grafana_docker_slug"
   matter_server:
     parent: "tabs_diagnostics"
     work_mode: "hassio"
     title: "Matter Server"
     icon: "m3of:matter"
-    url: "core_matter_server"
+    url: !secret "hass_addon_matterserver_docker_slug"
   # matterbridge:
   #   parent: "tabs_diagnostics"
   #   work_mode: "hassio"
@@ -256,21 +247,17 @@ ingress:
     parent: "tabs_media"
     work_mode: "hassio"
     title: "Music Assistant Server"
-    # icon: "simple-icons:applemusic"
-    url: "d5369777_music_assistant"
+    url: !secret "hass_addon_musicassistantserver_docker_slug"
   media_browser:
     parent: "tabs_media"
     work_mode: "iframe"
     # ui_mode: "replace"
     title: "Media Browser"
-    # icon: "simple-icons:vlcmediaplayer"
     url: "/media-browser/browser"
   moodist:
     parent: "tabs_media"
     title: "Moodist"
-    # icon: "mdi:headphones"
-    url: "http:///homeassistant.aot:8458"
-    #   url: "http://127.0.0.1:8458"
+    url: !secret "hass_addon_monica_webui_local_url"
     rewrite:
       # rewrite folders
       - mode: "body"
@@ -298,13 +285,12 @@ ingress:
     work_mode: "hassio"
     title: "5e Tools"
     icon: "simple-icons:dungeonsanddragons"
-    url: "2effc9b9_5etools"
+    url: !secret "hass_addon_5etools_docker_slug"
   calibre_web:
     parent: "tabs_media"
     work_mode: "hassio"
     title: "Calibre Web"
-    # icon: "simple-icons:calibreweb"
-    url: "db21ed7f_calibre"
+    url: !secret "hass_addon_calibre_docker_slug"
 
 
 
@@ -316,65 +302,170 @@ ingress:
   ha_map:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    # ui_mode: "replace"
     title: "Map"
-    # icon: "mdi:history"
     url: "/map"
   ha_logbook:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    # ui_mode: "replace"
     title: "Logbook"
-    # icon: "mdi:book-open-variant"
     url: "/logbook"
   ha_history:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    # ui_mode: "replace"
     title: "History"
-    # icon: "mdi:history"
     url: "/history"
   ha_calendar:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    # ui_mode: "replace"
     title: "Calendar"
-    # icon: "mdi:calendar-month"
     url: "/calendar"
   ha_todo:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    # ui_mode: "replace"
     title: "ToDo"
-    # icon: "mdi:checkbox-outline"
     url: "/todo"
   homebox:
     parent: "tabs_organisation"
     title: "Homebox"
-    # icon: "mdi:folder-home"
-    url: "http://127.0.0.1:8578"
+    url: !secret "hass_addon_homebox_webui_local_url"
   ha_home_maintenance:
     parent: "tabs_organisation"
     work_mode: "iframe"
-    # ui_mode: "replace"
     title: "Home Maintenance"
-    # icon: "mdi:home-edit"
     url: "/home-maintenance"
   monica:
     parent: "tabs_organisation"
-    # work_mode: "iframe"
-    # ui_mode: "replace"
+
     title: "Monica"
-    # icon: "simple-icons:openproject"
-    url: "http:///homeassistant.aot:8849"
+    url: !secret "hass_addon_monica_webui_local_url"
 
   openproject:
     parent: "tabs_organisation"
     title: "Open Project"
-    # icon: "simple-icons:openproject"
-    url: "http:///homeassistant.aot:8579"
+    url: !secret "hass_addon_openproject_webui_local_url"
   silverbullet:
     parent: "tabs_organisation"
     title: "Silver Bullet"
-    # icon: "mdi:flower-poppy"
-    url: "http:///homeassistant.aot:8538"
+    url: !secret "hass_addon_silverbullet_webui_local_url"
+
+
+  svc_5etools:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "5etools"
+    url: !secret "hass_addon_5etools_docker_slug"
+    static_token: !secret "hass_addon_5etools_webui_static_token"
+  svc_adguard:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "adguard"
+    url: !secret "hass_addon_adguard_docker_slug"
+    static_token: !secret "hass_addon_adguard_webui_static_token"
+  svc_advanced_ssh:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "advanced_ssh"
+    url: !secret "hass_addon_advanced_ssh_docker_slug"
+    static_token: !secret "hass_addon_advanced_ssh_webui_static_token"
+  svc_calibre:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "calibre"
+    url: !secret "hass_addon_calibre_docker_slug"
+    static_token: !secret "hass_addon_calibre_webui_static_token"
+  svc_cyberchef:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "cyberchef"
+    url: !secret "hass_addon_cyberchef_docker_slug"
+    static_token: !secret "hass_addon_cyberchef_webui_static_token"
+  svc_emqx:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "emqx"
+    url: !secret "hass_addon_emqx_docker_slug"
+    static_token: !secret "hass_addon_emqx_webui_static_token"
+  svc_esphome:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "ESPHome"
+    url: !secret "hass_addon_esphome_docker_slug"
+    static_token: !secret "hass_addon_esphome_webui_static_token"
+  svc_grafana:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "grafana"
+    url: !secret "hass_addon_grafana_docker_slug"
+    static_token: !secret "hass_addon_grafana_webui_static_token"
+  svc_guacamole:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "guacamole"
+    url: !secret "hass_addon_guacamole_docker_slug"
+    static_token: !secret "hass_addon_guacamole_webui_static_token"
+  svc_influx_db:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "influx_db"
+    url: !secret "hass_addon_influx_db_docker_slug"
+    static_token: !secret "hass_addon_influx_db_webui_static_token"
+  svc_matterserver:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "matterserver"
+    url: !secret "hass_addon_matterserver_docker_slug"
+    static_token: !secret "hass_addon_matterserver_webui_static_token"
+  svc_matterbridge:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "matterbridge"
+    url: !secret "hass_addon_matterbridge_docker_slug"
+    static_token: !secret "hass_addon_matterbridge_webui_static_token"
+  svc_musicassistantserver:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "musicassistantserver"
+    url: !secret "hass_addon_musicassistantserver_docker_slug"
+    static_token: !secret "hass_addon_musicassistantserver_webui_static_token"
+  svc_netalertx:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "netalertx"
+    url: !secret "hass_addon_netalertx_docker_slug"
+    static_token: !secret "hass_addon_netalertx_webui_static_token"
+  svc_netdata:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "netdata"
+    url: !secret "hass_addon_netdata_docker_slug"
+    static_token: !secret "hass_addon_netdata_webui_static_token"
+  svc_node_red:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "node_red"
+    url: !secret "hass_addon_node_red_docker_slug"
+    static_token: !secret "hass_addon_node_red_webui_static_token"
+  svc_phpmyadmin:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "phpmyadmin"
+    url: !secret "hass_addon_phpmyadmin_docker_slug"
+    static_token: !secret "hass_addon_phpmyadmin_webui_static_token"
+  svc_portainer:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "portainer"
+    url: !secret "hass_addon_portainer_docker_slug"
+    static_token: !secret "hass_addon_portainer_webui_static_token"
+  svc_scrutinyfa:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "scrutinyfa"
+    url: !secret "hass_addon_scrutinyfa_docker_slug"
+    static_token: !secret "hass_addon_scrutinyfa_webui_static_token"
+  svc_studiocodeserver:
+    work_mode: "ingress"
+    ui_mode: "normal"
+    title: "scrutinyfa"
+    url: !secret "hass_addon_studiocodeserver_docker_slug"
+    static_token: !secret "hass_addon_studiocodeserver_webui_static_token"
