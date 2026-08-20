@@ -156,7 +156,7 @@ views:
             name: "Mealie"
             new_tab: true
           - type: "weblink"
-            url: !secret "hass_addon_appdaemon_webserver_local_url"
+            url: !secret "hass_addon_appdaemon_webui_local_url"
             icon: "mdi:application-cog"
             name: "AppDaemon"
             new_tab: true
@@ -266,9 +266,14 @@ views:
             name: "Solar DRU Node Red"
             new_tab: true
           - type: "weblink"
-            url: !secret "brother_printer_rj45_local_webui"
+            url: !secret "brother_inkjet_printer_rj45_local_webui"
             icon: "mdi:printer"
             name: "Brother MFC Printer/Scanner"
+            new_tab: true
+          - type: "weblink"
+            url: !secret "brother_laser_printer_rj45_local_webui"
+            icon: "mdi:printer-outline"
+            name: "Brother Laser Printer"
             new_tab: true
           - type: "weblink"
             url: !secret "yamaha_rx_v777_rj45_local_webui"
@@ -456,67 +461,67 @@ views:
             icon: "simple-icons:googlemaps"
             name: "Google Maps"
 
-  - title: "Links"
-    icon: "hacs:hacs"
-    theme: "minimalist-mobile"
-    cards:
-      - type: "custom:auto-entities"
-        show_empty: false
-        card:
-          type: "entities"
-          title: "HACS Integrations"
-        filter:
-          template: >-
-            {%- for update_list in states.update | sort(attribute="name") -%}
-              {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
-                {%- if device_attr(update_list.entity_id, 'model') == 'integration' -%}
-                  {{{
-                    'entity': update_list.entity_id,
-                    'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
-                    'show_icon': false,
-                    'tap_action': {
-                      'action': 'navigate',
-                      'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
-                    },
-                    'hold_action': {
-                      'action': 'url',
-                      'url_path': state_attr(update_list.entity_id, 'release_url')
-                    },
-                    'double_tap_action': {
-                      'action': 'more-info'
-                    }
-                  }}},
-                {%- endif -%}
-              {%- endif -%}
-            {%- endfor -%}
-      - type: "custom:auto-entities"
-        show_empty: false
-        card:
-          type: "entities"
-          title: "HACS Plugins"
-        filter:
-          template: >-
-            {%- for update_list in states.update | sort(attribute="name") -%}
-              {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
-                {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
-                  {{{
-                    'entity': update_list.entity_id,
-                    'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
-                    'tap_action': {
-                      'action': 'navigate',
-                      'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
-                    },
-                    'hold_action': {
-                      'action': 'url',
-                      'url_path': state_attr(update_list.entity_id, 'release_url')
-                    },
-                    'double_tap_action': {
-                      'action': 'more-info'
-                    }
-                  }}},
-                {%- endif -%}
-              {%- endif -%}
-            {%- endfor -%}
+  # - title: "Links"
+  #   icon: "hacs:hacs"
+  #   theme: "minimalist-mobile"
+  #   cards:
+  #     - type: "custom:auto-entities"
+  #       show_empty: false
+  #       card:
+  #         type: "entities"
+  #         title: "HACS Integrations"
+  #       filter:
+  #         template: >-
+  #           {%- for update_list in states.update | sort(attribute="name") -%}
+  #             {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+  #               {%- if device_attr(update_list.entity_id, 'model') == 'integration' -%}
+  #                 {{{
+  #                   'entity': update_list.entity_id,
+  #                   'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
+  #                   'show_icon': false,
+  #                   'tap_action': {
+  #                     'action': 'navigate',
+  #                     'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
+  #                   },
+  #                   'hold_action': {
+  #                     'action': 'url',
+  #                     'url_path': state_attr(update_list.entity_id, 'release_url')
+  #                   },
+  #                   'double_tap_action': {
+  #                     'action': 'more-info'
+  #                   }
+  #                 }}},
+  #               {%- endif -%}
+  #             {%- endif -%}
+  #           {%- endfor -%}
+  #     - type: "custom:auto-entities"
+  #       show_empty: false
+  #       card:
+  #         type: "entities"
+  #         title: "HACS Plugins"
+  #       filter:
+  #         template: >-
+  #           {%- for update_list in states.update | sort(attribute="name") -%}
+  #             {%- if 'hacs' in device_attr(update_list.entity_id, 'identifiers') | map('first') | list -%}
+  #               {%- if device_attr(update_list.entity_id, 'model') == 'plugin' -%}
+  #                 {{{
+  #                   'entity': update_list.entity_id,
+  #                   'name': state_attr(update_list.entity_id, 'friendly_name') | lower | replace(' update','') | title,
+  #                   'tap_action': {
+  #                     'action': 'navigate',
+  #                     'navigation_path': device_attr(update_list.entity_id, 'configuration_url') | replace('homeassistant:/','')
+  #                   },
+  #                   'hold_action': {
+  #                     'action': 'url',
+  #                     'url_path': state_attr(update_list.entity_id, 'release_url')
+  #                   },
+  #                   'double_tap_action': {
+  #                     'action': 'more-info'
+  #                   }
+  #                 }}},
+  #               {%- endif -%}
+  #             {%- endif -%}
+  #           {%- endfor -%}
 
   - title: "Links"
     icon: "hacs:hacs"
@@ -538,9 +543,10 @@ views:
 
             {%- for model in ns_update_list.entity_list | map('device_attr','model') | unique | list | sort -%}
               {%- if loop.changed -%}
+              {%- set model_text = ' '+model|capitalize+'s' if model|length != 0 else '' -%}
                 {{{
                   'type': 'section',
-                  'label': 'HACS ' + model | capitalize
+                  'label': 'HACS' + model_text
                 }}},
               {%- endif -%}
                 {%- for update_list in states.update | sort(attribute="name") -%}

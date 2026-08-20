@@ -32,7 +32,7 @@ binary_sensor:
     device_class: "connectivity"
     filters:
       - delayed_off: "5min"
-      
+
   - platform: "gpio"
     name: "${friendly_name} Switch"
     id: "${device_name}_switchid1"
@@ -45,7 +45,7 @@ binary_sensor:
     filters:
       - delayed_on_off: "50ms"
     device_class: "power"
-        
+
   - platform: "gpio"
     name: "${friendly_name} Switch (Unused)"
     id: "${device_name}_switchid2"
@@ -99,6 +99,7 @@ logger:
   id: "${device_name}_logger"
 api:
   reboot_timeout: "30min"
+  homeassistant_services: true
   encryption:
     key: !secret "esphome_api_key"
 ota:

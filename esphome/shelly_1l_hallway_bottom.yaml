@@ -5,11 +5,16 @@ substitutions:
   friendly_name2: "Front Door Light"
   area: "hallway_bottom"
   light1_icon: "mdi:chandelier"
-  light2_icon: "mdi:coach-lamp"
+  light2_script: "script.toggle_frontdoor_smartbulb"
   device_ip: "10"
   ssid: !secret "not_wifi_ssid"
   log_level: "DEBUG"
   max_temp: "80.0"  # Centigrade
+
+
+# Second Switch Script Calling Include
+<<: !include "includes/shelly_1l_switch2_call_script.yaml"
+
 
 # Common Include
 <<: !include "includes/shelly_1l_common.yaml"
@@ -17,62 +22,37 @@ substitutions:
 # Extended Config - only use when overwriting values in include
 # Note: the entire light and binary_sensor blocks will be overwritten
 
-light:
-  - platform: "binary"
-    name: "${friendly_name}"
-    output: "${device_name}_relay1"
-    id: "${device_name}_lightid1"
-    icon: "${light1_icon}"
-    
-  - platform: "binary"
-    name: "${friendly_name2}"
-    output: "ha_script"
-    id: "${device_name}_lightid2"
-    icon: "${light2_icon}"
-    
-output:
-  - platform: "gpio"
-    pin: "GPIO5"
-    id: "${device_name}_relay1"
-
-  - platform: "template"
-    type: "binary"
-    id: "ha_script"
-    write_action:
-      then:
-        - homeassistant.service:
-            service: "script.front_light_toggle"
-
-binary_sensor:
-  - platform: "status"
-    name: "${friendly_name} Status"
-    id: "${device_name}_status"
-    icon: "mdi:web-check"
-    device_class: "connectivity"
-    filters:
-      - delayed_off: "5min"
+# binary_sensor:
+#   - platform: "status"
+#     name: "${friendly_name} Status"
+#     id: "${device_name}_status"
+#     icon: "mdi:web-check"
+#     device_class: "connectivity"
+#     filters:
+#       - delayed_off: "5min"
       
-  - platform: "gpio"
-    pin:
-      number: "GPIO4"
-    name: "${friendly_name} Switch"
-    id: "${device_name}_switchid1"
-    icon: "mdi:light-switch"
-    on_state:
-      then:
-        - light.toggle: "${device_name}_lightid1"
-    filters:
-      - delayed_on_off: "50ms"
-    device_class: "power"
-        
-  - platform: "gpio"
-    pin:
-      number: "GPIO14"
-    name: "${friendly_name2} Switch"
-    id: "${device_name}_switchid2"
-    icon: "mdi:light-switch"
-    on_state:
-      then:
-        - light.toggle: "${device_name}_lightid2"
-    device_class: "power"
+#   - platform: "gpio"
+#     name: "${friendly_name} Switch"
+#     id: "${device_name}_switchid1"
+#     icon: "mdi:light-switch"
+#     pin:
+#       number: "GPIO4"
+#     device_class: "power"
+#     on_state:
+#       then:
+#         - light.toggle: "${device_name}_lightid1"
+#     filters:
+#       - delayed_on_off: "50ms"
+
+#   - platform: "gpio"
+#     name: "${friendly_name2} Switch"
+#     id: "${device_name}_switchid2"
+#     icon: "mdi:light-switch"  
+#     pin:
+#       number: "GPIO14"
+#     device_class: "power"
+#     on_state:
+#       then:
+#         - homeassistant.action:
+#             action:  "${light2_script}"
           
