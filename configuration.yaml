@@ -27,13 +27,24 @@ homeassistant:
   customize: !include "customize.yaml"
   customize_glob: !include "customize_glob.yaml"
   packages: !include_dir_named "packages"
-http:
+  auth_providers:
+    - type: "trusted_networks"
+      trusted_networks:
+        - 192.168.10.0/24
+        - 172.30.33.0/24
+      trusted_users:
+        172.30.33.0/24: "b5e350db7cc44b5c842018a4b1233f6c"
+        192.168.10.0/24: "9f756190ad844cf59e8438d1bd248ae4"
+      allow_bypass_login: true
+    - type: "homeassistant"
+
+# http:
 api:
 zha_toolkit:
 debugpy:
   start: false
 logger:
-  default: warning
+  default: "info"
   # logs:
     # homeassistant.components.python_script.create_entity_groups.py: info
   #   custom_components.ui_lovelace_minimalist: "debug"
