@@ -267,3 +267,75 @@ template:
           docker_json: >
             {% from 'docker_container.jinja' import build_docker_json %}
             {{ build_docker_json() }}
+
+      - unique_id: "dfd50f59-da5a-4ee9-b13e-37b21c1b9f02"
+        name: "Washing Machine Notify State"
+        state:  >
+            {{-
+              'Air Wash' if states('sensor.washing_machine_job_state')|string == 'air_wash' else
+              'AI Rinse' if states('sensor.washing_machine_job_state')|string == 'ai_rinse' else
+              'AI Wash' if states('sensor.washing_machine_job_state')|string == 'ai_wash' else
+              'Cooling' if states('sensor.washing_machine_job_state')|string == 'cooling' else
+              'Timed Start' if states('sensor.washing_machine_job_state')|string == 'delay_wash' else
+              'Drying' if states('sensor.washing_machine_job_state')|string == 'drying' else
+              'Finished!' if states('sensor.washing_machine_job_state')|string == 'finish' else
+              'clear_notification' if states('sensor.washing_machine_job_state')|string == 'none' else
+              'Pre-wash' if states('sensor.washing_machine_job_state')|string == 'pre_wash' else
+              'Rinsing' if states('sensor.washing_machine_job_state')|string == 'rinse' else
+              'Spin' if states('sensor.washing_machine_job_state')|string == 'spin' else
+              'Wash' if states('sensor.washing_machine_job_state')|string == 'wash' else
+              'Weighing' if states('sensor.washing_machine_job_state')|string == 'weight_sensing' else
+              'Preventing those Wrinkles' if states('sensor.washing_machine_job_state')|string == 'wrinkle_prevent' else
+              'Freeze Protecting' if states('sensor.washing_machine_job_state')|string == 'freeze_protection' else
+              'Problem'
+            -}}
+        attributes:
+          icon: "mdi:washing-machine"
+          device_class: "enum"
+          options: "{{ ['Air Wash', 'AI Rinse', 'AI Wash', 'Cooling', 'Timed Start', 'Drying', 'Finished!', 'clear_notification', 'Pre-wash', 'Rinsing', 'Spin', 'Wash', 'Weighing', 'Preventing those Wrinkles', 'Freeze Protecting', 'Problem'] }}"
+
+      - unique_id: "b61045e0-debe-4789-812d-01c7dfe3cb80"
+        name: "Tumble Dryer Notify State"
+        state: >
+            {{-
+              'Refreshing' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'refreshing' else
+              'AI Drying' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'ai_drying' else
+              'Dehumidifying' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'dehumidifying' else
+              'Cooling' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'cooling' else
+              'Timed Start' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'delay_wash' else
+              'Drying' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'drying' else
+              'Finished!' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'finished' else
+              'clear_notification' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'none' else
+              'Sanitising' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'sanitizing' else
+              'Caring' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'internal_care' else
+              'Dehumidifying' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'continuous_dehumidifying' else
+              'Thawing' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'thawing_frozen_inside' else
+              'Weighing' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'weight_sensing' else
+              'Preventing those Wrinkles' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'wrinkle_prevent' else
+              'Freeze Protecting' if states('sensor.samsung_tumble_dryer_dryer_job_state')|string == 'freeze_protection' else
+              'Problem'
+            -}}
+        attributes:
+          icon: "mdi:tumble-dryer"
+          device_class: "enum"
+          options: "{{ ['Refreshing', 'AI Drying', 'Cooling', 'Timed Start', 'Drying', 'Finished!', 'clear_notification', 'Sanitising', 'Caring', 'Dehumidifying', 'Thawing', 'Weighing', 'Preventing those Wrinkles', 'Freeze Protecting', 'Problem'] }}"
+
+      - unique_id: "8a2086ee-2d55-4b6b-8185-fb5816bb3660"
+        name: "Dishwasher Notify State"
+        state: >
+          {{-
+              'Inactive' if states('sensor.dishwasher_operation_state')|string == 'inactive' else
+              'clear_notification' if states('sensor.dishwasher_operation_state')|string == 'ready' else
+              'Timed Start' if states('sensor.dishwasher_operation_state')|string == 'delayedstart' else
+              'Running' if states('sensor.dishwasher_operation_state')|string == 'run' else
+              'Paused' if states('sensor.dishwasher_operation_state')|string == 'pause' else
+              'Action Required' if states('sensor.dishwasher_operation_state')|string == 'actionrequired' else
+              'Finished!' if states('sensor.dishwasher_operation_state')|string == 'finished' else
+              'Error' if states('sensor.dishwasher_operation_state')|string == 'error' else
+              'Aborting' if states('sensor.dishwasher_operation_state')|string == 'aborting' else
+              'Problem'
+          -}}
+        attributes:
+          icon: "mdi:dishwasher"
+          device_class: "enum"
+          options: "{{ ['Inactive', 'clear_notification', 'Timed Start', 'Running', 'Paused', 'Action Required', 'Finished!', 'Error', 'Aborting', 'Problem'] }}"

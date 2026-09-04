@@ -1867,3 +1867,238 @@
       - browser_mod
     action: python_script.create_entity_groups
   mode: single
+- id: '1788381758514'
+  alias: 'On state change washing machine call iOS notify automation '
+  description: ''
+  triggers:
+  - alias: Washing machine state change while running
+    trigger: state
+    entity_id:
+    - sensor.washing_machine_notify_state
+    id: notify_state_change
+  - trigger: state
+    entity_id:
+    - sensor.washing_machine_machine_state
+    from:
+    - stop
+    to:
+    - run
+    alias: Durable washing machine start
+    id: durable_state_change
+  conditions: []
+  actions:
+  - if:
+    - condition: trigger
+      id:
+      - durable_state_change
+    then:
+    - action: input_datetime.set_datetime
+      metadata: {}
+      target:
+        entity_id: input_datetime.washing_machine_start_time
+      data:
+        datetime: '{{utcnow()}}'
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - action: notify.mobile_app_kevs_iphone
+    data:
+      message: '{{states("sensor.washing_machine_notify_state")}}'
+      title: Washing Machine
+      data:
+        tag: debug-washing-machine
+        live_update: true
+        title: Washing Machine
+        critical_text: '{{states("sensor.washing_machine_notify_state")}}
+
+          '
+        progress: '{{ ((now() - as_local(as_datetime(states("input_datetime.washing_machine_start_time")))).total_seconds()  /
+          60) | int }}
+
+          '
+        progress_max: '{{ ((as_datetime(states("sensor.washing_machine_completion_time"))
+          - as_local(as_datetime(states("input_datetime.washing_machine_start_time")))).total_seconds()
+          / 60) | int }}
+
+          '
+        chronometer: true
+        when: '{{ (as_datetime(states("sensor.washing_machine_completion_time")) -
+          now()).total_seconds() | int }}
+
+          '
+        when_relative: true
+        notification_icon: "{{\n  'mdi:washing-machine-alert' if (\n    not has_value(\"sensor.washing_machine_notify_state\")
+          or\n    states(\"sensor.washing_machine_notify_state\")|lower == 'problem'\n
+          \ ) else 'mdi:washing-machine'\n}}\n"
+        notification_icon_color: "{{\n  '#77F5EF' if (states(\"sensor.washing_machine_notify_state\")|lower
+          == 'ai rinse' or\n                states(\"sensor.washing_machine_notify_state\")|lower
+          == 'ai wash'\n  ) else (\n      '#47F89F' if (states(\"sensor.washing_machine_notify_state\")|lower
+          == 'timed start'\n    ) else (\n        '#000DF3' if (states(\"sensor.washing_machine_notify_state\")|lower
+          == 'pre-wash' or\n                      states(\"sensor.washing_machine_notify_state\")|lower
+          == 'rinsing' or\n                      states(\"sensor.washing_machine_notify_state\")|lower
+          == 'wash'\n      ) else (\n          '#9AC2F3' if (states(\"sensor.washing_machine_notify_state\")|lower
+          == 'cooling'\n        ) else (\n            '#F3ED6A' if (states(\"sensor.washing_machine_notify_state\")|lower
+          == 'drying'\n          ) else (\n              '#F05AF1' if (states(\"sensor.washing_machine_notify_state\")|lower
+          == 'spin'\n            ) else (\n                '#91E9F3' if (states(\"sensor.washing_machine_notify_state\")|lower
+          == 'weighing'\n              ) else (\n                  '#F2F3ED' if (states(\"sensor.washing_machine_notify_state\")|lower
+          == 'preventing those wrinkles' or\n                                states(\"sensor.washing_machine_notify_state\")|lower
+          == 'freeze protecting' or\n                                states(\"sensor.washing_machine_notify_state\")|lower
+          == 'air wash'\n                ) else (\n                    '#27FA06' if
+          (states(\"sensor.washing_machine_notify_state\")|lower == 'finished!'\n
+          \                 ) else (\n                      '#F00031'\n                  )\n
+          \               )\n              )\n            )\n          )\n        )\n
+          \     )\n    )\n  )\n}}\n"
+        background_color: '#101820'
+        url: "{{\n  \"/config/devices/device/\" + device_id(\"sensor.washing_machine_job_state\")\n}}\n"
+  mode: restart
+- id: '1788457841652'
+  alias: On state change tumble dryer call iOS notify automation
+  description: ''
+  triggers:
+  - alias: Tumble dryer state change while running
+    trigger: state
+    entity_id:
+    - sensor.tumble_dryer_notify_state
+    id: notify_state_change
+  - trigger: state
+    entity_id:
+    - sensor.samsung_tumble_dryer_dryer_machine_state
+    from:
+    - stop
+    to:
+    - run
+    alias: Durable tumble dryer start
+    id: durable_state_change
+  conditions: []
+  actions:
+  - if:
+    - condition: trigger
+      id:
+      - durable_state_change
+    then:
+    - action: input_datetime.set_datetime
+      metadata: {}
+      target:
+        entity_id: input_datetime.tumble_dryer_start_time
+      data:
+        datetime: '{{utcnow()}}'
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - action: notify.mobile_app_kevs_iphone
+    data:
+      message: '{{states("sensor.tumble_dryer_notify_state")}}'
+      title: Tumble Dryer
+      data:
+        tag: debug-tumble-dryer
+        live_update: true
+        title: Tumble Dryer
+        critical_text: '{{states("sensor.tumble_dryer_notify_state")}}
+
+          '
+        progress: '{{ ((now() - as_local(as_datetime(states("input_datetime.tumble_dryer_start_time")))).total_seconds()  /
+          60) | int }}
+
+          '
+        progress_max: '{{ ((as_datetime(states("sensor.samsung_tumble_dryer_dryer_completion_time"))
+          - as_local(as_datetime(states("input_datetime.tumble_dryer_start_time")))).total_seconds()
+          / 60) | int }}
+
+          '
+        chronometer: true
+        when: '{{ (as_datetime(states("sensor.samsung_tumble_dryer_dryer_completion_time"))
+          - now()).total_seconds() | int }}
+
+          '
+        when_relative: true
+        notification_icon: "{{\n  'mdi:tumble-dryer-alert-alert' if (\n    not has_value(\"sensor.washing_machine_notify_state\")
+          or\n    states(\"sensor.washing_machine_notify_state\")|lower == 'problem'\n
+          \ ) else 'mdi:tumble-dryer'\n}}\n"
+        notification_icon_color: "{{\n  '#77F5EF' if (states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'ai drying'\n  ) else (\n      '#47F89F' if (states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'timed start'\n    ) else (\n        '#000DF3' if (states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'refreshing' or\n                      states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'dehumidifying' or\n                      states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'sanitising'\n      ) else (\n          '#9AC2F3' if (states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'cooling'\n        ) else (\n            '#F3ED6A' if (states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'drying'\n          ) else (\n              '#F05AF1' if (states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'caring'\n            ) else (\n                '#91E9F3' if (states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'weighing'\n              ) else (\n                  '#F2F3ED' if (states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'preventing those wrinkles' or\n                                states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'freeze protecting' or\n                                states(\"sensor.tumble_dryer_notify_state\")|lower
+          == 'thawing'\n                ) else (\n                    '#27FA06' if
+          (states(\"sensor.tumble_dryer_notify_state\")|lower == 'finished!'\n                  )
+          else (\n                      '#F00031'\n                  )\n                )\n
+          \             )\n            )\n          )\n        )\n      )\n    )\n
+          \ )\n}}\n"
+        background_color: '#101820'
+        url: "{{\n  \"/config/devices/device/\" + device_id(\"sensor.samsung_tumble_dryer_dryer_machine_state\")\n}}\n"
+  mode: restart
+- id: '1788466404221'
+  alias: On state change dishwasher call iOS notify automation
+  description: ''
+  triggers:
+  - alias: Dishwasher state change while running
+    trigger: state
+    entity_id:
+    - sensor.dishwasher_notify_state
+    id: notify_state_change
+  conditions: []
+  actions:
+  - action: input_datetime.set_datetime
+    metadata: {}
+    target:
+      entity_id: input_datetime.dishwasher_start_time
+    data:
+      datetime: '{{utcnow()}}'
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - action: notify.mobile_app_kevs_iphone
+    data:
+      message: '{{states("sensor.dishwasher_notify_state")}}'
+      title: Dishwasher
+      data:
+        tag: debug-dishwasher
+        live_update: true
+        title: Dishwasher
+        critical_text: '{{states("sensor.dishwasher_notify_state")}}
+
+          '
+        progress: '{{ ((now() - as_local(as_datetime(states("input_datetime.dishwasher_start_time")))).total_seconds()  /
+          60) | int }}
+
+          '
+        progress_max: '{{ ((as_datetime(states("sensor.dishwasher_remaining_program_time"))
+          - as_local(as_datetime(states("input_datetime.dishwasher_start_time")))).total_seconds()
+          / 60) | int }}
+
+          '
+        chronometer: true
+        when: '{{ (as_datetime(states("sensor.dishwasher_remaining_program_time"))
+          - now()).total_seconds() | int }}
+
+          '
+        when_relative: true
+        notification_icon: "{{\n  'mdi:dishwasher-alert' if (\n    not has_value(\"sensor.dishwasher_notify_state\")
+          or\n    states(\"sensor.dishwasher_notify_state\")|lower == 'problem' or\n
+          \   states(\"sensor.dishwasher_notify_state\")|lower == 'error'\n  ) else
+          'mdi:dishwasher'\n}}\n"
+        notification_icon_color: "{{\n  '#47F89F' if (states(\"sensor.dishwasher_notify_state\")|lower
+          == 'timed start'\n    ) else (\n        '#000DF3' if (states(\"sensor.dishwasher_notify_state\")|lower
+          == 'running'\n      ) else (\n          '#9AC2F3' if (states(\"sensor.dishwasher_notify_state\")|lower
+          == 'inactive'\n        ) else (\n            '#F3ED6A' if (states(\"sensor.dishwasher_notify_state\")|lower
+          == 'action required' or\n                          states(\"sensor.dishwasher_notify_state\")|lower
+          == 'aborting' or\n                          states(\"sensor.dishwasher_notify_state\")|lower
+          == 'paused'\n          ) else (\n              '#27FA06' if (states(\"sensor.dishwasher_notify_state\")|lower
+          == 'finished!'\n            ) else (\n                '#F00031'\n          )\n
+          \       )\n      )\n    )\n  )\n}}\n"
+        background_color: '#101820'
+        url: "{{\n  \"/config/devices/device/\" + device_id(\"sensor.dishwasher_remaining_program_time\")\n}}\n"
+  mode: restart
