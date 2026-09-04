@@ -31,6 +31,7 @@ blueprint:
           device_class:
           - motion
           multiple: false
+          reorder: false
     occupied_on_shut_door:
       name: Enable Door Occupancy
       description: Turn on/off occupancy via door sensor(s).
@@ -47,7 +48,10 @@ blueprint:
           - binary_sensor
           device_class:
           - opening
+          - door
+          - garage_door
           multiple: false
+          reorder: false
     occupied_on_media_enabled:
       name: Enable Media Occupancy
       description: Turn on/off occupancy via media player(s).
@@ -63,12 +67,15 @@ blueprint:
           domain:
           - media_player
           multiple: false
+          reorder: false
     media_states:
       name: Media State(s)
       description: Media player state(s) when room is occupied (comma separated).
       default: playing
       selector:
-        text: {}
+        text:
+          multiline: false
+          multiple: false
     occupied_on_presence_enabled:
       name: Enable Presence Occupancy
       description: Turn on/off occupancy via presence sensor(s).
@@ -80,13 +87,17 @@ blueprint:
       description: Room presence entity or entities (comma separated) to track.
       default: sensor.none
       selector:
-        text: {}
+        text:
+          multiline: false
+          multiple: false
     presence_states:
       name: Presence State(s)
       description: A comma separated list of states that presence entity can match.
       default: lounge, dining room
       selector:
-        text: {}
+        text:
+          multiline: false
+          multiple: false
     disabled_entity_id:
       name: Disable Mode (Optional)
       description: An input_boolean to disable automation logic when on.
@@ -96,6 +107,7 @@ blueprint:
           domain:
           - input_boolean
           multiple: false
+          reorder: false
     household_group:
       name: Household Group (Optional)
       description: A grouped set of people in your house. Logic will only run if home.
@@ -105,6 +117,7 @@ blueprint:
           domain:
           - group
           multiple: false
+          reorder: false
     guest_mode_switch:
       name: Guest Mode (Optional)
       description: An input_boolean to allow logic to work when household group is
@@ -115,6 +128,7 @@ blueprint:
           domain:
           - input_boolean
           multiple: false
+          reorder: false
     occupancy_switch:
       name: Occupancy Switch
       description: An input_boolean that switches occupancy state in target room.
@@ -125,6 +139,7 @@ blueprint:
           domain:
           - input_boolean
           multiple: false
+          reorder: false
   source_url: https://github.com/kreene1987/automatic-room-occupancy/blob/main/automatic-room-occupancy.yaml
 variables:
   time_now: '{{ as_timestamp(now()) }}'

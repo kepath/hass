@@ -1,0 +1,420 @@
+blueprint:
+  name: Appliance Live Activity countdown
+  description: "Creates an iOS Live Activity / Android Live Update with a locally
+    updating countdown and a periodically refreshed progress bar for an appliance.\nWhen
+    the configured appliance state changes to one of the configured finished states,
+    the Live Activity changes to a completed state. An optional regular completion
+    notification can also be sent.\nThe completed Live Activity can optionally be
+    removed when the appliance later enters a configured state such as off or inactive.\nPLATFORM
+    REQUIREMENTS\niOS: iOS 17.2+, TestFlight (Labs) build of the Home Assistant app,
+    Home Assistant Core 2026.7.0+.\nAndroid: Android 16+. On older Android versions
+    the app has no Live Update support yet, so these notifications will show as regular
+    banner notifications instead of a pinned live update. That is a platform limitation,
+    not a blueprint bug. Use the \"Notification channel\" input below to give those
+    fallback notifications their own channel so they can be identified or muted independently
+    of other Home Assistant alerts.\nREQUIREMENTS\nThe appliance must provide:\n-
+    A start timestamp sensor\n  The sensor state must be an ISO 8601 date and time.
+    A sensor with\n  device_class: timestamp is recommended.\n\n  Example:\n    2026-07-15T13:46:00+00:00\n\n-
+    A finish timestamp sensor\n  The sensor state must be an ISO 8601 date and time.
+    A sensor with\n  device_class: timestamp is recommended.\n\n  Example:\n    2026-07-15T16:53:00+00:00\n\n
+    \ The finish timestamp must be later than the start timestamp.\n\n- An appliance
+    state entity\n  The entity must expose a state indicating when the appliance has\n
+    \ completed its cycle.\n\n  Example entity:\n    sensor.washing_machine\n\n  Example
+    finished states:\n    finished\n    completed\n    program_ended\n\nThe countdown
+    and progress are calculated from the start and finish timestamps. The appliance
+    state is used to determine when the cycle has completed and, optionally, when
+    the Live Activity should be removed.\nState matching is case-insensitive and ignores
+    surrounding whitespace. Use raw entity states from Developer Tools > States, not
+    translated dashboard labels.\nThe running title supports these placeholders:\n\n
+    \ {appliance}\n  {finish_time}\n\nThis allows the title wording and word order
+    to be customized for different languages.\nExamples:\n\n  English:\n    {appliance},
+    done at {finish_time}\n\n  Norwegian:\n    {appliance}, ferdig {finish_time}\n\n
+    \ German:\n    {appliance} ist um {finish_time} fertig\n\nDisable older automations
+    that control the same Live Activity tag to avoid duplicate notifications.\n"
+  domain: automation
+  author: Håkon Åreskjold
+  homeassistant:
+    min_version: 2024.6.0
+  input:
+    appliance:
+      name: Appliance
+      icon: mdi:washing-machine
+      input:
+        appliance_name:
+          name: Appliance name
+          description: Displayed while the appliance is running.
+          default: Washing machine
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        running_title_template:
+          name: Running title format
+          description: "Title shown while the appliance is running.\nAvailable placeholders:\n\n
+            \ {appliance}\n  {finish_time}\n\nExamples:\n\n  English:\n    {appliance},
+            done at {finish_time}\n\n  Norwegian:\n    {appliance}, ferdig {finish_time}\n\n
+            \ German:\n    {appliance} ist um {finish_time} fertig\n"
+          default: '{appliance}, done at {finish_time}'
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        completed_title:
+          name: Completed title
+          default: Washing machine
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        completed_message:
+          name: Completed message
+          default: "Laundry is complete \U0001F9FA"
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        start_sensor:
+          name: Start timestamp sensor
+          description: 'Must contain an ISO 8601 timestamp, for example 2026-07-15T13:46:00+00:00.
+
+            '
+          selector:
+            entity:
+              filter:
+              - domain:
+                - sensor
+                device_class:
+                - timestamp
+              multiple: false
+              reorder: false
+        finish_sensor:
+          name: Finish timestamp sensor
+          description: 'Must contain an ISO 8601 timestamp later than the start timestamp,
+            for example 2026-07-15T16:53:00+00:00.
+
+            '
+          selector:
+            entity:
+              filter:
+              - domain:
+                - sensor
+                device_class:
+                - timestamp
+              multiple: false
+              reorder: false
+        state_entity:
+          name: Appliance state entity
+          description: "Entity whose state indicates whether the appliance is running,
+            finished, idle, off, or in another operating phase.\nExample:\n  sensor.washing_machine\n"
+          selector:
+            entity:
+              filter:
+              - domain:
+                - sensor
+              multiple: false
+              reorder: false
+        finished_states:
+          name: Finished states
+          description: "Enter one raw entity state per line. Matching is case-insensitive
+            and ignores surrounding whitespace.\nWhen the appliance enters one of
+            these states, the Live Activity changes to its completed appearance.\nExample:\n\n
+            \ finished\n  completed\n  program_ended\n\nBe careful with states such
+            as \"idle\". Some appliances are idle both before and after a cycle, which
+            can cause false completion detection after a restart.\n"
+          default: 'finished
+
+            completed
+
+            '
+          selector:
+            text:
+              multiline: true
+              multiple: false
+        clear_activity_states:
+          name: Clear Live Activity states
+          description: "Optional. Enter one raw appliance state per line.\nWhen the
+            appliance enters one of these states after a valid cycle, the existing
+            Live Activity is removed.\nThis is useful when the appliance first enters
+            a finished state and later changes to off, power_off, or inactive.\nExample:\n\n
+            \ off\n  power_off\n  inactive\n\nLeave this empty to preserve the previous
+            behavior and keep the completed Live Activity visible.\n"
+          default: ''
+          selector:
+            text:
+              multiline: true
+              multiple: false
+    notifications:
+      name: Notifications
+      icon: mdi:cellphone
+      input:
+        notify_services:
+          name: Mobile notification actions
+          description: "Enter a YAML list of mobile-app notification actions.\nExample:\n
+            \ - notify.mobile_app_x\n  - notify.mobile_app_y\n"
+          selector:
+            object:
+              multiple: false
+        activity_tag:
+          name: Live Activity tag
+          description: Use a unique tag for each appliance blueprint instance.
+          default: appliance_live_activity
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        notification_channel:
+          name: Android notification channel
+          description: 'Channel name for the Android notifications. On Android 16+
+            this is only cosmetic (the Live Update UI is used regardless). On Android
+            versions below 16, Live Updates are not supported yet and these notifications
+            fall back to regular banners; giving them their own channel lets you find
+            and, if wanted, mute them in the Android app''s notification settings
+            without affecting other Home Assistant alerts.
+
+            Note: Android locks a channel''s importance the first time it is created.
+            If you already have a channel with this name at default importance, use
+            a new, unique channel name here to get a fresh channel.
+
+            '
+          default: Appliance Live Activity
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        dashboard_url:
+          name: Tap destination
+          description: "Home Assistant path opened when the Live Activity is tapped.\nThe
+            default \"/\" opens the Home Assistant landing page. You may specify a
+            dashboard or view path instead, for example:\n\n  /lovelace\n  /lovelace/laundry\n
+            \ /dashboard-mobile/laundry\n"
+          default: /
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        send_completion_notification:
+          name: Send regular completion notification
+          description: 'Send a normal push notification when the appliance first enters
+            a configured finished state.
+
+            '
+          default: true
+          selector:
+            boolean: {}
+    appearance:
+      name: Appearance
+      icon: mdi:palette
+      collapsed: true
+      input:
+        running_icon:
+          name: Running icon
+          default: mdi:washing-machine
+          selector:
+            icon: {}
+        completed_icon:
+          name: Completed icon
+          default: mdi:check-circle
+          selector:
+            icon: {}
+        running_color:
+          name: Running color
+          default: '#2196F3'
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        completed_color:
+          name: Completed color
+          default: '#4CAF50'
+          selector:
+            text:
+              multiline: false
+              multiple: false
+        finished_text:
+          name: Finished Live Activity text
+          default: Done
+          selector:
+            text:
+              multiline: false
+              multiple: false
+    behavior:
+      name: Behavior
+      icon: mdi:cog
+      collapsed: true
+      input:
+        update_pattern:
+          name: Progress update pattern
+          description: 'Time-pattern minute value. "/10" updates at minutes 0, 10,
+            20, 30, 40, and 50. The countdown itself updates locally every second.
+
+            '
+          default: /10
+          selector:
+            text:
+              multiline: false
+              multiple: false
+  source_url: https://gist.github.com/hakoares/f19081a08419f04043c6749e4190ae9d
+mode: restart
+max_exceeded: silent
+triggers:
+- trigger: state
+  entity_id:
+  - !input start_sensor
+  - !input finish_sensor
+  id: timestamps_changed
+- trigger: state
+  entity_id: !input state_entity
+  id: appliance_state_changed
+- trigger: time_pattern
+  minutes: !input update_pattern
+  id: progress_update
+- trigger: homeassistant
+  event: start
+  id: home_assistant_started
+variables:
+  appliance_name: !input appliance_name
+  running_title_template: !input running_title_template
+  completed_title: !input completed_title
+  completed_message: !input completed_message
+  start_sensor: !input start_sensor
+  finish_sensor: !input finish_sensor
+  state_entity: !input state_entity
+  finished_states_input: !input finished_states
+  clear_activity_states_input: !input clear_activity_states
+  notify_services: !input notify_services
+  activity_tag: !input activity_tag
+  notification_channel: !input notification_channel
+  dashboard_url: !input dashboard_url
+  send_completion_notification: !input send_completion_notification
+  running_icon: !input running_icon
+  completed_icon: !input completed_icon
+  running_color: !input running_color
+  completed_color: !input completed_color
+  finished_text: !input finished_text
+  appliance_state: '{{ states(state_entity) | lower | trim }}
+
+    '
+  finished_states_list: "{{\n  finished_states_input\n  .splitlines()\n  | map('trim')\n
+    \ | map('lower')\n  | reject('equalto', '')\n  | list\n}}\n"
+  clear_activity_states_list: "{{\n  clear_activity_states_input\n  .splitlines()\n
+    \ | map('trim')\n  | map('lower')\n  | reject('equalto', '')\n  | list\n}}\n"
+  is_finished: '{{ appliance_state in finished_states_list }}
+
+    '
+  previous_appliance_state: "{% if trigger.id == 'appliance_state_changed'\n      and
+    trigger.from_state is not none %}\n  {{ trigger.from_state.state | lower | trim
+    }}\n{% else %}\n  unknown\n{% endif %}\n"
+  previous_state_was_finished: '{{ previous_appliance_state in finished_states_list
+    }}
+
+    '
+  entered_finished_state: "{{\n  trigger.id == 'appliance_state_changed'\n  and is_finished\n
+    \ and not previous_state_was_finished\n}}\n"
+  start_timestamp: '{{ as_timestamp(states(start_sensor), 0) | int }}
+
+    '
+  finish_timestamp: '{{ as_timestamp(states(finish_sensor), 0) | int }}
+
+    '
+  now_timestamp: '{{ as_timestamp(now()) | int }}
+
+    '
+  has_valid_cycle: "{{\n  start_timestamp > 0\n  and finish_timestamp > start_timestamp\n}}\n"
+  should_clear_activity: "{{\n  has_valid_cycle\n  and appliance_state in clear_activity_states_list\n}}\n"
+  total_seconds: '{{ [finish_timestamp - start_timestamp, 1] | max }}
+
+    '
+  elapsed_seconds: "{{\n  [\n    [now_timestamp - start_timestamp, 0] | max,\n    total_seconds\n
+    \ ] | min\n}}\n"
+  finish_local: "{% if finish_timestamp > 0 %}\n  {{ finish_timestamp | timestamp_custom('%H:%M',
+    true) }}\n{% else %}\n  unknown\n{% endif %}\n"
+  running_title: "{{\n  running_title_template\n  | replace('{appliance}', appliance_name)\n
+    \ | replace('{finish_time}', finish_local)\n}}"
+  cycle_active: "{{\n  has_valid_cycle\n  and finish_timestamp > now_timestamp\n  and
+    not is_finished\n  and not should_clear_activity\n}}\n"
+actions:
+- choose:
+  - alias: Remove Live Activity
+    conditions:
+    - condition: template
+      value_template: '{{ should_clear_activity }}'
+    sequence:
+    - repeat:
+        for_each: '{{ notify_services }}'
+        sequence:
+        - action: '{{ repeat.item }}'
+          data:
+            message: clear_notification
+            data:
+              tag: '{{ activity_tag }}'
+  - alias: Show completed Live Activity
+    conditions:
+    - condition: template
+      value_template: '{{ has_valid_cycle and is_finished }}
+
+        '
+    sequence:
+    - repeat:
+        for_each: '{{ notify_services }}'
+        sequence:
+        - action: '{{ repeat.item }}'
+          data:
+            title: '{{ completed_title }}'
+            message: '{{ completed_message }}'
+            data:
+              tag: '{{ activity_tag }}'
+              live_update: true
+              channel: '{{ notification_channel }}'
+              critical_text: '{{ finished_text }}'
+              progress: 100
+              progress_max: 100
+              alert_once: true
+              notification_icon: '{{ completed_icon }}'
+              notification_icon_color: '{{ completed_color }}'
+              progress_bar_color: '{{ completed_color }}'
+              color: '{{ completed_color }}'
+              url: '{{ dashboard_url }}'
+    - if:
+      - condition: template
+        value_template: "{{\n  send_completion_notification | bool\n  and entered_finished_state\n}}\n"
+      then:
+      - repeat:
+          for_each: '{{ notify_services }}'
+          sequence:
+          - action: '{{ repeat.item }}'
+            data:
+              title: '{{ completed_title }}'
+              message: '{{ completed_message }}'
+              data:
+                tag: '{{ activity_tag }}_complete'
+                channel: '{{ notification_channel }}'
+                notification_icon: '{{ completed_icon }}'
+                color: '{{ completed_color }}'
+                url: '{{ dashboard_url }}'
+  - alias: Start or update running Live Activity
+    conditions:
+    - condition: template
+      value_template: '{{ cycle_active }}'
+    sequence:
+    - repeat:
+        for_each: '{{ notify_services }}'
+        sequence:
+        - action: '{{ repeat.item }}'
+          data:
+            title: '{{ running_title }}'
+            message: Running
+            data:
+              tag: '{{ activity_tag }}'
+              live_update: true
+              channel: '{{ notification_channel }}'
+              chronometer: true
+              when: '{{ finish_timestamp }}'
+              progress: '{{ elapsed_seconds | int }}'
+              progress_max: '{{ total_seconds | int }}'
+              alert_once: true
+              notification_icon: '{{ running_icon }}'
+              notification_icon_color: '{{ running_color }}'
+              progress_bar_color: '{{ running_color }}'
+              color: '{{ running_color }}'
+              url: '{{ dashboard_url }}'
+  default: []
